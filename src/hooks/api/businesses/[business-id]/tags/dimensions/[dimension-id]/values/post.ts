@@ -1,7 +1,7 @@
-import { type TagValueDefinitionSchema } from '@schemas/tags/tagValueDefinition'
+import { type TagValueDefinitionSchema } from '@schemas/features/tags/tagValueDefinition'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 
 const CREATE_TAG_VALUE_DEFINITION_TAG_KEY = '#create-tag-value-definition'
 

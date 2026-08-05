@@ -2,14 +2,14 @@ import { useContext, useMemo } from 'react'
 import { sub } from 'date-fns'
 
 import type { LineItem } from '@schemas/common/lineItem'
-import type { ProfitAndLoss } from '@schemas/profitAndLoss/profitAndLoss'
+import type { ProfitAndLoss } from '@schemas/features/profitAndLoss/profitAndLoss'
 import { toMiniChartData } from '@utils/features/profitAndLoss/profitAndLoss'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { calculatePercentageChange } from '@utils/shared/number/percentageChange'
-import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 
 const emptyLineItem = (name: string): LineItem => ({
   name,

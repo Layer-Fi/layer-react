@@ -1,9 +1,7 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { SWRConfig } from 'swr'
 
-import { type LayerThemeConfig } from '@internal-types/layerContext'
-import { type LayerError } from '@utils/shared/api/errorHandler'
-import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
+import { DEFAULT_LOCALE } from '@utils/shared/i18n/supportedLocale'
 import { DEFAULT_SWR_CONFIG } from '@utils/shared/swr/defaultSWRConfig'
 import { localeKeyMiddleware } from '@utils/shared/swr/localeKeyMiddleware'
 import { AuthInputProvider } from '@providers/global/AuthInput/AuthInputProvider'
@@ -11,33 +9,12 @@ import type { Environment, EnvironmentConfigOverride } from '@providers/global/E
 import { EnvironmentInputProvider } from '@providers/global/Environment/EnvironmentInputProvider'
 import { GlobalDateStoreProvider } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { LayerI18nProvider } from '@providers/global/I18nProvider/LayerI18nProvider'
-import { StaleLocaleCacheInvalidator } from '@providers/global/I18nProvider/StaleLocaleCacheInvalidator'
-import { BusinessProvider } from '@providers/global/LayerContext/BusinessProvider'
-import type { LayerEvent } from '@providers/global/LayerProvider/layerEvents'
+import { type LayerProviderProps } from '@providers/global/LayerContext/layerProviderProps'
+import { StaleLocaleCacheInvalidator } from '@providers/global/LayerProvider/StaleLocaleCacheInvalidator'
+import { BusinessProvider } from '@providers/features/business/BusinessProvider/BusinessProvider'
+import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 
-export type EventCallbacks = {
-  onEvent?: (event: LayerEvent) => void
-  onTransactionCategorized?: () => void
-  onTransactionsFetched?: () => void
-}
-
-type BaseLayerProviderProps = {
-  businessId: string
-  appId?: string
-  appSecret?: string
-  businessAccessToken?: string
-
-  locale?: SupportedLocale
-  theme?: LayerThemeConfig
-  usePlaidSandbox?: boolean
-  onError?: (error: LayerError) => void
-  eventCallbacks?: EventCallbacks
-}
-
-type LayerProviderPropsWithLayerEnv = BaseLayerProviderProps & { environment?: Environment }
-type LayerProviderPropsWithEnvironmentConfigOverride = BaseLayerProviderProps & { environmentConfigOverride?: EnvironmentConfigOverride }
-
-export type LayerProviderProps = LayerProviderPropsWithLayerEnv | LayerProviderPropsWithEnvironmentConfigOverride
+export type { EventCallbacks, LayerProviderProps } from '@providers/global/LayerContext/layerProviderProps'
 
 export const LayerProvider = ({
   appId,
@@ -78,7 +55,7 @@ export const LayerProvider = ({
             businessAccessToken={businessAccessToken}
           >
             <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} />
+              <BusinessProvider {...restProps} slots={{ Toasts: ToastsContainer }} />
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>

@@ -1,10 +1,10 @@
 import { CircleArrowRight, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxSummary } from '@schemas/taxEstimates/summary'
+import type { TaxSummary } from '@schemas/features/taxEstimates/summary'
 import { tConditional } from '@utils/shared/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useFullYearProjection } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'

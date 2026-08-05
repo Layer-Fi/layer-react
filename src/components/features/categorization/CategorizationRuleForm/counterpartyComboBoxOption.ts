@@ -1,5 +1,5 @@
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
+import { BaseComboBoxOption } from '@internal-types/utility/comboBoxOption'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
 
 export class CounterpartyComboBoxOption extends BaseComboBoxOption<BankTransactionCounterparty> {
   constructor(counterparty: BankTransactionCounterparty) {

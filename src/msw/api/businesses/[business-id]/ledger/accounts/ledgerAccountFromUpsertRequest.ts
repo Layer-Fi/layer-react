@@ -1,14 +1,14 @@
 import { Schema } from 'effect'
 
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { type LedgerAccountType, LedgerAccountTypeSchema } from '@schemas/generalLedger/ledgerAccountType'
-import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { type LedgerAccountType, LedgerAccountTypeSchema } from '@schemas/features/generalLedger/ledgerAccountType'
+import { UpsertLedgerAccountSchema } from '@schemas/features/generalLedger/upsertLedgerAccount'
+import { SUBTYPES_CONFIG_BY_TYPE } from '@utils/features/generalLedger/constants'
 import { humanizeEnum } from '@utils/shared/string/format'
-import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'
 
+import { ACCOUNT_TYPE_DISPLAY_NAME } from '@fixtures/chartOfAccounts/constants'
 import { accountParentStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { readRequestJson } from '@msw/utils/request'
-import { ACCOUNT_TYPE_DISPLAY_NAME } from '@fixtures/chartOfAccounts/constants'
 
 const decodeUpsert = Schema.decodeUnknownSync(UpsertLedgerAccountSchema)
 

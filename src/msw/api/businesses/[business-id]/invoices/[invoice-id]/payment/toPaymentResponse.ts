@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type InvoicePayment, InvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
-import { type UpsertDedicatedInvoicePayment } from '@schemas/invoices/upsertDedicatedInvoicePayment'
+import { type InvoicePayment, InvoicePaymentSchema } from '@schemas/features/invoices/invoicePayment'
+import { type UpsertDedicatedInvoicePayment } from '@schemas/features/invoices/upsertDedicatedInvoicePayment'
 
 import { apiData } from '@msw/utils/apiResponse'
 

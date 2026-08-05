@@ -1,6 +1,6 @@
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
-import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
+import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
 import { put } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

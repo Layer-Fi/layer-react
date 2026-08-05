@@ -1,12 +1,12 @@
 import { Check, Clock3, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/bookkeeping/callBooking'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { translationKey } from '@utils/shared/i18n/translationKey'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { DateTile } from '@ui/DateTile/DateTile'
@@ -34,11 +34,9 @@ const ONBOARDING_CALL_COVERAGE_ITEMS = [
   },
 ] as const
 
-export interface CallBookingStringOverrides {
-  title?: string
-  description?: string
-  coverage?: string
-}
+import type { CallBookingStringOverrides } from '@internal-types/callBooking'
+
+export type { CallBookingStringOverrides }
 
 export interface CallBookingProps {
   callBooking?: CallBookingData

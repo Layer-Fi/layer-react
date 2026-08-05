@@ -1,6 +1,6 @@
-import { type AccountCategorizationSchema, type ExclusionCategorizationSchema } from '@schemas/categorization/categorization'
-import { type Classification } from '@schemas/categorization/classification'
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type AccountCategorizationSchema, type ExclusionCategorizationSchema } from '@schemas/features/categorization/categorization'
+import { type Classification } from '@schemas/features/categorization/classification'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
 import { humanizeEnum } from '@utils/shared/string/format'
 
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'

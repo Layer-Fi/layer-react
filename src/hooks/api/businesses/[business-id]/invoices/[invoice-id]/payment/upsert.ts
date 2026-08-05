@@ -1,6 +1,6 @@
+import { createUpsertHook } from '@hooks/utils/swr/createUpsertHook'
 import { type UpdateParams, usePutDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/[invoice-payment-id]/put'
 import { type CreateParams, usePostDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/post'
-import { createUpsertHook } from '@hooks/utils/swr/createUpsertHook'
 
 export type UpsertParams = CreateParams | UpdateParams
 

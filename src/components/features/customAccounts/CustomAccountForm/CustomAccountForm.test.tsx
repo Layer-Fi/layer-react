@@ -2,13 +2,13 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype, CustomAccountType } from '@schemas/customAccounts/customAccount'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype, CustomAccountType } from '@schemas/features/customAccounts/customAccount'
 import { CustomAccountForm, type CustomAccountsFormProps } from '@features/customAccounts/CustomAccountForm/CustomAccountForm'
 
+import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
 import { post as postCustomAccount } from '@msw/api/businesses/[business-id]/custom-accounts/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
-import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
 import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
 import { LayerTestProvider, TEST_LAYER_BUSINESS_ID } from '@test-utils/LayerTestProvider'
 

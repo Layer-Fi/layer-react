@@ -2,7 +2,7 @@ import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
-import { LedgerDateStoreProvider } from '@providers/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
+import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import { Loader } from '@ui/Loader/Loader'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { View } from '@blocks/Layout/View/View'

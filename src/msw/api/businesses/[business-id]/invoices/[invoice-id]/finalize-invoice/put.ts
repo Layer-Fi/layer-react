@@ -1,16 +1,16 @@
 import { addDays } from 'date-fns'
 import { Schema } from 'effect'
 
-import { FinalizeInvoiceBodySchema, FinalizeInvoiceDataSchema } from '@schemas/invoices/finalizeInvoice'
-import { type Invoice } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { FinalizeInvoiceBodySchema, FinalizeInvoiceDataSchema } from '@schemas/features/invoices/finalizeInvoice'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
 
+import { DEFAULT_INVOICE_PAYMENT_TERMS_DAYS } from '@fixtures/invoices/constants'
 import { invoicePaymentMethodsStore } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/store'
 import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { DEFAULT_INVOICE_PAYMENT_TERMS_DAYS } from '@fixtures/invoices/constants'
 
 const decodeFinalizeBody = Schema.decodeUnknownSync(FinalizeInvoiceBodySchema)
 const encodeFinalizeData = Schema.encodeSync(FinalizeInvoiceDataSchema)

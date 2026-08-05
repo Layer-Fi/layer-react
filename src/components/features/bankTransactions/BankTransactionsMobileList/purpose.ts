@@ -2,7 +2,7 @@ import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBox
 import {
   type BankTransactionCategorization,
   BankTransactionSelectionVariant,
-} from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+} from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 
 export enum Purpose {
   business = 'business',

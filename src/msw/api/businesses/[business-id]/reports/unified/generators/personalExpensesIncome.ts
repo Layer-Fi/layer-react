@@ -1,5 +1,5 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'

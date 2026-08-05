@@ -1,10 +1,10 @@
 import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import type { UnifiedReportControlParams } from '@schemas/features/unifiedReports/reportParams'
 import { getAsMutation } from '@utils/shared/api/getAsMutation'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { type QueryParams } from '@utils/shared/request/toDefinedSearchParameters'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import type { UnifiedReportControlParams } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 
 type GetUnifiedReportExcelParams = {
   businessId: string

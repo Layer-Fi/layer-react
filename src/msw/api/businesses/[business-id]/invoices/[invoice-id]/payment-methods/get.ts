@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type InvoicePaymentMethod, InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
+import { type InvoicePaymentMethod, InvoicePaymentMethodsSchema } from '@schemas/features/invoices/invoicePaymentMethod'
 
 import { DEFAULT_INVOICE_PAYMENT_METHODS, invoicePaymentMethodsStore } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/store'
 import { apiData } from '@msw/utils/apiResponse'

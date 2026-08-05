@@ -1,4 +1,4 @@
-import { type CustomAccountTransactionRow } from '@schemas/customAccounts/customAccountTransactionRow'
+import { type CustomAccountTransactionRow } from '@schemas/features/customAccounts/customAccountTransactionRow'
 
 export const templateHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
   date: 'Date',

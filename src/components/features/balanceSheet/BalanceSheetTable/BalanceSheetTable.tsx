@@ -3,7 +3,7 @@ import { Fragment } from 'react'
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import type { LineItem } from '@internal-types/lineItem'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
-import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
+import { useTableExpandRow } from '@hooks/features/reports/useTableExpandRow'
 import {
   ReportsTable,
   ReportsTableBody,

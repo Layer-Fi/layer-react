@@ -1,6 +1,6 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 
-import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
+import { FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { type TaxScenario } from '@fixtures/taxEstimates/scenario/types'

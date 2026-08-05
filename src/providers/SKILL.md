@@ -55,7 +55,7 @@ canonical example:
   (`@providers/common/DateStore/useStoreWithDateSelected`) — it compares by `getTime()`, so a new `Date`
   with the same instant doesn't re-render.
 
-`createScopedStore` (`@utils/shared/zustand/createScopedStore`) is a generic version of this
+`createScopedStore` (`@providers/common/store/createScopedStore`) is a generic version of this
 pattern that throws instead of falling back to a dead store; today only the date store
 uses it. The hand-rolled shape above is the prevailing idiom for feature stores.
 

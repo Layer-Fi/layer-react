@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
+import { type TaxEstimatesBanner } from '@schemas/features/taxEstimates/banner'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

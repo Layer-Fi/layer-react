@@ -1,4 +1,4 @@
-import { type TaxOverviewMetric } from '@schemas/taxEstimates/overview'
+import { type TaxOverviewMetric } from '@schemas/features/taxEstimates/overview'
 import { MetricRow } from '@blocks/MetricRow/MetricRow'
 import { useMetricRowProps } from '@features/taxEstimates/TaxEstimateMetricRow/useMetricRowProps'
 

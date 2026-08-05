@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import type { ExternalAccountConnection } from '@schemas/bankAccounts/externalAccountConnection'
+import type { ExternalAccountConnection } from '@schemas/features/bankAccounts/externalAccountConnection'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { LinkedAccountRowContainer, LinkedAccountRowContent } from '@features/linkedAccounts/LinkedAccountRow/LinkedAccountRow'

@@ -1,7 +1,7 @@
-import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
+import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/features/taxEstimates/profile'
 import { patch } from '@utils/shared/api/authenticatedHttp'
-import { UPSERT_TAX_PROFILE_TAG_KEY, useTaxProfileTriggerSuccess } from '@api/businesses/[business-id]/tax-estimates/profile/post'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { UPSERT_TAX_PROFILE_TAG_KEY, useTaxProfileTriggerSuccess } from '@api/businesses/[business-id]/tax-estimates/profile/post'
 
 export const updateTaxProfile = patch<
   typeof TaxProfileResponseSchema.Encoded,

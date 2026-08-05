@@ -1,7 +1,7 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { ReportControl } from '@schemas/unifiedReports/reportConfig'
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { ReportControl } from '@schemas/features/unifiedReports/reportConfig'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   type AccountNode,

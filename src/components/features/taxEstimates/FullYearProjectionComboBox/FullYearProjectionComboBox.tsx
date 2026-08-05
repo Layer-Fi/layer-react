@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 
 import './fullYearProjectionComboBox.scss'

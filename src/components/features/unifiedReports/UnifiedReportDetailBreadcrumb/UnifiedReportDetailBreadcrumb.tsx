@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
-import type { ReportConfig } from '@schemas/unifiedReports/reportConfig'
-import { useDetailUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import type { ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
+import { useDetailUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Breadcrumb, Breadcrumbs } from '@ui/Breadcrumbs/Breadcrumbs'
 
 type BreadcrumbKey = string | number

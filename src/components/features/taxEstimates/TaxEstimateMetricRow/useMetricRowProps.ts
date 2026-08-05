@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { type TaxOverviewMetricType } from '@schemas/taxEstimates/overview'
+import { type TaxOverviewMetricType } from '@schemas/features/taxEstimates/overview'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 
 const METRIC_ROW_MOBILE_BREAKPOINT = 600

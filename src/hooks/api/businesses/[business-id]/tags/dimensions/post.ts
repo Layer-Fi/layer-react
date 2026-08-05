@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { CreateTagDimensionBodySchema } from '@schemas/tags/createTagDimensionBody'
-import { type TagDimensionSchema } from '@schemas/tags/tagDimension'
+import { CreateTagDimensionBodySchema } from '@schemas/features/tags/createTagDimensionBody'
+import { type TagDimensionSchema } from '@schemas/features/tags/tagDimension'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 
 const CREATE_TAG_DIMENSION_TAG_KEY = '#create-tag-dimension'
 

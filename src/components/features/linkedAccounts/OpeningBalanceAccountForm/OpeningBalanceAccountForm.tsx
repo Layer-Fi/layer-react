@@ -3,7 +3,7 @@ import { endOfDay } from 'date-fns'
 import { CircleCheckBig, Landmark } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/features/bankAccounts/bankAccount'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'

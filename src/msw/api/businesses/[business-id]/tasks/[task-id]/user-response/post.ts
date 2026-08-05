@@ -5,7 +5,7 @@ import {
   BusinessTaskSchema,
   BusinessTaskStatus,
   TaskUserResponseType,
-} from '@schemas/bookkeeping/businessTask'
+} from '@schemas/features/bookkeeping/businessTask'
 
 import { completeTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackTask'

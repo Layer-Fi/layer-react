@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
-import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useBankTransactionsFiltersContext } from '@providers/features/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { SearchField } from '@ui/SearchField/SearchField'
 
 type TransactionsSearchProps = {

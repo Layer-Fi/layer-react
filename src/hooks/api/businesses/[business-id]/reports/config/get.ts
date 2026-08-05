@@ -1,4 +1,4 @@
-import { ReportConfigResponseSchema } from '@schemas/unifiedReports/reportConfig'
+import { ReportConfigResponseSchema } from '@schemas/features/unifiedReports/reportConfig'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

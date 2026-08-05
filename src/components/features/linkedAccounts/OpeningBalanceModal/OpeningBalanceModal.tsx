@@ -3,17 +3,17 @@ import { startOfYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
-import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getActivationDate } from '@utils/features/business/business'
 import { toLocalizedCents } from '@utils/shared/i18n/number/input'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { OpeningBalanceModalContext } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
 import {
   type OpeningBalanceAPIResponseResult,
   type OpeningBalanceData,
   useBulkSetOpeningBalanceAndDate,
 } from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
-import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { OpeningBalanceModalContext } from '@providers/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
 import { Button } from '@ui/Button/Button'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'

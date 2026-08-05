@@ -1,7 +1,7 @@
 import { Landmark, Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

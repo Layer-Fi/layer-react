@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tagDimension'
+import { type TagDimension, TagDimensionSchema } from '@schemas/features/tags/tagDimension'
 
 import { findOrSeedTagDimension } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'

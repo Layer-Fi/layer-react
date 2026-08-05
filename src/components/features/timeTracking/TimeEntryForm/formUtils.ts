@@ -1,8 +1,8 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 import type { TFunction } from 'i18next'
 
-import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
-import { type TimeEntryForm } from '@schemas/timeTracking/timeEntryForm'
+import { type TimeEntry } from '@schemas/features/timeTracking/timeEntry'
+import { type TimeEntryForm } from '@schemas/features/timeTracking/timeEntryForm'
 
 export const getTimeEntryFormDefaultValues = (entry?: TimeEntry): TimeEntryForm => {
   if (entry) {

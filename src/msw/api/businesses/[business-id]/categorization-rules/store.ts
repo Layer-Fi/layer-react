@@ -1,7 +1,7 @@
-import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
+import { type CategorizationRule } from '@schemas/features/categorization/categorizationRule'
 
-import { createMockStore } from '@msw/utils/createMockStore'
 import { categorizationRules } from '@fixtures/categorizationRules/mocks'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const categorizationRuleStore = createMockStore<CategorizationRule>(
   () => Object.values(categorizationRules),

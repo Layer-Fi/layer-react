@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { type TagBankTransactionsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
-import type { TransactionTagEncoded } from '@schemas/tags/transactionTag'
+import { type TagBankTransactionsUpdateEncoded } from '@schemas/features/bankTransactions/tagUpdate'
+import type { TransactionTagEncoded } from '@schemas/features/tags/transactionTag'
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import {
   useBankTransactionsGlobalCacheActions,
 } from '@api/businesses/[business-id]/bank-transactions/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 

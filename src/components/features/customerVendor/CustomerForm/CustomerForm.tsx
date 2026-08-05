@@ -3,7 +3,7 @@ import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customerVendor/customer'
+import { type Customer } from '@schemas/features/customerVendor/customer'
 import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

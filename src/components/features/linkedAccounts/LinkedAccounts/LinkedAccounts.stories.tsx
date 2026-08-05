@@ -2,8 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
-import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
+import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   makeLinkedAccountsStoryControls,

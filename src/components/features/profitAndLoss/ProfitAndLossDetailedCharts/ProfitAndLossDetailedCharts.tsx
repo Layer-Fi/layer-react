@@ -2,11 +2,12 @@ import { useCallback, useContext, useMemo, useState } from 'react'
 import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import type { DetailedChartStringOverrides } from '@internal-types/profitAndLoss'
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { humanizeTitle } from '@utils/features/profitAndLoss/profitAndLoss'
-import { createPnlLineItemComparator, type Scope, type SelectedLineItem, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { createPnlLineItemComparator, type Scope, type SelectedLineItem, type SidebarScope } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { type ColorSelector } from '@ui/Chart/seriesTypes'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -20,12 +21,8 @@ import { isLineItemUncategorized, mapTypesToColors } from '@features/profitAndLo
 import type { ProfitAndLossDetailReportStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 import './profitAndLossDetailedCharts.scss'
-export interface DetailedChartStringOverrides {
-  expenseChartHeader?: string
-  revenueChartHeader?: string
-  revenueToggleLabel?: string
-  expenseToggleLabel?: string
-}
+
+export type { DetailedChartStringOverrides }
 
 export interface ProfitAndLossDetailedChartsSlotProps {
   detailedTable?: {

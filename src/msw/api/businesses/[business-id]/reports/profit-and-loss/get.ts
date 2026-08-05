@@ -1,12 +1,12 @@
 import { endOfMonth, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
-import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/profitAndLoss/profitAndLoss'
+import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/features/profitAndLoss/profitAndLoss'
 
+import { makeProfitAndLossReport } from '@fixtures/profitAndLoss/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { parseDateParam } from '@msw/utils/parseDateParam'
-import { makeProfitAndLossReport } from '@fixtures/profitAndLoss/mocks'
 
 const encodeReport = Schema.encodeSync(ProfitAndLossReportSchema)
 

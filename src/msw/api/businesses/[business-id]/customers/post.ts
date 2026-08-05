@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 
-import { type Customer, CustomerSchema } from '@schemas/customerVendor/customer'
+import { type Customer, CustomerSchema } from '@schemas/features/customerVendor/customer'
 
+import { makeCustomer } from '@fixtures/customers/mocks'
 import { customerFromUpsertRequest } from '@msw/api/businesses/[business-id]/customers/customerFromUpsertRequest'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { createStoreCreateResolver } from '@msw/utils/createStoreResolvers'
-import { makeCustomer } from '@fixtures/customers/mocks'
 
 const encodeCustomer = Schema.encodeSync(CustomerSchema)
 

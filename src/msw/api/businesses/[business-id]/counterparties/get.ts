@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BankTransactionCounterparty, BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
+import { type BankTransactionCounterparty, BankTransactionCounterpartySchema } from '@schemas/features/bankTransactions/base'
 
 import { counterpartyStore } from '@msw/api/businesses/[business-id]/counterparties/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'

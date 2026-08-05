@@ -1,14 +1,14 @@
 import { format, subMonths } from 'date-fns'
 
 import { Alignment, type Pinning } from '@internal-types/utility/table'
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
-import { type ReportConfig, type ReportControl } from '@schemas/unifiedReports/reportConfig'
-import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
+import { type ReportConfig, type ReportControl } from '@schemas/features/unifiedReports/reportConfig'
+import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
-import { parseDateParam } from '@msw/utils/parseDateParam'
 import { type EntryFlow, type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'
+import { parseDateParam } from '@msw/utils/parseDateParam'
 
 // The story business id is not a UUID, so reports return a fixed one instead of echoing the path param.
 export const MOCK_REPORT_BUSINESS_ID = '00000000-0000-4000-8000-000000000201'

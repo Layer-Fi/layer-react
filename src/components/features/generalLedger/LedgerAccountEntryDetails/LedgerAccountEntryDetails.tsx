@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import { LedgerAccountsContext } from '@providers/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
 

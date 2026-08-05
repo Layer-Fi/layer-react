@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { type BookkeepingConfiguration, BookkeepingConfigurationSchema } from '@schemas/bookkeeping/bookkeepingConfiguration'
+import { type BookkeepingConfiguration, BookkeepingConfigurationSchema } from '@schemas/features/bookkeeping/bookkeepingConfiguration'
 
+import { makeBookkeepingConfiguration } from '@fixtures/bookkeeping/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeBookkeepingConfiguration } from '@fixtures/bookkeeping/mocks'
 
 const encodeBookkeepingConfiguration = Schema.encodeSync(BookkeepingConfigurationSchema)
 

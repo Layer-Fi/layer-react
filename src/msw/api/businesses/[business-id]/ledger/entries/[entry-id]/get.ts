@@ -1,11 +1,11 @@
 import { Schema } from 'effect'
 
-import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { type LedgerEntry, LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
 
+import { makeLedgerEntry } from '@fixtures/ledgerEntries/mocks'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeLedgerEntry } from '@fixtures/ledgerEntries/mocks'
 
 const encodeLedgerEntry = Schema.encodeSync(LedgerEntrySchema)
 

@@ -3,13 +3,13 @@ import { uniqBy } from 'lodash-es'
 
 import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
-import { isSplitCategorization } from '@schemas/categorization/categorization'
-import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
-import { makeTagFromTransactionTag } from '@schemas/tags/tag'
+import { isSplitCategorization } from '@schemas/features/categorization/categorization'
+import { makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/features/tags/tag'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import { toLocalizedCents } from '@utils/shared/i18n/number/input'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',

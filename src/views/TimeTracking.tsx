@@ -2,14 +2,15 @@ import { useCallback, useMemo, useState } from 'react'
 import { Briefcase, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
-import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
+import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
+import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/features/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { View } from '@blocks/Layout/View/View'
 import { DataTableHeaderMenu } from '@blocks/Table/DataTable/DataTableHeaderMenu'
 import { ActiveTimeTracker } from '@features/timeTracking/ActiveTimeTracker/ActiveTimeTracker'
 import { TimeEntries } from '@features/timeTracking/TimeEntries/TimeEntries'
+import { TimeTrackingServicesDrawer } from '@features/timeTracking/TimeTrackingServicesDrawer/TimeTrackingServicesDrawer'
 import { TimeTrackingStats } from '@features/timeTracking/TimeTrackingStats/TimeTrackingStats'
 
 export interface TimeTrackingStringOverrides {
@@ -29,7 +30,7 @@ enum TimeTrackingHeaderMenuActions {
 
 export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides }: TimeTrackingProps) => {
   return (
-    <TimeTrackingServicesDrawerProvider>
+    <TimeTrackingServicesDrawerProvider slots={{ Drawer: TimeTrackingServicesDrawer }}>
       <TimeTrackingContent showTitle={showTitle} onReportsClick={onReportsClick} stringOverrides={stringOverrides} />
     </TimeTrackingServicesDrawerProvider>
   )

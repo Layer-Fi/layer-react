@@ -1,7 +1,7 @@
+import { generateAccountsNeedingConfirmation } from '@fixtures/bankAccounts/generator'
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { generateAccountsNeedingConfirmation } from '@fixtures/bankAccounts/generator'
 
 const FIRST_LINK_ACCOUNT_COUNT = 3
 

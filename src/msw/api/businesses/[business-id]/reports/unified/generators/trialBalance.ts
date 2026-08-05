@@ -1,9 +1,9 @@
 import { sumBy } from 'lodash-es'
 
 import { Pinning } from '@internal-types/utility/table'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { type ReportConfig } from '@schemas/unifiedReports/reportConfig'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
 import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {

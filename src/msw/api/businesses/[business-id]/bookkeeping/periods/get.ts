@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BookkeepingPeriod, BookkeepingPeriodsSchema } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { type BookkeepingPeriod, BookkeepingPeriodsSchema } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 
 import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { apiData } from '@msw/utils/apiResponse'

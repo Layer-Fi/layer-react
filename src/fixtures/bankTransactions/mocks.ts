@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
+import { CategorizationStatus, InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
+import { BankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
 
 import { makeBankAccount } from '@fixtures/bankAccounts/mocks'
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'

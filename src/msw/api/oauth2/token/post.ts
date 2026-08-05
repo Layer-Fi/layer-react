@@ -1,7 +1,7 @@
 import { type OAuthResponse } from '@internal-types/authentication'
 
-import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { makeOAuthResponse } from '@fixtures/auth/mocks'
+import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
 export const post = createMockEndpoint<OAuthResponse, OAuthResponse>({
   method: 'post',

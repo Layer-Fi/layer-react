@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Vehicle } from '@schemas/mileage/vehicle'
+import { type Vehicle } from '@schemas/features/mileage/vehicle'
 import { getVehicleDisplayName } from '@utils/features/mileage/vehicles'
 import { usePostReactivateVehicle } from '@api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/reactivate/post'
 import { type ModalProps } from '@ui/Modal/Modal'

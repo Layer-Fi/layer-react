@@ -1,4 +1,4 @@
-import { ClassifierAgent, EntryType } from '@schemas/generalLedger/ledgerEntry'
+import { ClassifierAgent, EntryType } from '@schemas/features/generalLedger/ledgerEntry'
 
 import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'

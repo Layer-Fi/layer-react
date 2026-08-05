@@ -1,4 +1,4 @@
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { invoicePaymentTermsDays } from '@fixtures/invoices/constants'

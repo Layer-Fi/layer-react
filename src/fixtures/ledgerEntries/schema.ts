@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { ClassifierAgent, EntryType, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { ClassifierAgent, EntryType, LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import {

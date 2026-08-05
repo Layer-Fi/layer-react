@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { MatchType } from '@schemas/bankTransactions/match'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
+import { MatchType } from '@schemas/features/bankTransactions/match'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePutMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
-import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
   const { eventCallbacks } = useLayerContext()

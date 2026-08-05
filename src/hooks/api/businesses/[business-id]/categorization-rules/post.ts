@@ -1,12 +1,12 @@
-import { CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
-import { type CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
-import { type PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { CategorizationRuleSchema } from '@schemas/features/categorization/categorizationRule'
+import { type CreateCategorizationRuleSchema } from '@schemas/features/categorization/createCategorizationRule'
+import { type PatchCategorizationRuleSchema } from '@schemas/features/categorization/patchCategorizationRule'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_CATEGORIZATION_RULE_TAG = '#upsert-categorization-rule'
 

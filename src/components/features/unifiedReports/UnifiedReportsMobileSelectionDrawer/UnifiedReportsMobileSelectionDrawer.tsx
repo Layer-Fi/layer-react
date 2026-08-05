@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
-import { useBaseUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { UnifiedReportComboBoxOption } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/unifiedReportComboBoxOption'

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip } from '@schemas/mileage/trip'
+import { type Trip } from '@schemas/features/mileage/trip'
 import type { TablePaginationProps } from '@hooks/utils/pagination/types'
 import { PaginatedMobileList } from '@blocks/MobileList/PaginatedMobileList'
 import { TripsMobileHeader } from '@features/mileage/TripsMobileHeader/TripsMobileHeader'

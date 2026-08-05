@@ -1,4 +1,5 @@
 import { patch } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import {
   UPSERT_INVOICE_TAG_KEY,
@@ -7,7 +8,6 @@ import {
   UpsertInvoiceReturnSchema,
 } from '@api/businesses/[business-id]/invoices/post'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export type UpdateParams = {
   readonly businessId: string

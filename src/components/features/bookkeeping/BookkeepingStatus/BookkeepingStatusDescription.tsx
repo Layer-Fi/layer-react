@@ -1,4 +1,4 @@
-import { type BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { P } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@features/bookkeeping/BookkeepingStatus/useBookkeepingStatusConfig'
 

@@ -3,10 +3,10 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
-import { useUpsertTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
+import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/features/taxEstimates/profile'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import { formValuesToTaxProfile, taxProfileToFormValues, validateTaxProfileForm } from '@features/taxEstimates/TaxProfileForm/formUtils'
 import { type TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/taxProfileFormSchema'
 

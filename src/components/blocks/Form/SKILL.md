@@ -34,7 +34,7 @@ export const useThingForm = ({ onSuccess }: { onSuccess?: (thing: Thing) => void
 }
 ```
 
-- `useAppForm` from `@hooks/features/forms/useForm` is the one to use — it's `useRawAppForm` with
+- `useAppForm` from `@blocks/Form/useForm` is the one to use — it's `useRawAppForm` with
   the field components pre-bound. Plain `useForm` from the same module exists for forms that need
   no field components; prefer `useAppForm`.
 - **Read form state with `useStore(form.store, selector)`**, selecting the narrowest slice
@@ -92,7 +92,7 @@ All of them accept `CommonFormFieldProps`:
 - `showLabel`, `inline`, `showFieldError`, `isReadOnly`, `className`.
 
 Adding a new field type means adding the component to `src/components/blocks/Form/` **and** registering
-it in the `createFormHook` `fieldComponents` map in `@hooks/features/forms/useForm` — it isn't
+it in the `createFormHook` `fieldComponents` map in `@blocks/Form/useForm` — it isn't
 available on `field.` until then.
 
 ## Validation

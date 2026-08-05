@@ -1,6 +1,6 @@
-import { createMockStore } from '@msw/utils/createMockStore'
 import { invoices } from '@fixtures/generated/invoices.gen'
 import { makeInvoice } from '@fixtures/invoices/mocks'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const invoiceStore = createMockStore(() => invoices)
 

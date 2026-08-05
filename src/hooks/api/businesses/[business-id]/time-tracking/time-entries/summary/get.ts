@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking/timeEntrySummary'
+import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/features/timeTracking/timeEntrySummary'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

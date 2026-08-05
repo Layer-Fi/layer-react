@@ -1,5 +1,5 @@
 import { flattenValidationErrors } from '@utils/shared/form/errors'
-import { useFormContext } from '@hooks/features/forms/useForm'
+import { useFormContext } from '@blocks/Form/useForm'
 import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
 
 type InvoiceFormErrorBannerProps = {

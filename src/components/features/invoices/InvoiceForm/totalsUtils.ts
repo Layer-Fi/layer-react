@@ -1,7 +1,7 @@
 import { BigDecimal as BD } from 'effect'
 
 import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
-import type { InvoiceForm, InvoiceFormLineItem } from '@schemas/invoices/invoiceForm'
+import type { InvoiceForm, InvoiceFormLineItem } from '@schemas/features/invoices/invoiceForm'
 import { BIG_DECIMAL_ZERO, roundDecimalToCents } from '@utils/shared/number/bigDecimal'
 
 export function computeSubtotal(lineItems: InvoiceFormLineItem[]): NonRecursiveBigDecimal

@@ -4,10 +4,10 @@ import {
   type BulkMatchOrCategorizeRequest,
   type BulkMatchOrCategorizeRequestEncoded,
   BulkMatchOrCategorizeRequestSchema,
-} from '@schemas/bankTransactions/bulkMatchOrCategorize'
+} from '@schemas/features/bankTransactions/bulkMatchOrCategorize'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 

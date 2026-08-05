@@ -1,5 +1,5 @@
-import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
-import { type TaxProfile } from '@schemas/taxEstimates/profile'
+import { FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
+import { type TaxProfile } from '@schemas/features/taxEstimates/profile'
 
 import { makeTaxScenario } from '@fixtures/taxEstimates/scenario/constants'
 import {

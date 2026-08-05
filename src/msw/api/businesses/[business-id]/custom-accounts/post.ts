@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 
-import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts/customAccount'
+import { type CustomAccount, CustomAccountSchema } from '@schemas/features/customAccounts/customAccount'
 
+import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
 import { customAccountFromCreateRequest } from '@msw/api/businesses/[business-id]/custom-accounts/customAccountFromCreateRequest'
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { createStoreCreateResolver } from '@msw/utils/createStoreResolvers'
-import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
 
 const encodeCustomAccount = Schema.encodeSync(CustomAccountSchema)
 

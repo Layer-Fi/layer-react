@@ -1,4 +1,4 @@
-import { useDetailUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useDetailUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { UnifiedReportBaseHeader } from '@features/unifiedReports/UnifiedReportBaseHeader/UnifiedReportBaseHeader'
 import { UnifiedReportDetailHeader } from '@features/unifiedReports/UnifiedReportDetailHeader/UnifiedReportDetailHeader'
 import { type UnifiedReportNavigationVariant } from '@features/unifiedReports/UnifiedReports/UnifiedReports'

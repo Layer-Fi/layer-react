@@ -2,10 +2,10 @@ import { getYear } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
 import { Pinning } from '@internal-types/utility/table'
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { type ReportConfig } from '@schemas/unifiedReports/reportConfig'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   type AccountNode,

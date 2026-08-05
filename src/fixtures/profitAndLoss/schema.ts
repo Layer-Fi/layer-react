@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { ProfitAndLossSummarySchema } from '@schemas/profitAndLoss/profitAndLossSummaries'
+import { ProfitAndLossSummarySchema } from '@schemas/features/profitAndLoss/profitAndLossSummaries'
 
 import {
   categorizedTransactionsArbitrary,

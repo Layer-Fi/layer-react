@@ -1,11 +1,11 @@
 import { pick } from 'lodash-es'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { MatchType } from '@schemas/bankTransactions/match'
-import { type MatchDetailsType } from '@schemas/bankTransactions/matchDetails'
-import { type AccountCategorizationSchema } from '@schemas/categorization/categorization'
+import { CategorizationStatus, InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { MatchType } from '@schemas/features/bankTransactions/match'
+import { type MatchDetailsType } from '@schemas/features/bankTransactions/matchDetails'
+import { type AccountCategorizationSchema } from '@schemas/features/categorization/categorization'
 
 import {
   type BankTransactionCategory,

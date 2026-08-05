@@ -3,11 +3,11 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { FinalizeInvoiceBodySchema } from '@schemas/invoices/finalizeInvoice'
-import type { Invoice } from '@schemas/invoices/invoice'
-import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
+import { FinalizeInvoiceBodySchema } from '@schemas/features/invoices/finalizeInvoice'
+import type { Invoice } from '@schemas/features/invoices/invoice'
+import type { InvoicePaymentMethod } from '@schemas/features/invoices/invoicePaymentMethod'
 import { usePutFinalizeInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/finalize-invoice/put'
-import { useAppForm } from '@hooks/features/forms/useForm'
+import { useAppForm } from '@blocks/Form/useForm'
 import {
   convertInvoiceFinalizeFormToParams,
   getInvoiceFinalizeFormDefaultValues,

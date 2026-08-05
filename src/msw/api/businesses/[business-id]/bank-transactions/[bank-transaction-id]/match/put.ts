@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type Match, MatchSchema } from '@schemas/bankTransactions/match'
-import { ConfirmMatchUpdateSchema } from '@schemas/bankTransactions/matchUpdate'
+import { type Match, MatchSchema } from '@schemas/features/bankTransactions/match'
+import { ConfirmMatchUpdateSchema } from '@schemas/features/bankTransactions/matchUpdate'
 
 import { applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyConfirmedMatch'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'

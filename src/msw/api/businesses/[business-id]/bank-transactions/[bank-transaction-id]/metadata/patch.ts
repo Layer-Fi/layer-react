@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bankTransactions'
-import { BankTransactionMetadataUpdateSchema } from '@schemas/bankTransactions/metadataUpdate'
+import { BankTransactionMetadataUpdateSchema } from '@schemas/features/bankTransactions/metadataUpdate'
 
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'

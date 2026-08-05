@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TaxProfile, TaxProfileRequestSchema, TaxProfileSchema } from '@schemas/taxEstimates/profile'
+import { type TaxProfile, TaxProfileRequestSchema, TaxProfileSchema } from '@schemas/features/taxEstimates/profile'
 
 import { getTaxProfile, saveTaxProfile } from '@msw/api/businesses/[business-id]/tax-estimates/profile/store'
 import { apiData } from '@msw/utils/apiResponse'

@@ -1,8 +1,9 @@
 import { subDays, subMonths } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
+import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {
   lineItemTreeReport,
@@ -15,7 +16,6 @@ import {
   resolvePeriods,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import { type ReportDateRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const OPENING_CASH_CENTS = 2_500_000
 

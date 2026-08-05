@@ -3,10 +3,10 @@ import { type Decorator } from '@storybook/react-vite'
 import { type DateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 
-import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
-import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
+import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
+import { handlers } from '@msw/handlers'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 export const PROFIT_AND_LOSS_PINNED_RANGE: DateRange = {

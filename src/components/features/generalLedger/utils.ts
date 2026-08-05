@@ -1,4 +1,4 @@
-import type { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
+import type { NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
 
 export const flattenAccounts = (
   accounts: readonly NestedLedgerAccountType[],

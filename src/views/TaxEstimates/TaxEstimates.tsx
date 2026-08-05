@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { TaxEstimatesContextProvider, type TaxEstimatesContextProviderProps } from '@providers/features/taxEstimates/TaxEstimatesContext/TaxEstimatesContextProvider'
+import { TaxEstimatesRouteStoreProvider } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
-import { TaxEstimatesContextProvider, type TaxEstimatesContextProviderProps } from '@providers/taxEstimates/TaxEstimatesContext/TaxEstimatesContextProvider'
-import { TaxEstimatesRouteStoreProvider } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { View } from '@blocks/Layout/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'

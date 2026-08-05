@@ -3,13 +3,14 @@ import classNames from 'classnames'
 import { FieldErrorContext } from 'react-aria-components/FieldError'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formField.scss'
+
+import { useFieldContext } from './formContexts'
 
 const FORM_FIELD_CLASS_NAME = 'Layer__FormField'
 const FIELD_ERROR_CLASS_NAME = 'Layer__UI__FieldError'

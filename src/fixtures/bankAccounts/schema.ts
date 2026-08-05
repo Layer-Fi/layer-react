@@ -1,10 +1,10 @@
 import { Arbitrary, Schema } from 'effect'
 
+import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 import {
   BalanceTimestampSchema,
   BankAccountSchema,
-} from '@schemas/bankAccounts/bankAccount'
-import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
+} from '@schemas/features/bankAccounts/bankAccount'
 
 import {
   accountNameKindArbitrary,

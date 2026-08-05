@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type UnifiedReportEncoded, UnifiedReportSchema } from '@schemas/unifiedReports/unifiedReport'
+import { type UnifiedReportEncoded, UnifiedReportSchema } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   extractReportRoute,

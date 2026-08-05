@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import type { USStateCode } from '@internal-types/location'
 import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
-import type { FilingStatus } from '@schemas/taxEstimates/filingStatus'
+import type { FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
 
 const WithholdingFormSchema = Schema.Struct({
   useCustomWithholding: Schema.NullishOr(Schema.Boolean),

@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'

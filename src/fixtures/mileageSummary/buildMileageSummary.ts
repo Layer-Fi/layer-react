@@ -1,7 +1,7 @@
 import { BigDecimal } from 'effect'
 
-import { type MileageMonth, type MileageSummary, type MileageYear } from '@schemas/mileage/mileage'
-import { type Trip, TripPurpose } from '@schemas/mileage/trip'
+import { type MileageMonth, type MileageSummary, type MileageYear } from '@schemas/features/mileage/mileage'
+import { type Trip, TripPurpose } from '@schemas/features/mileage/trip'
 
 // Monetary fields (estimated_deduction, deduction_rate) are in cents, matching
 // the API - the UI formats them with formatCurrencyFromCents.

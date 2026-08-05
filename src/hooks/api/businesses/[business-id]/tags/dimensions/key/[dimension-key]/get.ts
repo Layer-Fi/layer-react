@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { TagDimensionSchema } from '@schemas/tags/tagDimension'
+import { TagDimensionSchema } from '@schemas/features/tags/tagDimension'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

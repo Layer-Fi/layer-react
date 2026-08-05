@@ -1,4 +1,4 @@
-import { type Customer } from '@schemas/customerVendor/customer'
+import { type Customer } from '@schemas/features/customerVendor/customer'
 import { getCustomerName } from '@utils/features/customerVendor/customer'
 
 export class CustomerAsOption {

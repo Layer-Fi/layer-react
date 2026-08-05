@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { Invoice } from '@schemas/invoices/invoice'
+import type { Invoice } from '@schemas/features/invoices/invoice'
 import { usePostVoidInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/void/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'

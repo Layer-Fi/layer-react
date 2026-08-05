@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { type Match } from '@schemas/bankTransactions/match'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
+import { type Match } from '@schemas/features/bankTransactions/match'
 
 import { MATCH_TYPE_BY_DETAILS_TYPE, toMatchDetailsId } from '@fixtures/bankTransactions/derive'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'

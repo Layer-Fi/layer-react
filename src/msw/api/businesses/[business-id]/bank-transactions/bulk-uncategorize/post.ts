@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { BulkUncategorizeRequestSchema } from '@schemas/bankTransactions/bulkUncategorize'
+import { BulkUncategorizeRequestSchema } from '@schemas/features/bankTransactions/bulkUncategorize'
 
 import { applyUncategorize } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'

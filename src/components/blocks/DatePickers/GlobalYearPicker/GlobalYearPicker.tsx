@@ -2,9 +2,9 @@ import { useCallback, useMemo } from 'react'
 import { getYear } from 'date-fns'
 
 import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
-import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { YearPicker } from '@ui/DatePickers/YearPicker/YearPicker'
+import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
 type GlobalYearPickerProps = {
   showLabel?: boolean

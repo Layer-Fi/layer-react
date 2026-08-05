@@ -1,7 +1,7 @@
 import { type Row } from '@tanstack/react-table'
 
 import { Pinning } from '@internal-types/utility/table'
-import { type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 import { asMutable } from '@utils/shared/array/asMutable'
 import { type ColumnNode, type GroupColumn, type LeafColumn } from '@blocks/Table/DataTable/utils/column/nesting'
 import { type ColumnPinningSide } from '@blocks/Table/DataTable/utils/column/pinning'

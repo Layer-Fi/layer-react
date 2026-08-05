@@ -1,5 +1,5 @@
-import type { BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
-import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
+import { BaseComboBoxOption } from '@internal-types/utility/comboBoxOption'
+import type { BankTransactionTaxOption } from '@schemas/features/bankTransactions/bankTransaction'
 
 export const NO_TAX_CODE = '__no_tax_code__'
 

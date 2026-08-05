@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
-import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
+import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/features/categorization/categorizationRule'
+import { BankDirectionFilter } from '@schemas/features/categorization/categorizationRuleFilters'
 
 import { categorizationRuleStore } from '@msw/api/businesses/[business-id]/categorization-rules/store'
 import { findAccountByIdentifier } from '@msw/api/businesses/[business-id]/ledger/accounts/store'

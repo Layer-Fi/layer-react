@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { ProfitAndLossSummariesSchema, type ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLossSummaries'
+import { ProfitAndLossSummariesSchema, type ProfitAndLossSummary } from '@schemas/features/profitAndLoss/profitAndLossSummaries'
 
+import { makeProfitAndLossSummaries } from '@fixtures/profitAndLoss/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeProfitAndLossSummaries } from '@fixtures/profitAndLoss/mocks'
 
 const encodeSummaries = Schema.encodeSync(ProfitAndLossSummariesSchema)
 

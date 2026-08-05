@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type StopTrackerEncoded } from '@schemas/timeTracking/tracker'
+import { type StopTrackerEncoded } from '@schemas/features/timeTracking/tracker'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'
 import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const STOP_TIME_TRACKER_TAG_KEY = '#stop-time-tracker'
 

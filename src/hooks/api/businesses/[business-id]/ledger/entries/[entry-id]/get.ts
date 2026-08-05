@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

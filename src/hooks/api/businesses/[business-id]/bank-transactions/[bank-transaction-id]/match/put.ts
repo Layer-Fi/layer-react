@@ -1,6 +1,6 @@
-import { MatchSchema } from '@schemas/bankTransactions/match'
-import { type ConfirmMatchUpdateEncoded } from '@schemas/bankTransactions/matchUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { MatchSchema } from '@schemas/features/bankTransactions/match'
+import { type ConfirmMatchUpdateEncoded } from '@schemas/features/bankTransactions/matchUpdate'
 import { put } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

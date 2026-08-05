@@ -1,7 +1,8 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
 
+import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 import {
   accountActivityCents,
   accountStreamKey,
@@ -14,7 +15,6 @@ import {
   entryStreamOptionsFromParams,
   type ReportDateRange,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const BALANCE_SHEET_TYPES = [LedgerAccountType.Asset, LedgerAccountType.Liability, LedgerAccountType.Equity] as const
 

@@ -1,9 +1,13 @@
 import { sumBy } from 'lodash-es'
 
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { type LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
+import {
+  entriesInRange,
+  type MockReportEntry,
+} from '@fixtures/unifiedReports/deterministicAmounts'
 import {
   groupByParentAccountId,
   ledgerAccountStore,
@@ -17,10 +21,6 @@ import {
   type ReportDateRange,
   textCell,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import {
-  entriesInRange,
-  type MockReportEntry,
-} from '@fixtures/unifiedReports/deterministicAmounts'
 
 export const accountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
   ledgerAccountStore.all().filter(account => types.includes(account.accountType.value))

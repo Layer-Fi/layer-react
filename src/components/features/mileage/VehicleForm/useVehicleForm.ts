@@ -3,14 +3,14 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { UpsertVehicleSchema } from '@schemas/mileage/upsertVehicle'
-import { type Vehicle } from '@schemas/mileage/vehicle'
-import { type VehicleForm } from '@schemas/mileage/vehicleForm'
+import { UpsertVehicleSchema } from '@schemas/features/mileage/upsertVehicle'
+import { type Vehicle } from '@schemas/features/mileage/vehicle'
+import { type VehicleForm } from '@schemas/features/mileage/vehicleForm'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
-import { useUpsertVehicle } from '@api/businesses/[business-id]/mileage/vehicles/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertVehicle } from '@api/businesses/[business-id]/mileage/vehicles/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import {
   convertVehicleFormToUpsertVehicle,
   getVehicleFormDefaultValues,

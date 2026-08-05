@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 import { Stack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
+
+import { useFieldContext } from './formContexts'
 
 type YesNoValue = 'yes' | 'no'
 

@@ -1,0 +1,241 @@
+import { type ComponentType, type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+
+import {
+  type ColorConfig,
+  type ColorsPaletteOption,
+  type LayerContextAction,
+  LayerContextActionName as Action,
+  type LayerContextValues,
+  type LayerThemeConfig,
+} from '@internal-types/layerContext'
+import { type ToastData } from '@internal-types/toast'
+import { type LayerEvent } from '@schemas/common/layerEvents'
+import { errorHandler, type LayerError } from '@utils/shared/api/errorHandler'
+import { buildColorsPalette } from '@utils/shared/styles/colors'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerContext } from '@providers/global/LayerContext/LayerContext'
+import { type LayerProviderProps } from '@providers/global/LayerContext/layerProviderProps'
+import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
+import { useGetBusiness } from '@api/businesses/[business-id]/get'
+import { BankAccountsProvider } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { BookkeepingStatusProvider } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
+
+const reducer: Reducer<LayerContextValues, LayerContextAction> = (
+  state,
+  action,
+) => {
+  switch (action.type) {
+    case Action.setBusiness:
+    case Action.setTheme:
+    case Action.setColors:
+      return { ...state, ...action.payload }
+    case Action.setToast:
+      return {
+        ...state,
+        toasts: [
+          ...state.toasts,
+          { ...action.payload.toast, isExiting: false },
+        ],
+      }
+    case Action.setToastExit:
+      return {
+        ...state,
+        toasts: state.toasts.map(toast =>
+          toast.id === action.payload.toast.id
+            ? { ...toast, isExiting: true }
+            : toast,
+        ),
+      }
+    case Action.removeToast:
+      return {
+        ...state,
+        toasts: state.toasts.filter(t => t.id !== action.payload.toast.id),
+      }
+    default:
+      return state
+  }
+}
+
+type BusinessProviderProps = PropsWithChildren<
+  Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
+  // Injected so the provider does not depend on the design system to render toasts.
+  & { slots?: { Toasts?: ComponentType } }
+>
+
+export const BusinessProvider = ({
+  businessId,
+  children,
+  theme,
+  onError,
+  eventCallbacks,
+  slots: { Toasts } = {},
+}: PropsWithChildren<BusinessProviderProps>) => {
+  errorHandler.setOnError(onError)
+
+  const colors = buildColorsPalette(theme)
+
+  // Store latest callbacks in ref to prevent unnecessary re-renders
+  const eventCallbacksRef = useRef(eventCallbacks)
+
+  useEffect(() => {
+    eventCallbacksRef.current = eventCallbacks
+  }, [eventCallbacks])
+
+  // Create stable callback wrappers that always call the latest version
+  const stableEventCallbacks = useMemo(() => ({
+    onEvent: (event: LayerEvent) => {
+      eventCallbacksRef.current?.onEvent?.(event)
+    },
+    onTransactionCategorized: () => {
+      eventCallbacksRef.current?.onTransactionCategorized?.()
+    },
+    onTransactionsFetched: () => {
+      eventCallbacksRef.current?.onTransactionsFetched?.()
+    },
+  }), [])
+
+  const [state, dispatch] = useReducer(reducer, {
+    businessId,
+    business: undefined,
+    theme,
+    colors,
+    onboardingStep: undefined,
+    toasts: [],
+    eventCallbacks: {},
+  })
+
+  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const { setDateRange } = useGlobalDateRangeActions()
+
+  const dateRange = useMemo(() => ({
+    range: globalDateRange,
+    setRange: setDateRange,
+  }), [globalDateRange, setDateRange])
+
+  const { data: businessData } = useGetBusiness({ businessId })
+
+  useEffect(() => {
+    if (!businessData) return
+
+    dispatch({
+      type: Action.setBusiness,
+      payload: { business: businessData.data },
+    })
+  }, [businessData])
+
+  const setTheme = (theme: LayerThemeConfig) => {
+    dispatch({
+      type: Action.setTheme,
+      payload: { theme },
+    })
+
+    dispatch({
+      type: Action.setColors,
+      payload: { colors: buildColorsPalette(theme) },
+    })
+  }
+
+  const setLightColor = (color?: ColorConfig) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        light: color,
+      },
+    })
+  }
+
+  const setDarkColor = (color?: ColorConfig) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        dark: color,
+      },
+    })
+  }
+
+  const setTextColor = (color?: ColorConfig) => {
+    setTheme({
+      ...(state.theme ?? {}),
+      colors: {
+        ...(state.theme?.colors ?? {}),
+        text: color,
+      },
+    })
+  }
+
+  const setToast = (toast: ToastData) => {
+    dispatch({ type: Action.setToast, payload: { toast: toast } })
+  }
+
+  const removeToast = (toast: ToastData) => {
+    dispatch({ type: Action.removeToast, payload: { toast: toast } })
+  }
+
+  const setToastExit = (toast: ToastData) => {
+    dispatch({ type: Action.setToastExit, payload: { toast: toast } })
+  }
+
+  const addToast = (toast: ToastData) => {
+    const id = `${Date.now()}-${Math.random()}`
+    const newToast = { id, isExiting: false, ...toast }
+
+    setToast(newToast)
+
+    setTimeout(() => {
+      setToastExit(newToast)
+      setTimeout(() => {
+        removeToast(newToast)
+      }, 1000)
+    }, toast.duration || 3000)
+  }
+
+  const setColors = (colors?: { dark?: ColorConfig, light?: ColorConfig }) =>
+    setTheme({
+      ...(state.theme ?? {}),
+      colors,
+    })
+
+  const getColor = (shade: number): ColorsPaletteOption | undefined => {
+    if (state.colors && shade in state.colors) {
+      return state.colors[shade]
+    }
+
+    return
+  }
+
+  const { data: accountingConfiguration } = useGetAccountingConfiguration({ businessId })
+
+  // Deprecated no-op: onboardingStep no longer drives any UI now that the
+  // Onboarding component has been removed.
+  const setOnboardingStep = useCallback(() => {}, [])
+
+  return (
+    <LayerContext.Provider
+      value={{
+        ...state,
+        setTheme,
+        getColor,
+        setLightColor,
+        setDarkColor,
+        setTextColor,
+        setColors,
+        setOnboardingStep,
+        addToast,
+        removeToast,
+        onError: (payload: LayerError) => errorHandler.onError(payload),
+        eventCallbacks: stableEventCallbacks,
+        accountingConfiguration,
+        dateRange,
+      }}
+    >
+      <BookkeepingStatusProvider>
+        <BankAccountsProvider>
+          {children}
+        </BankAccountsProvider>
+      </BookkeepingStatusProvider>
+      {Toasts ? <Toasts /> : null}
+    </LayerContext.Provider>
+  )
+}

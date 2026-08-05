@@ -51,12 +51,12 @@ release process.
 
 | Path | Alias | Contains |
 | --- | --- | --- |
-| `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
+| `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract, split into `features/<domain>/` and `common/` |
 | `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
 | `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
-| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
+| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, split into `features/<domain>/`, `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
 | `src/components/ui` | `@ui/*` | design-system primitives (domain-agnostic) |
 | `src/components/blocks` | `@blocks/*` | composed patterns: tables, cards, wizards (domain-agnostic) |
 | `src/components/features/<domain>` | `@features/*` | feature UI, one directory per domain object; fetches its own data |
@@ -67,13 +67,60 @@ release process.
 | `src/fixtures` | `@fixtures/*` | fixture factories, generators, and committed `generated/*.gen.ts` |
 | `src/test-utils` | `@test-utils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
 
-Dependencies point one way: views → features → blocks → ui. A `@ui` component never imports a
-schema, a fetching hook, or a feature.
+## Import boundaries
 
-`features/<domain>` reuses the domain names of `src/hooks/features/*` and `src/schemas/*`, so one
-name locates a domain's components, hooks, and contracts. Domains are being migrated into
-`features/` one PR at a time — directories still directly under `src/components/` are un-migrated,
-not a second convention.
+Both axes are lint-enforced from one table at the top of `eslint.config.mjs`. Nothing here is
+advisory — a violation fails `npm run lint`.
+
+**Vertically**, code sits in a tier and may import strictly lower tiers only:
+
+| # | Tier | Holds |
+| --- | --- | --- |
+| 1 | foundation | `@internal-types` `@schemas` `@utils` `@icons` `@assets` |
+| 2 | context | `@providers/global` `@providers/common` — DI inputs, no fetching |
+| 3 | generic hooks | `@hooks/utils` — the SWR substrate `@api` is built on |
+| 4 | transport | `@api` — one file per endpoint |
+| 5 | stores | `@providers/features` and `@hooks/legacy` |
+| 6 | feature hooks | `@hooks/features` |
+| 7–9 | design system | `@components/utility` → `@ui` → `@blocks` |
+| 10–11 | feature UI | `@features` → `@views` |
+| 12 | app root | `LayerProvider` and `src/index.tsx` — composes everything |
+
+Two placements are worth knowing because they read backwards at first. **Context sits below
+`@hooks/utils`** because `useAuth` and `useBuildKeyInputs` read `LayerContext`, and every `@api`
+hook is built on those factories — putting DI inputs at the bottom is what makes the data layer
+orderable at all. **Stores sit below feature hooks**: the dependency runs
+`@hooks/features → @providers` about 38 times against 7 the other way, so a provider that needs a
+value a feature hook computes takes it as a prop instead.
+
+`src/hooks/legacy` is exempt from its own outbound checks — it predates the tiers and is being
+deleted. Lower tiers still cannot import it. Don't add files there.
+
+**Horizontally**, a domain may import itself plus a declared shared set, and nothing else:
+
+| Partition | Shared domains |
+| --- | --- |
+| `src/schemas/features` | `customerVendor` `tags` `business` `generalLedger` `bankTransactions` |
+| `src/components/features` | `reports` `customerVendor` `tags` `customAccounts` `bookkeeping` `generalLedger` |
+| `src/hooks/features` | `forms` `calendly` `business` |
+| `src/providers/features` | `business` `bankAccounts` `bookkeeping` |
+| `src/utils/features` | — |
+
+`bankTransactions` and `categorization` count as one boundary; they are one feature.
+
+To let a new cross-domain import through, either move the shared code down a tier or add the
+target to that partition's shared set — both are deliberate edits to the table, which is the
+point. Domain lists are read from disk, so the rules cannot drift from the tree.
+
+Tests and stories (`*.test.*`, `*.stories.tsx`) are exempt from both axes: the boundaries protect
+the shipped artifact, and `tsconfig.build.json` excludes exactly those files. The reverse rule
+still holds — production source may not import `@msw`, `@fixtures`, `@test-utils` or `*.stories*`.
+`src/fixtures` may reach only the foundation; `src/msw` adds `@fixtures`.
+
+`features/<domain>` reuses the domain names of `src/hooks/features/*`, `src/providers/features/*`
+and `src/schemas/features/*`, so one name locates a domain's components, hooks, stores, and
+contracts. Directories still directly under `src/components/` are un-migrated, not a second
+convention.
 
 ## Non-negotiables
 
@@ -123,12 +170,12 @@ Each of these has broken something before:
   `isLocalized` at its default.
 - **`src/msw` may not value-import `@api/*` or `@hooks/*`** — handlers load before per-test mocks
   apply and would break unrelated suites. Share contracts via `@schemas`.
-- **`@api/**` may not import UI or feature code** (`@components`, `@ui`, `@blocks`, `@views`,
-  `@icons`, `@assets`, `@hooks/features`, `@hooks/legacy`) and may not read `@providers`
-  at runtime. Wrap the hook in `@hooks/features/**` instead.
+- **Import boundaries are lint-enforced on both axes** — tiers and feature domains. See
+  [Import boundaries](#import-boundaries); the table lives at the top of `eslint.config.mjs`.
 - **Every `@api` method file needs an MSW handler** at the mirrored path in `src/msw/api`;
   `npm run msw:check-coverage` enforces it in CI.
 - **Production source may not import** `@msw/*`, `@fixtures/*`, `@test-utils/*`, or `*.stories*`.
+  Tests and stories are exempt from the tier and domain rules, but not from this one.
 - **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
   Chromatic's per-width iframe resizing.
 - **Every story is a Chromatic snapshot.** Pack primitive variants into one gallery story
@@ -175,12 +222,19 @@ Reach for these before writing your own:
 
 Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
-`@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`.
+`@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`. Adding one means editing `tsconfig.json`
+and the alias table in `eslint.config.mjs` — the latter feeds the sort order and the
+`no-relative-parent-imports` ignore list, so a missed entry breaks every import through it.
 
-`simple-import-sort` enforces dependency-layer order: react → external →
-(`@internal-types`, `@schemas`) → `@utils` → `@api` → `@hooks` → `@providers` →
-(`@icons`, `@ui`, `@blocks`) → (`@components`, `@features`, `@views`) → `@assets` →
-(`@msw`, `@fixtures`, `@test-utils`) → styles.
+`simple-import-sort` enforces tier order, lowest tier first, so an import block reads bottom-up
+through the dependency stack: react → external → foundation (`@internal-types`, `@schemas`,
+`@utils`, `@icons`, `@assets`) → context (`@providers/global`, `@providers/common`) →
+`@hooks/utils` → `@api` → `@providers/features` → `@hooks/features` → design system
+(`@components/utility`, `@ui`, `@blocks`) → (`@features`, `@views`) →
+(`@fixtures`, `@msw`, `@test-utils`) → styles.
+
+The group list is generated from the same alias table that drives the boundary rules, so the two
+cannot drift. Run `lint:fix`; never sort by hand.
 
 Type imports are inline-style and enforced: `import { type Foo } from '…'`.
 

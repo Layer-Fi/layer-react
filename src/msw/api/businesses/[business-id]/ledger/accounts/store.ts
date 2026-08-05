@@ -1,12 +1,12 @@
 import type { AccountIdentifier } from '@schemas/common/accountIdentifier'
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
 import { accountIdentifierIsForCategory } from '@utils/features/categorization/categories'
 
+import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
+import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { createMockStore } from '@msw/utils/createMockStore'
-import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
-import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 
 export const ledgerAccountStore = createMockStore(
   () => chartOfAccounts,

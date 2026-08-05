@@ -1,11 +1,11 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/invoices/customerRefund'
-import { type Invoice } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/features/invoices/customerRefund'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REFUND_INVOICE_TAG_KEY = '#refund-invoice'
 

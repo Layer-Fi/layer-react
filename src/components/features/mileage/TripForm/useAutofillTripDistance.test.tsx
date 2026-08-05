@@ -3,10 +3,10 @@ import { BigDecimal as BD } from 'effect'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
-import type { Trip } from '@schemas/mileage/trip'
-import type { TripForm, TripPlace } from '@schemas/mileage/tripForm'
+import type { Trip } from '@schemas/features/mileage/trip'
+import type { TripForm, TripPlace } from '@schemas/features/mileage/tripForm'
 import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
-import { useAppForm } from '@hooks/features/forms/useForm'
+import { useAppForm } from '@blocks/Form/useForm'
 import { getTripFormDefaultValues } from '@features/mileage/TripForm/formUtils'
 import { useAutofillTripDistance } from '@features/mileage/TripForm/useAutofillTripDistance'
 

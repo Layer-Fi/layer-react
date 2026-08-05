@@ -1,14 +1,14 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
+import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
-import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 
-import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
-import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { handlers } from '@msw/handlers'
 import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { BulkMatchOrCategorizeRequestSchema } from '@schemas/bankTransactions/bulkMatchOrCategorize'
+import { BulkMatchOrCategorizeRequestSchema } from '@schemas/features/bankTransactions/bulkMatchOrCategorize'
 
 import { applyCategoryUpdate } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyConfirmedMatch'

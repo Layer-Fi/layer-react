@@ -1,9 +1,9 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type UpsertVehicleEncoded } from '@schemas/mileage/upsertVehicle'
-import { VehicleSchema } from '@schemas/mileage/vehicle'
+import { type UpsertVehicleEncoded } from '@schemas/features/mileage/upsertVehicle'
+import { VehicleSchema } from '@schemas/features/mileage/vehicle'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 
 export const UPSERT_VEHICLE_TAG_KEY = '#upsert-vehicle'
 

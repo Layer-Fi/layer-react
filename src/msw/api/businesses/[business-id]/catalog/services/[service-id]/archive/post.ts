@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { type CatalogService, CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
+import { type CatalogService, CatalogServiceSchema } from '@schemas/features/timeTracking/catalogService'
 
+import { makeCatalogService } from '@fixtures/catalogServices/mocks'
 import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/services/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { createStoreTransformResolver } from '@msw/utils/createStoreResolvers'
-import { makeCatalogService } from '@fixtures/catalogServices/mocks'
 
 const encodeCatalogService = Schema.encodeSync(CatalogServiceSchema)
 

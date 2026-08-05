@@ -1,49 +1,17 @@
 import { useMemo } from 'react'
-import { endOfYesterday, startOfToday } from 'date-fns'
 import type { TFunction } from 'i18next'
 import { CircleAlert, CircleCheckBig, File, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Invoice } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { INVOICE_STATUS_CONFIG, type InvoiceStatusOption } from '@utils/features/invoices/invoiceStatus'
 import { tPlural } from '@utils/shared/i18n/plural'
-import { translationKey } from '@utils/shared/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { getDueDifference } from '@utils/shared/time/timeUtils'
-import { type ListInvoicesFilterParams } from '@api/businesses/[business-id]/invoices/get'
-import { type InvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { BadgeVariant } from '@ui/Badge/Badge'
 
-export enum InvoiceStatusFilter {
-  All = 'All',
-  Draft = 'Draft',
-  Unpaid = 'Unpaid',
-  Overdue = 'Overdue',
-  Saved = 'Saved',
-  Paid = 'Paid',
-  WrittenOff = 'Written Off',
-  Voided = 'Voided',
-  Refunded = 'Refunded',
-}
-
-export type InvoiceStatusOption = {
-  label: string
-  value: InvoiceStatusFilter
-}
-
-export const ALL_OPTION: InvoiceStatusOption = { value: InvoiceStatusFilter.All, label: 'All' }
-
-const INVOICE_STATUS_CONFIG = [
-  { value: InvoiceStatusFilter.All, ...translationKey('common:label.all', 'All') },
-  { value: InvoiceStatusFilter.Draft, ...translationKey('invoices:state.draft', 'Draft') },
-  { value: InvoiceStatusFilter.Unpaid, ...translationKey('invoices:state.unpaid', 'Unpaid') },
-  { value: InvoiceStatusFilter.Overdue, ...translationKey('invoices:state.overdue', 'Overdue') },
-  { value: InvoiceStatusFilter.Saved, ...translationKey('invoices:state.saved', 'Saved') },
-  { value: InvoiceStatusFilter.Paid, ...translationKey('invoices:state.paid', 'Paid') },
-  { value: InvoiceStatusFilter.Voided, ...translationKey('invoices:state.voided', 'Voided') },
-  { value: InvoiceStatusFilter.Refunded, ...translationKey('invoices:state.refunded', 'Refunded') },
-  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('invoices:state.written_off', 'Written Off') },
-]
+export { ALL_OPTION, INVOICE_STATUS_CONFIG, InvoiceStatusFilter, type InvoiceStatusOption } from '@utils/features/invoices/invoiceStatus'
 
 export const useInvoiceStatusOptions = (): InvoiceStatusOption[] => {
   const { t } = useTranslation()
@@ -57,51 +25,8 @@ export const useInvoiceStatusOptions = (): InvoiceStatusOption[] => {
   )
 }
 
-const UNPAID_STATUSES = [InvoiceStatus.Saved, InvoiceStatus.PartiallyPaid]
-
-export const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {
-  switch (statusFilter) {
-    case InvoiceStatusFilter.All:
-      return {}
-
-    case InvoiceStatusFilter.Draft:
-      return { status: [InvoiceStatus.Draft] }
-
-    case InvoiceStatusFilter.Unpaid:
-      return { status: UNPAID_STATUSES }
-
-    case InvoiceStatusFilter.Overdue:
-      return { status: UNPAID_STATUSES, dueAtEnd: endOfYesterday() }
-
-    case InvoiceStatusFilter.Saved:
-      return { status: UNPAID_STATUSES, dueAtStart: startOfToday() }
-
-    case InvoiceStatusFilter.Paid:
-      return { status: [InvoiceStatus.Paid, InvoiceStatus.PartiallyWrittenOff] }
-
-    case InvoiceStatusFilter.WrittenOff:
-      return { status: [InvoiceStatus.WrittenOff, InvoiceStatus.PartiallyWrittenOff] }
-
-    case InvoiceStatusFilter.Voided:
-      return { status: [InvoiceStatus.Voided] }
-
-    case InvoiceStatusFilter.Refunded:
-      return { status: [InvoiceStatus.Refunded] }
-
-    default:
-      unsafeAssertUnreachable({
-        value: statusFilter,
-        message: 'Unexpected status filter',
-      })
-  }
-}
-
-export const getListInvoiceParamsFromFilters = (
-  { showSalesReceipts, status, query }: InvoiceTableFilters,
-): ListInvoicesFilterParams => {
-  const statusFilterParams = getStatusFilterParams(status.value)
-  return { ...statusFilterParams, showSalesReceipts, query }
-}
+export { getListInvoiceParamsFromFilters } from '@providers/features/invoices/InvoicesRouteStore/listInvoiceParams'
+export { getStatusFilterParams } from '@utils/features/invoices/invoiceStatus'
 
 export interface InvoiceStatusDisplay {
   variant: BadgeVariant

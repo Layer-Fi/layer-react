@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import type { CategorizationRule } from '@schemas/categorization/categorizationRule'
+import type { CategorizationRule } from '@schemas/features/categorization/categorizationRule'
 import { amountRangeInOrder } from '@utils/shared/form/validators'
-import { useUpsertCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import {
   type CategorizationRuleFormState,
   type CategorizationRuleFormValues,

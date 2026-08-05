@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
+import { type BankAccount, BankAccountSchema } from '@schemas/features/bankAccounts/bankAccount'
 
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

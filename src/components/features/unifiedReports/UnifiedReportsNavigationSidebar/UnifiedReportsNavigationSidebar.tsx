@@ -2,11 +2,11 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
-import { useBaseUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { Span } from '@ui/Typography/Text'
 import { TreeNavigation } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigation'
 import { TreeNavigationSkeleton } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigationSkeleton'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { UnifiedReportsNavigationSidebarError } from '@features/unifiedReports/UnifiedReportsNavigationSidebar/UnifiedReportsNavigationSidebarError'
 import {
   buildRecursiveReportsGroupConfig,

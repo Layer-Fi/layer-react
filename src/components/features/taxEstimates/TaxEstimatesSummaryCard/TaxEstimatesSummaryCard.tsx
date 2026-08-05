@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { TaxEstimatesSummaryCardMode } from '@features/taxEstimates/TaxEstimatesSummaryCard/constants'
 import { Content } from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCardContent'
 import { TaxEstimatesSummaryCardError as Error } from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCardError'

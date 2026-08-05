@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { SortOrder } from '@internal-types/utility/pagination'
-import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useGetListLedgerEntries } from '@api/businesses/[business-id]/ledger/entries/get'
+import { type LedgerEntry } from '@schemas/features/generalLedger/ledgerEntry'
 import { type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { useLedgerDateRange } from '@providers/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
+import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useGetListLedgerEntries } from '@api/businesses/[business-id]/ledger/entries/get'
+import { useLedgerDateRange } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 
 export const JOURNAL_PAGE_SIZE = 15
 

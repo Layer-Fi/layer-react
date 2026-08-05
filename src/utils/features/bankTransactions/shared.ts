@@ -1,18 +1,18 @@
 import { isWithinInterval } from 'date-fns'
 
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
+import { BankTransactionSelectionVariant } from '@internal-types/bankTransactionMatchOption'
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
-import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
-import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
-import type { CustomAccount } from '@schemas/customAccounts/customAccount'
-import { makeTagKeyValueFromTag } from '@schemas/tags/tagKeyValue'
+import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
+import type { CategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
+import type { CustomAccount } from '@schemas/features/customAccounts/customAccount'
+import { makeTagKeyValueFromTag } from '@schemas/features/tags/tagKeyValue'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
+import { CategorizedCategories, ReviewCategories } from '@utils/features/bankTransactions/constants'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/features/bankTransactions/taxCode'
-import { BankTransactionSelectionVariant } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
-import { CategorizedCategories, ReviewCategories } from '@features/bankTransactions/constants'
 
 export const filterVisibility = (
   scope: DisplayState,

@@ -1,11 +1,11 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BankTransactionsWithLinkedAccounts } from '@views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
-import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,

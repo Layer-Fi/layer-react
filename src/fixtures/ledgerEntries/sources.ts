@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { EntryType } from '@schemas/generalLedger/ledgerEntry'
-import { LedgerEntrySourceSchema } from '@schemas/generalLedger/ledgerEntrySource'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { EntryType } from '@schemas/features/generalLedger/ledgerEntry'
+import { LedgerEntrySourceSchema } from '@schemas/features/generalLedger/ledgerEntrySource'
 
 import { makeCustomer } from '@fixtures/customers/mocks'
 import { makeVendor } from '@fixtures/vendors/mocks'

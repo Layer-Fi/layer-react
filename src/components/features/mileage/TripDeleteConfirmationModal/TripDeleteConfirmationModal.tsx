@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip } from '@schemas/mileage/trip'
-import { useDeleteTrip } from '@api/businesses/[business-id]/mileage/trips/[trip-id]/delete'
+import { type Trip } from '@schemas/features/mileage/trip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useDeleteTrip } from '@api/businesses/[business-id]/mileage/trips/[trip-id]/delete'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

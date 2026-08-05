@@ -1,14 +1,14 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
-import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
-import { type BankTransactionsMode } from '@providers/bankTransactions/LegacyMode/LegacyModeProvider'
+import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
+import { type MobileComponentType } from '@utils/features/bankTransactions/constants'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
+import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { type BankTransactionsMode } from '@providers/features/bankTransactions/LegacyMode/LegacyModeProvider'
 import { View } from '@blocks/Layout/View/View'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
-import { type MobileComponentType } from '@features/bankTransactions/constants'
-import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {

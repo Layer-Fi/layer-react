@@ -1,4 +1,4 @@
-import type { ReportConfig } from '@schemas/unifiedReports/reportConfig'
+import type { ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
 import {
   isCurrencyCellValue,
   isDateCellValue,
@@ -7,9 +7,9 @@ import {
   isEmptyCellValue,
   type UnifiedReportCell,
   type UnifiedReportColumn,
-} from '@schemas/unifiedReports/unifiedReport'
+} from '@schemas/features/unifiedReports/unifiedReport'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useOpenDetailReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useOpenDetailReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

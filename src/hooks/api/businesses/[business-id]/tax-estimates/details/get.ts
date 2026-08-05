@@ -1,8 +1,8 @@
-import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
+import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/features/taxEstimates/details'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
-import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 
 const TAX_DETAILS_TAG_KEY = '#tax-details'
 

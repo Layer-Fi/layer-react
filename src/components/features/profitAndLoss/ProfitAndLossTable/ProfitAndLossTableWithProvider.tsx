@@ -1,4 +1,4 @@
-import { ReportsTableProvider } from '@providers/reports/ReportsTableContext/ReportsTableContext'
+import { ReportsTableProvider } from '@providers/features/reports/ReportsTableContext/ReportsTableContext'
 import {
   ProfitAndLossTableComponent,
   type ProfitAndLossTableProps,

@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'

@@ -2,12 +2,12 @@ import { addDays, endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
 import { Direction } from '@internal-types/general'
-import { PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/pnlDetailLines'
+import { PnlDetailLinesDataSchema } from '@schemas/features/profitAndLoss/pnlDetailLines'
 
+import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/constants'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { parseDateParam } from '@msw/utils/parseDateParam'
-import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/constants'
 
 type PnlDetailLinesData = typeof PnlDetailLinesDataSchema.Type
 type PnlDetailLine = PnlDetailLinesData['lines'][number]

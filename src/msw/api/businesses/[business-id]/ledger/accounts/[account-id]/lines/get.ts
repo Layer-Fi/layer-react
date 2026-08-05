@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type LedgerAccountLineItem, LedgerAccountLineItemSchema, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
+import { type LedgerAccountLineItem, LedgerAccountLineItemSchema, type LedgerEntry } from '@schemas/features/generalLedger/ledgerEntry'
 
 import { collectAccountTreeIds, ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'

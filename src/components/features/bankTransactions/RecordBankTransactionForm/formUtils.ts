@@ -1,10 +1,10 @@
 import { fromDate, toCalendarDate } from '@internationalized/date'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { isClassificationExclusion } from '@schemas/categorization/classification'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/common/nonRecursiveBigDecimal'
-import type { RecordCustomTransaction } from '@schemas/customAccounts/recordCustomTransaction'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { isClassificationExclusion } from '@schemas/features/categorization/classification'
+import type { RecordCustomTransaction } from '@schemas/features/customAccounts/recordCustomTransaction'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/features/bankTransactions/shared'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/features/bankTransactions/taxCode'
 import type { RecordBankTransactionFormValues, RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'

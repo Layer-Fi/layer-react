@@ -1,10 +1,10 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import type React from 'react'
 
-import type { Invoice } from '@schemas/invoices/invoice'
-import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import type { Invoice } from '@schemas/features/invoices/invoice'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useInvoiceDetail } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useInvoiceDetail } from '@providers/features/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Form } from '@ui/Form/Form'
 import { VStack } from '@ui/Stack/Stack'
 import { CustomerFormDrawer } from '@features/customerVendor/CustomerFormDrawer/CustomerFormDrawer'

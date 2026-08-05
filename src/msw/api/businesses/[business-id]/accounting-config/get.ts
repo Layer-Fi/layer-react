@@ -3,11 +3,11 @@ import { Schema } from 'effect'
 import {
   AccountingConfigurationSchema,
   type AccountingConfigurationSchemaType,
-} from '@schemas/business/accountingConfiguration'
+} from '@schemas/features/business/accountingConfiguration'
 
+import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 
 const encodeAccountingConfiguration = Schema.encodeSync(AccountingConfigurationSchema)
 

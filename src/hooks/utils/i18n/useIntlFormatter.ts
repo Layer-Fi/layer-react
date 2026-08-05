@@ -17,6 +17,7 @@ import {
   formatSecondsAsDuration as formatSecondsAsDurationFn,
   type SecondsDurationFormatFn,
 } from '@utils/shared/i18n/duration/formatters'
+import type { IntlFormatter } from '@utils/shared/i18n/intlFormatter'
 import { formatList as formatListFn, type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import {
   type CurrencyFormatFn,
@@ -27,17 +28,7 @@ import {
   type PercentFormatFn,
 } from '@utils/shared/i18n/number/formatters'
 
-export type IntlFormatter = {
-  formatCurrencyFromCents: CurrencyFormatFn
-  formatNumber: NumberFormatFn
-  formatPercent: PercentFormatFn
-  formatDate: DateFormatFn
-  formatDateRange: DateRangeFormatFn
-  formatMonthName: MonthNameFormatFn
-  formatMinutesAsDuration: DurationFormatFn
-  formatSecondsAsDuration: SecondsDurationFormatFn
-  formatList: ListFormatFn
-}
+export type { IntlFormatter }
 
 export function useIntlFormatter(): IntlFormatter {
   const intl = useIntl()

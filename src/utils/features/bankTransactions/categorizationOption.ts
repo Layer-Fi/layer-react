@@ -1,8 +1,8 @@
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
 import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/categorizationOption'
-import { type Categorization, isSplitCategorization } from '@schemas/categorization/categorization'
-import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
-import { makeTagFromTransactionTag } from '@schemas/tags/tag'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
+import { type Categorization, isSplitCategorization } from '@schemas/features/categorization/categorization'
+import { makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/features/tags/tag'
 
 export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: Categorization): BankTransactionNonSuggestedMatchOption => {
   if (isSplitCategorization(categorization)) {

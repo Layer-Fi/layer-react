@@ -1,20 +1,20 @@
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import {
   type BookkeepingPeriod,
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
-} from '@schemas/bookkeeping/bookkeepingPeriods'
-import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+} from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
 import { get } from '@utils/shared/api/authenticatedHttp'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 import {
   BOOKKEEPING_TAG_KEY,
   useGetBookkeepingStatus,
 } from '@api/businesses/[business-id]/bookkeeping/status/get'
-import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 const BOOKKEEPING_PERIOD_STATUSES: string[] = Object.values(BookkeepingPeriodStatus)
 

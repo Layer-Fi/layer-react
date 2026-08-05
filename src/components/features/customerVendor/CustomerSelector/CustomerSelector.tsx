@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customerVendor/customer'
+import { type Customer } from '@schemas/features/customerVendor/customer'
 import { getCustomerName } from '@utils/features/customerVendor/customer'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
-import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { P } from '@ui/Typography/Text'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'

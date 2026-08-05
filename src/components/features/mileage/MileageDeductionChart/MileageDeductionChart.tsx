@@ -8,8 +8,8 @@ import {
 } from 'recharts'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
 import { VStack } from '@ui/Stack/Stack'
 import type { MileageDeductionChartDataPoint } from '@features/mileage/MileageDeductionChart/MileageDeductionChartDataPoint'

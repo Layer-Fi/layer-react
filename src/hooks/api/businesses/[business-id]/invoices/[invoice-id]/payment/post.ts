@@ -1,12 +1,12 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type Invoice } from '@schemas/invoices/invoice'
-import { type InvoicePayment, InvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
-import { type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/upsertDedicatedInvoicePayment'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { type InvoicePayment, InvoicePaymentSchema } from '@schemas/features/invoices/invoicePayment'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { type UpsertDedicatedInvoicePaymentSchema } from '@schemas/features/invoices/upsertDedicatedInvoicePayment'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_INVOICE_PAYMENT_TAG_KEY = '#upsert-dedicated-invoice-payment'
 

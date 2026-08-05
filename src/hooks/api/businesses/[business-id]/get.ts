@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
-import { BusinessResponseSchema } from '@schemas/business/business'
+import { BusinessResponseSchema } from '@schemas/features/business/business'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/shared/swr/createKeyedFetcher'

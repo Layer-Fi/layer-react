@@ -1,4 +1,5 @@
 import { put } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import {
   UPSERT_LEDGER_ACCOUNT_TAG_KEY,
   type UpsertLedgerAccountBody,
@@ -6,7 +7,6 @@ import {
   UpsertLedgerAccountReturnSchema,
   useLedgerAccountTriggerSuccess,
 } from '@api/businesses/[business-id]/ledger/accounts/post'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateLedgerAccount = put<
   UpsertLedgerAccountReturnEncoded,

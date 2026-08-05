@@ -1,10 +1,10 @@
 import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
-import { type Categorization } from '@schemas/categorization/categorization'
-import { type Classification, getClassificationFromCategorization, makeExclusion } from '@schemas/categorization/classification'
-import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
+import { BaseComboBoxOption } from '@internal-types/utility/comboBoxOption'
 import { makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'
+import { type Categorization } from '@schemas/features/categorization/categorization'
+import { type Classification, getClassificationFromCategorization, makeExclusion } from '@schemas/features/categorization/classification'
+import { type NestedCategorization } from '@schemas/features/categorization/nestedCategorization'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
-import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 
 export enum CategorizationOption {
   Category = 'Category',

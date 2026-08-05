@@ -1,8 +1,8 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/timeTracking/catalogService'
+import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/features/timeTracking/catalogService'
 import { patch } from '@utils/shared/api/authenticatedHttp'
-import { useCatalogServicesGlobalCacheActions } from '@api/businesses/[business-id]/catalog/services/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useCatalogServicesGlobalCacheActions } from '@api/businesses/[business-id]/catalog/services/get'
 
 const UPDATE_CATALOG_SERVICE_TAG_KEY = '#update-catalog-service'
 

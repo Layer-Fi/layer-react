@@ -2,9 +2,9 @@ import { type PropsWithChildren, type ReactNode, useCallback, useMemo } from 're
 
 import { type DateSelectionMode, getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@utils/shared/date/dateRange'
 import { DatePreset, deriveDateRangeFromPreset, type SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
-import { createScopedStore } from '@utils/shared/zustand/createScopedStore'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/common/DateStore/buildDateStore'
 import { useStoreWithDateSelected } from '@providers/common/DateStore/useStoreWithDateSelected'
+import { createScopedStore } from '@providers/common/store/createScopedStore'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 

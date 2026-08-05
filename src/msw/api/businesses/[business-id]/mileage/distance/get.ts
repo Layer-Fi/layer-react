@@ -1,6 +1,6 @@
 import { BigDecimal, Schema } from 'effect'
 
-import { type MileageDistance, MileageDistanceSchema } from '@schemas/mileage/mileage'
+import { type MileageDistance, MileageDistanceSchema } from '@schemas/features/mileage/mileage'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

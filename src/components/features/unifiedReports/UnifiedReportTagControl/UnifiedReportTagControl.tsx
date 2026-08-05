@@ -1,10 +1,10 @@
 import { useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tagValueDefinition'
-import type { TagControl } from '@schemas/unifiedReports/reportConfig'
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/features/tags/tagValueDefinition'
+import type { TagControl } from '@schemas/features/unifiedReports/reportConfig'
 import { capitalizeFirstLetter } from '@utils/shared/string/format'
-import { useUnifiedReportTagSelection } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useUnifiedReportTagSelection } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'

@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 
-import { type BankTransactionDataOnly, BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
-import { CustomTransactionSchema } from '@schemas/customAccounts/customTransaction'
+import { type BankTransactionDataOnly, BankTransactionDataOnlySchema } from '@schemas/features/bankTransactions/bankTransactionDataOnly'
+import { CustomTransactionSchema } from '@schemas/features/customAccounts/customTransaction'
 
+import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 
 const CreateCustomAccountTransactionsBodySchema = Schema.Struct({
   transactions: Schema.Array(CustomTransactionSchema),

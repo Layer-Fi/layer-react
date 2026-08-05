@@ -1,6 +1,6 @@
 import { Pinning } from '@internal-types/utility/table'
-import { type ReportConfig } from '@schemas/unifiedReports/reportConfig'
-import { type UnifiedReport, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
+import { type UnifiedReport, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   currencyCell,

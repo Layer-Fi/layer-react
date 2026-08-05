@@ -1,11 +1,11 @@
 import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankAccount } from '@schemas/bankAccounts/bankAccount'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import type { BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { isAllExternalAccountsUserCreatedCustom } from '@utils/features/bankAccounts/bankAccount'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
-import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

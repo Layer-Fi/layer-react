@@ -1,6 +1,6 @@
-import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
-import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
 import { makeStableName } from '@schemas/common/accountIdentifier'
+import { type CategorizationRule } from '@schemas/features/categorization/categorizationRule'
+import { BankDirectionFilter } from '@schemas/features/categorization/categorizationRuleFilters'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'

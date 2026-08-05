@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking/timeEntrySummary'
+import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/features/timeTracking/timeEntrySummary'
 
+import { buildTimeEntriesSummary } from '@fixtures/timeEntriesSummary/buildTimeEntriesSummary'
 import { filterTimeEntries } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/get'
 import { isActiveTimeEntry, timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { buildTimeEntriesSummary } from '@fixtures/timeEntriesSummary/buildTimeEntriesSummary'
 
 const encodeSummary = Schema.encodeSync(TimeEntrySummarySchema)
 

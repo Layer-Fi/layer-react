@@ -1,9 +1,9 @@
 import { type AccountIdentifier } from '@schemas/common/accountIdentifier'
-import { type CreateCustomJournalEntry } from '@schemas/generalLedger/createCustomJournalEntry'
-import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
+import { type CreateCustomJournalEntry } from '@schemas/features/generalLedger/createCustomJournalEntry'
+import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/features/generalLedger/ledgerEntry'
 
-import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { makeManualEntrySource } from '@fixtures/ledgerEntries/sources'
+import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 
 const resolveAccount = (identifier: AccountIdentifier) => {
   const account = identifier.type === 'StableName'

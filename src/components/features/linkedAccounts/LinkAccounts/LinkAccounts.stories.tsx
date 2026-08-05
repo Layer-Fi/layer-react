@@ -5,8 +5,8 @@ import { userEvent, within } from 'storybook/test'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { LinkAccounts } from '@features/linkedAccounts/LinkAccounts/LinkAccounts'
 
-import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
+import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 
 const clearBankAccounts = () => {
   bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))

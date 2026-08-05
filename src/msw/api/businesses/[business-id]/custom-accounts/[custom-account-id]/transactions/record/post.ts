@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { buildCustomBankTransaction, parseRecordCustomTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/recordedCustomTransaction'

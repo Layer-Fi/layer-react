@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { PaymentMethod } from '@schemas/invoices/paymentMethod'
+import { PaymentMethod } from '@schemas/features/invoices/paymentMethod'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'

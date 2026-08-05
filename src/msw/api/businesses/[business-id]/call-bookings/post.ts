@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type CallBooking, CallBookingItemResponseSchema, CallBookingState } from '@schemas/bookkeeping/callBooking'
-import { CreateCallBookingBodySchema } from '@schemas/bookkeeping/createCallBookingBody'
+import { type CallBooking, CallBookingItemResponseSchema, CallBookingState } from '@schemas/features/bookkeeping/callBooking'
+import { CreateCallBookingBodySchema } from '@schemas/features/bookkeeping/createCallBookingBody'
 
 import { callBookingStore } from '@msw/api/businesses/[business-id]/call-bookings/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

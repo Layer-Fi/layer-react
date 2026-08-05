@@ -1,5 +1,5 @@
-import { type CatalogService } from '@schemas/timeTracking/catalogService'
-import { type TimeEntryService } from '@schemas/timeTracking/timeEntryService'
+import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
+import { type TimeEntryService } from '@schemas/features/timeTracking/timeEntryService'
 
 export const toTimeEntryService = (service: CatalogService): TimeEntryService => ({
   id: service.id,

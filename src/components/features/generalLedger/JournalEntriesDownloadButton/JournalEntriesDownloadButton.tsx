@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
 import { useGetJournalEntriesDownload } from '@api/businesses/[business-id]/ledger/entries/exports/csv/get'
-import { useLedgerDateRange } from '@providers/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
-import { DownloadButton } from '@ui/Button/DownloadButton'
+import { useLedgerDateRange } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
+import { DownloadButton } from '@ui/Button/DownloadButton'
 
 type JournalEntriesDownloadButtonProps = {
   /** When true, export the range currently selected in the ledger date store. */

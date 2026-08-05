@@ -1,7 +1,7 @@
 import { del } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const deleteAccountFromLedger = del<
   Record<string, never>,

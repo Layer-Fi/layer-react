@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { PlaceDetailsSchema } from '@schemas/mileage/place'
+import { PlaceDetailsSchema } from '@schemas/features/mileage/place'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

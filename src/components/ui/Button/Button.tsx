@@ -6,9 +6,9 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { withRenderProp } from '@components/utility/withRenderProp'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
-import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './button.scss'
 

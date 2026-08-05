@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { type BaseSelectOption } from '@internal-types/general'
-import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerBalances'
+import { type LedgerBalancesSchemaType } from '@schemas/features/generalLedger/ledgerBalances'
 import { flattenAccounts } from '@features/generalLedger/utils'
 
 const isAlphanumeric = (char: string) => /[\p{L}\p{N}]/u.test(char)

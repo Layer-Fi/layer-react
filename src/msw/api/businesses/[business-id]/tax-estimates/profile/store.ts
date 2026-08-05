@@ -1,7 +1,7 @@
-import { type TaxProfile } from '@schemas/taxEstimates/profile'
+import { type TaxProfile } from '@schemas/features/taxEstimates/profile'
 
-import { createMockStore } from '@msw/utils/createMockStore'
 import { makeTaxProfile } from '@fixtures/taxEstimates/mocks'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 const TAX_PROFILE_ID = 'tax-profile'
 

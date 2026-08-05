@@ -1,7 +1,7 @@
-import { type AccountingConfigurationSchemaType } from '@schemas/business/accountingConfiguration'
-import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
+import { type AccountingConfigurationSchemaType } from '@schemas/features/business/accountingConfiguration'
+import { type TaxProfile } from '@schemas/features/taxEstimates/profile'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 
 export enum OnboardingStatus {
   Loading = 'Loading',

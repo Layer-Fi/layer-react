@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
-import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
-import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
-import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { Tabs } from '@ui/Tabs/Tabs'
 import { TaskStatusBadge } from '@features/bookkeeping/TaskStatusBadge/TaskStatusBadge'
 

@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { type DateRange } from '@utils/shared/date/dateRange'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@features/bookkeeping/Tasks/Tasks'
 
-import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
-import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
-import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
+import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { handlers } from '@msw/handlers'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 type TasksStoryArgs = {

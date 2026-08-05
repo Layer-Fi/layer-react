@@ -4,10 +4,10 @@ import { userEvent, within } from 'storybook/test'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { Invoices } from '@features/invoices/Invoices/Invoices'
 
-import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
-import { handlers } from '@msw/handlers'
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { invoices } from '@fixtures/generated/invoices.gen'
+import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
+import { handlers } from '@msw/handlers'
 import { findEntryRows } from '@test-utils/storybook/findEntryRows'
 
 const invoicesStoryHandlers = [

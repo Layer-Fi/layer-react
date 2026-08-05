@@ -1,8 +1,8 @@
-import { CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { CategorizationRuleSchema } from '@schemas/features/categorization/categorizationRule'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 

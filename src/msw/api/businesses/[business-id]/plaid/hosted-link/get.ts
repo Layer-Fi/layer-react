@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type ApiPlaidHostedLinkStatus, ApiPlaidHostedLinkStatusSchema, PlaidHostedLinkState } from '@schemas/linkedAccounts/plaidHostedLinkStatus'
+import { type ApiPlaidHostedLinkStatus, ApiPlaidHostedLinkStatusSchema, PlaidHostedLinkState } from '@schemas/features/linkedAccounts/plaidHostedLinkStatus'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
