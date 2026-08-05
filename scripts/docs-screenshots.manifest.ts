@@ -222,6 +222,12 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/solopreneur-overview.mdx',
   },
   {
+    storyId: 'views-taxestimates--onboarding',
+    out: 'pages/tax-estimates-profile.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/tax-estimates.mdx',
+  },
+  {
     storyId: 'views-taxestimates--docs-payments',
     out: 'pages/tax-estimates-payments.png',
     viewport: 'desktop',

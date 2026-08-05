@@ -58,6 +58,7 @@ export const DocsPayments: Story = {
 }
 
 export const Onboarding: Story = {
+  tags: ['docs-screenshot'],
   parameters: {
     msw: {
       handlers: [
