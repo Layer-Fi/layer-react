@@ -1,5 +1,5 @@
 /**
- * Guards the three ways the translation manifest goes wrong:
+ * Guards the four ways the translation manifest goes wrong:
  *
  *  1. one key carrying two different English defaults (the extractor keeps whichever call site it
  *     visits last, so the losing component silently renders the other component's copy),
