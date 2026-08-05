@@ -1,0 +1,53 @@
+name: Consumer matrix
+
+# Installs the packed tarball into throwaway consumer apps and builds them. Every other PR check
+# reads from the repo, so this is the only one that can fail on a broken published artifact:
+# a missing `exports` condition, a file left out of `files`, a top-level `window` reference, or a
+# declaration file that resolves under only one module mode.
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'consumer-fixtures/**'
+      - 'scripts/pack-and-test-consumers.ts'
+      - 'scripts/serve-static.ts'
+      - 'vite.config.ts'
+      - 'vite/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - '.github/workflows/consumer-matrix.yml'
+  workflow_call: {}
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consumer-matrix-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  consumers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The vite-esm fixture is loaded in a real browser to catch mount-time failures.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Pack and test consumers
+        run: npm run test:consumers

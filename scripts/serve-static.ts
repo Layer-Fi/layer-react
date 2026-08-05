@@ -5,7 +5,7 @@ import path from 'node:path'
 export const STATIC_ROOT = 'storybook-static'
 
 // Above the 6006 dev server so a running `npm run storybook` doesn't collide.
-const PORT = 6007
+const STORYBOOK_PORT = 6007
 
 const MIME: Record<string, string> = {
   '.html': 'text/html',
@@ -18,16 +18,12 @@ const MIME: Record<string, string> = {
   '.woff2': 'font/woff2',
 }
 
-/**
- * Serves the static build over http. Needed because MSW's service worker won't register on
- * `file://`, and every story's data comes from MSW.
- */
-export function serveStorybookStatic() {
+export function serveStatic(root: string, port: number) {
   const server = http.createServer((req, res) => {
     const requested = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname)
-    const file = path.join(STATIC_ROOT, requested === '/' ? 'index.html' : requested)
+    const file = path.join(root, requested === '/' ? 'index.html' : requested)
 
-    if (!path.resolve(file).startsWith(path.resolve(STATIC_ROOT)) || !fs.existsSync(file)) {
+    if (!path.resolve(file).startsWith(path.resolve(root)) || !fs.existsSync(file)) {
       res.writeHead(404).end()
       return
     }
@@ -40,8 +36,16 @@ export function serveStorybookStatic() {
   })
 
   return new Promise<{ server: http.Server, origin: string }>(resolve =>
-    server.listen(PORT, () => resolve({ server, origin: `http://localhost:${PORT}` })),
+    server.listen(port, () => resolve({ server, origin: `http://localhost:${port}` })),
   )
+}
+
+/**
+ * Serves the static build over http. Needed because MSW's service worker won't register on
+ * `file://`, and every story's data comes from MSW.
+ */
+export function serveStorybookStatic() {
+  return serveStatic(STATIC_ROOT, STORYBOOK_PORT)
 }
 
 export function requireStorybookBuild(file: string) {

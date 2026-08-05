@@ -8,3 +8,9 @@ node_modules/
 .agents/
 .claude/
 storybook-static
+
+# Consumer fixtures install the packed tarball fresh on every run.
+consumer-fixtures/*/node_modules/
+consumer-fixtures/*/dist/
+consumer-fixtures/*/package-lock.json
+consumer-fixtures/*/*.tgz

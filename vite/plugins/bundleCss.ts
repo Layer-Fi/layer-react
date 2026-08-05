@@ -28,7 +28,13 @@ export function bundleCss(): Plugin {
       }
 
       if (parts.length > 0) {
-        fs.writeFileSync(mergedPath, parts.join('\n'))
+        // Each part carries its own `@charset`, and concatenating them leaves one partway down
+        // the file — invalid, and every consumer's postcss build warns about it. Hoist a single
+        // declaration to the top instead.
+        const merged = parts
+          .map(part => part.replace(/^[ \t]*@charset[^;]*;[ \t]*\r?\n?/gim, ''))
+          .join('\n')
+        fs.writeFileSync(mergedPath, `@charset "UTF-8";\n${merged}`)
         console.log('✓ Merged CSS →', mergedPath)
       }
     },
