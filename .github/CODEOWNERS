@@ -1,0 +1,18 @@
+# Review requirements for files that can ship code to consumers or hold credentials.
+#
+# NOTE: this file is inert on its own. `main`'s branch protection currently has
+# `required_approving_review_count: 0` and `require_code_owner_reviews: false`, so nothing here is
+# enforced until "Require review from Code Owners" is enabled in repository settings.
+
+# Anything that runs in CI with a write token or a secret. The release workflows publish to npm via
+# OIDC; docs-screenshots holds a GitHub App token and opens PRs in another repo.
+/.github/                       @Layer-Fi/layer-engineering
+
+# The published surface: what gets built, what gets packed, and what consumers resolve against.
+/package.json                   @Layer-Fi/layer-engineering
+/package-lock.json              @Layer-Fi/layer-engineering
+/vite.config.ts                 @Layer-Fi/layer-engineering
+/vite/                          @Layer-Fi/layer-engineering
+/rollup.dts.config.mjs          @Layer-Fi/layer-engineering
+/scripts/build-types.ts         @Layer-Fi/layer-engineering
+/src/index.tsx                  @Layer-Fi/layer-engineering

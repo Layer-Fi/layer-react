@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
     - name: Upload sources to Crowdin
-      uses: crowdin/github-action@v2
+      uses: crowdin/github-action@c7af9bc98b01694653031fef2a0dc6c7888ce9bc # v2.17.0
       with:
         upload_sources: true
         upload_translations: false
@@ -39,7 +39,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Upload translations to Crowdin
-      uses: crowdin/github-action@v2
+      uses: crowdin/github-action@c7af9bc98b01694653031fef2a0dc6c7888ce9bc # v2.17.0
       with:
         command: upload translations
         command_args: --auto-approve-imported

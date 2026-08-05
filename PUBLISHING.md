@@ -1,70 +1,110 @@
-# Publishing This Module
+# Publishing this package
 
-The @layerfi/components module is [available on
-NPM](https://www.npmjs.com/package/@layerfi/components).
+[`@layerfi/components`](https://www.npmjs.com/package/@layerfi/components) is published from CI
+only. There is no manual `npm publish` step, and there is no npm token to hold — the release
+workflow authenticates to npm with OIDC trusted publishing.
 
-NOTE: This module is available to and accessible by anyone in the world, even if
-they do not have the credentials to access the LayerFi service itself. Please
-make sure no access tokens or keys get put into it accidentally.
+> The published package is public and readable by anyone, whether or not they have credentials for
+> the Layer service. Nothing secret may end up in `dist/`.
 
-## Development
+## The release flow
 
-Developing on this module is possible via `npm link`. This assumes that the
-demonstration app `demo` and the module `components` live in the same directory.
+Three workflows, in order. The first and last are manual buttons; the middle one is a hook.
 
-# Do not add the module to package.json of `demo`.
-# `cd ../demo`
-# `npm link ../components`
-# `cd ../components`
-# `npm install`
-# `rm -rf node_modules/react node_modules/react-dom`
-# `npm run build`
-# `cd ../demo`
-# Stop the server if it's currently running.
-# `npm install`
-# `npm start`
+### 1. Release — Prepare (`release-prepare.yml`, manual)
 
-When making changes that you want to see appear in the app, you should only need
-to run `npm run build`. You may need to refresh the browser page if the change
-was more than just a little styling.
+Inputs: `release_type` (`alpha` | `stable`) and `increment` (`patch` | `minor` | `major`).
 
-Making changes to the dependencies of the module requires that it be installed.
-Start at Step 4 above (`cd ../components`).
+Computes the next version, pushes a `release/vX.Y.Z` branch, and opens a `chore(release): vX.Y.Z`
+PR that bumps `package.json`. It does not merge, tag, publish, or touch Linear. Review and merge
+that PR like any other.
 
-## Production
+Versioning is "model A": the cycle target is fixed at the first alpha, and stable drops the suffix.
 
-The module is published with `npm publish`.
+| starting from | `release_type` | result |
+|---|---|---|
+| `0.1.143` (stable) | `alpha`, patch | `0.1.144-alpha.0` |
+| `0.1.144-alpha.0` | `alpha` | `0.1.144-alpha.1` (`increment` ignored) |
+| `0.1.144-alpha.1` | `stable` | `0.1.144` (`increment` ignored) |
+| `0.1.143` (stable) | `stable`, minor | `0.2.0` |
 
-In order to see what will happen before publishing, use `npm publish --dry-run`.
-This will show what the command will do, but will not actually publish the
-module. You can use this output to check for oversights before publishing.
-Similarly, you can run `npm pack` to build a local tarball of the package.
+### 2. Release — Tag (`release-tag.yml`, automatic)
 
-Running `npm publish`/`npm pack` in the module will put everything that is in
-the directory into the module _except_ the files disallowed by `.npmignore`. All
-that is necessary are the files in `dist` after being generated with `npm run
-build`. Therefore, you must run `npm run build` before packing/publishing.
-However, this should run automatically via the `prepack` script.
+Fires when a `release/v*` PR is merged. Creates the `vX.Y.Z` tag and a GitHub Release with generated
+notes. Alphas are marked prerelease and are not made "latest". Nothing else tags; don't tag by hand.
 
-### Version Numbers
+### 3. Release — Publish (`release-publish.yml`, manual)
 
-The version number must be incremented in order to be put on NPM. That is,
-version numbers refer to a specific and unique set of code. Once a version
-number is taken, it cannot be reused, even if that version is "unpublished".
+Inputs: `next_linear_release` (stable only) and `dry_run`, **which defaults to `true`**.
 
-In Semantic Versioning, the version numbers mean things: the version is split
-into `Major.Minor.Patch` numbers. From [semver.org](https://semver.org/):
+Reads the version from `package.json` on `main`, checks out the matching tag, verifies the packed
+tarball, publishes, then updates Linear:
 
-> Given a version number MAJOR.MINOR.PATCH, increment the:
->
-> * MAJOR version when you make incompatible API changes
-> * MINOR version when you add functionality in a backward compatible manner
-> * PATCH version when you make backward compatible bug fixes
->
-> Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+- **alpha** → `npm publish --tag alpha`, and syncs the Linear release
+- **stable** → `npm publish` (dist-tag `latest`), syncs and completes the Linear release, queues the
+  next one, and refreshes the screenshots in `Layer-Fi/api-documentation`
 
-Versions with a Major version of 0 are allowed to basically do whatever they
-want, as that is considered "prerelease".
+Because `dry_run` defaults to true, the first click is always a rehearsal: `npm publish --dry-run`,
+Linear read-only, and the tag isn't required. Untick it to ship.
 
-NOTE: The `version` field of package.json must be incremented in at least one of these
-numbers in order to publish a new version.
+## What gates a publish
+
+Before `npm publish` runs, the job packs the tarball and installs it into the consumer fixtures under
+`consumer-fixtures/` — Vite/ESM, CJS `require`, and SSR. This runs in the publish job against the
+exact tree being published, not as a separate job against `main`, so the tarball that gets verified
+is the one that ships. See [docs/dependency-policy.md](docs/dependency-policy.md) for the full list
+of gates and what each one covers.
+
+`prepack` (`npm run typecheck && npm run build:clean`) rebuilds `dist/` on any `npm pack` or
+`npm publish`, so a stale or half-built `dist/` cannot be published.
+
+Only the `files` field decides what ships — currently `dist/` only. There is no `.npmignore`.
+
+## Supply-chain posture
+
+- **No npm token.** Auth is OIDC trusted publishing, configured for the package on npmjs.com.
+  `release-publish.yml` needs `id-token: write` and deliberately omits `registry-url` on
+  `setup-node`, which would otherwise write an empty `_authToken` and make npm skip OIDC.
+- **npm is pinned** to 11.5.1 in the workflow; trusted publishing needs ≥ 11.5.1.
+- **Provenance** is published (`--provenance`), so consumers can verify which repo, workflow, and
+  commit built the tarball.
+- **Actions are pinned to commit SHAs**, with the version in a trailing comment. The
+  `github-actions` Dependabot lane moves them. Never reintroduce a floating tag like `@v4` — a tag
+  is a pointer the action's author can move, and these workflows hold secrets and write tokens.
+- **`.github/CODEOWNERS`** covers the workflows and the files that define the published surface.
+
+## Local development against a consumer app
+
+`npm link` works, but it makes React resolve twice, so it needs the extra step below. Packing the
+tarball is closer to what a consumer actually gets:
+
+```bash
+npm pack                     # runs prepack: typecheck + clean build
+cd ../your-app
+npm install ../layer-react/layerfi-components-<version>.tgz
+```
+
+For an iterative loop, `npm run dev` rebuilds `dist/` on change (JS and types in parallel). With
+`npm link`, run `npm run clear:react` in this repo afterwards to drop the duplicate React copies:
+
+```bash
+cd ../your-app && npm link ../layer-react
+cd ../layer-react && npm run clear:react && npm run dev
+```
+
+To check what a publish would contain without publishing:
+
+```bash
+npm pack --dry-run       # file list
+npm run test:consumers   # packs, then builds real consumer apps against the tarball
+npm run lint:package     # publint + attw on the packed result
+```
+
+## Version numbers
+
+Once a version is published it can never be reused, even if unpublished. The `version` field is
+bumped by Release — Prepare, not by hand.
+
+`0.x` versions are pre-1.0, so breaking changes can land in a minor — but the peer range in
+`package.json` is a promise, and widening or narrowing it needs the consumer fixtures run across the
+range first.
