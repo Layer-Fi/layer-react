@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process'
-import { rmSync } from 'node:fs'
+import { copyFileSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 /** Builds the bundled type declarations (dist/index.d.ts). Run via `npm run build:types`. */
@@ -19,3 +19,13 @@ run('tsc-alias -p tsconfig.dts.json')
 run('rollup -c rollup.dts.config.mjs')
 // Drop the temporary per-file output.
 rmSync('dist/.types', { recursive: true, force: true })
+
+// One flat .d.ts served to both the `import` and `require` conditions resolves as CJS types for an
+// ESM consumer ("masquerading as CJS"), which breaks default-import interop. The declarations are
+// identical; only the extension tells TypeScript which module system to assume.
+copyFileSync('dist/index.d.ts', 'dist/esm/index.d.mts')
+copyFileSync('dist/index.d.ts', 'dist/cjs/index.d.cts')
+
+// Lets consumers with `allowArbitraryExtensions` import the stylesheet without declaring it
+// themselves. Content is irrelevant — TypeScript only needs the import to resolve.
+writeFileSync('dist/index.d.css.ts', 'export {}\n')
