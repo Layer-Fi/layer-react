@@ -60,14 +60,15 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    # A stable release must not ship untranslated copy. The check needs no dependencies, so it
-    # runs before the version bump. Alpha releases are exempt — that is where untranslated
-    # strings are expected to live.
+    # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
+    # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.
     - name: Check translations are ready
       if: ${{ inputs.release_type == 'stable' }}
       id: i18n
       continue-on-error: true
-      run: node scripts/i18n/checkTranslationKeys.mjs --release
+      run: |
+        npm ci
+        npm run i18n:check-release
 
     # Start the pipeline that fixes it and stop: cutting a release PR now would only produce a
     # tag that Release — Publish refuses.

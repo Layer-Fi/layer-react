@@ -28,3 +28,12 @@ export const splitPluralCategory = (key) => {
   const match = key.match(new RegExp(String.raw`^(.*)_(${PLURAL_CATEGORIES.join('|')})$`))
   return match ? { base: match[1], category: match[2] } : undefined
 }
+
+/**
+ * Whether `keys` holds another category of the same plural family. A locale can need a CLDR
+ * category English lacks (French `_many`), so such a key is present-by-family, not missing.
+ */
+export const hasPluralSiblingIn = (key, keys) => {
+  const plural = splitPluralCategory(key)
+  return Boolean(plural) && PLURAL_CATEGORIES.some(category => keys.has(`${plural.base}_${category}`))
+}

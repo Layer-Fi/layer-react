@@ -99,16 +99,21 @@ jobs:
         node-version: '22'
         cache: 'npm'
 
-    # Runs against the checked-out tag, so it gates exactly what is about to ship rather than
-    # whatever main looks like now. Release — Prepare checks this too, but strings can land
-    # between cutting the release PR and tagging. Needs no dependencies, so it runs before
-    # npm ci and fails fast.
+    # Trusted publishing needs npm >= 11.5.1; pin it.
+    - name: Upgrade npm for trusted publishing
+      run: npm install -g npm@11.5.1
+
+    - name: Install dependencies
+      run: npm ci
+
+    # Runs against the checked-out tag, so it gates exactly what ships. Prepare checks this too,
+    # but strings can land between cutting the release PR and tagging.
     - name: Require translations for a stable release
       if: ${{ steps.r.outputs.type == 'stable' }}
       env:
         V: ${{ steps.r.outputs.version }}
       run: |
-        if node scripts/i18n/checkTranslationKeys.mjs --release; then
+        if npm run i18n:check-release; then
           exit 0
         fi
 
@@ -128,13 +133,6 @@ jobs:
 
         echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
         exit 1
-
-    # Trusted publishing needs npm >= 11.5.1; pin it.
-    - name: Upgrade npm for trusted publishing
-      run: npm install -g npm@11.5.1
-
-    - name: Install dependencies
-      run: npm ci
 
     - name: Publish to npm
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
