@@ -15,10 +15,11 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.stories.tsx",
+    "src/**/*.storyData.tsx",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
     "src/fixtures/**/*",
     "src/msw/**/*",
-    "src/test-utils/**/*"
+    "src/testUtils/**/*"
   ]
 }

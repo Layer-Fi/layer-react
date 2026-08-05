@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
-import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type Split } from '@internal-types/bankTransactions'
+import { type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import {
   type BulkMatchOrCategorizeRequest,
   type MatchOrCategorizeTransactionRequestSchema,

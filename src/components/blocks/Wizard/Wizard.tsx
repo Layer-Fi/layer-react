@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { VStack } from '@ui/Stack/Stack'
 
 function useWizardStep({

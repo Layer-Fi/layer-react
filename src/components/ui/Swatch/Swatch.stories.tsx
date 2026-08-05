@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Swatch } from '@ui/Swatch/Swatch'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const meta: Meta<typeof Swatch> = {
   title: 'UI/Swatch',

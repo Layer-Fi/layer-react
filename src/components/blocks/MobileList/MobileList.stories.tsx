@@ -9,7 +9,9 @@ import { type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileL
 import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@blocks/MobileList/MobileListItemStatusFooter'
 
-import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Frame } from '@testUtils/storybook/layout/Frame'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 type Row = {
   id: string

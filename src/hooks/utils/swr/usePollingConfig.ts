@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { type SWRConfiguration } from 'swr'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { isActive, isIdle, isStopped, PollingPhase } from '@hooks/utils/swr/pollingPhase'
 
 const DEFAULT_POLL_INTERVAL_MS = 2000

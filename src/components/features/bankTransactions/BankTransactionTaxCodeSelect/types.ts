@@ -1,4 +1,4 @@
-import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
+import { type TaxCodeComboBoxOption } from '@utils/features/bankTransactions/taxCodeComboBoxOption'
 import { type SingleSelectComboBoxProps } from '@ui/ComboBox/types'
 
 export type TaxCodeSelectCommonProps = Pick<

@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { TextArea } from '@ui/Input/TextArea'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const VALUE = 'Reconciled against the July payout. Two deposits are still unmatched and will retry overnight.'
 

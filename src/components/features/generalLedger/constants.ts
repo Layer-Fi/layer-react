@@ -1,4 +1,4 @@
-import { Direction } from '@internal-types/general'
+import { Direction } from '@internal-types/shared/money'
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 

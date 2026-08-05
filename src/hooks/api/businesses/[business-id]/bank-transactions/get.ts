@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash-es'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'

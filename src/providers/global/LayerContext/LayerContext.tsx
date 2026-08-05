@@ -4,7 +4,7 @@ import {
   type LayerContextDateRange,
   type LayerContextHelpers,
   type LayerContextValues,
-} from '@internal-types/layerContext'
+} from '@internal-types/shared/layerContext'
 
 type LayerContextShape = LayerContextValues & LayerContextHelpers & LayerContextDateRange
 

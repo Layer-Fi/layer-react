@@ -1,10 +1,10 @@
 import useSWRMutation from 'swr/mutation'
 
-import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { confirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
 import { excludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
+import { SWRMutationResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export type AccountConfirmExcludeFormState = Record<string, boolean>

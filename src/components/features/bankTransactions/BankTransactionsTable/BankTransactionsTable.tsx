@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
+import { type BankTransaction, DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { Alignment } from '@internal-types/utility/table'
 import { isMoneyIn } from '@utils/features/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'

@@ -3,7 +3,7 @@ import type { Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
+import { LedgerAccountNodeType } from '@internal-types/features/generalLedger/chartOfAccounts'
 import { Alignment } from '@internal-types/utility/table'
 import { type LedgerAccountLineItem } from '@schemas/generalLedger/ledgerEntry'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'

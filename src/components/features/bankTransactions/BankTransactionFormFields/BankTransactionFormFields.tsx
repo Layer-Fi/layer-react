@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { makeTagFromTransactionTag, type Tag } from '@schemas/tags/tag'
 import { useDeleteBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/delete'
 import { usePostBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/post'

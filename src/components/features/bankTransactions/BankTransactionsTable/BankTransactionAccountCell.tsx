@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 

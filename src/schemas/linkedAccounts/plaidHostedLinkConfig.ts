@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CreatePlaidLinkParams, CreatePlaidLinkParamsSchema } from '@schemas/linkedAccounts/createPlaidLinkParams'
 
 /**

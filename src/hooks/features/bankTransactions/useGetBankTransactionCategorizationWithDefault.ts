@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
-import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { getDefaultCategorizationForBankTransaction } from '@utils/features/bankTransactions/shared'
 import {
   type BankTransactionCategorization,

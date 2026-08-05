@@ -1,4 +1,4 @@
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { get } from '@utils/shared/api/authenticatedHttp'

@@ -1,11 +1,12 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useMemo } from 'react'
 
-import { type LoadedStatus } from '@internal-types/general'
-import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
 import { useGetBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
+import { type SWRQueryResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
+
+type LoadedStatus = 'initial' | 'loading' | 'complete'
 
 type BankAccountsContextValue = Pick<
   SWRQueryResult<BankAccount[]>,

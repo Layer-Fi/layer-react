@@ -1,4 +1,4 @@
-import { type ReportingBasis } from '@internal-types/general'
+import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/pnlDetailLines'
 import { get } from '@utils/shared/api/authenticatedHttp'

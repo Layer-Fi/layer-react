@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DisplayState } from '@internal-types/bankTransactions'
+import { DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'

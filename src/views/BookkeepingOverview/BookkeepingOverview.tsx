@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
-import { type TagOption } from '@internal-types/tags'
+import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/bookkeeping/callBooking'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'

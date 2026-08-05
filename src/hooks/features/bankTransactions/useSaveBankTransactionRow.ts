@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/features/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'

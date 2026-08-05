@@ -7,7 +7,7 @@ import {
   ERROR_FIELD_VARIANTS,
   type FormFieldVariant,
   FormFieldVariantGallery,
-} from '@test-utils/storybook/formField'
+} from '@testUtils/storybook/layout/formField'
 
 const LABEL = 'Description'
 const VALUE = 'Quarterly office supply restock, split across two deliveries.'

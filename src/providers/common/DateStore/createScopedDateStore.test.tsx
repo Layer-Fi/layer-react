@@ -8,7 +8,7 @@ import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusin
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/common/DateStore/createScopedDateStore'
 
 import { makeBusiness } from '@fixtures/business/mocks'
-import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
+import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'
 import {
   CURRENT_MONTH_TO_DATE,
   CURRENT_YEAR_TO_DATE,
@@ -21,8 +21,8 @@ import {
   PREVIOUS_MONTH_RANGE,
   SIX_MONTHS_AFTER_NOW,
   THREE_MONTHS_BEFORE_NOW,
-} from '@test-utils/fixedDates'
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+} from '@testUtils/dates/fixedDates'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 type DateStoreTestOptions = Omit<CreateScopedDateStoreOptions, 'useActivationDate'>
 

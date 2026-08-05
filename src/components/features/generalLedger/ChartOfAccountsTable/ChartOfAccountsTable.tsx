@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import {
   type AugmentedLedgerAccountBalance,
   LedgerAccountNodeType,
-} from '@internal-types/chartOfAccounts'
+} from '@internal-types/features/generalLedger/chartOfAccounts'
 import { Alignment } from '@internal-types/utility/table'
 import { asMutable } from '@utils/shared/array/asMutable'
 import { useDeleteLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/delete'

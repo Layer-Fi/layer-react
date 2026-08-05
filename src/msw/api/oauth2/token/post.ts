@@ -1,4 +1,4 @@
-import { type OAuthResponse } from '@internal-types/authentication'
+import { type OAuthResponse } from '@internal-types/shared/authentication'
 
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { makeOAuthResponse } from '@fixtures/auth/mocks'

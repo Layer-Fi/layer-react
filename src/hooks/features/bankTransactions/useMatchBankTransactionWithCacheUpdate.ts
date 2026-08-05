@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { MatchType } from '@schemas/bankTransactions/match'
 import { usePutMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'

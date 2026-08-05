@@ -4,7 +4,7 @@ import { EllipsisVertical } from 'lucide-react'
 import { Button } from 'react-aria-components/Button'
 import { useTranslation } from 'react-i18next'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 

@@ -10,9 +10,9 @@ import { useTranslation } from 'react-i18next'
 
 import {
   type BankTransaction,
-} from '@internal-types/bankTransactions'
-import { type Split } from '@internal-types/bankTransactions'
-import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+} from '@internal-types/features/bankTransactions/bankTransaction'
+import { type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import { SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
 import { type Tag } from '@schemas/tags/tag'
 import {

@@ -1,4 +1,4 @@
-import { type FileMetadata } from '@internal-types/fileUpload'
+import { type FileMetadata } from '@internal-types/shared/fileUpload'
 import { BusinessTaskStatus } from '@schemas/bookkeeping/businessTask'
 
 import { patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'

@@ -19,7 +19,7 @@ contract.** Do not guess field names, nullability, or enum members.
 | --- | --- |
 | Schema definitions | `src/schemas/<domain>/**` (`src/schemas/customerVendor/customer.ts`, `src/schemas/invoices/invoice.ts`) |
 | Shared building blocks | `src/schemas/common/**` (`utils.ts`, `pagination.ts`, `nonRecursiveBigDecimal.ts`, …) |
-| Internal-only TS types (no wire format) | `src/types/**` — a plain `type`/`interface` is correct here; don't reach for Schema |
+| Internal-only TS types (no wire format) | `src/types/**` — a plain `type`/`interface` is correct here; don't reach for Schema (see [`src/types/SKILL.md`](../types/SKILL.md)) |
 
 `schemas/<domain>` reuses the domain names of `src/hooks/features/*` and
 `src/components/features/*`, so one domain has the same folder name in all three trees. A

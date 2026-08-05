@@ -1,8 +1,8 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import type { SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 

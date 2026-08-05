@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type View as ViewType } from '@internal-types/general'
+import { type View as ViewType } from '@internal-types/shared/view'
 import { useGetBalanceSheet } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'

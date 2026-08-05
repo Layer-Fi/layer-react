@@ -40,6 +40,7 @@ export default tsEslint.config(
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
+            '.storybook/tags.ts',
             'eslint.config.mjs',
             'i18next.config.ts',
             'vite.config.ts',
@@ -116,7 +117,7 @@ export default tsEslint.config(
           '@assets/',
           '@msw/',
           '@fixtures/',
-          '@test-utils/',
+          '@testUtils/',
         ],
         },
       ],
@@ -146,12 +147,13 @@ export default tsEslint.config(
       'src/**/*.spec.ts',
       'src/**/*.spec.tsx',
       'src/**/*.stories.tsx',
+      'src/**/*.storyData.tsx',
       'src/msw/**/*',
       'src/fixtures/**/*',
-      'src/test-utils/**/*',
+      'src/testUtils/**/*',
     ],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css', '*.stories*', '@msw/*', '@fixtures/*', '@test-utils/*'] }],
+      'no-restricted-imports': ['error', { patterns: ['*.css', '*.stories*', '*.storyData*', '@msw/*', '@fixtures/*', '@testUtils/*'] }],
     },
   },
   {
@@ -231,7 +233,7 @@ export default tsEslint.config(
             // Test resources and fixtures
             '^(?:type:)?@msw/',
             '^(?:type:)?@fixtures/',
-            '^(?:type:)?@test-utils/',
+            '^(?:type:)?@testUtils/',
           ],
           [
             // Styles

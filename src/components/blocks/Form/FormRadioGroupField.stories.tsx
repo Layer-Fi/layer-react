@@ -11,7 +11,7 @@ import {
   ERROR_FIELD_VARIANTS,
   type FormFieldVariant,
   FormFieldVariantGallery,
-} from '@test-utils/storybook/formField'
+} from '@testUtils/storybook/layout/formField'
 
 const LABEL = 'Trip purpose'
 

@@ -2,7 +2,9 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
 
-import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Frame } from '@testUtils/storybook/layout/Frame'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const SHORT = 'Something went wrong. Please try again.'
 const LONG = 'Amounts must be greater than zero and use no more than two decimal places.'

@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next'
 import { ArrowRight, HandCoins, Save } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'

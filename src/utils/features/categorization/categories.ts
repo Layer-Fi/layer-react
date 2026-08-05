@@ -1,4 +1,4 @@
-import { type CategoryAsOption } from '@internal-types/categorizationOption'
+import { type CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type Classification, ClassificationEquivalence, isClassificationAccountIdentifier } from '@schemas/categorization/classification'
 import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
 import { type AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'

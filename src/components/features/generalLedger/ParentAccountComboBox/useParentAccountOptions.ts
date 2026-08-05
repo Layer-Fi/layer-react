@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
-import { type BaseSelectOption } from '@internal-types/general'
 import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerBalances'
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { flattenAccounts } from '@features/generalLedger/utils'
 
 const isAlphanumeric = (char: string) => /[\p{L}\p{N}]/u.test(char)
@@ -24,7 +24,7 @@ const compareSpecialCharsLast = (a: string, b: string): number => {
 
 export const useParentAccountOptions = (
   data?: LedgerBalancesSchemaType,
-): BaseSelectOption[] =>
+): ComboBoxOption[] =>
   useMemo(() => flattenAccounts(data?.accounts || [])
     .sort((a, b) => a?.name && b?.name ? compareSpecialCharsLast(a.name, b.name) : 0)
     .map(x => ({ label: x.name, value: x.accountId })),

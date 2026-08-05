@@ -1,7 +1,7 @@
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { TextArea } from '@ui/Input/TextArea'

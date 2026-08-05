@@ -1,8 +1,8 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type View as ViewType } from '@internal-types/general'
-import type { TimeRangePickerConfig } from '@internal-types/reports'
+import type { TimeRangePickerConfig } from '@internal-types/features/reports/timeRangePickerConfig'
+import { type View as ViewType } from '@internal-types/shared/view'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'

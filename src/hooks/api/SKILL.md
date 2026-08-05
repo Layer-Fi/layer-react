@@ -252,7 +252,7 @@ custom account invalidates bank accounts, because the new account appears in bot
 ## Hook return values
 
 The factories return `SWRQueryResult` / `SWRInfiniteResult` / `SWRMutationResult` class
-instances (`src/types/swr/SWRResponseTypes.ts`), not raw SWR responses:
+instances (`src/hooks/utils/swr/SWRResponseTypes.ts`), not raw SWR responses:
 
 - Read `isError` — never compare `error` yourself.
 - `refetch` is the friendly alias for `mutate`.

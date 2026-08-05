@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useMemo } from 'react'
 import { File } from 'lucide-react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@utils/features/bankTransactions/matchLinkingMetadata'
 import { hasReceipts, isCategorized, isMoneyIn } from '@utils/features/bankTransactions/shared'

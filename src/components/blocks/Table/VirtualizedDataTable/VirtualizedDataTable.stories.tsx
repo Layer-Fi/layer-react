@@ -2,7 +2,6 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
   buildCustomerRows,
   type CustomerRow,
@@ -10,7 +9,9 @@ import {
   TABLE_STORY_COMPONENT_NAME,
   TABLE_STORY_SLOTS,
   TableStoryStyles,
-} from '@test-utils/storybook/tableStoryData'
+} from '@testUtils/storybook/data/tables'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const COLUMN_CONFIG = getCustomerColumnConfig()
 const LONG_LIST = buildCustomerRows(2000)

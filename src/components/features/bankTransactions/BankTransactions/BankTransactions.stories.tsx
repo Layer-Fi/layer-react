@@ -15,8 +15,8 @@ import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,
   makeBankTransactionsStoryControls,
-} from '@test-utils/bankTransactionsStoryControls'
-import { findEntryRows } from '@test-utils/storybook/findEntryRows'
+} from '@testUtils/storybook/controls/bankTransactions'
+import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 type BankTransactionsStoryArgs = SharedBankTransactionsArgs & {
   pageSize: number

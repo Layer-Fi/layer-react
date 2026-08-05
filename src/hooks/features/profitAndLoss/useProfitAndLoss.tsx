@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import { type ReportingBasis } from '@internal-types/general'
+import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
 import { getNextSortOrder, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import {
   applyShare,
