@@ -1,0 +1,21 @@
+[
+  {
+    "name": "full import (ESM)",
+    "path": "dist/esm/index.mjs",
+    "import": "*",
+    "limit": "1300 kB",
+    "ignore": ["react", "react-dom"]
+  },
+  {
+    "name": "single component (tree-shaking)",
+    "path": "dist/esm/index.mjs",
+    "import": "{ GlobalMonthPicker }",
+    "limit": "600 kB",
+    "ignore": ["react", "react-dom"]
+  },
+  {
+    "name": "stylesheet",
+    "path": "dist/index.css",
+    "limit": "30 kB"
+  }
+]
