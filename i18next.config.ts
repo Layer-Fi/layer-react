@@ -8,7 +8,10 @@ export default defineConfig({
   locales: ['en-US', 'fr-CA'],
   plugins: [conditionalPlugin, pluralPlugin, translationKeyPlugin],
   extract: {
+    // Tests and stories are not shipped copy, and the zone rules in `npm run i18n:check`
+    // deliberately exempt them — so they must not be able to write keys into the locale JSON.
     input: 'src/**/*.{js,jsx,ts,tsx}',
+    ignore: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx'],
     output: 'src/assets/locales/{{language}}/{{namespace}}.json',
   },
 })

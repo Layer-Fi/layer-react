@@ -45,7 +45,6 @@
   "BankTransactionsAccountFilterChip": {
     "label": {
       "accounts_selected_one": "{{count}} compte sélectionné",
-      "accounts_selected_many": "",
       "accounts_selected_other": "{{count}} comptes sélectionnés"
     }
   },
