@@ -33,8 +33,11 @@ jobs:
           npm audit --json > audit-all.json || true
           npm audit --omit=dev --json > audit-prod.json || true
 
+      # The artifact is a convenience; the report is the point. A failed upload must not take the
+      # issue and the Slack ping down with it — the script already treats ARTIFACT_URL as optional.
       - name: Upload audit JSON
         id: upload
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: npm-audit
@@ -71,10 +74,20 @@ jobs:
               .map(([name, info]) => ({ name, ...info }))
               .filter(v => SEVERITIES.includes(v.severity));
 
-            const runtimeNames = new Set(toList(prod).map(v => v.name));
             const vulns = toList(all);
-            const runtime = vulns.filter(v => runtimeNames.has(v.name));
-            const dev = vulns.filter(v => !runtimeNames.has(v.name));
+
+            // Without the production audit there is no way to split the two sets. Defaulting to an
+            // empty runtime set would report "0 consumer-facing" and hide real exposure, so fail
+            // toward over-reporting: treat everything as potentially consumer-facing and mark the
+            // step failed so someone looks.
+            const prodAvailable = Boolean(prod && prod.vulnerabilities);
+            if (!prodAvailable) {
+              core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
+            }
+
+            const runtimeNames = new Set(toList(prod).map(v => v.name));
+            const runtime = prodAvailable ? vulns.filter(v => runtimeNames.has(v.name)) : vulns;
+            const dev = prodAvailable ? vulns.filter(v => !runtimeNames.has(v.name)) : [];
 
             if (vulns.length === 0) {
               console.log('No moderate+ vulnerabilities found.');
@@ -98,8 +111,12 @@ jobs:
               return out;
             };
 
-            let body = `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
-              + `**${dev.length}** dev/CI-only (moderate+).\n\n`;
+            let body = prodAvailable
+              ? `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
+                + `**${dev.length}** dev/CI-only (moderate+).\n\n`
+              : `> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n`
+                + `> exposure could not be separated. All **${vulns.length}** moderate+ findings are\n`
+                + `> listed below as potentially consumer-facing. The workflow run is marked failed.\n\n`;
 
             body += `## Runtime (reaches consumers) — ${runtime.length}\n\n`;
             body += runtime.length
@@ -145,16 +162,19 @@ jobs:
               console.log(`Created issue #${newIssue.data.number}`);
             }
 
+      # `!cancelled()` rather than `success()`: a broken audit or a failed upload is exactly when
+      # the ping matters most, and skipping it would make a silent failure look like a clean day.
       - name: Send Slack notification
-        if: ${{ success() }}
+        if: ${{ !cancelled() }}
         run: |
           if [ -z "${{ secrets.SLACK_WEBHOOK }}" ]; then
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
-          RUNTIME=$(jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' audit-prod.json || echo 0)
-          TOTAL=$(jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' audit-all.json || echo 0)
-          if [ "$TOTAL" -gt "0" ]; then
+          count() { jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' "$1" 2>/dev/null; }
+          RUNTIME=$(count audit-prod.json); RUNTIME=${RUNTIME:-unknown}
+          TOTAL=$(count audit-all.json); TOTAL=${TOTAL:-0}
+          if [ "$TOTAL" != "0" ]; then
             PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" \
               '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ vulnerabilities — see GitHub issues for details.")}')
             curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
