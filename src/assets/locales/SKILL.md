@@ -154,6 +154,12 @@ extract PR landing on `main` triggers the Crowdin sync itself), then re-run Prep
 checked-out tag, since strings can land between cutting the release PR and tagging. That one is a
 hard block on `npm publish --tag latest`.
 
+If Publish does block, nothing was published, so the version is still free to reuse — don't burn
+it on a new patch. Merge the i18n PRs, then run
+[`Release — Tag`](../../../.github/workflows/release-tag.yml) manually with `retag=true` to move
+the tag onto current `main`, and re-run Publish. That path refuses to move a tag whose version is
+already on npm, since a published version must never be retagged.
+
 Alpha releases are exempt; untranslated strings are expected there.
 
 ### Enforcement

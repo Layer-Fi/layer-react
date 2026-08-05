@@ -105,11 +105,29 @@ jobs:
     # npm ci and fails fast.
     - name: Require translations for a stable release
       if: ${{ steps.r.outputs.type == 'stable' }}
+      env:
+        V: ${{ steps.r.outputs.version }}
       run: |
-        if ! node scripts/i18n/checkTranslationKeys.mjs --release; then
-          echo "::error::Tag v${{ steps.r.outputs.version }} contains untranslated strings. Merge the i18n PRs, cut a new patch release, and publish that instead."
-          exit 1
+        if node scripts/i18n/checkTranslationKeys.mjs --release; then
+          exit 0
         fi
+
+        # Nothing has been published yet, so v$V is not a public artifact — move the tag onto
+        # the fixed commit rather than burning the version and leaving a dangling release.
+        {
+          echo "### Publish blocked — v$V contains untranslated strings"
+          echo
+          echo "Nothing was published, so \`v$V\` is still free to reuse. To recover:"
+          echo
+          echo "1. Merge the i18n PRs so the translations are on \`main\`."
+          echo "2. Run **Release — Tag** manually with \`retag=true\` — it moves \`v$V\` onto current \`main\`."
+          echo "3. Re-run **Release — Publish**."
+          echo
+          echo "See the previous step for the exact keys."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
+        exit 1
 
     # Trusted publishing needs npm >= 11.5.1; pin it.
     - name: Upgrade npm for trusted publishing

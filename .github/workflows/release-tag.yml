@@ -5,11 +5,24 @@ name: Release — Tag
 # from the PR's head branch name (release/vX.Y.Z[-alpha.N]); an alpha tag is
 # marked as a prerelease. Run "Release — Publish" afterwards to ship to npm and
 # update Linear.
+#
+# Can also be run manually to *move* an existing tag onto current main — for when
+# Release — Publish refused a tag (untranslated strings, say) and the fix has since
+# landed. Nothing has been published at that point, so the version is still free to
+# reuse. Re-running the original run would not do this: it re-tags the same stale
+# commit, and the create step no-ops when the release already exists.
 
 on:
   pull_request:
     types: [ closed ]
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      retag:
+        description: Delete the existing tag/release for the version in package.json and recreate it on current main
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write       # create the tag + GitHub Release
@@ -17,10 +30,11 @@ permissions:
 
 jobs:
   tag:
-    # Only for merged Release — Prepare PRs.
+    # Merged Release — Prepare PRs, or an explicit manual retag.
     if: >-
-      github.event.pull_request.merged == true &&
-      startsWith(github.event.pull_request.head.ref, 'release/v')
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       startsWith(github.event.pull_request.head.ref, 'release/v'))
     runs-on: ubuntu-latest
 
     steps:
@@ -35,21 +49,44 @@ jobs:
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
         PR: ${{ github.event.pull_request.number }}
       run: |
-        V="${HEAD_REF#release/v}"          # X.Y.Z or X.Y.Z-alpha.N
+        set -euo pipefail
+
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          # No PR to read the version from; package.json on main is the source of truth,
+          # and main's tip is the commit that carries the fix.
+          V=$(node -p "require('./package.json').version")
+          SHA=$(git rev-parse HEAD)
+        else
+          V="${HEAD_REF#release/v}"          # X.Y.Z or X.Y.Z-alpha.N
+          # The event payload's merge_commit_sha can be null/stale (race at close,
+          # and it varies by merge method). Fetch the settled value, and fall back
+          # to main's tip if it is still empty.
+          SHA=$(gh api "repos/{owner}/{repo}/pulls/$PR" --jq '.merge_commit_sha')
+          if [ -z "$SHA" ] || [ "$SHA" = "null" ]; then
+            SHA=$(git rev-parse HEAD)
+          fi
+        fi
+
         # stable -> mark the GitHub Release as Latest; alpha -> prerelease (never Latest)
         FLAGS=(--latest)
         case "$V" in *-*) FLAGS=(--prerelease --latest=false) ;; esac
+
         if gh release view "v$V" >/dev/null 2>&1; then
-          echo "::notice::Release v$V already exists; nothing to do."
-          exit 0
+          if [ "${{ inputs.retag }}" != "true" ]; then
+            echo "::notice::Release v$V already exists; nothing to do. Re-run manually with retag=true to move it."
+            exit 0
+          fi
+          # Safe only because Publish has not shipped this version: npm is the artifact,
+          # the tag is not. Refuse if it is already on npm.
+          PKG=$(node -p "require('./package.json').name")
+          if npm view "$PKG@$V" version >/dev/null 2>&1; then
+            echo "::error::$PKG@$V is already published to npm; a published version must never be retagged. Cut a new patch release instead."
+            exit 1
+          fi
+          echo "Retagging v$V onto $SHA"
+          gh release delete "v$V" --yes --cleanup-tag
         fi
-        # The event payload's merge_commit_sha can be null/stale (race at close,
-        # and it varies by merge method). Fetch the settled value, and fall back
-        # to main's tip if it is still empty.
-        SHA=$(gh api "repos/{owner}/{repo}/pulls/$PR" --jq '.merge_commit_sha')
-        if [ -z "$SHA" ] || [ "$SHA" = "null" ]; then
-          SHA=$(git rev-parse HEAD)
-        fi
+
         gh release create "v$V" --target "$SHA" --title "v$V" --generate-notes "${FLAGS[@]}"
         echo "Created tagged release v$V at $SHA"
-        echo "[Release v$V](https://github.com/${{ github.repository }}/releases/tag/v$V)" >> "$GITHUB_STEP_SUMMARY"
+        echo "[Release v$V](https://github.com/${{ github.repository }}/releases/tag/v$V) at \`$SHA\`" >> "$GITHUB_STEP_SUMMARY"
