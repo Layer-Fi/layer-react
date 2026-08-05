@@ -11,14 +11,13 @@ import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
-// Import boundaries. See the architecture section of AGENTS.md.
+// Import boundaries. See src/SKILL.md.
 const BOUNDARY_SEVERITY = 'error'
 
 const TEST_FILES = ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx']
 
-// Every path alias, ordered lowest tier first. Drives the
-// `no-relative-parent-imports` ignore list and the import-sort groups, so adding
-// an alias means editing here and tsconfig.json only.
+// Lowest tier first. Drives the import-sort groups and the
+// `no-relative-parent-imports` ignore list.
 const TIER_ALIASES = [
   '@internal-types', '@schemas/common', '@schemas/features', '@schemas', '@utils', '@icons', '@assets',
   '@providers/global', '@providers/common',
@@ -45,10 +44,8 @@ const aliasSortGroup = alias => `^(?:type:)?${alias.replaceAll('/', '\\/')}\\/`
  */
 
 /**
- * The tier stack, lowest first. A tier may import strictly lower tiers only.
- *
- * `files` are the tier's own sources, `imports` the specifiers that reach it —
- * lower tiers get one deny group per higher tier, built from these.
+ * Lowest tier first; a tier may import strictly lower tiers only. `files` are the
+ * tier's own sources, `imports` the specifiers that reach it.
  *
  * @type {Layer[]}
  */
@@ -65,12 +62,12 @@ const LAYERS = [
     imports: ['@providers/global/**', '@providers/common/**'],
   },
   {
-    name: 'hooks-utils',
+    name: 'generic hooks',
     files: ['src/hooks/utils/**/*.{ts,tsx}'],
     imports: ['@hooks/utils/**'],
   },
   {
-    name: 'transport',
+    name: 'data loading',
     files: ['src/hooks/api/**/*.{ts,tsx}'],
     imports: ['@api/**', '@hooks/api/**'],
   },
@@ -78,35 +75,33 @@ const LAYERS = [
     name: 'stores',
     files: ['src/providers/features/**/*.{ts,tsx}', 'src/hooks/legacy/**/*.{ts,tsx}'],
     nested: [
-      // src/hooks/legacy predates the tiers and is being deleted. It stays in this
-      // tier so the providers that wrap its hooks can reach it, and so lower tiers
-      // still cannot, but its own imports are unchecked. Do not add files here.
+      // Frozen and being deleted: reachable from this tier, unchecked itself.
       'src/hooks/legacy/**/*.{ts,tsx}',
     ],
     imports: ['@providers/features/**', '@hooks/legacy/**'],
   },
   {
-    name: 'feature-hooks',
+    name: 'feature hooks',
     files: ['src/hooks/features/**/*.{ts,tsx}'],
     imports: ['@hooks/features/**'],
   },
   {
-    name: 'utility',
+    name: 'render helpers',
     files: ['src/components/utility/**/*.{ts,tsx}'],
     imports: ['@components/utility/**'],
   },
   {
-    name: 'ui',
+    name: 'primitives',
     files: ['src/components/ui/**/*.{ts,tsx}'],
     imports: ['@ui/**', '@components/ui/**'],
   },
   {
-    name: 'blocks',
+    name: 'patterns',
     files: ['src/components/blocks/**/*.{ts,tsx}'],
     imports: ['@blocks/**', '@components/blocks/**'],
   },
   {
-    name: 'features',
+    name: 'feature UI',
     files: ['src/components/features/**/*.{ts,tsx}'],
     imports: ['@features/**', '@components/features/**'],
   },
@@ -116,15 +111,14 @@ const LAYERS = [
     imports: ['@views/**'],
   },
   {
-    name: 'app-root',
+    name: 'app root',
     files: ['src/providers/global/LayerProvider/**/*.{ts,tsx}', 'src/index.tsx'],
     imports: ['@providers/global/LayerProvider/**'],
   },
 ]
 
 /**
- * Directories partitioned by domain. A domain may import itself plus `shared`.
- * Domains are read from disk so the rules cannot drift from the tree.
+ * A domain may import itself plus `shared`. Domain lists are read from disk.
  *
  * @type {Partition[]}
  */
@@ -133,21 +127,20 @@ const DOMAIN_PARTITIONS = [
     dir: 'src/schemas/features',
     tier: 'foundation',
     aliases: ['@schemas/features'],
-    // The accounting primitives every other contract is expressed in terms of.
+    // Accounting primitives every other contract builds on.
     shared: ['customerVendor', 'tags', 'business', 'generalLedger', 'bankTransactions'],
   },
   { dir: 'src/utils/features', tier: 'foundation', aliases: ['@utils/features'], shared: [] },
   {
     dir: 'src/components/features',
-    tier: 'features',
+    tier: 'feature UI',
     aliases: ['@features', '@components/features'],
-    // Domains whose UI is reusable scaffolding rather than a feature of its own:
-    // report shells, entity pickers and status badges other domains embed.
+    // Reusable scaffolding: report shells, entity pickers, status badges.
     shared: ['reports', 'customerVendor', 'tags', 'customAccounts', 'bookkeeping', 'generalLedger'],
   },
   {
     dir: 'src/hooks/features',
-    tier: 'feature-hooks',
+    tier: 'feature hooks',
     aliases: ['@hooks/features'],
     shared: ['forms', 'calendly', 'business'],
   },
@@ -155,19 +148,17 @@ const DOMAIN_PARTITIONS = [
     dir: 'src/providers/features',
     tier: 'stores',
     aliases: ['@providers/features'],
-    // business/bankAccounts/bookkeeping hold app-wide singletons that any domain
-    // may read; they fetch, so they sit here rather than in global/.
+    // App-wide singletons; they fetch, so they sit here rather than global/.
     shared: ['business', 'bankAccounts', 'bookkeeping'],
   },
 ]
 
-// Domains too intertwined to separate; treated as one boundary.
+// Treated as one boundary.
 const DOMAIN_GROUPS = [['bankTransactions', 'categorization']]
 
 /** @type {(dir: string) => string[]} */
 const domainsOf = (dir) => {
-  // node:fs resolves to `error` under the default tsconfig that lints this file,
-  // so the call itself cannot be typed; the cast covers everything downstream.
+  // node:fs is untyped under the tsconfig that lints this file.
   /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
   const entries = /** @type {{ name: string, isDirectory: () => boolean }[]} */ (
     readdirSync(dir, { withFileTypes: true })
@@ -203,11 +194,8 @@ const domainPatterns = (partition, domain, domains) => {
   }]
 }
 
-/**
- * One config object per zone. A file must never be covered by two objects that
- * set the same rule — flat config replaces rule options rather than merging.
- * `nested` lists the zones carved out of a tier and handled by their own object.
- */
+// One object per zone: flat config replaces rule options rather than merging them,
+// so a file must never be matched by two objects setting the same rule.
 const boundaryConfigs = LAYERS.flatMap((layer) => {
   const partitions = DOMAIN_PARTITIONS.filter(partition => partition.tier === layer.name)
   const domainZones = partitions.flatMap((partition) => {
@@ -332,8 +320,7 @@ export default tsEslint.config(
     plugins: { import: pluginImport },
     settings: { 'import/resolver': { typescript: true, node: true } },
     rules: {
-      // The rule resolves each specifier and reports when the resolved path is a
-      // parent, so aliased imports match too and have to be ignored here.
+      // Resolves specifiers, so aliased imports match too and must be ignored.
       'import/no-relative-parent-imports': ['error', { ignore: ALIASES.map(alias => `${alias}/`) }],
     },
   },
@@ -354,8 +341,7 @@ export default tsEslint.config(
     },
   },
   {
-    // Production source may not reach into test-only code. The parent-relative
-    // pattern backs `import/no-relative-parent-imports`, which silently skips
+    // The `../*` pattern backs `import/no-relative-parent-imports`, which skips
     // specifiers it cannot resolve.
     files: ['src/**/*.{ts,tsx}'],
     ignores: [
@@ -386,8 +372,7 @@ export default tsEslint.config(
     },
   },
   {
-    // Test-only sources are exempt from the boundary rules but still may not
-    // reach outside src relatively.
+    // Exempt from the boundary rules, but not from the relative-import rule.
     files: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'src/**/*.stories.tsx',
@@ -447,8 +432,8 @@ export default tsEslint.config(
             '^(?:type:)?node:',
             '^(?:type:)?@?\\w',
           ],
-          // Internal imports in tier order. Each regex is its own sub-block,
-          // adjacent with no blank line; only the outer arrays are separated.
+          // Tier order. Each regex is its own sub-block; only outer arrays get a
+          // blank line between them.
           TIER_ALIASES.map(aliasSortGroup),
           TEST_ALIASES.map(aliasSortGroup),
           [

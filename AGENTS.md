@@ -23,6 +23,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 
 | Working on… | Read |
 | --- | --- |
+| Which layer code belongs in, feature-domain boundaries, fixing a boundary error | [`src/SKILL.md`](src/SKILL.md) |
 | API contracts, Effect `Schema`, enums, nullability, envelopes, money types | [`src/schemas/SKILL.md`](src/schemas/SKILL.md) |
 | Fetching, mutating, caching — SWR hook factories, cache tags, invalidation | [`src/hooks/api/SKILL.md`](src/hooks/api/SKILL.md) |
 | Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
@@ -70,58 +71,33 @@ release process.
 
 ## Import boundaries
 
-Both axes are lint-enforced from one table at the top of `eslint.config.mjs`. Nothing here is
-advisory — a violation fails `npm run lint`.
+Two lint-enforced rules. Full detail, including why each layer sits where it does and how to fix a
+violation, is in [`src/SKILL.md`](src/SKILL.md) — read it before moving code between directories.
 
-**Vertically**, code sits in a tier and may import strictly lower tiers only:
+**Layers.** Every file belongs to one layer and may import strictly lower layers only:
 
-| # | Tier | Holds |
-| --- | --- | --- |
-| 1 | foundation | `@internal-types` `@schemas` `@utils` `@icons` `@assets` |
-| 2 | context | `@providers/global` `@providers/common` — DI inputs, no fetching |
-| 3 | generic hooks | `@hooks/utils` — the SWR substrate `@api` is built on |
-| 4 | transport | `@api` — one file per endpoint |
-| 5 | stores | `@providers/features` and `@hooks/legacy` |
-| 6 | feature hooks | `@hooks/features` |
-| 7–9 | design system | `@components/utility` → `@ui` → `@blocks` |
-| 10–11 | feature UI | `@features` → `@views` |
-| 12 | app root | `LayerProvider` and `src/index.tsx` — composes everything |
+1. foundation — `@internal-types` `@schemas` `@utils` `@icons` `@assets`
+2. context — `@providers/global` `@providers/common` (never fetches)
+3. generic hooks — `@hooks/utils`
+4. data loading — `@api`
+5. stores — `@providers/features` `@hooks/legacy`
+6. feature hooks — `@hooks/features`
+7. render helpers — `@components/utility`
+8. primitives — `@ui`
+9. patterns — `@blocks`
+10. feature UI — `@features`
+11. views — `@views`
+12. app root — `LayerProvider`, `src/index.tsx`
 
-Two placements are worth knowing because they read backwards at first. **Context sits below
-`@hooks/utils`** because `useAuth` and `useBuildKeyInputs` read `LayerContext`, and every `@api`
-hook is built on those factories — putting DI inputs at the bottom is what makes the data layer
-orderable at all. **Stores sit below feature hooks**: the dependency runs
-`@hooks/features → @providers` about 38 times against 7 the other way, so a provider that needs a
-value a feature hook computes takes it as a prop instead.
+Context sits below the hooks because the SWR factories read `LayerContext`; stores sit below
+feature hooks because that is the direction the dependency already ran, 38 to 7.
 
-`src/hooks/legacy` is exempt from its own outbound checks — it predates the tiers and is being
-deleted. Lower tiers still cannot import it. Don't add files there.
+**Feature domains.** In `schemas`, `components`, `hooks`, `providers` and `utils`, a domain under
+`features/` may import itself plus that partition's declared shared set — nothing else. The sets
+live in `eslint.config.mjs`.
 
-**Horizontally**, a domain may import itself plus a declared shared set, and nothing else:
-
-| Partition | Shared domains |
-| --- | --- |
-| `src/schemas/features` | `customerVendor` `tags` `business` `generalLedger` `bankTransactions` |
-| `src/components/features` | `reports` `customerVendor` `tags` `customAccounts` `bookkeeping` `generalLedger` |
-| `src/hooks/features` | `forms` `calendly` `business` |
-| `src/providers/features` | `business` `bankAccounts` `bookkeeping` |
-| `src/utils/features` | — |
-
-`bankTransactions` and `categorization` count as one boundary; they are one feature.
-
-To let a new cross-domain import through, either move the shared code down a tier or add the
-target to that partition's shared set — both are deliberate edits to the table, which is the
-point. Domain lists are read from disk, so the rules cannot drift from the tree.
-
-Tests and stories (`*.test.*`, `*.stories.tsx`) are exempt from both axes: the boundaries protect
-the shipped artifact, and `tsconfig.build.json` excludes exactly those files. The reverse rule
-still holds — production source may not import `@msw`, `@fixtures`, `@testUtils` or `*.stories*`.
-`src/fixtures` may reach only the foundation; `src/msw` adds `@fixtures`.
-
-`features/<domain>` reuses the domain names of `src/hooks/features/*`, `src/providers/features/*`
-and `src/schemas/features/*`, so one name locates a domain's components, hooks, stores, and
-contracts. Directories still directly under `src/components/` are un-migrated, not a second
-convention.
+Tests and stories are exempt from both rules; production source still may not import `@msw`,
+`@fixtures`, `@testUtils` or story modules. A domain name means the same thing in every partition.
 
 ## Non-negotiables
 
@@ -224,19 +200,11 @@ Reach for these before writing your own:
 
 Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
-`@assets/*`, `@msw/*`, `@fixtures/*`, `@testUtils/*`. Adding one means editing `tsconfig.json`
-and the alias table in `eslint.config.mjs` — the latter feeds the sort order and the
-`no-relative-parent-imports` ignore list, so a missed entry breaks every import through it.
+`@assets/*`, `@msw/*`, `@fixtures/*`, `@testUtils/*`.
 
-`simple-import-sort` enforces tier order, lowest tier first, so an import block reads bottom-up
-through the dependency stack: react → external → foundation (`@internal-types`, `@schemas`,
-`@utils`, `@icons`, `@assets`) → context (`@providers/global`, `@providers/common`) →
-`@hooks/utils` → `@api` → `@providers/features` → `@hooks/features` → design system
-(`@components/utility`, `@ui`, `@blocks`) → (`@features`, `@views`) →
-(`@fixtures`, `@msw`, `@testUtils`) → styles.
-
-The group list is generated from the same alias table that drives the boundary rules, so the two
-cannot drift. Run `lint:fix`; never sort by hand.
+`simple-import-sort` sorts imports by layer, lowest first, so a block reads bottom-up through the
+stack. Run `lint:fix`; never sort by hand. Adding an alias touches two files — see
+[`src/SKILL.md`](src/SKILL.md#import-order).
 
 Type imports are inline-style and enforced: `import { type Foo } from '…'`.
 

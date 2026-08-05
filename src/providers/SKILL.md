@@ -1,7 +1,7 @@
 ---
 name: state-management
 description: State management — choosing between SWR, Zustand, and React Context; provider-scoped store pattern, DI contexts, feature visibility
-applies_to: src/providers/**, src/utils/zustand/**
+applies_to: src/providers/**
 ---
 
 # State management
@@ -22,17 +22,26 @@ must be shared across a subtree.
 
 ## Layout
 
-`src/providers/<domain>/<Concern>/`. A concern's context, its provider, and its helpers are
-colocated in that one directory; a bare context never lives apart from the provider that
+`src/providers/features/<domain>/<Concern>/`. A concern's context, its provider, and its helpers
+are colocated in that one directory; a bare context never lives apart from the provider that
 supplies it.
 
-Two buckets are not domains. `global/` is exactly the provider stack `LayerProvider` mounts —
-add to it only when you are adding a provider every consumer gets. `common/` is reusable,
-domain-agnostic machinery (`BulkSelectionStore`, the `DateStore` factory, `InAppLink`); put a
-store here rather than in a domain when a `@blocks` component consumes it, since a block may
-not depend on a feature domain. Nothing in `common/` may import `global/` or a domain — inject
-what it needs instead, the way `createScopedDateStore` takes a `useActivationDate` hook rather
-than reading `LayerContext` itself.
+`global/` and `common/` sit outside `features/` and are not domains. They are also a **different
+layer** — see [`src/SKILL.md`](../SKILL.md): they hold injected config (layer 2, below the SWR
+factories), while `features/` holds the domain stores (layer 5, above data loading). The split is
+load-bearing, so keep the distinction:
+
+- `global/` is exactly the provider stack `LayerProvider` mounts — add to it only when you are
+  adding a provider every consumer gets, and only if it does **not** fetch. A provider that loads
+  data belongs under `features/<domain>/`, which is why `BusinessProvider`, `BankAccountsContext`
+  and `BookkeepingStatusContext` live there.
+- `common/` is reusable, domain-agnostic machinery (`BulkSelectionStore`, the `DateStore` factory,
+  `createScopedStore`, `InAppLink`). Put a store here rather than in a domain when a `@blocks`
+  component consumes it, since a block may not depend on a feature domain.
+
+Nothing in `global/` or `common/` may import `features/`, `@api`, or `@hooks` — inject what it needs
+instead, the way `createScopedDateStore` takes a `useActivationDate` hook rather than reading
+`LayerContext` itself. A provider that needs a value a feature hook computes takes it as a prop.
 
 ## Zustand stores are provider-scoped, never global singletons
 

@@ -17,15 +17,19 @@ contract.** Do not guess field names, nullability, or enum members.
 
 | Thing | Location |
 | --- | --- |
-| Schema definitions | `src/schemas/<domain>/**` (`src/schemas/customerVendor/customer.ts`, `src/schemas/invoices/invoice.ts`) |
+| Schema definitions | `src/schemas/features/<domain>/**` (`features/customerVendor/customer.ts`, `features/invoices/invoice.ts`) |
 | Shared building blocks | `src/schemas/common/**` (`utils.ts`, `pagination.ts`, `nonRecursiveBigDecimal.ts`, …) |
 | Internal-only TS types (no wire format) | `src/types/**` — a plain `type`/`interface` is correct here; don't reach for Schema (see [`src/types/SKILL.md`](../types/SKILL.md)) |
 
-`schemas/<domain>` reuses the domain names of `src/hooks/features/*` and
-`src/components/features/*`, so one domain has the same folder name in all three trees. A
-schema shared by several domains belongs in `common/`, not in whichever domain reached for
-it first. Nothing sits at the root of `src/schemas` — every file is under a domain or
-`common/`.
+`schemas/features/<domain>` reuses the domain names of `src/hooks/features/*`,
+`src/providers/features/*`, `src/utils/features/*` and `src/components/features/*`, so one domain
+has the same folder name in every tree. A schema shared by several domains belongs in `common/`,
+not in whichever domain reached for it first. Nothing sits at the root of `src/schemas` — every
+file is under `features/<domain>/` or `common/`.
+
+Cross-domain imports are lint-enforced: a domain may import itself plus that partition's shared
+set, listed in [`src/SKILL.md`](../SKILL.md#feature-domains). If a second domain needs your
+schema, that is usually the signal to move it to `common/`.
 
 A file holds **one schema, or one cohesive collection** — an entity with its `Type`/`Encoded`
 aliases and own-use enums, or one API response including the structs nested only inside it.

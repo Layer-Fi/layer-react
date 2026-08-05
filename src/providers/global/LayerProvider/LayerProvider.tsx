@@ -14,6 +14,7 @@ import { GlobalDateStoreProvider } from '@providers/global/GlobalDateStore/Globa
 import { LayerI18nProvider } from '@providers/global/I18nProvider/LayerI18nProvider'
 import { StaleLocaleCacheInvalidator } from '@providers/global/LayerProvider/StaleLocaleCacheInvalidator'
 import { BusinessProvider } from '@providers/features/business/BusinessProvider/BusinessProvider'
+import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 
 export type EventCallbacks = {
   onEvent?: (event: LayerEvent) => void
@@ -78,7 +79,7 @@ export const LayerProvider = ({
             businessAccessToken={businessAccessToken}
           >
             <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} />
+              <BusinessProvider {...restProps} slots={{ Toasts: ToastsContainer }} />
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>

@@ -59,7 +59,8 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
 type BusinessProviderProps = PropsWithChildren<
   Pick<LayerProviderProps, 'businessId' | 'theme' | 'onError' | 'eventCallbacks'>
   // Injected so the provider does not depend on the design system to render toasts.
-  & { slots?: { Toasts?: ComponentType } }
+  // Required: a missing renderer would silently drop every toast.
+  & { slots: { Toasts: ComponentType } }
 >
 
 export const BusinessProvider = ({
@@ -68,7 +69,7 @@ export const BusinessProvider = ({
   theme,
   onError,
   eventCallbacks,
-  slots: { Toasts } = {},
+  slots: { Toasts },
 }: PropsWithChildren<BusinessProviderProps>) => {
   errorHandler.setOnError(onError)
 
@@ -235,7 +236,7 @@ export const BusinessProvider = ({
           {children}
         </BankAccountsProvider>
       </BookkeepingStatusProvider>
-      {Toasts ? <Toasts /> : null}
+      <Toasts />
     </LayerContext.Provider>
   )
 }

@@ -85,9 +85,11 @@ silently meant create, a form editing a not-yet-loaded record would POST a dupli
 
 ## What may not be imported here
 
-`src/hooks/api` is the transport layer. A lint rule blocks `@components`, `@ui`, `@blocks`,
-`@views`, `@icons`, `@assets`, `@hooks/features` and `@hooks/legacy` outright, and blocks runtime
-imports from `@providers` (type-only is fine).
+`src/hooks/api` is the data-loading layer — layer 4 of the stack in
+[`src/SKILL.md`](../../SKILL.md). Everything above it is blocked by lint: UI (`@components`,
+`@ui`, `@blocks`, `@views`), feature code (`@hooks/features`), and the domain stores in
+`@providers/features`. Injected config in `@providers/global` and `@providers/common` sits *below*
+this layer, so reading it is fine.
 
 A hook that needs app state — store params, context callbacks — does not read it here. Export the
 parameterized hook from `@api` and wrap it in `@hooks/features/**`, which may import from `@api`.
