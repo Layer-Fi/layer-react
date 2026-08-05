@@ -93,7 +93,7 @@ export const Default: Story = {
 }
 
 export const DrawerOpen: Story = {
-  parameters: { chromatic: { viewports: [1280] }, responseDelay: 0 },
+  parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

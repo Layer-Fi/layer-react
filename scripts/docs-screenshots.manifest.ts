@@ -49,7 +49,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/bank-transactions.mdx',
   },
   {
-    storyId: 'components-banktransactions--bookkeeping-disabled',
+    storyId: 'components-banktransactions--docs-categorization',
     out: 'components/bank-transactions-categorization.png',
     viewport: 'desktop',
     maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
@@ -125,7 +125,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/pnl-chart.mdx',
   },
   {
-    storyId: 'components-tasks--default',
+    storyId: 'components-tasks--docs-default',
     out: 'components/tasks.png',
     // The card tops out near 740px, so a desktop capture is mostly empty space beside it.
     viewport: 'tablet',
@@ -164,7 +164,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/mileage-tracking.mdx',
   },
   {
-    storyId: 'views-taxestimates--default',
+    storyId: 'views-taxestimates--docs-default',
     out: 'pages/tax-estimates.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/tax-estimates.mdx',

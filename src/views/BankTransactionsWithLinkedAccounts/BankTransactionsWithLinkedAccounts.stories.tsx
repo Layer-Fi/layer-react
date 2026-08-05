@@ -100,5 +100,4 @@ export const BookkeepingEnabled: Story = {
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
   tags: ['docs-screenshot'],
-  parameters: { responseDelay: 0 },
 }

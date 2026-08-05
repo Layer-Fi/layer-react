@@ -28,8 +28,7 @@
 
   &:focus-visible,
   &[data-focus-visible] {
-    outline: 2px solid var(--outline-default);
-    outline-offset: -2px;
+    outline: none;
   }
 
   &:not(:last-child) .Layer__UI__Table-Cell {

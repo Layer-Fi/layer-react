@@ -56,7 +56,7 @@ const findInvoiceRowWithNamedPerson = (rows: ReadonlyArray<HTMLElement>) => {
 // detail view — the desktop table's rows aren't clickable — so this is a tablet story.
 export const Detail: Story = {
   tags: ['docs-screenshot'],
-  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] }, responseDelay: 0 },
+  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const { row, number } = findInvoiceRowWithNamedPerson(await findEntryRows(canvas))

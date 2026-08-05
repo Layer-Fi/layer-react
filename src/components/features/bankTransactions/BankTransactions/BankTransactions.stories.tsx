@@ -219,9 +219,13 @@ const CATEGORIZABLE_DESCRIPTIONS = bankTransactions.flatMap(transaction =>
     : [],
 )
 
-export const BookkeepingDisabled: Story = {
-  tags: ['docs-screenshot'],
-  parameters: { responseDelay: 0 },
+// The global mock's status is NOT_PURCHASED, so categorization is enabled.
+export const BookkeepingDisabled: Story = {}
+
+// Same state, with a row expanded to show the categorize form the collapsed rows can't convey.
+// Split from `BookkeepingDisabled` so the public-api story stays free of interactions.
+export const DocsCategorization: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const rows = await findEntryRows(canvas)

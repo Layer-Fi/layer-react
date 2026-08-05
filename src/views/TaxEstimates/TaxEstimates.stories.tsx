@@ -25,15 +25,17 @@ export default meta
 
 type Story = StoryObj<typeof TaxEstimates>
 
-// The banner only renders when the year has uncategorized transactions, which is noise in a
-// screenshot of the estimates themselves.
+export const Default: Story = {}
+
+// The banner only renders when the year has uncategorized transactions. That's real behavior worth
+// keeping on `Default`, but it's noise in a screenshot of the estimates themselves.
 const noUncategorizedTransactions = getTaxBanner.mock({
   ...makeTaxBanner(FIXTURE_YEAR),
   totalUncategorizedCount: 0,
 })
 
-export const Default: Story = {
-  tags: ['docs-screenshot'],
+export const DocsDefault: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [enableTaxEstimates, noUncategorizedTransactions, ...handlers] },
   },

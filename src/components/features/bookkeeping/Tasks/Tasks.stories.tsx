@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
+import { type DateRange } from '@utils/date/dateRange'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@features/bookkeeping/Tasks/Tasks'
 
@@ -9,7 +10,7 @@ import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-a
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
-import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
@@ -99,8 +100,10 @@ const meta: Meta<TasksStoryArgs> = {
     },
   },
   decorators: [
-    Story => (
-      <PinnedGlobalDateRange dateRange={FIXTURE_YEAR_RANGE}>
+    // One pin, chosen by parameter: nesting a second PinnedGlobalDateRange would race, since the
+    // inner layout effect lands before the outer one and the outer range would win.
+    (Story, { parameters }: { parameters: { pinnedDateRange?: DateRange } }) => (
+      <PinnedGlobalDateRange dateRange={parameters.pinnedDateRange ?? FIXTURE_YEAR_RANGE}>
         <div style={{ display: 'grid', paddingBlock: '2rem', paddingInline: '3rem' }}>
           <div style={{ display: 'grid', minInlineSize: '20rem', maxInlineSize: '48rem' }}>
             <Story />
@@ -125,6 +128,17 @@ export default meta
 
 type Story = StoryObj<TasksStoryArgs>
 
-export const Default: Story = {
-  tags: ['docs-screenshot'],
+export const Default: Story = {}
+
+// November has the most outstanding tasks in the fixture year. Day 30, not 31 — November has no
+// 31st, and JS would roll that over into December.
+const NOVEMBER: DateRange = {
+  startDate: new Date(FIXTURE_YEAR, 10, 1),
+  endDate: new Date(FIXTURE_YEAR, 10, 30),
+}
+
+export const DocsDefault: Story = {
+  ...Default,
+  tags: ['!public-api', 'docs-screenshot'],
+  parameters: { pinnedDateRange: NOVEMBER },
 }
