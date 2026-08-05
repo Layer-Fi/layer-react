@@ -102,11 +102,14 @@ const checkReadyForRelease = async () => {
   const sourceKeys = new Set(Object.keys(source))
 
   // Extraction emits a plural form per configured locale, so a category English does not use is
-  // absent from en-US by design. Any category English does use must be there.
+  // absent by design — but only for a base English really pluralizes, or `…_greater_than_zero`
+  // reads as a plural form and escapes the check.
   const sourceCategories = pluralCategoriesFor(SOURCE_LOCALE)
   const isForeignPluralForm = (key) => {
     const plural = splitPluralCategory(key)
-    return Boolean(plural) && !sourceCategories.has(plural.category)
+    return Boolean(plural)
+      && !sourceCategories.has(plural.category)
+      && hasPluralFamilyIn(plural.base, sourceKeys)
   }
 
   const unextracted = [...new Set(
