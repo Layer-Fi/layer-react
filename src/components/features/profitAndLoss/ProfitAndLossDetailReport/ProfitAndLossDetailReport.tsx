@@ -65,8 +65,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('reports:error.load_detail_lines', 'Error loading detail lines')}
-      description={t('reports:error.load_pnl_detail_lines', 'There was an error loading the profit and loss detail lines')}
+      title={t('profitAndLoss:ProfitAndLossDetailReport.error.load_detail_lines', 'Error loading detail lines')}
+      description={t('profitAndLoss:ProfitAndLossDetailReport.error.load_pnl_detail_lines', 'There was an error loading the profit and loss detail lines')}
     />
   )
 }
@@ -77,8 +77,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('reports:empty.no_detail_lines_found', 'No detail lines found')}
-      description={t('reports:empty.no_detail_lines_pnl_item', 'There are no detail lines for this profit and loss item')}
+      title={t('profitAndLoss:ProfitAndLossDetailReport.empty.no_detail_lines_found', 'No detail lines found')}
+      description={t('profitAndLoss:ProfitAndLossDetailReport.empty.no_detail_lines_pnl_item', 'There are no detail lines for this profit and loss item')}
     />
   )
 }
@@ -232,7 +232,7 @@ export const ProfitAndLossDetailReport = ({
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
           <LedgerEntryDetailSection
-            title={stringOverrides?.sourceDetailsTitle || t('bankTransactions:label.transaction_source', 'Transaction source')}
+            title={stringOverrides?.sourceDetailsTitle || t('profitAndLoss:ProfitAndLossDetailReport.label.transaction_source', 'Transaction source')}
           >
             <LedgerEntryDetailField label={t('common:label.source', 'Source')}>
               {badgeOrInAppLink}
@@ -249,7 +249,7 @@ export const ProfitAndLossDetailReport = ({
       <VStack className='Layer__ProfitAndLossDetailReport'>
         <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}
-          ariaLabel={t('reports:label.line_item_name_detail_lines', '{{lineItemName}} detail lines', { lineItemName })}
+          ariaLabel={t('profitAndLoss:ProfitAndLossDetailReport.label.line_item_name_detail_lines', '{{lineItemName}} detail lines', { lineItemName })}
           columnConfig={columnConfig}
           data={rowsWithRunningBalance.lines}
           isLoading={isLoading}

@@ -30,7 +30,7 @@ export const InvoiceDetail = () => {
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
     if (!enablePaymentMethodsOnFinalize) {
       addToast({
-        content: t('invoices:label.invoice_saved', 'Invoice saved'),
+        content: t('invoices:InvoiceDetail.label.invoice_saved', 'Invoice saved'),
         type: 'success',
       })
     }
@@ -49,7 +49,7 @@ export const InvoiceDetail = () => {
 
   const onFinalizeInvoiceSuccess = useCallback((invoice: Invoice) => {
     addToast({
-      content: t('invoices:label.invoice_saved_and_sent_successfully', 'Invoice saved and sent successfully'),
+      content: t('invoices:InvoiceDetail.label.invoice_saved_and_sent_successfully', 'Invoice saved and sent successfully'),
       type: 'success',
     })
     toViewInvoice(invoice)

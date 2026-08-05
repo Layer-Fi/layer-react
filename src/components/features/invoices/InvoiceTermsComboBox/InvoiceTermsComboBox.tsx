@@ -14,12 +14,12 @@ type InvoiceTermsOption = {
 }
 
 const INVOICE_TERMS_CONFIG = [
-  { value: InvoiceTermsValues.Net10, ...translationKey('invoices:label.net_10', 'Net 10') },
-  { value: InvoiceTermsValues.Net15, ...translationKey('invoices:label.net_15', 'Net 15') },
-  { value: InvoiceTermsValues.Net30, ...translationKey('invoices:label.net_30', 'Net 30') },
-  { value: InvoiceTermsValues.Net60, ...translationKey('invoices:label.net_60', 'Net 60') },
-  { value: InvoiceTermsValues.Net90, ...translationKey('invoices:label.net_90', 'Net 90') },
-  { value: InvoiceTermsValues.Custom, ...translationKey('invoices:label.custom', 'Custom') },
+  { value: InvoiceTermsValues.Net10, ...translationKey('invoices:InvoiceTermsComboBox.label.net_10', 'Net 10') },
+  { value: InvoiceTermsValues.Net15, ...translationKey('invoices:InvoiceTermsComboBox.label.net_15', 'Net 15') },
+  { value: InvoiceTermsValues.Net30, ...translationKey('invoices:InvoiceTermsComboBox.label.net_30', 'Net 30') },
+  { value: InvoiceTermsValues.Net60, ...translationKey('invoices:InvoiceTermsComboBox.label.net_60', 'Net 60') },
+  { value: InvoiceTermsValues.Net90, ...translationKey('invoices:InvoiceTermsComboBox.label.net_90', 'Net 90') },
+  { value: InvoiceTermsValues.Custom, ...translationKey('invoices:InvoiceTermsComboBox.label.custom', 'Custom') },
 ]
 
 export const getDurationInDaysFromTerms = (terms: InvoiceTermsValues) => {
@@ -88,7 +88,7 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
   const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   return (
-    <ComboBoxField label={t('invoices:label.terms', 'Terms')} className='Layer__InvoiceForm__Field__Terms' inline>
+    <ComboBoxField label={t('invoices:InvoiceTermsComboBox.label.terms', 'Terms')} className='Layer__InvoiceForm__Field__Terms' inline>
       {controlProps => (
         <ComboBox
           {...controlProps}

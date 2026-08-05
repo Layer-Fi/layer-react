@@ -62,13 +62,13 @@ const getColumnConfig = (
   },
   {
     id: TripColumns.Vehicle,
-    header: t('vehicles:label.vehicle', 'Vehicle'),
+    header: t('mileage:TripsTable.label.vehicle', 'Vehicle'),
     cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle, t)}</Span>,
     isRowHeader: true,
   },
   {
     id: TripColumns.Distance,
-    header: t('trips:label.distance', 'Distance'),
+    header: t('mileage:TripsTable.label.distance', 'Distance'),
     cell: (row: TripsRowType) => <TripsDistanceCell distance={row.original.distance} />,
   },
   {
@@ -90,10 +90,10 @@ const getColumnConfig = (
     id: TripColumns.Actions,
     cell: (row: TripsRowType) => (
       <HStack gap='3xs'>
-        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={t('trips:action.view_trip', 'View Trip')} variant='ghost'>
+        <Button inset icon onPress={() => onViewOrUpsertTrip(row.original)} aria-label={t('mileage:TripsTable.action.view_trip', 'View Trip')} variant='ghost'>
           <Edit size={20} />
         </Button>
-        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={t('trips:action.delete_trip', 'Delete Trip')} variant='ghost'>
+        <Button inset icon onPress={() => onDeleteTrip(row.original)} aria-label={t('mileage:TripsTable.action.delete_trip', 'Delete Trip')} variant='ghost'>
           <Trash2 size={20} />
         </Button>
       </HStack>
@@ -134,7 +134,7 @@ export const TripsTable = ({
     <Container name='TripsTable'>
       <TripsTableHeader onRecordTrip={onRecordTrip} />
       <PaginatedTable
-        ariaLabel={t('trips:label.trips', 'Trips')}
+        ariaLabel={t('mileage:TripsTable.label.trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

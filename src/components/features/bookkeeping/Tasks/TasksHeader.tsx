@@ -21,7 +21,7 @@ export const TasksHeader = ({
       pi='lg'
     >
       <Heading size='sm'>
-        {tasksHeader ?? t('bookkeeping:label.bookkeeping_tasks', 'Bookkeeping Tasks')}
+        {tasksHeader ?? t('bookkeeping:Tasks.TasksHeader.label.bookkeeping_tasks', 'Bookkeeping Tasks')}
       </Heading>
     </HStack>
   )

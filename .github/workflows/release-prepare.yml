@@ -39,6 +39,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   prepare:
@@ -58,6 +59,58 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    # Kept out of the check step below: that one is continue-on-error, so an install failure
+    # there would read as a translation failure.
+    - name: Install dependencies
+      if: ${{ inputs.release_type == 'stable' }}
+      run: npm ci
+
+    # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
+    # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.
+    - name: Check translations are ready
+      if: ${{ inputs.release_type == 'stable' }}
+      id: i18n
+      continue-on-error: true
+      run: npm run i18n:check-release
+
+    # Start the pipeline that fixes it and stop: cutting a release PR now would only produce a
+    # tag that Release — Publish refuses.
+    - name: Start the translation pipeline and stop
+      if: ${{ inputs.release_type == 'stable' && steps.i18n.outcome == 'failure' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # No remedy means the check itself died rather than reporting untranslated keys.
+        if [ -z "${{ steps.i18n.outputs.remedy }}" ]; then
+          echo "::error::npm run i18n:check-release failed to produce a result; see the previous step."
+          exit 1
+        fi
+
+        if [ "${{ steps.i18n.outputs.remedy }}" = "crowdin" ]; then
+          WORKFLOW=crowdin-sync.yml
+          BRANCH=i18n/crowdin-fr-ca
+          # A bare dispatch is download-only, which cannot fill values Crowdin has not translated
+          # yet; the upload and pre-translate steps are gated on this input.
+          gh workflow run "$WORKFLOW" --ref main -f pretranslate=true
+        else
+          WORKFLOW=i18n-extract-keys.yml
+          BRANCH=i18n/extract-keys
+          gh workflow run "$WORKFLOW" --ref main
+        fi
+
+        {
+          echo "### Stable release blocked — translations are not ready"
+          echo
+          echo "Dispatched \`$WORKFLOW\`, which opens or updates the \`$BRANCH\` PR."
+          echo "Merge it — an extract PR landing on \`main\` triggers the Crowdin sync"
+          echo "automatically — then re-run this workflow once the translations are on \`main\`."
+          echo
+          echo "See the previous step for the exact keys."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::Translations are not ready for a stable release. Dispatched $WORKFLOW; merge the $BRANCH PR, then re-run."
+        exit 1
 
     - name: Compute next version
       id: ver

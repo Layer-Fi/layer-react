@@ -63,7 +63,7 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
         const error = amountRangeInOrder(
           { min: value.amountMinFilter, max: value.amountMaxFilter },
           t(
-            'categorizationRules:validation.amount_min_greater_than_max',
+            'categorization:CategorizationRuleForm.useCategorizationRuleForm.validation.amount_min_greater_than_max',
             'Minimum amount must be less than or equal to maximum amount.',
           ),
         )

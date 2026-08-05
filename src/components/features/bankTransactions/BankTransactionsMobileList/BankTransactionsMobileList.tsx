@@ -123,7 +123,7 @@ const BankTransactionsMobileListContent = ({
       )}
       <VStack pbs='sm'>
         <MobileList
-          ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
+          ariaLabel={t('bankTransactions:BankTransactionsMobileList.label.transactions', 'Transactions')}
           data={bankTransactions}
           isLoading={isLoading}
           isError={isError}

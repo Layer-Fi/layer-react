@@ -81,7 +81,7 @@ export function ProfitAndLossSummaries({
       isLoading={isLoading}
       rows={[
         {
-          label: t('overview:label.categorized_revenue', 'Categorized revenue'),
+          label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_revenue', 'Categorized revenue'),
           amount: categorized,
           swatchColor: categorizedSwatchColor,
         },
@@ -103,7 +103,7 @@ export function ProfitAndLossSummaries({
       isLoading={isLoading}
       rows={[
         {
-          label: t('overview:label.categorized_expenses', 'Categorized expenses'),
+          label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_expenses', 'Categorized expenses'),
           amount: categorized,
           swatchColor: categorizedSwatchColor,
         },
@@ -125,7 +125,7 @@ export function ProfitAndLossSummaries({
       isLoading={isLoading}
       rows={showProfitAndLossBreakdown
         ? [{
-          label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
+          label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_net_profit', 'Categorized net profit'),
           amount: categorized,
         }]
         : []}
@@ -176,7 +176,7 @@ export function ProfitAndLossSummaries({
 
   const net: SummaryTileConfig = useMemo(() => ({
     label: isCashflow
-      ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
+      ? stringOverrides?.netCashFlowLabel || t('profitAndLoss:ProfitAndLossSummaries.label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
     renderFooter: isCashflow && showProfitAndLossBreakdown
       ? renderNetFooter

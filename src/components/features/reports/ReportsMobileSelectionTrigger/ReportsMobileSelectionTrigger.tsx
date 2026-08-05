@@ -15,8 +15,8 @@ export const ReportsMobileSelectionTrigger = () => {
 
   return (
     <MobileSelectionDrawerWithTrigger<ReportOption>
-      ariaLabel={t('reports:label.report_type', 'Report type')}
-      heading={t('reports:label.select_report', 'Select report')}
+      ariaLabel={t('reports:ReportsMobileSelectionTrigger.label.report_type', 'Report type')}
+      heading={t('reports:ReportsMobileSelectionTrigger.label.select_report', 'Select report')}
       options={options}
       selectedValue={selectedReportOption}
       onSelectedValueChange={value => value && setActiveReport(value.value)}

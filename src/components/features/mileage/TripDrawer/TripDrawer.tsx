@@ -26,7 +26,7 @@ const TripDrawerHeader = ({ title, close, isMobile }: { title: string, close: ()
 export const TripDrawer = ({ isOpen, onOpenChange, trip, onSuccess }: TripDrawerProps) => {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const title = trip ? t('trips:action.edit_trip', 'Edit Trip') : t('trips:action.record_trip', 'Record trip')
+  const title = trip ? t('mileage:TripDrawer.action.edit_trip', 'Edit Trip') : t('mileage:TripDrawer.action.record_trip', 'Record trip')
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <TripDrawerHeader title={title} close={close} isMobile={isMobile} />

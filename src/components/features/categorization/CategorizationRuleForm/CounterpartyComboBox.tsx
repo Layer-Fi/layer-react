@@ -44,13 +44,13 @@ export const CounterpartyComboBox = ({
   } = useCounterpartyOptions({ value, searchQuery, transactionDescription })
 
   const slots = useMemo(() => {
-    let emptyMessageContent = t('categorizationRules:empty.no_matching_counterparties', 'No matching counterparties.')
+    let emptyMessageContent = t('categorization:CategorizationRuleForm.CounterpartyComboBox.empty.no_matching_counterparties', 'No matching counterparties.')
     if (isListError) {
-      emptyMessageContent = t('categorizationRules:error.load_counterparties', 'Couldn’t load counterparties. Please try again.')
+      emptyMessageContent = t('categorization:CategorizationRuleForm.CounterpartyComboBox.error.load_counterparties', 'Couldn’t load counterparties. Please try again.')
     }
     else if (searchQuery === '') {
       emptyMessageContent = t(
-        'categorizationRules:empty.no_counterparties_yet',
+        'categorization:CategorizationRuleForm.CounterpartyComboBox.empty.no_counterparties_yet',
         'No counterparties yet. They will appear here automatically as your transactions are processed.',
       )
     }
@@ -61,7 +61,7 @@ export const CounterpartyComboBox = ({
           <Span>{emptyMessageContent}</Span>
         </VStack>
       ),
-      ErrorMessage: t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
+      ErrorMessage: t('categorization:CategorizationRuleForm.CounterpartyComboBox.validation.counterparty_required', 'Counterparty is required.'),
     }
   }, [isListError, searchQuery, t])
 

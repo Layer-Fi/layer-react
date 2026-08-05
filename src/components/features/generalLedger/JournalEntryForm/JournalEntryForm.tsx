@@ -94,7 +94,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
         <div className={`${JOURNAL_ENTRY_FORM_CSS_PREFIX}__Row`}>
           <VStack gap='xs'>
             <form.AppField name='entryAt'>
-              {field => <field.FormDateField label={t('generalLedger:label.entry_date', 'Entry date')} isReadOnly={isReadOnly} />}
+              {field => <field.FormDateField label={t('generalLedger:JournalEntryForm.label.entry_date', 'Entry date')} isReadOnly={isReadOnly} />}
             </form.AppField>
           </VStack>
           <div></div>
@@ -158,7 +158,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
                         <CustomerVendorSelector
                           selectedCustomerVendor={currentCustomerVendor}
                           onSelectedCustomerVendorChange={handleSelectionChange}
-                          placeholder={t('customerVendor:action.select_customer_vendor', 'Select customer or vendor')}
+                          placeholder={t('generalLedger:JournalEntryForm.action.select_customer_vendor', 'Select customer or vendor')}
                           isReadOnly={isReadOnly}
                         />
                       )
@@ -191,7 +191,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title={t('generalLedger:action.add_debits', 'Add Debits')}
+            title={t('generalLedger:JournalEntryForm.action.add_debits', 'Add Debits')}
             direction={LedgerEntryDirection.Debit}
             showTags={showTags}
           />
@@ -202,7 +202,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
           <JournalEntryLineItemsTable
             form={form}
             isReadOnly={isReadOnly}
-            title={t('generalLedger:action.add_credits', 'Add Credits')}
+            title={t('generalLedger:JournalEntryForm.action.add_credits', 'Add Credits')}
             direction={LedgerEntryDirection.Credit}
             showTags={showTags}
           />

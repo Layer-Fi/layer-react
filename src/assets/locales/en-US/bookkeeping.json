@@ -1,42 +1,109 @@
 {
-  "action": {
-    "delete_uploads": "Delete Uploads",
-    "select_files": "Select files",
-    "show_all_tasks_count": "Show all tasks ({{tasksCount}})",
-    "show_completed_tasks": "Show completed tasks",
-    "view_and_complete": "View and complete"
+  "BookkeepingStatus": {
+    "useBookkeepingStatusConfig": {
+      "label": {
+        "month_name_books_complete": "Your {{monthName}} books are complete and ready to view!",
+        "respond_to_below_tasks": "Please respond to the below tasks to help us complete your {{monthName}} books.",
+        "working_on_books_no_action_needed": "We’re working on your {{monthName}} books. No action is needed from you right now.",
+        "working_on_books_please_complete_tasks_one": "We’re working on your {{monthName}} books. Please complete the {{displayCount}} open task.",
+        "working_on_books_please_complete_tasks_other": "We’re working on your {{monthName}} books. Please complete the {{displayCount}} open tasks."
+      },
+      "state": {
+        "action_required": "Action required",
+        "books_completed": "Books completed",
+        "books_in_progress": "Books in progress"
+      }
+    }
   },
-  "label": {
-    "bank_accounts_disconnected_one": "{{displayCount}} bank account is disconnected",
-    "bank_accounts_disconnected_other": "{{displayCount}} bank accounts are disconnected",
-    "bookkeeping_tasks": "Bookkeeping Tasks",
-    "complete_bookkeeping_onboarding_call": "Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.",
-    "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
-    "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
-    "count_open_tasks_one": "{{displayCount}} open task in {{displayYear}}",
-    "count_open_tasks_other": "{{displayCount}} open tasks in {{displayYear}}",
-    "count_tasks_one": "{{displayCount}} task",
-    "count_tasks_other": "{{displayCount}} tasks",
-    "great_job": "Great job!",
-    "month_name_books_complete": "Your {{monthName}} books are complete and ready to view!",
-    "not_enrolled_in_bookkeeping": "Not Enrolled in Bookkeeping",
-    "optional_description": "Optional description",
-    "pending_tasks": "There are no pending tasks!",
-    "please_contact_support": "If you believe this is an error, please contact support.",
-    "reconnect_count_accounts_one": "Reconnect {{displayCount}} account",
-    "reconnect_count_accounts_other": "Reconnect {{displayCount}} accounts",
-    "respond_to_below_tasks": "Please respond to the below tasks to help us complete your {{monthName}} books.",
-    "selected_files": "Selected Files:",
-    "tasks": "Tasks",
-    "team_review_and_categorize_transaction": "Our team will review and categorize this transaction. We'll reach out if we have any questions about it.",
-    "uploaded_files": "Uploaded Files:",
-    "working_on_books_no_action_needed": "We're working on your {{monthName}} books. No action is needed from you right now.",
-    "working_on_books_please_complete_tasks_one": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open task.",
-    "working_on_books_please_complete_tasks_other": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open tasks."
+  "CallBooking": {
+    "action": {
+      "join_call": "Join call",
+      "schedule_call": "Schedule a call"
+    },
+    "label": {
+      "ad_hoc_call": "Ad hoc call",
+      "book_call_with_bookkeeper": "Schedule an onboarding call with your bookkeeper",
+      "meet_bookkeeping_team": "Meet with our bookkeeping team",
+      "on_this_call_well": "On this call, we’ll",
+      "onboarding_call": "Onboarding call",
+      "onboarding_cover_bookkeeping_process": "Walk through our bookkeeping process",
+      "onboarding_cover_connect_bank_and_cards": "Connect your business bank accounts and credit cards",
+      "onboarding_cover_introduce_bookkeeper": "Introduce your bookkeeper"
+    },
+    "prompt": {
+      "ready_to_get_started": "Ready to get started?"
+    },
+    "useCallBookingCountdownLabel": {
+      "state": {
+        "call_in_count_days_one": "in {{displayCount}} day",
+        "call_in_count_days_other": "in {{displayCount}} days",
+        "call_in_count_hours_one": "in {{displayCount}} hour",
+        "call_in_count_hours_other": "in {{displayCount}} hours",
+        "starting_soon": "starting soon"
+      }
+    }
   },
-  "state": {
-    "action_required": "Action required",
-    "books_completed": "Books completed",
-    "books_in_progress": "Books in progress"
+  "Tasks": {
+    "label": {
+      "complete_bookkeeping_onboarding_call": "Once you complete your bookkeeping onboarding call, you will see your bookkeeping tasks here.",
+      "not_enrolled_in_bookkeeping": "Not Enrolled in Bookkeeping",
+      "please_contact_support": "If you believe this is an error, please contact support."
+    },
+    "TasksHeader": {
+      "label": {
+        "bookkeeping_tasks": "Bookkeeping Tasks"
+      }
+    },
+    "TasksPanelNotification": {
+      "action": {
+        "view_and_complete": "View and complete"
+      },
+      "label": {
+        "bank_accounts_disconnected_one": "{{displayCount}} bank account is disconnected",
+        "bank_accounts_disconnected_other": "{{displayCount}} bank accounts are disconnected",
+        "count_open_tasks_one": "{{displayCount}} open task in {{displayYear}}",
+        "count_open_tasks_other": "{{displayCount}} open tasks in {{displayYear}}",
+        "reconnect_count_accounts_one": "Reconnect {{displayCount}} account",
+        "reconnect_count_accounts_other": "Reconnect {{displayCount}} accounts"
+      }
+    },
+    "TasksPending": {
+      "label": {
+        "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done",
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done"
+      }
+    }
+  },
+  "TasksList": {
+    "label": {
+      "great_job": "Great job!",
+      "pending_tasks": "There are no pending tasks!"
+    },
+    "TasksListMobile": {
+      "action": {
+        "show_all_tasks_count": "Show all tasks ({{tasksCount}})",
+        "show_completed_tasks": "Show completed tasks"
+      },
+      "label": {
+        "tasks": "Tasks"
+      }
+    }
+  },
+  "TasksListItem": {
+    "action": {
+      "delete_uploads": "Delete Uploads",
+      "select_files": "Select files"
+    },
+    "label": {
+      "optional_description": "Optional description",
+      "selected_files": "Selected Files:",
+      "uploaded_files": "Uploaded Files:"
+    }
+  },
+  "TaskStatusBadge": {
+    "label": {
+      "count_tasks_one": "{{displayCount}} task",
+      "count_tasks_other": "{{displayCount}} tasks"
+    }
   }
 }

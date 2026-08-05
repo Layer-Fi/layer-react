@@ -105,3 +105,10 @@ the two cannot drift. Run `npm run lint:fix`; never sort by hand.
 Adding a path alias means editing `tsconfig.json` **and** the alias table in `eslint.config.mjs` —
 the latter feeds the sort order and the `no-relative-parent-imports` ignore list, so a missed entry
 breaks every import through the new alias.
+
+## Translation keys follow the same domains
+
+A translation key's namespace is the domain (or tier) that owns the file using it, and the segment
+after it is the owning file: `invoices:InvoiceTable.action.view_invoice`. Ownership is derived from
+the same on-disk domain list as the boundary rules, in `scripts/i18n/keyOwnership.mjs` and
+`eslint.config.mjs`. See [`src/assets/locales/SKILL.md`](assets/locales/SKILL.md).

@@ -12,7 +12,7 @@ export const formatDistance = (
   t: TFunction,
   formatNumber: NumberFormatFn,
 ) => {
-  return t('trips:label.distance_mi', '{{distance}} mi', {
+  return t('mileage:utils.label.distance_mi', '{{distance}} mi', {
     distance: formatNumber(BD.format(distance), { maximumFractionDigits: 2 }),
   })
 }

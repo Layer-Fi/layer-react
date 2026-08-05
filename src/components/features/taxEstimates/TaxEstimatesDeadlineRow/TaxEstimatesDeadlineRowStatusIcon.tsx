@@ -12,16 +12,16 @@ const ICON_STROKE_WIDTH = 2.25
 const getStatusVisuals = (t: TFunction, status: TaxOverviewDeadlineStatus) => {
   switch (status) {
     case TaxOverviewDeadlineStatus.Paid:
-      return { Icon: Check, label: t('taxEstimates:label.paid', 'Paid'), tone: 'paid' as const }
+      return { Icon: Check, label: t('taxEstimates:TaxEstimatesDeadlineRow.TaxEstimatesDeadlineRowStatusIcon.label.paid', 'Paid'), tone: 'paid' as const }
     case TaxOverviewDeadlineStatus.PastDue:
-      return { Icon: CircleAlert, label: t('taxEstimates:label.payment_past_due', 'Payment past due'), tone: 'pastDue' as const }
+      return { Icon: CircleAlert, label: t('taxEstimates:TaxEstimatesDeadlineRow.TaxEstimatesDeadlineRowStatusIcon.label.payment_past_due', 'Payment past due'), tone: 'pastDue' as const }
     case TaxOverviewDeadlineStatus.Due:
-      return { Icon: Clock3, label: t('taxEstimates:label.due', 'Due'), tone: 'due' as const }
+      return { Icon: Clock3, label: t('taxEstimates:TaxEstimatesDeadlineRow.TaxEstimatesDeadlineRowStatusIcon.label.due', 'Due'), tone: 'due' as const }
     case TaxOverviewDeadlineStatus.CategorizationIncomplete:
-      return { Icon: CircleAlert, label: t('taxEstimates:label.categorization_incomplete', 'Categorization incomplete'), tone: 'warning' as const }
+      return { Icon: CircleAlert, label: t('taxEstimates:TaxEstimatesDeadlineRow.TaxEstimatesDeadlineRowStatusIcon.label.categorization_incomplete', 'Categorization incomplete'), tone: 'warning' as const }
     case TaxOverviewDeadlineStatus.Neutral:
     default:
-      return { Icon: Clock3, label: t('taxEstimates:label.estimated_taxes', 'Estimated taxes'), tone: 'neutral' as const }
+      return { Icon: Clock3, label: t('taxEstimates:TaxEstimatesDeadlineRow.TaxEstimatesDeadlineRowStatusIcon.label.estimated_taxes', 'Estimated taxes'), tone: 'neutral' as const }
   }
 }
 

@@ -1,138 +1,344 @@
 {
-  "action": {
-    "add_line_item": "Ajouter une ligne",
-    "create_invoice": "Créer une facture",
-    "download_pdf": "Télécharger le PDF",
-    "mark_paid": "Marquer comme payée",
-    "mark_void": "Marquer comme annulée",
-    "record_invoice_payment": "Enregistrer le paiement de la facture",
-    "record_payment": "Enregistrer le paiement",
-    "refund_invoice": "Rembourser la facture",
-    "reset_invoice": "Réinitialiser la facture",
-    "reset_to_saved": "Revenir au statut enregistré",
-    "view_invoice": "Voir la facture",
-    "void_invoice_label": "Annuler la facture",
-    "write_off": "Passer en perte",
-    "write_off_invoice": "Passer la facture en perte"
+  "InvoiceDetail": {
+    "label": {
+      "invoice_saved": "Facture enregistrée",
+      "invoice_saved_and_sent_successfully": "Facture enregistrée et envoyée avec succès"
+    }
   },
-  "empty": {
-    "add_first_invoice": "Ajoutez votre première facture pour commencer à faire le suivi de ce que vos clients vous doivent.",
-    "invoices": "Aucune facture pour le moment",
-    "invoices_filtered": "Nous n’avons trouvé aucune facture avec les filtres actuels. Essayez de les modifier ou de les effacer pour voir plus de résultats."
+  "InvoiceDetailHeader": {
+    "action": {
+      "create_invoice": "Créer une facture",
+      "mark_paid": "Marquer comme payée",
+      "view_invoice": "Voir la facture"
+    },
+    "InvoiceDetailHeaderMenu": {
+      "action": {
+        "download_pdf": "Télécharger le PDF",
+        "mark_void": "Marquer comme annulée",
+        "refund_invoice": "Rembourser la facture",
+        "reset_to_saved": "Revenir au statut enregistré",
+        "write_off": "Passer en perte"
+      },
+      "error": {
+        "download_failed": "Échec du téléchargement"
+      },
+      "label": {
+        "additional_invoice_actions": "Autres actions sur la facture",
+        "download_started": "Téléchargement commencé",
+        "download_successful": "Téléchargement réussi"
+      }
+    },
+    "label": {
+      "editing_invoice": "Modification de la facture",
+      "editing_invoice_number": "Modification de la facture no {{invoiceNumber}}",
+      "invoice_number": "Facture no {{invoiceNumber}}"
+    }
   },
-  "error": {
-    "couldnt_load_invoices": "Nous n’avons pas réussi à récupérer vos factures",
-    "download_failed": "Échec du téléchargement",
-    "load_invoices": "Une erreur s'est produite lors du chargement de vos factures. Veuillez vérifier votre connexion et réessayer.",
-    "load_payment_methods": "Nous n'avons pas pu charger les modes de paiement",
-    "refund_invoice": "Une erreur s'est produite lors du remboursement de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
-    "reset_invoice": "Une erreur s'est produite lors de la réinitialisation de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
-    "void_invoice": "Une erreur s'est produite lors de l’annulation de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
-    "write_off_invoice": "Une erreur s'est produite lors du passage en perte de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+  "InvoiceDetailSubHeader": {
+    "label": {
+      "balance_due": "Solde dû",
+      "open_balance": "Solde impayé"
+    }
   },
-  "label": {
-    "add_custom_payment_instructions": "Ajouter des instructions de paiement personnalisées",
-    "additional_invoice_actions": "Autres actions sur la facture",
-    "amount_outstanding": "{{amount}} en souffrance",
-    "amount_paid": "Montant payé",
-    "balance_due": "Solde dû",
-    "billing_address": "Adresse de facturation",
-    "created_date": "Date de création",
-    "custom": "Personnalisé",
-    "custom_payment_instructions": "Instructions de paiement personnalisées",
-    "discount": "Rabais",
-    "download_started": "Téléchargement commencé",
-    "download_successful": "Téléchargement réussi",
-    "due_date": "Date d’échéance",
-    "editing_invoice": "Modification de la facture",
-    "editing_invoice_number": "Modification de la facture no {{invoiceNumber}}",
-    "invoice_date": "Date de la facture",
-    "invoice_negative_total": "Le total de la facture est négatif.",
-    "invoice_number": "Facture no {{invoiceNumber}}",
-    "invoice_number_component": "<label>Facture</label> <value>no {{invoiceNumber}}</value>",
-    "invoice_number_label": "Numéro de facture",
-    "invoice_paid_successfully": "Facture payée avec succès",
-    "invoice_saved": "Facture enregistrée",
-    "invoice_saved_and_sent_successfully": "Facture enregistrée et envoyée avec succès",
-    "invoices": "Factures",
-    "invoices_count_one": "{{displayCount}} facture",
-    "invoices_count_other": "{{displayCount}} factures",
-    "net_10": "Net 10",
-    "net_15": "Net 15",
-    "net_30": "Net 30",
-    "net_60": "Net 60",
-    "net_90": "Net 90",
-    "number_abbreviation": "N°",
-    "open_balance": "Solde impayé",
-    "overdue": "En retard",
-    "owed_last_12_months": "<owed>Ce qui vous est dû</owed> <period>12 derniers mois</period>",
-    "paid_last_30_days": "<paid>Payé</paid> <period>30 derniers jours</period>",
-    "payment_date": "Date du paiement",
-    "payment_details": "Détails du paiement",
-    "payment_method": "Mode de paiement",
-    "payment_methods": "Modes de paiement",
-    "percentage_invoices_overdue": "Pourcentage de factures en retard",
-    "quantity": "Quantité",
-    "rate": "Tarif",
-    "refund_date": "Date du remboursement",
-    "refund_invoice": "Émettre un remboursement",
-    "refunded_amount": "Montant remboursé",
-    "reset_invoice_remove_void_status_warning": "La réinitialisation de cette facture supprimera son statut actuel d’annulée et la remettra au statut enregistré.",
-    "reset_invoice_to_saved": "Remettre la facture au statut enregistré",
-    "reset_invoice_warning": "La réinitialisation de cette facture supprimera tous les paiements, remboursements et radiations qui y sont associés et la remettra au statut enregistré.",
-    "search_invoices": "Rechercher des factures",
-    "status_filter": "Filtre de statut",
-    "status_with_label": "Statut : {{label}}",
-    "subtotal": "Sous-total",
-    "tax_rate": "Taux d’imposition",
-    "tax_rate_title_case": "Taux d’imposition",
-    "taxable": "Taxable",
-    "taxable_subtotal": "Sous-total taxable",
-    "terms": "Conditions",
-    "upcoming": "À venir",
-    "void_invoice": "Annuler la facture",
-    "void_invoice_warning": "L’annulation de cette facture la marquera comme annulée, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible.",
-    "write_off_amount": "Montant passé en perte",
-    "write_off_date": "Date du passage en perte",
-    "write_off_invoice_warning": "Le passage en perte de cette facture l’enregistrera comme créance irrécouvrable, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible."
+  "InvoiceDiscardChangesConfirmationModal": {
+    "prompt": {
+      "discard_changes_invoice": "Annuler les modifications apportées à cette facture?"
+    }
   },
-  "prompt": {
-    "discard_changes_invoice": "Annuler les modifications apportées à cette facture?"
+  "InvoiceFinalizeForm": {
+    "formUtils": {
+      "validation": {
+        "either_payment_must": "Une facture doit avoir soit un mode de paiement, soit des instructions de paiement personnalisées"
+      }
+    },
+    "label": {
+      "add_custom_payment_instructions": "Ajouter des instructions de paiement personnalisées",
+      "custom_payment_instructions": "Instructions de paiement personnalisées",
+      "payment_methods": "Modes de paiement"
+    }
   },
-  "state": {
-    "draft": "Brouillon",
-    "due_count_days_ago_one": "Échue depuis {{displayCount}} jour",
-    "due_count_days_ago_other": "Échue depuis {{displayCount}} jours",
-    "due_in_count_days_one": "Échéance dans {{displayCount}} jour",
-    "due_in_count_days_other": "Échéance dans {{displayCount}} jours",
-    "due_today": "Échéance aujourd’hui",
-    "overdue": "En retard",
-    "paid": "Payée",
-    "partially_paid": "Partiellement payée",
-    "partially_written_off": "Partiellement passée en perte",
-    "refunded": "Remboursée",
-    "saved": "Enregistrée",
-    "unpaid": "Impayée",
-    "voided": "Annulée",
-    "written_off": "Passée en perte"
+  "InvoiceFinalizeStep": {
+    "error": {
+      "load_payment_methods": "Nous n’avons pas pu charger les modes de paiement"
+    }
   },
-  "validation": {
-    "customer_required": "Le champ client est obligatoire.",
-    "due_date_must": "La date d’échéance doit être postérieure à la date de la facture.",
-    "due_date_required": "La date d’échéance est un champ obligatoire.",
-    "either_payment_must": "Une facture doit avoir soit un mode de paiement, soit des instructions de paiement personnalisées",
-    "invoice_date_required": "La date de la facture est un champ obligatoire.",
-    "invoice_incomplete_required": "La facture contient des lignes incomplètes. Veuillez inclure le champ obligatoire : Description.",
-    "invoice_number_required": "Le numéro de facture est un champ obligatoire.",
-    "invoice_requires_empty": "La facture doit contenir au moins une ligne non vide.",
-    "payment_amount_max_outstanding": "Le montant du paiement ne peut pas être supérieur au solde impayé de la facture.",
-    "payment_amount_must": "Le montant du paiement doit être supérieur à zéro.",
-    "payment_date_not_before_invoice": "La date du paiement ne peut pas être antérieure à la date de la facture ({{invoiceDate}}).",
-    "payment_date_not_future": "La date du paiement ne peut pas être dans le futur.",
-    "payment_date_required": "La date du paiement est un champ obligatoire.",
-    "payment_method_required": "Le mode de paiement est un champ obligatoire.",
-    "refund_date_before_last_payment": "La date du remboursement ne peut pas être antérieure au dernier paiement de la facture ({{lastPaymentDate}}).",
-    "refund_date_future": "La date du remboursement ne peut pas être dans le futur.",
-    "refund_date_required": "La date du remboursement est un champ obligatoire."
+  "InvoiceForm": {
+    "formUtils": {
+      "label": {
+        "invoice_negative_total": "Le total de la facture est négatif."
+      },
+      "validation": {
+        "customer_required": "Le champ client est obligatoire.",
+        "due_date_must": "La date d’échéance doit être postérieure à la date de la facture.",
+        "due_date_required": "La date d’échéance est un champ obligatoire.",
+        "invoice_date_required": "La date de la facture est un champ obligatoire.",
+        "invoice_incomplete_required": "La facture contient des lignes incomplètes. Veuillez inclure le champ obligatoire : Description.",
+        "invoice_number_required": "Le numéro de facture est un champ obligatoire.",
+        "invoice_requires_empty": "La facture doit contenir au moins une ligne non vide."
+      }
+    },
+    "InvoiceFormLineItemRow": {
+      "label": {
+        "quantity": "Quantité",
+        "rate": "Tarif",
+        "taxable": "Taxable"
+      }
+    },
+    "InvoiceFormLineItemsSection": {
+      "action": {
+        "add_line_item": "Ajouter une ligne"
+      }
+    },
+    "InvoiceFormMetadataSection": {
+      "label": {
+        "discount": "Rabais",
+        "subtotal": "Sous-total",
+        "tax_rate": "Taux d’imposition",
+        "tax_rate_title_case": "Taux d’imposition",
+        "taxable_subtotal": "Sous-total taxable"
+      }
+    },
+    "InvoiceFormTermsSection": {
+      "action": {
+        "edit_customer_details": "Modifier les renseignements du client"
+      },
+      "label": {
+        "billing_address": "Adresse de facturation",
+        "due_date": "Date d’échéance",
+        "invoice_date": "Date de la facture",
+        "invoice_number_label": "Numéro de facture"
+      }
+    }
+  },
+  "InvoicePaymentDrawer": {
+    "action": {
+      "record_invoice_payment": "Enregistrer le paiement de la facture"
+    },
+    "label": {
+      "invoice_paid_successfully": "Facture payée avec succès"
+    }
+  },
+  "InvoicePaymentForm": {
+    "action": {
+      "record_payment": "Enregistrer le paiement"
+    },
+    "label": {
+      "amount_paid": "Montant payé",
+      "balance_due": "Solde dû",
+      "invoice_number_component": "<label>Facture</label> <value>no {{invoiceNumber}}</value>",
+      "payment_date": "Date du paiement",
+      "payment_details": "Détails du paiement"
+    },
+    "useInvoicePaymentForm": {
+      "validation": {
+        "payment_amount_max_outstanding": "Le montant du paiement ne peut pas être supérieur au solde impayé de la facture.",
+        "payment_amount_must": "Le montant du paiement doit être supérieur à zéro.",
+        "payment_date_not_before_invoice": "La date du paiement ne peut pas être antérieure à la date de la facture ({{invoiceDate}}).",
+        "payment_date_not_future": "La date du paiement ne peut pas être dans le futur.",
+        "payment_date_required": "La date du paiement est un champ obligatoire.",
+        "payment_method_required": "Le mode de paiement est un champ obligatoire."
+      }
+    }
+  },
+  "InvoicePdfDownloadButton": {
+    "action": {
+      "download_pdf": "Télécharger le PDF"
+    }
+  },
+  "InvoiceRefundForm": {
+    "label": {
+      "invoice_number_component": "<label>Facture</label> <value>no {{invoiceNumber}}</value>",
+      "refund_date": "Date du remboursement"
+    },
+    "useInvoiceRefundForm": {
+      "validation": {
+        "payment_method_required": "Le mode de paiement est un champ obligatoire.",
+        "refund_date_before_last_payment": "La date du remboursement ne peut pas être antérieure au dernier paiement de la facture ({{lastPaymentDate}}).",
+        "refund_date_future": "La date du remboursement ne peut pas être dans le futur.",
+        "refund_date_required": "La date du remboursement est un champ obligatoire."
+      }
+    }
+  },
+  "InvoiceRefundModal": {
+    "action": {
+      "refund_invoice": "Rembourser la facture"
+    },
+    "error": {
+      "refund_invoice": "Une erreur s’est produite lors du remboursement de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+    },
+    "label": {
+      "refund_invoice": "Émettre un remboursement"
+    }
+  },
+  "InvoiceResetConfirmationModal": {
+    "action": {
+      "reset_invoice": "Réinitialiser la facture"
+    },
+    "error": {
+      "reset_invoice": "Une erreur s’est produite lors de la réinitialisation de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+    },
+    "label": {
+      "reset_invoice_remove_void_status_warning": "La réinitialisation de cette facture supprimera son statut actuel d’annulée et la remettra au statut enregistré.",
+      "reset_invoice_to_saved": "Remettre la facture au statut enregistré",
+      "reset_invoice_warning": "La réinitialisation de cette facture supprimera tous les paiements, remboursements et radiations qui y sont associés et la remettra au statut enregistré."
+    }
+  },
+  "InvoicesMobileHeader": {
+    "label": {
+      "invoices": "Factures",
+      "search_invoices": "Rechercher des factures",
+      "status_filter": "Filtre de statut",
+      "status_with_label": "Statut : {{label}}"
+    }
+  },
+  "InvoicesMobileList": {
+    "InvoicesMobileListItem": {
+      "label": {
+        "amount_outstanding": "{{amount}} en souffrance"
+      }
+    },
+    "label": {
+      "invoices": "Factures"
+    }
+  },
+  "invoiceStatus": {
+    "state": {
+      "draft": "Brouillon",
+      "overdue": "En retard",
+      "paid": "Payée",
+      "refunded": "Remboursée",
+      "saved": "Enregistrée",
+      "unpaid": "Impayée",
+      "voided": "Annulée",
+      "written_off": "Passée en perte"
+    }
+  },
+  "InvoiceSummaryStats": {
+    "InvoiceOwedSummary": {
+      "label": {
+        "overdue": "En retard",
+        "owed_last_12_months": "<owed>Ce qui vous est dû</owed> <period>12 derniers mois</period>",
+        "percentage_invoices_overdue": "Pourcentage de factures en retard",
+        "upcoming": "À venir"
+      }
+    },
+    "InvoiceOwedSummaryStatCard": {
+      "label": {
+        "invoices_count_one": "{{displayCount}} facture",
+        "invoices_count_other": "{{displayCount}} factures"
+      }
+    },
+    "InvoicePaymentsSummary": {
+      "label": {
+        "paid_last_30_days": "<paid>Payé</paid> <period>30 derniers jours</period>"
+      }
+    }
+  },
+  "InvoiceTable": {
+    "action": {
+      "create_invoice": "Créer une facture",
+      "view_invoice": "Voir la facture"
+    },
+    "label": {
+      "amount_outstanding": "{{amount}} en souffrance",
+      "created_date": "Date de création",
+      "customer": "Client",
+      "invoices": "Factures",
+      "number_abbreviation": "N°",
+      "search_invoices": "Rechercher des factures",
+      "status_filter": "Filtre de statut",
+      "status_with_label": "Statut : {{label}}"
+    }
+  },
+  "InvoiceTermsComboBox": {
+    "label": {
+      "custom": "Personnalisé",
+      "net_10": "Net 10",
+      "net_15": "Net 15",
+      "net_30": "Net 30",
+      "net_60": "Net 60",
+      "net_90": "Net 90",
+      "terms": "Conditions"
+    }
+  },
+  "InvoiceVoidConfirmationModal": {
+    "action": {
+      "void_invoice_label": "Annuler la facture"
+    },
+    "error": {
+      "void_invoice": "Une erreur s’est produite lors de l’annulation de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+    },
+    "label": {
+      "void_invoice": "Annuler la facture",
+      "void_invoice_warning": "L’annulation de cette facture la marquera comme annulée, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible."
+    }
+  },
+  "InvoiceWriteoffConfirmationModal": {
+    "action": {
+      "write_off_invoice": "Passer la facture en perte"
+    },
+    "error": {
+      "write_off_invoice": "Une erreur s’est produite lors du passage en perte de cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+    },
+    "label": {
+      "write_off_invoice_warning": "Le passage en perte de cette facture l’enregistrera comme créance irrécouvrable, et vous ne pourrez plus y appliquer de paiements. Cette action est irréversible."
+    }
+  },
+  "PaymentMethodComboBox": {
+    "label": {
+      "payment_method": "Mode de paiement"
+    }
+  },
+  "ResponsiveInvoiceView": {
+    "empty": {
+      "add_first_invoice": "Ajoutez votre première facture pour commencer à faire le suivi de ce que vos clients vous doivent.",
+      "invoices": "Aucune facture pour le moment",
+      "invoices_filtered": "Nous n’avons trouvé aucune facture avec les filtres actuels. Essayez de les modifier ou de les effacer pour voir plus de résultats."
+    },
+    "error": {
+      "couldnt_load_invoices": "Nous n’avons pas réussi à récupérer vos factures",
+      "load_invoices": "Une erreur s’est produite lors du chargement de vos factures. Veuillez vérifier votre connexion et réessayer."
+    }
+  },
+  "StripeConnectBanner": {
+    "ConnectStripeButton": {
+      "action": {
+        "connect_stripe_label": "Connecter Stripe"
+      }
+    },
+    "label": {
+      "finish_setting_up_stripe_account": "Terminez la configuration de votre compte Stripe pour commencer à accepter les paiements par carte et par virement bancaire pour vos factures.",
+      "once_complete_can_accept_payments": "Une fois la configuration terminée, vous pourrez commencer à accepter les paiements par carte et par virement bancaire.",
+      "set_up_stripe_account": "Configurez votre compte Stripe pour commencer à accepter les paiements par carte et par virement bancaire pour vos factures."
+    },
+    "state": {
+      "stripe_account_review": "Compte Stripe en cours de vérification",
+      "stripe_payment_not_enabled": "Paiements Stripe non activés",
+      "stripe_setup_incomplete": "Configuration de Stripe incomplète"
+    },
+    "useStripeConnect": {
+      "error": {
+        "stripe_sent_misconfigured_link": "Stripe a envoyé un lien d’intégration du compte Connect mal configuré. Veuillez réessayer.",
+        "unable_to_connect_to_stripe": "Impossible de se connecter à Stripe. Veuillez réessayer."
+      }
+    }
+  },
+  "utils": {
+    "state": {
+      "draft": "Brouillon",
+      "due_count_days_ago_one": "Échue depuis {{displayCount}} jour",
+      "due_count_days_ago_other": "Échue depuis {{displayCount}} jours",
+      "due_in_count_days_one": "Échéance dans {{displayCount}} jour",
+      "due_in_count_days_other": "Échéance dans {{displayCount}} jours",
+      "due_today": "Échéance aujourd’hui",
+      "overdue": "En retard",
+      "paid": "Payée",
+      "partially_paid": "Partiellement payée",
+      "partially_written_off": "Partiellement passée en perte",
+      "refunded": "Remboursée",
+      "saved": "Enregistrée",
+      "voided": "Annulée",
+      "written_off": "Passée en perte"
+    }
   }
 }

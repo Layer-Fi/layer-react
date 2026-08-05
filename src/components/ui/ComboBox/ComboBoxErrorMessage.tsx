@@ -13,7 +13,7 @@ export function ComboBoxErrorMessage({ isError, errorMessage }: ComboBoxErrorMes
 
   return (
     <Span size='xs' status='error'>
-      {errorMessage ?? t('ui:error.generic', 'An error occurred.')}
+      {errorMessage ?? t('ui:ComboBox.ComboBoxErrorMessage.error.generic', 'An error occurred.')}
     </Span>
   )
 }

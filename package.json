@@ -30,6 +30,8 @@
     "dev:types": "tsx scripts/dev-types.ts",
     "fixtures:generate": "tsx scripts/generate-fixtures.ts",
     "fixtures:check": "tsx scripts/generate-fixtures.ts --check",
+    "i18n:check": "tsx scripts/i18n/checkTranslationKeys.mjs",
+    "i18n:check-release": "tsx scripts/i18n/checkTranslationKeys.mjs --release",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "msw:check-coverage": "tsx scripts/check-msw-coverage.ts",
     "lint:eslint": "eslint .",

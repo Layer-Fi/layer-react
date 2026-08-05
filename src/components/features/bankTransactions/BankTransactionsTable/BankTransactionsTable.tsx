@@ -166,8 +166,8 @@ export const BankTransactionsTable = () => {
     return {
       rowSelection,
       onRowSelectionChange,
-      selectAllAriaLabel: t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page'),
-      getRowSelectionAriaLabel: () => t('bankTransactions:label.select_transaction', 'Select transaction'),
+      selectAllAriaLabel: t('bankTransactions:BankTransactionsTable.label.select_all_transactions', 'Select all transactions on this page'),
+      getRowSelectionAriaLabel: () => t('bankTransactions:BankTransactionsTable.label.select_transaction', 'Select transaction'),
     }
   }, [isCategorizationEnabled, onRowSelectionChange, rowSelection, t])
 
@@ -229,7 +229,7 @@ export const BankTransactionsTable = () => {
   ), [shouldHideAfterCategorize])
 
   const tableProps = {
-    ariaLabel: t('bankTransactions:label.bank_transactions', 'Bank transactions'),
+    ariaLabel: t('bankTransactions:BankTransactionsTable.label.bank_transactions', 'Bank transactions'),
     className: 'Layer__bank-transactions__table',
     data: bankTransactions,
     isLoading,

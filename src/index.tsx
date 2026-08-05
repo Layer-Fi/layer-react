@@ -41,17 +41,17 @@ export { MileageSummaryCard } from './components/features/mileage/MileageSummary
 /*
 ======================= Composite Views =======================
 */
-export { Invoices } from './components/features/invoices/Invoices/Invoices'
-export { UnifiedReports } from './components/features/unifiedReports/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
-export { MileageTracking } from './views/MileageTracking'
+export { Invoices } from './views/Invoices/Invoices'
+export { MileageTracking } from './views/MileageTracking/MileageTracking'
 export { Reports } from './views/Reports/Reports'
 export { SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
-export { TimeTracking } from './views/TimeTracking'
+export { TimeTracking } from './views/TimeTracking/TimeTracking'
+export { UnifiedReports } from './views/UnifiedReports/UnifiedReports'
 
 /*
 ======================= Layer Provider & Context =======================

@@ -57,10 +57,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='makeAndModel'>
         {field => (
           <field.FormTextField
-            label={t('vehicles:label.make_model', 'Make and model')}
+            label={t('mileage:VehicleForm.label.make_model', 'Make and model')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('vehicles:label.enter_vehicle_make_model', 'Enter vehicle make and model')}
+            placeholder={t('mileage:VehicleForm.label.enter_vehicle_make_model', 'Enter vehicle make and model')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__MakeAndModel`}
           />
         )}
@@ -73,7 +73,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
             label={t('date:label.year', 'Year')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('vehicles:label.enter_vehicle_year', 'Enter vehicle year')}
+            placeholder={t('mileage:VehicleForm.label.enter_vehicle_year', 'Enter vehicle year')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Year`}
           />
         )}
@@ -82,10 +82,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='licensePlate'>
         {field => (
           <field.FormTextField
-            label={t('vehicles:label.license_plate', 'License plate')}
+            label={t('mileage:VehicleForm.label.license_plate', 'License plate')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('vehicles:label.enter_license_plate', 'Enter license plate')}
+            placeholder={t('mileage:VehicleForm.label.enter_license_plate', 'Enter license plate')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__LicensePlate`}
           />
         )}
@@ -94,10 +94,10 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='vin'>
         {field => (
           <field.FormTextField
-            label={t('vehicles:label.vin', 'VIN')}
+            label={t('mileage:VehicleForm.label.vin', 'VIN')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('vehicles:label.enter_vin', 'Enter VIN')}
+            placeholder={t('mileage:VehicleForm.label.enter_vin', 'Enter VIN')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Vin`}
           />
         )}
@@ -118,7 +118,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
       <form.AppField name='isPrimary'>
         {field => (
           <field.FormSwitchField
-            label={t('vehicles:action.set_primary_vehicle', 'Set as primary vehicle')}
+            label={t('mileage:VehicleForm.action.set_primary_vehicle', 'Set as primary vehicle')}
             inline
             isReadOnly={isReadOnly}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__IsPrimary`}
@@ -135,7 +135,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
               isPending={isSubmitting}
               onPress={() => { void form.handleSubmit() }}
             >
-              {t('vehicles:action.save_vehicle', 'Save Vehicle')}
+              {t('mileage:VehicleForm.action.save_vehicle', 'Save Vehicle')}
             </Button>
           )}
         </form.Subscribe>

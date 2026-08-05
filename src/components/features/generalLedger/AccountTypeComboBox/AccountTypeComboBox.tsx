@@ -30,7 +30,7 @@ export const AccountTypeComboBox = ({ label, value, onChange, isDisabled, error,
           options={options}
           selectedValue={options.find(option => option.value === value) ?? null}
           onSelectedValueChange={option => onChange(option?.value ?? null)}
-          placeholder={t('chartOfAccounts:placeholder.select_type', 'Select a type')}
+          placeholder={t('generalLedger:AccountTypeComboBox.placeholder.select_type', 'Select a type')}
           isDisabled={isDisabled}
           isError={Boolean(error)}
           slots={{ ErrorMessage: error }}

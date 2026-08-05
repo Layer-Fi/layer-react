@@ -15,7 +15,7 @@ type EditCustomBankTransactionButtonProps = {
 export function EditCustomBankTransactionButton({ bankTransaction, withLabel = false }: EditCustomBankTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const label = t('bankTransactions:action.edit_transaction', 'Edit transaction')
+  const label = t('bankTransactions:EditCustomBankTransactionButton.action.edit_transaction', 'Edit transaction')
   const buttonProps = withLabel
     ? { variant: 'outlined' as const, fullWidth: true }
     : { variant: 'ghost' as const, icon: true, inset: true as const, ['aria-label']: label }

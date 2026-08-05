@@ -95,7 +95,7 @@ const BankTransactionReceipts = forwardRef<
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)
           ? (
-            <FileInput onUpload={files => void uploadReceipt(files[0])} text={t('bankTransactions:action.upload_receipt', 'Upload receipt')} accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
+            <FileInput onUpload={files => void uploadReceipt(files[0])} text={t('bankTransactions:BankTransactionReceipts.action.upload_receipt', 'Upload receipt')} accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES} />
           )
           : null}
         {receiptUrls.map((url, index) => (
@@ -106,14 +106,14 @@ const BankTransactionReceipts = forwardRef<
             floatingActions={floatingActions}
             uploadPending={url.status === 'pending'}
             deletePending={url.status === 'deleting'}
-            name={url.name ?? t('bankTransactions:label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) })}
+            name={url.name ?? t('bankTransactions:BankTransactionReceipts.label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) })}
             date={url.date}
             enableOpen={url.type === 'application/pdf'}
             onOpen={
               url.url && url.type && url.type.startsWith('image/')
                 ? openReceiptInNewTab(
                   url.url,
-                  t('bankTransactions:label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) }),
+                  t('bankTransactions:BankTransactionReceipts.label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) }),
                 )
                 : undefined
             }
@@ -129,7 +129,7 @@ const BankTransactionReceipts = forwardRef<
             <FileInput
               secondary
               onUpload={files => void uploadReceipt(files[0])}
-              text={t('bankTransactions:action.add_next_receipt', 'Add next receipt')}
+              text={t('bankTransactions:BankTransactionReceipts.action.add_next_receipt', 'Add next receipt')}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )

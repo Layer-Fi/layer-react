@@ -43,7 +43,7 @@ function useFormatHourly(): FormatHourly {
       if (cents == null) {
         return null
       }
-      return t('timeTracking:services.rate_per_hour', '{{rate}}/hr', {
+      return t('timeTracking:TimeTrackingServicesDrawer.services.rate_per_hour', '{{rate}}/hr', {
         rate: formatCurrencyFromCents(cents),
       })
     },
@@ -84,7 +84,7 @@ const LoadServicesErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('timeTracking:error.load_services', 'Failed to load services.')}
+      title={t('timeTracking:TimeTrackingServicesDrawer.error.load_services', 'Failed to load services.')}
       spacing
     />
   )
@@ -129,7 +129,7 @@ function ActiveServicesContent({
       <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
         <DataState
           status={DataStateStatus.allDone}
-          title={t('timeTracking:services.no_active', 'No services yet')}
+          title={t('timeTracking:TimeTrackingServicesDrawer.services.no_active', 'No services yet')}
           spacing
         />
       </VStack>
@@ -179,7 +179,7 @@ function ActiveServicesContent({
         <HStack justify='end' fluid>
           <Button onPress={onStartAdd}>
             <Plus size={16} />
-            {t('timeTracking:services.add', 'Add')}
+            {t('timeTracking:TimeTrackingServicesDrawer.services.add', 'Add')}
           </Button>
         </HStack>
       )}
@@ -220,7 +220,7 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
             <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
               <DataState
                 status={DataStateStatus.allDone}
-                title={t('timeTracking:services.no_archived', 'No archived services')}
+                title={t('timeTracking:TimeTrackingServicesDrawer.services.no_archived', 'No archived services')}
                 spacing
               />
             </VStack>
@@ -241,7 +241,7 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
               <ServiceRowLabels name={service.name} rateLabel={formatHourly(service)} />
               <Button variant='outlined' inset onPress={() => onRestore(service)}>
                 <ArchiveRestore size={14} />
-                <Span size='sm'>{t('timeTracking:services.unarchive', 'Restore')}</Span>
+                <Span size='sm'>{t('timeTracking:TimeTrackingServicesDrawer.services.unarchive', 'Restore')}</Span>
               </Button>
             </HStack>
           )}
@@ -307,8 +307,8 @@ export function TimeTrackingServicesDrawer({
 
   const tabOptions = useMemo(
     () => [
-      { value: 'active' as const, label: t('timeTracking:label.active', 'Active') },
-      { value: 'archived' as const, label: t('timeTracking:services.archived', 'Archived') },
+      { value: 'active' as const, label: t('timeTracking:TimeTrackingServicesDrawer.label.active', 'Active') },
+      { value: 'archived' as const, label: t('timeTracking:TimeTrackingServicesDrawer.services.archived', 'Archived') },
     ],
     [t],
   )
@@ -360,12 +360,12 @@ export function TimeTrackingServicesDrawer({
     ({ close }: { close: () => void }) => (
       <VStack gap='md'>
         <ModalTitleWithClose
-          heading={<ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>}
+          heading={<ModalHeading>{t('timeTracking:TimeTrackingServicesDrawer.services.title', 'Services')}</ModalHeading>}
           onClose={close}
         />
         <HStack className='Layer__TimeTrackingServicesDrawer__tabs' justify='end' fluid>
           <Toggle
-            ariaLabel={t('timeTracking:services.tab_group_label', 'Service list')}
+            ariaLabel={t('timeTracking:TimeTrackingServicesDrawer.services.tab_group_label', 'Service list')}
             options={tabOptions}
             selectedKey={tabRef.current}
             onSelectionChange={key => setTab(key as ServicesTab)}
@@ -385,7 +385,7 @@ export function TimeTrackingServicesDrawer({
         isDismissable
         variant={isMobile ? 'mobile-drawer' : 'drawer'}
         flexBlock={isMobile}
-        aria-label={t('timeTracking:services.title', 'Services')}
+        aria-label={t('timeTracking:TimeTrackingServicesDrawer.services.title', 'Services')}
         slots={{ Header }}
       >
         {() => (

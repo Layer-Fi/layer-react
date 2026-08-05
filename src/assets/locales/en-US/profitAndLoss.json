@@ -1,0 +1,76 @@
+{
+  "ProfitAndLossChart": {
+    "ProfitAndLossChartStateCard": {
+      "label": {
+        "data_is_syncing": "Data is syncing",
+        "may_take_few_minutes": "This may take a few minutes"
+      }
+    }
+  },
+  "ProfitAndLossDetailedCharts": {
+    "empty": {
+      "no_transactions_found": "No transactions found"
+    },
+    "label": {
+      "upload_transactions_or_wait_for_bank_sync": "Upload your transactions or wait for transactions to be synced from your bank."
+    },
+    "ProfitAndLossDetailReportModal": {
+      "label": {
+        "profit_loss_detail_report": "Profit and Loss Detail Report"
+      }
+    }
+  },
+  "ProfitAndLossDetailReport": {
+    "empty": {
+      "no_detail_lines_found": "No detail lines found",
+      "no_detail_lines_pnl_item": "There are no detail lines for this profit and loss item"
+    },
+    "error": {
+      "load_detail_lines": "Error loading detail lines",
+      "load_pnl_detail_lines": "There was an error loading the profit and loss detail lines"
+    },
+    "label": {
+      "line_item_name_detail_lines": "{{lineItemName}} detail lines",
+      "transaction_source": "Transaction source"
+    }
+  },
+  "ProfitAndLossOverviewDetailedCharts": {
+    "label": {
+      "chart_type": "Chart type"
+    }
+  },
+  "ProfitAndLossSummaries": {
+    "label": {
+      "categorized_expenses": "Categorized expenses",
+      "categorized_net_profit": "Categorized net profit",
+      "categorized_revenue": "Categorized revenue",
+      "net_cash_flow": "Net cash flow"
+    },
+    "ProfitAndLossSummariesSummary": {
+      "label": {
+        "vs_comparison_month": "vs. {{comparisonMonth}}"
+      }
+    }
+  },
+  "ProfitAndLossTable": {
+    "ProfitAndLossTableComponent": {
+      "label": {
+        "profit_before_taxes": "Profit Before Taxes"
+      }
+    }
+  },
+  "TransactionsToReview": {
+    "label": {
+      "all_done": "All done",
+      "pending": "pending",
+      "transactions_to_review": "Transactions to review"
+    }
+  },
+  "UncategorizedTransactionsBadge": {
+    "label": {
+      "all_transactions_categorized": "All transactions categorized",
+      "review_uncategorized_transactions_one": "Review {{displayCount}} uncategorized transaction",
+      "review_uncategorized_transactions_other": "Review {{displayCount}} uncategorized transactions"
+    }
+  }
+}

@@ -43,8 +43,8 @@ export const CategorizationRuleFormDrawer = ({
   const activeFormState = formState ?? lastFormStateRef.current
 
   const title = activeFormState?.mode === 'edit'
-    ? t('categorizationRules:action.edit_rule', 'Edit Rule')
-    : t('categorizationRules:action.create_rule', 'Create Rule')
+    ? t('categorization:CategorizationRuleFormDrawer.action.edit_rule', 'Edit Rule')
+    : t('categorization:CategorizationRuleFormDrawer.action.create_rule', 'Create Rule')
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <CategorizationRuleFormDrawerHeader title={title} close={close} />

@@ -21,10 +21,10 @@ export const InvoiceDetailSubHeader = ({ invoice }: InvoiceDetailSubHeaderProps)
   return (
     <HStack className='Layer__InvoiceDetail__SubHeader'>
       <HStack gap='5xl'>
-        <DataPoint label={t('invoices:label.balance_due', 'Balance due')}>
+        <DataPoint label={t('invoices:InvoiceDetailSubHeader.label.balance_due', 'Balance due')}>
           <Span>{formatCurrencyFromCents(outstandingBalance)}</Span>
         </DataPoint>
-        <DataPoint label={t('invoices:label.open_balance', 'Open balance')}>
+        <DataPoint label={t('invoices:InvoiceDetailSubHeader.label.open_balance', 'Open balance')}>
           <Span>{formatCurrencyFromCents(totalAmount)}</Span>
         </DataPoint>
         <DataPoint label={t('common:label.status', 'Status')}>

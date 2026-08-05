@@ -41,7 +41,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
       <VStack className='Layer__TaxSummaryCard__MobileCard' gap='md'>
         <HStack justify='space-between' align='center'>
           <Span size='sm'>
-            {tConditional(t, 'taxEstimates:label.taxes_owed', {
+            {tConditional(t, 'taxEstimates:TaxSummaryCard.TaxSummaryCardMobile.label.taxes_owed', {
               condition: projectedCondition,
               cases: {
                 default: 'Taxes Owed',
@@ -53,7 +53,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
             })}
           </Span>
           <Span size='sm' variant='subtle'>
-            {t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+            {t('taxEstimates:TaxSummaryCard.TaxSummaryCardMobile.label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
           </Span>
         </HStack>
         <HStack className='Layer__TaxSummaryCard__MobileAmountRow' justify='space-between' align='baseline' gap='md'>

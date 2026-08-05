@@ -165,7 +165,7 @@ export const ProfitAndLossTableComponent = ({
                 name: 'profit_before_taxes',
                 value: data.profitBeforeTaxes,
                 displayName:
-                  stringOverrides?.profitBeforeTaxesLabel || t('reports:label.profit_before_taxes', 'Profit Before Taxes'),
+                  stringOverrides?.profitBeforeTaxesLabel || t('profitAndLoss:ProfitAndLossTable.ProfitAndLossTableComponent.label.profit_before_taxes', 'Profit Before Taxes'),
                 lineItems: [],
               },
               depth: 0,

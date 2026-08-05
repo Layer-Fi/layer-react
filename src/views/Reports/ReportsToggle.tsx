@@ -22,7 +22,7 @@ export const ReportsToggle = () => {
   return (
     <HStack className='Layer__component' gap='sm' align='center' justify='space-between'>
       <Toggle
-        ariaLabel={t('reports:label.report_type', 'Report type')}
+        ariaLabel={t('views:Reports.ReportsToggle.label.report_type', 'Report type')}
         options={options}
         selectedKey={activeReport}
         onSelectionChange={key => setActiveReport(key as ReportType)}

@@ -7,11 +7,11 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 const FILING_STATUS_CONFIG = [
-  { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:label.single', 'Single') },
-  { value: FilingStatus.MARRIED, ...translationKey('taxEstimates:label.married_filing_jointly', 'Married filing jointly') },
-  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('taxEstimates:label.married_filing_separately', 'Married filing separately') },
-  { value: FilingStatus.HEAD, ...translationKey('taxEstimates:label.head_household', 'Head of household') },
-  { value: FilingStatus.WIDOWER, ...translationKey('taxEstimates:label.qualifying_widow_er', 'Qualifying widow(er)') },
+  { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:FilingStatusComboBox.label.single', 'Single') },
+  { value: FilingStatus.MARRIED, ...translationKey('taxEstimates:FilingStatusComboBox.label.married_filing_jointly', 'Married filing jointly') },
+  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('taxEstimates:FilingStatusComboBox.label.married_filing_separately', 'Married filing separately') },
+  { value: FilingStatus.HEAD, ...translationKey('taxEstimates:FilingStatusComboBox.label.head_household', 'Head of household') },
+  { value: FilingStatus.WIDOWER, ...translationKey('taxEstimates:FilingStatusComboBox.label.qualifying_widow_er', 'Qualifying widow(er)') },
 ] as const
 
 type FilingStatusOption = { value: FilingStatus, label: string }
@@ -51,7 +51,7 @@ export const FilingStatusComboBox = ({
   }, [onChange])
 
   return (
-    <ComboBoxField label={t('taxEstimates:label.filing_status', 'Filing status')} className={className} inline={inline}>
+    <ComboBoxField label={t('taxEstimates:FilingStatusComboBox.label.filing_status', 'Filing status')} className={className} inline={inline}>
       {controlProps => (
         <ComboBox<FilingStatusOption>
           {...controlProps}

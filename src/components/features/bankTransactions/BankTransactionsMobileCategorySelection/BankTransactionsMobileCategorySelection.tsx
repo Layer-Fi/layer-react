@@ -57,7 +57,7 @@ export const BankTransactionsMobileCategorySelection = ({
   const categoryOptions = useMemo(
     () => buildCategoryOptions(
       sessionCategories,
-      t('bankTransactions:action.show_all_categories', 'Show all categories'),
+      t('bankTransactions:BankTransactionsMobileCategorySelection.action.show_all_categories', 'Show all categories'),
       getSuggestedCategoryValues(bankTransaction),
     ),
     [bankTransaction, sessionCategories, t],
@@ -102,10 +102,10 @@ export const BankTransactionsMobileCategorySelection = ({
   return (
     <VStack gap='3xs'>
       <Span size='sm' weight='bold'>
-        {t('bankTransactions:action.select_category', 'Select category')}
+        {t('bankTransactions:BankTransactionsMobileCategorySelection.action.select_category', 'Select category')}
       </Span>
       <GridList
-        aria-label={t('bankTransactions:action.select_a_category', 'Select a category')}
+        aria-label={t('bankTransactions:BankTransactionsMobileCategorySelection.action.select_a_category', 'Select a category')}
         selectionMode='single'
         selectedKeys={selectedCategory?.value ? new Set([selectedCategory.value]) : new Set()}
         onSelectionChange={handleCategoryGridSelect}

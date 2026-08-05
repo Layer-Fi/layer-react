@@ -41,8 +41,8 @@ export interface BankTransactionsHeaderProps {
 }
 
 const STATUS_TOGGLE_CONFIG = [
-  { ...translationKey('bankTransactions:label.to_review', 'To Review'), value: DisplayState.review },
-  { ...translationKey('bankTransactions:label.categorized', 'Categorized'), value: DisplayState.categorized },
+  { ...translationKey('bankTransactions:BankTransactionsHeader.label.to_review', 'To Review'), value: DisplayState.review },
+  { ...translationKey('bankTransactions:BankTransactionsHeader.label.categorized', 'Categorized'), value: DisplayState.categorized },
 ]
 
 export const BankTransactionsHeader = ({
@@ -148,7 +148,7 @@ export const BankTransactionsHeader = ({
         isMobileView={isMobileList}
         slotProps={{
           ConfirmAllModal: {
-            label: isMobileList ? t('common:action.confirm_label', 'Confirm') : t('bankTransactions:action.confirm_all', 'Confirm all'),
+            label: isMobileList ? t('common:action.confirm_label', 'Confirm') : t('bankTransactions:BankTransactionsHeader.action.confirm_all', 'Confirm all'),
           },
         }}
       />
@@ -159,7 +159,7 @@ export const BankTransactionsHeader = ({
   const statusToggle = isStatusToggleVisible
     ? (
       <Toggle
-        ariaLabel={t('bankTransactions:label.categorization_status', 'Categorization status')}
+        ariaLabel={t('bankTransactions:BankTransactionsHeader.label.categorization_status', 'Categorization status')}
         options={statusToggleOptions}
         selectedKey={display}
         onSelectionChange={onCategorizationDisplayChange}

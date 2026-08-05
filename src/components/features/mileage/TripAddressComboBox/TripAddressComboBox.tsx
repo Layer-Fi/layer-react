@@ -87,7 +87,7 @@ export const TripAddressComboBox = ({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('trips:empty.address_suggestions', 'Type to search for an address')}
+        {t('mileage:TripAddressComboBox.empty.address_suggestions', 'Type to search for an address')}
       </P>
     ),
     [t],
@@ -105,10 +105,10 @@ export const TripAddressComboBox = ({
           isReadOnly={isReadOnly}
           isLoading={isLoading}
           isError={isError}
-          placeholder={t('trips:label.enter_address', 'Enter address')}
+          placeholder={t('mileage:TripAddressComboBox.label.enter_address', 'Enter address')}
           slots={{
             EmptyMessage,
-            ErrorMessage: t('trips:error.load_address_suggestions', 'An error occurred while loading address suggestions.'),
+            ErrorMessage: t('mileage:TripAddressComboBox.error.load_address_suggestions', 'An error occurred while loading address suggestions.'),
           }}
         />
       )}

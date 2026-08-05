@@ -50,8 +50,8 @@ export interface ReportsProps {
 
 const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
   { value: 'profitAndLoss', ...translationKey('common:label.profit_loss', 'Profit & Loss') },
-  { value: 'balanceSheet', ...translationKey('reports:label.balance_sheet', 'Balance Sheet') },
-  { value: 'statementOfCashFlow', ...translationKey('reports:label.cash_flow_statement', 'Cash Flow Statement') },
+  { value: 'balanceSheet', ...translationKey('views:Reports.label.balance_sheet', 'Balance Sheet') },
+  { value: 'statementOfCashFlow', ...translationKey('views:Reports.label.cash_flow_statement', 'Cash Flow Statement') },
 ]
 
 export interface ReportsPanelProps {
@@ -90,7 +90,7 @@ export const Reports = ({
   )
   const defaultTitle =
     enabledReports.length > 1
-      ? t('reports:label.reports', 'Reports')
+      ? t('views:Reports.label.reports', 'Reports')
       : options.find(option => (option.value === enabledReports[0]))?.label
 
   const resolvedTitle = stringOverrides?.title || title || defaultTitle

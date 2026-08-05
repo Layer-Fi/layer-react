@@ -1,0 +1,24 @@
+{
+  "CustomAccountForm": {
+    "action": {
+      "save_account": "Enregistrer le compte",
+      "select_account_type": "Sélectionner un type de compte..."
+    },
+    "error": {
+      "check_fields": "Veuillez vérifier tous les champs."
+    },
+    "label": {
+      "account_name": "Nom du compte",
+      "account_ownership": "Propriété",
+      "account_type": "Type de compte",
+      "enter_account_name": "Saisissez le nom du compte...",
+      "enter_institution_name": "Saisissez le nom de l’institution...",
+      "institution_name": "Nom de l’institution"
+    },
+    "validation": {
+      "account_name_required": "Le nom du compte est obligatoire",
+      "account_type_required": "Le type de compte est obligatoire",
+      "institution_name_required": "Le nom de l’institution est obligatoire"
+    }
+  }
+}

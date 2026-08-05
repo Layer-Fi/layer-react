@@ -24,11 +24,11 @@ export function InvoiceVoidConfirmationModal({ isOpen, onOpenChange, invoiceId, 
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('invoices:label.void_invoice', 'Void invoice')}
-      description={t('invoices:label.void_invoice_warning', 'Voiding this invoice will mark it as cancelled, and you will no longer be able to apply payments to it. This action cannot be undone.')}
+      title={t('invoices:InvoiceVoidConfirmationModal.label.void_invoice', 'Void invoice')}
+      description={t('invoices:InvoiceVoidConfirmationModal.label.void_invoice_warning', 'Voiding this invoice will mark it as cancelled, and you will no longer be able to apply payments to it. This action cannot be undone.')}
       onConfirm={onConfirm}
-      confirmLabel={t('invoices:action.void_invoice_label', 'Void Invoice')}
-      errorText={t('invoices:error.void_invoice', 'There was an error voiding this invoice. Please check your connection and try again in a few seconds.')}
+      confirmLabel={t('invoices:InvoiceVoidConfirmationModal.action.void_invoice_label', 'Void Invoice')}
+      errorText={t('invoices:InvoiceVoidConfirmationModal.error.void_invoice', 'There was an error voiding this invoice. Please check your connection and try again in a few seconds.')}
     />
   )
 }

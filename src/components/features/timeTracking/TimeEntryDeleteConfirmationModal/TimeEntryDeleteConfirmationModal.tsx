@@ -26,16 +26,16 @@ export function TimeEntryDeleteConfirmationModal({ entry }: TimeEntryDeleteConfi
   const modalContentProps = useMemo(() => {
     if (isActive) {
       return ({
-        title: t('timeTracking:prompt.discard_timer', 'Discard this timer?'),
-        description: t('timeTracking:label.discard_timer_warning', 'The active timer will be discarded and no time entry will be recorded.'),
-        confirmLabel: t('timeTracking:action.discard_timer', 'Discard Timer'),
+        title: t('timeTracking:TimeEntryDeleteConfirmationModal.prompt.discard_timer', 'Discard this timer?'),
+        description: t('timeTracking:TimeEntryDeleteConfirmationModal.label.discard_timer_warning', 'The active timer will be discarded and no time entry will be recorded.'),
+        confirmLabel: t('timeTracking:TimeEntryDeleteConfirmationModal.action.discard_timer', 'Discard Timer'),
       })
     }
 
     return ({
-      title: t('timeTracking:prompt.delete_entry', 'Delete this time entry?'),
-      description: t('timeTracking:label.delete_entry_warning', 'This time entry will be permanently deleted. This action cannot be undone.'),
-      confirmLabel: t('timeTracking:action.delete_entry', 'Delete Entry'),
+      title: t('timeTracking:TimeEntryDeleteConfirmationModal.prompt.delete_entry', 'Delete this time entry?'),
+      description: t('timeTracking:TimeEntryDeleteConfirmationModal.label.delete_entry_warning', 'This time entry will be permanently deleted. This action cannot be undone.'),
+      confirmLabel: t('timeTracking:TimeEntryDeleteConfirmationModal.action.delete_entry', 'Delete Entry'),
     })
   }, [isActive, t])
 
@@ -47,7 +47,7 @@ export function TimeEntryDeleteConfirmationModal({ entry }: TimeEntryDeleteConfi
       description={modalContentProps.description}
       onConfirm={onConfirm}
       confirmLabel={modalContentProps.confirmLabel}
-      errorText={t('timeTracking:error.delete_entry', 'Failed to delete time entry. Please check your connection and try again.')}
+      errorText={t('timeTracking:TimeEntryDeleteConfirmationModal.error.delete_entry', 'Failed to delete time entry. Please check your connection and try again.')}
       useDrawer={isMobile}
     />
   )

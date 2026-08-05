@@ -35,7 +35,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
   }, [])
 
   const directionOptions = useMemo<Array<{ value: DirectionFormValue, label: string }>>(() => [
-    { value: '', label: t('categorizationRules:label.any', 'Any') },
+    { value: '', label: t('categorization:CategorizationRuleForm.label.any', 'Any') },
     { value: BankDirectionFilter.MONEY_IN, label: t('common:label.money_in', 'Money in') },
     { value: BankDirectionFilter.MONEY_OUT, label: t('common:label.money_out', 'Money out') },
   ], [t])
@@ -48,7 +48,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           onDynamic: ({ value }) => transactionDescription
             ? undefined
             : required(
-              t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
+              t('categorization:CategorizationRuleForm.validation.counterparty_required', 'Counterparty is required.'),
             )(value),
         }}
       >
@@ -58,7 +58,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               label={t('common:label.counterparty', 'Counterparty')}
               value={field.state.value}
               onValueChange={field.handleChange}
-              placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
+              placeholder={t('categorization:CategorizationRuleForm.placeholder.select_counterparty', 'Select counterparty')}
               transactionDescription={transactionDescription}
               showLabel
             />
@@ -72,7 +72,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
         validators={{
           onDynamic: ({ value }) => value && isClassificationAccountIdentifier(value)
             ? undefined
-            : t('categorizationRules:validation.category_required', 'Category is required.'),
+            : t('categorization:CategorizationRuleForm.validation.category_required', 'Category is required.'),
         }}
       >
         {field => (
@@ -82,7 +82,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               value={field.state.value}
               onValueChange={field.handleChange}
               showLabel
-              placeholder={t('categorizationRules:placeholder.select_account', 'Select account')}
+              placeholder={t('categorization:CategorizationRuleForm.placeholder.select_account', 'Select account')}
             />
             <FieldErrors errors={field.state.meta.errors} />
           </VStack>
@@ -104,7 +104,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           <form.AppField name='amountMinFilter'>
             {field => (
               <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_min_optional', 'Minimum amount (optional)')}
+                label={t('categorization:CategorizationRuleForm.label.amount_min_optional', 'Minimum amount (optional)')}
                 mode='currency'
                 allowEmpty
                 showFieldError={false}
@@ -115,11 +115,11 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           <form.AppField name='amountMaxFilter'>
             {field => (
               <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_max_optional', 'Maximum amount (optional)')}
+                label={t('categorization:CategorizationRuleForm.label.amount_max_optional', 'Maximum amount (optional)')}
                 mode='currency'
                 allowEmpty
                 showFieldError={false}
-                placeholder={t('categorizationRules:placeholder.none', 'None')}
+                placeholder={t('categorization:CategorizationRuleForm.placeholder.none', 'None')}
               />
             )}
           </form.AppField>
@@ -144,8 +144,8 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               {submitError
                 ? t('common:action.retry_label', 'Retry')
                 : formState.mode === 'edit'
-                  ? t('categorizationRules:action.save_rule', 'Save Rule')
-                  : t('categorizationRules:action.create_rule', 'Create Rule')}
+                  ? t('categorization:CategorizationRuleForm.action.save_rule', 'Save Rule')
+                  : t('categorization:CategorizationRuleForm.action.create_rule', 'Create Rule')}
             </SubmitButton>
           )}
         </form.Subscribe>

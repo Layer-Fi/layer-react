@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import type { Vehicle } from '@schemas/features/mileage/vehicle'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 
-const unnamedVehicle = translationKey('vehicles:label.unnamed_vehicle', 'Unnamed vehicle')
+const unnamedVehicle = translationKey('mileage:vehicles.label.unnamed_vehicle', 'Unnamed vehicle')
 
 export const getVehicleDisplayName = (vehicle: Vehicle | null | undefined, t: TFunction): string => {
   if (!vehicle) return ''

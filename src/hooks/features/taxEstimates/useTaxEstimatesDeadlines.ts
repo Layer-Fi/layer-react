@@ -16,23 +16,23 @@ function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): 
   let quarterLabel
   switch (quarter.quarter) {
     case 1:
-      quarterLabel = t('taxEstimates:label.q1', 'Q1')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q1', 'Q1')
       break
     case 2:
-      quarterLabel = t('taxEstimates:label.q2', 'Q2')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q2', 'Q2')
       break
     case 3:
-      quarterLabel = t('taxEstimates:label.q3', 'Q3')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q3', 'Q3')
       break
     case 4:
-      quarterLabel = t('taxEstimates:label.q4', 'Q4')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q4', 'Q4')
       break
   }
 
   return {
     ...quarter,
     type: 'quarter',
-    title: t('taxEstimates:label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
+    title: t('taxEstimates:useTaxEstimatesDeadlines.label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
   }
 }
 
@@ -58,7 +58,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
 
     const annual: TaxEstimatesDeadlineRow = {
       type: 'annual',
-      title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
+      title: t('taxEstimates:useTaxEstimatesDeadlines.label.annual_taxes', 'Annual taxes'),
       dueDate: data.taxesDueAt,
       amountOwed: data.totalTaxesOwed,
       state: TaxOverviewDeadlineStatus.Neutral,

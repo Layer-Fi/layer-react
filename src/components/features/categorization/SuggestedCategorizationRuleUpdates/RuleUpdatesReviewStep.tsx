@@ -26,7 +26,7 @@ export function RuleUpdatesReviewStep({ ruleSuggestion, isDrawer }: RuleUpdatesP
   return (
     <VStack pbe={isDrawer ? 'xl' : undefined}>
       <Span size='md'>
-        {tPlural(t, 'categorizationRules:label.following_count_transactions', {
+        {tPlural(t, 'categorization:SuggestedCategorizationRuleUpdates.RuleUpdatesReviewStep.label.following_count_transactions', {
           count: ruleSuggestion.transactionsThatWillBeAffected.length,
           displayCount: formatNumber(ruleSuggestion.transactionsThatWillBeAffected.length),
           one: 'The following {{displayCount}} transaction will be affected:',

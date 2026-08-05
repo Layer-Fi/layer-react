@@ -17,7 +17,7 @@ the key **and its English default inline at the call site** and let the pipeline
 ## How to add or change a translated string
 
 1. **Write it inline in the code**, with the key and the English default:
-   `t('invoices:label.due_date', 'Due date')`. Reuse an existing key if one fits — check
+   `t('invoices:InvoiceTable.label.due_date', 'Due date')`. Reuse an existing key if one fits — check
    `common.json` first.
 2. **Ship your PR without touching the locale JSON.** Your feature works immediately: i18next
    falls back to the inline default when the key is missing, so English renders correctly and
@@ -46,17 +46,18 @@ project causes spurious "omitted" warnings on download.
 
 ## Changing the English text of an existing key
 
-**Change the key too.** Editing the default of `invoices:label.due_date` from "Due date" to
-"Payment due" without renaming the key risks the stale `fr-CA` translation surviving; a new key
-(`invoices:label.payment_due`) is unambiguously untranslated, so Crowdin translates it fresh.
+**Change the key too.** Editing the default of `invoices:InvoiceTable.label.due_date` from
+"Due date" to "Payment due" without renaming the key risks the stale `fr-CA` translation
+surviving; a new key (`invoices:InvoiceTable.label.payment_due`) is unambiguously untranslated,
+so Crowdin translates it fresh.
 
 Grep for the old key and change **both the key and the default value at every call site** —
 `t()`, `translationKey(...)` constants, `tPlural`/`tConditional` case maps. Half-migrating
 leaves two keys with conflicting English, and the stragglers keep rendering the old French.
 
 ```diff
--t('invoices:label.due_date', 'Due date')
-+t('invoices:label.payment_due', 'Payment due')
+-t('invoices:InvoiceTable.label.due_date', 'Due date')
++t('invoices:InvoiceTable.label.payment_due', 'Payment due')
 ```
 
 ## Renaming or deleting a key
@@ -70,16 +71,104 @@ edit desynchronizes `fr-CA`.
 ```tsx
 const { t } = useTranslation()
 
-t('taxEstimates:label.tax_details', 'Tax Details')
+t('taxEstimates:TaxDetails.label.tax_details', 'Tax Details')
 ```
 
 - Always pass the inline default as the second argument. Never `t('some.key')` bare.
-- Keys are `namespace:category.snake_case_key`. The namespace is the JSON file
-  (`common`, `bankTransactions`, `invoices`, `reports`, `taxEstimates`, `ui`, …); add a new
-  namespace file only for a genuinely new domain.
-- Categories follow existing usage: `action.*`, `label.*`, `state.*`, `title.*`, `error.*`,
-  `description.*`. Look in `common.json` first — generic strings ("Cancel", "Save", "Loading…")
-  already exist there and should be reused, not re-keyed per feature.
+- Apostrophes are typographic: `’`, never `'` or `ʼ`.
+- Keys are `namespace:Owner.category.snake_case_key` — see below.
+
+## Key naming
+
+```
+<namespace>:<Owner>.<category>.<snake_case_key>
+```
+
+The **namespace** is the JSON file, and it is derived from where the string is used:
+
+| where the string is used | namespace |
+|---|---|
+| `src/{components,hooks,providers,schemas,types,utils}/features/<domain>/**` | `<domain>` |
+| `src/components/blocks/**` | `blocks` |
+| `src/components/ui/**` | `ui` |
+| `src/views/<View>/**` | `views`, or any feature domain it composes |
+
+The **owner** names the file that uses the string, so a key always leads you back to it:
+
+| file | owner |
+|---|---|
+| `InvoiceTable/InvoiceTable.tsx` — the directory's namesake | `InvoiceTable` |
+| `Tasks/TasksPanelNotification.tsx` — a sub-component | `Tasks.TasksPanelNotification` |
+| `CallBooking/useCallBookingCountdownLabel.ts` — a colocated hook | `CallBooking.useCallBookingCountdownLabel` |
+| `InvoiceForm/formUtils.ts` — a colocated helper | `InvoiceForm.formUtils` |
+| `utils/features/generalLedger/constants.ts` — a module in the domain folder | `constants` |
+
+Anything that is not its directory's namesake is a sub-part and is qualified by its parent. That
+keeps the key pointing at the right file, and keeps generic filenames like `formUtils.ts` distinct
+between components.
+
+The **category** is one of `action`, `label`, `state`, `error`, `validation`, `empty`,
+`placeholder`, `banner`, `tooltip`, `title`, `disclaimer`, `prompt`.
+
+```tsx
+// src/components/features/invoices/InvoiceTable/InvoiceTable.tsx
+t('invoices:InvoiceTable.action.view_invoice', 'View invoice')
+
+// src/components/features/bookkeeping/Tasks/TasksPanelNotification.tsx
+t('bookkeeping:Tasks.TasksPanelNotification.action.view_and_complete', 'View and complete')
+```
+
+**A component owns its keys — never reuse another component's.** The owner segment is what stops
+two components sharing a key and passing different English, where extraction silently keeps
+whichever call site it visited last. Duplicating the same English under two owners is fine; the
+translation memory translates identical source identically.
+
+### Shared namespaces
+
+`common`, `date`, `upload`, and `usStates` are cross-cutting. They carry **no owner segment** and
+are meant to be reused:
+
+```tsx
+t('common:action.cancel', 'Cancel')
+```
+
+Check `common.json` before adding a string to a domain namespace — "Cancel", "Save", "Loading…"
+already exist. Because these keys have no owner to separate them, a shared key must have exactly
+one English default everywhere; if two call sites need different copy, they need different keys.
+
+## Stable releases require finished translations
+
+`npm run i18n:check-release` fails unless both halves of the pipeline have run:
+
+1. every key used in code exists in `en-US` — otherwise the string never reached Crowdin at all;
+2. every `en-US` key has a non-empty value in every translated locale — otherwise it renders
+   English through the fallback.
+
+[`Release — Prepare`](../../../.github/workflows/release-prepare.yml) runs it when
+`release_type=stable`, **before** the version bump. If it fails, Prepare dispatches the workflow
+that can fix it — `i18n-extract-keys` when keys are unextracted, `crowdin-sync` when they are
+merely untranslated — and then stops without cutting a release PR. Merge the PR it opens (an
+extract PR landing on `main` triggers the Crowdin sync itself), then re-run Prepare.
+
+[`Release — Publish`](../../../.github/workflows/release-publish.yml) runs it again against the
+checked-out tag, since strings can land between cutting the release PR and tagging. That one is a
+hard block on `npm publish --tag latest`.
+
+If Publish does block, nothing was published, so the version is still free to reuse — don't burn
+it on a new patch. Merge the i18n PRs, then run
+[`Release — Tag`](../../../.github/workflows/release-tag.yml) manually with `retag=true` to move
+the tag onto current `main`, and re-run Publish. That path refuses to move a tag whose version is
+already on npm, since a published version must never be retagged.
+
+Alpha releases are exempt; untranslated strings are expected there.
+
+### Enforcement
+
+`npm run i18n:check` (CI: [`i18n-check`](../../../.github/workflows/i18n-check.yml)) fails on a key
+with two different English defaults, a key whose namespace or owner doesn't match its file, an
+`en-US`/`fr-CA` structural mismatch, and straight apostrophes. ESLint additionally flags a foreign
+namespace inline as you type. Both derive the same namespace/owner rules, in
+`scripts/i18n/keyOwnership.mjs` and `eslint.config.mjs`.
 
 ## Strings outside JSX
 
@@ -102,9 +191,9 @@ It returns `{ i18nKey, defaultValue, ns? }` for the consumer to translate at ren
 Don't build these with ternaries — the extraction plugins understand these helpers:
 
 ```ts
-tPlural(t, 'invoices:label.invoice_count', { count, one: '{{count}} invoice', other: '{{count}} invoices' })
+tPlural(t, 'invoices:InvoiceTable.label.invoice_count', { count, one: '{{count}} invoice', other: '{{count}} invoices' })
 
-tConditional(t, 'bankTransactions:state.status', {
+tConditional(t, 'bankTransactions:BankTransactionsTable.state.status', {
   condition: status,
   cases: { pending: 'Pending', posted: 'Posted' },
 })

@@ -1,0 +1,287 @@
+{
+  "MileageDeductionChart": {
+    "MileageDeductionChartTooltip": {
+      "label": {
+        "deduction_colon": "Déduction :",
+        "miles_colon": "Kilomètres :"
+      }
+    }
+  },
+  "MileageSummaryCard": {
+    "action": {
+      "record_trip": "Ajouter un voyage"
+    },
+    "error": {
+      "load_mileage_data": "Une erreur s’est produite lors du chargement de vos données de kilométrage. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "distance_mi": "{{distance}} km",
+      "mileage_tracking": "Suivi des kilomètres parcourus",
+      "miles_month": "Kilomètres ce mois-ci",
+      "standard_rate_formatted_deduction": "Taux standard : {{formattedDeductionRate}}/kilomètre",
+      "tax_deduction": "Déduction fiscale",
+      "total_miles_in_year": "Total des kilomètres en {{displayYear}} :",
+      "total_tax_deduction": "Déduction fiscale totale :"
+    }
+  },
+  "MileageTrackingStats": {
+    "error": {
+      "load_mileage_summary_data": "Échec du chargement des données du résumé du kilométrage"
+    },
+    "label": {
+      "total_deduction": "Déduction totale",
+      "total_miles": "Kilomètres totaux",
+      "trips": "Voyages"
+    }
+  },
+  "MileageTrackingSummary": {
+    "error": {
+      "load_mileage_summary_data": "Échec du chargement des données du résumé du kilométrage"
+    },
+    "label": {
+      "in_year": "En {{year}}",
+      "mileage_tracking": "Suivi des kilomètres parcourus",
+      "total_deduction": "Déduction totale",
+      "total_miles": "Kilomètres totaux",
+      "trips": "Voyages"
+    }
+  },
+  "TripAddressCell": {
+    "label": {
+      "trip_end_address": "<bold>Destination :</bold> {{address}}",
+      "trip_start_address": "<bold>Départ :</bold> {{address}}"
+    }
+  },
+  "TripAddressComboBox": {
+    "empty": {
+      "address_suggestions": "Saisissez une adresse à rechercher"
+    },
+    "error": {
+      "load_address_suggestions": "Une erreur s’est produite lors du chargement des suggestions d’adresse."
+    },
+    "label": {
+      "enter_address": "Saisissez l’adresse"
+    }
+  },
+  "TripDeleteConfirmationModal": {
+    "action": {
+      "delete_trip": "Supprimer le voyage"
+    },
+    "error": {
+      "delete_trip": "Échec de la suppression du voyage. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "delete_trip_warning": "Ce voyage sera supprimé définitivement. Cette action ne peut pas être annulée."
+    },
+    "prompt": {
+      "delete_trip": "Supprimer ce voyage?"
+    }
+  },
+  "TripDrawer": {
+    "action": {
+      "edit_trip": "Modifier le voyage",
+      "record_trip": "Ajouter un voyage"
+    }
+  },
+  "TripForm": {
+    "action": {
+      "add_vehicle_label": "Ajouter un véhicule",
+      "save_trip": "Enregistrer le voyage"
+    },
+    "error": {
+      "distance_incalculable": "Aucun trajet trouvé entre ces adresses."
+    },
+    "formUtils": {
+      "validation": {
+        "distance_greater_than_zero": "La distance doit être supérieure à 0 kilomètre.",
+        "purpose_required": "Le motif est un champ obligatoire.",
+        "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
+        "trip_date_required": "La date du voyage est un champ obligatoire."
+      }
+    },
+    "label": {
+      "distance_miles": "Distance (kilomètres)",
+      "end_address": "Adresse de destination",
+      "enter_distance": "Saisissez la distance",
+      "start_address": "Adresse de départ",
+      "trip_date": "Date du voyage"
+    }
+  },
+  "TripPurposeToggle": {
+    "label": {
+      "trip_purpose": "Motif du voyage"
+    }
+  },
+  "TripsHeaderMenu": {
+    "action": {
+      "manage_vehicles": "Gérer les véhicules"
+    },
+    "label": {
+      "additional_trip_actions": "Actions supplémentaires pour les voyages"
+    }
+  },
+  "TripsMobileHeader": {
+    "action": {
+      "record_trip": "Ajouter un voyage"
+    },
+    "label": {
+      "search_trips": "Rechercher des voyages",
+      "trips": "Voyages"
+    }
+  },
+  "TripsMobileList": {
+    "action": {
+      "delete_trip": "Supprimer le voyage",
+      "edit_trip": "Modifier le voyage"
+    },
+    "label": {
+      "trip_actions": "Actions liées au trajet",
+      "trips": "Voyages"
+    }
+  },
+  "TripsTable": {
+    "action": {
+      "delete_trip": "Supprimer le voyage",
+      "view_trip": "Afficher le voyage"
+    },
+    "label": {
+      "distance": "Distance",
+      "trips": "Voyages",
+      "vehicle": "Véhicule"
+    }
+  },
+  "TripsTableHeader": {
+    "action": {
+      "record_trip": "Ajouter un voyage"
+    },
+    "label": {
+      "all_vehicles": "Tous les véhicules",
+      "search_trips": "Rechercher des voyages",
+      "trips": "Voyages"
+    }
+  },
+  "TripsView": {
+    "empty": {
+      "add_first_trip": "Ajoutez votre premier voyage pour commencer à faire le suivi des kilomètres parcourus.",
+      "no_trips_yet": "Aucun voyage pour le moment"
+    },
+    "error": {
+      "load_trips": "Nous n’avons pas pu charger vos voyages",
+      "load_trips_error": "Une erreur s’est produite lors du chargement de vos voyages. Veuillez vérifier votre connexion et réessayer."
+    }
+  },
+  "utils": {
+    "label": {
+      "distance_mi": "{{distance}} km"
+    }
+  },
+  "VehicleArchiveConfirmationModal": {
+    "action": {
+      "archive_vehicle_label": "Archiver le véhicule"
+    },
+    "error": {
+      "archive_vehicle": "Impossible d’archiver le véhicule. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "vehicle_name_hidden_from_active_list": "{{vehicleName}} sera masqué de votre liste de véhicules actifs. Vous pourrez le réactiver en tout temps."
+    },
+    "prompt": {
+      "archive_vehicle": "Archiver ce véhicule?"
+    }
+  },
+  "VehicleCard": {
+    "label": {
+      "license_plate": "Plaque d’immatriculation",
+      "make_model": "Marque et modèle",
+      "vin": "NIV"
+    }
+  },
+  "VehicleDeleteConfirmationModal": {
+    "action": {
+      "delete_vehicle_label": "Supprimer le véhicule"
+    },
+    "error": {
+      "delete_vehicle": "Impossible de supprimer le véhicule. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "delete_vehicle_name_warning": "{{vehicleName}} sera supprimé définitivement. Cette action ne peut pas être annulée."
+    },
+    "prompt": {
+      "delete_vehicle": "Supprimer ce véhicule?"
+    }
+  },
+  "VehicleDrawer": {
+    "action": {
+      "add_vehicle_label": "Ajouter un véhicule",
+      "edit_vehicle": "Modifier le véhicule"
+    }
+  },
+  "VehicleForm": {
+    "action": {
+      "save_vehicle": "Enregistrer le véhicule",
+      "set_primary_vehicle": "Définir comme véhicule principal"
+    },
+    "label": {
+      "enter_license_plate": "Saisissez la plaque d’immatriculation",
+      "enter_vehicle_make_model": "Saisissez la marque et le modèle du véhicule",
+      "enter_vehicle_year": "Saisissez l’année du véhicule",
+      "enter_vin": "Saisissez le NIV",
+      "license_plate": "Plaque d’immatriculation",
+      "make_model": "Marque et modèle",
+      "vin": "NIV"
+    },
+    "useVehicleForm": {
+      "validation": {
+        "make_model_required": "Le champ Marque et modèle est obligatoire.",
+        "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
+        "year_required": "Le champ Année est obligatoire."
+      }
+    }
+  },
+  "VehicleReactivateConfirmationModal": {
+    "action": {
+      "reactivate_vehicle_label": "Réactiver le véhicule"
+    },
+    "error": {
+      "reactivate_vehicle": "Impossible de réactiver le véhicule. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "vehicle_name_restored_to_active_list": "{{vehicleName}} sera rétabli dans votre liste de véhicules actifs et pourra être utilisé pour faire le suivi des déplacements."
+    },
+    "prompt": {
+      "reactivate_vehicle": "Réactiver ce véhicule?"
+    }
+  },
+  "vehicles": {
+    "label": {
+      "unnamed_vehicle": "Véhicule sans nom"
+    }
+  },
+  "VehicleSelector": {
+    "empty": {
+      "matching_vehicle": "Aucun véhicule correspondant"
+    },
+    "error": {
+      "load_vehicles": "Une erreur s’est produite lors du chargement des véhicules."
+    },
+    "label": {
+      "vehicle": "Véhicule"
+    }
+  },
+  "VehiclesGrid": {
+    "empty": {
+      "add_first_vehicle": "Ajoutez votre premier véhicule pour commencer à faire le suivi des déplacements.",
+      "vehicles": "Aucun véhicule pour le moment"
+    },
+    "error": {
+      "load_vehicle": "Nous n’avons pas pu charger vos véhicules",
+      "load_vehicle_retry": "Une erreur s’est produite lors du chargement de vos véhicules. Veuillez vérifier votre connexion et réessayer."
+    }
+  },
+  "VehiclesView": {
+    "action": {
+      "add_vehicle": "Ajouter un véhicule",
+      "manage_vehicles": "Gérer les véhicules"
+    }
+  }
+}

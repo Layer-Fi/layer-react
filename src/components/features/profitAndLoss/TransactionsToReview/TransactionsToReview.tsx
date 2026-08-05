@@ -82,7 +82,7 @@ export function TransactionsToReview({
         >
           {numTransactionsToReview}
           {' '}
-          {t('bankTransactions:label.pending', 'pending')}
+          {t('profitAndLoss:TransactionsToReview.label.pending', 'pending')}
         </Badge>
       )
     }
@@ -93,7 +93,7 @@ export function TransactionsToReview({
         size={BadgeSize.SMALL}
         icon={<Check size={12} />}
       >
-        {t('bankTransactions:label.all_done', 'All done')}
+        {t('profitAndLoss:TransactionsToReview.label.all_done', 'All done')}
       </Badge>
     )
   }, [t, hasLoadedData, isError, mutate, numTransactionsToReview])
@@ -102,7 +102,7 @@ export function TransactionsToReview({
     <div className={CLASS_NAME}>
       <VStack gap='3xs' align='start'>
         <Span size='sm' weight='bold'>
-          {t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
+          {t('profitAndLoss:TransactionsToReview.label.transactions_to_review', 'Transactions to review')}
         </Span>
         {transactionsToReviewBadge}
       </VStack>
@@ -110,7 +110,7 @@ export function TransactionsToReview({
         variant='outlined'
         icon
         onPress={onClick}
-        aria-label={t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
+        aria-label={t('profitAndLoss:TransactionsToReview.label.transactions_to_review', 'Transactions to review')}
       >
         <ChevronRight size={18} />
       </Button>

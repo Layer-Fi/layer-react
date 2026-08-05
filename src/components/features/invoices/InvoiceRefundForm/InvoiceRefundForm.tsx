@@ -62,7 +62,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
       <VStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Trans
-            i18nKey='invoices:label.invoice_number_component'
+            i18nKey='invoices:InvoiceRefundForm.label.invoice_number_component'
             defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
             values={{ invoiceNumber: invoice.invoiceNumber }}
             components={{
@@ -72,7 +72,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
           />
         </HStack>
         <form.AppField name='completedAt'>
-          {field => <field.FormDateField label={t('invoices:label.refund_date', 'Refund date')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__CompletedAt`} />}
+          {field => <field.FormDateField label={t('invoices:InvoiceRefundForm.label.refund_date', 'Refund date')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__CompletedAt`} />}
         </form.AppField>
         <form.Field name='method'>
           {field => (

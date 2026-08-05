@@ -22,15 +22,15 @@ import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 const ONBOARDING_CALL_COVERAGE_ITEMS = [
   {
     key: 'introduce_bookkeeper',
-    ...translationKey('callBookings:label.onboarding_cover_introduce_bookkeeper', 'Introduce your bookkeeper'),
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_introduce_bookkeeper', 'Introduce your bookkeeper'),
   },
   {
     key: 'bookkeeping_process',
-    ...translationKey('callBookings:label.onboarding_cover_bookkeeping_process', 'Walk through our bookkeeping process'),
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_bookkeeping_process', 'Walk through our bookkeeping process'),
   },
   {
     key: 'connect_bank_and_cards',
-    ...translationKey('callBookings:label.onboarding_cover_connect_bank_and_cards', 'Connect your business bank accounts and credit cards'),
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_connect_bank_and_cards', 'Connect your business bank accounts and credit cards'),
   },
 ] as const
 
@@ -62,13 +62,13 @@ const EmptyState = ({
   return (
     <VStack gap='md' align='center' pi='lg' pb='lg'>
       <Heading size='sm' align='center'>
-        {stringOverrides?.title || t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
+        {stringOverrides?.title || t('bookkeeping:CallBooking.prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
       <Span variant='subtle' align='center'>
-        {stringOverrides?.description || t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
+        {stringOverrides?.description || t('bookkeeping:CallBooking.label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={handleBookCall}>
-        {t('callBookings:action.schedule_call', 'Schedule a call')}
+        {t('bookkeeping:CallBooking.action.schedule_call', 'Schedule a call')}
       </Button>
     </VStack>
   )
@@ -93,7 +93,7 @@ const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
                 pbe='sm'
                 className='Layer__CallBooking__CoverageHeading'
               >
-                {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
+                {t('bookkeeping:CallBooking.label.on_this_call_well', 'On this call, we’ll')}
               </Span>
               <VStack role='list' gap='xs'>
                 {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
@@ -146,11 +146,11 @@ export const CallBooking = ({
 
   const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
   const purpose = isOnboardingCall
-    ? (stringOverrides?.title || t('callBookings:label.onboarding_call', 'Onboarding call'))
-    : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
+    ? (stringOverrides?.title || t('bookkeeping:CallBooking.label.onboarding_call', 'Onboarding call'))
+    : t('bookkeeping:CallBooking.label.ad_hoc_call', 'Ad hoc call')
   const subtitle = isOnboardingCall
-    ? (stringOverrides?.description || t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
-    : t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
+    ? (stringOverrides?.description || t('bookkeeping:CallBooking.label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
+    : t('bookkeeping:CallBooking.label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
   const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
@@ -206,7 +206,7 @@ export const CallBooking = ({
           <HStack className='Layer__CallBooking__JoinAction'>
             <LinkButton href={callLink} external variant='solid' fullWidth>
               <Video size={15} />
-              {t('callBookings:action.join_call', 'Join call')}
+              {t('bookkeeping:CallBooking.action.join_call', 'Join call')}
             </LinkButton>
           </HStack>
         </HStack>

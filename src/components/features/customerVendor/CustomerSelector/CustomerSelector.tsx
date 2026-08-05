@@ -47,7 +47,7 @@ export function CustomerSelector({
   showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
-  const resolvedLabel = label ?? t('customerVendor:label.customer', 'Customer')
+  const resolvedLabel = label ?? t('customerVendor:CustomerSelector.label.customer', 'Customer')
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -113,13 +113,13 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('customerVendor:empty.matching_customers', 'No matching customers')}
+        {t('customerVendor:CustomerSelector.empty.matching_customers', 'No matching customers')}
       </P>
     ),
     [t],
   )
 
-  const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
+  const ErrorMessage = t('customerVendor:CustomerSelector.error.load_customers', 'An error occurred while loading customers.')
 
   const isLoadingWithoutFallback = isLoading && !flattenedData
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
@@ -141,13 +141,13 @@ export function CustomerSelector({
 
   const formatCreateLabel = useCallback((inputValue: string) =>
     inputValue
-      ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
-      : t('customerVendor:action.create_new_customer', 'Create new customer'),
+      ? t('customerVendor:CustomerSelector.action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
+      : t('customerVendor:CustomerSelector.action.create_new_customer', 'Create new customer'),
   [t],
   )
 
   const groups = useMemo(
-    () => [{ label: t('customerVendor:label.customers', 'Customers'), options }],
+    () => [{ label: t('customerVendor:CustomerSelector.label.customers', 'Customers'), options }],
     [t, options],
   )
 

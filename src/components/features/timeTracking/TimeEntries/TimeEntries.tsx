@@ -25,8 +25,8 @@ const TimeEntriesEmptyState = () => {
     return (
       <DataState
         status={DataStateStatus.info}
-        title={t('timeTracking:empty.no_matching_entries', 'No time entries found')}
-        description={t('timeTracking:empty.try_adjusting_filters', 'Try adjusting your filters.')}
+        title={t('timeTracking:TimeEntries.empty.no_matching_entries', 'No time entries found')}
+        description={t('timeTracking:TimeEntries.empty.try_adjusting_filters', 'Try adjusting your filters.')}
         icon={<SearchX />}
         spacing
       />
@@ -36,8 +36,8 @@ const TimeEntriesEmptyState = () => {
   return (
     <DataState
       status={DataStateStatus.allDone}
-      title={t('timeTracking:empty.no_entries_yet', 'No time entries yet')}
-      description={t('timeTracking:empty.add_first_entry', 'Add your first time entry to start tracking.')}
+      title={t('timeTracking:TimeEntries.empty.no_entries_yet', 'No time entries yet')}
+      description={t('timeTracking:TimeEntries.empty.add_first_entry', 'Add your first time entry to start tracking.')}
       icon={<Clock />}
       spacing
     />
@@ -49,8 +49,8 @@ const TimeEntriesErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('timeTracking:error.load_entries', 'We couldn\'t load your time entries')}
-      description={t('timeTracking:error.load_entries_detail', 'An error occurred while loading your time entries. Please check your connection and try again.')}
+      title={t('timeTracking:TimeEntries.error.load_entries', 'We couldn’t load your time entries')}
+      description={t('timeTracking:TimeEntries.error.load_entries_detail', 'An error occurred while loading your time entries. Please check your connection and try again.')}
       spacing
       className='Layer__TimeEntries__ErrorState'
     />

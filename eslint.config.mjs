@@ -230,6 +230,62 @@ const boundaryConfigs = LAYERS.flatMap((layer) => {
   return [tierZone, ...domainZones]
 })
 
+// Translation key namespaces. See src/assets/locales/SKILL.md.
+// Cross-cutting namespaces every zone may reuse; they carry no owner segment.
+const SHARED_NAMESPACES = ['common', 'date', 'upload', 'usStates']
+
+// Roots whose second segment is a feature domain, and which therefore own the
+// same-named translation namespace.
+const I18N_DOMAIN_ROOTS = ['components', 'hooks', 'providers', 'schemas', 'types', 'utils']
+
+/**
+ * Flags a namespaced key literal whose namespace is not one this zone owns. The trailing shape
+ * check keeps URLs and other `word:` strings out of it. The owner segment is path-derived, so
+ * `npm run i18n:check` enforces that half.
+ *
+ * @type {(namespaces: string[]) => string}
+ */
+const foreignKeyPattern = (namespaces) => {
+  const allowed = [...namespaces, ...SHARED_NAMESPACES].join('|')
+  return `/^(?!(?:${allowed}):)[a-z][A-Za-z]*:[A-Za-z0-9_]+(?:\\.[A-Za-z0-9_]+)*$/`
+}
+
+/** @type {(files: string[], namespaces: string[], describe: string) => object} */
+const i18nZone = (files, namespaces, describe) => {
+  const pattern = foreignKeyPattern(namespaces)
+  const message = `Translation keys used here must be ${describe} or a shared namespace (${SHARED_NAMESPACES.join(', ')}). See src/assets/locales/SKILL.md.`
+  return {
+    files,
+    ignores: TEST_FILES,
+    rules: {
+      'no-restricted-syntax': [BOUNDARY_SEVERITY,
+        // t('ns:Owner.category.key', …) and translationKey('ns:…', …)
+        { selector: `CallExpression[callee.name=/^(?:t|translationKey)$/][arguments.0.value=${pattern}]`, message },
+        // tPlural(t, 'ns:…', …) and tConditional(t, 'ns:…', …)
+        { selector: `CallExpression[callee.name=/^(?:tPlural|tConditional)$/][arguments.1.value=${pattern}]`, message },
+        // <Trans i18nKey='ns:…' />
+        { selector: `JSXAttribute[name.name="i18nKey"][value.value=${pattern}]`, message },
+      ],
+    },
+  }
+}
+
+const i18nConfigs = [
+  ...I18N_DOMAIN_ROOTS.flatMap(root =>
+    domainsOf(`src/${root}/features`).map(domain =>
+      i18nZone([`src/${root}/features/${domain}/**/*.{ts,tsx}`], [domain], `${domain}:`),
+    ),
+  ),
+  i18nZone(['src/components/blocks/**/*.{ts,tsx}'], ['blocks'], 'blocks:'),
+  i18nZone(['src/components/ui/**/*.{ts,tsx}'], ['ui'], 'ui:'),
+  // A view composes several domains, so it may reach any of them alongside 'views:'.
+  i18nZone(
+    ['src/views/**/*.{ts,tsx}'],
+    ['views', ...new Set(I18N_DOMAIN_ROOTS.flatMap(root => domainsOf(`src/${root}/features`)))],
+    'views: or a feature domain',
+  ),
+]
+
 export default tsEslint.config(
   {
     ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**', '**/*.gen.ts', '.storybook/public/**', 'storybook-static/**'],
@@ -446,4 +502,5 @@ export default tsEslint.config(
     },
   },
   ...boundaryConfigs,
+  ...i18nConfigs,
 )

@@ -37,7 +37,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
     return (
       <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<Minimize2 size={11} />}>
-          {type === 'transfer' ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.match', 'Match')}
+          {type === 'transfer' ? t('bankTransactions:BankTransactionsSelectedValue.label.transfer', 'Transfer') : t('bankTransactions:BankTransactionsSelectedValue.label.match', 'Match')}
         </Badge>
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
@@ -48,7 +48,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
     return (
       <HStack gap='xs' align='center' className={className}>
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
-          {t('bankTransactions:action.split_label', 'Split')}
+          {t('bankTransactions:BankTransactionsSelectedValue.action.split_label', 'Split')}
         </Badge>
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
@@ -59,7 +59,7 @@ export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedVal
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
         <Badge size={BadgeSize.SMALL} icon={isCategorized ? <Layers2Icon size={11} /> : <SparklesIcon size={11} />}>
-          {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:label.suggested_category', 'Suggested category')}
+          {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:BankTransactionsSelectedValue.label.suggested_category', 'Suggested category')}
         </Badge>
       )}
       {showAiSparkle && <SparklesIcon size={14} className='Layer__BankTransactionsSelectedValue__AiSparkle' />}

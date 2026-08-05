@@ -43,7 +43,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.quantity', 'Quantity')} showLabel={index === 0} isReadOnly={isReadOnly} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoiceForm.InvoiceFormLineItemRow.label.quantity', 'Quantity')} showLabel={index === 0} isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].unitPrice`}
@@ -59,7 +59,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
             },
           }}
         >
-          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.rate', 'Rate')} mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoiceForm.InvoiceFormLineItemRow.label.rate', 'Rate')} mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name={`lineItems[${index}].amount`}
@@ -78,7 +78,7 @@ export const InvoiceFormLineItemRow = ({ form, index, isReadOnly, onDeleteLine }
           {field => <field.FormNonRecursiveBigDecimalField label={t('common:label.amount', 'Amount')} mode='currency' showLabel={index === 0} allowNegative isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField name={`lineItems[${index}].isTaxable`}>
-          {field => <field.FormCheckboxField label={t('invoices:label.taxable', 'Taxable')} showLabel={index === 0} align='center' isReadOnly={isReadOnly} />}
+          {field => <field.FormCheckboxField label={t('invoices:InvoiceForm.InvoiceFormLineItemRow.label.taxable', 'Taxable')} showLabel={index === 0} align='center' isReadOnly={isReadOnly} />}
         </form.AppField>
         {!isReadOnly
           && <Button variant='outlined' icon inset aria-label={t('common:action.delete_line_item', 'Delete line item')} onPress={onDeleteLine}><Trash size={16} /></Button>}

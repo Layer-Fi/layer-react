@@ -26,7 +26,7 @@ export const ParentAccountComboBox = ({ label, data, value, onChange, error, inl
           options={options}
           selectedValue={options.find(option => option.value === value) ?? null}
           onSelectedValueChange={option => onChange(option?.value ?? null)}
-          placeholder={t('chartOfAccounts:placeholder.select_parent', 'Select a parent account')}
+          placeholder={t('generalLedger:ParentAccountComboBox.placeholder.select_parent', 'Select a parent account')}
           isError={Boolean(error)}
           slots={{ ErrorMessage: error }}
         />

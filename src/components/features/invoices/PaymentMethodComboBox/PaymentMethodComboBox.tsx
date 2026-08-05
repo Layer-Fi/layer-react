@@ -44,7 +44,7 @@ export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, classN
   const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
   return (
-    <ComboBoxField label={t('invoices:label.payment_method', 'Payment method')} className={className} inline={inline}>
+    <ComboBoxField label={t('invoices:PaymentMethodComboBox.label.payment_method', 'Payment method')} className={className} inline={inline}>
       {controlProps => (
         <ComboBox
           {...controlProps}

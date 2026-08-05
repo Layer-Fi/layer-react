@@ -36,10 +36,10 @@ export function ServiceArchiveConfirmationModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       onConfirm={onConfirm}
-      title={t('timeTracking:services.archive_confirm_title', 'Archive this service?')}
-      description={t('timeTracking:services.archive_confirm_description', 'This service will be removed from your active list. Time entries that used it are unchanged.')}
-      confirmLabel={t('timeTracking:services.archive', 'Archive')}
-      errorText={t('timeTracking:error.archive_service', 'Could not archive this service. Please try again.')}
+      title={t('timeTracking:ServiceArchiveConfirmationModal.services.archive_confirm_title', 'Archive this service?')}
+      description={t('timeTracking:ServiceArchiveConfirmationModal.services.archive_confirm_description', 'This service will be removed from your active list. Time entries that used it are unchanged.')}
+      confirmLabel={t('timeTracking:ServiceArchiveConfirmationModal.services.archive', 'Archive')}
+      errorText={t('timeTracking:ServiceArchiveConfirmationModal.error.archive_service', 'Could not archive this service. Please try again.')}
       useDrawer={isMobile}
     />
   )

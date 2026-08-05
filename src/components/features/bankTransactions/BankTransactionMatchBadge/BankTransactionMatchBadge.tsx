@@ -41,8 +41,8 @@ export const BankTransactionMatchBadge = ({ bankTransaction }: BankTransactionMa
   const { t } = useTranslation()
 
   const text = isTransferMatch(bankTransaction)
-    ? t('bankTransactions:label.transfer', 'Transfer')
-    : t('bankTransactions:label.matched', 'Matched')
+    ? t('bankTransactions:BankTransactionMatchBadge.label.transfer', 'Transfer')
+    : t('bankTransactions:BankTransactionMatchBadge.label.matched', 'Matched')
 
   if (
     bankTransaction.categorizationStatus === CategorizationStatus.MATCHED

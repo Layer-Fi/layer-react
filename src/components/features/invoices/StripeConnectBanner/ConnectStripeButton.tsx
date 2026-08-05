@@ -20,7 +20,7 @@ export const ConnectStripeButton = ({
       isDisabled={isMutating}
       isPending={isMutating}
     >
-      {isError ? t('common:action.retry_label', 'Retry') : t('stripe:action.connect_stripe_label', 'Connect Stripe')}
+      {isError ? t('common:action.retry_label', 'Retry') : t('invoices:StripeConnectBanner.ConnectStripeButton.action.connect_stripe_label', 'Connect Stripe')}
       {isError ? <RotateCcw size={16} /> : <ExternalLink size={16} />}
     </BannerButton>
   )

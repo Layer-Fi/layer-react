@@ -1,99 +1,185 @@
 {
-  "action": {
-    "add_account": "Add Account",
-    "add_opening_balance": "Add opening balance",
-    "confirm_account": "Confirm account",
-    "confirm_accounts_one": "Confirm Account",
-    "confirm_accounts_other": "Confirm All Accounts",
-    "confirm_accounts_selected_one": "Confirm {{displayCount}} Selected Account",
-    "confirm_accounts_selected_other": "Confirm {{displayCount}} Selected Accounts",
-    "connect_my_bank": "Connect my bank",
-    "delete_account": "Delete account",
-    "delete_account_label": "Delete Account",
-    "exclude_all_accounts_one": "Exclude Account",
-    "exclude_all_accounts_other": "Exclude All Accounts",
-    "fix_account": "Fix account",
-    "im_done_linking": "I’m done linking my banks",
-    "link_another_bank": "Link another bank",
-    "mark_duplicate_account": "Mark as a duplicate account",
-    "mark_not_duplicate_account": "Mark as not a duplicate account",
-    "reconnect_another_bank": "Reconnect another bank",
-    "reconnect_my_accounts": "Reconnect My Accounts",
-    "repair_connection": "Repair connection",
-    "unlink_account": "Unlink account",
-    "unlink_account_label": "Unlink Account",
-    "unlink_accounts_under_connection": "Unlink all accounts under this connection",
-    "unlink_accounts_under_institution_name": "Unlink all accounts under this {{institutionName}} connection"
+  "LinkAccountDemoTooltip": {
+    "tooltip": {
+      "cannot_link_demo_business": "Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections."
+    }
   },
-  "error": {
-    "break_connection": "We couldn’t reset this connection. Please try again.",
-    "confirm_account": "We couldn’t confirm your account. Please try again.",
-    "confirm_accounts_try_again_later": "An error occurred while confirming accounts. You will have an opportunity to try again later.",
-    "connect_account": "We couldn’t connect your account. Please try again.",
-    "delete_account_check_connection": "Deletion failed. Please check your connection and try again in a few seconds.",
-    "exclude_account": "We couldn’t exclude your account. Please try again.",
-    "hosted_link_failed_description": "We couldn’t finish linking your account. Please try again.",
-    "hosted_link_failed_title": "Connection failed",
-    "load_accounts": "Failed to load accounts",
-    "remove_connection": "We couldn’t remove this connection. Please try again.",
-    "repair_connection": "We couldn’t repair the Plaid connection with your account. Please try again.",
-    "save_data_try_again_later": "An error occurred while saving data. You will have an opportunity to try again later.",
-    "start_connection": "We couldn’t initiate the Plaid connection flow. Please try again.",
-    "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
+  "LinkAccounts": {
+    "label": {
+      "link_bank_accounts_and_credit_cards": "Link your bank accounts and credit cards",
+      "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards"
+    },
+    "LinkAccountsConfirmationStep": {
+      "action": {
+        "confirm_accounts_one": "Confirm Account",
+        "confirm_accounts_other": "Confirm All Accounts",
+        "confirm_accounts_selected_one": "Confirm {{displayCount}} Selected Account",
+        "confirm_accounts_selected_other": "Confirm {{displayCount}} Selected Accounts",
+        "exclude_all_accounts_one": "Exclude Account",
+        "exclude_all_accounts_other": "Exclude All Accounts"
+      },
+      "label": {
+        "accounts_successfully_linked": "Accounts Successfully Linked",
+        "deselect_unused_accounts": "Please deselect any accounts you don’t use for your business.",
+        "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section"
+      },
+      "prompt": {
+        "which_accounts_for_business": "Which accounts do you use for businesses?"
+      }
+    },
+    "LinkAccountsLinkStep": {
+      "action": {
+        "connect_my_bank": "Connect my bank",
+        "im_done_linking": "I’m done linking my banks",
+        "link_another_bank": "Link another bank",
+        "reconnect_another_bank": "Reconnect another bank",
+        "reconnect_my_accounts": "Reconnect My Accounts"
+      },
+      "error": {
+        "load_accounts": "Failed to load accounts"
+      },
+      "label": {
+        "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
+        "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
+        "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
+        "found_accounts_count_one": "We’ve found {{displayCount}} account",
+        "found_accounts_count_other": "We’ve found {{displayCount}} accounts",
+        "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
+        "remove_accounts_new_dashboard": "You’ll have the chance to remove any accounts in the new dashboard.",
+        "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step."
+      },
+      "prompt": {
+        "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
+        "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?"
+      }
+    }
   },
-  "label": {
-    "account_and_unmatched_transactions_deleted": "This account and any unmatched transactions will be deleted.",
-    "account_options": "Account options",
-    "account_stops_syncing_new_data": "This account will stop syncing new data, and any unmatched transactions will be deleted.",
-    "accounts_successfully_linked": "Accounts Successfully Linked",
-    "bank_balance": "Bank balance",
-    "confirm_account_inclusion": "Confirm Account Inclusion",
-    "confirm_business_accounts": "Confirm Accounts",
-    "confirm_remove_accounts_for_institution": "Please confirm you wish to remove all accounts belonging to this institution",
-    "confirm_remove_accounts_for_institution_name": "Please confirm you wish to remove all accounts belonging to {{institutionName}}",
-    "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
-    "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
-    "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
-    "data_is_syncing": "Data is syncing",
-    "deselect_unused_accounts": "Please deselect any accounts you don't use for your business.",
-    "found_accounts_count_one": "We’ve found {{displayCount}} account",
-    "found_accounts_count_other": "We’ve found {{displayCount}} accounts",
-    "ledger_balance": "Ledger balance",
-    "link_bank_accounts_and_credit_cards": "Link your bank accounts and credit cards",
-    "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section",
-    "link_your_bank_accounts": "Link your bank accounts",
-    "link_your_bank_accounts_description": "Linking your bank accounts allows us to load your bank transactions and automatically categorize them.",
-    "linked_accounts": "Linked Accounts",
-    "linked_accounts_list": "Linked accounts",
-    "loading_accounts": "Loading Your Accounts...",
-    "may_take_few_minutes": "This may take a few minutes",
-    "may_take_up_to_5_minutes": "This may take up to 5 minutes",
-    "may_take_up_to_hours_one": "This may take up to {{displayCount}} hour.",
-    "may_take_up_to_hours_other": "This may take up to {{displayCount}} hours.",
-    "may_take_up_to_minutes_one": "This may take up to {{displayCount}} minute.",
-    "may_take_up_to_minutes_other": "This may take up to {{displayCount}} minutes.",
-    "no_accounts_to_confirm": "There are no accounts to confirm. You may close this modal.",
-    "no_data_sync_until_confirm": "No data will be synced until you confirm.",
-    "opening_balance": "Opening balance",
-    "opening_date": "Opening date",
-    "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards",
-    "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
-    "remove_accounts_new_dashboard": "You’ll have the chance to remove any accounts in the new dashboard.",
-    "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step.",
-    "select_accounts_use_one": "We’ve pulled the below account from your institution. Unselect it if you do not want it connected.",
-    "select_accounts_use_other": "We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected."
+  "LinkedAccountCard": {
+    "label": {
+      "bank_balance": "Bank balance",
+      "ledger_balance": "Ledger balance",
+      "may_take_up_to_5_minutes": "This may take up to 5 minutes"
+    },
+    "state": {
+      "syncing_account_data": "Syncing account data"
+    }
   },
-  "prompt": {
-    "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
-    "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?",
-    "which_accounts_for_business": "Which accounts do you use for businesses?"
+  "LinkedAccountGridItem": {
+    "action": {
+      "add_opening_balance": "Add opening balance",
+      "confirm_account": "Confirm account",
+      "delete_account": "Delete account",
+      "fix_account": "Fix account",
+      "mark_duplicate_account": "Mark as a duplicate account",
+      "mark_not_duplicate_account": "Mark as not a duplicate account",
+      "repair_connection": "Repair connection",
+      "unlink_account": "Unlink account",
+      "unlink_accounts_under_connection": "Unlink all accounts under this connection",
+      "unlink_accounts_under_institution_name": "Unlink all accounts under this {{institutionName}} connection"
+    },
+    "label": {
+      "confirm_remove_accounts_for_institution": "Please confirm you wish to remove all accounts belonging to this institution",
+      "confirm_remove_accounts_for_institution_name": "Please confirm you wish to remove all accounts belonging to {{institutionName}}"
+    },
+    "tooltip": {
+      "account_filter_locked": "Account filters can’t be changed while transactions are selected"
+    }
   },
-  "state": {
-    "syncing_account_data": "Syncing account data",
-    "syncing_historical_account_data": "Syncing historical account data"
+  "LinkedAccountOptions": {
+    "label": {
+      "account_options": "Account options"
+    }
   },
-  "tooltip": {
-    "account_filter_locked": "Account filters can’t be changed while transactions are selected",
-    "cannot_link_demo_business": "Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections."
+  "LinkedAccounts": {
+    "label": {
+      "linked_accounts": "Linked Accounts"
+    },
+    "LinkedAccountsContent": {
+      "action": {
+        "add_account": "Add Account"
+      },
+      "label": {
+        "linked_accounts_list": "Linked accounts"
+      }
+    }
+  },
+  "LinkedAccountsConfirmationModal": {
+    "action": {
+      "confirm_accounts_one": "Connect Account",
+      "confirm_accounts_other": "Connect All Accounts",
+      "confirm_accounts_selected_one": "Connect {{displayCount}} Account",
+      "confirm_accounts_selected_other": "Connect {{displayCount}} Accounts",
+      "exclude_all_accounts_one": "Exclude Account",
+      "exclude_all_accounts_other": "Exclude All Accounts"
+    },
+    "error": {
+      "confirm_accounts_try_again_later": "An error occurred while confirming accounts. You will have an opportunity to try again later."
+    },
+    "label": {
+      "confirm_business_accounts": "Confirm Accounts",
+      "loading_accounts": "Loading Your Accounts...",
+      "may_take_few_minutes": "This may take a few minutes.",
+      "no_accounts_to_confirm": "There are no accounts to confirm. You may close this modal.",
+      "no_data_sync_until_confirm": "No data will be synced until you confirm.",
+      "select_accounts_use_one": "We’ve pulled the below account from your institution. Unselect it if you do not want it connected.",
+      "select_accounts_use_other": "We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected."
+    }
+  },
+  "LinkedAccountToConfirm": {
+    "label": {
+      "confirm_account_inclusion": "Confirm Account Inclusion"
+    }
+  },
+  "OpeningBalanceAccountForm": {
+    "error": {
+      "save_data_try_again_later": "An error occurred while saving data. You will have an opportunity to try again later."
+    },
+    "label": {
+      "confirm_account_inclusion": "Confirm Account Inclusion",
+      "opening_balance": "Opening balance",
+      "opening_date": "Opening date"
+    }
+  },
+  "OpeningBalanceModal": {
+    "action": {
+      "add_opening_balance": "Add opening balance"
+    }
+  },
+  "PlaidHostedLinkErrorBanner": {
+    "error": {
+      "hosted_link_failed_description": "We couldn’t finish linking your account. Please try again.",
+      "hosted_link_failed_title": "Connection failed"
+    }
+  },
+  "UnlinkAccountConfirmationModal": {
+    "action": {
+      "delete_account": "Delete account",
+      "delete_account_label": "Delete Account",
+      "unlink_account": "Unlink account",
+      "unlink_account_label": "Unlink Account"
+    },
+    "error": {
+      "delete_account_check_connection": "Deletion failed. Please check your connection and try again in a few seconds.",
+      "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
+    },
+    "label": {
+      "account_and_unmatched_transactions_deleted": "This account and any unmatched transactions will be deleted.",
+      "account_stops_syncing_new_data": "This account will stop syncing new data, and any unmatched transactions will be deleted."
+    }
+  },
+  "useLinkedAccounts": {
+    "error": {
+      "break_connection": "We couldn’t reset this connection. Please try again.",
+      "confirm_account": "We couldn’t confirm your account. Please try again.",
+      "exclude_account": "We couldn’t exclude your account. Please try again.",
+      "remove_connection": "We couldn’t remove this connection. Please try again.",
+      "repair_connection": "We couldn’t repair the Plaid connection with your account. Please try again.",
+      "start_connection": "We couldn’t initiate the Plaid connection flow. Please try again."
+    }
+  },
+  "usePlaidLinkModal": {
+    "error": {
+      "connect_account": "We couldn’t connect your account. Please try again."
+    }
   }
 }

@@ -33,14 +33,14 @@ export const BankTransactionsSyncingStatus = ({
   const getSyncDurationMessage = () => {
     if (timeSync > 60) {
       const hours = Math.floor(timeSync / 60)
-      return tPlural(t, 'linkedAccounts:label.may_take_up_to_hours', {
+      return tPlural(t, 'bankTransactions:BankTransactionsSyncingStatus.label.may_take_up_to_hours', {
         count: hours,
         displayCount: formatNumber(hours),
         one: 'This may take up to {{displayCount}} hour.',
         other: 'This may take up to {{displayCount}} hours.',
       })
     }
-    return tPlural(t, 'linkedAccounts:label.may_take_up_to_minutes', {
+    return tPlural(t, 'bankTransactions:BankTransactionsSyncingStatus.label.may_take_up_to_minutes', {
       count: timeSync,
       displayCount: formatNumber(timeSync),
       one: 'This may take up to {{displayCount}} minute.',
@@ -49,8 +49,8 @@ export const BankTransactionsSyncingStatus = ({
   }
 
   const title = titleVariant === 'historical'
-    ? t('linkedAccounts:state.syncing_historical_account_data', 'Syncing historical account data')
-    : t('linkedAccounts:state.syncing_account_data', 'Syncing account data')
+    ? t('bankTransactions:BankTransactionsSyncingStatus.state.syncing_historical_account_data', 'Syncing historical account data')
+    : t('bankTransactions:BankTransactionsSyncingStatus.state.syncing_account_data', 'Syncing account data')
 
   return (
     <div

@@ -20,8 +20,8 @@ export const BankTransactionsEmptyState = () => {
       <DataStateContainer>
         <DataState
           status={DataStateStatus.info}
-          title={t('bankTransactions:empty.no_transactions_found', 'No transactions found')}
-          description={t('bankTransactions:empty.try_adjusting_search_filters', 'Try adjusting your search filters')}
+          title={t('bankTransactions:BankTransactionsDataStates.empty.no_transactions_found', 'No transactions found')}
+          description={t('bankTransactions:BankTransactionsDataStates.empty.try_adjusting_search_filters', 'Try adjusting your search filters')}
           icon={<SearchX />}
           spacing
         />
@@ -35,13 +35,13 @@ export const BankTransactionsEmptyState = () => {
         status={DataStateStatus.allDone}
         title={
           isCategorizationMode
-            ? t('bankTransactions:empty.transactions_up_to_date', 'You are up to date with transactions!')
-            : t('bankTransactions:empty.no_categorized_transactions', 'You have no categorized transactions')
+            ? t('bankTransactions:BankTransactionsDataStates.empty.transactions_up_to_date', 'You are up to date with transactions!')
+            : t('bankTransactions:BankTransactionsDataStates.empty.no_categorized_transactions', 'You have no categorized transactions')
         }
         description={
           isCategorizationMode
-            ? t('bankTransactions:empty.uncategorized_transactions_displayed_here', 'All uncategorized transactions will be displayed here')
-            : t('bankTransactions:empty.transactions_displayed_here_once_reviewed', 'All transactions will be displayed here once reviewed')
+            ? t('bankTransactions:BankTransactionsDataStates.empty.uncategorized_transactions_displayed_here', 'All uncategorized transactions will be displayed here')
+            : t('bankTransactions:BankTransactionsDataStates.empty.transactions_displayed_here_once_reviewed', 'All transactions will be displayed here once reviewed')
         }
         icon={isCategorizationMode ? undefined : <Inbox size={18} />}
         spacing
@@ -58,7 +58,7 @@ export const BankTransactionsErrorState = () => {
       <DataState
         status={DataStateStatus.failed}
         title={t('common:error.something_went_wrong', 'Something went wrong')}
-        description={t('bankTransactions:error.couldnt_load_transactions', 'We couldn’t load your transactions')}
+        description={t('bankTransactions:BankTransactionsDataStates.error.couldnt_load_transactions', 'We couldn’t load your transactions')}
         spacing
       />
     </DataStateContainer>

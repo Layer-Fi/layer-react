@@ -64,7 +64,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
                   onSelectedCustomerChange={field.handleChange}
                   inline
                   showLabel={false}
-                  placeholder={t('timeTracking:label.select_customer', 'Select a customer (optional)')}
+                  placeholder={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerBanner.label.select_customer', 'Select a customer (optional)')}
                   className='Layer__ActiveTimeTracker__Field__Customer Layer__ActiveTimeTracker__Field--inline'
                 />
               )}
@@ -79,7 +79,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
             isPending={state.isCancelling}
             isDisabled={state.isStopping || state.isUpdating}
           >
-            {t('timeTracking:action.cancel_timer', 'Cancel')}
+            {t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerBanner.action.cancel_timer', 'Cancel')}
           </Button>
 
           <form.Subscribe selector={s => s.values.selectedServiceId}>
@@ -89,7 +89,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
                 onPress={actions.completeTimer}
                 isDisabled={state.isCancelling || state.isStopping || state.isUpdating || !selectedServiceId}
               >
-                {t('timeTracking:action.complete_timer', 'Complete')}
+                {t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerBanner.action.complete_timer', 'Complete')}
                 <Check size={16} />
               </Button>
             )}

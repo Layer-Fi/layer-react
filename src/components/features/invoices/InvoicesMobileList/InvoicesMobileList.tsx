@@ -38,7 +38,7 @@ export const InvoicesMobileList = ({
     <div className='Layer__InvoicesMobileList'>
       <InvoicesMobileHeader onCreateInvoice={onCreateInvoice} />
       <PaginatedMobileList
-        ariaLabel={t('invoices:label.invoices', 'Invoices')}
+        ariaLabel={t('invoices:InvoicesMobileList.label.invoices', 'Invoices')}
         data={data}
         isLoading={isLoading}
         isError={isError}

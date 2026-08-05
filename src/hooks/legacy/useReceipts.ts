@@ -174,7 +174,7 @@ export const useReceipts: UseReceipts = ({
           status: 'failed' as const,
           name: file.name,
           date: formatDate(new Date()),
-          error: t('bankTransactions:error.upload_file_type', 'Invalid file type. Please upload an image or PDF.'),
+          error: t('bankTransactions:useReceipts.error.upload_file_type', 'Invalid file type. Please upload an image or PDF.'),
         },
       ])
       return
@@ -234,7 +234,7 @@ export const useReceipts: UseReceipts = ({
           if (url.id === id) {
             return {
               ...url,
-              error: t('bankTransactions:error.upload', 'Failed to upload'),
+              error: t('bankTransactions:useReceipts.error.upload', 'Failed to upload'),
               status: 'failed' as const,
             }
           }
@@ -282,7 +282,7 @@ export const useReceipts: UseReceipts = ({
             return {
               ...url,
               status: 'failed',
-              error: t('bankTransactions:error.delete', 'Failed to delete'),
+              error: t('bankTransactions:useReceipts.error.delete', 'Failed to delete'),
             }
           }
 

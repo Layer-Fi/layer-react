@@ -154,7 +154,7 @@ export const ReportsTableTotalRow = ({ depth, displayName, amount }: ReportsTabl
   return (
     <ReportsTableRow depth={depth} summation>
       <ReportsTableNameCell bold>
-        {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName })}
+        {t('reports:ReportsTable.label.total_display_name', 'Total of {{displayName}}', { displayName })}
       </ReportsTableNameCell>
       <ReportsTableAmountCell amount={amount} bold />
     </ReportsTableRow>

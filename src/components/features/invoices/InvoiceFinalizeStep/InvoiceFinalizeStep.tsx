@@ -55,7 +55,7 @@ export const InvoiceFinalizeStep = ({ onSuccess }: InvoiceFinalizeStepProps) => 
                 <DataState
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
-                  title={t('invoices:error.load_payment_methods', 'We couldn\'t load payment methods')}
+                  title={t('invoices:InvoiceFinalizeStep.error.load_payment_methods', 'We couldn’t load payment methods')}
                   description={t('common:error.please_try_again', 'Please try again.')}
                 />
               </VStack>

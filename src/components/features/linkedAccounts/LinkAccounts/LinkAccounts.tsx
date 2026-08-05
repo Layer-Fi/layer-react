@@ -58,8 +58,8 @@ function LinkAccountsContent({
           <>
             <Heading>
               {isReconnectFlow
-                ? t('linkedAccounts:label.reconnect_bank_accounts_and_credit_cards', 'Reconnect your bank accounts and credit cards')
-                : t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
+                ? t('linkedAccounts:LinkAccounts.label.reconnect_bank_accounts_and_credit_cards', 'Reconnect your bank accounts and credit cards')
+                : t('linkedAccounts:LinkAccounts.label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
             </Heading>
             <PlaidHostedLinkErrorBanner />
           </>

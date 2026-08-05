@@ -44,7 +44,7 @@ export const CategorizationRuleMobileListItemFooter = ({
   return (
     <MobileListItemStatusFooter
       variant={BadgeVariant.NEUTRAL}
-      text={categoryName ?? t('categorizationRules:label.suggests_category', 'Suggests a category')}
+      text={categoryName ?? t('categorization:CategorizationRulesMobileList.CategorizationRuleMobileListItem.label.suggests_category', 'Suggests a category')}
       slots={{ Icon: CornerDownRight }}
     />
   )

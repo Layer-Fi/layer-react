@@ -94,7 +94,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               onUpload={(files: File[]) => {
                 setSelectedFiles(files)
               }}
-              text={t('bookkeeping:action.select_files', 'Select files')}
+              text={t('bookkeeping:TasksListItem.action.select_files', 'Select files')}
               allowMultipleUploads
             />
           )
@@ -144,7 +144,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 })
               }}
             >
-              {t('bookkeeping:action.delete_uploads', 'Delete Uploads')}
+              {t('bookkeeping:TasksListItem.action.delete_uploads', 'Delete Uploads')}
             </Button>
           )
         }
@@ -180,7 +180,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
             <P size='sm' variant='inherit'>{task.question}</P>
             <TextArea
               value={userResponse}
-              placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
+              placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:TasksListItem.label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)}
             />
@@ -189,11 +189,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 <div className='Layer__tasks-list__link-list'>
                   {selectedFiles
                     ? (
-                      <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:label.selected_files', 'Selected Files:')}</div>
+                      <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:TasksListItem.label.selected_files', 'Selected Files:')}</div>
                     )
                     : task.documents
                       ? (
-                        <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:label.uploaded_files', 'Uploaded Files:')}</div>
+                        <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:TasksListItem.label.uploaded_files', 'Uploaded Files:')}</div>
                       )
                       : null}
                   <ul className='Layer__tasks-list__links-list'>

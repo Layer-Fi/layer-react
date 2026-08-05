@@ -25,10 +25,10 @@ interface VehicleCardProps {
 }
 
 const VEHICLE_CARD_FIELDS_CONFIG = [
-  { fieldKey: 'makeAndModel' as const, ...translationKey('vehicles:label.make_model', 'Make and model') },
+  { fieldKey: 'makeAndModel' as const, ...translationKey('mileage:VehicleCard.label.make_model', 'Make and model') },
   { fieldKey: 'year' as const, ...translationKey('date:label.year', 'Year') },
-  { fieldKey: 'licensePlate' as const, ...translationKey('vehicles:label.license_plate', 'License plate') },
-  { fieldKey: 'vin' as const, ...translationKey('vehicles:label.vin', 'VIN') },
+  { fieldKey: 'licensePlate' as const, ...translationKey('mileage:VehicleCard.label.license_plate', 'License plate') },
+  { fieldKey: 'vin' as const, ...translationKey('mileage:VehicleCard.label.vin', 'VIN') },
   { fieldKey: 'description' as const, ...translationKey('common:label.description', 'Description') },
 ]
 

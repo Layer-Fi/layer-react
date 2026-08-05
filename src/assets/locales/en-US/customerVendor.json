@@ -1,38 +1,67 @@
 {
-  "action": {
-    "create_customer_input_value": "Create customer \"{{inputValue}}\"",
-    "create_new_customer": "Create new customer",
-    "edit_customer_details": "Edit customer details",
-    "save_customer": "Save Customer",
-    "select_customer_vendor": "Select customer or vendor",
-    "set_customer_vendor": "Set customer or vendor"
+  "CustomerForm": {
+    "action": {
+      "save_customer": "Save Customer"
+    },
+    "formUtils": {
+      "validation": {
+        "either_individual_required": "Either individual name or company name is required.",
+        "email_required": "Email is a required field."
+      }
+    },
+    "label": {
+      "company_name": "Company name",
+      "enter_address": "Enter address",
+      "enter_company_name": "Enter company name",
+      "enter_email_address": "Enter email address",
+      "enter_individual_name": "Enter individual name",
+      "individual_name": "Individual name"
+    }
   },
-  "empty": {
-    "matching_customers": "No matching customers",
-    "matching_customers_vendors": "No matching customers or vendors found",
-    "matching_vendors": "No matching vendors"
+  "CustomerFormDrawer": {
+    "action": {
+      "create_new_customer": "Create new customer",
+      "edit_customer_details": "Edit customer details"
+    }
   },
-  "error": {
-    "load_customer_vendor": "An error occurred while loading customer and vendor options.",
-    "load_customers": "An error occurred while loading customers.",
-    "load_vendors": "An error occurred while loading vendors."
+  "CustomerSelector": {
+    "action": {
+      "create_customer_input_value": "Create customer \"{{inputValue}}\"",
+      "create_new_customer": "Create new customer"
+    },
+    "empty": {
+      "matching_customers": "No matching customers"
+    },
+    "error": {
+      "load_customers": "An error occurred while loading customers."
+    },
+    "label": {
+      "customer": "Customer",
+      "customers": "Customers"
+    }
   },
-  "label": {
-    "company_name": "Company name",
-    "customer": "Customer",
-    "customer_vendor": "Customer or Vendor",
-    "customers": "Customers",
-    "enter_address": "Enter address",
-    "enter_company_name": "Enter company name",
-    "enter_email_address": "Enter email address",
-    "enter_individual_name": "Enter individual name",
-    "individual_name": "Individual name",
-    "vendor": "Vendor",
-    "vendor_description": "Vendor Description",
-    "vendors": "Vendors"
+  "CustomerVendorSelector": {
+    "empty": {
+      "matching_customers_vendors": "No matching customers or vendors found"
+    },
+    "error": {
+      "load_customer_vendor": "An error occurred while loading customer and vendor options."
+    },
+    "label": {
+      "customer_vendor": "Customer or Vendor",
+      "customers": "Customers",
+      "vendors": "Vendors"
+    }
   },
-  "validation": {
-    "either_individual_required": "Either individual name or company name is required.",
-    "email_required": "Email is a required field."
+  "VendorSelector": {
+    "empty": {
+      "matching_vendors": "No matching vendors"
+    },
+    "error": {
+      "load_vendors": "An error occurred while loading vendors."
+    },
+    "label": {
+      "vendor": "Vendor"
+    }
   }
 }

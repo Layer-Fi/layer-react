@@ -35,10 +35,10 @@ const CategorizationRulesEmptyState = ({ isFiltered }: { isFiltered: boolean }) 
       status={DataStateStatus.allDone}
       title={isFiltered
         ? t('common:empty.results', 'No results found')
-        : t('categorizationRules:empty.no_rules_found', 'No rules found')}
+        : t('categorization:ResponsiveCategorizationRulesView.empty.no_rules_found', 'No rules found')}
       description={isFiltered
-        ? t('categorizationRules:empty.no_categorization_rules_match_search', 'We couldn’t find any categorization rules matching your search. Try a different search term.')
-        : t('categorizationRules:empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
+        ? t('categorization:ResponsiveCategorizationRulesView.empty.no_categorization_rules_match_search', 'We couldn’t find any categorization rules matching your search. Try a different search term.')
+        : t('categorization:ResponsiveCategorizationRulesView.empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
       icon={isFiltered ? <Search /> : <PencilRuler />}
       spacing
       className='Layer__ResponsiveCategorizationRulesView__EmptyState'
@@ -51,8 +51,8 @@ const CategorizationRulesErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('categorizationRules:error.couldnt_load_data', 'We couldn’t load your categorization rules')}
-      description={t('categorizationRules:error.load_categorization_rules', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
+      title={t('categorization:ResponsiveCategorizationRulesView.error.couldnt_load_data', 'We couldn’t load your categorization rules')}
+      description={t('categorization:ResponsiveCategorizationRulesView.error.load_categorization_rules', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
       spacing
       className='Layer__ResponsiveCategorizationRulesView__ErrorState'
     />
@@ -79,11 +79,11 @@ const CategorizationRulesHeader = ({ isMobile, onGoBack, onCreateRule }: Categor
   return (
     <DataTableHeader
       isMobile={isMobile}
-      name={t('categorizationRules:label.categorization_rules', 'Categorization Rules')}
+      name={t('categorization:ResponsiveCategorizationRulesView.label.categorization_rules', 'Categorization Rules')}
       slots={{ HeaderActions }}
       slotProps={{
         SearchField: {
-          label: t('categorizationRules:label.search_rules', 'Search rules'),
+          label: t('categorization:ResponsiveCategorizationRulesView.label.search_rules', 'Search rules'),
           ...searchProps,
         },
         BackButton: onGoBack ? { onPress: onGoBack } : undefined,
@@ -132,7 +132,7 @@ export const ResponsiveCategorizationRulesView = () => {
         setShowDeletionConfirmationModal(false)
         setSelectedRule(null)
       }).catch(() => {
-        addToast({ content: t('categorizationRules:error.archive_categorization_rule', 'Failed to archive categorization rule'), type: 'error' })
+        addToast({ content: t('categorization:ResponsiveCategorizationRulesView.error.archive_categorization_rule', 'Failed to archive categorization rule'), type: 'error' })
       })
     }
   }, [t, addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
@@ -181,7 +181,7 @@ export const ResponsiveCategorizationRulesView = () => {
   ), [toBankTransactionsTable, onCreateRule, listProps])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
-    ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')
+    ?? t('categorization:ResponsiveCategorizationRulesView.label.selected_counterparty', 'this counterparty')
 
   const responsiveSlots = useMemo(
     () => ({ Desktop: DesktopView, Mobile: MobileView }),
@@ -197,8 +197,8 @@ export const ResponsiveCategorizationRulesView = () => {
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
-        title={t('categorizationRules:prompt.delete_categorization_rule', 'Delete categorization rule?')}
-        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRuleCounterpartyLabel })}
+        title={t('categorization:ResponsiveCategorizationRulesView.prompt.delete_categorization_rule', 'Delete categorization rule?')}
+        description={t('categorization:ResponsiveCategorizationRulesView.label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRuleCounterpartyLabel })}
         onConfirm={archiveCategorizationRule}
         confirmLabel={t('common:action.delete_label', 'Delete')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}

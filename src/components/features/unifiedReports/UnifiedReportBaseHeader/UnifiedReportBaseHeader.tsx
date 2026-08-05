@@ -1,3 +1,4 @@
+import { type UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -7,7 +8,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { UnifiedReportControls } from '@features/unifiedReports/UnifiedReportControls/UnifiedReportControls'
 import { UnifiedReportHeaderButtons } from '@features/unifiedReports/UnifiedReportHeaderButtons/UnifiedReportHeaderButtons'
-import { type UnifiedReportNavigationVariant } from '@features/unifiedReports/UnifiedReports/UnifiedReports'
 import { UnifiedReportsMegaMenu } from '@features/unifiedReports/UnifiedReportsMegaMenu/UnifiedReportsMegaMenu'
 
 import './unifiedReportBaseHeader.scss'

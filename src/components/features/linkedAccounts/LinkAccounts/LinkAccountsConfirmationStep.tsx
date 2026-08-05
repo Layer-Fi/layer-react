@@ -25,8 +25,8 @@ function AccountConfirmationEmptyList() {
   return (
     <div className={CLASS_NAME}>
       <VStack slot='center' gap='xs'>
-        <Heading size='sm' align='center'>{t('linkedAccounts:label.accounts_successfully_linked', 'Accounts Successfully Linked')}</Heading>
-        <P variant='subtle' align='center'>{t('linkedAccounts:label.link_more_accounts_any_time', 'You can link more accounts at any time from the Bank Transactions section')}</P>
+        <Heading size='sm' align='center'>{t('linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.label.accounts_successfully_linked', 'Accounts Successfully Linked')}</Heading>
+        <P variant='subtle' align='center'>{t('linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.label.link_more_accounts_any_time', 'You can link more accounts at any time from the Bank Transactions section')}</P>
       </VStack>
     </div>
   )
@@ -72,7 +72,7 @@ export function LinkAccountsConfirmationStep() {
     { totalCount, confirmedCount }: { totalCount: number, confirmedCount: number },
   ) => {
     if (confirmedCount === totalCount) {
-      return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
+      return tPlural(t, 'linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.action.confirm_accounts', {
         count: totalCount,
         one: 'Confirm Account',
         other: 'Confirm All Accounts',
@@ -80,14 +80,14 @@ export function LinkAccountsConfirmationStep() {
     }
 
     if (confirmedCount === 0) {
-      return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
+      return tPlural(t, 'linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.action.exclude_all_accounts', {
         count: totalCount,
         one: 'Exclude Account',
         other: 'Exclude All Accounts',
       })
     }
 
-    return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
+    return tPlural(t, 'linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.action.confirm_accounts_selected', {
       count: confirmedCount,
       displayCount: formatNumber(confirmedCount),
       one: 'Confirm {{displayCount}} Selected Account',
@@ -99,10 +99,10 @@ export function LinkAccountsConfirmationStep() {
     <VStack gap='lg'>
       <VStack gap='2xs'>
         <Heading level={3} size='sm'>
-          {t('linkedAccounts:prompt.which_accounts_for_business', 'Which accounts do you use for businesses?')}
+          {t('linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.prompt.which_accounts_for_business', 'Which accounts do you use for businesses?')}
         </Heading>
         <P variant='subtle'>
-          {t('linkedAccounts:label.deselect_unused_accounts', 'Please deselect any accounts you don\'t use for your business.')}
+          {t('linkedAccounts:LinkAccounts.LinkAccountsConfirmationStep.label.deselect_unused_accounts', 'Please deselect any accounts you don’t use for your business.')}
         </P>
       </VStack>
       <Field name='accounts' mode='array'>

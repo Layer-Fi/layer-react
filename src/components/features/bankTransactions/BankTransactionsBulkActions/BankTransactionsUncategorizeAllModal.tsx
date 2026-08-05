@@ -36,10 +36,10 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('bankTransactions:prompt.uncategorize_selected_transactions', 'Uncategorize all selected transactions?')}
+      title={t('bankTransactions:BankTransactionsBulkActions.BankTransactionsUncategorizeAllModal.prompt.uncategorize_selected_transactions', 'Uncategorize all selected transactions?')}
       content={(
         <Span>
-          {tPlural(t, 'bankTransactions:label.uncategorize_count_selected', {
+          {tPlural(t, 'bankTransactions:BankTransactionsBulkActions.BankTransactionsUncategorizeAllModal.label.uncategorize_count_selected', {
             count,
             displayCount: formatNumber(count),
             one: 'This will uncategorize {{displayCount}} selected transaction.',
@@ -48,8 +48,8 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
         </Span>
       )}
       onConfirm={handleConfirm}
-      confirmLabel={t('bankTransactions:action.uncategorize_all', 'Uncategorize All')}
-      errorText={t('bankTransactions:error.uncategorize_transactions', 'Failed to uncategorize transactions')}
+      confirmLabel={t('bankTransactions:BankTransactionsBulkActions.BankTransactionsUncategorizeAllModal.action.uncategorize_all', 'Uncategorize All')}
+      errorText={t('bankTransactions:BankTransactionsBulkActions.BankTransactionsUncategorizeAllModal.error.uncategorize_transactions', 'Failed to uncategorize transactions')}
       useDrawer={isMobileView}
     />
   )

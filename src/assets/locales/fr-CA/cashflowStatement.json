@@ -1,0 +1,15 @@
+{
+  "StatementOfCashFlow": {
+    "constants": {
+      "label": {
+        "adjustments_net_income": "Ajustements au résultat net",
+        "cash_beginning_of_period": "Trésorerie au début de la période",
+        "cash_end_of_period": "Trésorerie à la fin de la période",
+        "financing_activities": "Activités de financement",
+        "investing_activities": "Activités d’investissement",
+        "net_cash_increase_period": "Augmentation nette de la trésorerie pour la période",
+        "operating_activities": "Activités d’exploitation"
+      }
+    }
+  }
+}

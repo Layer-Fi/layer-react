@@ -16,8 +16,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('taxEstimates:error.load_tax_payments', 'We couldnʼt load your tax payments')}
-      description={t('taxEstimates:error.while_loading_tax_payments', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
+      title={t('taxEstimates:TaxPayments.error.load_tax_payments', 'We couldn’t load your tax payments')}
+      description={t('taxEstimates:TaxPayments.error.while_loading_tax_payments', 'An error occurred while loading your tax payments. Please check your connection and try again.')}
       className='Layer__TaxPayments__ErrorState'
     />
   )
@@ -29,8 +29,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('taxEstimates:empty.tax_payments', 'No tax payments found')}
-      description={t('taxEstimates:empty.no_tax_payments_to_display', 'There are no tax payments to display.')}
+      title={t('taxEstimates:TaxPayments.empty.tax_payments', 'No tax payments found')}
+      description={t('taxEstimates:TaxPayments.empty.no_tax_payments_to_display', 'There are no tax payments to display.')}
       className='Layer__TaxPayments__EmptyState'
     />
   )

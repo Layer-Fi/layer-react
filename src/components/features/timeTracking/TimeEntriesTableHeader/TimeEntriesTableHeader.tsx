@@ -22,7 +22,7 @@ export const TimeEntriesTableHeader = () => {
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
       <Button variant='outlined' onPress={onAddEntry}>
-        {t('timeTracking:action.add_entry', 'Add Entry')}
+        {t('timeTracking:TimeEntriesTableHeader.action.add_entry', 'Add Entry')}
         <Plus size={16} />
       </Button>
       {onStartTimer && (
@@ -30,7 +30,7 @@ export const TimeEntriesTableHeader = () => {
           onPress={onStartTimer}
           isDisabled={isStartTimerDisabled}
         >
-          {t('timeTracking:action.start_timer', 'Start Timer')}
+          {t('timeTracking:TimeEntriesTableHeader.action.start_timer', 'Start Timer')}
           <Clock3 size={16} />
         </Button>
       )}
@@ -43,7 +43,7 @@ export const TimeEntriesTableHeader = () => {
         selectedServiceId={selectedServiceId}
         onSelectedServiceIdChange={setSelectedServiceId}
         className='Layer__TimeEntriesTable__FilterService'
-        placeholder={t('timeTracking:label.all_services', 'All Services')}
+        placeholder={t('timeTracking:TimeEntriesTableHeader.label.all_services', 'All Services')}
         showLabel={false}
         allowArchived
         inline
@@ -54,7 +54,7 @@ export const TimeEntriesTableHeader = () => {
         onSelectedCustomerChange={setSelectedCustomer}
         isCreatable={false}
         className='Layer__TimeEntriesTable__FilterCustomer'
-        placeholder={t('timeTracking:label.all_customers', 'All Customers')}
+        placeholder={t('timeTracking:TimeEntriesTableHeader.label.all_customers', 'All Customers')}
         showLabel={false}
         inline
         hideSpecifiedIdNotFoundError
@@ -69,7 +69,7 @@ export const TimeEntriesTableHeader = () => {
 
   return (
     <DataTableHeader
-      name={t('timeTracking:label.time_entries', 'Time Entries')}
+      name={t('timeTracking:TimeEntriesTableHeader.label.time_entries', 'Time Entries')}
       slots={headerSlots}
     />
   )

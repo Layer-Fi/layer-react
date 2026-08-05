@@ -1,0 +1,33 @@
+{
+  "DateSelection": {
+    "DateGroupByComboBox": {
+      "label": {
+        "group": "Grouper par"
+      }
+    },
+    "DateSelectionComboBox": {
+      "label": {
+        "report_period": "Période du rapport"
+      }
+    }
+  },
+  "LedgerEntrySourceDetailView": {
+    "label": {
+      "account_name": "Nom du compte",
+      "bill_number": "Numéro de facture fournisseur",
+      "closing_action_type": "Type d’action",
+      "closing_date": "Date de clôture",
+      "customer": "Client",
+      "import_date": "Date d’importation",
+      "invoice_number": "Numéro de facture",
+      "payday": "Jour de paie",
+      "quickbooks_id": "ID QuickBooks",
+      "recipient_name": "Nom du destinataire",
+      "refunded_amount": "Montant remboursé",
+      "vendor": "Fournisseur",
+      "vendor_description": "Description du fournisseur",
+      "write_off_amount": "Montant passé en perte",
+      "write_off_date": "Date du passage en perte"
+    }
+  }
+}

@@ -28,14 +28,14 @@ export const ALL_OPTION: InvoiceStatusOption = { value: InvoiceStatusFilter.All,
 
 export const INVOICE_STATUS_CONFIG = [
   { value: InvoiceStatusFilter.All, ...translationKey('common:label.all', 'All') },
-  { value: InvoiceStatusFilter.Draft, ...translationKey('invoices:state.draft', 'Draft') },
-  { value: InvoiceStatusFilter.Unpaid, ...translationKey('invoices:state.unpaid', 'Unpaid') },
-  { value: InvoiceStatusFilter.Overdue, ...translationKey('invoices:state.overdue', 'Overdue') },
-  { value: InvoiceStatusFilter.Saved, ...translationKey('invoices:state.saved', 'Saved') },
-  { value: InvoiceStatusFilter.Paid, ...translationKey('invoices:state.paid', 'Paid') },
-  { value: InvoiceStatusFilter.Voided, ...translationKey('invoices:state.voided', 'Voided') },
-  { value: InvoiceStatusFilter.Refunded, ...translationKey('invoices:state.refunded', 'Refunded') },
-  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('invoices:state.written_off', 'Written Off') },
+  { value: InvoiceStatusFilter.Draft, ...translationKey('invoices:invoiceStatus.state.draft', 'Draft') },
+  { value: InvoiceStatusFilter.Unpaid, ...translationKey('invoices:invoiceStatus.state.unpaid', 'Unpaid') },
+  { value: InvoiceStatusFilter.Overdue, ...translationKey('invoices:invoiceStatus.state.overdue', 'Overdue') },
+  { value: InvoiceStatusFilter.Saved, ...translationKey('invoices:invoiceStatus.state.saved', 'Saved') },
+  { value: InvoiceStatusFilter.Paid, ...translationKey('invoices:invoiceStatus.state.paid', 'Paid') },
+  { value: InvoiceStatusFilter.Voided, ...translationKey('invoices:invoiceStatus.state.voided', 'Voided') },
+  { value: InvoiceStatusFilter.Refunded, ...translationKey('invoices:invoiceStatus.state.refunded', 'Refunded') },
+  { value: InvoiceStatusFilter.WrittenOff, ...translationKey('invoices:invoiceStatus.state.written_off', 'Written Off') },
 ]
 
 const UNPAID_STATUSES = [InvoiceStatus.Saved, InvoiceStatus.PartiallyPaid]

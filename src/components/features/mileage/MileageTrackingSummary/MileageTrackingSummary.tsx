@@ -20,7 +20,7 @@ const Content = () => {
   const { formatDate } = useIntlFormatter()
   const { data, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTrackingYearlySummary()
   const { isDesktop, isMobile } = useSizeClass()
-  const inYearLabel = t('mileageTracking:label.in_year', 'In {{year}}', {
+  const inYearLabel = t('mileage:MileageTrackingSummary.label.in_year', 'In {{year}}', {
     year: formatDate(new Date(selectedYear, 0, 1), DateFormat.Year),
   })
 
@@ -41,7 +41,7 @@ const Content = () => {
       Error={(
         <DataState
           status={DataStateStatus.failed}
-          title={t('mileageTracking:error.load_mileage_summary_data', 'Failed to load mileage summary data')}
+          title={t('mileage:MileageTrackingSummary.error.load_mileage_summary_data', 'Failed to load mileage summary data')}
           spacing
         />
       )}
@@ -55,7 +55,7 @@ const Content = () => {
           <Stack {...statsProps} className='Layer__MileageTrackingSummary__Cards' gap='md'>
             <div className='Layer__MileageTrackingSummary__StatCardSlot'>
               <MileageTrackingStatsCard
-                title={t('mileageTracking:label.total_deduction', 'Total Deduction')}
+                title={t('mileage:MileageTrackingSummary.label.total_deduction', 'Total Deduction')}
                 amount={selectedYearData?.estimatedDeduction ?? 0}
                 formatAsMoney
                 description={inYearLabel}
@@ -63,14 +63,14 @@ const Content = () => {
             </div>
             <div className='Layer__MileageTrackingSummary__StatCardSlot'>
               <MileageTrackingStatsCard
-                title={t('mileageTracking:label.total_miles', 'Total Miles')}
+                title={t('mileage:MileageTrackingSummary.label.total_miles', 'Total Miles')}
                 amount={selectedYearData?.miles ?? 0}
                 description={inYearLabel}
               />
             </div>
             <div className='Layer__MileageTrackingSummary__StatCardSlot'>
               <MileageTrackingStatsCard
-                title={t('trips:label.trips', 'Trips')}
+                title={t('mileage:MileageTrackingSummary.label.trips', 'Trips')}
                 amount={selectedYearData?.trips ?? 0}
                 description={inYearLabel}
               />
@@ -93,7 +93,7 @@ export type MileageTrackingSummaryProps = {
 export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: MileageTrackingSummaryProps = {}) => {
   const { t } = useTranslation()
   const slots = useSummaryCardSlots({
-    defaultTitle: t('mileageTracking:label.mileage_tracking', 'Mileage Tracking'),
+    defaultTitle: t('mileage:MileageTrackingSummary.label.mileage_tracking', 'Mileage Tracking'),
     interactionProps,
     stringOverrides,
     subtitleDateFormat: DateFormat.Year,

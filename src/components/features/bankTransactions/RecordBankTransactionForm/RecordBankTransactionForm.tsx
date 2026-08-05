@@ -50,18 +50,18 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
   const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense
-    ? t('bankTransactions:recordTransaction.label.paid_from', 'Paid from')
-    : t('bankTransactions:recordTransaction.label.deposited_in', 'Deposited in')
+    ? t('bankTransactions:RecordBankTransactionForm.label.paid_from', 'Paid from')
+    : t('bankTransactions:RecordBankTransactionForm.label.deposited_in', 'Deposited in')
 
   const payeeLabel = isExpense
-    ? t('bankTransactions:recordTransaction.label.payee', 'Payee')
-    : t('bankTransactions:recordTransaction.label.payer', 'Payer')
+    ? t('bankTransactions:RecordBankTransactionForm.label.payee', 'Payee')
+    : t('bankTransactions:RecordBankTransactionForm.label.payer', 'Payer')
   const payeePlaceholder = isExpense
-    ? t('bankTransactions:recordTransaction.placeholder.payee', 'Who you paid')
-    : t('bankTransactions:recordTransaction.placeholder.payer', 'Who paid you')
+    ? t('bankTransactions:RecordBankTransactionForm.placeholder.payee', 'Who you paid')
+    : t('bankTransactions:RecordBankTransactionForm.placeholder.payer', 'Who paid you')
   const payeeRequiredMessage = isExpense
-    ? t('bankTransactions:recordTransaction.validation.payee_required', 'Payee is required')
-    : t('bankTransactions:recordTransaction.validation.payer_required', 'Payer is required')
+    ? t('bankTransactions:RecordBankTransactionForm.validation.payee_required', 'Payee is required')
+    : t('bankTransactions:RecordBankTransactionForm.validation.payer_required', 'Payer is required')
 
   return (
     <Form
@@ -73,7 +73,7 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
     >
       <form.Field
         name='account'
-        validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.account_required', 'Account is required'))(value) }}
+        validators={{ onDynamic: ({ value }) => required(t('bankTransactions:RecordBankTransactionForm.validation.account_required', 'Account is required'))(value) }}
       >
         {(field) => {
           const isCreatingAccount = isNewAccountOption(field.state.value)
@@ -82,7 +82,7 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
               <CustomAccountComboBox
                 inputId='record-transaction-account'
                 label={accountLabel}
-                placeholder={t('bankTransactions:recordTransaction.placeholder.account', 'Select account...')}
+                placeholder={t('bankTransactions:RecordBankTransactionForm.placeholder.account', 'Select account...')}
                 showLabel={!isCreatingAccount}
                 inline={!isCreatingAccount && isInline}
                 isInvalid={field.state.meta.errors.length > 0}
@@ -118,9 +118,9 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
                 name='date'
                 validators={{
                   onDynamic: ({ value }) =>
-                    required(t('bankTransactions:recordTransaction.validation.date_required', 'Date is required'))(value)
-                    ?? dateNotInFuture(t('bankTransactions:recordTransaction.validation.date_in_future', 'Date cannot be in the future'))(value)
-                    ?? dateNotBefore(activationDate, t('bankTransactions:recordTransaction.validation.date_before_activation', 'Date cannot be before the business activation date'))(value),
+                    required(t('bankTransactions:RecordBankTransactionForm.validation.date_required', 'Date is required'))(value)
+                    ?? dateNotInFuture(t('bankTransactions:RecordBankTransactionForm.validation.date_in_future', 'Date cannot be in the future'))(value)
+                    ?? dateNotBefore(activationDate, t('bankTransactions:RecordBankTransactionForm.validation.date_before_activation', 'Date cannot be before the business activation date'))(value),
                 }}
               >
                 {field => (
@@ -137,7 +137,7 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
                 {isAmountReadOnly => (
                   <form.AppField
                     name='amount'
-                    validators={{ onDynamic: ({ value }) => positiveAmount(t('bankTransactions:recordTransaction.validation.amount_greater_than_zero', 'Amount must be greater than zero'))(value) }}
+                    validators={{ onDynamic: ({ value }) => positiveAmount(t('bankTransactions:RecordBankTransactionForm.validation.amount_greater_than_zero', 'Amount must be greater than zero'))(value) }}
                   >
                     {field => (
                       <field.FormNonRecursiveBigDecimalField
@@ -154,13 +154,13 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
 
               <form.Field
                 name='category'
-                validators={{ onDynamic: ({ value }) => isMultiSplit ? undefined : required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => isMultiSplit ? undefined : required(t('bankTransactions:RecordBankTransactionForm.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
                   <RecordBankTransactionFormField>
                     <RecordBankTransactionFormCategoryComboBox
                       label={t('common:label.category', 'Category')}
-                      placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
+                      placeholder={t('bankTransactions:RecordBankTransactionForm.placeholder.category', 'Select category...')}
                       inline={isInline}
                       isInvalid={field.state.meta.errors.length > 0}
                       value={field.state.value}
@@ -179,7 +179,7 @@ export function RecordBankTransactionForm({ form, variant, transaction }: Record
                     <form.Field name='taxCode'>
                       {field => (
                         <RecordBankTransactionFormField>
-                          <Label size='sm'>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
+                          <Label size='sm'>{t('bankTransactions:RecordBankTransactionForm.label.tax_code', 'Tax code')}</Label>
                           <BankTransactionTaxCodeSelect
                             isMobile={isMobile}
                             options={taxCodeOptions}

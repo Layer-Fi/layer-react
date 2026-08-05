@@ -79,7 +79,7 @@ export const AccountingOverview = ({
       tagFilter={profitAndLossTagFilter}
     >
       <View
-        title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
+        title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
         viewClassName='Layer__AccountingOverview'
         showHeader={showTitle}
         header={(

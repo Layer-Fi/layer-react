@@ -42,14 +42,14 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesPaid, size },
-          Badge: { children: t('taxEstimates:label.taxes_paid', 'Taxes Paid') },
+          Badge: { children: t('taxEstimates:TaxSummaryCard.TaxSummaryCardEquation.label.taxes_paid', 'Taxes Paid') },
         }}
       />
       <Span size={size} variant='subtle'>=</Span>
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesOwed, size },
-          Badge: { children: t('taxEstimates:label.taxes_owed', 'Taxes Owed') },
+          Badge: { children: t('taxEstimates:TaxSummaryCard.TaxSummaryCardEquation.label.taxes_owed', 'Taxes Owed') },
         }}
       />
     </HStack>

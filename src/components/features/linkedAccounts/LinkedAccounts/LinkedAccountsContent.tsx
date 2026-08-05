@@ -76,7 +76,7 @@ export const LinkedAccountsContent = ({
     <>
       <div className='Layer__linked-accounts__list'>
         <GridList
-          aria-label={t('linkedAccounts:label.linked_accounts_list', 'Linked accounts')}
+          aria-label={t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.label.linked_accounts_list', 'Linked accounts')}
           selectionMode={isFilterEnabled ? 'multiple' : 'none'}
           selectedKeys={selectedBankAccountIds}
           onSelectionChange={onSelectionChange}
@@ -103,7 +103,7 @@ export const LinkedAccountsContent = ({
             <HStack align='center' gap='2xs'>
               <CirclePlus size={14} />
               <Span variant='placeholder'>
-                {t('linkedAccounts:action.add_account', 'Add Account')}
+                {t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.action.add_account', 'Add Account')}
               </Span>
             </HStack>
           </button>

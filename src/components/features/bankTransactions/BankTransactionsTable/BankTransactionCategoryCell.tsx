@@ -117,7 +117,7 @@ export const BankTransactionCategoryCell = ({
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       isActive={isOpen}
       isError={isError}
-      errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
+      errorMessage={t('bankTransactions:BankTransactionsTable.BankTransactionCategoryCell.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
     >
       {isError
         ? t('common:action.retry_label', 'Retry')
@@ -132,7 +132,7 @@ export const BankTransactionCategoryCell = ({
       variant='ghost'
       icon
       onPress={() => row.toggleExpanded()}
-      aria-label={t('bankTransactions:action.toggle_details', 'Toggle details')}
+      aria-label={t('bankTransactions:BankTransactionsTable.BankTransactionCategoryCell.action.toggle_details', 'Toggle details')}
     >
       <Chevron open={isOpen} />
     </Button>

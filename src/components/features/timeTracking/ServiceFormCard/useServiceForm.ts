@@ -90,8 +90,8 @@ export function useServiceForm(props: ServiceFormProps) {
     catch {
       setSubmitError(
         mode === 'edit'
-          ? t('timeTracking:error.update_service', 'Could not save this service. Please try again.')
-          : t('timeTracking:error.create_service', 'Failed to create service. Please try again.'),
+          ? t('timeTracking:ServiceFormCard.useServiceForm.error.update_service', 'Could not save this service. Please try again.')
+          : t('timeTracking:ServiceFormCard.useServiceForm.error.create_service', 'Failed to create service. Please try again.'),
       )
     }
   }, [createService, mode, onSuccess, t, updateService])
@@ -100,14 +100,14 @@ export function useServiceForm(props: ServiceFormProps) {
     const errors: { [field: string]: string }[] = []
 
     if (value.name.trim() === '') {
-      errors.push({ name: t('timeTracking:validation.service_name_required', 'Service name is a required field.') })
+      errors.push({ name: t('timeTracking:ServiceFormCard.useServiceForm.validation.service_name_required', 'Service name is a required field.') })
     }
 
     if (value.hourlyRate !== null
       && !BD.isPositive(fromNonRecursiveBigDecimal(value.hourlyRate))) {
       errors.push({
         hourlyRate: t(
-          'timeTracking:validation.hourly_rate_positive',
+          'timeTracking:ServiceFormCard.useServiceForm.validation.hourly_rate_positive',
           'Default hourly rate must be greater than zero.',
         ),
       })

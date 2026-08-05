@@ -43,7 +43,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
               isSelected={isAllSelected}
               isIndeterminate={isPartiallySelected}
               onChange={onHeaderCheckboxChange}
-              aria-label={t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page')}
+              aria-label={t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileBulkActionsHeader.label.select_all_transactions', 'Select all transactions on this page')}
             />
             <Span size='md'>
               {t('common:label.select_all', 'Select all')}

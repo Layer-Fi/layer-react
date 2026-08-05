@@ -39,14 +39,14 @@ export const ReverseLedgerEntryButton = ({ onReverse, alreadyReversed }: Reverse
         isPending={isProcessing}
         tooltip={
           alreadyReversed
-            ? t('generalLedger:label.entry_reversed', 'This entry has already been reversed')
+            ? t('generalLedger:ReverseLedgerEntryButton.label.entry_reversed', 'This entry has already been reversed')
             : isError
-              ? t('generalLedger:error.operation_retry', 'Operation failed. Try again.')
+              ? t('generalLedger:ReverseLedgerEntryButton.error.operation_retry', 'Operation failed. Try again.')
               : undefined
         }
         isDisabled={alreadyReversed || isProcessing}
       >
-        {t('generalLedger:action.reverse_entry', 'Reverse entry')}
+        {t('generalLedger:ReverseLedgerEntryButton.action.reverse_entry', 'Reverse entry')}
         {isError ? <CircleAlert size={12} /> : <RefreshCcw size={12} />}
       </Button>
     </div>

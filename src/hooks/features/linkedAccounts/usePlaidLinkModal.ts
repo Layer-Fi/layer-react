@@ -67,7 +67,7 @@ export function usePlaidLinkModal({
           // Only refresh once the link has actually persisted.
           () => handleAddConnectionSuccess(),
           () => addToast({
-            content: t('linkedAccounts:error.connect_account', 'We couldn’t connect your account. Please try again.'),
+            content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
             type: 'error',
           }),
         )

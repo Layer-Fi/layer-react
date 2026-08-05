@@ -31,7 +31,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       key: 'DownloadTransactions',
       onClick: handleDownloadTransactions,
       slots: { Icon: CloudDownload },
-      label: t('bankTransactions:action.download_transactions', 'Download transactions'),
+      label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.download_transactions', 'Download transactions'),
     }]
 
     if (actions.includes(BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard)) {
@@ -39,7 +39,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard,
         onClick: () => setIsModalOpen(true),
         slots: { Icon: CloudUpload },
-        label: t('bankTransactions:action.upload_transactions_manually', 'Upload transactions manually'),
+        label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.upload_transactions_manually', 'Upload transactions manually'),
       })
     }
 
@@ -48,7 +48,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
         onClick: toCategorizationRulesTable,
         slots: { Icon: PencilRuler },
-        label: t('bankTransactions:action.manage_categorization_rules', 'Manage categorization rules'),
+        label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.manage_categorization_rules', 'Manage categorization rules'),
       })
     }
 
@@ -58,7 +58,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   return (
     <>
       <DataTableHeaderMenu
-        ariaLabel={t('bankTransactions:label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
+        ariaLabel={t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
         items={menuItems}
         isDisabled={isDisabled}
         isPending={isMutating}

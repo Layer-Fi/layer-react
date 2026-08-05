@@ -41,14 +41,14 @@ export const LandingPageOffer = ({
 
   const features = useMemo(() => type === 'bookkeeping'
     ? [
-      t('landingPage:label.personalized_setup_bookkeeper', 'Personalized setup with your bookkeeper'),
-      t('landingPage:label.monthly_books_done_for_you', 'Monthly books done for you'),
-      t('landingPage:label.complete_financial_reports', 'Complete financial reports and end of year tax packet'),
+      t('views:LandingPage.LandingPageOptions.label.personalized_setup_bookkeeper', 'Personalized setup with your bookkeeper'),
+      t('views:LandingPage.LandingPageOptions.label.monthly_books_done_for_you', 'Monthly books done for you'),
+      t('views:LandingPage.LandingPageOptions.label.complete_financial_reports', 'Complete financial reports and end of year tax packet'),
     ]
     : [
-      t('landingPage:label.direct_integration_with_platform_name', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
-      t('landingPage:label.track_expenses_and_receipts', 'Track expenses and receipts'),
-      t('landingPage:label.easy_to_understand_profitability_charts', 'Easy to understand profitability charts and reports'),
+      t('views:LandingPage.LandingPageOptions.label.direct_integration_with_platform_name', 'Direct integration with {{platformName}}', { platformName: platformConfig.platformName }),
+      t('views:LandingPage.LandingPageOptions.label.track_expenses_and_receipts', 'Track expenses and receipts'),
+      t('views:LandingPage.LandingPageOptions.label.easy_to_understand_profitability_charts', 'Easy to understand profitability charts and reports'),
     ], [platformConfig.platformName, t, type])
 
   const baseClassName = classNames(className)
@@ -86,7 +86,7 @@ export const LandingPageOffer = ({
 
         <HStack justify='space-between' align='end' className='Layer__LandingPage-options__footer'>
           <VStack gap='4xs'>
-            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('landingPage:label.starting_at', 'Starting at')}</Span>}
+            {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('views:LandingPage.LandingPageOptions.label.starting_at', 'Starting at')}</Span>}
             <HStack align='baseline'>
               <Span size='xl' weight='bold'>{config.stringOverrides.priceAmount}</Span>
               {config.stringOverrides.priceAmount != '' && (

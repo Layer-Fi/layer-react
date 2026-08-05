@@ -36,7 +36,7 @@ export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderPr
 
   const HeaderFilters = useCallback(() => (
     <MobileSelectionDrawerWithTrigger<InvoiceStatusOption>
-      ariaLabel={t('invoices:label.status_filter', 'Status Filter')}
+      ariaLabel={t('invoices:InvoicesMobileHeader.label.status_filter', 'Status Filter')}
       heading={t('common:label.status', 'Status')}
       options={options}
       selectedValue={selectedStatusOption}
@@ -45,7 +45,7 @@ export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderPr
       slotProps={{
         Trigger: {
           value: option => option
-            ? t('invoices:label.status_with_label', 'Status: {{label}}', { label: option.label })
+            ? t('invoices:InvoicesMobileHeader.label.status_with_label', 'Status: {{label}}', { label: option.label })
             : t('common:label.status', 'Status'),
         },
       }}
@@ -55,11 +55,11 @@ export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderPr
   return (
     <DataTableHeader
       isMobile
-      name={t('invoices:label.invoices', 'Invoices')}
+      name={t('invoices:InvoicesMobileHeader.label.invoices', 'Invoices')}
       slots={{ HeaderActions, HeaderFilters }}
       slotProps={{
         SearchField: {
-          label: t('invoices:label.search_invoices', 'Search invoices'),
+          label: t('invoices:InvoicesMobileHeader.label.search_invoices', 'Search invoices'),
           className: 'Layer__InvoicesMobileHeader__SearchField',
           ...searchProps,
         },

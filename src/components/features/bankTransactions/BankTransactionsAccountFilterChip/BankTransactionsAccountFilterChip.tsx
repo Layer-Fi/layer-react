@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 
@@ -31,10 +32,10 @@ export function BankTransactionsAccountFilterChip({ slot, variant }: BankTransac
         iconPosition='right'
         onClick={() => setSelectedBankAccountIds([])}
       >
-        {t('bankTransactions:label.accounts_selected', {
+        {tPlural(t, 'bankTransactions:BankTransactionsAccountFilterChip.label.accounts_selected', {
           count: selectedBankAccountIds.length,
-          defaultValue_one: '{{count}} account selected',
-          defaultValue_other: '{{count}} accounts selected',
+          one: '{{count}} account selected',
+          other: '{{count}} accounts selected',
         })}
       </Badge>
     </span>

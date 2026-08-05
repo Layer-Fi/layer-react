@@ -94,7 +94,7 @@ export const BankTransactionsMobileListSplitForm = ({
         <VStack gap='sm'>
           <VStack gap='3xs'>
             <Span size='sm' weight='bold'>
-              {t('bankTransactions:action.split_transaction', 'Split transaction')}
+              {t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileListSplitForm.action.split_transaction', 'Split transaction')}
             </Span>
             <VStack gap='sm'>
               {localSplits.map((split, index) => (
@@ -168,7 +168,7 @@ export const BankTransactionsMobileListSplitForm = ({
             <Spacer />
             <Button onClick={addSplit} variant='outlined'>
               <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                {t('bankTransactions:action.split_label', 'Split')}
+                {t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileListSplitForm.action.split_label', 'Split')}
                 <Scissors size={14} />
               </HStack>
             </Button>
@@ -194,13 +194,13 @@ export const BankTransactionsMobileListSplitForm = ({
           ref={receiptsRef}
           floatingActions={false}
           hideUploadButtons={true}
-          label={t('bankTransactions:label.receipts', 'Receipts')}
+          label={t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileListSplitForm.label.receipts', 'Receipts')}
         />
       </div>
       <HStack gap='md'>
         <FileInput
           onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-          text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
+          text={t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileListSplitForm.action.upload_receipt', 'Upload receipt')}
           icon
           slots={{ Icon: <Paperclip size={20} /> }}
           accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -224,7 +224,7 @@ export const BankTransactionsMobileListSplitForm = ({
       {(isErrorCategorizing && showRetry)
         && (
           <ErrorText size='sm' align='center' pb='sm'>
-            {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
+            {t('bankTransactions:BankTransactionsMobileList.BankTransactionsMobileListSplitForm.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}
     </VStack>

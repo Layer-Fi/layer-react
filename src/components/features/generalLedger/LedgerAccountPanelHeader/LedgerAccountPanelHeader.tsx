@@ -27,7 +27,7 @@ export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) 
             <Span weight='bold'>{selectedAccount?.name ?? ''}</Span>
             <HStack gap='xs' align='center'>
               <Span size='sm' variant='subtle'>
-                {t('generalLedger:label.balance', 'Current balance')}
+                {t('generalLedger:LedgerAccountPanelHeader.label.balance', 'Current balance')}
               </Span>
               <MoneySpan size='sm' amount={selectedAccount?.balance ?? 0} />
             </HStack>

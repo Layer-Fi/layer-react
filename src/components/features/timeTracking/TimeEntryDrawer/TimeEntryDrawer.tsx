@@ -56,8 +56,8 @@ export const TimeEntryDrawer = () => {
   const hasEntry = selectedEntry !== null
   const isLocked = !!selectedEntry?.invoiceLineItem
   const isReadOnly = isLocked || (!isEditMode && hasEntry && (isMobile || isTablet))
-  const title = selectedEntry ? t('timeTracking:label.entry_details', 'Time entry details') : t('timeTracking:label.add_time_entry', 'Add time entry')
-  const invoicedLabel = t('timeTracking:label.invoiced', 'Invoiced')
+  const title = selectedEntry ? t('timeTracking:TimeEntryDrawer.label.entry_details', 'Time entry details') : t('timeTracking:TimeEntryDrawer.label.add_time_entry', 'Add time entry')
+  const invoicedLabel = t('timeTracking:TimeEntryDrawer.label.invoiced', 'Invoiced')
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
     if (!nextIsOpen) {
@@ -108,11 +108,11 @@ export const TimeEntryDrawer = () => {
                 <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
                   <Button variant='outlined' onPress={handleDeleteEntry}>
                     <Trash2 size={16} strokeWidth={1.25} />
-                    {t('timeTracking:action.delete_entry', 'Delete Entry')}
+                    {t('timeTracking:TimeEntryDrawer.action.delete_entry', 'Delete Entry')}
                   </Button>
                   <Button onPress={() => setIsEditMode(true)}>
                     <Edit size={16} strokeWidth={1.25} />
-                    {t('timeTracking:action.edit_entry', 'Edit Entry')}
+                    {t('timeTracking:TimeEntryDrawer.action.edit_entry', 'Edit Entry')}
                   </Button>
                 </HStack>
               )}

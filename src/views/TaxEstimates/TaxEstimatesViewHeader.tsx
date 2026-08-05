@@ -45,14 +45,14 @@ export const TaxEstimatesViewHeader = () => {
         maxDate={maxDateZdt}
       />
       <DropdownMenu
-        ariaLabel={t('taxEstimates:label.additional_actions', 'Additional actions')}
+        ariaLabel={t('views:TaxEstimates.TaxEstimatesViewHeader.label.additional_actions', 'Additional actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
       >
         <MenuList>
           <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => { navigate.toProfile() }}>
             <UserRoundPen size={20} strokeWidth={1.25} />
-            <Span size='sm'>{t('taxEstimates:action.update_tax_profile', 'Update tax profile')}</Span>
+            <Span size='sm'>{t('views:TaxEstimates.TaxEstimatesViewHeader.action.update_tax_profile', 'Update tax profile')}</Span>
           </MenuItem>
         </MenuList>
       </DropdownMenu>

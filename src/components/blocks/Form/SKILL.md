@@ -55,13 +55,13 @@ export const useThingForm = ({ onSuccess }: { onSuccess?: (thing: Thing) => void
   name='account_name'
   validators={{
     onSubmit: ({ value }) =>
-      notEmpty(value) ? undefined : t('generalLedger:validation.account_name_required', 'Account name is required'),
+      notEmpty(value) ? undefined : t('generalLedger:ChartOfAccountsForm.validation.account_name_required', 'Account name is required'),
   }}
 >
   {field => (
     <field.FormTextField
-      label={t('generalLedger:label.account_name', 'Account name')}
-      placeholder={t('generalLedger:label.enter_account_name', 'Enter account name…')}
+      label={t('generalLedger:ChartOfAccountsForm.label.account_name', 'Account name')}
+      placeholder={t('generalLedger:ChartOfAccountsForm.label.enter_account_name', 'Enter account name…')}
     />
   )}
 </form.AppField>

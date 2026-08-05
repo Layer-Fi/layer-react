@@ -34,7 +34,7 @@ const ProfitAndLossTooltipContent = ({
   if (isLoading) {
     return (
       <div className='Layer__ChartTooltip'>
-        <Span variant='white' size='sm'>{t('common:state.loading', 'Loading...')}</Span>
+        <Span variant='white' size='sm'>{t('common:state.loading', 'Loading…')}</Span>
       </div>
     )
   }

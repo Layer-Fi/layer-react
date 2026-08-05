@@ -29,7 +29,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
   const HeaderActions = useCallback(() => (
     <HStack align='center' gap='xs'>
       <Button onPress={onRecordTrip}>
-        {t('trips:action.record_trip', 'Record Trip')}
+        {t('mileage:TripsMobileHeader.action.record_trip', 'Record Trip')}
         <Plus size={16} />
       </Button>
       <TripsHeaderMenu />
@@ -47,11 +47,11 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
   return (
     <DataTableHeader
       isMobile
-      name={t('trips:label.trips', 'Trips')}
+      name={t('mileage:TripsMobileHeader.label.trips', 'Trips')}
       slots={{ HeaderActions, HeaderFilters }}
       slotProps={{
         SearchField: {
-          label: t('trips:label.search_trips', 'Search trips'),
+          label: t('mileage:TripsMobileHeader.label.search_trips', 'Search trips'),
           ...searchProps,
         },
       }}

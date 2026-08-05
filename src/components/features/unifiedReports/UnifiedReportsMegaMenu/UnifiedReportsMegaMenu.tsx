@@ -34,7 +34,7 @@ export function UnifiedReportsMegaMenu() {
 
   const Trigger = useMemo(() => (
     <Button variant='outlined' isPending={isLoading} isDisabled={isError}>
-      {t('reports:label.switch_report', 'Switch report')}
+      {t('unifiedReports:UnifiedReportsMegaMenu.label.switch_report', 'Switch report')}
       <ChevronDown size={14} />
     </Button>
   ), [t, isLoading, isError])

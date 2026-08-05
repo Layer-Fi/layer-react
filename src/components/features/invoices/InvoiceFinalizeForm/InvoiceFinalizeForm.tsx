@@ -48,7 +48,7 @@ export const InvoiceFinalizeForm = ({
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
       {topError ? <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' /> : null}
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
-        <Heading level={3} size='sm'>{t('invoices:label.payment_methods', 'Payment methods')}</Heading>
+        <Heading level={3} size='sm'>{t('invoices:InvoiceFinalizeForm.label.payment_methods', 'Payment methods')}</Heading>
         <form.AppField name='creditCardEnabled'>
           {field => (
             <field.FormSwitchField
@@ -60,14 +60,14 @@ export const InvoiceFinalizeForm = ({
         </form.AppField>
       </VStack>
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
-        <Heading level={3} size='sm'>{t('invoices:label.custom_payment_instructions', 'Custom Payment Instructions')}</Heading>
+        <Heading level={3} size='sm'>{t('invoices:InvoiceFinalizeForm.label.custom_payment_instructions', 'Custom Payment Instructions')}</Heading>
         <form.AppField name='customPaymentInstructions'>
           {field => (
             <field.FormTextAreaField
-              label={t('invoices:label.custom_payment_instructions', 'Custom Payment Instructions')}
+              label={t('invoices:InvoiceFinalizeForm.label.custom_payment_instructions', 'Custom Payment Instructions')}
               showLabel={false}
               className='Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions'
-              placeholder={t('invoices:label.add_custom_payment_instructions', 'Add custom payment instructions')}
+              placeholder={t('invoices:InvoiceFinalizeForm.label.add_custom_payment_instructions', 'Add custom payment instructions')}
             />
           )}
         </form.AppField>

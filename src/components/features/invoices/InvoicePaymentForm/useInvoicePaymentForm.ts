@@ -53,19 +53,19 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
   const getErrorText = useCallback((reason: InvoicePaymentInvalidReason): string => {
     switch (reason) {
       case InvoicePaymentInvalidReason.AmountMustBePositive:
-        return t('invoices:validation.payment_amount_must', 'Payment amount must be greater than zero.')
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_amount_must', 'Payment amount must be greater than zero.')
       case InvoicePaymentInvalidReason.AmountExceedsOutstandingBalance:
-        return t('invoices:validation.payment_amount_max_outstanding', 'Payment amount cannot be greater than the outstanding invoice balance.')
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_amount_max_outstanding', 'Payment amount cannot be greater than the outstanding invoice balance.')
       case InvoicePaymentInvalidReason.PaidAtRequired:
-        return t('invoices:validation.payment_date_required', 'Payment date is a required field.')
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_date_required', 'Payment date is a required field.')
       case InvoicePaymentInvalidReason.PaidAtBeforeInvoiceDate:
-        return t('invoices:validation.payment_date_not_before_invoice', 'Payment date cannot be before the invoice date ({{invoiceDate}}).', {
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_date_not_before_invoice', 'Payment date cannot be before the invoice date ({{invoiceDate}}).', {
           invoiceDate: invoice.sentAt ? formatDate(invoice.sentAt, DateFormat.DateNumeric) : '',
         })
       case InvoicePaymentInvalidReason.PaidAtInFuture:
-        return t('invoices:validation.payment_date_not_future', 'Payment date cannot be in the future.')
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_date_not_future', 'Payment date cannot be in the future.')
       case InvoicePaymentInvalidReason.MethodRequired:
-        return t('invoices:validation.payment_method_required', 'Payment method is a required field.')
+        return t('invoices:InvoicePaymentForm.useInvoicePaymentForm.validation.payment_method_required', 'Payment method is a required field.')
       default:
         return ''
     }

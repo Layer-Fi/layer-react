@@ -17,7 +17,7 @@ function RecordTransactionTrigger({ isDisabled }: { isDisabled?: boolean }) {
       icon
       variant='outlined'
       isDisabled={isDisabled}
-      aria-label={t('bankTransactions:action.record_transaction', 'Record transaction')}
+      aria-label={t('bankTransactions:RecordBankTransactionMenuButton.action.record_transaction', 'Record transaction')}
     >
       <Plus size={14} />
     </Button>
@@ -37,18 +37,18 @@ export function RecordBankTransactionMenuButton({ isDisabled }: RecordTransactio
   return (
     <>
       <DropdownMenu
-        ariaLabel={t('bankTransactions:action.record_transaction', 'Record transaction')}
+        ariaLabel={t('bankTransactions:RecordBankTransactionMenuButton.action.record_transaction', 'Record transaction')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 180 } }}
       >
         <MenuList>
           <MenuItem onClick={() => setOpenVariant('expense')}>
-            <Span size='sm'>{t('bankTransactions:action.record_expense', 'Record expense')}</Span>
+            <Span size='sm'>{t('bankTransactions:RecordBankTransactionMenuButton.action.record_expense', 'Record expense')}</Span>
             <Spacer />
             <ChevronRight size={12} />
           </MenuItem>
           <MenuItem onClick={() => setOpenVariant('income')}>
-            <Span size='sm'>{t('bankTransactions:action.record_income', 'Record income')}</Span>
+            <Span size='sm'>{t('bankTransactions:RecordBankTransactionMenuButton.action.record_income', 'Record income')}</Span>
             <Spacer />
             <ChevronRight size={12} />
           </MenuItem>

@@ -78,16 +78,16 @@ export const LinkedAccountGridItem = ({
     )
     if (plaidAccountForConfirm) {
       pillConfig = {
-        text: t('linkedAccounts:action.confirm_account', 'Confirm account'),
+        text: t('linkedAccounts:LinkedAccountGridItem.action.confirm_account', 'Confirm account'),
         config: [
           {
-            name: t('linkedAccounts:action.mark_duplicate_account', 'Mark as a duplicate account'),
+            name: t('linkedAccounts:LinkedAccountGridItem.action.mark_duplicate_account', 'Mark as a duplicate account'),
             action: () => {
               void excludeAccount(plaidAccountForConfirm.externalAccountSource, plaidAccountForConfirm.id)
             },
           },
           {
-            name: t('linkedAccounts:action.mark_not_duplicate_account', 'Mark as not a duplicate account'),
+            name: t('linkedAccounts:LinkedAccountGridItem.action.mark_not_duplicate_account', 'Mark as not a duplicate account'),
             action: () => {
               void confirmAccount(plaidAccountForConfirm.externalAccountSource, plaidAccountForConfirm.id)
             },
@@ -98,10 +98,10 @@ export const LinkedAccountGridItem = ({
   }
   else if (repairInfo) {
     pillConfig = {
-      text: t('linkedAccounts:action.fix_account', 'Fix account'),
+      text: t('linkedAccounts:LinkedAccountGridItem.action.fix_account', 'Fix account'),
       config: [
         {
-          name: t('linkedAccounts:action.repair_connection', 'Repair connection'),
+          name: t('linkedAccounts:LinkedAccountGridItem.action.repair_connection', 'Repair connection'),
           action: () => {
             if (!repairInfo.connectionExternalId) return
             if (repairInfo.reconnectWithNewCredentials) {
@@ -119,7 +119,7 @@ export const LinkedAccountGridItem = ({
   const additionalConfigs: LinkedAccountOptionsConfig = []
 
   additionalConfigs.push({
-    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts:action.delete_account', 'Delete account') : t('linkedAccounts:action.unlink_account', 'Unlink account'),
+    name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts:LinkedAccountGridItem.action.delete_account', 'Delete account') : t('linkedAccounts:LinkedAccountGridItem.action.unlink_account', 'Unlink account'),
     action: () => {
       setIsUnlinkConfirmationModalOpen(true)
     },
@@ -129,18 +129,18 @@ export const LinkedAccountGridItem = ({
     const institutionName = getBankAccountInstitution(bankAccount)?.name
     const removeAllAccountsConfirmationMessage = institutionName
       ? t(
-        'linkedAccounts:label.confirm_remove_accounts_for_institution_name',
+        'linkedAccounts:LinkedAccountGridItem.label.confirm_remove_accounts_for_institution_name',
         'Please confirm you wish to remove all accounts belonging to {{institutionName}}',
         { institutionName },
       )
       : t(
-        'linkedAccounts:label.confirm_remove_accounts_for_institution',
+        'linkedAccounts:LinkedAccountGridItem.label.confirm_remove_accounts_for_institution',
         'Please confirm you wish to remove all accounts belonging to this institution',
       )
     additionalConfigs.push({
       name: institutionName
-        ? t('linkedAccounts:action.unlink_accounts_under_institution_name', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
-        : t('linkedAccounts:action.unlink_accounts_under_connection', 'Unlink all accounts under this connection'),
+        ? t('linkedAccounts:LinkedAccountGridItem.action.unlink_accounts_under_institution_name', 'Unlink all accounts under this {{institutionName}} connection', { institutionName })
+        : t('linkedAccounts:LinkedAccountGridItem.action.unlink_accounts_under_connection', 'Unlink all accounts under this connection'),
       action: () => {
         // TODO: replace with better confirm dialog
         if (
@@ -158,7 +158,7 @@ export const LinkedAccountGridItem = ({
 
   if (accountMissingOpeningBalance(bankAccount)) {
     additionalConfigs.push({
-      name: t('linkedAccounts:action.add_opening_balance', 'Add opening balance'),
+      name: t('linkedAccounts:LinkedAccountGridItem.action.add_opening_balance', 'Add opening balance'),
       action: () => {
         setAccountsToAddOpeningBalanceInModal([bankAccount])
       },
@@ -220,7 +220,7 @@ export const LinkedAccountGridItem = ({
         </TooltipTrigger>
         <TooltipContent>
           {t(
-            'linkedAccounts:tooltip.account_filter_locked',
+            'linkedAccounts:LinkedAccountGridItem.tooltip.account_filter_locked',
             'Account filters can’t be changed while transactions are selected',
           )}
         </TooltipContent>

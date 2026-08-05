@@ -19,7 +19,7 @@ const InvoicesMobileListItemAmount = ({ invoice }: { invoice: Invoice }) => {
       <Span weight='bold' numeric='tabular-nums'>{formatCurrencyFromCents(invoice.totalAmount)}</Span>
       {isPartiallyPaid && (
         <Span variant='subtle' size='sm' numeric='tabular-nums'>
-          {t('invoices:label.amount_outstanding', '{{amount}} outstanding', {
+          {t('invoices:InvoicesMobileList.InvoicesMobileListItem.label.amount_outstanding', '{{amount}} outstanding', {
             amount: formatCurrencyFromCents(invoice.outstandingBalance),
           })}
         </Span>

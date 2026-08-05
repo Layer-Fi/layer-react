@@ -34,8 +34,8 @@ export const VehiclesGrid = ({ onEditVehicle, showArchived }: VehiclesGridProps)
     return (
       <DataState
         status={DataStateStatus.failed}
-        title={t('vehicles:error.load_vehicle', 'We couldn\'t load your vehicles')}
-        description={t('vehicles:error.load_vehicle_retry', 'An error occurred while loading your vehicles. Please check your connection and try again.')}
+        title={t('mileage:VehiclesGrid.error.load_vehicle', 'We couldn’t load your vehicles')}
+        description={t('mileage:VehiclesGrid.error.load_vehicle_retry', 'An error occurred while loading your vehicles. Please check your connection and try again.')}
         spacing
       />
     )
@@ -45,8 +45,8 @@ export const VehiclesGrid = ({ onEditVehicle, showArchived }: VehiclesGridProps)
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('vehicles:empty.vehicles', 'No vehicles yet')}
-        description={t('vehicles:empty.add_first_vehicle', 'Add your first vehicle to start tracking trips.')}
+        title={t('mileage:VehiclesGrid.empty.vehicles', 'No vehicles yet')}
+        description={t('mileage:VehiclesGrid.empty.add_first_vehicle', 'Add your first vehicle to start tracking trips.')}
         icon={<Car />}
         spacing
       />

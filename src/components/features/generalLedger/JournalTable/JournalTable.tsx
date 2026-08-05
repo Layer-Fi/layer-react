@@ -107,8 +107,8 @@ const JournalTableContent = ({
     EmptyState: () => (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('generalLedger:empty.entries', 'No entries found')}
-        description={t('generalLedger:label.entry_journal', 'There are no entries in the journal.')}
+        title={t('generalLedger:JournalTable.empty.entries', 'No entries found')}
+        description={t('generalLedger:JournalTable.label.entry_journal', 'There are no entries in the journal.')}
       />
     ),
     ErrorState: () => (
@@ -131,7 +131,7 @@ const JournalTableContent = ({
     const accountNumberColumn = enableAccountNumbers
       ? [{
         id: 'accountNumber',
-        header: stringOverrides?.accountNumberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
+        header: stringOverrides?.accountNumberColumnHeader || t('generalLedger:JournalTable.label.account_number', 'Account Number'),
         cell: (row: Row<JournalRow>) =>
           isLineItemRow(row.original)
             ? <Span ellipsis>{row.original.lineItem.account.accountNumber}</Span>
@@ -142,7 +142,7 @@ const JournalTableContent = ({
     return [
       {
         id: 'id',
-        header: stringOverrides?.idColumnHeader || t('common:label.id', 'Id'),
+        header: stringOverrides?.idColumnHeader || t('common:label.id', 'ID'),
         isRowHeader: true,
         cell: (row: Row<JournalRow>) =>
           isEntryRow(row.original) ? <Span>{entryNumber(row.original.entry)}</Span> : null,
@@ -162,7 +162,7 @@ const JournalTableContent = ({
       ...accountNumberColumn,
       {
         id: 'account',
-        header: stringOverrides?.accountColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
+        header: stringOverrides?.accountColumnHeader || t('generalLedger:JournalTable.label.account_name_title_case', 'Account Name'),
         cell: (row: Row<JournalRow>) =>
           isEntryRow(row.original)
             ? <Span>{`(${row.original.entry.lineItems.length})`}</Span>
@@ -210,7 +210,7 @@ const JournalTableContent = ({
     <>
       <ExpandableDataTable<JournalRow>
         componentName={COMPONENT_NAME}
-        ariaLabel={t('generalLedger:label.journal', 'Journal')}
+        ariaLabel={t('generalLedger:JournalTable.label.journal', 'Journal')}
         columnConfig={columnConfig}
         data={rows}
         isLoading={isLoading}

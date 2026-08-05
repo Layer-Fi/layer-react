@@ -1,122 +1,250 @@
 {
-  "action": {
-    "review_banner": "Review",
-    "save_profile": "Save Profile",
-    "update_tax_profile": "Update tax profile"
-  },
-  "banner": {
-    "categorization_incomplete": {
-      "description_one": "In tax year {{year}}, you have {{count}} uncategorized transaction with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
-      "description_other": "In tax year {{year}}, you have {{count}} uncategorized transactions with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
-      "description_short_one": "You have {{count}} uncategorized transaction: {{deductions}} in deductions and {{income}} in unrecognized income.",
-      "description_short_other": "You have {{count}} uncategorized transactions: {{deductions}} in deductions and {{income}} in unrecognized income.",
-      "description_with_range_one": "In tax year {{year}}, you have {{count}} uncategorized transaction spanning {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
-      "description_with_range_other": "In tax year {{year}}, you have {{count}} uncategorized transactions spanning from {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
-      "title": "Your tax estimates are incomplete"
+  "FilingStatusComboBox": {
+    "label": {
+      "filing_status": "Filing status",
+      "head_household": "Head of household",
+      "married_filing_jointly": "Married filing jointly",
+      "married_filing_separately": "Married filing separately",
+      "qualifying_widow_er": "Qualifying widow(er)",
+      "single": "Single"
     }
   },
-  "disclaimer": {
-    "acknowledgment": "By continuing, I certify that I understand the above.",
-    "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+  "FullYearProjectionComboBox": {
+    "label": {
+      "full_year_projection": "Full year projection",
+      "year_to_date": "Year to date"
+    }
   },
-  "empty": {
-    "no_tax_details": "No tax details",
-    "no_tax_details_description": "No tax details found",
-    "no_tax_estimates_summary": "Get started with your tax estimates",
-    "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions.",
-    "no_tax_payments_to_display": "There are no tax payments to display.",
-    "tax_due_is_negative_or_zero": "No taxes owed this year",
-    "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero.",
-    "tax_payments": "No tax payments found"
+  "TaxableIncomeCard": {
+    "error": {
+      "load_tax_estimates": "We couldn’t load your tax estimates",
+      "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again."
+    }
   },
-  "error": {
-    "disclaimer_required": "You must acknowledge the disclaimer to continue.",
-    "feature_not_enabled": "Tax estimates are not enabled.",
-    "load_tax_deadlines": "We couldn't load your tax deadlines",
-    "load_tax_details": "We couldn't load your tax details",
-    "load_tax_estimates": "We couldn't load your tax estimates",
-    "load_tax_estimates_summary": "We couldn't load your tax summary",
-    "load_tax_information": "Unable to load tax information",
-    "load_tax_payments": "We couldnʼt load your tax payments",
-    "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
-    "while_loading_tax_details": "An error occurred while loading your tax details. Please check your connection and try again.",
-    "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again.",
-    "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
-    "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
-    "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+  "TaxBanner": {
+    "action": {
+      "review_banner": "Review"
+    },
+    "banner": {
+      "categorization_incomplete": {
+        "title": "Your tax estimates are incomplete"
+      }
+    }
   },
-  "label": {
-    "additional_actions": "Additional actions",
-    "annual_taxes": "Annual taxes",
-    "annual_w2_income": "Annual W-2 income",
-    "business_income_taxes": "Business Income Taxes",
-    "business_income_taxes_projected": "Projected Business Income Taxes",
-    "calculated_from_categorized_transactions": "Calculated based on your categorized transactions and tracked mileage",
-    "categorization_incomplete": "Categorization incomplete",
-    "deductions": "Deductions",
-    "due": "Due",
-    "due_at": "Due on {{date}}",
-    "due_with_date": "Due: {{date}}",
-    "enter_amount": "Enter amount",
-    "enter_area": "Enter area",
-    "estimated_taxes": "Estimated taxes",
-    "estimates": "Estimates",
-    "federal": "Federal",
-    "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
-    "federal_state_tax_payments_projected": "Projected federal and state tax payments for the selected tax year",
-    "federal_tax_information": "Federal Tax Information",
-    "filing_status": "Filing status",
-    "full_year_projection": "Full year projection",
-    "head_household": "Head of household",
-    "home_office_area_sq": "Home office area (sq ft)",
-    "married_filing_jointly": "Married filing jointly",
-    "married_filing_separately": "Married filing separately",
-    "overtime_income": "Overtime income",
-    "owed_quarter": "Owed This Quarter",
-    "paid": "Paid",
-    "payment_past_due": "Payment past due",
-    "payments": "Payments",
-    "q1": "Q1",
-    "q2": "Q2",
-    "q3": "Q3",
-    "q4": "Q4",
-    "qualifying_widow_er": "Qualifying widow(er)",
-    "quarter": "Quarter",
-    "quarter_taxes": "{{quarterLabel}} taxes",
-    "remaining_balance": "Remaining Balance",
-    "rolled_over_from_previous_quarter": "Rolled Over From Previous Quarter",
-    "set_up_your_tax_profile": "Set up your tax profile",
-    "set_up_your_tax_profile_description": "Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time.",
-    "single": "Single",
-    "state": "State",
-    "tax_details": "Tax Details",
-    "tax_details_amount": "Amount",
-    "tax_details_label": "Label",
-    "tax_estimate_view": "Tax estimate view",
-    "tax_information": "State Tax Information",
-    "tax_payments": "Tax Payments",
-    "tax_payments_projected": "Projected Tax Payments",
-    "tax_profile": "Tax Profile",
-    "tax_profile_saved": "Tax profile saved",
-    "tax_summary": "Tax Summary",
-    "taxable_income_estimate_to_date_for_year": "Taxable income estimate to date for year {{year}}",
-    "taxable_income_estimate_to_date_for_year_projected": "Taxable income projection for year {{year}}",
-    "taxable_income_for_year": "Taxable income for {{year}}",
-    "taxable_income_for_year_projected": "Projected taxable income for {{year}}",
-    "taxes_owed": "Taxes Owed",
-    "taxes_owed_projected": "Projected Taxes Owed",
-    "taxes_paid": "Taxes Paid",
-    "tip_income": "Tip income",
-    "total_paid": "Total Paid",
-    "uncategorized_transactions_one": "{{count}} uncategorized transaction",
-    "uncategorized_transactions_other": "{{count}} uncategorized transactions",
-    "uncategorized_transactions_with_year_one": "{{count}} uncategorized transaction ({{year}})",
-    "uncategorized_transactions_with_year_other": "{{count}} uncategorized transactions ({{year}})",
-    "use_custom_withholding": "Use custom withholding?",
-    "use_simplified_home_office": "Use simplified home office deduction?",
-    "use_standard_mileage_deduction": "Use standard mileage deduction?",
-    "withholding_amount": "Withholding amount",
-    "year_to_date": "Year to date",
-    "your_tax_deadlines": "Your tax deadlines"
+  "TaxDeadlinesCard": {
+    "error": {
+      "load_tax_deadlines": "We couldn’t load your tax deadlines"
+    },
+    "label": {
+      "your_tax_deadlines": "Your tax deadlines"
+    }
+  },
+  "TaxDetails": {
+    "TaxDetailsContent": {
+      "empty": {
+        "no_tax_details": "No tax details",
+        "no_tax_details_description": "No tax details found"
+      },
+      "error": {
+        "load_tax_details": "We couldn’t load your tax details",
+        "while_loading_tax_details": "An error occurred while loading your tax details. Please check your connection and try again."
+      },
+      "label": {
+        "tax_details": "Tax Details",
+        "tax_details_amount": "Amount",
+        "tax_details_label": "Label"
+      }
+    }
+  },
+  "TaxEstimatesDeadlineRow": {
+    "action": {
+      "review_banner": "Review"
+    },
+    "label": {
+      "due_with_date": "Due: {{date}}",
+      "estimated_taxes": "Estimated taxes",
+      "uncategorized_transactions_one": "{{count}} uncategorized transaction",
+      "uncategorized_transactions_other": "{{count}} uncategorized transactions",
+      "uncategorized_transactions_with_year_one": "{{count}} uncategorized transaction ({{year}})",
+      "uncategorized_transactions_with_year_other": "{{count}} uncategorized transactions ({{year}})"
+    },
+    "TaxEstimatesDeadlineRowStatusIcon": {
+      "label": {
+        "categorization_incomplete": "Categorization incomplete",
+        "due": "Due",
+        "estimated_taxes": "Estimated taxes",
+        "paid": "Paid",
+        "payment_past_due": "Payment past due"
+      }
+    }
+  },
+  "TaxEstimatesHeader": {
+    "label": {
+      "business_income_taxes": "Business Income Taxes",
+      "business_income_taxes_projected": "Projected Business Income Taxes",
+      "calculated_from_categorized_transactions": "Calculated based on your categorized transactions and tracked mileage",
+      "federal_state_tax_payments": "Federal and state tax payments for the selected tax year",
+      "federal_state_tax_payments_projected": "Projected federal and state tax payments for the selected tax year",
+      "tax_payments": "Tax Payments",
+      "tax_payments_projected": "Projected Tax Payments",
+      "taxable_income_estimate_to_date_for_year": "Taxable income estimate to date for year {{year}}",
+      "taxable_income_estimate_to_date_for_year_projected": "Taxable income projection for year {{year}}",
+      "taxable_income_for_year": "Taxable income for {{year}}",
+      "taxable_income_for_year_projected": "Projected taxable income for {{year}}"
+    }
+  },
+  "TaxEstimatesSummaryCard": {
+    "TaxEstimatesSummaryCardEmpty": {
+      "empty": {
+        "no_tax_estimates_summary": "Get started with your tax estimates",
+        "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions."
+      }
+    },
+    "TaxEstimatesSummaryCardError": {
+      "error": {
+        "load_tax_estimates_summary": "We couldn’t load your tax summary",
+        "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+      }
+    },
+    "TaxEstimatesSummaryCardNegativeOrZero": {
+      "empty": {
+        "tax_due_is_negative_or_zero": "No taxes owed this year",
+        "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero."
+      }
+    },
+    "useTaxEstimatesSummaryCard": {
+      "label": {
+        "federal": "Federal",
+        "state": "State",
+        "tax_summary": "Tax Summary"
+      }
+    }
+  },
+  "TaxPayments": {
+    "empty": {
+      "no_tax_payments_to_display": "There are no tax payments to display.",
+      "tax_payments": "No tax payments found"
+    },
+    "error": {
+      "load_tax_payments": "We couldn’t load your tax payments",
+      "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again."
+    }
+  },
+  "TaxPaymentsMobileList": {
+    "label": {
+      "owed_quarter": "Owed This Quarter",
+      "remaining_balance": "Remaining Balance",
+      "rolled_over_from_previous_quarter": "Rolled Over From Previous Quarter",
+      "tax_payments": "Tax Payments",
+      "total_paid": "Total Paid"
+    }
+  },
+  "TaxPaymentsTable": {
+    "label": {
+      "owed_quarter": "Owed This Quarter",
+      "quarter": "Quarter",
+      "remaining_balance": "Remaining Balance",
+      "rolled_over_from_previous_quarter": "Rolled Over From Previous Quarter",
+      "tax_payments": "Tax Payments",
+      "total_paid": "Total Paid"
+    }
+  },
+  "TaxProfileForm": {
+    "action": {
+      "save_profile": "Save Profile"
+    },
+    "DeductionsSection": {
+      "label": {
+        "deductions": "Deductions",
+        "enter_area": "Enter area",
+        "home_office_area_sq": "Home office area (sq ft)",
+        "use_simplified_home_office": "Use simplified home office deduction?",
+        "use_standard_mileage_deduction": "Use standard mileage deduction?"
+      }
+    },
+    "disclaimer": {
+      "acknowledgment": "By continuing, I certify that I understand the above.",
+      "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+    },
+    "error": {
+      "disclaimer_required": "You must acknowledge the disclaimer to continue."
+    },
+    "FederalTaxSection": {
+      "label": {
+        "annual_w2_income": "Annual W-2 income",
+        "enter_amount": "Enter amount",
+        "federal_tax_information": "Federal Tax Information",
+        "overtime_income": "Overtime income",
+        "tip_income": "Tip income",
+        "use_custom_withholding": "Use custom withholding?",
+        "withholding_amount": "Withholding amount"
+      }
+    },
+    "formUtils": {
+      "error": {
+        "disclaimer_required": "You must acknowledge the disclaimer to continue."
+      }
+    },
+    "StateTaxSection": {
+      "label": {
+        "enter_amount": "Enter amount",
+        "tax_information": "State Tax Information",
+        "use_custom_withholding": "Use custom withholding?",
+        "withholding_amount": "Withholding amount"
+      }
+    },
+    "useTaxProfileForm": {
+      "label": {
+        "tax_profile_saved": "Tax profile saved"
+      }
+    }
+  },
+  "TaxSummaryCard": {
+    "error": {
+      "load_tax_estimates_summary": "We couldn’t load your tax summary",
+      "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+    },
+    "TaxSummaryCardDesktop": {
+      "label": {
+        "due_at": "Due on {{date}}",
+        "taxes_owed": "Taxes Owed",
+        "taxes_owed_projected": "Projected Taxes Owed"
+      }
+    },
+    "TaxSummaryCardEquation": {
+      "label": {
+        "taxes_owed": "Taxes Owed",
+        "taxes_paid": "Taxes Paid"
+      }
+    },
+    "TaxSummaryCardMobile": {
+      "label": {
+        "due_at": "Due on {{date}}",
+        "taxes_owed": "Taxes Owed",
+        "taxes_owed_projected": "Projected Taxes Owed"
+      }
+    }
+  },
+  "useTaxBanner": {
+    "banner": {
+      "categorization_incomplete": {
+        "description_one": "In tax year {{year}}, you have {{count}} uncategorized transaction with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+        "description_other": "In tax year {{year}}, you have {{count}} uncategorized transactions with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+        "description_short_one": "You have {{count}} uncategorized transaction: {{deductions}} in deductions and {{income}} in unrecognized income.",
+        "description_short_other": "You have {{count}} uncategorized transactions: {{deductions}} in deductions and {{income}} in unrecognized income.",
+        "description_with_range_one": "In tax year {{year}}, you have {{count}} uncategorized transaction spanning {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+        "description_with_range_other": "In tax year {{year}}, you have {{count}} uncategorized transactions spanning from {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates."
+      }
+    }
+  },
+  "useTaxEstimatesDeadlines": {
+    "label": {
+      "annual_taxes": "Annual taxes",
+      "q1": "Q1",
+      "q2": "Q2",
+      "q3": "Q3",
+      "q4": "Q4",
+      "quarter_taxes": "{{quarterLabel}} taxes"
+    }
   }
 }

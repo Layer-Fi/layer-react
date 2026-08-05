@@ -106,6 +106,34 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    # Runs against the checked-out tag, so it gates exactly what ships. Prepare checks this too,
+    # but strings can land between cutting the release PR and tagging.
+    - name: Require translations for a stable release
+      if: ${{ steps.r.outputs.type == 'stable' }}
+      env:
+        V: ${{ steps.r.outputs.version }}
+      run: |
+        if npm run i18n:check-release; then
+          exit 0
+        fi
+
+        # Nothing has been published yet, so v$V is not a public artifact — move the tag onto
+        # the fixed commit rather than burning the version and leaving a dangling release.
+        {
+          echo "### Publish blocked — v$V contains untranslated strings"
+          echo
+          echo "Nothing was published, so \`v$V\` is still free to reuse. To recover:"
+          echo
+          echo "1. Merge the i18n PRs so the translations are on \`main\`."
+          echo "2. Run **Release — Tag** manually with \`retag=true\` — it moves \`v$V\` onto current \`main\`."
+          echo "3. Re-run **Release — Publish**."
+          echo
+          echo "See the previous step for the exact keys."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
+        exit 1
+
     - name: Publish to npm
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
 

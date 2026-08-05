@@ -115,13 +115,13 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
         url: presignedUrl,
         filename: fileName,
       })
-      addToast({ content: t('invoices:label.download_successful', 'Download successful'), type: 'success' })
+      addToast({ content: t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.label.download_successful', 'Download successful'), type: 'success' })
     },
-    onError: () => addToast({ content: t('invoices:error.download_failed', 'Download failed'), type: 'error' }),
+    onError: () => addToast({ content: t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.error.download_failed', 'Download failed'), type: 'error' }),
   })
 
   const onDownloadInvoicePdf = () => {
-    addToast({ content: t('invoices:label.download_started', 'Download started') })
+    addToast({ content: t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.label.download_started', 'Download started') })
     void downloadInvoicePdf()
   }
 
@@ -134,7 +134,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   return (
     <>
       <DropdownMenu
-        ariaLabel={t('invoices:label.additional_invoice_actions', 'Additional invoice actions')}
+        ariaLabel={t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.label.additional_invoice_actions', 'Additional invoice actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
         variant='compact'
@@ -147,22 +147,22 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Refund) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Refund} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Refund)}>
-              <Span size='sm'>{t('invoices:action.refund_invoice', 'Issue refund')}</Span>
+              <Span size='sm'>{t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.action.refund_invoice', 'Issue refund')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Void) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Void} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Void)}>
-              <Span size='sm'>{t('invoices:action.mark_void', 'Mark as void')}</Span>
+              <Span size='sm'>{t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.action.mark_void', 'Mark as void')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Writeoff) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Writeoff} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Writeoff)}>
-              <Span size='sm'>{t('invoices:action.write_off', 'Write off')}</Span>
+              <Span size='sm'>{t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.action.write_off', 'Write off')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Reset) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Reset} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Reset)}>
-              <Span size='sm'>{t('invoices:action.reset_to_saved', 'Reset to saved')}</Span>
+              <Span size='sm'>{t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.action.reset_to_saved', 'Reset to saved')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.DownloadPdf) && (
@@ -171,7 +171,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
               isDisabled={isDownloadingInvoicePdf}
               onClick={onDownloadInvoicePdf}
             >
-              <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
+              <Span size='sm'>{t('invoices:InvoiceDetailHeader.InvoiceDetailHeaderMenu.action.download_pdf', 'Download PDF')}</Span>
             </MenuItem>
           )}
         </MenuList>

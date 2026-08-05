@@ -14,7 +14,7 @@ import './timeEntryServiceSelector.scss'
 
 function getServiceLabel(service: CatalogService, t: TFunction): string {
   return service.archivedAt
-    ? t('timeTracking:services.archived_service', '{{name}} (Archived)', { name: service.name })
+    ? t('timeTracking:TimeEntryServiceSelector.services.archived_service', '{{name}} (Archived)', { name: service.name })
     : service.name
 }
 
@@ -72,8 +72,8 @@ const formatCreateLabel = (inputValue: string, t: TFunction) => (
   <Span className='Layer__TimeEntryServiceSelector__CreateLabel'>
     <Plus size={14} aria-hidden='true' />
     {inputValue
-      ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
-      : t('timeTracking:services.add_service', 'Add service')}
+      ? t('timeTracking:TimeEntryServiceSelector.services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
+      : t('timeTracking:TimeEntryServiceSelector.services.add_service', 'Add service')}
   </Span>
 )
 
@@ -126,21 +126,21 @@ export function TimeEntryServiceSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('timeTracking:label.no_services', 'No services available')}
+        {t('timeTracking:TimeEntryServiceSelector.label.no_services', 'No services available')}
       </P>
     ),
     [t],
   )
 
   const ErrorMessage = shouldShowError
-    ? t('timeTracking:error.load_services', 'Failed to load services.')
+    ? t('timeTracking:TimeEntryServiceSelector.error.load_services', 'Failed to load services.')
     : undefined
 
   const sharedProps = {
     selectedValue: selectedServiceForComboBox,
     onSelectedValueChange: handleSelectionChange,
     className: 'Layer__TimeEntryServiceSelector__Input',
-    placeholder: placeholder ?? t('timeTracking:label.select_service', 'Select a service'),
+    placeholder: placeholder ?? t('timeTracking:TimeEntryServiceSelector.label.select_service', 'Select a service'),
     slots: { EmptyMessage, ErrorMessage },
     isClearable,
     isDisabled: shouldDisableComboBox,
@@ -154,13 +154,13 @@ export function TimeEntryServiceSelector({
       isCreatable: true as const,
       onCreateOption: onCreateService,
       formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
-      groups: [{ label: t('timeTracking:services.title', 'Services'), options: serviceOptions }],
+      groups: [{ label: t('timeTracking:TimeEntryServiceSelector.services.title', 'Services'), options: serviceOptions }],
     }
     : { isCreatable: false as const, options: serviceOptions }
 
   return (
     <ComboBoxField
-      label={t('timeTracking:label.service', 'Service')}
+      label={t('timeTracking:TimeEntryServiceSelector.label.service', 'Service')}
       className={className}
       inline={inline}
       showLabel={showLabel}

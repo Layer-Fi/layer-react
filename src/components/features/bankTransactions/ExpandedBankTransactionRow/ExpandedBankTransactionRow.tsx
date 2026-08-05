@@ -170,9 +170,9 @@ export const ExpandedBankTransactionRow = ({
     },
     {
       value: BankTransactionSelectionVariant.MATCH,
-      label: t('bankTransactions:label.match', 'Match'),
+      label: t('bankTransactions:ExpandedBankTransactionRow.label.match', 'Match'),
       disabled: !hasMatch(bankTransaction),
-      disabledMessage: t('bankTransactions:error.matching_transactions_not_found', 'We could not find matching transactions'),
+      disabledMessage: t('bankTransactions:ExpandedBankTransactionRow.error.matching_transactions_not_found', 'We could not find matching transactions'),
     },
   ], [t, bankTransaction])
 
@@ -187,7 +187,7 @@ export const ExpandedBankTransactionRow = ({
           {isCategorizationEnabled && (
             <HStack pi='md' pbe='md' pbs='3xs'>
               <Toggle
-                ariaLabel={t('bankTransactions:label.categorize_or_match_transaction', 'Categorize or match transaction')}
+                ariaLabel={t('bankTransactions:ExpandedBankTransactionRow.label.categorize_or_match_transaction', 'Categorize or match transaction')}
                 size={ToggleSize.small}
                 options={toggleOptions}
                 selectedKey={purpose}
@@ -215,7 +215,7 @@ export const ExpandedBankTransactionRow = ({
                     readOnly={!isCategorizationEnabled}
                     setSelectedMatch={(suggestedMatch) => {
                       setTransactionMatchSelection(bankTransaction.id, suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null)
-                      setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
+                      setMatchFormError(!suggestedMatch ? t('bankTransactions:ExpandedBankTransactionRow.error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
                     }}
                     matchFormError={matchFormError}
                   />
@@ -241,7 +241,7 @@ export const ExpandedBankTransactionRow = ({
                         key={`split-${index}`}
                       >
                         {asListItem && effectiveSplits.length > 1 && (
-                          <Span>{t('bankTransactions:action.split_number_label', 'Split #{{number}}', { number: index + 1 })}</Span>
+                          <Span>{t('bankTransactions:ExpandedBankTransactionRow.action.split_number_label', 'Split #{{number}}', { number: index + 1 })}</Span>
                         )}
                         <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry'>
                           <AmountInput
@@ -290,7 +290,7 @@ export const ExpandedBankTransactionRow = ({
                               <CustomerVendorSelector
                                 selectedCustomerVendor={split.customerVendor}
                                 onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
+                                placeholder={t('bankTransactions:ExpandedBankTransactionRow.action.set_customer_vendor', 'Set customer or vendor')}
                                 isReadOnly={!isCategorizationEnabled}
                                 showLabel={false}
                               />
@@ -333,7 +333,7 @@ export const ExpandedBankTransactionRow = ({
                         {effectiveSplits.length > 1
                           ? (
                             <Button variant='text' underline onPress={addSplit}>
-                              {t('bankTransactions:action.add_new_split', 'Add new split')}
+                              {t('bankTransactions:ExpandedBankTransactionRow.action.add_new_split', 'Add new split')}
                             </Button>
                           )
                           : (
@@ -342,7 +342,7 @@ export const ExpandedBankTransactionRow = ({
                               variant='outlined'
                             >
                               <Scissors size={14} />
-                              {t('bankTransactions:action.split_label', 'Split')}
+                              {t('bankTransactions:ExpandedBankTransactionRow.action.split_label', 'Split')}
                             </Button>
                           )}
                       </div>

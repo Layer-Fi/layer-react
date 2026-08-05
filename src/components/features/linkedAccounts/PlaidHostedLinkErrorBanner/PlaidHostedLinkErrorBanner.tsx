@@ -33,9 +33,9 @@ export function PlaidHostedLinkErrorBanner({ showRetryButton = false }: PlaidHos
   return (
     <Banner
       variant='error'
-      title={t('linkedAccounts:error.hosted_link_failed_title', 'Connection failed')}
+      title={t('linkedAccounts:PlaidHostedLinkErrorBanner.error.hosted_link_failed_title', 'Connection failed')}
       description={t(
-        'linkedAccounts:error.hosted_link_failed_description',
+        'linkedAccounts:PlaidHostedLinkErrorBanner.error.hosted_link_failed_description',
         'We couldn’t finish linking your account. Please try again.',
       )}
       slots={{ Button: RetryButton }}
