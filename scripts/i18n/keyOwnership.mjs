@@ -10,12 +10,8 @@ export const SHARED_NAMESPACES = ['common', 'date', 'upload', 'usStates']
 /** Directories under `src/` whose second segment is a feature domain. */
 const DOMAIN_PARENTS = ['components', 'hooks', 'providers', 'schemas', 'types', 'utils']
 
-const TEST_OR_STORY_FILE = /\.(test|spec)\.[jt]sx?$|\.stories\.[jt]sx?$|\.storyData\.[jt]sx?$/
-
 /** `src/hooks/legacy` predates the domain layout, so its namespaces are left alone. */
 const GRANDFATHERED_DIR = /^src\/hooks\/legacy\//
-
-export const isExempt = file => TEST_OR_STORY_FILE.test(file)
 
 const toPosixPath = file => file.split(path.sep).join('/')
 

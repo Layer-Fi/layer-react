@@ -90,12 +90,14 @@ jobs:
         if [ "${{ steps.i18n.outputs.remedy }}" = "crowdin" ]; then
           WORKFLOW=crowdin-sync.yml
           BRANCH=i18n/crowdin-fr-ca
+          # A bare dispatch is download-only, which cannot fill values Crowdin has not translated
+          # yet; the upload and pre-translate steps are gated on this input.
+          gh workflow run "$WORKFLOW" --ref main -f pretranslate=true
         else
           WORKFLOW=i18n-extract-keys.yml
           BRANCH=i18n/extract-keys
+          gh workflow run "$WORKFLOW" --ref main
         fi
-
-        gh workflow run "$WORKFLOW" --ref main
 
         {
           echo "### Stable release blocked — translations are not ready"
