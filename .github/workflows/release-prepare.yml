@@ -60,15 +60,19 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+    # Kept out of the check step below: that one is continue-on-error, so an install failure
+    # there would read as a translation failure.
+    - name: Install dependencies
+      if: ${{ inputs.release_type == 'stable' }}
+      run: npm ci
+
     # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
     # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.
     - name: Check translations are ready
       if: ${{ inputs.release_type == 'stable' }}
       id: i18n
       continue-on-error: true
-      run: |
-        npm ci
-        npm run i18n:check-release
+      run: npm run i18n:check-release
 
     # Start the pipeline that fixes it and stop: cutting a release PR now would only produce a
     # tag that Release — Publish refuses.
@@ -77,6 +81,12 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # No remedy means the check itself died rather than reporting untranslated keys.
+        if [ -z "${{ steps.i18n.outputs.remedy }}" ]; then
+          echo "::error::npm run i18n:check-release failed to produce a result; see the previous step."
+          exit 1
+        fi
+
         if [ "${{ steps.i18n.outputs.remedy }}" = "crowdin" ]; then
           WORKFLOW=crowdin-sync.yml
           BRANCH=i18n/crowdin-fr-ca

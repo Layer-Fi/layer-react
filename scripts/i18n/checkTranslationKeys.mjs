@@ -13,7 +13,7 @@
 import fs from 'node:fs'
 
 import { collectCallSites } from './callSites.mjs'
-import { hasPluralSiblingIn, OWNER_EXEMPT_NAMESPACES, ownerOf } from './keyGrammar.mjs'
+import { hasPluralFamilyIn, OWNER_EXEMPT_NAMESPACES, ownerOf, pluralCategoriesFor, splitPluralCategory } from './keyGrammar.mjs'
 import { SHARED_NAMESPACES, ownershipFor } from './keyOwnership.mjs'
 import { LOCALES, readLocale, SOURCE_LOCALE } from './localeManifests.mjs'
 
@@ -78,6 +78,7 @@ const checkLocaleParity = (fail) => {
   for (const locale of LOCALES) {
     if (locale === SOURCE_LOCALE) continue
     const target = readLocale(locale)
+    const localeCategories = pluralCategoriesFor(locale)
 
     for (const key of sourceKeys) {
       if (!(key in target)) fail(`${locale} is missing ${key}`)
@@ -85,7 +86,12 @@ const checkLocaleParity = (fail) => {
     for (const key of Object.keys(target)) {
       if (sourceKeys.has(key)) continue
 
-      if (!hasPluralSiblingIn(key, sourceKeys)) fail(`${locale} has ${key}, which ${SOURCE_LOCALE} does not`)
+      // English has no `_many`, but French does; that form is extra, not drift.
+      const plural = splitPluralCategory(key)
+      const isLocaleOnlyForm = plural
+        && localeCategories.has(plural.category)
+        && hasPluralFamilyIn(plural.base, sourceKeys)
+      if (!isLocaleOnlyForm) fail(`${locale} has ${key}, which ${SOURCE_LOCALE} does not`)
     }
   }
 }
@@ -95,9 +101,17 @@ const checkReadyForRelease = async () => {
   const source = readLocale(SOURCE_LOCALE)
   const sourceKeys = new Set(Object.keys(source))
 
+  // Extraction emits a plural form per configured locale, so a category English does not use is
+  // absent from en-US by design. Any category English does use must be there.
+  const sourceCategories = pluralCategoriesFor(SOURCE_LOCALE)
+  const isForeignPluralForm = (key) => {
+    const plural = splitPluralCategory(key)
+    return Boolean(plural) && !sourceCategories.has(plural.category)
+  }
+
   const unextracted = [...new Set(
     (await collectCallSites())
-      .filter(site => !sourceKeys.has(site.key) && !hasPluralSiblingIn(site.key, sourceKeys))
+      .filter(site => !sourceKeys.has(site.key) && !isForeignPluralForm(site.key))
       .map(site => site.key),
   )].sort()
 

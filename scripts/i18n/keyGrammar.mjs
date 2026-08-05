@@ -24,8 +24,8 @@ export const splitPluralCategory = (key) => {
   return match ? { base: match[1], category: match[2] } : undefined
 }
 
-/** A locale can need a CLDR category English lacks (French `_many`); that is present, not missing. */
-export const hasPluralSiblingIn = (key, keys) => {
-  const plural = splitPluralCategory(key)
-  return Boolean(plural) && PLURAL_CATEGORIES.some(category => keys.has(`${plural.base}_${category}`))
-}
+export const pluralCategoriesFor = locale =>
+  new Set(new Intl.PluralRules(locale).resolvedOptions().pluralCategories)
+
+export const hasPluralFamilyIn = (base, keys) =>
+  PLURAL_CATEGORIES.some(category => keys.has(`${base}_${category}`))
