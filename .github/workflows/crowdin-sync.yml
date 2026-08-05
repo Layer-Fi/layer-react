@@ -1,11 +1,12 @@
 name: i18n - Sync Translations
 
 # Runs when en-US files change on main. Steps:
-#   1. If the merge also changed fr-CA files, upload them to Crowdin so the
-#      download below cannot revert them.
-#   2. Scaffold fr-CA keys from the en-US diff: added keys get "", changed
+#   1. Upload en-US sources to Crowdin.
+#   2. If the merge also changed fr-CA files, upload them to Crowdin so the
+#      download below cannot revert them. Must follow the source upload —
+#      Crowdin rejects a translation whose source string it does not have.
+#   3. Scaffold fr-CA keys from the en-US diff: added keys get "", changed
 #      keys are blanked, removed keys are dropped.
-#   3. Upload en-US sources to Crowdin.
 #   4. Pre-translate untranslated fr-CA strings (translation memory, then AI).
 #   5. Download fr-CA; downloaded values overwrite local ones.
 #   6. Open/update the i18n/crowdin-fr-ca PR with the result.
@@ -67,6 +68,21 @@ jobs:
         fi
         echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
 
+    # Before the translations below: Crowdin only accepts a translation for a source string it
+    # already has, so a push that adds or renames a namespace file fails without this.
+    - name: Upload sources to Crowdin
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: true
+        upload_translations: false
+        download_translations: false
+        create_pull_request: false
+        push_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
     - name: Upload translation changes from this push to Crowdin
       if: ${{ steps.pushed_translations.outputs.changed == 'true' }}
       uses: crowdin/github-action@v2
@@ -90,19 +106,6 @@ jobs:
             src/assets/locales/en-US \
             src/assets/locales/fr-CA
         fi
-
-    - name: Upload sources to Crowdin
-      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
-      uses: crowdin/github-action@v2
-      with:
-        upload_sources: true
-        upload_translations: false
-        download_translations: false
-        create_pull_request: false
-        push_translations: false
-      env:
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Pre-translate fr-CA from translation memory
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
