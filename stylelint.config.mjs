@@ -278,4 +278,13 @@ export default {
     '@stylistic/no-missing-end-of-source-newline': true,
     '@stylistic/string-quotes': 'single',
   },
+
+  overrides: [
+    {
+      // The container-name mixins take the name as an argument, so stylelint only ever
+      // sees the interpolation. The literal names are checked at each call site.
+      files: ['src/styles/_breakpoints.scss'],
+      rules: { 'container-name-pattern': null },
+    },
+  ],
 }

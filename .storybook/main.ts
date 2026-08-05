@@ -46,9 +46,18 @@ const config: StorybookConfig = {
       return entries.filter(({ tags }) => inScope(fileName, tags))
     },
   })),
+  // Storybook builds its own Vite config, so the shared SCSS partials need wiring here
+  // as well as in vite.config.ts and vitest.config.ts.
   viteFinal: viteConfig => ({
     ...viteConfig,
     base: process.env.STORYBOOK_BASE_PATH ?? viteConfig.base,
+    css: {
+      ...viteConfig.css,
+      preprocessorOptions: {
+        ...viteConfig.css?.preprocessorOptions,
+        scss: { loadPaths: [join(process.cwd(), 'src/styles')] },
+      },
+    },
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
