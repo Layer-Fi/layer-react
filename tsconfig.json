@@ -56,7 +56,7 @@
       "@internal-types/*": ["./src/types/*"],
       "@schemas/*": ["./src/schemas/*"],
       "@views/*": ["./src/views/*"],
-      "@icons/*": ["./src/icons/*"],
+      "@icons/*": ["./src/components/icons/*"],
       "@assets/*": ["./src/assets/*"],
       "@msw/*": ["./src/msw/*"],
       "@fixtures/*": ["./src/fixtures/*"],
