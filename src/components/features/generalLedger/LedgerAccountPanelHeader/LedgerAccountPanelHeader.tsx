@@ -6,9 +6,7 @@ import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
+import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 
 export interface LedgerAccountHeaderProps {
   onClose: () => void
@@ -19,21 +17,24 @@ export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) 
   const { selectedAccount } = useContext(LedgerAccountsContext)
 
   return (
-    <Header>
-      <HeaderRow>
-        <HeaderCol>
-          <BackButton onPress={onClose} />
-          <VStack align='start'>
-            <Span weight='bold'>{selectedAccount?.name ?? ''}</Span>
-            <HStack gap='xs' align='center'>
-              <Span size='sm' variant='subtle'>
-                {t('generalLedger:LedgerAccountPanelHeader.label.balance', 'Current balance')}
-              </Span>
-              <MoneySpan size='sm' amount={selectedAccount?.balance ?? 0} />
-            </HStack>
-          </VStack>
-        </HeaderCol>
-      </HeaderRow>
-    </Header>
+    <ViewHeader
+      surface='panel'
+      slots={{
+        Title: (
+          <>
+            <BackButton onPress={onClose} />
+            <VStack align='start'>
+              <Span weight='bold'>{selectedAccount?.name ?? ''}</Span>
+              <HStack gap='xs' align='center'>
+                <Span size='sm' variant='subtle'>
+                  {t('generalLedger:LedgerAccountPanelHeader.label.balance', 'Current balance')}
+                </Span>
+                <MoneySpan size='sm' amount={selectedAccount?.balance ?? 0} />
+              </HStack>
+            </VStack>
+          </>
+        ),
+      }}
+    />
   )
 }

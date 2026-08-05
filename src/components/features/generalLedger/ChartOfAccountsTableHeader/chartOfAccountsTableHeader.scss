@@ -1,11 +1,10 @@
-.Layer__chart-of-accounts__actions {
-  .Layer__SearchField {
-    width: 15rem;
-  }
+@use 'breakpoints' as bp;
 
-  @container (max-width: 760px) {
-    .Layer__SearchField {
-      width: 12rem;
-    }
+/* The class now sits on the field itself rather than on a header column wrapper. */
+.Layer__chart-of-accounts__actions {
+  width: 15rem;
+
+  @include bp.container-tablet-down {
+    width: 12rem;
   }
 }

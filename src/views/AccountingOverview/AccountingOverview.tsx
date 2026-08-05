@@ -6,9 +6,6 @@ import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -82,15 +79,7 @@ export const AccountingOverview = ({
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
         viewClassName='Layer__AccountingOverview'
         showHeader={showTitle}
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
+        header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}

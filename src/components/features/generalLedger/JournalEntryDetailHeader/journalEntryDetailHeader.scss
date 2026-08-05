@@ -1,8 +1,12 @@
+@use 'breakpoints' as bp;
+
+/* The back button is the mobile affordance; the close button is the desktop one. */
+
 .Layer__JournalEntryDetailHeader--VisibleOnLarge {
   display: none;
 }
 
-@container (min-width: 1024px) {
+@include bp.container-desktop-up('layer-view-header') {
   .Layer__JournalEntryDetailHeader--HiddenOnLarge {
     display: none;
   }

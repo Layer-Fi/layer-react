@@ -15,14 +15,21 @@ export const LAYOUT_CLASS_NAMES = {
   VIEW_PANEL_LAYOUT: layerClassName('', 'Layer__view--panel'),
   VIEW_MAIN: layerClassName('Layer__LayoutView__Main', 'Layer__view-main'),
 
+  /*
+   * `ViewHeader` serves two surfaces whose legacy classes never coexisted on an element.
+   * Emitting both everywhere would make a consumer's `.Layer__view-header` rule start
+   * hitting panel headers, so `surface` picks the group.
+   */
   VIEW_HEADER: layerClassName('Layer__ViewHeader', 'Layer__view-header'),
-  VIEW_HEADER_CONTENT: layerClassName('Layer__ViewHeader__Row', 'Layer__view-header__content'),
-  VIEW_HEADER_ACTIONS: layerClassName('Layer__ViewHeader__Actions', 'Layer__view-header__children'),
+  VIEW_HEADER_ROW: layerClassName('Layer__ViewHeader__Row', 'Layer__view-header__content'),
+  VIEW_HEADER_TITLE: layerClassName('Layer__ViewHeader__Title'),
+  VIEW_HEADER_ACTIONS: layerClassName('Layer__ViewHeader__Col', 'Layer__view-header__children'),
 
   PANEL_HEADER: layerClassName('Layer__ViewHeader', 'Layer__HeaderContainer'),
   PANEL_HEADER_STICKY: layerClassName('', 'Layer__HeaderContainer--Sticky'),
   PANEL_HEADER_ROUNDED: layerClassName('', 'Layer__HeaderContainer--Rounded'),
   PANEL_HEADER_ROW: layerClassName('Layer__ViewHeader__Row', 'Layer__HeaderRow'),
+  PANEL_HEADER_TITLE: layerClassName('Layer__ViewHeader__Title', 'Layer__HeaderCol'),
   PANEL_HEADER_COL: layerClassName('Layer__ViewHeader__Col', 'Layer__HeaderCol'),
 
   PANEL: layerClassName('Layer__ViewPanel', 'Layer__panel'),

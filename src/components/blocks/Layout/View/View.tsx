@@ -56,12 +56,9 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
         {showHeader && (
           <ViewHeader
             title={title}
-            className={classNames(
-              headerControls ? 'Layer__view-header--paddings' : undefined,
-            )}
-          >
-            {header ?? headerControls}
-          </ViewHeader>
+            padding={type === 'panel' ? 'none' : 'default'}
+            slots={{ Actions: header ?? headerControls }}
+          />
         )}
         {withSidebar
           ? (

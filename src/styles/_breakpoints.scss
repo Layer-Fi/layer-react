@@ -1,24 +1,26 @@
 // The size-class thresholds, mirroring `BREAKPOINTS` in
 // `@utils/shared/size/screenSizeBreakpoints`. `breakpoints.test.ts` asserts the two stay
 // equal - the TS constant is the source of truth.
+// The widths are interpolated because Sass does not evaluate variables in the prelude of
+// an unknown at-rule like `@container`.
 
 $mobile: 500px;
 $tablet: 760px;
 
 @mixin mobile {
-  @media (width <= $mobile) {
+  @media (width <= #{$mobile}) {
     @content;
   }
 }
 
 @mixin tablet-down {
-  @media (width <= $tablet) {
+  @media (width <= #{$tablet}) {
     @content;
   }
 }
 
 @mixin desktop-up {
-  @media (width > $tablet) {
+  @media (width > #{$tablet}) {
     @content;
   }
 }
@@ -27,19 +29,19 @@ $tablet: 760px;
 // nearest one - `layer-card`, `layer-view`, `layer-view-header`.
 
 @mixin container-mobile($name: null) {
-  @container #{$name} (width <= $mobile) {
+  @container #{$name} (width <= #{$mobile}) {
     @content;
   }
 }
 
 @mixin container-tablet-down($name: null) {
-  @container #{$name} (width <= $tablet) {
+  @container #{$name} (width <= #{$tablet}) {
     @content;
   }
 }
 
 @mixin container-desktop-up($name: null) {
-  @container #{$name} (width > $tablet) {
+  @container #{$name} (width > #{$tablet}) {
     @content;
   }
 }

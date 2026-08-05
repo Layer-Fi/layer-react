@@ -6,11 +6,9 @@ import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { View } from '@blocks/Layout/View/View'
+import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 import { Section } from '@testUtils/storybook/layout/Section'
@@ -76,58 +74,58 @@ export const Containers: Story = {
 export const Headers: Story = {
   render: () => (
     <Gallery>
-      <Section title='single row'>
+      <Section title='view surface, title only'>
+        <ViewHeader title='Reports' />
+      </Section>
+
+      <Section title='view surface, title and actions'>
+        <ViewHeader title='Reports' slots={{ Actions: <Button>Export</Button> }} />
+      </Section>
+
+      <Section title='view surface, fluid title'>
+        <ViewHeader
+          fluid
+          slots={{
+            Title: (
+              <HStack justify='space-between' fluid>
+                <Button variant='ghost'>Date range</Button>
+                <Button variant='outlined'>Download</Button>
+              </HStack>
+            ),
+          }}
+        />
+      </Section>
+
+      <Section title='panel surface, title and actions'>
         <Container name='story-container'>
-          <Header asHeader>
-            <HeaderRow>
-              <HeaderCol><Heading level={2} size='md'>Title</Heading></HeaderCol>
-              <HeaderCol><Button>Action</Button></HeaderCol>
-            </HeaderRow>
-          </Header>
+          <ViewHeader
+            surface='panel'
+            asHeader
+            title='Chart of accounts'
+            slots={{ Actions: <Button>Add account</Button> }}
+          />
         </Container>
       </Section>
 
-      <Section title='sticky and rounded, two rows, second scrollable'>
+      <Section title='panel surface, sticky and rounded, with filters'>
         <Container name='story-container'>
-          <Header asHeader sticky rounded>
-            <HeaderRow>
-              <HeaderCol><Heading level={2} size='md'>Journal</Heading></HeaderCol>
-              <HeaderCol>
-                <HStack gap='xs'>
+          <ViewHeader
+            surface='panel'
+            asHeader
+            sticky
+            rounded
+            title='Journal'
+            slots={{
+              Actions: (
+                <>
                   <Button variant='outlined'>Download</Button>
                   <Button>Add entry</Button>
-                </HStack>
-              </HeaderCol>
-            </HeaderRow>
-            <HeaderRow scrollable>
-              <HeaderCol><Button variant='ghost'>Date range</Button></HeaderCol>
-              <HeaderCol><Button variant='ghost'>Search</Button></HeaderCol>
-            </HeaderRow>
-          </Header>
-        </Container>
-      </Section>
-
-      <Section title='fluid column'>
-        <Container name='story-container'>
-          <Header asHeader>
-            <HeaderRow>
-              <HeaderCol fluid>
-                <Heading level={2} size='md'>Fills the row</Heading>
-                <Button>Action</Button>
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        </Container>
-      </Section>
-
-      <Section title='stacked direction'>
-        <Container name='story-container'>
-          <Header asHeader>
-            <HeaderRow direction='col'>
-              <HeaderCol><Heading level={2} size='md'>Stacked</Heading></HeaderCol>
-              <HeaderCol><Button>Action</Button></HeaderCol>
-            </HeaderRow>
-          </Header>
+                </>
+              ),
+              Filters: <Button variant='ghost'>Date range</Button>,
+              FilterActions: <Button variant='ghost'>Search</Button>,
+            }}
+          />
         </Container>
       </Section>
     </Gallery>
@@ -185,12 +183,14 @@ export const Panels: Story = {
             sidebarIsOpen
             sidebar={<Sidebar />}
             header={(
-              <Header asHeader sticky rounded>
-                <HeaderRow>
-                  <HeaderCol><Heading level={2} size='md'>Chart of accounts</Heading></HeaderCol>
-                  <HeaderCol><Button>Add account</Button></HeaderCol>
-                </HeaderRow>
-              </Header>
+              <ViewHeader
+                surface='panel'
+                asHeader
+                sticky
+                rounded
+                title='Chart of accounts'
+                slots={{ Actions: <Button>Add account</Button> }}
+              />
             )}
           >
             <Body />

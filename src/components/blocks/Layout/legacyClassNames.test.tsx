@@ -5,12 +5,10 @@ import { describe, expect, it } from 'vitest'
 import { type LayerClassName } from '@utils/shared/styles/legacyClassNames'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { LAYOUT_CLASS_NAMES } from '@blocks/Layout/layoutClassNames'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { View } from '@blocks/Layout/View/View'
+import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
@@ -37,10 +35,13 @@ const queryLegacy = (root: ParentNode, name: LayerClassName) =>
   root.querySelector(legacyOf(name).map(className => `.${className}`).join(''))
 
 describe('layout legacy class names', () => {
-  it('every entry declares at least one legacy name', () => {
-    for (const [key, name] of Object.entries(LAYOUT_CLASS_NAMES)) {
-      expect(legacyOf(name), key).not.toHaveLength(0)
-    }
+  it('every entry that replaced an older name still declares it', () => {
+    const withoutLegacy = Object.entries(LAYOUT_CLASS_NAMES)
+      .filter(([, name]) => legacyOf(name).length === 0)
+      .map(([key]) => key)
+
+    // Only genuinely new elements may have no legacy name.
+    expect(withoutLegacy).toEqual(['VIEW_HEADER_TITLE'])
   })
 
   describe('View', () => {
@@ -67,8 +68,8 @@ describe('layout legacy class names', () => {
       const header = queryLegacy(container, LAYOUT_CLASS_NAMES.VIEW_HEADER)
       expectLegacyOn(header, LAYOUT_CLASS_NAMES.VIEW_HEADER)
 
-      const content = queryLegacy(header!, LAYOUT_CLASS_NAMES.VIEW_HEADER_CONTENT)
-      expectLegacyOn(content, LAYOUT_CLASS_NAMES.VIEW_HEADER_CONTENT)
+      const content = queryLegacy(header!, LAYOUT_CLASS_NAMES.VIEW_HEADER_ROW)
+      expectLegacyOn(content, LAYOUT_CLASS_NAMES.VIEW_HEADER_ROW)
       expectLegacyOn(
         queryLegacy(content!, LAYOUT_CLASS_NAMES.VIEW_HEADER_ACTIONS),
         LAYOUT_CLASS_NAMES.VIEW_HEADER_ACTIONS,
@@ -131,14 +132,17 @@ describe('layout legacy class names', () => {
     })
   })
 
-  describe('panel header', () => {
+  describe('ViewHeader on the panel surface', () => {
     it('emits the container, row and col classes, nested', () => {
       const container = renderLayout(
-        <Header asHeader sticky rounded>
-          <HeaderRow>
-            <HeaderCol>title</HeaderCol>
-          </HeaderRow>
-        </Header>,
+        <ViewHeader
+          surface='panel'
+          asHeader
+          sticky
+          rounded
+          title='Journal'
+          slots={{ Actions: <button>Add</button> }}
+        />,
       )
 
       const header = queryLegacy(container, LAYOUT_CLASS_NAMES.PANEL_HEADER)
@@ -152,6 +156,26 @@ describe('layout legacy class names', () => {
         queryLegacy(row!, LAYOUT_CLASS_NAMES.PANEL_HEADER_COL),
         LAYOUT_CLASS_NAMES.PANEL_HEADER_COL,
       )
+    })
+
+    it('renders a second row for the filter slots', () => {
+      const container = renderLayout(
+        <ViewHeader
+          surface='panel'
+          title='Journal'
+          slots={{ Filters: <button>Date range</button> }}
+        />,
+      )
+
+      const rows = container.querySelectorAll('.Layer__HeaderRow')
+      expect(rows).toHaveLength(2)
+      expect(rows[1].getAttribute('data-row')).toBe('filters')
+    })
+
+    it('keeps the view surface classes off a panel header', () => {
+      const container = renderLayout(<ViewHeader surface='panel' title='Journal' />)
+
+      expect(container.querySelector('.Layer__view-header')).toBeNull()
     })
   })
 

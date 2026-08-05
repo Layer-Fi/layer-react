@@ -1,63 +1,106 @@
-.Layer__view-header {
+@use 'breakpoints' as bp;
+
+.Layer__ViewHeader {
   box-sizing: border-box;
   position: relative;
+  z-index: var(--view-header-z-index, auto);
 
   display: flex;
+  flex-direction: column;
   overflow: auto;
-  width: 100%;
-  max-width: 100%;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  padding-inline: var(--view-header-padding-inline, 0);
+  border-start-start-radius: var(--view-header-radius, 0);
+  border-start-end-radius: var(--view-header-radius, 0);
+  border-block-end: var(--view-header-border-width, 0) solid var(--border-color);
+  background: var(--view-header-bg, none);
+  backdrop-filter: var(--view-header-backdrop, none);
+  container: layer-view-header / inline-size;
 
-  padding: 0 var(--spacing-lg);
-  border-bottom: 1px solid var(--border-color);
-  container-type: inline-size;
+  &[data-surface='view'] {
+    --view-header-padding-inline: var(--layout-view-padding);
+    --view-header-border-width: 1px;
+  }
 
-  .Layer__HeaderRow:last-child {
-    border-width: 0;
+  /* A panel-layout view runs its header flush to the edge. */
+  &[data-padding='none'] {
+    --view-header-padding-inline: 0;
+  }
+
+  &[data-sticky] {
+    position: sticky;
+    inset-block-start: 0;
+
+    --view-header-z-index: var(--z-index-sticky-header);
+    --view-header-bg: var(--color-base-0);
+    --view-header-backdrop: blur(var(--blur-sticky));
+  }
+
+  &[data-rounded] {
+    --view-header-radius: var(--border-radius-sm);
   }
 }
 
-.Layer__UI__Heading + .Layer__view-header__children {
-  width: min-content;
-}
-
-.Layer__view-header__content > .Layer__UI__Heading {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: var(--spacing-md) 0;
-}
-
-.Layer__view-header__content {
+.Layer__ViewHeader__Row {
+  box-sizing: border-box;
   display: flex;
   gap: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 1406px;
-}
+  inline-size: 100%;
+  max-inline-size: var(--layout-max-content-width);
+  padding-inline: var(--view-header-row-padding-inline, 0);
+  border-block-end: var(--view-header-row-border-width, 0) solid var(--border-color);
 
-.Layer__view-header--paddings {
-  .Layer__view-header__content {
-    padding: var(--spacing-md);
+  /* A panel header divides its own rows; a view header carries one border on the root. */
+  [data-surface='panel'] & {
+    --view-header-row-padding-inline: var(--spacing-md);
+    --view-header-row-border-width: 1px;
+  }
 
-    .Layer__view-header__children {
-      gap: var(--spacing-md);
-    }
+  &[data-row='filters'] {
+    overflow-x: auto;
   }
 }
 
-.Layer__view-header__children {
+.Layer__ViewHeader__Title {
   display: flex;
-  width: 100%;
-}
+  gap: var(--spacing-sm);
+  align-items: center;
+  min-block-size: var(--view-header-col-min-block-size, var(--layout-header-height-sm));
+  padding-block: var(--spacing-md);
 
-.Layer__view--panel {
-  .Layer__view-header {
-    position: relative;
-    padding: 0;
+  &[data-fluid] {
+    flex: 1 1;
   }
 
-  .Layer__view-header__content {
-    max-width: 1406px;
+  [data-surface='panel'] & {
+    --view-header-col-min-block-size: var(--layout-header-height);
+
+    padding-block: 0;
+  }
+}
+
+.Layer__ViewHeader__Col {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--spacing-sm);
+  align-items: center;
+  min-block-size: var(--view-header-col-min-block-size, auto);
+
+  /* Nothing to sit beside, so take the row. */
+  &:only-child {
+    flex: 1 1 auto;
+  }
+
+  [data-surface='panel'] & {
+    --view-header-col-min-block-size: var(--layout-header-height);
+  }
+}
+
+@include bp.container-tablet-down('layer-view-header') {
+  .Layer__ViewHeader__Row[data-row='title'] {
+    gap: var(--spacing-sm);
   }
 }
