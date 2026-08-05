@@ -7,8 +7,8 @@
  *
  * Panel deliberately declares no `container-type`: nine feature stylesheets nest
  * `@container` rules inside a panel and expect to measure the surrounding surface. The
- * query below names `layer-surface`, which both `Container` and `View` carry, since a
- * Panel sits inside one or the other.
+ * query below names `layer-surface`, which `Container` carries - see `view.scss` for why
+ * a `View` does not, and what that means for a Panel rendered directly in one.
  */
 
 .Layer__ViewPanel {

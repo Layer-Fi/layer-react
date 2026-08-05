@@ -1,9 +1,12 @@
+/*
+ * Deliberately not a container. `container-type` implies layout containment, which would
+ * make every View a containing block for `position: fixed` descendants - `TasksMobilePanel`
+ * is a 100dvw x 100dvh overlay rendered inside one. A `Panel` in a bare `View` therefore
+ * has no surface to measure and stays two-column, which is what it did before this
+ * refactor; the only caller gates its sidebar on a width well above the breakpoint anyway.
+ */
 .Layer__LayoutView {
   position: relative;
-
-  /* Shares `layer-surface` with `Container` so a `Panel` can query either. */
-  container-name: layer-view-root layer-surface;
-  container-type: inline-size;
 
   &[data-layout='panel'] {
     --layout-view-main-padding: 0;

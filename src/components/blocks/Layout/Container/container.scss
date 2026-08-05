@@ -12,8 +12,8 @@
   background-color: var(--layout-container-bg, var(--bg-color));
 
   /*
-   * `layer-surface` is the name shared with `View`, so a `Panel` can query whichever of
-   * the two it happens to sit in.
+   * `layer-surface` is the name a `Panel` and its headers query - the card is the only
+   * surface that measures them, since `View` deliberately isn't a container.
    */
   container-name: layer-card layer-surface;
   container-type: inline-size;
