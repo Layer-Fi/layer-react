@@ -79,7 +79,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <HStack className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
           <Trans
-            i18nKey='invoices:label.invoice_number_component'
+            i18nKey='invoices:InvoicePaymentForm.label.invoice_number_component'
             defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
             values={{ invoiceNumber: invoice.invoiceNumber }}
             components={{
@@ -89,11 +89,11 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
           />
         </HStack>
         <form.AppField name='paidAt'>
-          {field => <field.FormDateField label={t('invoices:label.payment_date', 'Payment date')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__PaidAt`} isReadOnly={isReadOnly} />}
+          {field => <field.FormDateField label={t('invoices:InvoicePaymentForm.label.payment_date', 'Payment date')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__PaidAt`} isReadOnly={isReadOnly} />}
         </form.AppField>
       </VStack>
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='xs'>
-        <Heading level={3} size='sm' pbe='xs'>{t('invoices:label.payment_details', 'Payment details')}</Heading>
+        <Heading level={3} size='sm' pbe='xs'>{t('invoices:InvoicePaymentForm.label.payment_details', 'Payment details')}</Heading>
         <form.Field name='method'>
           {field => (
             <PaymentMethodComboBox
@@ -117,12 +117,12 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       </VStack>
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <form.AppField name='amount'>
-          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoicePaymentForm.label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
         </form.AppField>
         <form.Subscribe selector={state => [state.values.amount]}>
           {([amount]) => (
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
-              <Span size='sm'>{t('invoices:label.balance_due', 'Balance due')}</Span>
+              <Span size='sm'>{t('invoices:InvoicePaymentForm.label.balance_due', 'Balance due')}</Span>
               <Span size='md' weight='bold'>{formatBalanceDue(amount)}</Span>
             </HStack>
           )}
@@ -132,7 +132,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting]}>
           {([canSubmit, isSubmitting]) => (
             <Button type='submit' isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
-              {t('invoices:action.record_payment', 'Record Payment')}
+              {t('invoices:InvoicePaymentForm.action.record_payment', 'Record Payment')}
             </Button>
           )}
         </form.Subscribe>

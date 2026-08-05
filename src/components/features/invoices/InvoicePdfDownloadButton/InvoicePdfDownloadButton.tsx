@@ -22,7 +22,7 @@ export const InvoicePdfDownloadButton = ({ invoiceId }: InvoicePdfDownloadButton
 
   const buttonText = isError
     ? t('common:action.retry_label', 'Retry')
-    : t('invoices:action.download_pdf', 'Download PDF')
+    : t('invoices:InvoicePdfDownloadButton.action.download_pdf', 'Download PDF')
 
   return (
     <>

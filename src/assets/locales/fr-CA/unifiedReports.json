@@ -1,0 +1,50 @@
+{
+  "UnifiedReportReportingBasisControl": {
+    "label": {
+      "accrual": "Comptabilité d’exercice",
+      "cash": "Comptabilité de caisse",
+      "reporting_basis": "Méthode comptable"
+    }
+  },
+  "UnifiedReportsMegaMenu": {
+    "label": {
+      "switch_report": "Changer de rapport"
+    }
+  },
+  "UnifiedReportsMobileSelectionDrawer": {
+    "action": {
+      "search_reports": "Rechercher des rapports"
+    },
+    "label": {
+      "reports_navigation": "Navigation des rapports",
+      "select_report": "Sélectionner un rapport"
+    }
+  },
+  "UnifiedReportsNavigationSidebar": {
+    "error": {
+      "couldnt_load_reports": "Impossible de charger les rapports",
+      "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
+    },
+    "label": {
+      "reports_navigation": "Navigation des rapports"
+    }
+  },
+  "UnifiedReportTable": {
+    "empty": {
+      "no_rows_found": "Aucun poste trouvé",
+      "report_has_no_rows": "Ce rapport ne contient aucun poste."
+    },
+    "error": {
+      "couldnt_load_report": "Nous n’avons pas pu charger votre rapport",
+      "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "reports": "Rapports"
+    }
+  },
+  "UnifiedReportTagControl": {
+    "action": {
+      "select_dimension_name": "Sélectionner {{dimensionName}}"
+    }
+  }
+}

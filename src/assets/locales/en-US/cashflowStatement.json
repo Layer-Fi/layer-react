@@ -1,0 +1,13 @@
+{
+  "StatementOfCashFlow": {
+    "label": {
+      "adjustments_net_income": "Adjustments to Net Income",
+      "cash_beginning_of_period": "Cash at Beginning of Period",
+      "cash_end_of_period": "Cash at End of Period",
+      "financing_activities": "Financing Activities",
+      "investing_activities": "Investing Activities",
+      "net_cash_increase_period": "Net Cash Increase For Period",
+      "operating_activities": "Operating Activities"
+    }
+  }
+}

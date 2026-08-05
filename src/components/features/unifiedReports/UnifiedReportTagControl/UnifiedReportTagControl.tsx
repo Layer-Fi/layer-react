@@ -59,7 +59,7 @@ export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlP
         options={options}
         selectedValues={selectedValues}
         onSelectedValuesChange={handleSelectedValuesChange}
-        placeholder={t('tags:action.select_dimension_name', 'Select {{dimensionName}}', { dimensionName })}
+        placeholder={t('unifiedReports:UnifiedReportTagControl.action.select_dimension_name', 'Select {{dimensionName}}', { dimensionName })}
         isSearchable={selectedValues.length === 0}
       />
     </VStack>

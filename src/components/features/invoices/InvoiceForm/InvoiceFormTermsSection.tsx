@@ -84,7 +84,7 @@ export const InvoiceFormTermsSection = ({
               {customer => customer && (
                 <HStack>
                   <Button variant='text' onPress={onClickEditCustomer}>
-                    <Span size='sm'>{t('customerVendor:action.edit_customer_details', 'Edit customer details')}</Span>
+                    <Span size='sm'>{t('invoices:InvoiceForm.action.edit_customer_details', 'Edit customer details')}</Span>
                   </Button>
                 </HStack>
               )}
@@ -98,14 +98,14 @@ export const InvoiceFormTermsSection = ({
         </form.AppField>
         <form.AppField name='address'>
           {field => (
-            <field.FormTextAreaField label={t('invoices:label.billing_address', 'Billing address')} inline className='Layer__InvoiceForm__Field__Address' isReadOnly />
+            <field.FormTextAreaField label={t('invoices:InvoiceForm.label.billing_address', 'Billing address')} inline className='Layer__InvoiceForm__Field__Address' isReadOnly />
           )}
         </form.AppField>
       </VStack>
       <VStack gap='xs'>
         <form.AppField name='invoiceNumber'>
           {field =>
-            <field.FormTextField label={t('invoices:label.invoice_number_label', 'Invoice number')} inline className='Layer__InvoiceForm__Field__InvoiceNo' isReadOnly={isReadOnly} />}
+            <field.FormTextField label={t('invoices:InvoiceForm.label.invoice_number_label', 'Invoice number')} inline className='Layer__InvoiceForm__Field__InvoiceNo' isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.Field
           name='terms'
@@ -137,7 +137,7 @@ export const InvoiceFormTermsSection = ({
             },
           }}
         >
-          {field => <field.FormDatePickerField label={t('invoices:label.invoice_date', 'Invoice date')} inline className='Layer__InvoiceForm__Field__SentAt' isReadOnly={isReadOnly} />}
+          {field => <field.FormDatePickerField label={t('invoices:InvoiceForm.label.invoice_date', 'Invoice date')} inline className='Layer__InvoiceForm__Field__SentAt' isReadOnly={isReadOnly} />}
         </form.AppField>
         <form.AppField
           name='dueAt'
@@ -156,7 +156,7 @@ export const InvoiceFormTermsSection = ({
           }}
         >
           {field => (
-            <field.FormDatePickerField label={t('invoices:label.due_date', 'Due date')} inline className='Layer__InvoiceForm__Field__DueAt' isReadOnly={isReadOnly} />
+            <field.FormDatePickerField label={t('invoices:InvoiceForm.label.due_date', 'Due date')} inline className='Layer__InvoiceForm__Field__DueAt' isReadOnly={isReadOnly} />
           )}
         </form.AppField>
       </VStack>

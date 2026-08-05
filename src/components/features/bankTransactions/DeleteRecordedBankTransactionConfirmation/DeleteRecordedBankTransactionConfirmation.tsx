@@ -32,12 +32,12 @@ export function DeleteRecordedBankTransactionConfirmation({ transaction, onCance
   return (
     <>
       <ModalTitleWithClose
-        heading={<ModalHeading size='sm'>{t('bankTransactions:recordTransaction.delete.title', 'Delete transaction')}</ModalHeading>}
+        heading={<ModalHeading size='sm'>{t('bankTransactions:DeleteRecordedBankTransactionConfirmation.delete.title', 'Delete transaction')}</ModalHeading>}
         onClose={onCancel}
       />
       <ModalContent>
         <ModalDescription>
-          {t('bankTransactions:recordTransaction.delete.description', 'This transaction will be permanently deleted. This action cannot be undone.')}
+          {t('bankTransactions:DeleteRecordedBankTransactionConfirmation.delete.description', 'This transaction will be permanently deleted. This action cannot be undone.')}
         </ModalDescription>
       </ModalContent>
       <ModalActions>

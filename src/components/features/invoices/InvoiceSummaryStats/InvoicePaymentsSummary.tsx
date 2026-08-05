@@ -22,7 +22,7 @@ export const InvoicePaymentsSummary = () => {
     <VStack className='Layer__InvoiceSummaryStats__Payments' gap='3xs'>
       <HStack align='center' gap='3xs'>
         <Trans
-          i18nKey='invoices:label.paid_last_30_days'
+          i18nKey='invoices:InvoiceSummaryStats.label.paid_last_30_days'
           defaults='<paid>Paid</paid> <period>last 30 days</period>'
           components={{
             paid: <Span size='sm' />,

@@ -1,46 +1,13 @@
 {
-  "action": {
-    "search_reports": "Rechercher des rapports"
+  "ReportsMobileSelectionTrigger": {
+    "label": {
+      "report_type": "Type de rapport",
+      "select_report": "Sélectionner un rapport"
+    }
   },
-  "empty": {
-    "no_detail_lines_found": "Aucune ligne de détail trouvée",
-    "no_detail_lines_pnl_item": "Il n’y a aucune ligne de détail pour cet élément de l’état des résultats",
-    "no_rows_found": "Aucun poste trouvé",
-    "report_has_no_rows": "Ce rapport ne contient aucun poste."
-  },
-  "error": {
-    "couldnt_load_report": "Nous n’avons pas pu charger votre rapport",
-    "couldnt_load_reports": "Impossible de charger les rapports",
-    "load_detail_lines": "Erreur lors du chargement des lignes de détail",
-    "load_pnl_detail_lines": "Une erreur s’est produite lors du chargement des lignes de détail de l’état des résultats",
-    "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer.",
-    "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
-  },
-  "label": {
-    "accrual": "Comptabilité d’exercice",
-    "adjustments_net_income": "Ajustements au résultat net",
-    "assets": "Actifs",
-    "balance_sheet": "Bilan",
-    "cash": "Comptabilité de caisse",
-    "cash_beginning_of_period": "Trésorerie au début de la période",
-    "cash_end_of_period": "Trésorerie à la fin de la période",
-    "cash_flow_statement": "État des flux de trésorerie",
-    "financing_activities": "Activités de financement",
-    "group": "Grouper par",
-    "investing_activities": "Activités d’investissement",
-    "liabilities_equity": "Passifs et capitaux propres",
-    "line_item_name_detail_lines": "Lignes de détail de {{lineItemName}}",
-    "net_cash_increase_period": "Augmentation nette de la trésorerie pour la période",
-    "operating_activities": "Activités d’exploitation",
-    "profit_before_taxes": "Bénéfice avant impôts",
-    "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
-    "report_period": "Période du rapport",
-    "report_type": "Type de rapport",
-    "reporting_basis": "Méthode comptable",
-    "reports": "Rapports",
-    "reports_navigation": "Navigation des rapports",
-    "select_report": "Sélectionner un rapport",
-    "switch_report": "Changer de rapport",
-    "total_display_name": "Total de {{displayName}}"
+  "ReportsTable": {
+    "label": {
+      "total_display_name": "Total de {{displayName}}"
+    }
   }
 }

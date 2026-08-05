@@ -19,7 +19,7 @@ export const TaxEstimatesViewContent = () => {
           status={DataStateStatus.info}
           title={t('common:state.feature_not_enabled', 'Feature not enabled')}
           description={t(
-            'taxEstimates:error.feature_not_enabled',
+            'views:TaxEstimates.error.feature_not_enabled',
             'Tax estimates are not enabled.',
           )}
           spacing
@@ -43,7 +43,7 @@ export const TaxEstimatesViewContent = () => {
   if (onboardingStatus === OnboardingStatus.Error) {
     return (
       <Container name='tax-estimates'>
-        <DataState status={DataStateStatus.failed} title={t('taxEstimates:error.load_tax_information', 'Unable to load tax information')} description={t('taxEstimates:error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
+        <DataState status={DataStateStatus.failed} title={t('views:TaxEstimates.error.load_tax_information', 'Unable to load tax information')} description={t('views:TaxEstimates.error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
       </Container>
     )
   }

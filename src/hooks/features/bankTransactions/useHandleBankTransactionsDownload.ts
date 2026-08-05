@@ -32,13 +32,13 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
         }
         else if (isListView) {
           addToast({
-            content: t('bankTransactions:error.download_retry', 'Download failed, please retry'),
+            content: t('bankTransactions:useHandleBankTransactionsDownload.error.download_retry', 'Download failed, please retry'),
             type: 'error',
           })
         }
       })
       .catch(() => {
-        addToast({ content: t('bankTransactions:error.download_retry', 'Download failed, please retry'), type: 'error' })
+        addToast({ content: t('bankTransactions:useHandleBankTransactionsDownload.error.download_retry', 'Download failed, please retry'), type: 'error' })
       })
   }, [addToast, emitLayerEvent, filters, isListView, trigger, triggerInvisibleDownload, t])
 

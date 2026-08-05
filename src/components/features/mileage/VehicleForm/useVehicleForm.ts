@@ -54,11 +54,11 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
   const getErrorText = useCallback((reason: VehicleFormInvalidReason): string => {
     switch (reason) {
       case VehicleFormInvalidReason.MakeAndModelRequired:
-        return t('vehicles:validation.make_model_required', 'Make and model is a required field.')
+        return t('mileage:VehicleForm.validation.make_model_required', 'Make and model is a required field.')
       case VehicleFormInvalidReason.YearRequired:
-        return t('vehicles:validation.year_required', 'Year is a required field.')
+        return t('mileage:VehicleForm.validation.year_required', 'Year is a required field.')
       case VehicleFormInvalidReason.YearRange:
-        return t('vehicles:validation.year_range', 'Year must be between 1900 and {{maxYear}}.', {
+        return t('mileage:VehicleForm.validation.year_range', 'Year must be between 1900 and {{maxYear}}.', {
           maxYear: formatDate(new Date(new Date().getFullYear() + 1, 0, 1), DateFormat.Year),
         })
       default:

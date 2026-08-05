@@ -53,7 +53,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
         inset
         icon
         onPress={() => setDrawerOpen(true, entry)}
-        aria-label={t('timeTracking:action.view_entry', 'View Entry')}
+        aria-label={t('timeTracking:TimeEntriesTable.action.view_entry', 'View Entry')}
         variant='ghost'
       >
         <Edit size={20} strokeWidth={1.25} />
@@ -63,7 +63,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
           inset
           icon
           onPress={() => setDeleteModalOpen(true, entry)}
-          aria-label={t('timeTracking:action.delete_entry', 'Delete Entry')}
+          aria-label={t('timeTracking:TimeEntriesTable.action.delete_entry', 'Delete Entry')}
           variant='ghost'
         >
           <Trash2 size={20} strokeWidth={1.25} />
@@ -81,12 +81,12 @@ const getColumnConfig = (t: TFunction): ColumnConfig<TimeEntry> => [
   },
   {
     id: TimeEntryColumns.Duration,
-    header: t('timeTracking:label.duration', 'Duration'),
+    header: t('timeTracking:TimeEntriesTable.label.duration', 'Duration'),
     cell: (row: TimeEntryRowType) => <TimeEntryDurationCell durationMinutes={row.original.durationMinutes} />,
   },
   {
     id: TimeEntryColumns.Service,
-    header: t('timeTracking:label.service', 'Service'),
+    header: t('timeTracking:TimeEntriesTable.label.service', 'Service'),
     cell: (row: TimeEntryRowType) => (
       <Span ellipsis withTooltip>{row.original.service?.name || '—'}</Span>
     ),
@@ -94,7 +94,7 @@ const getColumnConfig = (t: TFunction): ColumnConfig<TimeEntry> => [
   },
   {
     id: TimeEntryColumns.Customer,
-    header: t('timeTracking:label.customer', 'Customer'),
+    header: t('timeTracking:TimeEntriesTable.label.customer', 'Customer'),
     cell: (row: TimeEntryRowType) => (
       <Span ellipsis withTooltip>
         {row.original.customer?.individualName || row.original.customer?.companyName || '—'}
@@ -132,7 +132,7 @@ const TimeEntriesTableComponent = ({
     <Container name='TimeEntriesTable'>
       <TimeEntriesTableHeader />
       <PaginatedTable
-        ariaLabel={t('timeTracking:label.time_entries', 'Time Entries')}
+        ariaLabel={t('timeTracking:TimeEntriesTable.label.time_entries', 'Time Entries')}
         data={data}
         isLoading={isLoading}
         isError={isError}

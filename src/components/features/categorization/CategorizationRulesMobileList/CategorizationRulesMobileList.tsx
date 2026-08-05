@@ -41,17 +41,17 @@ export const CategorizationRulesMobileList = ({
   ), [])
 
   const actionsMenu = useMemo(() => ({
-    ariaLabel: t('categorizationRules:label.rule_actions', 'Rule actions'),
+    ariaLabel: t('categorization:CategorizationRulesMobileList.label.rule_actions', 'Rule actions'),
     getActions: (rule: CategorizationRule) => [
       {
         key: 'edit',
-        label: t('categorizationRules:action.edit_rule', 'Edit Rule'),
+        label: t('categorization:CategorizationRulesMobileList.action.edit_rule', 'Edit Rule'),
         onClick: () => onEditRule(rule),
         slots: { Icon: Pencil },
       },
       {
         key: 'delete',
-        label: t('categorizationRules:action.delete_rule', 'Delete Rule'),
+        label: t('categorization:CategorizationRulesMobileList.action.delete_rule', 'Delete Rule'),
         onClick: () => onDeleteRule(rule),
         slots: { Icon: Trash2 },
       },
@@ -65,7 +65,7 @@ export const CategorizationRulesMobileList = ({
   return (
     <div className='Layer__CategorizationRulesMobileList'>
       <PaginatedMobileList
-        ariaLabel={t('categorizationRules:label.categorization_rules', 'Categorization rules')}
+        ariaLabel={t('categorization:CategorizationRulesMobileList.label.categorization_rules', 'Categorization rules')}
         data={data}
         isLoading={isLoading}
         isError={isError}

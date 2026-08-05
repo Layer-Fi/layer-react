@@ -92,10 +92,10 @@ export const LinkedAccountCard = ({
           <div className='Layer__LinkedAccountCard__Syncing'>
             <VStack className='Layer__LinkedAccountCard__SyncingText'>
               <Span size='sm' variant='inherit'>
-                {t('linkedAccounts:state.syncing_account_data', 'Syncing account data')}
+                {t('linkedAccounts:LinkedAccountCard.state.syncing_account_data', 'Syncing account data')}
               </Span>
               <Span size='sm' variant='subtle'>
-                {t('linkedAccounts:label.may_take_up_to_5_minutes', 'This may take up to 5 minutes')}
+                {t('linkedAccounts:LinkedAccountCard.label.may_take_up_to_5_minutes', 'This may take up to 5 minutes')}
               </Span>
             </VStack>
             <div className='Layer__LinkedAccountCard__SyncingIcon'>
@@ -108,7 +108,7 @@ export const LinkedAccountCard = ({
             {!asWidget && (
               <div className='Layer__LinkedAccountCard__Balance'>
                 <Span size='sm' variant='subtle' pb='sm'>
-                  {t('linkedAccounts:label.bank_balance', 'Bank balance')}
+                  {t('linkedAccounts:LinkedAccountCard.label.bank_balance', 'Bank balance')}
                 </Span>
                 {bankBalance}
               </div>
@@ -121,7 +121,7 @@ export const LinkedAccountCard = ({
                   )
                   : (
                     <Span size='sm' variant='subtle'>
-                      {t('linkedAccounts:label.ledger_balance', 'Ledger balance')}
+                      {t('linkedAccounts:LinkedAccountCard.label.ledger_balance', 'Ledger balance')}
                     </Span>
                   )}
                 <MoneySpan amount={bankAccount.currentLedgerBalance} />

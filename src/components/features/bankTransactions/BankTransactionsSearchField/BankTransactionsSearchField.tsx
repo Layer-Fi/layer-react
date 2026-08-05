@@ -40,7 +40,7 @@ export function BankTransactionsSearchField({ slot, isDisabled }: TransactionsSe
   return (
     <SearchField
       slot={slot}
-      label={t('bankTransactions:label.search_transactions', 'Search transactions')}
+      label={t('bankTransactions:BankTransactionsSearchField.label.search_transactions', 'Search transactions')}
       value={localSearch}
       onChange={handleSearch}
       isDisabled={isDisabled}

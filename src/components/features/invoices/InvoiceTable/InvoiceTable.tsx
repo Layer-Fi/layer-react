@@ -42,7 +42,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
   const { formatCurrencyFromCents } = useIntlFormatter()
   const totalAmount = formatCurrencyFromCents(invoice.totalAmount)
   const outstandingBalance = formatCurrencyFromCents(invoice.outstandingBalance)
-  const outstandingBalanceLabel = t('invoices:label.amount_outstanding', '{{amount}} outstanding', { amount: outstandingBalance })
+  const outstandingBalanceLabel = t('invoices:InvoiceTable.label.amount_outstanding', '{{amount}} outstanding', { amount: outstandingBalance })
 
   switch (invoice.status) {
     case InvoiceStatus.Draft:
@@ -87,18 +87,18 @@ const getColumnConfig = (
 ): ColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
-    header: t('invoices:label.created_date', 'Created Date'),
+    header: t('invoices:InvoiceTable.label.created_date', 'Created Date'),
     cell: (row: InvoiceRowType) => <DateCell date={row.original.sentAt} />,
   },
   {
     id: InvoiceColumns.InvoiceNo,
-    header: t('invoices:label.number_abbreviation', 'No.'),
+    header: t('invoices:InvoiceTable.label.number_abbreviation', 'No.'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{row.original.invoiceNumber}</Span>,
     isRowHeader: true,
   },
   {
     id: InvoiceColumns.Customer,
-    header: t('customerVendor:label.customer', 'Customer'),
+    header: t('invoices:InvoiceTable.label.customer', 'Customer'),
     cell: (row: InvoiceRowType) => <Span ellipsis>{getCustomerName(row.original.customer)}</Span>,
   },
   {
@@ -114,7 +114,7 @@ const getColumnConfig = (
   {
     id: InvoiceColumns.Expand,
     cell: (row: InvoiceRowType) => (
-      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label={t('invoices:action.view_invoice', 'View invoice')} variant='ghost'>
+      <Button inset icon onPress={() => onViewInvoice(row.original)} aria-label={t('invoices:InvoiceTable.action.view_invoice', 'View invoice')} variant='ghost'>
         <ChevronRightFill />
       </Button>
     ),
@@ -158,7 +158,7 @@ export const InvoiceTable = ({
 
   const SingleValue = useCallback(() => {
     const label = selectedStatusOption?.label
-    return label ? t('invoices:label.status_with_label', 'Status: {{label}}', { label }) : t('common:label.status', 'Status')
+    return label ? t('invoices:InvoiceTable.label.status_with_label', 'Status: {{label}}', { label }) : t('common:label.status', 'Status')
   }, [selectedStatusOption?.label, t])
 
   const StatusFilter = useCallback(() => (
@@ -171,14 +171,14 @@ export const InvoiceTable = ({
       isClearable={false}
       placeholder={t('common:label.status', 'Status')}
       slots={{ SingleValue }}
-      aria-label={t('invoices:label.status_filter', 'Status Filter')}
+      aria-label={t('invoices:InvoiceTable.label.status_filter', 'Status Filter')}
     />
   ),
   [SingleValue, options, selectedStatusOption, setTableFilters, t])
 
   const CreateInvoiceButton = useCallback(() => (
     <Button onPress={onCreateInvoice}>
-      {t('invoices:action.create_invoice', 'Create Invoice')}
+      {t('invoices:InvoiceTable.action.create_invoice', 'Create Invoice')}
       <Plus size={16} />
     </Button>
   ),
@@ -189,21 +189,21 @@ export const InvoiceTable = ({
   return (
     <Container name='InvoiceTable'>
       <DataTableHeader
-        name={t('invoices:label.invoices', 'Invoices')}
+        name={t('invoices:InvoiceTable.label.invoices', 'Invoices')}
         slots={{
           HeaderActions: CreateInvoiceButton,
           HeaderFilters: StatusFilter,
         }}
         slotProps={{
           SearchField: {
-            label: t('invoices:label.search_invoices', 'Search invoices'),
+            label: t('invoices:InvoiceTable.label.search_invoices', 'Search invoices'),
             className: 'Layer__InvoiceTable__SearchField',
             ...searchProps,
           },
         }}
       />
       <PaginatedTable
-        ariaLabel={t('invoices:label.invoices', 'Invoices')}
+        ariaLabel={t('invoices:InvoiceTable.label.invoices', 'Invoices')}
         data={data}
         isLoading={isLoading}
         isError={isError}

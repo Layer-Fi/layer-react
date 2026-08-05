@@ -34,7 +34,7 @@ const buildLongLabel = (
   formatNumber: (n: number) => string,
   tasksCount: number,
 ) =>
-  tPlural(t, 'bookkeeping:label.count_tasks', {
+  tPlural(t, 'bookkeeping:TaskStatusBadge.label.count_tasks', {
     count: tasksCount,
     displayCount: formatNumber(tasksCount),
     one: '{{displayCount}} task',

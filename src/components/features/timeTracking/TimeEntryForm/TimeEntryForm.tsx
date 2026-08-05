@@ -50,8 +50,8 @@ const TimeEntryCustomerField = ({ value, entryCustomer, isReadOnly, onChange }: 
       onSelectedCustomerChange={handleSelectedCustomerChange}
       isReadOnly={isReadOnly}
       inline
-      label={t('timeTracking:label.customer_optional', 'Customer (optional)')}
-      placeholder={t('timeTracking:label.select_customer_short', 'Select a customer')}
+      label={t('timeTracking:TimeEntryForm.label.customer_optional', 'Customer (optional)')}
+      placeholder={t('timeTracking:TimeEntryForm.label.select_customer_short', 'Select a customer')}
       className='Layer__TimeEntryForm__Field__Customer'
       hideSpecifiedIdNotFoundError
     />
@@ -96,7 +96,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
       <form.AppField name='date'>
         {field => (
           <field.FormDateField<CalendarDate>
-            label={t('timeTracking:label.entry_date', 'Entry date')}
+            label={t('timeTracking:TimeEntryForm.label.entry_date', 'Entry date')}
             inline
             isReadOnly={isReadOnly}
             className='Layer__TimeEntryForm__Field__EntryDate'
@@ -107,10 +107,10 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
       <form.AppField name='durationMinutes'>
         {field => (
           <field.FormNumberField
-            label={t('timeTracking:label.duration_minutes', 'Duration (minutes)')}
+            label={t('timeTracking:TimeEntryForm.label.duration_minutes', 'Duration (minutes)')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('timeTracking:label.enter_duration', 'Enter duration')}
+            placeholder={t('timeTracking:TimeEntryForm.label.enter_duration', 'Enter duration')}
             className='Layer__TimeEntryForm__Field__Duration'
           />
         )}
@@ -146,10 +146,10 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
       <form.AppField name='memo'>
         {field => (
           <field.FormTextAreaField
-            label={t('timeTracking:label.memo', 'Memo')}
+            label={t('timeTracking:TimeEntryForm.label.memo', 'Memo')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('timeTracking:label.add_memo', 'Add memo')}
+            placeholder={t('timeTracking:TimeEntryForm.label.add_memo', 'Add memo')}
             className='Layer__TimeEntryForm__Field__Memo'
           />
         )}
@@ -166,7 +166,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                {t('timeTracking:action.save_entry', 'Save Entry')}
+                {t('timeTracking:TimeEntryForm.action.save_entry', 'Save Entry')}
               </Button>
             )}
           </form.Subscribe>

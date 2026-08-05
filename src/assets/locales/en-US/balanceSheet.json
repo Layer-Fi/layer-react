@@ -1,0 +1,8 @@
+{
+  "BalanceSheet": {
+    "label": {
+      "assets": "Assets",
+      "liabilities_equity": "Liabilities & Equity"
+    }
+  }
+}

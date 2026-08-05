@@ -39,8 +39,8 @@ export const UnifiedReportTable = () => {
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('reports:empty.no_rows_found', 'No line items found')}
-        description={t('reports:empty.report_has_no_rows', 'This report has no line items.')}
+        title={t('unifiedReports:UnifiedReportTable.empty.no_rows_found', 'No line items found')}
+        description={t('unifiedReports:UnifiedReportTable.empty.report_has_no_rows', 'This report has no line items.')}
         spacing
       />
     )
@@ -59,8 +59,8 @@ export const UnifiedReportTable = () => {
   const UnifiedReportErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('reports:error.couldnt_load_report', 'We couldn’t load your report')}
-      description={t('reports:error.load_report', 'An error occurred while loading your report. Please check your connection and try again.')}
+      title={t('unifiedReports:UnifiedReportTable.error.couldnt_load_report', 'We couldn’t load your report')}
+      description={t('unifiedReports:UnifiedReportTable.error.load_report', 'An error occurred while loading your report. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />
@@ -68,7 +68,7 @@ export const UnifiedReportTable = () => {
 
   return (
     <ExpandableDataTable
-      ariaLabel={report?.displayName ?? t('reports:label.reports', 'Reports')}
+      ariaLabel={report?.displayName ?? t('unifiedReports:UnifiedReportTable.label.reports', 'Reports')}
       data={mutableRows}
       isLoading={data === undefined || isLoading}
       isError={isError}

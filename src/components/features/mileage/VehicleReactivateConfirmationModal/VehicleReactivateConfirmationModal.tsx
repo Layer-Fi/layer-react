@@ -31,11 +31,11 @@ export function VehicleReactivateConfirmationModal({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title={t('vehicles:prompt.reactivate_vehicle', 'Reactivate this vehicle?')}
-      description={t('vehicles:label.vehicle_name_restored_to_active_list', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
+      title={t('mileage:VehicleReactivateConfirmationModal.prompt.reactivate_vehicle', 'Reactivate this vehicle?')}
+      description={t('mileage:VehicleReactivateConfirmationModal.label.vehicle_name_restored_to_active_list', '{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.', { vehicleName })}
       onConfirm={onConfirm}
-      confirmLabel={t('vehicles:action.reactivate_vehicle_label', 'Reactivate vehicle')}
-      errorText={t('vehicles:error.reactivate_vehicle', 'Failed to reactivate vehicle. Please check your connection and try again.')}
+      confirmLabel={t('mileage:VehicleReactivateConfirmationModal.action.reactivate_vehicle_label', 'Reactivate vehicle')}
+      errorText={t('mileage:VehicleReactivateConfirmationModal.error.reactivate_vehicle', 'Failed to reactivate vehicle. Please check your connection and try again.')}
       useDrawer={useDrawer}
     />
   )

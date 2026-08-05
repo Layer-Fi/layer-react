@@ -45,7 +45,7 @@ export const TasksListMobile = ({
       {unresolvedTasks.length === 0 && tasksCount > 0
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button variant='text' underline onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:action.show_completed_tasks', 'Show completed tasks')}</Button>
+            <Button variant='text' underline onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:TasksList.action.show_completed_tasks', 'Show completed tasks')}</Button>
           </div>
         )
         : null}
@@ -53,7 +53,7 @@ export const TasksListMobile = ({
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
             <Button onPress={() => setShowMobilePanel(true)} fullWidth>
-              {t('bookkeeping:action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })}
+              {t('bookkeeping:TasksList.action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })}
             </Button>
           </div>
         )
@@ -61,7 +61,7 @@ export const TasksListMobile = ({
       <TasksMobilePanel
         open={showMobilePanel}
         onClose={() => setShowMobilePanel(false)}
-        header={<p>{t('bookkeeping:label.tasks', 'Tasks')}</p>}
+        header={<p>{t('bookkeeping:TasksList.label.tasks', 'Tasks')}</p>}
       >
         {sortedTasks && sortedTasks.length > 0
           && (

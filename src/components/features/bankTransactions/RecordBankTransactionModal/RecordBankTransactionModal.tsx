@@ -53,10 +53,10 @@ export function RecordBankTransactionModal({ variant, transaction, isOpen, onOpe
   }, [form, onOpenChange])
 
   const title = transaction
-    ? t('bankTransactions:recordTransaction.title.edit', 'Edit transaction')
+    ? t('bankTransactions:RecordBankTransactionModal.title.edit', 'Edit transaction')
     : effectiveVariant === 'expense'
-      ? t('bankTransactions:recordTransaction.title.add_expense', 'Add expense')
-      : t('bankTransactions:recordTransaction.title.add_income', 'Add income')
+      ? t('bankTransactions:RecordBankTransactionModal.title.add_expense', 'Add expense')
+      : t('bankTransactions:RecordBankTransactionModal.title.add_income', 'Add income')
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock variant={isMobile ? 'mobile-drawer' : 'center'}>

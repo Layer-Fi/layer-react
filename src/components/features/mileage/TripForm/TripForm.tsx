@@ -58,7 +58,7 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='tripDate'>
         {field => (
           <field.FormDateField<CalendarDate>
-            label={t('trips:label.trip_date', 'Trip date')}
+            label={t('mileage:TripForm.label.trip_date', 'Trip date')}
             inline={isInline}
             isReadOnly={isReadOnly}
             className='Layer__TripForm__Field'
@@ -69,7 +69,7 @@ export const TripForm = (props: TripFormProps) => {
       <form.Field name='start' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
-            label={t('trips:label.start_address', 'Start address')}
+            label={t('mileage:TripForm.label.start_address', 'Start address')}
             address={field.state.value.address}
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
@@ -82,7 +82,7 @@ export const TripForm = (props: TripFormProps) => {
       <form.Field name='end' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
-            label={t('trips:label.end_address', 'End address')}
+            label={t('mileage:TripForm.label.end_address', 'End address')}
             address={field.state.value.address}
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
@@ -95,15 +95,15 @@ export const TripForm = (props: TripFormProps) => {
       <form.AppField name='distance'>
         {field => (
           <field.FormNonRecursiveBigDecimalField
-            label={t('trips:label.distance_miles', 'Distance (miles)')}
+            label={t('mileage:TripForm.label.distance_miles', 'Distance (miles)')}
             inline={isInline}
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}
             allowEmpty
-            placeholder={t('trips:label.enter_distance', 'Enter distance')}
+            placeholder={t('mileage:TripForm.label.enter_distance', 'Enter distance')}
             className='Layer__TripForm__Field'
             errorText={isDistanceIncalculable
-              ? t('trips:error.distance_incalculable', 'No route found between these addresses.')
+              ? t('mileage:TripForm.error.distance_incalculable', 'No route found between these addresses.')
               : undefined}
           />
         )}
@@ -143,7 +143,7 @@ export const TripForm = (props: TripFormProps) => {
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline={isInline}
-            placeholder={t('vehicles:action.add_vehicle_label', 'Add vehicle')}
+            placeholder={t('mileage:TripForm.action.add_vehicle_label', 'Add vehicle')}
             containerClassName='Layer__TripForm__Field'
           />
         )}
@@ -160,7 +160,7 @@ export const TripForm = (props: TripFormProps) => {
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                {t('trips:action.save_trip', 'Save Trip')}
+                {t('mileage:TripForm.action.save_trip', 'Save Trip')}
               </Button>
             )}
           </form.Subscribe>

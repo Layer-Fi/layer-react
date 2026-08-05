@@ -16,7 +16,7 @@ export const ReportsTableErrorState = ({
       <DataState
         status={DataStateStatus.failed}
         title={t('common:error.something_went_wrong', 'Something went wrong')}
-        description={t('common:error.couldnt_load_data', 'We couldn\'t load your data.')}
+        description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
         isLoading={isLoading}
       />
     </DataStateContainer>

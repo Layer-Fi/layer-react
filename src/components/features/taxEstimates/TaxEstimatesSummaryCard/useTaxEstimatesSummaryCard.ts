@@ -23,8 +23,8 @@ export const useTaxEstimatesSummaryCard = () => {
   const { data: taxSummaryData, isLoading, isError } = useGetTaxSummary({ year, fullYearProjection })
 
   const shortenedDisplayName = useCallback((type: TaxSummarySectionType) => {
-    if (type === 'federal') return t('taxEstimates:label.federal', 'Federal')
-    if (type === 'state') return t('taxEstimates:label.state', 'State')
+    if (type === 'federal') return t('taxEstimates:TaxEstimatesSummaryCard.label.federal', 'Federal')
+    if (type === 'state') return t('taxEstimates:TaxEstimatesSummaryCard.label.state', 'State')
     return type
   }, [t])
 
@@ -45,6 +45,6 @@ export const useTaxEstimatesSummaryCard = () => {
     isError,
     state: taxSummaryData?.state ?? TaxSummaryState.TAXES_OWED,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
-    title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
+    title: t('taxEstimates:TaxEstimatesSummaryCard.label.tax_summary', 'Tax Summary'),
   }
 }

@@ -43,7 +43,7 @@ export function UnifiedReportsNavigationSidebar() {
     >
       {({ data }) => (
         <TreeNavigation
-          ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
+          ariaLabel={t('unifiedReports:UnifiedReportsNavigationSidebar.label.reports_navigation', 'Reports navigation')}
           items={data}
           selectedItem={baseReport?.key ?? null}
           isGroup={isReportGroup}

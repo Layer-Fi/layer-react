@@ -57,8 +57,8 @@ export const LedgerEntryDetails = ({
   const id = entry ? entryNumber(entry) : ''
 
   const defaultTitle = entry
-    ? t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: id })
-    : t('generalLedger:label.journal_entry', 'Journal Entry')
+    ? t('generalLedger:LedgerEntryDetails.label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: id })
+    : t('generalLedger:LedgerEntryDetails.label.journal_entry', 'Journal Entry')
 
   const headerTitle = stringOverrides?.journalEntry?.header
     ? stringOverrides.journalEntry.header(entry ? id : undefined)
@@ -69,7 +69,7 @@ export const LedgerEntryDetails = ({
       <JournalEntryDetailHeader onClose={onClose} title={headerTitle} />
 
       <LedgerEntryDetailSection
-        title={stringOverrides?.transactionSource?.header || t('bankTransactions:label.transaction_source', 'Transaction source')}
+        title={stringOverrides?.transactionSource?.header || t('generalLedger:LedgerEntryDetails.label.transaction_source', 'Transaction source')}
       >
         <LedgerEntryDetailField
           label={stringOverrides?.transactionSource?.details?.sourceLabel || t('common:label.source', 'Source')}
@@ -86,13 +86,13 @@ export const LedgerEntryDetails = ({
       </LedgerEntryDetailSection>
 
       <LedgerEntryDetailSection
-        title={t('generalLedger:label.entry_details', 'Entry details')}
+        title={t('generalLedger:LedgerEntryDetails.label.entry_details', 'Entry details')}
       >
         <LedgerEntryDetailField label={t('common:label.id', 'ID')} isLoading={isLoading}>
           {id}
         </LedgerEntryDetailField>
         <LedgerEntryDetailField
-          label={stringOverrides?.journalEntry?.details?.entryTypeLabel || t('generalLedger:label.entry_type', 'Entry type')}
+          label={stringOverrides?.journalEntry?.details?.entryTypeLabel || t('generalLedger:LedgerEntryDetails.label.entry_type', 'Entry type')}
           isLoading={isLoading}
         >
           {humanizeEnum(entry?.entryType ?? '')}
@@ -111,17 +111,17 @@ export const LedgerEntryDetails = ({
         </LedgerEntryDetailField>
         {entry?.reversalId && (
           <LedgerEntryDetailField
-            label={stringOverrides?.journalEntry?.details?.reversalLabel || t('generalLedger:label.reversal', 'Reversal')}
+            label={stringOverrides?.journalEntry?.details?.reversalLabel || t('generalLedger:LedgerEntryDetails.label.reversal', 'Reversal')}
             isLoading={isLoading}
             fullWidth
           >
-            {t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: entry.reversalId.substring(0, 5) })}
+            {t('generalLedger:LedgerEntryDetails.label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: entry.reversalId.substring(0, 5) })}
           </LedgerEntryDetailField>
         )}
       </LedgerEntryDetailSection>
 
       <LedgerEntryDetailSection
-        title={stringOverrides?.lineItemsTable?.lineItemsColumnHeader || t('generalLedger:label.line_items', 'Line items')}
+        title={stringOverrides?.lineItemsTable?.lineItemsColumnHeader || t('generalLedger:LedgerEntryDetails.label.line_items', 'Line items')}
       >
         <LedgerEntryDetailsLineItemsTable
           lineItems={entry?.lineItems}

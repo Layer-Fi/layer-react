@@ -38,14 +38,14 @@ export const ChartOfAccountsTableHeader = ({
 }: ChartOfAccountsTableHeaderProps) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
-  const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
+  const addAccountLabel = stringOverrides?.addAccountButtonText || t('generalLedger:ChartOfAccountsTableHeader.action.add_account', 'Add Account')
 
   return (
     <Header asHeader sticky rounded>
       <HeaderRow>
         <HeaderCol>
           <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
-            {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
+            {stringOverrides?.headerText || t('generalLedger:ChartOfAccountsTableHeader.label.chart_of_accounts', 'Chart of Accounts')}
           </Heading>
         </HeaderCol>
         <HeaderCol>
@@ -71,7 +71,7 @@ export const ChartOfAccountsTableHeader = ({
         </HeaderCol>
         <HeaderCol className='Layer__chart-of-accounts__actions'>
           <SearchField
-            label={t('chartOfAccounts:label.search_accounts', 'Search accounts')}
+            label={t('generalLedger:ChartOfAccountsTableHeader.label.search_accounts', 'Search accounts')}
             value={inputValue}
             onChange={onSearchChange}
           />

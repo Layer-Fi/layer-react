@@ -63,7 +63,7 @@ export function UncategorizedTransactionsBadge({ onTransactionsToReviewClick }: 
         icon={<ArrowUpRight size={12} />}
         iconPosition='right'
       >
-        {tPlural(t, 'bankTransactions:label.review_uncategorized_transactions', {
+        {tPlural(t, 'profitAndLoss:UncategorizedTransactionsBadge.label.review_uncategorized_transactions', {
           count: uncategorizedCount,
           displayCount: formatNumber(uncategorizedCount),
           one: 'Review {{displayCount}} uncategorized transaction',
@@ -75,7 +75,7 @@ export function UncategorizedTransactionsBadge({ onTransactionsToReviewClick }: 
 
   return (
     <Badge variant={BadgeVariant.SUCCESS} size={BadgeSize.MEDIUM} icon={<Check size={12} />}>
-      {t('bankTransactions:label.all_transactions_categorized', 'All transactions categorized')}
+      {t('profitAndLoss:UncategorizedTransactionsBadge.label.all_transactions_categorized', 'All transactions categorized')}
     </Badge>
   )
 }

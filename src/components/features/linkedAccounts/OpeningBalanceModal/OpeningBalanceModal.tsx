@@ -126,7 +126,7 @@ function LinkedAccountsOpeningBalanceModalContent({
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='sm'>
-            {stringOverrides?.title ?? t('linkedAccounts:action.add_opening_balance', 'Add opening balance')}
+            {stringOverrides?.title ?? t('linkedAccounts:OpeningBalanceModal.action.add_opening_balance', 'Add opening balance')}
           </ModalHeading>
         )}
         onClose={handleDismiss}

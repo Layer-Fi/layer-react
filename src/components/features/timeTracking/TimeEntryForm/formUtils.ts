@@ -30,19 +30,19 @@ export const validateTimeEntryForm = ({ entry }: { entry: TimeEntryForm }, t: TF
   const errors = []
 
   if (date === null) {
-    errors.push({ date: t('timeTracking:validation.entry_date_required', 'Entry date is a required field.') })
+    errors.push({ date: t('timeTracking:TimeEntryForm.validation.entry_date_required', 'Entry date is a required field.') })
   }
 
   if (date && date.compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ date: t('timeTracking:validation.entry_date_not_future', 'Entry date cannot be in the future.') })
+    errors.push({ date: t('timeTracking:TimeEntryForm.validation.entry_date_not_future', 'Entry date cannot be in the future.') })
   }
 
   if (!(durationMinutes > 0) || !Number.isInteger(durationMinutes)) {
-    errors.push({ durationMinutes: t('timeTracking:validation.duration_whole_minutes', 'Duration must be a whole number of minutes greater than zero.') })
+    errors.push({ durationMinutes: t('timeTracking:TimeEntryForm.validation.duration_whole_minutes', 'Duration must be a whole number of minutes greater than zero.') })
   }
 
   if (!serviceId) {
-    errors.push({ serviceId: t('timeTracking:validation.service_required', 'Service is a required field.') })
+    errors.push({ serviceId: t('timeTracking:TimeEntryForm.validation.service_required', 'Service is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

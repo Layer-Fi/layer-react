@@ -1,8 +1,10 @@
 {
-  "action": {
-    "select_dimension_name": "Select {{dimensionName}}"
-  },
-  "label": {
-    "tag_label_archived": "{{label}} (Archived)"
+  "TagDimensionComboBox": {
+    "action": {
+      "select_dimension_name": "Select {{dimensionName}}"
+    },
+    "label": {
+      "tag_label_archived": "{{label}} (Archived)"
+    }
   }
 }

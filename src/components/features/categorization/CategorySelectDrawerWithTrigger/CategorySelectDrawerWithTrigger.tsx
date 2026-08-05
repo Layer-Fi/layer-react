@@ -39,7 +39,7 @@ export const CategorySelectDrawerWithTrigger = ({
     <HStack fluid className='Layer__CategorySelectDrawerWithTrigger'>
       <Button
         fullWidth
-        aria-label={t('bankTransactions:action.select_category', 'Select category')}
+        aria-label={t('categorization:CategorySelectDrawerWithTrigger.action.select_category', 'Select category')}
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >

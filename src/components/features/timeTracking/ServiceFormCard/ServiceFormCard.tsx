@@ -75,14 +75,14 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
 
         {mode === 'create' && (
           <Span size='sm' weight='bold'>
-            {t('timeTracking:services.add_service', 'Add service')}
+            {t('timeTracking:ServiceFormCard.services.add_service', 'Add service')}
           </Span>
         )}
 
         <form.AppField name='name'>
           {field => (
             <field.FormTextField
-              label={t('timeTracking:services.service_name', 'Service name')}
+              label={t('timeTracking:ServiceFormCard.services.service_name', 'Service name')}
               className='Layer__TimeTrackingServicesDrawer__rateField'
             />
           )}
@@ -91,7 +91,7 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
         <form.AppField name='hourlyRate'>
           {field => (
             <field.FormNonRecursiveBigDecimalField
-              label={t('timeTracking:services.hourly_rate_optional', 'Default hourly rate (optional)')}
+              label={t('timeTracking:ServiceFormCard.services.hourly_rate_optional', 'Default hourly rate (optional)')}
               mode='currency'
               className='Layer__TimeTrackingServicesDrawer__rateField'
               allowEmpty
@@ -104,20 +104,20 @@ export function ServiceFormCard(props: ServiceFormCardProps) {
             ? (
               <Button variant='outlined' onPress={props.onArchive}>
                 <Archive size={16} />
-                {t('timeTracking:services.archive', 'Archive')}
+                {t('timeTracking:ServiceFormCard.services.archive', 'Archive')}
               </Button>
             )
             : (
               props.showCancel && (
                 <Button variant='outlined' onPress={props.onCancel}>
-                  {t('timeTracking:services.cancel', 'Cancel')}
+                  {t('timeTracking:ServiceFormCard.services.cancel', 'Cancel')}
                 </Button>
               )
             )}
           <Button onPress={() => { void form.handleSubmit() }} isDisabled={isSubmitting} isPending={isSubmitting}>
             {mode === 'edit'
-              ? t('timeTracking:services.save', 'Save')
-              : t('timeTracking:services.add', 'Add')}
+              ? t('timeTracking:ServiceFormCard.services.save', 'Save')
+              : t('timeTracking:ServiceFormCard.services.add', 'Add')}
           </Button>
         </HStack>
       </VStack>

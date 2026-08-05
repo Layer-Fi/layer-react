@@ -42,22 +42,22 @@ export const getInvoiceStatusDisplay = (
 ): InvoiceStatusDisplay => {
   switch (invoice.status) {
     case InvoiceStatus.Draft:
-      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.draft', 'Draft'), Icon: File }
+      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.draft', 'Draft'), Icon: File }
 
     case InvoiceStatus.WrittenOff:
-      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.written_off', 'Written Off') }
+      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.written_off', 'Written Off') }
 
     case InvoiceStatus.PartiallyWrittenOff:
-      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.partially_written_off', 'Partially Written Off') }
+      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.partially_written_off', 'Partially Written Off') }
 
     case InvoiceStatus.Refunded:
-      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.refunded', 'Refunded') }
+      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.refunded', 'Refunded') }
 
     case InvoiceStatus.Paid:
-      return { variant: BadgeVariant.SUCCESS, text: t('invoices:state.paid', 'Paid'), Icon: CircleCheckBig }
+      return { variant: BadgeVariant.SUCCESS, text: t('invoices:utils.state.paid', 'Paid'), Icon: CircleCheckBig }
 
     case InvoiceStatus.Voided:
-      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.voided', 'Voided') }
+      return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.voided', 'Voided') }
 
     case InvoiceStatus.Saved:
     case InvoiceStatus.PartiallyPaid: {
@@ -65,23 +65,23 @@ export const getInvoiceStatusDisplay = (
         return {
           variant: BadgeVariant.NEUTRAL,
           text: invoice.status === InvoiceStatus.PartiallyPaid
-            ? t('invoices:state.partially_paid', 'Partially Paid')
-            : t('invoices:state.saved', 'Saved'),
+            ? t('invoices:utils.state.partially_paid', 'Partially Paid')
+            : t('invoices:utils.state.saved', 'Saved'),
         }
       }
 
       const dueDifference = getDueDifference(invoice.dueAt)
 
       if (dueDifference === 0) {
-        return { variant: BadgeVariant.NEUTRAL, text: t('invoices:state.due_today', 'Due Today') }
+        return { variant: BadgeVariant.NEUTRAL, text: t('invoices:utils.state.due_today', 'Due Today') }
       }
 
       if (dueDifference < 0) {
         const daysAgo = Math.abs(dueDifference)
         return {
           variant: BadgeVariant.WARNING,
-          text: t('invoices:state.overdue', 'Overdue'),
-          subText: tPlural(t, 'invoices:state.due_count_days_ago', {
+          text: t('invoices:utils.state.overdue', 'Overdue'),
+          subText: tPlural(t, 'invoices:utils.state.due_count_days_ago', {
             count: daysAgo,
             displayCount: formatNumber(daysAgo),
             one: 'Due {{displayCount}} day ago',
@@ -94,8 +94,8 @@ export const getInvoiceStatusDisplay = (
       const daysUntilDue = Math.abs(dueDifference)
       return {
         variant: BadgeVariant.NEUTRAL,
-        text: t('invoices:state.saved', 'Saved'),
-        subText: tPlural(t, 'invoices:state.due_in_count_days', {
+        text: t('invoices:utils.state.saved', 'Saved'),
+        subText: tPlural(t, 'invoices:utils.state.due_in_count_days', {
           count: daysUntilDue,
           displayCount: formatNumber(daysUntilDue),
           one: 'Due in {{displayCount}} day',

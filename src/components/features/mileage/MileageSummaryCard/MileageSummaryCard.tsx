@@ -62,7 +62,7 @@ export const MileageSummaryCard = () => {
       <VStack gap='md' pb='md' pi='lg'>
         <DataState
           status={DataStateStatus.failed}
-          title={t('mileageTracking:error.load_mileage_data', 'An error occurred while loading your mileage data. Please check your connection and try again.')}
+          title={t('mileage:MileageSummaryCard.error.load_mileage_data', 'An error occurred while loading your mileage data. Please check your connection and try again.')}
           spacing
         />
       </VStack>
@@ -104,7 +104,7 @@ export const MileageSummaryCard = () => {
       <HStack className='Layer__MileageSummaryCard__Panel'>
         {/* Header */}
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
-          <Span size='lg'>{t('mileageTracking:label.miles_month', 'Miles this month')}</Span>
+          <Span size='lg'>{t('mileage:MileageSummaryCard.label.miles_month', 'Miles this month')}</Span>
           <ArrowRightCircleSubtle size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' />
         </HStack>
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header'>
@@ -113,10 +113,10 @@ export const MileageSummaryCard = () => {
               size='lg'
               className='Layer__MileageSummaryCard__Panel-header-tax-deduction-label'
             >
-              {t('mileageTracking:label.tax_deduction', 'Tax Deduction')}
+              {t('mileage:MileageSummaryCard.label.tax_deduction', 'Tax Deduction')}
             </Span>
             <Badge size={BadgeSize.MEDIUM} variant={BadgeVariant.NEUTRAL}>
-              {t('mileageTracking:label.standard_rate_formatted_deduction', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
+              {t('mileage:MileageSummaryCard.label.standard_rate_formatted_deduction', 'Standard Rate: {{formattedDeductionRate}}/mile', { formattedDeductionRate })}
             </Badge>
           </HStack>
         </HStack>
@@ -124,7 +124,7 @@ export const MileageSummaryCard = () => {
         {/* Value */}
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-value Layer__MileageSummaryCard__Panel-left'>
           <Span size='xl' weight='bold'>
-            {t('trips:label.distance_mi', '{{distance}} mi', {
+            {t('mileage:MileageSummaryCard.label.distance_mi', '{{distance}} mi', {
               distance: formatNumber(currentMonthMileageData?.miles ?? 0, { maximumFractionDigits: 2 }),
             })}
           </Span>
@@ -145,10 +145,10 @@ export const MileageSummaryCard = () => {
     <VStack gap='md' pb='md' pi='lg'>
       <HStack gap='md' justify='space-between'>
         <Span size='lg' weight='bold' pb='2xs'>
-          {t('mileageTracking:label.mileage_tracking', 'Mileage Tracking')}
+          {t('mileage:MileageSummaryCard.label.mileage_tracking', 'Mileage Tracking')}
         </Span>
         <Button onPress={onRecordTrip}>
-          {t('trips:action.record_trip', 'Record Trip')}
+          {t('mileage:MileageSummaryCard.action.record_trip', 'Record Trip')}
           <Plus size={16} />
         </Button>
       </HStack>
@@ -156,14 +156,14 @@ export const MileageSummaryCard = () => {
       <HStack gap='md' justify='space-between'>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
-            {t('mileageTracking:label.total_miles_in_year', 'Total miles in {{displayYear}}:', { displayYear: formatDate(date, DateFormat.Year) })}
+            {t('mileage:MileageSummaryCard.label.total_miles_in_year', 'Total miles in {{displayYear}}:', { displayYear: formatDate(date, DateFormat.Year) })}
             {' '}
           </Span>
           <Span size='sm'>{formatNumber(currentMileageData?.miles ?? 0, { maximumFractionDigits: 0 })}</Span>
         </HStack>
         <HStack gap='xs'>
           <Span size='sm' variant='subtle'>
-            {t('mileageTracking:label.total_tax_deduction', 'Total tax deduction:')}
+            {t('mileage:MileageSummaryCard.label.total_tax_deduction', 'Total tax deduction:')}
             {' '}
           </Span>
           <MoneySpan

@@ -29,7 +29,7 @@ export const AccountNormalityComboBox = ({ label, value, onChange, error, inline
           options={options}
           selectedValue={options.find(option => option.value === value) ?? null}
           onSelectedValueChange={option => onChange(option?.value ?? null)}
-          placeholder={t('chartOfAccounts:placeholder.select_normality', 'Select a normality')}
+          placeholder={t('generalLedger:AccountNormalityComboBox.placeholder.select_normality', 'Select a normality')}
           isError={Boolean(error)}
           slots={{ ErrorMessage: error }}
         />

@@ -1,79 +1,239 @@
 {
-  "action": {
-    "add_credits": "Add Credits",
-    "add_debits": "Add Debits",
-    "add_entry": "Add Entry",
-    "add_new_entry": "Add new entry",
-    "add_next_line": "Add next line",
-    "reverse_entry": "Reverse entry",
-    "save_account": "Save Account",
-    "select_account_type": "Select account type..."
+  "AccountNormalityComboBox": {
+    "placeholder": {
+      "select_normality": "Select a normality"
+    }
   },
-  "empty": {
-    "credit_line_items": "No credit line items added yet. Click \"Add next line\" to get started.",
-    "debit_line_items": "No debit line items added yet. Click \"Add next line\" to get started.",
-    "entries": "No entries found",
-    "entry_journal_message": "There are no ledger entries in this account.",
-    "ledger_activity": "No ledger activity",
-    "line_items": "No line items",
-    "line_items_description": "This entry has no line items."
+  "AccountSubtypeComboBox": {
+    "placeholder": {
+      "select_sub_type": "Select a sub-type"
+    }
   },
-  "error": {
-    "check_fields": "Please check all fields.",
-    "couldnt_load_ledger_entries": "We couldn’t load ledger entries",
-    "load_ledger_entries": "An error occurred while loading this account’s ledger entries. Please check your connection and try again.",
-    "operation_retry": "Operation failed. Try again."
+  "AccountTypeComboBox": {
+    "placeholder": {
+      "select_type": "Select a type"
+    }
   },
-  "label": {
-    "account_name": "Account name",
-    "account_name_title_case": "Account Name",
-    "account_number": "Account Number",
-    "account_ownership": "Ownership",
-    "account_type": "Account type",
-    "balance": "Current balance",
-    "bill_number": "Bill Number",
-    "closing_action_type": "Action type",
-    "closing_date": "Closing date",
-    "enter_account_name": "Enter account name...",
-    "enter_institution_name": "Enter institution name...",
-    "entry_date": "Entry date",
-    "entry_details": "Entry details",
-    "entry_journal": "There are no entries in the journal.",
-    "entry_reversed": "This entry has already been reversed",
-    "entry_type": "Entry type",
-    "general_ledger": "General Ledger",
-    "import_date": "Import Date",
-    "institution_name": "Institution name",
-    "invoice_number": "Invoice number",
-    "journal": "Journal",
-    "journal_entry": "Journal Entry",
-    "journal_entry_number": "Journal Entry #{{entryNumber}}",
-    "journal_entry_posted": "Journal entry #{{journalEntryNumber}} posted",
-    "journal_id": "Journal ID #",
-    "ledger_entries": "Ledger entries",
-    "ledger_view": "Ledger view",
-    "line_items": "Line items",
-    "payday": "Payday",
-    "quickbooks_id": "QuickBooks ID",
-    "recipient_name": "Recipient name",
-    "reversal": "Reversal",
-    "running_balance": "Running balance"
+  "ChartOfAccountsForm": {
+    "action": {
+      "add_new_account": "Add New Account",
+      "edit_account": "Edit Account"
+    },
+    "label": {
+      "account_number": "Account Number",
+      "enter_account_number": "Enter account number...",
+      "enter_name": "Enter name...",
+      "parent": "Parent",
+      "sub_type": "Sub-Type"
+    },
+    "validation": {
+      "name_required": "Enter an account name",
+      "normality_required": "Select a normality",
+      "parent_required": "Select a parent account",
+      "subtype_required": "Select a sub-type",
+      "type_required": "Select an account type"
+    }
   },
-  "prompt": {
-    "discard_changes_journal_entry": "Discard changes to this journal entry?"
+  "ChartOfAccountsTable": {
+    "action": {
+      "delete_account": "Delete Account",
+      "delete_account_name": "Delete {{accountName}}"
+    },
+    "empty": {
+      "accounts": "No accounts found",
+      "accounts_match_filters": "No accounts match the current filters. Click \"Add Account\" to create a new one."
+    },
+    "label": {
+      "account_name_title_case": "Account Name",
+      "account_number": "Account Number",
+      "account_remove_warning": "This account will be permanently removed from your Chart of Accounts.",
+      "chart_of_accounts": "Chart of Accounts",
+      "sub_type": "Sub-Type"
+    },
+    "validation": {
+      "account_not_modifiable": "This account cannot be modified",
+      "delete_account_has_children": "This account cannot be deleted because it has child accounts",
+      "delete_account_has_ledger_entries": "This account cannot be deleted because it has ledger entries",
+      "delete_account_is_required": "This account cannot be deleted because it is a required account"
+    }
   },
-  "validation": {
-    "account_name_required": "Account name is required",
-    "account_required": "Account is a required field.",
-    "account_type_required": "Account type is required",
-    "amount_greater_must": "Amount must be greater than zero.",
-    "create_required": "Created by is a required field.",
-    "debit_credit_must": "Debit and credit amounts must be equal",
-    "entry_date_required": "Entry date is a required field.",
-    "institution_name_required": "Institution name is required",
-    "least_one_required": "At least one credit line item is required.",
-    "least_one_required_line": "At least one line item is required.",
-    "least_one_required_one": "At least one debit line item is required.",
-    "memo_required": "Memo is a required field."
+  "ChartOfAccountsTableHeader": {
+    "action": {
+      "add_account": "Add Account"
+    },
+    "label": {
+      "chart_of_accounts": "Chart of Accounts",
+      "search_accounts": "Search accounts"
+    }
+  },
+  "constants": {
+    "label": {
+      "accounts_payable": "Accounts Payable",
+      "accounts_receivable": "Accounts Receivable",
+      "accumulated_adjustments": "Accumulated Adjustments",
+      "accumulated_depreciation": "Accumulated Depreciation",
+      "additional_paid_in_capital": "Additional Paid In Capital",
+      "amortization": "Amortization",
+      "bad_debt": "Bad Debt",
+      "bank_accounts": "Bank Accounts",
+      "cash": "Cash",
+      "charitable_contributions": "Charitable Contributions",
+      "cogs": "COGS",
+      "common_stock": "Common Stock",
+      "contributions": "Contributions",
+      "credit_cards": "Credit Cards",
+      "current_assets": "Current Assets",
+      "current_liabilities": "Current Liabilities",
+      "depreciation": "Depreciation",
+      "development_costs": "Development Costs",
+      "distributions": "Distributions",
+      "dividend_income": "Dividend Income",
+      "finance_costs": "Finance Costs",
+      "fixed_assets": "Fixed Assets",
+      "income_taxes_payable": "Income Taxes Payable",
+      "intangible_assets": "Intangible Assets",
+      "interest_expenses": "Interest Expenses",
+      "interest_income": "Interest Income",
+      "inventory": "Inventory",
+      "lines_of_credit": "Lines of Credit",
+      "loan_expenses": "Loan Expenses",
+      "loans_payable": "Loans Payable",
+      "loans_receivable": "Loans Receivable",
+      "long_term_liabilities": "Long Term Liabilities",
+      "non_current_assets": "Non-Current Assets",
+      "notes_payable": "Notes Payable",
+      "opening_balance_equity": "Opening Balance Equity",
+      "operating_expenses": "Operating Expenses",
+      "other_equity": "Other Equity",
+      "other_expenses": "Other Expenses",
+      "other_income": "Other Income",
+      "other_taxes_payable": "Other Taxes Payable",
+      "outgoing_payment_clearing_accounts": "Outgoing Payment Clearing Accounts",
+      "payment_processor_clearing_accounts": "Payment Processor Clearing Accounts",
+      "payroll": "Payroll",
+      "payroll_clearing": "Payroll Clearing",
+      "payroll_liabilities": "Payroll Liabilities",
+      "payroll_taxes_payable": "Payroll Taxes Payable",
+      "preferred_stock": "Preferred Stock",
+      "prepaid_expenses": "Prepaid Expenses",
+      "refund_liabilities": "Refund Liabilities",
+      "retained_earnings": "Retained Earnings",
+      "returns_allowances": "Returns & Allowances",
+      "sales": "Sales",
+      "sales_taxes_payable": "Sales Taxes Payable",
+      "shareholder_loans": "Shareholder Loans",
+      "taxes_licenses": "Taxes & Licenses",
+      "tips": "Tips",
+      "uncategorized_expense": "Uncategorized Expense",
+      "uncategorized_revenue": "Uncategorized Revenue",
+      "undeposited_funds": "Undeposited Funds",
+      "undeposited_outflows": "Undeposited Outflows",
+      "unearned_revenue": "Unearned Revenue"
+    }
+  },
+  "JournalEntryDrawer": {
+    "action": {
+      "add_new_entry": "Add new entry"
+    },
+    "prompt": {
+      "discard_changes_journal_entry": "Discard changes to this journal entry?"
+    }
+  },
+  "JournalEntryForm": {
+    "action": {
+      "add_credits": "Add Credits",
+      "add_debits": "Add Debits",
+      "add_next_line": "Add next line",
+      "select_customer_vendor": "Select customer or vendor"
+    },
+    "empty": {
+      "credit_line_items": "No credit line items added yet. Click \"Add next line\" to get started.",
+      "debit_line_items": "No debit line items added yet. Click \"Add next line\" to get started."
+    },
+    "label": {
+      "entry_date": "Entry date",
+      "journal_entry_posted": "Journal entry #{{journalEntryNumber}} posted"
+    },
+    "validation": {
+      "account_required": "Account is a required field.",
+      "amount_greater_must": "Amount must be greater than zero.",
+      "create_required": "Created by is a required field.",
+      "debit_credit_must": "Debit and credit amounts must be equal",
+      "entry_date_required": "Entry date is a required field.",
+      "least_one_required": "At least one credit line item is required.",
+      "least_one_required_line": "At least one line item is required.",
+      "least_one_required_one": "At least one debit line item is required.",
+      "memo_required": "Memo is a required field."
+    }
+  },
+  "JournalTable": {
+    "empty": {
+      "entries": "No entries found"
+    },
+    "label": {
+      "account_name_title_case": "Account Name",
+      "account_number": "Account Number",
+      "entry_journal": "There are no entries in the journal.",
+      "journal": "Journal"
+    }
+  },
+  "JournalTableWithPanel": {
+    "action": {
+      "add_entry": "Add Entry"
+    },
+    "label": {
+      "journal": "Journal"
+    }
+  },
+  "LedgerAccountLineItemsTable": {
+    "empty": {
+      "entry_journal_message": "There are no ledger entries in this account.",
+      "ledger_activity": "No ledger activity"
+    },
+    "error": {
+      "couldnt_load_ledger_entries": "We couldn’t load ledger entries",
+      "load_ledger_entries": "An error occurred while loading this account’s ledger entries. Please check your connection and try again."
+    },
+    "label": {
+      "journal_id": "Journal ID #",
+      "ledger_entries": "Ledger entries",
+      "running_balance": "Running balance"
+    }
+  },
+  "LedgerAccountPanelHeader": {
+    "label": {
+      "balance": "Current balance"
+    }
+  },
+  "LedgerEntryDetails": {
+    "empty": {
+      "line_items": "No line items",
+      "line_items_description": "This entry has no line items."
+    },
+    "label": {
+      "entry_details": "Entry details",
+      "entry_type": "Entry type",
+      "journal_entry": "Journal Entry",
+      "journal_entry_number": "Journal Entry #{{entryNumber}}",
+      "line_items": "Line items",
+      "reversal": "Reversal",
+      "transaction_source": "Transaction source"
+    }
+  },
+  "ParentAccountComboBox": {
+    "placeholder": {
+      "select_parent": "Select a parent account"
+    }
+  },
+  "ReverseLedgerEntryButton": {
+    "action": {
+      "reverse_entry": "Reverse entry"
+    },
+    "error": {
+      "operation_retry": "Operation failed. Try again."
+    },
+    "label": {
+      "entry_reversed": "This entry has already been reversed"
+    }
   }
 }

@@ -26,7 +26,7 @@ export const LinkedAccountOptions = ({
   showLedgerBalance,
 }: LinkedAccountOptionsProps) => {
   const { t } = useTranslation()
-  const accountOptionsLabel = t('linkedAccounts:label.account_options', 'Account options')
+  const accountOptionsLabel = t('linkedAccounts:LinkedAccountOptions.label.account_options', 'Account options')
 
   const Trigger = useCallback(() => (
     <Button

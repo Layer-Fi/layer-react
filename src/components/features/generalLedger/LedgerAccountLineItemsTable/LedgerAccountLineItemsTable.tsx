@@ -57,7 +57,7 @@ const getColumnConfig = (
   },
   {
     id: LedgerAccountLineItemColumns.JournalId,
-    header: stringOverrides?.journalIdColumnHeader ?? t('generalLedger:label.journal_id', 'Journal ID #'),
+    header: stringOverrides?.journalIdColumnHeader ?? t('generalLedger:LedgerAccountLineItemsTable.label.journal_id', 'Journal ID #'),
     cell: (row: LedgerAccountLineItemRow) => <Span>{lineEntryNumber(row.original)}</Span>,
     isRowHeader: true,
   },
@@ -97,7 +97,7 @@ const getColumnConfig = (
   },
   {
     id: LedgerAccountLineItemColumns.RunningBalance,
-    header: stringOverrides?.runningBalanceColumnHeader ?? t('generalLedger:label.running_balance', 'Running balance'),
+    header: stringOverrides?.runningBalanceColumnHeader ?? t('generalLedger:LedgerAccountLineItemsTable.label.running_balance', 'Running balance'),
     alignment: Alignment.Right,
     cell: (row: LedgerAccountLineItemRow) => <MoneySpan amount={row.original.runningBalance} />,
   },
@@ -163,8 +163,8 @@ export const LedgerAccountLineItemsTable = ({
   const EmptyState = useCallback(() => (
     <DataState
       status={DataStateStatus.info}
-      title={t('generalLedger:empty.ledger_activity', 'No ledger activity')}
-      description={t('generalLedger:empty.entry_journal_message', 'There are no ledger entries in this account.')}
+      title={t('generalLedger:LedgerAccountLineItemsTable.empty.ledger_activity', 'No ledger activity')}
+      description={t('generalLedger:LedgerAccountLineItemsTable.empty.entry_journal_message', 'There are no ledger entries in this account.')}
       spacing
     />
   ), [t])
@@ -172,8 +172,8 @@ export const LedgerAccountLineItemsTable = ({
   const ErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('generalLedger:error.couldnt_load_ledger_entries', 'We couldn’t load ledger entries')}
-      description={t('generalLedger:error.load_ledger_entries', 'An error occurred while loading this account’s ledger entries. Please check your connection and try again.')}
+      title={t('generalLedger:LedgerAccountLineItemsTable.error.couldnt_load_ledger_entries', 'We couldn’t load ledger entries')}
+      description={t('generalLedger:LedgerAccountLineItemsTable.error.load_ledger_entries', 'An error occurred while loading this account’s ledger entries. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       isLoading={isValidating || isLoading}
       spacing
@@ -182,7 +182,7 @@ export const LedgerAccountLineItemsTable = ({
 
   return (
     <PaginatedTable
-      ariaLabel={t('generalLedger:label.ledger_entries', 'Ledger entries')}
+      ariaLabel={t('generalLedger:LedgerAccountLineItemsTable.label.ledger_entries', 'Ledger entries')}
       data={data}
       isLoading={Boolean(isLoading)}
       isError={Boolean(isError)}

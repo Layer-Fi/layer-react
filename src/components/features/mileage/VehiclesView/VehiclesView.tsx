@@ -28,7 +28,7 @@ const MobileVehiclesViewHeader = ({
   const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' pb='md'>
-      <Heading size='sm'>{t('vehicles:action.manage_vehicles', 'Manage vehicles')}</Heading>
+      <Heading size='sm'>{t('mileage:VehiclesView.action.manage_vehicles', 'Manage vehicles')}</Heading>
       <Button variant='solid' onPress={onAddVehicle}>
         {t('common:action.add_label', 'Add')}
         <Plus size={14} />
@@ -46,7 +46,7 @@ const DesktopVehiclesViewHeader = ({
   const { t } = useTranslation()
   return (
     <HStack justify='space-between' align='center' fluid pie='md' gap='3xl'>
-      <Heading size='sm'>{t('vehicles:action.manage_vehicles', 'Manage vehicles')}</Heading>
+      <Heading size='sm'>{t('mileage:VehiclesView.action.manage_vehicles', 'Manage vehicles')}</Heading>
       <HStack gap='md' align='center'>
         {showArchivedToggle && (
           <Switch isSelected={showArchived} onChange={onShowArchivedChange}>
@@ -54,7 +54,7 @@ const DesktopVehiclesViewHeader = ({
           </Switch>
         )}
         <Button variant='solid' onPress={onAddVehicle}>
-          {t('vehicles:action.add_vehicle', 'Add Vehicle')}
+          {t('mileage:VehiclesView.action.add_vehicle', 'Add Vehicle')}
           <Plus size={14} />
         </Button>
       </HStack>

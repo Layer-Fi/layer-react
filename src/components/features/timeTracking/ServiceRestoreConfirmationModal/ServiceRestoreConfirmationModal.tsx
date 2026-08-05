@@ -36,10 +36,10 @@ export function ServiceRestoreConfirmationModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       onConfirm={onConfirm}
-      title={t('timeTracking:services.unarchive_confirm_title', 'Restore this service?')}
-      description={t('timeTracking:services.unarchive_confirm_description', 'This service will appear in your active list again.')}
-      confirmLabel={t('timeTracking:services.unarchive', 'Restore')}
-      errorText={t('timeTracking:error.unarchive_service', 'Could not restore this service. Please try again.')}
+      title={t('timeTracking:ServiceRestoreConfirmationModal.services.unarchive_confirm_title', 'Restore this service?')}
+      description={t('timeTracking:ServiceRestoreConfirmationModal.services.unarchive_confirm_description', 'This service will appear in your active list again.')}
+      confirmLabel={t('timeTracking:ServiceRestoreConfirmationModal.services.unarchive', 'Restore')}
+      errorText={t('timeTracking:ServiceRestoreConfirmationModal.error.unarchive_service', 'Could not restore this service. Please try again.')}
       useDrawer={isMobile}
     />
   )

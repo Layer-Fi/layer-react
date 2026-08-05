@@ -46,7 +46,7 @@ export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTi
         <VStack pi='lg' pbe='md'>
           <DataState
             status={DataStateStatus.failed}
-            title={t('timeTracking:error.load_active_timer', 'Failed to load active timer. Please check your connection and try again.')}
+            title={t('timeTracking:ActiveTimeTracker.error.load_active_timer', 'Failed to load active timer. Please check your connection and try again.')}
           />
         </VStack>
       </Container>

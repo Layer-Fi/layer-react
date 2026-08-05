@@ -13,7 +13,7 @@ export const MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) =
 
   return (
     <View
-      title={t('mileageTracking:label.mileage_tracking', 'Mileage Tracking')}
+      title={t('views:MileageTracking.label.mileage_tracking', 'Mileage Tracking')}
       showHeader={showTitle}
       header={(
         <Header>

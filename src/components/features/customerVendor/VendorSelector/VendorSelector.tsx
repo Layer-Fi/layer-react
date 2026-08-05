@@ -37,7 +37,7 @@ export function VendorSelector({
   showLabel = true,
 }: VendorSelectorProps) {
   const { t } = useTranslation()
-  const resolvedLabel = label ?? t('customerVendor:label.vendor', 'Vendor')
+  const resolvedLabel = label ?? t('customerVendor:VendorSelector.label.vendor', 'Vendor')
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -94,8 +94,8 @@ export function VendorSelector({
           isReadOnly={isReadOnly}
           isClearable
           slots={{
-            EmptyMessage: <P variant='subtle'>{t('customerVendor:empty.matching_vendors', 'No matching vendors')}</P>,
-            ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
+            EmptyMessage: <P variant='subtle'>{t('customerVendor:VendorSelector.empty.matching_vendors', 'No matching vendors')}</P>,
+            ErrorMessage: t('customerVendor:VendorSelector.error.load_vendors', 'An error occurred while loading vendors.'),
           }}
         />
       )}

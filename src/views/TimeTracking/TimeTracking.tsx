@@ -58,24 +58,24 @@ const TimeTrackingContent = ({ showTitle, onReportsClick, stringOverrides }: Tim
         key: TimeTrackingHeaderMenuActions.Reports,
         onClick: onReportsClick,
         slots: { Icon: FileText },
-        label: t('reports:label.reports', 'Reports'),
+        label: t('views:TimeTracking.label.reports', 'Reports'),
       }]
       : []),
     {
       key: TimeTrackingHeaderMenuActions.Services,
       onClick: openServicesDrawer,
       slots: { Icon: Briefcase },
-      label: t('timeTracking:services.title', 'Services'),
+      label: t('views:TimeTracking.services.title', 'Services'),
     },
   ], [openServicesDrawer, t, onReportsClick])
 
   return (
     <View
-      title={stringOverrides?.title || t('timeTracking:label.time_tracking', 'Time Tracking')}
+      title={stringOverrides?.title || t('views:TimeTracking.label.time_tracking', 'Time Tracking')}
       showHeader={showTitle}
       header={(
         <DataTableHeaderMenu
-          ariaLabel={t('timeTracking:label.additional_time_tracking_actions', 'Additional time tracking actions')}
+          ariaLabel={t('views:TimeTracking.label.additional_time_tracking_actions', 'Additional time tracking actions')}
           items={menuItems}
         />
       )}

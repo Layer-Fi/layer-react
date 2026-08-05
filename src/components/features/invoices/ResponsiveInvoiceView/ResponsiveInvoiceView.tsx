@@ -28,11 +28,11 @@ export const ResponsiveInvoiceView = () => {
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={isFiltered ? t('common:empty.results', 'No results found') : t('invoices:empty.invoices', 'No invoices yet')}
+        title={isFiltered ? t('common:empty.results', 'No results found') : t('invoices:ResponsiveInvoiceView.empty.invoices', 'No invoices yet')}
         description={
           isFiltered
-            ? t('invoices:empty.invoices_filtered', 'We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results.')
-            : t('invoices:empty.add_first_invoice', 'Add your first invoice to start tracking what your customers owe you.')
+            ? t('invoices:ResponsiveInvoiceView.empty.invoices_filtered', 'We couldn’t find any invoices with the current filters. Try changing or clearing them to see more results.')
+            : t('invoices:ResponsiveInvoiceView.empty.add_first_invoice', 'Add your first invoice to start tracking what your customers owe you.')
         }
         icon={isFiltered ? <Search /> : <HandCoins />}
         spacing
@@ -43,8 +43,8 @@ export const ResponsiveInvoiceView = () => {
   const ErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('invoices:error.couldnt_load_invoices', 'We couldn’t load your invoices')}
-      description={t('invoices:error.load_invoices', 'An error occurred while loading your invoices. Please check your connection and try again.')}
+      title={t('invoices:ResponsiveInvoiceView.error.couldnt_load_invoices', 'We couldn’t load your invoices')}
+      description={t('invoices:ResponsiveInvoiceView.error.load_invoices', 'An error occurred while loading your invoices. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       spacing
     />

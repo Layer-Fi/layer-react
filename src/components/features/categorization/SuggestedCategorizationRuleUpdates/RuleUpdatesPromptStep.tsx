@@ -34,7 +34,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
       .then(() => {
         close()
       }).catch(() => {
-        addToast({ content: t('categorizationRules:error.reject_rule_suggestion', 'Failed to reject rule suggestion'), type: 'error' })
+        addToast({ content: t('categorization:SuggestedCategorizationRuleUpdates.error.reject_rule_suggestion', 'Failed to reject rule suggestion'), type: 'error' })
       })
   },
   [addToast, close, rejectRuleSuggestion, ruleSuggestion.newRule.createdBySuggestionId, t])
@@ -49,16 +49,16 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
           ? (
             <CreateRuleButton
               newRule={ruleSuggestion.newRule}
-              slotProps={{ fullWidth: true, children: t('categorizationRules:action.yes_always_categorize', 'Yes, always categorize') }}
+              slotProps={{ fullWidth: true, children: t('categorization:SuggestedCategorizationRuleUpdates.action.yes_always_categorize', 'Yes, always categorize') }}
             />
           )
           : (
             <Button onPress={() => void next()} fullWidth>
-              {t('categorizationRules:action.yes_always_categorize', 'Yes, always categorize')}
+              {t('categorization:SuggestedCategorizationRuleUpdates.action.yes_always_categorize', 'Yes, always categorize')}
             </Button>
           )}
         <Button onPress={close} variant='outlined' fullWidth>
-          {t('categorizationRules:action.no_decide_each_time', 'No, I’ll decide each time')}
+          {t('categorization:SuggestedCategorizationRuleUpdates.action.no_decide_each_time', 'No, I’ll decide each time')}
         </Button>
         <HStack align='center' gap='xs'>
           <Separator />
@@ -66,12 +66,12 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
             size='sm'
             variant='subtle'
           >
-            {t('categorizationRules:label.or', 'OR')}
+            {t('categorization:SuggestedCategorizationRuleUpdates.label.or', 'OR')}
           </Span>
           <Separator />
         </HStack>
         <Button onPress={() => void handleDisableSuggestionPrompt()} isPending={isMutating} variant='outlined' fullWidth>
-          {t('categorizationRules:action.dont_ask_again', 'Don’t ask again')}
+          {t('categorization:SuggestedCategorizationRuleUpdates.action.dont_ask_again', 'Don’t ask again')}
         </Button>
       </VStack>
     </VStack>

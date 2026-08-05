@@ -76,8 +76,8 @@ export const useRecordBankTransactionForm = ({ variant, transaction, onSuccess }
 
         addToast({
           content: transaction
-            ? t('bankTransactions:recordTransaction.toast.transaction_updated', 'Transaction updated')
-            : t('bankTransactions:recordTransaction.toast.transaction_recorded', 'Transaction recorded'),
+            ? t('bankTransactions:RecordBankTransactionForm.toast.transaction_updated', 'Transaction updated')
+            : t('bankTransactions:RecordBankTransactionForm.toast.transaction_recorded', 'Transaction recorded'),
           type: 'success',
         })
 

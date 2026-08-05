@@ -35,7 +35,7 @@ export const LedgerEntrySourceDetailView = ({
       return (
         <>
           <LedgerEntryDetailField
-            label={stringOverrides?.accountNameLabel || t('generalLedger:label.account_name', 'Account name')}
+            label={stringOverrides?.accountNameLabel || t('blocks:LedgerEntrySourceDetailView.label.account_name', 'Account name')}
           >
             {source.accountName}
           </LedgerEntryDetailField>
@@ -64,12 +64,12 @@ export const LedgerEntrySourceDetailView = ({
       return (
         <>
           <LedgerEntryDetailField
-            label={stringOverrides?.invoiceNumberLabel || t('generalLedger:label.invoice_number', 'Invoice number')}
+            label={stringOverrides?.invoiceNumberLabel || t('blocks:LedgerEntrySourceDetailView.label.invoice_number', 'Invoice number')}
           >
             {source.invoiceNumber}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField
-            label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
+            label={stringOverrides?.recipientNameLabel || t('blocks:LedgerEntrySourceDetailView.label.recipient_name', 'Recipient name')}
           >
             {source.recipientName}
           </LedgerEntryDetailField>
@@ -100,7 +100,7 @@ export const LedgerEntrySourceDetailView = ({
       return (
         <>
           <LedgerEntryDetailField
-            label={stringOverrides?.invoiceNumberLabel || t('generalLedger:label.invoice_number', 'Invoice number')}
+            label={stringOverrides?.invoiceNumberLabel || t('blocks:LedgerEntrySourceDetailView.label.invoice_number', 'Invoice number')}
           >
             {source.invoiceNumber}
           </LedgerEntryDetailField>
@@ -117,7 +117,7 @@ export const LedgerEntrySourceDetailView = ({
             {formatCurrencyFromCents(source.amount)}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField
-            label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
+            label={stringOverrides?.recipientNameLabel || t('blocks:LedgerEntrySourceDetailView.label.recipient_name', 'Recipient name')}
           >
             {source.recipientName}
           </LedgerEntryDetailField>
@@ -131,7 +131,7 @@ export const LedgerEntrySourceDetailView = ({
             {formatCurrencyFromCents(source.refundedToCustomerAmount)}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField
-            label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
+            label={stringOverrides?.recipientNameLabel || t('blocks:LedgerEntrySourceDetailView.label.recipient_name', 'Recipient name')}
           >
             {source.recipientName}
           </LedgerEntryDetailField>
@@ -141,7 +141,7 @@ export const LedgerEntrySourceDetailView = ({
     case 'Opening_Balance_Ledger_Entry_Source': {
       return (
         <LedgerEntryDetailField
-          label={stringOverrides?.accountNameLabel || t('generalLedger:label.account_name', 'Account name')}
+          label={stringOverrides?.accountNameLabel || t('blocks:LedgerEntrySourceDetailView.label.account_name', 'Account name')}
         >
           {source.accountName}
         </LedgerEntryDetailField>
@@ -165,10 +165,10 @@ export const LedgerEntrySourceDetailView = ({
     case 'Quickbooks_Ledger_Entry_Source': {
       return (
         <>
-          <LedgerEntryDetailField label={t('generalLedger:label.quickbooks_id', 'QuickBooks ID')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.quickbooks_id', 'QuickBooks ID')}>
             {source.quickbooksId}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('generalLedger:label.import_date', 'Import Date')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.import_date', 'Import Date')}>
             <DateTime value={source.importDate} />
           </LedgerEntryDetailField>
         </>
@@ -178,19 +178,19 @@ export const LedgerEntrySourceDetailView = ({
       return (
         <>
           <LedgerEntryDetailField
-            label={stringOverrides?.invoiceNumberLabel || t('generalLedger:label.invoice_number', 'Invoice number')}
+            label={stringOverrides?.invoiceNumberLabel || t('blocks:LedgerEntrySourceDetailView.label.invoice_number', 'Invoice number')}
           >
             {source.invoiceNumber}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField
-            label={stringOverrides?.recipientNameLabel || t('generalLedger:label.recipient_name', 'Recipient name')}
+            label={stringOverrides?.recipientNameLabel || t('blocks:LedgerEntrySourceDetailView.label.recipient_name', 'Recipient name')}
           >
             {source.recipientName}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('invoices:label.write_off_date', 'Write-off Date')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.write_off_date', 'Write-off Date')}>
             <DateTime value={source.date} />
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('invoices:label.write_off_amount', 'Write-off Amount')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.write_off_amount', 'Write-off Amount')}>
             {formatCurrencyFromCents(source.writeOffAmount)}
           </LedgerEntryDetailField>
         </>
@@ -202,7 +202,7 @@ export const LedgerEntrySourceDetailView = ({
           <LedgerEntryDetailField label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
             {formatCurrencyFromCents(source.amount)}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('customerVendor:label.vendor_description', 'Vendor Description')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.vendor_description', 'Vendor Description')}>
             {source.vendorDescription}
           </LedgerEntryDetailField>
         </>
@@ -211,10 +211,10 @@ export const LedgerEntrySourceDetailView = ({
     case 'Vendor_Refund_Payment_Ledger_Entry_Source': {
       return (
         <>
-          <LedgerEntryDetailField label={t('invoices:label.refunded_amount', 'Refunded Amount')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.refunded_amount', 'Refunded Amount')}>
             {formatCurrencyFromCents(source.refundedByVendorAmount)}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('customerVendor:label.vendor_description', 'Vendor Description')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.vendor_description', 'Vendor Description')}>
             {source.vendorDescription}
           </LedgerEntryDetailField>
         </>
@@ -239,7 +239,7 @@ export const LedgerEntrySourceDetailView = ({
     }
     case 'Payroll_Ledger_Entry_Source': {
       return (
-        <LedgerEntryDetailField label={t('generalLedger:label.payday', 'Payday')}>
+        <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.payday', 'Payday')}>
           <DateTime value={source.payday} />
         </LedgerEntryDetailField>
       )
@@ -254,10 +254,10 @@ export const LedgerEntrySourceDetailView = ({
     case 'Bill_Ledger_Entry_Source': {
       return (
         <>
-          <LedgerEntryDetailField label={t('generalLedger:label.bill_number', 'Bill Number')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.bill_number', 'Bill Number')}>
             {source.billNumber}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('customerVendor:label.vendor_description', 'Vendor Description')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.vendor_description', 'Vendor Description')}>
             {source.vendorDescription}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField label={stringOverrides?.dateLabel || t('common:label.date', 'Date')}>
@@ -272,7 +272,7 @@ export const LedgerEntrySourceDetailView = ({
     case 'Bill_Payment_Ledger_Entry_Source': {
       return (
         <>
-          <LedgerEntryDetailField label={t('generalLedger:label.bill_number', 'Bill Number')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.bill_number', 'Bill Number')}>
             {source.billNumber}
           </LedgerEntryDetailField>
           <LedgerEntryDetailField label={stringOverrides?.amountLabel || t('common:label.amount', 'Amount')}>
@@ -289,7 +289,7 @@ export const LedgerEntrySourceDetailView = ({
             {formatCurrencyFromCents(source.amount)}
           </LedgerEntryDetailField>
           {vendorDisplayName && (
-            <LedgerEntryDetailField label={t('customerVendor:label.vendor', 'Vendor')}>
+            <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.vendor', 'Vendor')}>
               {vendorDisplayName}
             </LedgerEntryDetailField>
           )}
@@ -304,7 +304,7 @@ export const LedgerEntrySourceDetailView = ({
             {formatCurrencyFromCents(source.amount)}
           </LedgerEntryDetailField>
           {customerDisplayName && (
-            <LedgerEntryDetailField label={t('customerVendor:label.customer', 'Customer')}>
+            <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.customer', 'Customer')}>
               {customerDisplayName}
             </LedgerEntryDetailField>
           )}
@@ -315,10 +315,10 @@ export const LedgerEntrySourceDetailView = ({
     case 'Closing_Action_Ledger_Entry_Source': {
       return (
         <>
-          <LedgerEntryDetailField label={t('generalLedger:label.closing_action_type', 'Action type')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.closing_action_type', 'Action type')}>
             {humanizeEnum(source.actionType)}
           </LedgerEntryDetailField>
-          <LedgerEntryDetailField label={t('generalLedger:label.closing_date', 'Closing date')}>
+          <LedgerEntryDetailField label={t('blocks:LedgerEntrySourceDetailView.label.closing_date', 'Closing date')}>
             <DateTime value={source.closingDate} onlyDate />
           </LedgerEntryDetailField>
         </>

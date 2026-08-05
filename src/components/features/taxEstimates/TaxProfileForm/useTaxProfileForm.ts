@@ -40,7 +40,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
       const result = await upsertProfile(input)
 
       setSubmitError(undefined)
-      setSubmitSuccess(t('taxEstimates:label.tax_profile_saved', 'Tax profile saved'))
+      setSubmitSuccess(t('taxEstimates:TaxProfileForm.label.tax_profile_saved', 'Tax profile saved'))
       onSuccess?.(result)
     }
     catch (e) {

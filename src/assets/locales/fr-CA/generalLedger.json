@@ -1,79 +1,239 @@
 {
-  "action": {
-    "add_credits": "Ajouter des crédits",
-    "add_debits": "Ajouter des débits",
-    "add_entry": "Ajouter une écriture",
-    "add_new_entry": "Ajouter une nouvelle écriture",
-    "add_next_line": "Ajouter la ligne suivante",
-    "reverse_entry": "Contre-passer l’écriture",
-    "save_account": "Enregistrer le compte",
-    "select_account_type": "Sélectionner un type de compte..."
+  "AccountNormalityComboBox": {
+    "placeholder": {
+      "select_normality": "Sélectionner une normalité"
+    }
   },
-  "empty": {
-    "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
-    "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
-    "entries": "Aucune écriture trouvée",
-    "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
-    "ledger_activity": "Aucune activité au grand livre",
-    "line_items": "Aucune ligne",
-    "line_items_description": "Cette écriture ne comporte aucune ligne."
+  "AccountSubtypeComboBox": {
+    "placeholder": {
+      "select_sub_type": "Sélectionner un sous-type"
+    }
   },
-  "error": {
-    "check_fields": "Veuillez vérifier tous les champs.",
-    "couldnt_load_ledger_entries": "Nous n’avons pas pu charger les écritures du grand livre",
-    "load_ledger_entries": "Une erreur s’est produite lors du chargement des écritures du grand livre de ce compte. Veuillez vérifier votre connexion et réessayer.",
-    "operation_retry": "L’opération a échoué. Réessayez."
+  "AccountTypeComboBox": {
+    "placeholder": {
+      "select_type": "Sélectionner un type"
+    }
   },
-  "label": {
-    "account_name": "Nom du compte",
-    "account_name_title_case": "Nom du compte",
-    "account_number": "Numéro de compte",
-    "account_ownership": "Propriété",
-    "account_type": "Type de compte",
-    "balance": "Solde actuel",
-    "bill_number": "Numéro de facture fournisseur",
-    "closing_action_type": "Type d'action",
-    "closing_date": "Date de clôture",
-    "enter_account_name": "Saisissez le nom du compte...",
-    "enter_institution_name": "Saisissez le nom de l’institution...",
-    "entry_date": "Date d’écriture",
-    "entry_details": "Détails de l’écriture",
-    "entry_journal": "Il n’y a aucune écriture dans le journal.",
-    "entry_reversed": "Cette écriture a déjà été contrepassée",
-    "entry_type": "Type d’écriture",
-    "general_ledger": "Grand livre",
-    "import_date": "Date d’importation",
-    "institution_name": "Nom de l’institution",
-    "invoice_number": "Numéro de facture",
-    "journal": "Journal",
-    "journal_entry": "Écriture de journal",
-    "journal_entry_number": "Écriture de journal no {{entryNumber}}",
-    "journal_entry_posted": "Écriture de journal no {{journalEntryNumber}} comptabilisée",
-    "journal_id": "ID du journal",
-    "ledger_entries": "Écritures du grand livre",
-    "ledger_view": "Vue du grand livre",
-    "line_items": "Lignes",
-    "payday": "Jour de paie",
-    "quickbooks_id": "ID QuickBooks",
-    "recipient_name": "Nom du destinataire",
-    "reversal": "Contrepassation",
-    "running_balance": "Solde courant"
+  "ChartOfAccountsForm": {
+    "action": {
+      "add_new_account": "Ajouter un nouveau compte",
+      "edit_account": "Modifier le compte"
+    },
+    "label": {
+      "account_number": "Numéro de compte",
+      "enter_account_number": "Saisissez le numéro de compte...",
+      "enter_name": "Saisissez le nom...",
+      "parent": "Parent",
+      "sub_type": "Sous-type"
+    },
+    "validation": {
+      "name_required": "Saisissez un nom de compte",
+      "normality_required": "Sélectionner une normalité",
+      "parent_required": "Sélectionner un compte parent",
+      "subtype_required": "Sélectionner un sous-type",
+      "type_required": "Sélectionner un type de compte"
+    }
   },
-  "prompt": {
-    "discard_changes_journal_entry": "Annuler les modifications apportées à cette écriture de journal?"
+  "ChartOfAccountsTable": {
+    "action": {
+      "delete_account": "Supprimer le compte",
+      "delete_account_name": "Supprimer {{accountName}}"
+    },
+    "empty": {
+      "accounts": "Aucun compte trouvé",
+      "accounts_match_filters": "Aucun compte ne correspond aux filtres actuels. Cliquez sur \"Ajouter un compte\" pour en créer un nouveau."
+    },
+    "label": {
+      "account_name_title_case": "Nom du compte",
+      "account_number": "Numéro de compte",
+      "account_remove_warning": "Ce compte sera supprimé définitivement de votre plan comptable.",
+      "chart_of_accounts": "Plan comptable",
+      "sub_type": "Sous-type"
+    },
+    "validation": {
+      "account_not_modifiable": "Ce compte ne peut pas être modifié",
+      "delete_account_has_children": "Ce compte ne peut pas être supprimé, car il comporte des comptes enfants",
+      "delete_account_has_ledger_entries": "Ce compte ne peut pas être supprimé, car il comporte des écritures au grand livre",
+      "delete_account_is_required": "Ce compte ne peut pas être supprimé, car il s’agit d’un compte obligatoire"
+    }
   },
-  "validation": {
-    "account_name_required": "Le nom du compte est obligatoire",
-    "account_required": "Le compte est un champ obligatoire.",
-    "account_type_required": "Le type de compte est obligatoire",
-    "amount_greater_must": "Le montant doit être supérieur à zéro.",
-    "create_required": "Le créateur est obligatoire.",
-    "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
-    "entry_date_required": "La date d’écriture est un champ obligatoire.",
-    "institution_name_required": "Le nom de l’institution est obligatoire",
-    "least_one_required": "Au moins une ligne de crédit est obligatoire.",
-    "least_one_required_line": "Au moins une ligne est obligatoire.",
-    "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
-    "memo_required": "Le mémo est un champ obligatoire."
+  "ChartOfAccountsTableHeader": {
+    "action": {
+      "add_account": "Ajouter un compte"
+    },
+    "label": {
+      "chart_of_accounts": "Plan comptable",
+      "search_accounts": "Rechercher des comptes"
+    }
+  },
+  "constants": {
+    "label": {
+      "accounts_payable": "Comptes fournisseurs",
+      "accounts_receivable": "Comptes clients",
+      "accumulated_adjustments": "Ajustements cumulés",
+      "accumulated_depreciation": "Amortissement cumulé",
+      "additional_paid_in_capital": "Capital d’apport supplémentaire",
+      "amortization": "Amortissement",
+      "bad_debt": "Créances douteuses",
+      "bank_accounts": "Comptes bancaires",
+      "cash": "Encaisse",
+      "charitable_contributions": "Dons de bienfaisance",
+      "cogs": "CMV",
+      "common_stock": "Actions ordinaires",
+      "contributions": "Apports",
+      "credit_cards": "Cartes de crédit",
+      "current_assets": "Actifs à court terme",
+      "current_liabilities": "Passifs à court terme",
+      "depreciation": "Amortissement",
+      "development_costs": "Coûts de développement",
+      "distributions": "Distributions",
+      "dividend_income": "Revenus de dividendes",
+      "finance_costs": "Frais financiers",
+      "fixed_assets": "Immobilisations",
+      "income_taxes_payable": "Impôts sur le revenu à payer",
+      "intangible_assets": "Immobilisations incorporelles",
+      "interest_expenses": "Charges d’intérêts",
+      "interest_income": "Produits d’intérêts",
+      "inventory": "Stocks",
+      "lines_of_credit": "Marges de crédit",
+      "loan_expenses": "Frais d’emprunt",
+      "loans_payable": "Emprunts à payer",
+      "loans_receivable": "Prêts à recevoir",
+      "long_term_liabilities": "Passifs à long terme",
+      "non_current_assets": "Actifs non courants",
+      "notes_payable": "Billets à payer",
+      "opening_balance_equity": "Capitaux propres d’ouverture",
+      "operating_expenses": "Charges d’exploitation",
+      "other_equity": "Autres capitaux propres",
+      "other_expenses": "Autres dépenses",
+      "other_income": "Autres revenus",
+      "other_taxes_payable": "Autres taxes à payer",
+      "outgoing_payment_clearing_accounts": "Comptes de compensation des paiements sortants",
+      "payment_processor_clearing_accounts": "Comptes d’attente des processeurs de paiement",
+      "payroll": "Paie",
+      "payroll_clearing": "Compte d’attente de paie",
+      "payroll_liabilities": "Passifs liés à la paie",
+      "payroll_taxes_payable": "Charges sociales à payer",
+      "preferred_stock": "Actions privilégiées",
+      "prepaid_expenses": "Charges payées d’avance",
+      "refund_liabilities": "Passifs au titre des remboursements",
+      "retained_earnings": "Bénéfices non distribués",
+      "returns_allowances": "Retours et rabais",
+      "sales": "Ventes",
+      "sales_taxes_payable": "Taxes de vente à payer",
+      "shareholder_loans": "Prêts des actionnaires",
+      "taxes_licenses": "Taxes et permis",
+      "tips": "Pourboires",
+      "uncategorized_expense": "Dépense non catégorisée",
+      "uncategorized_revenue": "Revenu non catégorisé",
+      "undeposited_funds": "Fonds non déposés",
+      "undeposited_outflows": "Décaissements non déposés",
+      "unearned_revenue": "Produits constatés d’avance"
+    }
+  },
+  "JournalEntryDrawer": {
+    "action": {
+      "add_new_entry": "Ajouter une nouvelle écriture"
+    },
+    "prompt": {
+      "discard_changes_journal_entry": "Annuler les modifications apportées à cette écriture de journal?"
+    }
+  },
+  "JournalEntryForm": {
+    "action": {
+      "add_credits": "Ajouter des crédits",
+      "add_debits": "Ajouter des débits",
+      "add_next_line": "Ajouter la ligne suivante",
+      "select_customer_vendor": "Sélectionner un client ou un fournisseur"
+    },
+    "empty": {
+      "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
+      "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer."
+    },
+    "label": {
+      "entry_date": "Date d’écriture",
+      "journal_entry_posted": "Écriture de journal no {{journalEntryNumber}} comptabilisée"
+    },
+    "validation": {
+      "account_required": "Le compte est un champ obligatoire.",
+      "amount_greater_must": "Le montant doit être supérieur à zéro.",
+      "create_required": "Le créateur est obligatoire.",
+      "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
+      "entry_date_required": "La date d’écriture est un champ obligatoire.",
+      "least_one_required": "Au moins une ligne de crédit est obligatoire.",
+      "least_one_required_line": "Au moins une ligne est obligatoire.",
+      "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
+      "memo_required": "Le mémo est un champ obligatoire."
+    }
+  },
+  "JournalTable": {
+    "empty": {
+      "entries": "Aucune écriture trouvée"
+    },
+    "label": {
+      "account_name_title_case": "Nom du compte",
+      "account_number": "Numéro de compte",
+      "entry_journal": "Il n’y a aucune écriture dans le journal.",
+      "journal": "Journal"
+    }
+  },
+  "JournalTableWithPanel": {
+    "action": {
+      "add_entry": "Ajouter une écriture"
+    },
+    "label": {
+      "journal": "Journal"
+    }
+  },
+  "LedgerAccountLineItemsTable": {
+    "empty": {
+      "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
+      "ledger_activity": "Aucune activité au grand livre"
+    },
+    "error": {
+      "couldnt_load_ledger_entries": "Nous n’avons pas pu charger les écritures du grand livre",
+      "load_ledger_entries": "Une erreur s’est produite lors du chargement des écritures du grand livre de ce compte. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "journal_id": "ID du journal",
+      "ledger_entries": "Écritures du grand livre",
+      "running_balance": "Solde courant"
+    }
+  },
+  "LedgerAccountPanelHeader": {
+    "label": {
+      "balance": "Solde actuel"
+    }
+  },
+  "LedgerEntryDetails": {
+    "empty": {
+      "line_items": "Aucune ligne",
+      "line_items_description": "Cette écriture ne comporte aucune ligne."
+    },
+    "label": {
+      "entry_details": "Détails de l’écriture",
+      "entry_type": "Type d’écriture",
+      "journal_entry": "Écriture de journal",
+      "journal_entry_number": "Écriture de journal no {{entryNumber}}",
+      "line_items": "Lignes",
+      "reversal": "Contrepassation",
+      "transaction_source": "Source de la transaction"
+    }
+  },
+  "ParentAccountComboBox": {
+    "placeholder": {
+      "select_parent": "Sélectionner un compte parent"
+    }
+  },
+  "ReverseLedgerEntryButton": {
+    "action": {
+      "reverse_entry": "Contre-passer l’écriture"
+    },
+    "error": {
+      "operation_retry": "L’opération a échoué. Réessayez."
+    },
+    "label": {
+      "entry_reversed": "Cette écriture a déjà été contrepassée"
+    }
   }
 }

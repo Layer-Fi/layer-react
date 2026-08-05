@@ -30,7 +30,7 @@ export const BankTransactionMatchList = ({
 
   return (
     <GridList
-      aria-label={t('bankTransactions:action.select_a_match', 'Select a match')}
+      aria-label={t('bankTransactions:BankTransactionMatchList.action.select_a_match', 'Select a match')}
       selectionMode='single'
       selectedKeys={selectedMatchId ? new Set([selectedMatchId]) : new Set()}
       onSelectionChange={(keys) => {

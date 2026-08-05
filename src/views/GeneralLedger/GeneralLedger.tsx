@@ -50,22 +50,22 @@ export const GeneralLedgerView = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'chartOfAccounts',
-      label: stringOverrides?.chartOfAccountsToggleOption || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts'),
+      label: stringOverrides?.chartOfAccountsToggleOption || t('views:GeneralLedger.label.chart_of_accounts', 'Chart of Accounts'),
     },
     {
       value: 'journal',
-      label: stringOverrides?.journalToggleOption || t('generalLedger:label.journal', 'Journal'),
+      label: stringOverrides?.journalToggleOption || t('views:GeneralLedger.label.journal', 'Journal'),
     },
   ], [t, stringOverrides?.chartOfAccountsToggleOption, stringOverrides?.journalToggleOption])
 
   return (
     <ProfitAndLoss asContainer={false}>
       <View
-        title={stringOverrides?.title || title || t('generalLedger:label.general_ledger', 'General Ledger')}
+        title={stringOverrides?.title || title || t('views:GeneralLedger.label.general_ledger', 'General Ledger')}
         showHeader={showTitle}
       >
         <Toggle
-          ariaLabel={t('generalLedger:label.ledger_view', 'Ledger view')}
+          ariaLabel={t('views:GeneralLedger.label.ledger_view', 'Ledger view')}
           options={toggleOptions}
           selectedKey={activeTab}
           onSelectionChange={key => setActiveTab(key as string)}

@@ -39,17 +39,17 @@ export const TripsMobileList = ({
   const renderFooter = useCallback((trip: Trip) => <TripsMobileListItemFooter trip={trip} />, [])
 
   const actionsMenu = useMemo(() => ({
-    ariaLabel: t('trips:label.trip_actions', 'Trip actions'),
+    ariaLabel: t('mileage:TripsMobileList.label.trip_actions', 'Trip actions'),
     getActions: (trip: Trip) => [
       {
         key: 'edit',
-        label: t('trips:action.edit_trip', 'Edit Trip'),
+        label: t('mileage:TripsMobileList.action.edit_trip', 'Edit Trip'),
         onClick: () => onEditTrip(trip),
         slots: { Icon: Pencil },
       },
       {
         key: 'delete',
-        label: t('trips:action.delete_trip', 'Delete Trip'),
+        label: t('mileage:TripsMobileList.action.delete_trip', 'Delete Trip'),
         onClick: () => onDeleteTrip(trip),
         slots: { Icon: Trash2 },
       },
@@ -60,7 +60,7 @@ export const TripsMobileList = ({
     <div className='Layer__TripsMobileList'>
       <TripsMobileHeader onRecordTrip={onRecordTrip} />
       <PaginatedMobileList
-        ariaLabel={t('trips:label.trips', 'Trips')}
+        ariaLabel={t('mileage:TripsMobileList.label.trips', 'Trips')}
         data={data}
         isLoading={isLoading}
         isError={isError}

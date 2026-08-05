@@ -20,7 +20,7 @@ export const TaxBanner = ({ data }: TaxBannerProps) => {
   const { onClickReviewTransactions } = useTaxEstimatesContext()
   const { bannerDescription } = useTaxBanner(data)
 
-  const title = t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')
+  const title = t('taxEstimates:TaxBanner.banner.categorization_incomplete.title', 'Your tax estimates are incomplete')
 
   const ReviewButton = onClickReviewTransactions
     ? (
@@ -31,7 +31,7 @@ export const TaxBanner = ({ data }: TaxBannerProps) => {
           uncategorizedTransactionCount: data.totalUncategorizedCount,
         })}
       >
-        {t('taxEstimates:action.review_banner', 'Review')}
+        {t('taxEstimates:TaxBanner.action.review_banner', 'Review')}
       </BannerButton>
     )
     : undefined

@@ -24,8 +24,8 @@ const TripsViewEmptyState = () => {
   return (
     <DataState
       status={DataStateStatus.allDone}
-      title={t('trips:empty.no_trips_yet', 'No trips yet')}
-      description={t('trips:empty.add_first_trip', 'Add your first trip to start tracking mileage.')}
+      title={t('mileage:TripsView.empty.no_trips_yet', 'No trips yet')}
+      description={t('mileage:TripsView.empty.add_first_trip', 'Add your first trip to start tracking mileage.')}
       icon={<Car />}
       spacing
       className='Layer__TripsView__EmptyState'
@@ -38,8 +38,8 @@ const TripsViewErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('trips:error.load_trips', 'We couldn\'t load your trips')}
-      description={t('trips:error.load_trips_error', 'An error occurred while loading your trips. Please check your connection and try again.')}
+      title={t('mileage:TripsView.error.load_trips', 'We couldn’t load your trips')}
+      description={t('mileage:TripsView.error.load_trips_error', 'An error occurred while loading your trips. Please check your connection and try again.')}
       spacing
       className='Layer__TripsView__ErrorState'
     />

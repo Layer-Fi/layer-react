@@ -49,7 +49,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
         <VStack gap='sm'>
           <Span size='sm' variant='subtle'>
             {t(
-              'taxEstimates:disclaimer.content',
+              'taxEstimates:TaxProfileForm.disclaimer.content',
               'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
             )}
           </Span>
@@ -58,7 +58,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
             validators={{
               onChange: ({ value }) => {
                 if (!value) {
-                  return t('taxEstimates:error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
+                  return t('taxEstimates:TaxProfileForm.error.disclaimer_required', 'You must acknowledge the disclaimer to continue.')
                 }
                 return undefined
               },
@@ -80,7 +80,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
                   >
                     <Span size='sm'>
                       {t(
-                        'taxEstimates:disclaimer.acknowledgment',
+                        'taxEstimates:TaxProfileForm.disclaimer.acknowledgment',
                         'By continuing, I certify that I understand the above.',
                       )}
                     </Span>
@@ -135,7 +135,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
                 onPress={() => { void form.handleSubmit() }}
               >
                 <Save size={14} />
-                {t('taxEstimates:action.save_profile', 'Save Profile')}
+                {t('taxEstimates:TaxProfileForm.action.save_profile', 'Save Profile')}
               </Button>
             )}
           </form.Subscribe>

@@ -143,7 +143,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
   const { t } = useTranslation()
 
   const serviceBreakdown = useMemo(
-    () => buildServiceBreakdown(summary.byService, t('timeTracking:label.other', 'Other')),
+    () => buildServiceBreakdown(summary.byService, t('timeTracking:TimeTrackingStats.label.other', 'Other')),
     [summary.byService, t],
   )
 
@@ -174,7 +174,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           <VStack className='Layer__TimeTrackingStats__Chart' gap='md' justify='center' pbs='lg'>
             <HStack className='Layer__TimeTrackingStats__ChartBar Layer__TimeTrackingStats__ChartBar--empty' />
             <Span size='sm' variant='subtle'>
-              {t('timeTracking:label.no_activity_breakdown', 'No activity during this period')}
+              {t('timeTracking:TimeTrackingStats.label.no_activity_breakdown', 'No activity during this period')}
             </Span>
           </VStack>
         )}
@@ -200,7 +200,7 @@ export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsPro
         Error={(
           <DataState
             status={DataStateStatus.failed}
-            title={t('timeTracking:error.load_summary', 'Failed to load time tracking summary')}
+            title={t('timeTracking:TimeTrackingStats.error.load_summary', 'Failed to load time tracking summary')}
             spacing
           />
         )}

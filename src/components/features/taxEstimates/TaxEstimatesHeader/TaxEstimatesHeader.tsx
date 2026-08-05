@@ -39,7 +39,7 @@ const createTaxEstimatesHeaderConfig = ({
   formattedYear: string
 }): Record<TaxEstimatesHeaderType, TaxEstimatesHeaderConfig> => ({
   [TaxEstimatesHeaderType.Overview]: {
-    title: tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
+    title: tConditional(t, 'taxEstimates:TaxEstimatesHeader.label.taxable_income_for_year', {
       condition: projectedCondition,
       cases: {
         default: 'Taxable income for {{year}}',
@@ -50,7 +50,7 @@ const createTaxEstimatesHeaderConfig = ({
       },
       year: formattedYear,
     }),
-    description: tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
+    description: tConditional(t, 'taxEstimates:TaxEstimatesHeader.label.taxable_income_estimate_to_date_for_year', {
       condition: projectedCondition,
       cases: {
         default: 'Taxable income estimate to date for year {{year}}',
@@ -63,7 +63,7 @@ const createTaxEstimatesHeaderConfig = ({
     }),
   },
   [TaxEstimatesHeaderType.Estimates]: {
-    title: tConditional(t, 'taxEstimates:label.business_income_taxes', {
+    title: tConditional(t, 'taxEstimates:TaxEstimatesHeader.label.business_income_taxes', {
       condition: projectedCondition,
       cases: {
         default: 'Business Income Taxes',
@@ -73,10 +73,10 @@ const createTaxEstimatesHeaderConfig = ({
         projected: 'projected',
       },
     }),
-    description: t('taxEstimates:label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage'),
+    description: t('taxEstimates:TaxEstimatesHeader.label.calculated_from_categorized_transactions', 'Calculated based on your categorized transactions and tracked mileage'),
   },
   [TaxEstimatesHeaderType.Payments]: {
-    title: tConditional(t, 'taxEstimates:label.tax_payments', {
+    title: tConditional(t, 'taxEstimates:TaxEstimatesHeader.label.tax_payments', {
       condition: projectedCondition,
       cases: {
         default: 'Tax Payments',
@@ -87,7 +87,7 @@ const createTaxEstimatesHeaderConfig = ({
       },
       year: formattedYear,
     }),
-    description: tConditional(t, 'taxEstimates:label.federal_state_tax_payments', {
+    description: tConditional(t, 'taxEstimates:TaxEstimatesHeader.label.federal_state_tax_payments', {
       condition: projectedCondition,
       cases: {
         default: 'Federal and state tax payments for the selected tax year',

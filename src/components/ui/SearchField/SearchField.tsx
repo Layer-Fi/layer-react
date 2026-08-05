@@ -37,7 +37,7 @@ export function SearchField({ slot = 'search', className, label, isDisabled, ...
         className='Layer__SearchField__Field'
       >
         <ReactAriaInput slot='input' placeholder={label} />
-        <Button slot='clear-button' inset icon variant='ghost' aria-label={t('ui:action.clear_search', 'Clear search')}>
+        <Button slot='clear-button' inset icon variant='ghost' aria-label={t('ui:SearchField.action.clear_search', 'Clear search')}>
           <X size={18} />
         </Button>
       </ReactAriaSearchField>

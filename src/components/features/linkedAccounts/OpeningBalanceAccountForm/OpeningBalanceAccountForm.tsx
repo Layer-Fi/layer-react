@@ -108,10 +108,10 @@ export const OpeningBalanceAccountForm = ({
         <div className='Layer__OpeningBalanceAccountForm__Inputs'>
           <VStack className='Layer__OpeningBalanceAccountForm__InputGroup'>
             <Label size='sm' pbe='3xs'>
-              {t('linkedAccounts:label.opening_date', 'Opening date')}
+              {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_date', 'Opening date')}
             </Label>
             <DatePicker
-              label={t('linkedAccounts:label.opening_date', 'Opening date')}
+              label={t('linkedAccounts:OpeningBalanceAccountForm.label.opening_date', 'Opening date')}
               date={date}
               onChange={onChangeDate}
               onBlur={onBlurDate}
@@ -123,7 +123,7 @@ export const OpeningBalanceAccountForm = ({
           </VStack>
           <VStack className='Layer__OpeningBalanceAccountForm__InputGroup'>
             <Label size='sm' pbe='3xs'>
-              {t('linkedAccounts:label.opening_balance', 'Opening balance')}
+              {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_balance', 'Opening balance')}
             </Label>
             <AmountInput
               name='openingBalance'
@@ -138,7 +138,7 @@ export const OpeningBalanceAccountForm = ({
         </div>
         {errors.includes('API_ERROR') && (
           <ErrorText>
-            {t('linkedAccounts:error.save_data_try_again_later', 'An error occurred while saving data. You will have an opportunity to try again later.')}
+            {t('linkedAccounts:OpeningBalanceAccountForm.error.save_data_try_again_later', 'An error occurred while saving data. You will have an opportunity to try again later.')}
           </ErrorText>
         )}
       </div>
@@ -148,7 +148,7 @@ export const OpeningBalanceAccountForm = ({
             size='lg'
             isSelected={value.isConfirmed}
             onChange={v => onChange({ ...value, isConfirmed: v })}
-            aria-label={t('linkedAccounts:label.confirm_account_inclusion', 'Confirm Account Inclusion')}
+            aria-label={t('linkedAccounts:OpeningBalanceAccountForm.label.confirm_account_inclusion', 'Confirm Account Inclusion')}
           />
         </div>
       )}

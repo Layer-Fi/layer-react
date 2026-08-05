@@ -67,7 +67,7 @@ export const DateSelectionComboBox = ({
 
   const inputId = useId()
 
-  const label = t('reports:label.report_period', 'Report period')
+  const label = t('blocks:DateSelection.label.report_period', 'Report period')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

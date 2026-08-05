@@ -1,140 +1,246 @@
 {
-  "action": {
-    "add_new_split": "Ajouter une nouvelle répartition",
-    "add_next_receipt": "Ajouter le prochain reçu",
-    "approve_match": "Approuver la correspondance",
-    "categorize_all": "Tout catégoriser",
-    "categorize_or_match": "Catégoriser ou apparier...",
-    "confirm_all": "Tout confirmer",
-    "download_transactions": "Télécharger les transactions",
-    "edit_transaction": "Modifier la transaction",
-    "manage_categorization_rules": "Gérer les règles de catégorisation",
-    "mark_as_personal": "Marquer comme personnel",
-    "no_tax_code": "Aucun code de taxe",
-    "or_find_match": "ou trouver une correspondance",
-    "or_split_transaction": "ou répartir la transaction",
-    "recategorize_all": "Tout recatégoriser",
-    "record_expense": "Enregistrer une dépense",
-    "record_income": "Enregistrer un revenu",
-    "record_transaction": "Enregistrer une transaction",
-    "search_categories": "Rechercher des catégories...",
-    "search_tax_codes": "Rechercher des codes de taxe...",
-    "select_a_category": "Sélectionner une catégorie",
-    "select_a_match": "Sélectionner une correspondance",
-    "select_category": "Sélectionner une catégorie",
-    "select_tax_code": "Sélectionner un code de taxe",
-    "set_transaction_customer_vendor": "Définir le client ou le fournisseur de la transaction",
-    "show_all_categories": "Afficher toutes les catégories",
-    "split_label": "Répartir",
-    "split_number_label": "Répartition no {{number}}",
-    "split_transaction": "Répartir la transaction",
-    "toggle_details": "Basculer les détails",
-    "uncategorize_all": "Tout décatégoriser",
-    "upload_receipt": "Téléverser un reçu",
-    "upload_transactions_manually": "Importer les transactions manuellement"
+  "BankTransactionCategoryComboBox": {
+    "action": {
+      "categorize_or_match": "Catégoriser ou apparier...",
+      "select_category": "Sélectionner une catégorie"
+    },
+    "label": {
+      "all_categories_uppercase": "TOUTES LES CATÉGORIES",
+      "generating_suggestions": "Génération des suggestions...",
+      "generating_suggestions_transaction": "Génération de suggestions pour la transaction...",
+      "match_uppercase": "CORRESPONDANCE",
+      "suggestions_uppercase": "SUGGESTIONS",
+      "transfer_uppercase": "VIREMENT"
+    }
   },
-  "empty": {
-    "no_categorized_transactions": "Vous n’avez aucune transaction catégorisée",
-    "no_category_selected": "Aucune catégorie sélectionnée",
-    "no_transactions_found": "Aucune transaction trouvée",
-    "transactions_displayed_here_once_reviewed": "Toutes les transactions s’afficheront ici une fois examinées",
-    "transactions_up_to_date": "Vos transactions sont à jour",
-    "try_adjusting_search_filters": "Essayez d’ajuster vos filtres de recherche",
-    "uncategorized_transactions_displayed_here": "Toutes les transactions non catégorisées s’afficheront ici"
+  "BankTransactionCustomerVendorSelector": {
+    "action": {
+      "set_transaction_customer_vendor": "Définir le client ou le fournisseur de la transaction"
+    }
   },
-  "error": {
-    "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes.",
-    "categorize_transactions": "Échec de la catégorisation des transactions",
-    "confirm_transactions": "Échec de la confirmation des transactions",
-    "couldnt_load_transactions": "Nous n’avons pas pu charger vos transactions",
-    "delete": "Échec de la suppression",
-    "download_retry": "Le téléchargement a échoué, veuillez réessayer",
-    "matching_transactions_not_found": "Nous n’avons pas trouvé de transactions correspondantes",
-    "recategorize_transactions": "Échec de la recatégorisation des transactions",
-    "select_option_match_transaction": "Sélectionnez une option pour apparier la transaction",
-    "uncategorize_transactions": "Échec de la décatégorisation des transactions",
-    "upload": "Échec du téléversement",
-    "upload_file_type": "Type de fichier invalide. Veuillez téléverser une image ou un PDF."
+  "BankTransactionMatchBadge": {
+    "label": {
+      "matched": "Appariée",
+      "transfer": "Virement"
+    }
   },
-  "label": {
-    "accounts_selected_one": "{{count}} compte sélectionné",
-    "accounts_selected_other": "{{count}} comptes sélectionnés",
-    "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
-    "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
-    "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
-    "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
-    "affected_transactions": "Transactions concernées",
-    "all_categories_uppercase": "TOUTES LES CATÉGORIES",
-    "all_done": "Tout est terminé",
-    "all_transactions_categorized": "Toutes les transactions sont catégorisées",
-    "bank_transactions": "Activité bancaire",
-    "categorization_status": "Statut de catégorisation",
-    "categorize_count_selected_one": "Cette action catégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
-    "categorize_count_selected_other": "Cette action catégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
-    "categorize_or_match_transaction": "Catégoriser ou apparier la transaction",
-    "categorized": "Catégorisé",
-    "count_transactions_will_be_skipped_one": "{{displayCount}} transaction sera ignorée en raison de l’absence de catégorie.",
-    "count_transactions_will_be_skipped_other": "{{displayCount}} transactions seront ignorées en raison de l’absence de catégorie.",
-    "find_match": "Trouver une correspondance",
-    "generating_suggestions": "Génération des suggestions...",
-    "generating_suggestions_transaction": "Génération de suggestions pour la transaction...",
-    "match": "Correspondance",
-    "match_uppercase": "CORRESPONDANCE",
-    "matched": "Appariée",
-    "pending": "en attente",
-    "recategorize_count_selected_one": "Cette action recatégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
-    "recategorize_count_selected_other": "Cette action recatégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
-    "receipt_number": "Reçu {{number}}",
-    "receipts": "Reçus",
-    "review_uncategorized_transactions_one": "Examiner {{displayCount}} transaction non catégorisée",
-    "review_uncategorized_transactions_other": "Examiner {{displayCount}} transactions non catégorisées",
-    "search_transactions": "Rechercher des transactions",
-    "select_all_transactions": "Sélectionner toutes les transactions sur cette page",
-    "select_transaction": "Sélectionner l'opération",
-    "selected_counterparty": "cette contrepartie",
-    "suggested_category": "Catégorie suggérée",
-    "suggestions_uppercase": "SUGGESTIONS",
-    "tax_code": "Code de taxe",
-    "this_will_confirm_count_transactions_one": "Cette action confirmera {{displayCount}} transaction.",
-    "this_will_confirm_count_transactions_other": "Cette action confirmera {{displayCount}} transactions.",
-    "to_review": "À examiner",
-    "transaction_source": "Source de la transaction",
-    "transactions": "Opérations",
-    "transactions_to_review": "Transactions à examiner",
-    "transfer": "Virement",
-    "transfer_uppercase": "VIREMENT",
-    "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
-    "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées.",
-    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque.",
-    "accounts_selected_many": ""
+  "BankTransactionMatchList": {
+    "action": {
+      "select_a_match": "Sélectionner une correspondance"
+    }
   },
-  "prompt": {
-    "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
-    "confirm_all_suggestions": "Confirmer toutes les suggestions?",
-    "recategorize_selected_transactions": "Recatégoriser toutes les transactions sélectionnées?",
-    "uncategorize_selected_transactions": "Retirer la catégorie de toutes les transactions sélectionnées?"
+  "BankTransactionReceipts": {
+    "action": {
+      "add_next_receipt": "Ajouter le prochain reçu",
+      "upload_receipt": "Téléverser un reçu"
+    },
+    "label": {
+      "receipt_number": "Reçu {{number}}"
+    }
   },
-  "recordTransaction": {
+  "BankTransactionsAccountFilterChip": {
+    "label": {
+      "accounts_selected_one": "{{count}} compte sélectionné",
+      "accounts_selected_many": "",
+      "accounts_selected_other": "{{count}} comptes sélectionnés"
+    }
+  },
+  "BankTransactionsBulkActions": {
+    "action": {
+      "categorize_all": "Tout catégoriser",
+      "confirm_all": "Tout confirmer",
+      "recategorize_all": "Tout recatégoriser",
+      "select_category": "Sélectionner une catégorie",
+      "uncategorize_all": "Tout décatégoriser"
+    },
+    "error": {
+      "categorize_transactions": "Échec de la catégorisation des transactions",
+      "confirm_transactions": "Échec de la confirmation des transactions",
+      "recategorize_transactions": "Échec de la recatégorisation des transactions",
+      "uncategorize_transactions": "Échec de la décatégorisation des transactions"
+    },
+    "label": {
+      "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
+      "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
+      "categorize_count_selected_one": "Cette action catégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
+      "categorize_count_selected_other": "Cette action catégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
+      "count_transactions_will_be_skipped_one": "{{displayCount}} transaction sera ignorée en raison de l’absence de catégorie.",
+      "count_transactions_will_be_skipped_other": "{{displayCount}} transactions seront ignorées en raison de l’absence de catégorie.",
+      "recategorize_count_selected_one": "Cette action recatégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
+      "recategorize_count_selected_other": "Cette action recatégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
+      "tax_code": "Code de taxe",
+      "this_will_confirm_count_transactions_one": "Cette action confirmera {{displayCount}} transaction.",
+      "this_will_confirm_count_transactions_other": "Cette action confirmera {{displayCount}} transactions.",
+      "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
+      "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées."
+    },
+    "prompt": {
+      "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
+      "confirm_all_suggestions": "Confirmer toutes les suggestions?",
+      "recategorize_selected_transactions": "Recatégoriser toutes les transactions sélectionnées?",
+      "uncategorize_selected_transactions": "Retirer la catégorie de toutes les transactions sélectionnées?"
+    }
+  },
+  "BankTransactionsDataStates": {
+    "empty": {
+      "no_categorized_transactions": "Vous n’avez aucune transaction catégorisée",
+      "no_transactions_found": "Aucune transaction trouvée",
+      "transactions_displayed_here_once_reviewed": "Toutes les transactions s’afficheront ici une fois examinées",
+      "transactions_up_to_date": "Vos transactions sont à jour",
+      "try_adjusting_search_filters": "Essayez d’ajuster vos filtres de recherche",
+      "uncategorized_transactions_displayed_here": "Toutes les transactions non catégorisées s’afficheront ici"
+    },
+    "error": {
+      "couldnt_load_transactions": "Nous n’avons pas pu charger vos transactions"
+    }
+  },
+  "BankTransactionsHeader": {
+    "action": {
+      "confirm_all": "Tout confirmer",
+      "download_transactions": "Télécharger les transactions",
+      "manage_categorization_rules": "Gérer les règles de catégorisation",
+      "upload_transactions_manually": "Importer les transactions manuellement"
+    },
+    "label": {
+      "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
+      "categorization_status": "Statut de catégorisation",
+      "categorized": "Catégorisé",
+      "to_review": "À examiner"
+    }
+  },
+  "BankTransactionsList": {
+    "error": {
+      "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes."
+    },
+    "label": {
+      "select_all_transactions": "Sélectionner toutes les transactions sur cette page"
+    }
+  },
+  "BankTransactionsListItemCategory": {
+    "empty": {
+      "no_category_selected": "Aucune catégorie sélectionnée"
+    }
+  },
+  "BankTransactionsMobileCategorySelection": {
+    "action": {
+      "select_a_category": "Sélectionner une catégorie",
+      "select_category": "Sélectionner une catégorie",
+      "show_all_categories": "Afficher toutes les catégories"
+    }
+  },
+  "BankTransactionsMobileList": {
+    "action": {
+      "approve_match": "Approuver la correspondance",
+      "mark_as_personal": "Marquer comme personnel",
+      "or_find_match": "ou trouver une correspondance",
+      "or_split_transaction": "ou répartir la transaction",
+      "split_label": "Répartir",
+      "split_transaction": "Répartir la transaction",
+      "upload_receipt": "Téléverser un reçu"
+    },
+    "error": {
+      "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes.",
+      "select_option_match_transaction": "Sélectionnez une option pour apparier la transaction"
+    },
+    "label": {
+      "find_match": "Trouver une correspondance",
+      "receipts": "Reçus",
+      "select_all_transactions": "Sélectionner toutes les transactions sur cette page",
+      "transactions": "Opérations"
+    }
+  },
+  "BankTransactionsProcessingInfo": {
+    "label": {
+      "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet."
+    }
+  },
+  "BankTransactionsSearchField": {
+    "label": {
+      "search_transactions": "Rechercher des transactions"
+    }
+  },
+  "BankTransactionsSelectedValue": {
+    "action": {
+      "split_label": "Répartir"
+    },
+    "label": {
+      "match": "Correspondance",
+      "suggested_category": "Catégorie suggérée",
+      "transfer": "Virement"
+    }
+  },
+  "BankTransactionsSyncingStatus": {
+    "label": {
+      "may_take_up_to_hours_one": "Cela peut prendre jusqu’à {{displayCount}} heure.",
+      "may_take_up_to_hours_other": "Cela peut prendre jusqu’à {{displayCount}} heures.",
+      "may_take_up_to_minutes_one": "Cela peut prendre jusqu’à {{displayCount}} minute.",
+      "may_take_up_to_minutes_other": "Cela peut prendre jusqu’à {{displayCount}} minutes."
+    },
+    "state": {
+      "syncing_account_data": "Synchronisation des données du compte",
+      "syncing_historical_account_data": "Synchronisation des données historiques du compte"
+    }
+  },
+  "BankTransactionsTable": {
+    "action": {
+      "toggle_details": "Basculer les détails"
+    },
+    "error": {
+      "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes."
+    },
+    "label": {
+      "bank_transactions": "Activité bancaire",
+      "select_all_transactions": "Sélectionner toutes les transactions sur cette page",
+      "select_transaction": "Sélectionner l’opération"
+    }
+  },
+  "BankTransactionTaxCodeSelect": {
+    "action": {
+      "no_tax_code": "Aucun code de taxe",
+      "search_tax_codes": "Rechercher des codes de taxe...",
+      "select_tax_code": "Sélectionner un code de taxe"
+    }
+  },
+  "DeleteRecordedBankTransactionConfirmation": {
     "delete": {
       "description": "Cette transaction sera supprimée définitivement. Cette action ne peut pas être annulée.",
       "title": "Supprimer la transaction"
+    }
+  },
+  "EditCustomBankTransactionButton": {
+    "action": {
+      "edit_transaction": "Modifier la transaction"
+    }
+  },
+  "ExpandedBankTransactionRow": {
+    "action": {
+      "add_new_split": "Ajouter une nouvelle répartition",
+      "set_customer_vendor": "Sélectionner un client ou un fournisseur",
+      "split_label": "Répartir",
+      "split_number_label": "Répartition no {{number}}"
     },
+    "error": {
+      "matching_transactions_not_found": "Nous n’avons pas trouvé de transactions correspondantes",
+      "select_option_match_transaction": "Sélectionnez une option pour apparier la transaction"
+    },
+    "label": {
+      "categorize_or_match_transaction": "Catégoriser ou apparier la transaction",
+      "match": "Correspondance"
+    }
+  },
+  "RecordBankTransactionForm": {
     "label": {
       "deposited_in": "Déposé dans",
       "paid_from": "Payé à partir de",
       "payee": "Bénéficiaire",
-      "payer": "Payeur"
+      "payer": "Payeur",
+      "tax_code": "Code de taxe"
     },
     "placeholder": {
       "account": "Sélectionner un compte...",
       "category": "Sélectionner une catégorie...",
       "payee": "Personne que vous avez payée",
       "payer": "Personne qui vous a payé"
-    },
-    "title": {
-      "add_expense": "Ajouter une dépense",
-      "add_income": "Ajouter un revenu",
-      "edit": "Modifier la transaction"
     },
     "toast": {
       "transaction_recorded": "Transaction enregistrée",
@@ -151,8 +257,36 @@
       "payer_required": "Le payeur est obligatoire"
     }
   },
-  "validation": {
-    "splits_amount_greater_than_zero": "Toutes les répartitions doivent avoir un montant supérieur à 0,00 $",
-    "splits_must_have_category": "Toutes les répartitions doivent avoir une catégorie"
+  "RecordBankTransactionMenuButton": {
+    "action": {
+      "record_expense": "Enregistrer une dépense",
+      "record_income": "Enregistrer un revenu",
+      "record_transaction": "Enregistrer une transaction"
+    }
+  },
+  "RecordBankTransactionModal": {
+    "title": {
+      "add_expense": "Ajouter une dépense",
+      "add_income": "Ajouter un revenu",
+      "edit": "Modifier la transaction"
+    }
+  },
+  "splits": {
+    "validation": {
+      "splits_amount_greater_than_zero": "Toutes les répartitions doivent avoir un montant supérieur à 0,00 $",
+      "splits_must_have_category": "Toutes les répartitions doivent avoir une catégorie"
+    }
+  },
+  "useHandleBankTransactionsDownload": {
+    "error": {
+      "download_retry": "Le téléchargement a échoué, veuillez réessayer"
+    }
+  },
+  "useReceipts": {
+    "error": {
+      "delete": "Échec de la suppression",
+      "upload": "Échec du téléversement",
+      "upload_file_type": "Type de fichier invalide. Veuillez téléverser une image ou un PDF."
+    }
   }
 }

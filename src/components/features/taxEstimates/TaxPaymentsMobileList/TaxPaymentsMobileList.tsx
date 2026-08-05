@@ -19,21 +19,21 @@ const TaxPaymentsMobileListItem = ({ payment }: { payment: TaxPaymentRow }) => {
       <Heading size='sm' weight='bold' pbe='3xs'>{payment.label}</Heading>
       <VStack gap='3xs'>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:TaxPaymentsMobileList.label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.rolledOverFromPrevious} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.owed_quarter', 'Owed This Quarter')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:TaxPaymentsMobileList.label.owed_quarter', 'Owed This Quarter')}</Span>
           <MoneySpan size='sm' amount={payment.owedThisQuarter} />
         </HStack>
         <HStack justify='space-between'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.total_paid', 'Total Paid')}</Span>
+          <Span size='sm' variant='subtle'>{t('taxEstimates:TaxPaymentsMobileList.label.total_paid', 'Total Paid')}</Span>
           <MoneySpan size='sm' amount={payment.totalPaid} />
         </HStack>
       </VStack>
       <Separator />
       <HStack justify='space-between'>
-        <Span size='md' weight='bold'>{t('taxEstimates:label.remaining_balance', 'Remaining Balance')}</Span>
+        <Span size='md' weight='bold'>{t('taxEstimates:TaxPaymentsMobileList.label.remaining_balance', 'Remaining Balance')}</Span>
         <MoneySpan size='md' amount={payment.remainingBalance} weight='bold' />
       </HStack>
     </VStack>
@@ -53,7 +53,7 @@ export const TaxPaymentsMobileList = ({ data, isLoading, isError, slots }: Commo
   return (
     <div className='Layer__TaxPaymentsMobileList'>
       <MobileList
-        ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
+        ariaLabel={t('taxEstimates:TaxPaymentsMobileList.label.tax_payments', 'Tax Payments')}
         data={mutableData}
         isLoading={isLoading}
         isError={isError}

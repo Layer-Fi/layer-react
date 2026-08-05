@@ -67,8 +67,8 @@ const ChartOfAccountsEmptyState = () => {
   return (
     <DataState
       status={DataStateStatus.info}
-      title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
-      description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
+      title={t('generalLedger:ChartOfAccountsTable.empty.accounts', 'No accounts found')}
+      description={t('generalLedger:ChartOfAccountsTable.empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
       spacing
     />
   )
@@ -123,12 +123,12 @@ export const ChartOfAccountsTable = ({
       return undefined
     }
     if (account.subAccounts.length > 0) {
-      return t('chartOfAccounts:validation.delete_account_has_children', 'This account cannot be deleted because it has child accounts')
+      return t('generalLedger:ChartOfAccountsTable.validation.delete_account_has_children', 'This account cannot be deleted because it has child accounts')
     }
     if (account.balance !== 0) {
-      return t('chartOfAccounts:validation.delete_account_has_ledger_entries', 'This account cannot be deleted because it has ledger entries')
+      return t('generalLedger:ChartOfAccountsTable.validation.delete_account_has_ledger_entries', 'This account cannot be deleted because it has ledger entries')
     }
-    return t('chartOfAccounts:validation.delete_account_is_required', 'This account cannot be deleted because it is a required account')
+    return t('generalLedger:ChartOfAccountsTable.validation.delete_account_is_required', 'This account cannot be deleted because it is a required account')
   }, [t])
 
   const filteredAccounts = useMemo(() => {
@@ -191,7 +191,7 @@ export const ChartOfAccountsTable = ({
   const columnConfig = useMemo<ColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
       id: ChartOfAccountsColumn.AccountNumber,
-      header: stringOverrides?.numberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
+      header: stringOverrides?.numberColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_number', 'Account Number'),
       cell: (row: Row<AugmentedLedgerAccountBalance>) =>
         renderHighlightedValue(row, row.original.accountNumber || ''),
     }
@@ -199,7 +199,7 @@ export const ChartOfAccountsTable = ({
     const columns: ColumnConfig<AugmentedLedgerAccountBalance> = [
       {
         id: ChartOfAccountsColumn.Name,
-        header: stringOverrides?.nameColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
+        header: stringOverrides?.nameColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_name_title_case', 'Account Name'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           <Button variant='text' ellipsis onClick={e => onClickView(row, e)}>
             {renderHighlightedValue(row, row.original.name)}
@@ -216,7 +216,7 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Subtype,
-        header: stringOverrides?.subtypeColumnHeader || t('chartOfAccounts:label.sub_type', 'Sub-Type'),
+        header: stringOverrides?.subtypeColumnHeader || t('generalLedger:ChartOfAccountsTable.label.sub_type', 'Sub-Type'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           renderHighlightedNonRootValue(row, row.original.accountSubtype?.displayName || '')
         ),
@@ -254,7 +254,7 @@ export const ChartOfAccountsTable = ({
                 aria-label={t('common:action.edit_label', 'Edit')}
                 isDisabled={isNonEditable}
                 onClick={e => onClickEdit(account, e)}
-                tooltip={isNonEditable ? t('chartOfAccounts:validation.account_not_modifiable', 'This account cannot be modified') : undefined}
+                tooltip={isNonEditable ? t('generalLedger:ChartOfAccountsTable.validation.account_not_modifiable', 'This account cannot be modified') : undefined}
               >
                 <Pen size={14} />
               </Button>
@@ -299,7 +299,7 @@ export const ChartOfAccountsTable = ({
     <>
       <ExpandableDataTable
         componentName={COMPONENT_NAME}
-        ariaLabel={t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
+        ariaLabel={t('generalLedger:ChartOfAccountsTable.label.chart_of_accounts', 'Chart of Accounts')}
         columnConfig={columnConfig}
         data={filteredAccounts ? asMutable(filteredAccounts) : undefined}
         isLoading={isLoading}
@@ -315,10 +315,10 @@ export const ChartOfAccountsTable = ({
             setAccountToDelete(null)
           }
         }}
-        title={t('chartOfAccounts:action.delete_account_name', 'Delete {{accountName}}', { accountName: accountToDelete?.name })}
-        description={t('chartOfAccounts:label.account_remove_warning', 'This account will be permanently removed from your Chart of Accounts.')}
+        title={t('generalLedger:ChartOfAccountsTable.action.delete_account_name', 'Delete {{accountName}}', { accountName: accountToDelete?.name })}
+        description={t('generalLedger:ChartOfAccountsTable.label.account_remove_warning', 'This account will be permanently removed from your Chart of Accounts.')}
         onConfirm={onConfirmDelete}
-        confirmLabel={t('chartOfAccounts:action.delete_account', 'Delete Account')}
+        confirmLabel={t('generalLedger:ChartOfAccountsTable.action.delete_account', 'Delete Account')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
       />
     </>

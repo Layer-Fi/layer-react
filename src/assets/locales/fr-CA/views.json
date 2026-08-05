@@ -1,0 +1,115 @@
+{
+  "AccountingOverview": {
+    "label": {
+      "accounting_overview": "Aperçu de la comptabilité"
+    }
+  },
+  "BankTransactionsWithLinkedAccounts": {
+    "label": {
+      "bank_transactions": "Activité bancaire"
+    }
+  },
+  "BookkeepingOverview": {
+    "label": {
+      "bookkeeping_overview": "Aperçu de la tenue de livres"
+    }
+  },
+  "GeneralLedger": {
+    "label": {
+      "chart_of_accounts": "Plan comptable",
+      "general_ledger": "Grand livre",
+      "journal": "Journal",
+      "ledger_view": "Vue du grand livre"
+    }
+  },
+  "Invoices": {
+    "label": {
+      "invoices": "Factures"
+    }
+  },
+  "LandingPage": {
+    "action": {
+      "book_call": "Planifier un appel",
+      "learn_more": "Découvrir plus"
+    },
+    "label": {
+      "all_finances_in_one_place": "Toutes vos finances au même endroit",
+      "best_accounting_software_for_industry": "Le meilleur logiciel de comptabilité pour les entreprises de {{industry}}. Rapide à configurer et facile à utiliser.",
+      "built_for_industry": "Conçu pour {{industry}}",
+      "complete_bookkeeping_service": "Un service complet de tenue de livres",
+      "complete_financial_reports": "Rapports financiers complets et dossier fiscal de fin d’année",
+      "direct_integration_with_platform_name": "Intégration directe avec {{platformName}}",
+      "directly_integrated_with_platform_name": "Intégré directement à vos données {{platformName}}, pour que vous puissiez voir la performance et les profits de votre entreprise en temps réel.",
+      "easy_to_understand_profitability_charts": "Graphiques et rapports de rentabilité faciles à comprendre",
+      "easy_to_use_software": "Un logiciel facile à utiliser",
+      "full_service_bookkeeping": "Tenue de livres à service complet",
+      "get_dedicated_bookkeeper": "Obtenez un teneur de livres attitré qui organisera et gérera vos livres pour vous.",
+      "monthly_books_done_for_you": "Tenue de livres mensuelle faite pour vous",
+      "personalized_setup_bookkeeper": "Configuration personnalisée avec votre teneur de livres",
+      "platform_name_accounting": "Comptabilité {{platformName}}",
+      "platform_name_accounting_dashboard": "Interface du tableau de bord Comptabilité {{platformName}} affichant des données financières et des informations sur l’entreprise",
+      "self_service_accounting_business_health": "Comptabilité en libre-service pour comprendre la santé de votre entreprise",
+      "starting_at": "À partir de",
+      "track_business_finances_within_platform": "Suivez les finances de votre entreprise directement dans {{platformName}}.",
+      "track_expenses_and_get_reports": "Suivez vos dépenses et obtenez des rapports faciles à comprendre conçus spécialement pour les entreprises de {{industry}}.",
+      "track_expenses_and_receipts": "Suivez les dépenses et les reçus",
+      "use_platform_name_accounting": "Utilisez Comptabilité {{platformName}} vous-même, ou laissez votre tenue de livres à notre équipe d’experts"
+    }
+  },
+  "MileageTracking": {
+    "label": {
+      "mileage_tracking": "Suivi des kilomètres parcourus"
+    }
+  },
+  "Reports": {
+    "label": {
+      "balance_sheet": "Bilan",
+      "cash_flow_statement": "État des flux de trésorerie",
+      "report_type": "Type de rapport",
+      "reports": "Rapports"
+    }
+  },
+  "SolopreneurOverview": {
+    "label": {
+      "link_your_bank_accounts": "Connectez vos comptes bancaires",
+      "link_your_bank_accounts_description": "La connexion de vos comptes bancaires nous permet de charger vos transactions bancaires et de les catégoriser automatiquement.",
+      "set_up_your_tax_profile": "Configurez votre profil fiscal",
+      "set_up_your_tax_profile_description": "La configuration de votre profil fiscal nous permet de vous fournir des estimations fiscales et d’éviter toute surprise au moment des impôts."
+    }
+  },
+  "TaxEstimates": {
+    "action": {
+      "update_tax_profile": "Mettre à jour le profil fiscal"
+    },
+    "disclaimer": {
+      "content": "L’outil d’estimation des impôts et le contenu connexe sont fournis à titre informatif seulement et ne constituent pas des conseils juridiques, comptables ou fiscaux, ni un substitut à l’avis d’un professionnel. Nous ne sommes pas un planificateur financier ni un conseiller fiscal, et les utilisateurs assument l’entière responsabilité de leurs obligations fiscales, de l’exactitude des données et du respect des lois. Tous les calculs sont des estimations et peuvent contenir des erreurs. Ils reposent uniquement sur les renseignements que vous nous fournissez."
+    },
+    "error": {
+      "feature_not_enabled": "Les estimations fiscales ne sont pas activées.",
+      "load_tax_information": "Impossible de charger les renseignements fiscaux",
+      "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "additional_actions": "Actions supplémentaires",
+      "estimates": "Estimations",
+      "payments": "Paiements",
+      "tax_estimate_view": "Vue des estimations fiscales",
+      "tax_profile": "Profil fiscal"
+    }
+  },
+  "TimeTracking": {
+    "label": {
+      "additional_time_tracking_actions": "Actions supplémentaires de suivi du temps",
+      "reports": "Rapports",
+      "time_tracking": "Suivi du temps"
+    },
+    "services": {
+      "title": "Services"
+    }
+  },
+  "UnifiedReports": {
+    "label": {
+      "reports": "Rapports"
+    }
+  }
+}

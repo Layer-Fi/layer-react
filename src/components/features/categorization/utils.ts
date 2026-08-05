@@ -5,8 +5,8 @@ import { BankDirectionFilter } from '@schemas/features/categorization/categoriza
 import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export const DIRECTION_CONFIG = [
-  { value: BankDirectionFilter.MONEY_IN, ...translationKey('categorizationRules:label.money_in', 'Money In') },
-  { value: BankDirectionFilter.MONEY_OUT, ...translationKey('categorizationRules:label.money_out', 'Money Out') },
+  { value: BankDirectionFilter.MONEY_IN, ...translationKey('categorization:utils.label.money_in', 'Money In') },
+  { value: BankDirectionFilter.MONEY_OUT, ...translationKey('categorization:utils.label.money_out', 'Money Out') },
 ] as const
 
 export const getCategorizationRuleDirectionLabel = (
@@ -14,10 +14,10 @@ export const getCategorizationRuleDirectionLabel = (
   t: TFunction,
 ): string => {
   if (!bankDirectionFilter) {
-    return t('categorizationRules:label.any_direction', 'Any direction')
+    return t('categorization:utils.label.any_direction', 'Any direction')
   }
   const entry = DIRECTION_CONFIG.find(c => c.value === bankDirectionFilter)
-  return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorizationRules:label.any_direction', 'Any direction')
+  return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorization:utils.label.any_direction', 'Any direction')
 }
 
 export const getCategorizationRuleCounterpartyLabel = (rule: CategorizationRule): string | undefined => {
@@ -31,7 +31,7 @@ export const getCategorizationRuleAmountLabel = (
 ): string => {
   const { amountMinFilter: min, amountMaxFilter: max } = rule
   if (min == null && max == null) {
-    return t('categorizationRules:label.any_amount', 'Any amount')
+    return t('categorization:utils.label.any_amount', 'Any amount')
   }
   if (min != null && max != null) {
     return `${formatCurrencyFromCents(min)} – ${formatCurrencyFromCents(max)}`

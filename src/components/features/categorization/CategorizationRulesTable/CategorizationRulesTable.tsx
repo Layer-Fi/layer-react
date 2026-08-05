@@ -93,7 +93,7 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onEditRule(row.original)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
+          aria-label={t('categorization:CategorizationRulesTable.action.edit_rule', 'Edit Rule')}
           variant='ghost'
         >
           <Pencil size={16} />
@@ -107,7 +107,7 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onDeleteRule(row.original)}
-          aria-label={t('categorizationRules:action.delete_rule', 'Delete Rule')}
+          aria-label={t('categorization:CategorizationRulesTable.action.delete_rule', 'Delete Rule')}
           variant='ghost'
         >
           <Trash2 size={16} />
@@ -118,7 +118,7 @@ export const CategorizationRulesTable = ({
 
   return (
     <PaginatedTable
-      ariaLabel={t('categorizationRules:label.categorization_rules', 'Categorization rules')}
+      ariaLabel={t('categorization:CategorizationRulesTable.label.categorization_rules', 'Categorization rules')}
       data={data}
       isLoading={isLoading}
       isError={isError}

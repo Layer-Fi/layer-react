@@ -11,8 +11,8 @@ import { Label } from '@ui/Typography/Text'
 import './unifiedReportReportingBasisControl.scss'
 
 const REPORTING_BASIS_CONFIG = [
-  { value: ReportingBasis.Cash, ...translationKey('reports:label.cash', 'Cash') },
-  { value: ReportingBasis.Accrual, ...translationKey('reports:label.accrual', 'Accrual') },
+  { value: ReportingBasis.Cash, ...translationKey('unifiedReports:UnifiedReportReportingBasisControl.label.cash', 'Cash') },
+  { value: ReportingBasis.Accrual, ...translationKey('unifiedReports:UnifiedReportReportingBasisControl.label.accrual', 'Accrual') },
 ] satisfies ReadonlyArray<{ value: UnifiedReportReportingBasis, i18nKey: string, defaultValue: string }>
 
 type ReportingBasisOption = {
@@ -28,7 +28,7 @@ type UnifiedReportReportingBasisControlProps = {
 const useReportingBasisControlData = () => {
   const { t } = useTranslation()
 
-  const label = t('reports:label.reporting_basis', 'Reporting basis')
+  const label = t('unifiedReports:UnifiedReportReportingBasisControl.label.reporting_basis', 'Reporting basis')
   const options = REPORTING_BASIS_CONFIG.map(({ value, i18nKey, defaultValue }) => ({
     value,
     label: t(i18nKey, defaultValue),

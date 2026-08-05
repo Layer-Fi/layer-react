@@ -33,11 +33,11 @@ export const validateCustomerForm = ({ customer }: { customer: CustomerForm }, t
   const errors = []
 
   if (!individualName.trim() && !companyName.trim()) {
-    errors.push({ individualName: t('customerVendor:validation.either_individual_required', 'Either individual name or company name is required.') })
+    errors.push({ individualName: t('customerVendor:CustomerForm.validation.either_individual_required', 'Either individual name or company name is required.') })
   }
 
   if (!email.trim()) {
-    errors.push({ email: t('customerVendor:validation.email_required', 'Email is a required field.') })
+    errors.push({ email: t('customerVendor:CustomerForm.validation.email_required', 'Email is a required field.') })
   }
 
   return errors.length > 0 ? errors : null

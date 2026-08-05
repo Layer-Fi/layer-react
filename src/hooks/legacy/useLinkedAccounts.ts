@@ -156,7 +156,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
     () => fetchLinkToken(
       'add',
       () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
-      t('linkedAccounts:error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
       plaidHostedLinkConfig,
     ),
     [fetchLinkToken, triggerCreatePlaidLink, plaidHostedLinkConfig, t],
@@ -169,7 +169,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
     (plaidItemPlaidId: string) => fetchLinkToken(
       'update',
       () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
-      t('linkedAccounts:error.repair_connection', 'We couldn’t repair the Plaid connection with your account. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.repair_connection', 'We couldn’t repair the Plaid connection with your account. Please try again.'),
       plaidHostedLinkConfig,
     ),
     [fetchLinkToken, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, t],
@@ -182,7 +182,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const handleRemoveConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchWithToast(
       () => triggerUnlinkPlaidItem({ plaidItemId: connectionExternalId }),
-      t('linkedAccounts:error.remove_connection', 'We couldn’t remove this connection. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.remove_connection', 'We couldn’t remove this connection. Please try again.'),
     ),
     [mutateAndRefetchWithToast, triggerUnlinkPlaidItem, t],
   )
@@ -191,7 +191,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const handleConfirmAccount = useCallback(
     (accountId: string) => mutateAndRefetchWithToast(
       () => triggerConfirmExternalAccount({ accountId }),
-      t('linkedAccounts:error.confirm_account', 'We couldn’t confirm your account. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.confirm_account', 'We couldn’t confirm your account. Please try again.'),
     ),
     [mutateAndRefetchWithToast, triggerConfirmExternalAccount, t],
   )
@@ -200,7 +200,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const handleExcludeAccount = useCallback(
     (accountId: string) => mutateAndRefetchWithToast(
       () => triggerExcludeExternalAccount({ accountId, body: { is_duplicate: true } }),
-      t('linkedAccounts:error.exclude_account', 'We couldn’t exclude your account. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.exclude_account', 'We couldn’t exclude your account. Please try again.'),
     ),
     [mutateAndRefetchWithToast, triggerExcludeExternalAccount, t],
   )
@@ -209,7 +209,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const handleBreakConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchWithToast(
       () => triggerBreakPlaidItemConnection({ plaidItemId: connectionExternalId }),
-      t('linkedAccounts:error.break_connection', 'We couldn’t reset this connection. Please try again.'),
+      t('linkedAccounts:useLinkedAccounts.error.break_connection', 'We couldn’t reset this connection. Please try again.'),
     ),
     [mutateAndRefetchWithToast, triggerBreakPlaidItemConnection, t],
   )

@@ -20,7 +20,7 @@ export const Invoices = ({ stringOverrides }: InvoicesProps) => {
 
   return (
     <InvoicesRouteStoreProvider>
-      <View title={stringOverrides?.title || t('invoices:label.invoices', 'Invoices')}>
+      <View title={stringOverrides?.title || t('views:Invoices.label.invoices', 'Invoices')}>
         <InvoicesContent />
       </View>
     </InvoicesRouteStoreProvider>

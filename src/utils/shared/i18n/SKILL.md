@@ -114,7 +114,7 @@ the value, then pass the result into `t()` as an interpolation variable.**
 const { t } = useTranslation()
 const { formatDate, formatNumber } = useIntlFormatter()
 
-t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })
+t('taxEstimates:TaxDeadlinesCard.label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })
 t('bookkeeping:action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })
 ```
 

@@ -1,0 +1,127 @@
+{
+  "CategorizationRuleForm": {
+    "action": {
+      "create_rule": "Create Rule",
+      "save_rule": "Save Rule"
+    },
+    "empty": {
+      "no_counterparties_yet": "No counterparties yet. They will appear here automatically as your transactions are processed.",
+      "no_matching_counterparties": "No matching counterparties."
+    },
+    "error": {
+      "load_counterparties": "Couldn’t load counterparties. Please try again."
+    },
+    "label": {
+      "amount_max_optional": "Maximum amount (optional)",
+      "amount_min_optional": "Minimum amount (optional)",
+      "any": "Any"
+    },
+    "placeholder": {
+      "none": "None",
+      "select_account": "Select account",
+      "select_counterparty": "Select counterparty"
+    },
+    "validation": {
+      "amount_min_greater_than_max": "Minimum amount must be less than or equal to maximum amount.",
+      "category_required": "Category is required.",
+      "counterparty_required": "Counterparty is required."
+    }
+  },
+  "CategorizationRuleFormDrawer": {
+    "action": {
+      "create_rule": "Create Rule",
+      "edit_rule": "Edit Rule"
+    }
+  },
+  "CategorizationRulesMobileList": {
+    "action": {
+      "delete_rule": "Delete Rule",
+      "edit_rule": "Edit Rule"
+    },
+    "label": {
+      "categorization_rules": "Categorization rules",
+      "rule_actions": "Rule actions",
+      "suggests_category": "Suggests a category"
+    }
+  },
+  "CategorizationRulesTable": {
+    "action": {
+      "delete_rule": "Delete Rule",
+      "edit_rule": "Edit Rule"
+    },
+    "label": {
+      "categorization_rules": "Categorization rules"
+    }
+  },
+  "CategorySelectDrawer": {
+    "action": {
+      "search_categories": "Search categories...",
+      "select_category": "Select category"
+    }
+  },
+  "CategorySelectDrawerWithTrigger": {
+    "action": {
+      "select_category": "Select category"
+    }
+  },
+  "ResponsiveCategorizationRulesView": {
+    "empty": {
+      "no_categorization_rules_match_search": "We couldn’t find any categorization rules matching your search. Try a different search term.",
+      "no_categorization_rules_yet": "No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.",
+      "no_rules_found": "No rules found"
+    },
+    "error": {
+      "archive_categorization_rule": "Failed to archive categorization rule",
+      "couldnt_load_data": "We couldn’t load your categorization rules",
+      "load_categorization_rules": "An error occurred while loading your categorization rules. Please check your connection and try again."
+    },
+    "label": {
+      "categorization_rules": "Categorization Rules",
+      "search_rules": "Search rules",
+      "selected_counterparty": "this counterparty",
+      "transaction_no_longer_automatically_categorized": "Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected."
+    },
+    "prompt": {
+      "delete_categorization_rule": "Delete categorization rule?"
+    }
+  },
+  "SuggestedCategorizationRuleUpdates": {
+    "action": {
+      "dont_ask_again": "Don’t ask again",
+      "no_decide_each_time": "No, I’ll decide each time",
+      "yes_always_categorize": "Yes, always categorize"
+    },
+    "empty": {
+      "no_transactions_found": "No transactions found"
+    },
+    "error": {
+      "create_categorization_rule": "Failed to create categorization rule",
+      "load_affected_transactions": "There was an error loading the affected transactions",
+      "load_transactions": "Error loading transactions",
+      "reject_rule_suggestion": "Failed to reject rule suggestion"
+    },
+    "label": {
+      "affected_transaction_display": "There are no affected transactions to display",
+      "affected_transactions": "Affected transactions",
+      "following_count_transactions_one": "The following {{displayCount}} transaction will be affected:",
+      "following_count_transactions_other": "The following {{displayCount}} transactions will be affected:",
+      "or": "OR"
+    },
+    "prompt": {
+      "always_use_category": "Always use this category?"
+    }
+  },
+  "SuggestedCategorizationRuleUpdatesDialog": {
+    "label": {
+      "update_categorization_rules": "Update categorization rules"
+    }
+  },
+  "utils": {
+    "label": {
+      "any_amount": "Any amount",
+      "any_direction": "Any direction",
+      "money_in": "Money In",
+      "money_out": "Money Out"
+    }
+  }
+}

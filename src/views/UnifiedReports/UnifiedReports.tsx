@@ -27,7 +27,7 @@ const UnifiedReportContent = ({
   const { isDesktop } = useSizeClass()
 
   return (
-    <View title={t('reports:label.reports', 'Reports')} showHeader={showTitle} viewClassName='Layer__UnifiedReports'>
+    <View title={t('views:UnifiedReports.label.reports', 'Reports')} showHeader={showTitle} viewClassName='Layer__UnifiedReports'>
       <HStack className='Layer__UnifiedReports__Body'>
         {isDesktop && navigationVariant === 'sidebar' && (
           <VStack className='Layer__UnifiedReports__Sidebar'>

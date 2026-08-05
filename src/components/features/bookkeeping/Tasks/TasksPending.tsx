@@ -58,7 +58,7 @@ export const TasksPending = () => {
             <div className='Layer__tasks-pending-bar'>
               <P size='sm'>
                 <Trans
-                  i18nKey='bookkeeping:label.completed_over_total_done'
+                  i18nKey='bookkeeping:Tasks.label.completed_over_total_done'
                   count={totalTaskCount}
                   values={{ displayCompletedTaskCount, displayTotalTaskCount }}
                   defaults='<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} done'

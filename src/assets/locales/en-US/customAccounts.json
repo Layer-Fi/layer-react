@@ -1,0 +1,24 @@
+{
+  "CustomAccountForm": {
+    "action": {
+      "save_account": "Save Account",
+      "select_account_type": "Select account type..."
+    },
+    "error": {
+      "check_fields": "Please check all fields."
+    },
+    "label": {
+      "account_name": "Account name",
+      "account_ownership": "Ownership",
+      "account_type": "Account type",
+      "enter_account_name": "Enter account name...",
+      "enter_institution_name": "Enter institution name...",
+      "institution_name": "Institution name"
+    },
+    "validation": {
+      "account_name_required": "Account name is required",
+      "account_type_required": "Account type is required",
+      "institution_name_required": "Institution name is required"
+    }
+  }
+}

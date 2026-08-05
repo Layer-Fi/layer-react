@@ -120,11 +120,11 @@ export const BankTransactionsCategorizeAllModal = ({
     <BaseConfirmationModal
       isOpen={isOpen}
       onOpenChange={handleCategorizeModalClose}
-      title={mode === CategorizationMode.Categorize ? t('bankTransactions:prompt.categorize_selected_transactions', 'Categorize all selected transactions?') : t('bankTransactions:prompt.recategorize_selected_transactions', 'Recategorize all selected transactions?')}
+      title={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.prompt.categorize_selected_transactions', 'Categorize all selected transactions?') : t('bankTransactions:BankTransactionsBulkActions.prompt.recategorize_selected_transactions', 'Recategorize all selected transactions?')}
       content={(
         <VStack gap='xs'>
           <VStack gap='3xs'>
-            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:action.select_category', 'Select category')}</Label>
+            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:BankTransactionsBulkActions.action.select_category', 'Select category')}</Label>
             {isMobileView
               ? (
                 <CategorySelectDrawerWithTrigger
@@ -146,7 +146,7 @@ export const BankTransactionsCategorizeAllModal = ({
           </VStack>
           {showTaxCodeSelect && (
             <VStack gap='3xs' pbs='sm'>
-              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
+              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:BankTransactionsBulkActions.label.tax_code', 'Tax code')}</Label>
               <BankTransactionTaxCodeSelect
                 inputId={taxCodeSelectId}
                 isMobile={isMobileView}
@@ -160,14 +160,14 @@ export const BankTransactionsCategorizeAllModal = ({
           {selectedCategory && isCategoryAsOption(selectedCategory) && (
             <Span>
               {mode === CategorizationMode.Categorize
-                ? tPlural(t, 'bankTransactions:label.categorize_count_selected', {
+                ? tPlural(t, 'bankTransactions:BankTransactionsBulkActions.label.categorize_count_selected', {
                   count,
                   displayCount: formatNumber(count),
                   category: selectedCategory.original.displayName,
                   one: 'This will categorize {{displayCount}} selected transaction as {{category}}.',
                   other: 'This will categorize {{displayCount}} selected transactions as {{category}}.',
                 })
-                : tPlural(t, 'bankTransactions:label.recategorize_count_selected', {
+                : tPlural(t, 'bankTransactions:BankTransactionsBulkActions.label.recategorize_count_selected', {
                   count,
                   displayCount: formatNumber(count),
                   category: selectedCategory.original.displayName,
@@ -179,9 +179,9 @@ export const BankTransactionsCategorizeAllModal = ({
         </VStack>
       )}
       onConfirm={handleConfirm}
-      confirmLabel={mode === CategorizationMode.Categorize ? t('bankTransactions:action.categorize_all', 'Categorize All') : t('bankTransactions:action.recategorize_all', 'Recategorize All')}
+      confirmLabel={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.action.categorize_all', 'Categorize All') : t('bankTransactions:BankTransactionsBulkActions.action.recategorize_all', 'Recategorize All')}
       confirmDisabled={!selectedCategory}
-      errorText={mode === CategorizationMode.Categorize ? t('bankTransactions:error.categorize_transactions', 'Failed to categorize transactions') : t('bankTransactions:error.recategorize_transactions', 'Failed to recategorize transactions')}
+      errorText={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.error.categorize_transactions', 'Failed to categorize transactions') : t('bankTransactions:BankTransactionsBulkActions.error.recategorize_transactions', 'Failed to recategorize transactions')}
       closeOnConfirm
       useDrawer={isMobileView}
     />

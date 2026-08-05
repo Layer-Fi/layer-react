@@ -31,7 +31,7 @@ export function BankTransactionsAccountFilterChip({ slot, variant }: BankTransac
         iconPosition='right'
         onClick={() => setSelectedBankAccountIds([])}
       >
-        {t('bankTransactions:label.accounts_selected', {
+        {t('bankTransactions:BankTransactionsAccountFilterChip.label.accounts_selected', {
           count: selectedBankAccountIds.length,
           defaultValue_one: '{{count}} account selected',
           defaultValue_other: '{{count}} accounts selected',

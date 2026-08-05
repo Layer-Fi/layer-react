@@ -36,16 +36,16 @@ export const InvoiceFormMetadataSection = ({
           </form.AppField>
         </VStack>
         <VStack className='Layer__InvoiceForm__TotalFields' fluid>
-          <InvoiceFormTotalRow label={t('invoices:label.subtotal', 'Subtotal')} value={subtotal} />
-          <InvoiceFormTotalRow label={t('invoices:label.discount', 'Discount')} value={negateNonRecursiveBigDecimal(additionalDiscount)}>
+          <InvoiceFormTotalRow label={t('invoices:InvoiceForm.label.subtotal', 'Subtotal')} value={subtotal} />
+          <InvoiceFormTotalRow label={t('invoices:InvoiceForm.label.discount', 'Discount')} value={negateNonRecursiveBigDecimal(additionalDiscount)}>
             <form.AppField name='discountRate'>
-              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoiceForm.label.discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
-          <InvoiceFormTotalRow label={t('invoices:label.taxable_subtotal', 'Taxable subtotal')} value={taxableSubtotal} />
-          <InvoiceFormTotalRow label={t('invoices:label.tax_rate', 'Tax rate')} value={taxes}>
+          <InvoiceFormTotalRow label={t('invoices:InvoiceForm.label.taxable_subtotal', 'Taxable subtotal')} value={taxableSubtotal} />
+          <InvoiceFormTotalRow label={t('invoices:InvoiceForm.label.tax_rate', 'Tax rate')} value={taxes}>
             <form.AppField name='taxRate'>
-              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.tax_rate_title_case', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoiceForm.label.tax_rate_title_case', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
           <InvoiceFormTotalRow label={t('common:label.total', 'Total')} value={grandTotal} />

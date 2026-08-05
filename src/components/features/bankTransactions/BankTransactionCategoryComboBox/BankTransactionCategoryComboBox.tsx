@@ -32,7 +32,7 @@ const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransac
   if (option.value === 'LOADING_SUGGESTIONS') {
     return (
       <HStack justify='space-between' align='center' className='Layer__BankTransactionCategoryComboBox__LoadingSuggestionsOption'>
-        <Span>{t('bankTransactions:label.generating_suggestions', 'Generating suggestions...')}</Span>
+        <Span>{t('bankTransactions:BankTransactionCategoryComboBox.label.generating_suggestions', 'Generating suggestions...')}</Span>
         <LoadingSpinner size={16} />
       </HStack>
     )
@@ -146,10 +146,10 @@ export const BankTransactionCategoryComboBox = ({
   const placeholder = numMatchOptions > 1
     ? `${numMatchOptions} possible matches...`
     : loadingSuggestions
-      ? t('bankTransactions:label.generating_suggestions', 'Generating suggestions...')
+      ? t('bankTransactions:BankTransactionCategoryComboBox.label.generating_suggestions', 'Generating suggestions...')
       : includeSuggestedMatches
-        ? t('bankTransactions:action.categorize_or_match', 'Categorize or match...')
-        : t('bankTransactions:action.select_category', 'Select category')
+        ? t('bankTransactions:BankTransactionCategoryComboBox.action.categorize_or_match', 'Categorize or match...')
+        : t('bankTransactions:BankTransactionCategoryComboBox.action.select_category', 'Select category')
 
   const isSuggestedCategorySelected = selectedValue !== null
     && (suggestedGroup?.options.some(option => option.value === selectedValue.value) ?? false)

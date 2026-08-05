@@ -48,7 +48,7 @@ export const BankTransactionsListItemCategory = ({
     : (
       <BankTransactionsSelectedValue
         type='placeholder'
-        label={t('bankTransactions:empty.no_category_selected', 'No category selected')}
+        label={t('bankTransactions:BankTransactionsListItemCategory.empty.no_category_selected', 'No category selected')}
         className={className}
         slotProps={{ Label: { size: 'sm' } }}
         showCategoryBadge={mobile}

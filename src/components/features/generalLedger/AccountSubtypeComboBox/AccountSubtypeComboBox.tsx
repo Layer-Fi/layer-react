@@ -34,7 +34,7 @@ export const AccountSubtypeComboBox = ({ label, type, value, onChange, error, in
           options={options}
           selectedValue={options.find(option => option.value === value) ?? null}
           onSelectedValueChange={option => onChange(option?.value ?? null)}
-          placeholder={t('chartOfAccounts:placeholder.select_sub_type', 'Select a sub-type')}
+          placeholder={t('generalLedger:AccountSubtypeComboBox.placeholder.select_sub_type', 'Select a sub-type')}
           isError={Boolean(error)}
           slots={{ ErrorMessage: error }}
         />

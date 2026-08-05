@@ -102,8 +102,8 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       <HStack className='Layer__ChartOfAccountsForm__Header' justify='space-between' align='center' gap='md'>
         <Heading level={3} size='sm'>
           {isEdit
-            ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
-            : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
+            ? stringOverrides?.editModeHeader || t('generalLedger:ChartOfAccountsForm.action.edit_account', 'Edit Account')
+            : stringOverrides?.createModeHeader || t('generalLedger:ChartOfAccountsForm.action.add_new_account', 'Add New Account')}
         </Heading>
         <CloseButton onPress={onCancel} aria-label={cancelLabel} />
       </HStack>
@@ -131,7 +131,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
         <form.Field name='parent'>
           {field => (
             <ParentAccountComboBox
-              label={stringOverrides?.parentLabel || t('chartOfAccounts:label.parent', 'Parent')}
+              label={stringOverrides?.parentLabel || t('generalLedger:ChartOfAccountsForm.label.parent', 'Parent')}
               data={data}
               value={field.state.value}
               onChange={onChangeParent}
@@ -145,7 +145,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
           {field => (
             <field.FormTextField
               label={stringOverrides?.nameLabel || t('common:label.name', 'Name')}
-              placeholder={t('chartOfAccounts:label.enter_name', 'Enter name...')}
+              placeholder={t('generalLedger:ChartOfAccountsForm.label.enter_name', 'Enter name...')}
               inline={inline}
             />
           )}
@@ -155,8 +155,8 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
           <form.AppField name='accountNumber'>
             {field => (
               <field.FormTextField
-                label={stringOverrides?.accountNumberLabel || t('generalLedger:label.account_number', 'Account Number')}
-                placeholder={t('chartOfAccounts:label.enter_account_number', 'Enter account number...')}
+                label={stringOverrides?.accountNumberLabel || t('generalLedger:ChartOfAccountsForm.label.account_number', 'Account Number')}
+                placeholder={t('generalLedger:ChartOfAccountsForm.label.enter_account_number', 'Enter account number...')}
                 inline={inline}
               />
             )}
@@ -185,7 +185,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             <form.Field name='subType'>
               {field => (
                 <AccountSubtypeComboBox
-                  label={stringOverrides?.subTypeLabel || t('chartOfAccounts:label.sub_type', 'Sub-Type')}
+                  label={stringOverrides?.subTypeLabel || t('generalLedger:ChartOfAccountsForm.label.sub_type', 'Sub-Type')}
                   type={type}
                   value={field.state.value}
                   onChange={field.handleChange}

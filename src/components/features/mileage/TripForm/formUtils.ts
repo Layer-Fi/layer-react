@@ -47,10 +47,10 @@ export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => 
   const { tripDate, distance, purpose } = trip
 
   const fields = {
-    tripDate: required(t('trips:validation.trip_date_required', 'Trip date is a required field.'))(tripDate)
-      ?? dateNotInFuture(t('trips:validation.trip_date_not_future', 'Trip date cannot be in the future.'))(tripDate),
-    distance: positiveAmount(t('trips:validation.distance_greater_than_zero', 'Distance must be greater than 0 miles.'))(distance),
-    purpose: required(t('trips:validation.purpose_required', 'Purpose is a required field.'))(purpose),
+    tripDate: required(t('mileage:TripForm.validation.trip_date_required', 'Trip date is a required field.'))(tripDate)
+      ?? dateNotInFuture(t('mileage:TripForm.validation.trip_date_not_future', 'Trip date cannot be in the future.'))(tripDate),
+    distance: positiveAmount(t('mileage:TripForm.validation.distance_greater_than_zero', 'Distance must be greater than 0 miles.'))(distance),
+    purpose: required(t('mileage:TripForm.validation.purpose_required', 'Purpose is a required field.'))(purpose),
   }
 
   return Object.values(fields).some(Boolean) ? { fields } : undefined

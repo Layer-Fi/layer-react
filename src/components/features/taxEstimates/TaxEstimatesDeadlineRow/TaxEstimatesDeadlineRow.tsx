@@ -41,7 +41,7 @@ export const TaxEstimatesDeadlineRow = ({
         <VStack className='Layer__TaxOverview__DeadlineContent' gap='3xs' fluid>
           <Heading level={HEADING_LEVEL} size='sm'>{data.title}</Heading>
           <Span size='sm' variant='subtle'>
-            {t('taxEstimates:label.due_with_date', 'Due: {{date}}', { date: formatCalendarDate(data.dueDate, formatDate) })}
+            {t('taxEstimates:TaxEstimatesDeadlineRow.label.due_with_date', 'Due: {{date}}', { date: formatCalendarDate(data.dueDate, formatDate) })}
           </Span>
         </VStack>
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
@@ -51,7 +51,7 @@ export const TaxEstimatesDeadlineRow = ({
               <MoneySpan size='lg' weight='bold' amount={data.amountOwed} />
             </HStack>
             <VStack align='end' gap='3xs'>
-              <Span size='xs' variant='subtle'>{t('taxEstimates:label.estimated_taxes', 'Estimated taxes')}</Span>
+              <Span size='xs' variant='subtle'>{t('taxEstimates:TaxEstimatesDeadlineRow.label.estimated_taxes', 'Estimated taxes')}</Span>
             </VStack>
           </VStack>
         </VStack>
@@ -64,13 +64,13 @@ export const TaxEstimatesDeadlineRow = ({
             </Span>
             <Span className='Layer__TaxOverview__DeadlineReviewLabel' size='sm' weight='bold'>
               {isAnnual
-                ? tPlural(t, 'taxEstimates:label.uncategorized_transactions_with_year', {
+                ? tPlural(t, 'taxEstimates:TaxEstimatesDeadlineRow.label.uncategorized_transactions_with_year', {
                   count: data.uncategorizedCount,
                   one: '{{count}} uncategorized transaction ({{year}})',
                   other: '{{count}} uncategorized transactions ({{year}})',
                   year,
                 })
-                : tPlural(t, 'taxEstimates:label.uncategorized_transactions', {
+                : tPlural(t, 'taxEstimates:TaxEstimatesDeadlineRow.label.uncategorized_transactions', {
                   count: data.uncategorizedCount,
                   one: '{{count}} uncategorized transaction',
                   other: '{{count}} uncategorized transactions',
@@ -86,7 +86,7 @@ export const TaxEstimatesDeadlineRow = ({
                 uncategorizedTransactionCount: data.uncategorizedCount,
               })}
             >
-              {t('taxEstimates:action.review_banner', 'Review')}
+              {t('taxEstimates:TaxEstimatesDeadlineRow.action.review_banner', 'Review')}
             </Button>
           )}
         </Stack>

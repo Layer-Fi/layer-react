@@ -42,12 +42,12 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
         variant === BankTransactionSelectionVariant.MATCH
           ? (
             <Button variant='text' underline onPress={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.CATEGORY)}>
-              {t('bankTransactions:action.or_split_transaction', 'or split transaction')}
+              {t('bankTransactions:BankTransactionsMobileList.action.or_split_transaction', 'or split transaction')}
             </Button>
           )
           : (
             <Button variant='text' underline onPress={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.MATCH)}>
-              {t('bankTransactions:action.or_find_match', 'or find match')}
+              {t('bankTransactions:BankTransactionsMobileList.action.or_find_match', 'or find match')}
             </Button>
           )
       )}

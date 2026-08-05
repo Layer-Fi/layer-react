@@ -1,0 +1,8 @@
+{
+  "BalanceSheet": {
+    "label": {
+      "assets": "Actifs",
+      "liabilities_equity": "Passifs et capitaux propres"
+    }
+  }
+}

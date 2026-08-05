@@ -58,7 +58,7 @@ export const LinkedAccountsComponent = ({
     <Container name={COMPONENT_NAME} elevated={elevated}>
       <DeprecatedHeader className='Layer__linked-accounts__header'>
         <Heading level={3} size='sm'>
-          {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
+          {stringOverrides?.title || t('linkedAccounts:LinkedAccounts.label.linked_accounts', 'Linked Accounts')}
         </Heading>
       </DeprecatedHeader>
 

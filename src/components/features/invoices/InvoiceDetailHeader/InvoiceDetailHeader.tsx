@@ -35,16 +35,16 @@ const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
 
 const HEADING_I18N: Record<HeaderMode, { withNumber: ReturnType<typeof translationKey>, noNumber: ReturnType<typeof translationKey> }> = {
   [HeaderMode.Preview]: {
-    withNumber: translationKey('invoices:label.invoice_number', 'Invoice #{{invoiceNumber}}'),
-    noNumber: translationKey('invoices:action.view_invoice', 'View Invoice'),
+    withNumber: translationKey('invoices:InvoiceDetailHeader.label.invoice_number', 'Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('invoices:InvoiceDetailHeader.action.view_invoice', 'View Invoice'),
   },
   [HeaderMode.View]: {
-    withNumber: translationKey('invoices:label.invoice_number', 'Invoice #{{invoiceNumber}}'),
-    noNumber: translationKey('invoices:action.view_invoice', 'View Invoice'),
+    withNumber: translationKey('invoices:InvoiceDetailHeader.label.invoice_number', 'Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('invoices:InvoiceDetailHeader.action.view_invoice', 'View Invoice'),
   },
   [HeaderMode.Edit]: {
-    withNumber: translationKey('invoices:label.editing_invoice_number', 'Editing Invoice #{{invoiceNumber}}'),
-    noNumber: translationKey('invoices:label.editing_invoice', 'Editing Invoice'),
+    withNumber: translationKey('invoices:InvoiceDetailHeader.label.editing_invoice_number', 'Editing Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('invoices:InvoiceDetailHeader.label.editing_invoice', 'Editing Invoice'),
   },
 }
 
@@ -96,7 +96,7 @@ export const InvoiceDetailHeader = ({
   if (viewState.mode === UpsertMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
-        <Heading>{t('invoices:action.create_invoice', 'Create Invoice')}</Heading>
+        <Heading>{t('invoices:InvoiceDetailHeader.action.create_invoice', 'Create Invoice')}</Heading>
         {formStepButton}
       </HStack>
     )
@@ -119,7 +119,7 @@ export const InvoiceDetailHeader = ({
         <HStack gap='xs'>
           {canMarkAsPaid && (
             <Button onPress={openInvoicePaymentDrawer}>
-              {t('invoices:action.mark_paid', 'Mark as paid')}
+              {t('invoices:InvoiceDetailHeader.action.mark_paid', 'Mark as paid')}
               <HandCoins size={14} />
             </Button>
           )}

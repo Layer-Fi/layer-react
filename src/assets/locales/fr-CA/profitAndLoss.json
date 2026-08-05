@@ -1,0 +1,64 @@
+{
+  "ProfitAndLossChart": {
+    "label": {
+      "data_is_syncing": "Les données sont en cours de synchronisation",
+      "may_take_few_minutes": "Cela peut prendre quelques minutes"
+    }
+  },
+  "ProfitAndLossDetailedCharts": {
+    "empty": {
+      "no_transactions_found": "Aucune transaction trouvée"
+    },
+    "label": {
+      "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
+      "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
+    }
+  },
+  "ProfitAndLossDetailReport": {
+    "empty": {
+      "no_detail_lines_found": "Aucune ligne de détail trouvée",
+      "no_detail_lines_pnl_item": "Il n’y a aucune ligne de détail pour cet élément de l’état des résultats"
+    },
+    "error": {
+      "load_detail_lines": "Erreur lors du chargement des lignes de détail",
+      "load_pnl_detail_lines": "Une erreur s’est produite lors du chargement des lignes de détail de l’état des résultats"
+    },
+    "label": {
+      "line_item_name_detail_lines": "Lignes de détail de {{lineItemName}}",
+      "transaction_source": "Source de la transaction"
+    }
+  },
+  "ProfitAndLossOverviewDetailedCharts": {
+    "label": {
+      "chart_type": "Type de graphique"
+    }
+  },
+  "ProfitAndLossSummaries": {
+    "label": {
+      "categorized_expenses": "Dépenses catégorisées",
+      "categorized_net_profit": "Bénéfice net catégorisé",
+      "categorized_revenue": "Revenus catégorisés",
+      "net_cash_flow": "Flux de trésorerie net",
+      "vs_comparison_month": "p/r à {{comparisonMonth}}"
+    }
+  },
+  "ProfitAndLossTable": {
+    "label": {
+      "profit_before_taxes": "Bénéfice avant impôts"
+    }
+  },
+  "TransactionsToReview": {
+    "label": {
+      "all_done": "Tout est terminé",
+      "pending": "en attente",
+      "transactions_to_review": "Transactions à examiner"
+    }
+  },
+  "UncategorizedTransactionsBadge": {
+    "label": {
+      "all_transactions_categorized": "Toutes les transactions sont catégorisées",
+      "review_uncategorized_transactions_one": "Examiner {{displayCount}} transaction non catégorisée",
+      "review_uncategorized_transactions_other": "Examiner {{displayCount}} transactions non catégorisées"
+    }
+  }
+}

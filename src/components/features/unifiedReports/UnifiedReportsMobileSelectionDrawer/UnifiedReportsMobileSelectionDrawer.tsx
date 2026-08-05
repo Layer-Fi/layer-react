@@ -41,15 +41,15 @@ export function UnifiedReportsMobileSelectionDrawer() {
   return (
     <HStack className='Layer__UnifiedReportsMobileSelectionDrawer'>
       <MobileSelectionDrawerWithTrigger<UnifiedReportComboBoxOption>
-        ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
-        heading={t('reports:label.select_report', 'Select report')}
+        ariaLabel={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.reports_navigation', 'Reports navigation')}
+        heading={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.select_report', 'Select report')}
         groups={groups}
         selectedValue={selectedValue}
         onSelectedValueChange={onSelectedValueChange}
         isLoading={isLoading}
         isError={isError}
         isSearchable
-        searchPlaceholder={t('reports:action.search_reports', 'Search reports')}
+        searchPlaceholder={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.action.search_reports', 'Search reports')}
       />
     </HStack>
   )

@@ -1,0 +1,27 @@
+{
+  "DateSelection": {
+    "label": {
+      "group": "Group by",
+      "report_period": "Report period"
+    }
+  },
+  "LedgerEntrySourceDetailView": {
+    "label": {
+      "account_name": "Account name",
+      "bill_number": "Bill Number",
+      "closing_action_type": "Action type",
+      "closing_date": "Closing date",
+      "customer": "Customer",
+      "import_date": "Import Date",
+      "invoice_number": "Invoice number",
+      "payday": "Payday",
+      "quickbooks_id": "QuickBooks ID",
+      "recipient_name": "Recipient name",
+      "refunded_amount": "Refunded Amount",
+      "vendor": "Vendor",
+      "vendor_description": "Vendor Description",
+      "write_off_amount": "Write-off Amount",
+      "write_off_date": "Write-off Date"
+    }
+  }
+}

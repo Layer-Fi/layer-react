@@ -69,7 +69,7 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
       <BaseConfirmationModal
         isOpen={isDiscardChangesModalOpen}
         onOpenChange={setIsDiscardChangesModalOpen}
-        title={t('generalLedger:prompt.discard_changes_journal_entry', 'Discard changes to this journal entry?')}
+        title={t('generalLedger:JournalEntryDrawer.prompt.discard_changes_journal_entry', 'Discard changes to this journal entry?')}
         description={t('common:label.unsaved_changes_lost', 'Any unsaved changes will be lost.')}
         onConfirm={toJournalTable}
         confirmLabel={t('common:action.discard_changes', 'Discard changes')}
@@ -104,7 +104,7 @@ const JournalEntryDrawerHeader = ({ onSubmit, formState }: JournalEntryDrawerHea
 
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading size='sm'>{t('generalLedger:action.add_new_entry', 'Add new entry')}</Heading>
+      <Heading size='sm'>{t('generalLedger:JournalEntryDrawer.action.add_new_entry', 'Add new entry')}</Heading>
       <HStack gap='xs'>
         {cancelButton}
         {saveButton}

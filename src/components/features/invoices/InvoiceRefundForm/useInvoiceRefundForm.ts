@@ -49,15 +49,15 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
   const getErrorText = useCallback((reason: InvoiceRefundInvalidReason): string => {
     switch (reason) {
       case InvoiceRefundInvalidReason.CompletedAtRequired:
-        return t('invoices:validation.refund_date_required', 'Refund date is a required field.')
+        return t('invoices:InvoiceRefundForm.validation.refund_date_required', 'Refund date is a required field.')
       case InvoiceRefundInvalidReason.CompletedAtBeforeLastPayment:
-        return t('invoices:validation.refund_date_before_last_payment', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', {
+        return t('invoices:InvoiceRefundForm.validation.refund_date_before_last_payment', 'Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).', {
           lastPaymentDate: invoice.paidAt ? formatDate(invoice.paidAt, DateFormat.DateNumeric) : '',
         })
       case InvoiceRefundInvalidReason.CompletedAtInFuture:
-        return t('invoices:validation.refund_date_future', 'Refund date cannot be in the future.')
+        return t('invoices:InvoiceRefundForm.validation.refund_date_future', 'Refund date cannot be in the future.')
       case InvoiceRefundInvalidReason.MethodRequired:
-        return t('invoices:validation.payment_method_required', 'Payment method is a required field.')
+        return t('invoices:InvoiceRefundForm.validation.payment_method_required', 'Payment method is a required field.')
       default:
         return ''
     }

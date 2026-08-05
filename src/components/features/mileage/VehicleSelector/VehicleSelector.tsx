@@ -89,20 +89,20 @@ export function VehicleSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('vehicles:empty.matching_vehicle', 'No matching vehicle')}
+        {t('mileage:VehicleSelector.empty.matching_vehicle', 'No matching vehicle')}
       </P>
     ),
     [t],
   )
 
-  const ErrorMessage = t('vehicles:error.load_vehicles', 'An error occurred while loading vehicles.')
+  const ErrorMessage = t('mileage:VehicleSelector.error.load_vehicles', 'An error occurred while loading vehicles.')
 
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
     <ComboBoxField
-      label={t('vehicles:label.vehicle', 'Vehicle')}
+      label={t('mileage:VehicleSelector.label.vehicle', 'Vehicle')}
       className={containerClassName}
       inline={inline}
       showLabel={showLabel}

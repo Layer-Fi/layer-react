@@ -56,7 +56,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
       {isCompact
         && (
           <Toggle
-            ariaLabel={t('overview:chart_type', 'Chart type')}
+            ariaLabel={t('profitAndLoss:ProfitAndLossOverviewDetailedCharts.label.chart_type', 'Chart type')}
             options={toggleOptions}
             selectedKey={pnlToggle}
             onSelectionChange={key => setPnlToggle(key as PnlToggleOption)}

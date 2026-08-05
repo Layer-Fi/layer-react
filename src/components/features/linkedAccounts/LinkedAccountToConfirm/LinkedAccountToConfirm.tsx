@@ -26,7 +26,7 @@ export function LinkedAccountToConfirm({
           variant='branded'
           isSelected={isConfirmed}
           onChange={onChangeConfirmed}
-          aria-label={t('linkedAccounts:label.confirm_account_inclusion', 'Confirm Account Inclusion')}
+          aria-label={t('linkedAccounts:LinkedAccountToConfirm.label.confirm_account_inclusion', 'Confirm Account Inclusion')}
         />
       </VStack>
     </LinkedAccountRowContainer>

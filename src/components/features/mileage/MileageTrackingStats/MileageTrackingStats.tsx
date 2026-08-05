@@ -17,7 +17,7 @@ export const MileageTrackingStats = () => {
   if (isError) {
     return (
       <Container name='mileage-tracking-stats'>
-        <DataState status={DataStateStatus.failed} title={t('mileageTracking:error.load_mileage_summary_data', 'Failed to load mileage summary data')} spacing />
+        <DataState status={DataStateStatus.failed} title={t('mileage:MileageTrackingStats.error.load_mileage_summary_data', 'Failed to load mileage summary data')} spacing />
       </Container>
     )
   }
@@ -37,12 +37,12 @@ export const MileageTrackingStats = () => {
       <div className='Layer__MileageTrackingStats__Content'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard
-            title={t('mileageTracking:label.total_deduction', 'Total Deduction')}
+            title={t('mileage:MileageTrackingStats.label.total_deduction', 'Total Deduction')}
             amount={selectedYearData?.estimatedDeduction ?? 0}
             formatAsMoney
           />
           <MileageTrackingStatsCard
-            title={t('mileageTracking:label.total_miles', 'Total Miles')}
+            title={t('mileage:MileageTrackingStats.label.total_miles', 'Total Miles')}
             amount={selectedYearData?.miles ?? 0}
             breakdown={{
               business: selectedYearData?.businessMiles ?? 0,
@@ -51,7 +51,7 @@ export const MileageTrackingStats = () => {
             }}
           />
           <MileageTrackingStatsCard
-            title={t('trips:label.trips', 'Trips')}
+            title={t('mileage:MileageTrackingStats.label.trips', 'Trips')}
             amount={selectedYearData?.trips ?? 0}
             breakdown={{
               business: selectedYearData?.businessTrips ?? 0,

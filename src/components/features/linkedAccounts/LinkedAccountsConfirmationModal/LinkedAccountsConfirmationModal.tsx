@@ -70,7 +70,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
       <ModalTitleWithClose
         heading={(
           <ModalHeading size='md'>
-            {t('linkedAccounts:label.loading_accounts', 'Loading Your Accounts...')}
+            {t('linkedAccounts:LinkedAccountsConfirmationModal.label.loading_accounts', 'Loading Your Accounts...')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -79,7 +79,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
         <VStack slot='center' align='center' gap='md' pbs='xl' pbe='xl'>
           <LoadingSpinner size={48} />
           <P align='center'>
-            {t('linkedAccounts:label.may_take_few_minutes', 'This may take a few minutes.')}
+            {t('linkedAccounts:LinkedAccountsConfirmationModal.label.may_take_few_minutes', 'This may take a few minutes.')}
           </P>
         </VStack>
       </ModalContent>
@@ -109,7 +109,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   const getButtonLabel = useCallback(
     ({ totalCount, confirmedCount }: { totalCount: number, confirmedCount: number }) => {
       if (confirmedCount === totalCount) {
-        return tPlural(t, 'linkedAccounts:action.confirm_accounts', {
+        return tPlural(t, 'linkedAccounts:LinkedAccountsConfirmationModal.action.confirm_accounts', {
           count: totalCount,
           one: 'Connect Account',
           other: 'Connect All Accounts',
@@ -117,14 +117,14 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       }
 
       if (confirmedCount === 0) {
-        return tPlural(t, 'linkedAccounts:action.exclude_all_accounts', {
+        return tPlural(t, 'linkedAccounts:LinkedAccountsConfirmationModal.action.exclude_all_accounts', {
           count: totalCount,
           one: 'Exclude Account',
           other: 'Exclude All Accounts',
         })
       }
 
-      return tPlural(t, 'linkedAccounts:action.confirm_accounts_selected', {
+      return tPlural(t, 'linkedAccounts:LinkedAccountsConfirmationModal.action.confirm_accounts_selected', {
         count: confirmedCount,
         displayCount: formatNumber(confirmedCount),
         one: 'Connect {{displayCount}} Account',
@@ -141,7 +141,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     const confirmedCount = values.filter(Boolean).length
 
     const buttonLabel = getButtonLabel({ totalCount, confirmedCount })
-    const descriptionLabel = tPlural(t, 'linkedAccounts:label.select_accounts_use', {
+    const descriptionLabel = tPlural(t, 'linkedAccounts:LinkedAccountsConfirmationModal.label.select_accounts_use', {
       count: totalCount,
       one: 'We’ve pulled the below account from your institution. Unselect it if you do not want it connected.',
       other: 'We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected.',
@@ -157,7 +157,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       <ModalTitleWithClose
         heading={(
           <ModalHeading pbe='2xs' size='md'>
-            {t('linkedAccounts:label.confirm_business_accounts', 'Confirm Accounts')}
+            {t('linkedAccounts:LinkedAccountsConfirmationModal.label.confirm_business_accounts', 'Confirm Accounts')}
           </ModalHeading>
         )}
         onClose={onClose}
@@ -171,7 +171,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
           Empty={(
             <VStack slot='center'>
               <P align='center'>
-                {t('linkedAccounts:label.no_accounts_to_confirm', 'There are no accounts to confirm. You may close this modal.')}
+                {t('linkedAccounts:LinkedAccountsConfirmationModal.label.no_accounts_to_confirm', 'There are no accounts to confirm. You may close this modal.')}
               </P>
             </VStack>
           )}
@@ -198,10 +198,10 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
             ? (
               <>
                 <P size='sm'>
-                  {t('linkedAccounts:error.confirm_accounts_try_again_later', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
+                  {t('linkedAccounts:LinkedAccountsConfirmationModal.error.confirm_accounts_try_again_later', 'An error occurred while confirming accounts. You will have an opportunity to try again later.')}
                 </P>
                 <P size='sm'>
-                  {t('linkedAccounts:label.no_data_sync_until_confirm', 'No data will be synced until you confirm.')}
+                  {t('linkedAccounts:LinkedAccountsConfirmationModal.label.no_data_sync_until_confirm', 'No data will be synced until you confirm.')}
                 </P>
                 <Button onPress={onClose}>
                   {t('common:action.close_label', 'Close')}

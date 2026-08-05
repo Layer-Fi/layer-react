@@ -58,7 +58,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   const openDrawer = useCallback(() => setIsOpen(true), [])
 
-  const resolvedPlaceholder = placeholder ?? t('common:action.select_label', 'Select...')
+  const resolvedPlaceholder = placeholder ?? t('common:action.select_label', 'Select…')
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
   const triggerIcon = slotProps?.Trigger?.icon ?? <ChevronDown size={16} />

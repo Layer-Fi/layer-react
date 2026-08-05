@@ -29,28 +29,28 @@ type TaxPaymentRowType = Row<TaxPaymentRow>
 const getColumnConfig = (t: TFunction): ColumnConfig<TaxPaymentRow> => [
   {
     id: TaxPaymentColumns.Quarter,
-    header: t('taxEstimates:label.quarter', 'Quarter'),
+    header: t('taxEstimates:TaxPaymentsTable.label.quarter', 'Quarter'),
     cell: (row: TaxPaymentRowType) => <Span>{row.original.label}</Span>,
     isRowHeader: true,
   },
   {
     id: TaxPaymentColumns.RolledOverFromPrevious,
-    header: t('taxEstimates:label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter'),
+    header: t('taxEstimates:TaxPaymentsTable.label.rolled_over_from_previous_quarter', 'Rolled Over From Previous Quarter'),
     cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.rolledOverFromPrevious} />,
   },
   {
     id: TaxPaymentColumns.Estimated,
-    header: t('taxEstimates:label.owed_quarter', 'Owed This Quarter'),
+    header: t('taxEstimates:TaxPaymentsTable.label.owed_quarter', 'Owed This Quarter'),
     cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.owedThisQuarter} />,
   },
   {
     id: TaxPaymentColumns.Paid,
-    header: t('taxEstimates:label.total_paid', 'Total Paid'),
+    header: t('taxEstimates:TaxPaymentsTable.label.total_paid', 'Total Paid'),
     cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.totalPaid} />,
   },
   {
     id: TaxPaymentColumns.RemainingBalance,
-    header: t('taxEstimates:label.remaining_balance', 'Remaining Balance'),
+    header: t('taxEstimates:TaxPaymentsTable.label.remaining_balance', 'Remaining Balance'),
     cell: (row: TaxPaymentRowType) => <MoneySpan amount={row.original.remainingBalance} />,
   },
 ]
@@ -67,7 +67,7 @@ export const TaxPaymentsTable = ({ data, isLoading, isError, slots }: CommonTaxP
     <ExpandableDataTableProvider>
       <ExpandableDataTable
         componentName={COMPONENT_NAME}
-        ariaLabel={t('taxEstimates:label.tax_payments', 'Tax Payments')}
+        ariaLabel={t('taxEstimates:TaxPaymentsTable.label.tax_payments', 'Tax Payments')}
         columnConfig={columnConfig}
         data={mutableRows}
         isLoading={isLoading}

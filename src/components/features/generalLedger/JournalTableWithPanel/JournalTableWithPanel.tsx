@@ -45,7 +45,7 @@ export const JournalTableWithPanel = ({
   const { toCreateEntry } = useJournalNavigation()
   const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
   const showAddEntryButton = !isActiveBookkeepingStatus
-  const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
+  const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:JournalTableWithPanel.action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
 
@@ -65,7 +65,7 @@ export const JournalTableWithPanel = ({
         <HeaderRow>
           <HeaderCol>
             <Heading level={2} size='md'>
-              {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
+              {stringOverrides?.componentTitle || t('generalLedger:JournalTableWithPanel.label.journal', 'Journal')}
             </Heading>
           </HeaderCol>
           <HeaderCol>

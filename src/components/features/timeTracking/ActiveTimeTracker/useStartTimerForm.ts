@@ -31,7 +31,7 @@ export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
   }) => {
     const payload = toStartPayload(value)
     if (!payload) {
-      setActionError(t('timeTracking:validation.service_required', 'Service is a required field.'))
+      setActionError(t('timeTracking:ActiveTimeTracker.validation.service_required', 'Service is a required field.'))
       return
     }
 
@@ -44,10 +44,10 @@ export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
     }
     catch (error) {
       if (isActiveTimerAlreadyExistsError(error)) {
-        setActionError(t('timeTracking:error.start_timer_already_active', 'A timer is already running. Please reload the page.'))
+        setActionError(t('timeTracking:ActiveTimeTracker.error.start_timer_already_active', 'A timer is already running. Please reload the page.'))
       }
       else {
-        setActionError(t('timeTracking:error.start_timer', 'Failed to start timer. Please try again.'))
+        setActionError(t('timeTracking:ActiveTimeTracker.error.start_timer', 'Failed to start timer. Please try again.'))
       }
     }
   }, [onStarted, startTimeTracker, t])

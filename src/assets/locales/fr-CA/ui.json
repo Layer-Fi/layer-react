@@ -1,20 +1,42 @@
 {
-  "action": {
-    "clear_search": "Effacer la recherche",
-    "close_modal": "Fermer la fenêtre modale",
-    "get_more_results": "Afficher plus de résultats"
+  "ComboBox": {
+    "empty": {
+      "matching_options": "Aucune option correspondante"
+    },
+    "error": {
+      "generic": "Une erreur s’est produite."
+    }
   },
-  "empty": {
-    "matching_options": "Aucune option correspondante"
+  "DropdownMenu": {
+    "label": {
+      "menu": "Menu"
+    }
   },
-  "error": {
-    "generic": "Une erreur s’est produite."
+  "Modal": {
+    "action": {
+      "close_modal": "Fermer la fenêtre modale"
+    }
   },
-  "label": {
-    "go_next_page": "Aller à la page suivante",
-    "go_page_number": "Aller à la page {{pageNumber}}",
-    "go_previous_page": "Aller à la page précédente",
-    "menu": "Menu",
-    "pagination": "Pagination"
+  "Pagination": {
+    "action": {
+      "get_more_results": "Afficher plus de résultats"
+    },
+    "label": {
+      "go_next_page": "Aller à la page suivante",
+      "go_page_number": "Aller à la page {{pageNumber}}",
+      "go_previous_page": "Aller à la page précédente",
+      "pagination": "Pagination"
+    }
+  },
+  "SearchField": {
+    "action": {
+      "clear_search": "Effacer la recherche"
+    }
+  },
+  "Typography": {
+    "label": {
+      "less_than_one_minute": "< 1 min",
+      "zero_minutes": "0 min"
+    }
   }
 }

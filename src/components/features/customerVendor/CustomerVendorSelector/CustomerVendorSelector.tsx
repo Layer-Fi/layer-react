@@ -93,7 +93,7 @@ export function CustomerVendorSelector({
     () => {
       const customersSection = customers
         ? {
-          label: t('customerVendor:label.customers', 'Customers'),
+          label: t('customerVendor:CustomerVendorSelector.label.customers', 'Customers'),
           id: 'CUSTOMER',
           options: customers
             .map(customer => new CustomerVendorAsOption({ ...customer, customerVendorType: 'CUSTOMER' })),
@@ -102,7 +102,7 @@ export function CustomerVendorSelector({
 
       const vendorsSection = vendors
         ? {
-          label: t('customerVendor:label.vendors', 'Vendors'),
+          label: t('customerVendor:CustomerVendorSelector.label.vendors', 'Vendors'),
           id: 'VENDOR',
           options: vendors
             .map(vendor => new CustomerVendorAsOption({ ...vendor, customerVendorType: 'VENDOR' })),
@@ -188,13 +188,13 @@ export function CustomerVendorSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('customerVendor:empty.matching_customers_vendors', 'No matching customers or vendors found')}
+        {t('customerVendor:CustomerVendorSelector.empty.matching_customers_vendors', 'No matching customers or vendors found')}
       </P>
     ),
     [t],
   )
 
-  const ErrorMessage = t('customerVendor:error.load_customer_vendor', 'An error occurred while loading customer and vendor options.')
+  const ErrorMessage = t('customerVendor:CustomerVendorSelector.error.load_customer_vendor', 'An error occurred while loading customer and vendor options.')
 
   const inputId = useId()
 
@@ -215,7 +215,7 @@ export function CustomerVendorSelector({
             htmlFor={inputId}
             size='sm'
           >
-            {t('customerVendor:label.customer_vendor', 'Customer or Vendor')}
+            {t('customerVendor:CustomerVendorSelector.label.customer_vendor', 'Customer or Vendor')}
           </Label>
           {isMutating
             ? (
@@ -244,7 +244,7 @@ export function CustomerVendorSelector({
         isDisabled={isReadOnly || shouldDisableComboBox}
         isError={isError}
         isLoading={isLoadingWithoutFallback}
-        aria-label={showLabel ? undefined : t('customerVendor:label.customer_vendor', 'Customer or Vendor')}
+        aria-label={showLabel ? undefined : t('customerVendor:CustomerVendorSelector.label.customer_vendor', 'Customer or Vendor')}
       />
     </VStack>
   )

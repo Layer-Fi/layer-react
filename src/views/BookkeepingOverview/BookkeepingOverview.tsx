@@ -133,7 +133,7 @@ export const BookkeepingOverview = ({
     >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
-        title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
+        title={stringOverrides?.title || title || t('views:BookkeepingOverview.label.bookkeeping_overview', 'Bookkeeping overview')}
         header={(
           <Header>
             <HeaderRow>

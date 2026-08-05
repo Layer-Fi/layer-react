@@ -92,7 +92,7 @@ export const BankTransactionsMobileListBusinessForm = ({
           )}
         >
           <BankTransactionReceipts
-            label={t('bankTransactions:label.receipts', 'Receipts')}
+            label={t('bankTransactions:BankTransactionsMobileList.label.receipts', 'Receipts')}
             ref={receiptsRef}
             floatingActions={false}
             hideUploadButtons={true}
@@ -101,7 +101,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         <HStack gap='xs'>
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
+            text={t('bankTransactions:BankTransactionsMobileList.action.upload_receipt', 'Upload receipt')}
             icon
             slots={{ Icon: <Paperclip size={20} /> }}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
@@ -125,7 +125,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         {isErrorCategorizing && showRetry
           ? (
             <ErrorText size='sm' align='center' pb='sm'>
-              {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
+              {t('bankTransactions:BankTransactionsMobileList.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             </ErrorText>
           )
           : null}

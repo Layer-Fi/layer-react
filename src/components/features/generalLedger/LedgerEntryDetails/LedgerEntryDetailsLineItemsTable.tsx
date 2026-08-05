@@ -93,7 +93,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
   const columnConfig = useMemo<ColumnConfig<LineItemRow>>(() => [
     {
       id: 'account',
-      header: stringOverrides?.lineItemsColumnHeader || t('generalLedger:label.line_items', 'Line items'),
+      header: stringOverrides?.lineItemsColumnHeader || t('generalLedger:LedgerEntryDetails.label.line_items', 'Line items'),
       isRowHeader: true,
       cell: (row: Row<LineItemRow>) =>
         row.original.isTotal
@@ -122,8 +122,8 @@ export const LedgerEntryDetailsLineItemsTable = ({
     EmptyState: () => (
       <DataState
         status={DataStateStatus.info}
-        title={t('generalLedger:empty.line_items', 'No line items')}
-        description={t('generalLedger:empty.line_items_description', 'This entry has no line items.')}
+        title={t('generalLedger:LedgerEntryDetails.empty.line_items', 'No line items')}
+        description={t('generalLedger:LedgerEntryDetails.empty.line_items_description', 'This entry has no line items.')}
         spacing
       />
     ),
@@ -141,7 +141,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
     <div className='Layer__LedgerEntryDetails__LineItems'>
       <SimpleDataTable<LineItemRow>
         componentName={COMPONENT_NAME}
-        ariaLabel={t('generalLedger:label.line_items', 'Line items')}
+        ariaLabel={t('generalLedger:LedgerEntryDetails.label.line_items', 'Line items')}
         columnConfig={columnConfig}
         data={rows}
         isLoading={Boolean(isLoading)}
