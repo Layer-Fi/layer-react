@@ -42,15 +42,8 @@ export type DocsScreenshot = {
 // story tagged `docs-screenshot` appears below, and vice versa.
 export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
-    storyId: 'components-banktransactions--bookkeeping-enabled',
-    out: 'components/bank-transactions.png',
-    viewport: 'desktop',
-    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
-    page: 'embedded-components/components/bank-transactions.mdx',
-  },
-  {
     storyId: 'components-banktransactions--docs-categorization',
-    out: 'components/bank-transactions-categorization.png',
+    out: 'components/bank-transactions.png',
     viewport: 'desktop',
     maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/components/bank-transactions.mdx',
