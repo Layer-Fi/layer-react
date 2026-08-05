@@ -28,21 +28,28 @@ the key **and its English default inline at the call site** and let the pipeline
    (`npx i18next-cli extract --sync-primary`), which opens/updates one standing
    `i18n/extract-keys` PR against `main`. It writes English values and scaffolds or removes
    `fr-CA` keys — it never writes French values.
-4. **French comes from Crowdin.** Merging `en-US` changes to `main` triggers
-   [`crowdin-sync`](../../../.github/workflows/crowdin-sync.yml): it scaffolds `fr-CA` keys from
-   the `en-US` diff (added → `""`, changed → blanked, removed → dropped), uploads English
-   sources, pre-translates untranslated strings (translation memory, then AI), downloads
-   `fr-CA`, and opens/updates the `i18n/crowdin-fr-ca` PR. A manual run defaults to
-   download-only for pulling upstream Crowdin edits.
-5. **Local French edits are honored, not clobbered.** Changing an `fr-CA` file on `main`
-   triggers [`crowdin-upload`](../../../.github/workflows/crowdin-upload.yml), which pushes
-   sources then translations so the next download can't revert you. The overall model is
-   bidirectional **last-writer-wins**.
+4. **French comes from Crowdin.** Both directions run through one workflow,
+   [`crowdin-sync`](../../../.github/workflows/crowdin-sync.yml), which picks its half from what
+   the push changed:
+   - **`en-US` changed** — uploads English sources, scaffolds `fr-CA` from the `en-US` diff
+     (added → `""`, changed → blanked, removed → dropped), pre-translates untranslated strings
+     (translation memory, then AI), downloads `fr-CA`, and opens/updates the
+     `i18n/crowdin-fr-ca` PR.
+   - **`fr-CA` changed** — uploads those edits so the next download can't revert them, and stops.
+     This is what makes **local French edits win**; the overall model is bidirectional
+     **last-writer-wins**.
 
-Things to know when the pipeline misbehaves: both Crowdin workflows share a
-`i18n-crowdin-sync` concurrency group, so they queue rather than race; full pre-translation
-runs need the `CROWDIN_AI_PROMPT_ID` variable; and a stale `main/` folder left in the Crowdin
-project causes spurious "omitted" warnings on download.
+   Sources always upload before translations: Crowdin rejects a translation whose source string
+   it doesn't have, so a new or renamed namespace fails otherwise.
+
+Manual runs default to the full flow, which is what a release needs. Uncheck `pretranslate` to
+only pull down what Crowdin already has. `prune` additionally uploads sources with
+`--delete-obsolete`, deleting files and folders that no longer match the source config — needed
+after a namespace rename, and destructive, so it is opt-in.
+
+Things to know when the pipeline misbehaves: full pre-translation runs need the
+`CROWDIN_AI_PROMPT_ID` variable, and a stale folder left in the Crowdin project causes spurious
+"omitted" warnings on download — `prune` clears those.
 
 ## Changing the English text of an existing key
 

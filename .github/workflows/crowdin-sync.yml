@@ -1,23 +1,23 @@
-name: i18n - Sync Translations
+name: i18n - Crowdin
 
-# Runs when en-US files change on main. Steps:
-#   1. Upload en-US sources to Crowdin.
-#   2. If the merge also changed fr-CA files, upload them to Crowdin so the
-#      download below cannot revert them. Must follow the source upload —
-#      Crowdin rejects a translation whose source string it does not have.
-#   3. Scaffold fr-CA keys from the en-US diff: added keys get "", changed
-#      keys are blanked, removed keys are dropped.
-#   4. Pre-translate untranslated fr-CA strings (translation memory, then AI).
-#   5. Download fr-CA; downloaded values overwrite local ones.
-#   6. Open/update the i18n/crowdin-fr-ca PR with the result.
+# One workflow for both directions, so the ordering rule below is defined once.
 #
-# Manual runs default to download-only (steps 5-6) for pulling upstream
-# Crowdin edits. Set pretranslate=true to run the full flow.
+# Which half runs depends on what changed:
+#   en-US changed   -> push sources up, pre-translate, pull fr-CA back down, open a PR
+#   fr-CA changed   -> push those edits up so a later download cannot revert them
+#   both changed    -> both, in that order
 #
-# prune=true uploads sources with --delete-obsolete, removing files and folders
-# that no longer match the source config — needed after a namespace rename, since
-# a plain upload adds the new file without retiring the old one. Destructive, so
-# it is opt-in.
+# Sources always upload before translations: Crowdin rejects a translation whose
+# source string it does not have, so a new or renamed namespace fails otherwise.
+#
+# Manual runs default to the full flow, which is what a release needs: sources up,
+# pre-translate, download, PR. Release — Prepare dispatches exactly this when the
+# release gate reports untranslated keys.
+#
+#   pretranslate=false -> download only, for pulling upstream Crowdin edits
+#   prune=true         -> upload sources with --delete-obsolete, deleting files and
+#                         folders that no longer match the source config. Needed
+#                         after a namespace rename. Destructive, so it is opt-in.
 #
 # Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
 # Variable: CROWDIN_AI_PROMPT_ID — required for full pre-translation runs.
@@ -26,9 +26,9 @@ on:
   workflow_dispatch:
     inputs:
       pretranslate:
-        description: Upload English sources and run fr-CA pretranslation before downloading
+        description: Upload English sources and run fr-CA pretranslation before downloading. Uncheck to only pull down what Crowdin already has.
         required: true
-        default: false
+        default: true
         type: boolean
       prune:
         description: 'DESTRUCTIVE: also delete Crowdin files and folders that no longer exist in en-US'
@@ -39,7 +39,7 @@ on:
     branches:
       - main
     paths:
-      - src/assets/locales/en-US/**
+      - src/assets/locales/**
 
 permissions:
   contents: write
@@ -64,19 +64,21 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    - name: Check for translation changes in this push
-      id: pushed_translations
+    - name: Classify what this push changed
+      id: changed
       if: ${{ github.event_name == 'push' }}
       env:
         BEFORE_SHA: ${{ github.event.before }}
       run: |
-        CHANGED=false
+        # Without the previous commit the halves are indistinguishable, so run both.
+        ENGLISH=true
+        TRANSLATIONS=true
         if git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
-          if ! git diff --quiet "$BEFORE_SHA" HEAD -- src/assets/locales ':!src/assets/locales/en-US'; then
-            CHANGED=true
-          fi
+          git diff --quiet "$BEFORE_SHA" HEAD -- src/assets/locales/en-US && ENGLISH=false
+          git diff --quiet "$BEFORE_SHA" HEAD -- src/assets/locales ':!src/assets/locales/en-US' && TRANSLATIONS=false
         fi
-        echo "changed=$CHANGED" >> "$GITHUB_OUTPUT"
+        echo "english=$ENGLISH" >> "$GITHUB_OUTPUT"
+        echo "translations=$TRANSLATIONS" >> "$GITHUB_OUTPUT"
 
     # Before the translations below: Crowdin only accepts a translation for a source string it
     # already has, so a push that adds or renames a namespace file fails without this.
@@ -97,7 +99,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Upload translation changes from this push to Crowdin
-      if: ${{ steps.pushed_translations.outputs.changed == 'true' }}
+      if: ${{ steps.changed.outputs.translations == 'true' }}
       uses: crowdin/github-action@v2
       with:
         command: upload translations
@@ -107,7 +109,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Scaffold fr-CA keys from en-US changes
-      if: ${{ github.event_name == 'push' }}
+      if: ${{ steps.changed.outputs.english == 'true' }}
       env:
         BEFORE_SHA: ${{ github.event.before }}
       run: |
@@ -121,7 +123,7 @@ jobs:
         fi
 
     - name: Pre-translate fr-CA from translation memory
-      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      if: ${{ steps.changed.outputs.english == 'true' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
         command: pre-translate
@@ -131,7 +133,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Require Crowdin AI prompt
-      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      if: ${{ steps.changed.outputs.english == 'true' || inputs.pretranslate }}
       env:
         CROWDIN_AI_PROMPT_ID: ${{ vars.CROWDIN_AI_PROMPT_ID }}
       run: |
@@ -141,7 +143,7 @@ jobs:
         fi
 
     - name: Pre-translate fr-CA with AI
-      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      if: ${{ steps.changed.outputs.english == 'true' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
         command: pre-translate
@@ -151,9 +153,11 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Snapshot current fr-CA manifest
+      if: ${{ github.event_name == 'workflow_dispatch' || steps.changed.outputs.english == 'true' }}
       run: cp -R src/assets/locales/fr-CA "$RUNNER_TEMP/fr-CA-before-crowdin"
 
     - name: Download fr-CA translations
+      if: ${{ github.event_name == 'workflow_dispatch' || steps.changed.outputs.english == 'true' }}
       uses: crowdin/github-action@v2
       with:
         upload_sources: false
@@ -168,6 +172,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Normalize downloaded fr-CA file permissions
+      if: ${{ github.event_name == 'workflow_dispatch' || steps.changed.outputs.english == 'true' }}
       run: |
         ls -ld src/assets/locales/fr-CA
         find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
@@ -177,9 +182,11 @@ jobs:
         find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
 
     - name: Apply downloaded fr-CA translations
+      if: ${{ github.event_name == 'workflow_dispatch' || steps.changed.outputs.english == 'true' }}
       run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
 
     - name: Open French translations PR
+      if: ${{ github.event_name == 'workflow_dispatch' || steps.changed.outputs.english == 'true' }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
