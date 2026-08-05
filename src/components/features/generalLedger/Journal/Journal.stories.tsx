@@ -111,7 +111,7 @@ export const DocsInAppLink: Story = {
         <a
           href='https://layerfi.com'
           target='_blank'
-          rel='noreferrer'
+          rel='noopener noreferrer'
           style={{ color: '#007bff', textDecoration: 'none', fontWeight: 500 }}
         >
           {entityName}

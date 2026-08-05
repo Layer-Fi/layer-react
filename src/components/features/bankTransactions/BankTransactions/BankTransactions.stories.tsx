@@ -272,7 +272,7 @@ export const DocsRuleSuggestionPreview: Story = {
   play: async ({ canvasElement }) => {
     await confirmFirstCategorizableRow(canvasElement)
 
-    await userEvent.click(screen.getByRole('button', { name: 'Yes, always categorize' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Yes, always categorize' }))
     await screen.findByText(/transactions will be affected/)
   },
 }
