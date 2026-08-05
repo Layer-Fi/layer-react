@@ -31,6 +31,11 @@ export type DocsScreenshot = {
   interactAt?: DocsScreenshotViewport
   /** Clips the capture to this many CSS pixels. Omit to capture the component's full height. */
   maxHeight?: number
+  /**
+   * Shoots the viewport instead of `#storybook-root`. Dialogs portal to `document.body`, so a
+   * root-scoped capture of a modal story is the page with the overlay missing.
+   */
+  captureViewport?: boolean
   /** The .mdx page that renders this image. Reported in the PR body; never edited. */
   page: string
 }
@@ -200,6 +205,32 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     out: 'pages/unified-reports-mobile.png',
     viewport: 'mobile',
     page: 'embedded-components/pages/unified-reports.mdx',
+  },
+  {
+    storyId: 'views-overview-solopreneur--default',
+    out: 'pages/solopreneur-overview.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/solopreneur-overview.mdx',
+  },
+  {
+    storyId: 'views-taxestimates--docs-payments',
+    out: 'pages/tax-estimates-payments.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/tax-estimates.mdx',
+  },
+  {
+    storyId: 'components-banktransactions--docs-rule-suggestion-prompt',
+    out: 'guides/categorization-rule-suggestion-prompt.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'guides/transaction-categorization/rules-suggestion.mdx',
+  },
+  {
+    storyId: 'components-banktransactions--docs-rule-suggestion-preview',
+    out: 'guides/categorization-rule-suggestion-preview.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'guides/transaction-categorization/rules-suggestion.mdx',
   },
   {
     storyId: 'views-timetracking--default',

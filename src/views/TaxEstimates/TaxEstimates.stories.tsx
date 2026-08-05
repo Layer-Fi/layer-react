@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { TaxEstimates } from '@views/TaxEstimates/TaxEstimates'
 
@@ -38,6 +39,21 @@ export const DocsDefault: Story = {
   tags: ['!public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [enableTaxEstimates, noUncategorizedTransactions, ...handlers] },
+  },
+}
+
+export const DocsPayments: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
+  parameters: {
+    msw: { handlers: [enableTaxEstimates, noUncategorizedTransactions, ...handlers] },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const payments = await canvas.findByRole('radio', { name: 'Payments' })
+    await userEvent.click(payments)
+    await canvas.findByLabelText('Tax Payments')
+    // The click leaves a focus ring on the toggle, which reads as a selection state in the shot.
+    payments.blur()
   },
 }
 
