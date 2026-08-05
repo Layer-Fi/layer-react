@@ -14,6 +14,11 @@ name: i18n - Sync Translations
 # Manual runs default to download-only (steps 5-6) for pulling upstream
 # Crowdin edits. Set pretranslate=true to run the full flow.
 #
+# prune=true uploads sources with --delete-obsolete, removing files and folders
+# that no longer match the source config — needed after a namespace rename, since
+# a plain upload adds the new file without retiring the old one. Destructive, so
+# it is opt-in.
+#
 # Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
 # Variable: CROWDIN_AI_PROMPT_ID — required for full pre-translation runs.
 
@@ -22,6 +27,11 @@ on:
     inputs:
       pretranslate:
         description: Upload English sources and run fr-CA pretranslation before downloading
+        required: true
+        default: false
+        type: boolean
+      prune:
+        description: 'DESTRUCTIVE: also delete Crowdin files and folders that no longer exist in en-US'
         required: true
         default: false
         type: boolean
@@ -71,10 +81,13 @@ jobs:
     # Before the translations below: Crowdin only accepts a translation for a source string it
     # already has, so a push that adds or renames a namespace file fails without this.
     - name: Upload sources to Crowdin
-      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      if: ${{ github.event_name == 'push' || inputs.pretranslate || inputs.prune }}
       uses: crowdin/github-action@v2
       with:
         upload_sources: true
+        # Renaming a namespace leaves its old file in the project; --delete-obsolete removes
+        # files and folders that no longer match the source config.
+        upload_sources_args: ${{ inputs.prune && '--delete-obsolete' || '' }}
         upload_translations: false
         download_translations: false
         create_pull_request: false
