@@ -17,8 +17,8 @@ import { type CustomerVendorSchema } from '@schemas/customerVendor/customerVendo
 import { type Tag } from '@schemas/tags/tag'
 import {
   hasMatch,
-} from '@utils/bankTransactions/shared'
-import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
+} from '@utils/features/bankTransactions/shared'
+import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
 import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
 import { useDeleteBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/delete'
 import { usePostBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/post'

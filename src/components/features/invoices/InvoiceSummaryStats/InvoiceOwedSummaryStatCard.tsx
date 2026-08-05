@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/shared/number/bigDecimal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack } from '@ui/Stack/Stack'

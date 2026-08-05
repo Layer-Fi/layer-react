@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'

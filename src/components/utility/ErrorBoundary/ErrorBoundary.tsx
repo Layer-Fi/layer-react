@@ -1,6 +1,6 @@
 import { Component, type ErrorInfo, type PropsWithChildren } from 'react'
 
-import { type LayerError, reportError } from '@utils/api/errorHandler'
+import { type LayerError, reportError } from '@utils/shared/api/errorHandler'
 import { ErrorBoundaryMessage } from '@components/utility/ErrorBoundary/ErrorBoundaryMessage'
 
 interface ErrorBoundaryProps {

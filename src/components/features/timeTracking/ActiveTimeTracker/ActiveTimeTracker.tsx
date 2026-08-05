@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useElapsedSeconds } from '@hooks/utils/dates/useElapsedSeconds'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

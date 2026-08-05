@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next'
 
 import type { CategorizationRule } from '@schemas/categorization/categorizationRule'
 import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export const DIRECTION_CONFIG = [
   { value: BankDirectionFilter.MONEY_IN, ...translationKey('categorizationRules:label.money_in', 'Money In') },

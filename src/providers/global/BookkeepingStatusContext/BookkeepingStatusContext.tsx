@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo } from 'reac
 
 import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeeping/bookkeepingStatus'
-import { isActiveBookkeepingStatus as checkIsActiveBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
+import { isActiveBookkeepingStatus as checkIsActiveBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 
 type BookkeepingStatusContextValue = Pick<

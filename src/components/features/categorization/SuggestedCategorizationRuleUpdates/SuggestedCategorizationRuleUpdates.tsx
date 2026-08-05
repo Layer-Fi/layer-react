@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
 import { Wizard } from '@blocks/Wizard/Wizard'
 import { RuleUpdatesPromptStep } from '@features/categorization/SuggestedCategorizationRuleUpdates/RuleUpdatesPromptStep'

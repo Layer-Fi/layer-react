@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { createTransformedEnumSchema } from '@schemas/common/utils'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 
 export enum CustomAccountSubtype {
   CHECKING = 'CHECKING',

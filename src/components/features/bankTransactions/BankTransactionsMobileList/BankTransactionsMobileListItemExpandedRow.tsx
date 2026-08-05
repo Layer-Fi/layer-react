@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { hasMatch } from '@utils/bankTransactions/shared'
-import { translationKey } from '@utils/i18n/translationKey'
+import { hasMatch } from '@utils/features/bankTransactions/shared'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import {

@@ -2,7 +2,7 @@ import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTran
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { type BankTransactionsMobileCategorySelectionItemOption } from '@features/bankTransactions/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 

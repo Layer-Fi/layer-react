@@ -3,7 +3,7 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useMemo
 import { type LoadedStatus } from '@internal-types/general'
 import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/bankAccount'
+import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
 import { useGetBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 

@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
-import { tPlural } from '@utils/i18n/plural'
+import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

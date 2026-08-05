@@ -1,5 +1,5 @@
 import { type TaxSummary, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

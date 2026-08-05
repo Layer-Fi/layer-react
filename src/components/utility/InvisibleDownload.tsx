@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 
-import { runDelayedSync } from '@utils/delay/runDelayed'
+import { runDelayedSync } from '@utils/shared/delay/runDelayed'
 
 import './invisibleDownload.scss'
 

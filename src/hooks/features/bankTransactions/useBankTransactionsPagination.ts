@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/features/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { PaginationChangeSource, type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'

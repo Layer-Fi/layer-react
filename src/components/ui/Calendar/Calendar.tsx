@@ -16,7 +16,7 @@ import {
   type CalendarProps as ReactAriaCalendarProps,
 } from 'react-aria-components/Calendar'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './calendar.scss'
 

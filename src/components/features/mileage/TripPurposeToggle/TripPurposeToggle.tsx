@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { TripPurposeFilterValue } from '@schemas/mileage/trip'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 
 const TRIP_PURPOSE_CONFIG = [

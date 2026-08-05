@@ -5,7 +5,7 @@ import {
   type BulkMatchOrCategorizeRequestEncoded,
   BulkMatchOrCategorizeRequestSchema,
 } from '@schemas/bankTransactions/bulkMatchOrCategorize'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

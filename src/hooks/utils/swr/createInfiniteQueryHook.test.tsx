@@ -4,9 +4,9 @@ import { Schema } from 'effect'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import * as authenticatedHttp from '@utils/api/authenticatedHttp'
-import { SupportedLocale } from '@utils/i18n/supportedLocale'
-import { type AuthenticatedRequest } from '@utils/swr/createKeyedFetcher'
+import * as authenticatedHttp from '@utils/shared/api/authenticatedHttp'
+import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
+import { type AuthenticatedRequest } from '@utils/shared/swr/createKeyedFetcher'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 import { getRequestOptions } from '@test-utils/getRequestOptions'

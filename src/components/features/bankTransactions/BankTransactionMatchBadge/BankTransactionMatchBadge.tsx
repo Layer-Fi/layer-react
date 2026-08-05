@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { isTransferMatch } from '@utils/bankTransactions/shared'
+import { isTransferMatch } from '@utils/features/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge } from '@ui/Badge/Badge'
 

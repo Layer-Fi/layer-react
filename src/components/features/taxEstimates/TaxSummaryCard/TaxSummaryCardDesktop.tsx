@@ -2,7 +2,7 @@ import { CircleArrowRight, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
-import { tConditional } from '@utils/i18n/conditional'
+import { tConditional } from '@utils/shared/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'

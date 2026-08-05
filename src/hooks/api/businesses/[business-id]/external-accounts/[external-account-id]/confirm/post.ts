@@ -1,5 +1,5 @@
 import type { OneOf } from '@internal-types/utility/oneOf'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY = '#confirm-external-account'

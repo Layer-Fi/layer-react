@@ -14,7 +14,7 @@ import {
   type DatePickerProps as ReactAriaDatePickerProps,
 } from 'react-aria-components/DatePicker'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './date.scss'
 

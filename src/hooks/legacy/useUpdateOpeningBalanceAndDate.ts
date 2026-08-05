@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
+import { post } from '@utils/shared/api/authenticatedHttp'
+import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type UpdateBankAccountOpeningBalanceBody = {

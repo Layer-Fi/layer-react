@@ -3,8 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/bookkeeping/businessTask'
-import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
+import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useDeleteTaskUploads } from '@api/businesses/[business-id]/tasks/[task-id]/upload/delete/post'
 import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
 import { usePostTaskUploadDescription } from '@api/businesses/[business-id]/tasks/[task-id]/upload/update-description/post'
@@ -16,6 +15,7 @@ import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
 import { TextArea } from '@ui/Input/TextArea'
 import { P } from '@ui/Typography/Text'
+import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
 
 type TasksListItemProps = {
   task: UserVisibleTask

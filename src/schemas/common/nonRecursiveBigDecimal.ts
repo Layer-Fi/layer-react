@@ -1,6 +1,6 @@
 import { BigDecimal as BD, Schema } from 'effect'
 
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/shared/number/bigDecimal'
 
 export type NonRecursiveBigDecimal = { value: bigint, scale: number }
 

@@ -1,5 +1,5 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions/shared'
+import { isCategorized } from '@utils/features/bankTransactions/shared'
 import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { BankTransactionsListItemCategory } from '@features/bankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'

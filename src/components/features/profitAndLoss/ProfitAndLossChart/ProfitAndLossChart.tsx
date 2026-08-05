@@ -16,7 +16,7 @@ import {
   XAxis,
 } from 'recharts'
 
-import { isDateAllowedToBrowse } from '@utils/business'
+import { isDateAllowedToBrowse } from '@utils/features/business/business'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'

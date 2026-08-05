@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useGlobalDateFormatter } from '@hooks/utils/i18n/useGlobalDateFormatter'
 import { ExpandSummaryCardButton } from '@blocks/SummaryCard/ExpandSummaryCardButton'
 import { type SummaryCardProps } from '@blocks/SummaryCard/SummaryCard'

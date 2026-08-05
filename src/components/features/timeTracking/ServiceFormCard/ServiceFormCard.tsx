@@ -3,7 +3,7 @@ import { AlertTriangle, Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/timeTracking/catalogService'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

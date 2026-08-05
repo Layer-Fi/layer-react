@@ -6,7 +6,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import {
   getBankTransactionMatchAsSuggestedMatch,
-} from '@utils/bankTransactions/shared'
+} from '@utils/features/bankTransactions/shared'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'

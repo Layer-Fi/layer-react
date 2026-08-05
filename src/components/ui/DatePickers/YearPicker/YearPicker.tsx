@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

@@ -1,6 +1,6 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Customer, CustomerSchema } from '@schemas/customerVendor/customer'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 

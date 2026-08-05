@@ -1,5 +1,5 @@
 import type { OneOf } from '@internal-types/utility/oneOf'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY = '#exclude-external-account'

@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'

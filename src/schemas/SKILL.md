@@ -140,7 +140,7 @@ stand-in, with `NonRecursiveBigDecimalSchema` plus:
 - `convertCentsToNonRecursiveBigDecimal` / `convertNonRecursiveBigDecimalToCents`
 - `makeNonRecursiveBigDecimal`, `negateNonRecursiveBigDecimal`, `nrbdEquals`, `NRBD_ZERO`, `NRBD_ONE`
 
-Do arithmetic by converting to `BigDecimal` (or via `@utils/bigDecimalUtils`); never operate
+Do arithmetic by converting to `BigDecimal` (or via `@utils/shared/number/bigDecimal`); never operate
 on `value`/`scale` directly.
 
 ### `@schemas/common/lineItem`
@@ -180,15 +180,15 @@ evaluates. Three things make it work:
 Monetary values that must not lose precision use `NonRecursiveBigDecimal`
 (`src/schemas/common/nonRecursiveBigDecimal.ts`) with the `fromNonRecursiveBigDecimal` /
 `toNonRecursiveBigDecimal` converters in the same module and the helpers in
-`@utils/bigDecimalUtils`. A plain `BigDecimal` in form state or React state is recursive
+`@utils/shared/number/bigDecimal`. A plain `BigDecimal` in form state or React state is recursive
 enough to blow up TS inference — hence the non-recursive wrapper.
 
 Amounts that arrive as integer cents stay integer cents; formatting divides by 100
-(see [`src/utils/i18n/SKILL.md`](../utils/i18n/SKILL.md)).
+(see [`src/utils/shared/i18n/SKILL.md`](../utils/shared/i18n/SKILL.md)).
 
 ## Related
 
 - [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) — how schemas get wired into query/mutation hooks
 - [`src/msw/SKILL.md`](../msw/SKILL.md) — mock handlers encode fixtures back through the schema
 - [`src/fixtures/SKILL.md`](../fixtures/SKILL.md) — generators derive `Arbitrary` from the schema
-- [`src/utils/i18n/SKILL.md`](../utils/i18n/SKILL.md) — formatting the values these schemas carry
+- [`src/utils/shared/i18n/SKILL.md`](../utils/shared/i18n/SKILL.md) — formatting the values these schemas carry

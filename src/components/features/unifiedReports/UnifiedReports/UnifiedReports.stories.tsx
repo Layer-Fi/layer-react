@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { type DateSelectionMode } from '@utils/date/dateRange'
+import { type DateSelectionMode } from '@utils/shared/date/dateRange'
 import { type UnifiedReportNavigationVariant, UnifiedReports } from '@features/unifiedReports/UnifiedReports/UnifiedReports'
 
 type UnifiedReportsStoryArgs = {

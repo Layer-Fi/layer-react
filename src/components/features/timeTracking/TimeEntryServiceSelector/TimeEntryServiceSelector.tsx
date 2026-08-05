@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/timeTracking/catalogService'
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { P, Span } from '@ui/Typography/Text'

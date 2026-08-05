@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react'
 import type { Key } from 'swr'
 import type { SWRMutationResponse } from 'swr/mutation'
 
-import { sleep } from '@utils/helpers'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { sleep } from '@utils/shared/delay/sleep'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 
 const DEFAULT_MIN_LOADING_MS = 500
 

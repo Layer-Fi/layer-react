@@ -1,5 +1,5 @@
 import { type Vendor } from '@schemas/customerVendor/vendor'
-import { getVendorName } from '@utils/vendor'
+import { getVendorName } from '@utils/features/customerVendor/vendor'
 
 export class VendorAsOption {
   private internalVendor: Vendor

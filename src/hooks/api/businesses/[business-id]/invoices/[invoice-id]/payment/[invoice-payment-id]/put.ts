@@ -1,4 +1,4 @@
-import { put } from '@utils/api/authenticatedHttp'
+import { put } from '@utils/shared/api/authenticatedHttp'
 import {
   UPSERT_INVOICE_PAYMENT_TAG_KEY,
   type UpsertDedicatedInvoicePaymentBody,

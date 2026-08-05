@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useBulkUncategorizeBankTransactions } from '@hooks/features/bankTransactions/useBulkBankTransactionMutations'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'

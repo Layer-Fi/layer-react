@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { hasMatch } from '@utils/bankTransactions/shared'
+import { hasMatch } from '@utils/features/bankTransactions/shared'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'

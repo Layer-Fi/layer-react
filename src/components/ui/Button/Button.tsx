@@ -5,7 +5,7 @@ import {
 } from 'react-aria-components/Button'
 import { useTranslation } from 'react-i18next'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'

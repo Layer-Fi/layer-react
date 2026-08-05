@@ -52,10 +52,10 @@ canonical example:
 - **Split state selectors from action selectors** so components that only dispatch don't
   re-render on value changes. Hooks returning multiple values `useMemo` the result object.
 - Select the narrowest slice possible. For `Date` values use `useStoreWithDateSelected`
-  (`@utils/zustand/useStoreWithDateSelected`) — it compares by `getTime()`, so a new `Date`
+  (`@providers/common/DateStore/useStoreWithDateSelected`) — it compares by `getTime()`, so a new `Date`
   with the same instant doesn't re-render.
 
-`createScopedStore` (`@utils/zustand/createScopedStore`) is a generic version of this
+`createScopedStore` (`@utils/shared/zustand/createScopedStore`) is a generic version of this
 pattern that throws instead of falling back to a dead store; today only the date store
 uses it. The hand-rolled shape above is the prevailing idiom for feature stores.
 
@@ -64,7 +64,7 @@ uses it. The hand-rolled shape above is the prevailing idiom for feature stores.
 Do not build a new date store. `createScopedDateStore` already handles ranges, presets, and
 period-aligned actions; `global/GlobalDateStore/GlobalDateStoreProvider` re-exports its hooks
 under domain names and applies clamping (`clampToPresentOrPast`, `clampToAfterActivationDate`
-from `@utils/date`). A domain that needs different defaults builds its own scoped store in its
+from `@utils/shared/date/dateRange`). A domain that needs different defaults builds its own scoped store in its
 own directory, as `generalLedger/LedgerDateStore` does for its `AllTime` default.
 
 ## Contexts

@@ -1,4 +1,4 @@
-import { patchWithFormData } from '@utils/api/authenticatedHttp'
+import { patchWithFormData } from '@utils/shared/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import {
   buildTransactionFormData,

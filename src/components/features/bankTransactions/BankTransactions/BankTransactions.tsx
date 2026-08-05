@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 
-import type { LayerError } from '@utils/api/errorHandler'
-import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/features/bankTransactions/shared'
+import type { LayerError } from '@utils/shared/api/errorHandler'
 import { usePreloadCategories } from '@api/businesses/[business-id]/categories/get'
 import { usePreloadCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { usePreloadCustomers } from '@api/businesses/[business-id]/customers/get'

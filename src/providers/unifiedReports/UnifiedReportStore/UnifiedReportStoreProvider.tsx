@@ -16,7 +16,7 @@ import {
   type UnifiedReportColumn,
   type UnifiedReportReportingBasis,
 } from '@schemas/unifiedReports/unifiedReport'
-import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
+import type { QueryParams } from '@utils/shared/request/toDefinedSearchParameters'
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'

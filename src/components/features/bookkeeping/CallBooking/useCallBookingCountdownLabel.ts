@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
 
 const MS_PER_HOUR = 60 * 60 * 1000
 const MS_PER_DAY = 24 * MS_PER_HOUR

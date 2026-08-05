@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
-import { type PnlChartLineItem } from '@utils/profitAndLossUtils'
+import { type PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 
 type ProfitAndLossMiniChartProps = {

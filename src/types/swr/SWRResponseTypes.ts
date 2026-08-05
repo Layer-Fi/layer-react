@@ -4,7 +4,7 @@ import type { SWRInfiniteResponse } from 'swr/infinite'
 import type { SWRMutationResponse } from 'swr/mutation'
 
 import type { PaginatedResponse } from '@schemas/common/pagination'
-import { hasMorePages } from '@utils/swr/hasMorePages'
+import { hasMorePages } from '@utils/shared/swr/hasMorePages'
 
 export class SWRQueryResult<T> {
   protected swrResponse: SWRResponse<T>

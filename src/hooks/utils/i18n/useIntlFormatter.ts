@@ -8,16 +8,16 @@ import {
   formatDateRange as formatDateRangeFn,
   formatMonthName as formatMonthNameFn,
   type MonthNameFormatFn,
-} from '@utils/i18n/date/formatters'
-import type { DateInput } from '@utils/i18n/date/input'
-import { type DateFormat } from '@utils/i18n/date/patterns'
+} from '@utils/shared/i18n/date/formatters'
+import type { DateInput } from '@utils/shared/i18n/date/input'
+import { type DateFormat } from '@utils/shared/i18n/date/patterns'
 import {
   type DurationFormatFn,
   formatMinutesAsDuration as formatMinutesAsDurationFn,
   formatSecondsAsDuration as formatSecondsAsDurationFn,
   type SecondsDurationFormatFn,
-} from '@utils/i18n/duration/formatters'
-import { formatList as formatListFn, type ListFormatFn } from '@utils/i18n/list/formatters'
+} from '@utils/shared/i18n/duration/formatters'
+import { formatList as formatListFn, type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import {
   type CurrencyFormatFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
@@ -25,7 +25,7 @@ import {
   formatPercent as formatPercentFn,
   type NumberFormatFn,
   type PercentFormatFn,
-} from '@utils/i18n/number/formatters'
+} from '@utils/shared/i18n/number/formatters'
 
 export type IntlFormatter = {
   formatCurrencyFromCents: CurrencyFormatFn

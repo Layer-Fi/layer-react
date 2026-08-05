@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
-import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
+import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/shared/number/bigDecimal'
 import { useGetInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'

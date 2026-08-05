@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useMemo } from 'react'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './profitAndLossSummariesList.scss'
 

@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
+import { isAllExternalAccountsUserCreatedCustom } from '@utils/features/bankAccounts/bankAccount'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'

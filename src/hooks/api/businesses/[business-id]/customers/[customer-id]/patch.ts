@@ -1,4 +1,4 @@
-import { patch } from '@utils/api/authenticatedHttp'
+import { patch } from '@utils/shared/api/authenticatedHttp'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@api/businesses/[business-id]/customers/get'
 import {
   UPSERT_CUSTOMER_TAG_KEY,

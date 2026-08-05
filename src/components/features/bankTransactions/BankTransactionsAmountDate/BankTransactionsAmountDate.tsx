@@ -1,4 +1,4 @@
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { DateTime } from '@ui/DateTime/DateTime'
 import type { Spacing } from '@ui/sharedUITypes'
 import { VStack } from '@ui/Stack/Stack'

@@ -1,8 +1,8 @@
 import { createStore } from 'zustand'
 
-import type { DateRange } from '@utils/date/dateRange'
-import { getDateRange, maybeInvertDateRange } from '@utils/date/dateRange'
-import { type DatePreset, deriveDateRangeFromPreset, derivePresetFromDateRange, type SelectableDatePreset } from '@utils/date/dateRangePresets'
+import type { DateRange } from '@utils/shared/date/dateRange'
+import { getDateRange, maybeInvertDateRange } from '@utils/shared/date/dateRange'
+import { type DatePreset, deriveDateRangeFromPreset, derivePresetFromDateRange, type SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
 import type { DateRangeWithPreset, DateStore } from '@providers/common/DateStore/types'
 
 export type MakeDateStoreOptions = {

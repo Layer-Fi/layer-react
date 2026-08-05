@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'

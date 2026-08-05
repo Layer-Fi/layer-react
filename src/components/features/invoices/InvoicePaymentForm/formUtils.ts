@@ -5,7 +5,7 @@ import { BigDecimal as BD } from 'effect'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePaymentForm'
-import { convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { convertCentsToBigDecimal } from '@utils/shared/number/bigDecimal'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
   const paidAt = fromDate(startOfToday(), getLocalTimeZone())

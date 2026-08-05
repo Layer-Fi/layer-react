@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Legend } from 'recharts'
 
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { STRIPE_PATTERN_DARK_FILL } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 
 import './profitAndLossChartLegend.scss'

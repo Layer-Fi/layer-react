@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
-import { type CacheKeyInfo } from '@utils/swr/withSWRKeyTags'
+import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 

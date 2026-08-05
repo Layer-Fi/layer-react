@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { useSWRConfig } from 'swr'
 
-import { getRelevantCacheKeys } from '@utils/swr/getRelevantCacheKeys'
-import { type CacheKeyInfo } from '@utils/swr/withSWRKeyTags'
+import { getRelevantCacheKeys } from '@utils/shared/swr/getRelevantCacheKeys'
+import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 
 type CacheKeyPredicateFn<TKey = unknown> = (info: CacheKeyInfo<TKey>) => boolean
 

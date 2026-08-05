@@ -3,9 +3,9 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
-import type { MutationRequest } from '@utils/api/getAsMutation'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import type { MutationRequest } from '@utils/shared/api/getAsMutation'
+import { createBuildKey } from '@utils/shared/swr/createBuildKey'
+import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
 import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 

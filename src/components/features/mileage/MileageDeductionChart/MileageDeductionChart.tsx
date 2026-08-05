@@ -7,7 +7,7 @@ import {
   XAxis,
 } from 'recharts'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'

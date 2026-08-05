@@ -2,7 +2,7 @@ import { type PaginationParams, SortOrder, type SortParams } from '@internal-typ
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Invoice, InvoiceSchema } from '@schemas/invoices/invoice'
 import { type InvoiceStatus } from '@schemas/invoices/invoiceStatus'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 

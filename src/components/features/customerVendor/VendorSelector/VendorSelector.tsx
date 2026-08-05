@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/customerVendor/vendor'
-import { getVendorName } from '@utils/vendor'
+import { getVendorName } from '@utils/features/customerVendor/vendor'
 import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'

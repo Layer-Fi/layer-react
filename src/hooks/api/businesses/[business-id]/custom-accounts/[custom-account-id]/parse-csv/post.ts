@@ -4,7 +4,7 @@ import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/c
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import type { CustomAccountTransactionRow } from '@schemas/customAccounts/customAccountTransactionRow'
 import type { RawCustomTransaction } from '@schemas/customAccounts/customTransaction'
-import { postWithFormData } from '@utils/api/authenticatedHttp'
+import { postWithFormData } from '@utils/shared/api/authenticatedHttp'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

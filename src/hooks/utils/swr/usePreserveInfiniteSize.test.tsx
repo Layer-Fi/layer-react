@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { type SWRInfiniteResponse } from 'swr/infinite'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { SupportedLocale } from '@utils/i18n/supportedLocale'
+import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { usePreserveInfiniteSize } from '@hooks/utils/swr/usePreserveInfiniteSize'
 import { useLocale } from '@providers/global/I18nProvider/LayerI18nProvider'
 

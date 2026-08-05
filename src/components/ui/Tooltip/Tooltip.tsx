@@ -10,7 +10,7 @@ import type { Placement } from '@floating-ui/react'
 import { FloatingPortal, useMergeRefs } from '@floating-ui/react'
 import classNames from 'classnames'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
 import { TooltipContext, useTooltip, useTooltipContext } from '@ui/Tooltip/useTooltip'
 

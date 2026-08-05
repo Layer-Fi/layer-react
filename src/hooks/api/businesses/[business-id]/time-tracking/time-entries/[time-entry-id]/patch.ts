@@ -1,4 +1,4 @@
-import { patch } from '@utils/api/authenticatedHttp'
+import { patch } from '@utils/shared/api/authenticatedHttp'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import {
   type CreateTimeEntryBody,

@@ -131,4 +131,4 @@ A screen often uses both: fetch by cursor, display with a pager, bridging them w
 
 - [`src/components/SKILL.md`](../../SKILL.md) — component layering and state helpers
 - [`src/components/ui/SKILL.md`](../../ui/SKILL.md) — styling and variant conventions these blocks follow
-- [`src/utils/i18n/SKILL.md`](../../../utils/i18n/SKILL.md) — formatting cell values
+- [`src/utils/shared/i18n/SKILL.md`](../../../utils/shared/i18n/SKILL.md) — formatting cell values

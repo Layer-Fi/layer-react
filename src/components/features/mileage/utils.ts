@@ -3,8 +3,8 @@ import { type TFunction } from 'i18next'
 import { Briefcase, CircleHelp, House, type LucideIcon } from 'lucide-react'
 
 import { TripPurpose } from '@schemas/mileage/trip'
-import { type NumberFormatFn } from '@utils/i18n/number/formatters'
-import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { type NumberFormatFn } from '@utils/shared/i18n/number/formatters'
+import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { BadgeVariant } from '@ui/Badge/Badge'
 
 export const formatDistance = (

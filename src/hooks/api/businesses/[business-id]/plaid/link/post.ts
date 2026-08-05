@@ -1,7 +1,7 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type CreatePlaidLinkParams, type CreatePlaidLinkParamsEncoded, encodeCreatePlaidLinkParams } from '@schemas/linkedAccounts/createPlaidLinkParams'
 import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/linkToken'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_PLAID_LINK_TAG_KEY = '#create-plaid-link'

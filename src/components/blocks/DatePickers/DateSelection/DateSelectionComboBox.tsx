@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, type SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

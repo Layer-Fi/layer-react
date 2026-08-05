@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { ChevronRight, CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

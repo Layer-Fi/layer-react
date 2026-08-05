@@ -9,8 +9,8 @@ import {
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { type ToastData } from '@internal-types/toast'
-import { errorHandler, type LayerError } from '@utils/api/errorHandler'
-import { buildColorsPalette } from '@utils/colors'
+import { errorHandler, type LayerError } from '@utils/shared/api/errorHandler'
+import { buildColorsPalette } from '@utils/shared/styles/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
 import { useGetBusiness } from '@api/businesses/[business-id]/get'
 import { BankAccountsProvider } from '@providers/global/BankAccountsContext/BankAccountsContext'
