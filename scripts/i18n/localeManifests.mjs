@@ -1,4 +1,3 @@
-/** Reading the generated locale manifests under `src/assets/locales`. */
 import fs from 'node:fs'
 import path from 'node:path'
 

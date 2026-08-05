@@ -1,7 +1,4 @@
-/**
- * Which namespace and owner segment a source file's keys must carry.
- * See src/assets/locales/SKILL.md.
- */
+/** Which namespace and owner a source file's keys must carry. See src/assets/locales/SKILL.md. */
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -23,10 +20,9 @@ export const isExempt = file => TEST_OR_STORY_FILE.test(file)
 const toPosixPath = file => file.split(path.sep).join('/')
 
 /**
- * A directory's namesake is the component itself (`InvoiceTable/InvoiceTable.tsx` → `InvoiceTable`).
- * Any other file there is a sub-part — sub-component, colocated hook, form helper — and is
- * qualified by its parent (`Tasks/TasksPanelNotification.tsx` → `Tasks.TasksPanelNotification`), so
- * the key names the file that uses it and generic names like `formUtils.ts` stay distinct.
+ * A directory's namesake is the component; anything else is a sub-part qualified by its parent
+ * (`Tasks/TasksPanelNotification.tsx` → `Tasks.TasksPanelNotification`), which keeps generic names
+ * like `formUtils.ts` distinct between components.
  */
 const ownerOfFile = (file, domainDirectory) => {
   const directoryName = path.basename(path.dirname(file))
@@ -38,10 +34,6 @@ const ownerOfFile = (file, domainDirectory) => {
   return fileName === directoryName ? directoryName : `${directoryName}.${fileName}`
 }
 
-/**
- * @returns `{ namespace, owner, allowsAnyDomain }`, `{ grandfathered: true, owner }` for
- *   `hooks/legacy`, or `undefined` for a file that owns no namespace.
- */
 export const ownershipFor = (rawFile) => {
   const file = toPosixPath(rawFile)
 
@@ -61,7 +53,6 @@ export const ownershipFor = (rawFile) => {
     return { namespace: tier, owner: ownerOfFile(file, tier), allowsAnyDomain: false }
   }
 
-  // A view composes several domains, so it may reach into any of them.
   if (/^src\/views\//.test(file)) {
     return { namespace: 'views', owner: ownerOfFile(file, 'views'), allowsAnyDomain: true }
   }

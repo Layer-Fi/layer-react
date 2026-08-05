@@ -1,11 +1,3 @@
-/**
- * Every place the source declares a translation key, from the real extractor rather than a second
- * copy of its parser.
- *
- * `findKeys` returns a deduplicated map, which cannot show a key declared twice with different
- * English. `onKeySubmitted` fires per submission before deduplication and `onLoad` gives the file;
- * extraction is sequential, so pairing them attributes each key correctly.
- */
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -17,10 +9,7 @@ const CONFIG_PATH = path.resolve('i18next.config.ts')
 
 const QUIET = { log: () => {}, info: () => {}, warn: () => {}, error: () => {}, debug: () => {}, success: () => {} }
 
-/**
- * Extraction reports the key, not its position. For an expanded variant (`…_one`) the source holds
- * the base key. `from` walks repeats forward so two declarations don't both report the first.
- */
+/** Extraction reports keys, not positions; an expanded variant (`…_one`) is written as its base. */
 const findKeyLiteral = (text, key, from = 0) => {
   const candidates = [key]
   const plural = splitPluralCategory(key)
@@ -39,7 +28,11 @@ const findKeyLiteral = (text, key, from = 0) => {
   return { line: text.slice(0, best.at).split('\n').length, next: best.at + best.length }
 }
 
-/** One entry per declaration, including duplicates — that is the point. */
+/**
+ * Don't reduce this to `findKeys`' return value: it is deduplicated, so a key declared twice with
+ * different English arrives with the loser already dropped. `onKeySubmitted` sees every submission,
+ * and `onLoad` names the file — safe to pair because extraction is sequential.
+ */
 export const collectCallSites = async () => {
   const config = (await import(CONFIG_PATH)).default
 
@@ -52,8 +45,7 @@ export const collectCallSites = async () => {
       return code
     },
     onKeySubmitted: (extracted) => {
-      // i18next-cli falls back to the key itself when a call declares no default: a reference, not
-      // a declaration.
+      // i18next-cli defaults to the key itself: a reference, not a declaration.
       if (!extracted.explicitDefault && extracted.defaultValue === extracted.key) return
       submissions.push({
         file: currentFile,
