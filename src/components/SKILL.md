@@ -189,5 +189,6 @@ refactored freely.
 - [`src/components/ui/SKILL.md`](ui/SKILL.md) — primitives and their styling props
 - [`src/styles/SKILL.md`](../styles/SKILL.md) — SCSS and BEM rules
 - [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) · [`src/providers/SKILL.md`](../providers/SKILL.md)
-- [`src/assets/locales/SKILL.md`](../assets/locales/SKILL.md) — translated strings
+- [`src/assets/locales/SKILL.md`](../assets/locales/SKILL.md) — translated strings; a component's
+  directory name is the owner segment of every key it uses
 - [`.storybook/SKILL.md`](../../.storybook/SKILL.md) — stories for new components
