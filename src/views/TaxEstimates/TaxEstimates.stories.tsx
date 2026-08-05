@@ -57,13 +57,15 @@ export const DocsPayments: Story = {
   },
 }
 
+// Keeps the fixture's configuration so the form renders filled out; the empty form reads as a
+// column of blank inputs in the docs image.
 export const Onboarding: Story = {
   tags: ['docs-screenshot'],
   parameters: {
     msw: {
       handlers: [
         enableTaxEstimates,
-        getTaxProfile.mock(makeTaxProfile({ userHasSavedTaxProfile: false, usConfiguration: null })),
+        getTaxProfile.mock(makeTaxProfile({ userHasSavedTaxProfile: false })),
         ...handlers,
       ],
     },

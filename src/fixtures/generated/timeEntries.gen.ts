@@ -11,7 +11,7 @@ export const timeEntries = [
     "durationMinutes": 300,
     "billable": true,
     "description": "Requirements gathering",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
@@ -45,7 +45,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": false,
     "description": "Draft revisions",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-ce47-433a-8943-a740f2732a3f",
@@ -79,7 +79,7 @@ export const timeEntries = [
     "durationMinutes": 240,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Billed at standard rate",
     "metadata": null,
     "customer": {
       "id": "00000003-045f-4a99-834f-2248873864e4",
@@ -113,19 +113,19 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Quarterly review",
-    "memo": "Billed at standard rate",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 11500
+      "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
+      "name": "Interior Design",
+      "billableRatePerHourAmount": 20500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2021-06-09T07:19:22.722Z"),
-    "updatedAt": new Date("2024-08-09T07:39:25.626Z"),
+    "createdAt": new Date("2021-11-02T09:41:52.831Z"),
+    "updatedAt": new Date("2024-06-19T00:56:41.832Z"),
     "deletedAt": null
   },
   {
@@ -136,31 +136,20 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": false,
     "description": "Documentation",
-    "memo": "Covered under retainer",
+    "memo": "Overtime approved",
     "metadata": null,
-    "customer": {
-      "id": "00000003-ce47-433a-8943-a740f2732a3f",
-      "externalId": null,
-      "individualName": "Amara Okafor",
-      "companyName": null,
-      "email": "amara.okafor@example.com",
-      "mobilePhone": null,
-      "officePhone": "+13985550197",
-      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
-      "status": "ARCHIVED",
-      "memo": null
-    },
+    "customer": null,
     "service": {
-      "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
-      "name": "Interior Design",
-      "billableRatePerHourAmount": 20500
+      "id": "00000007-f63f-4fcb-858d-1a35ff5a6aa5",
+      "name": "Copywriting",
+      "billableRatePerHourAmount": 16000
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.012Z"),
     "updatedAt": new Date("2025-04-27T04:26:16.782Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "deletedAt": null
   },
   {
     "id": "00000008-aa4b-48e6-8d84-cbf2c5b7a0aa",
@@ -170,24 +159,24 @@ export const timeEntries = [
     "durationMinutes": 45,
     "billable": true,
     "description": "Final delivery",
-    "memo": "Split across two projects",
+    "memo": "Overtime approved",
     "metadata": null,
     "customer": {
-      "id": "00000003-e14c-4f0d-8f51-ecbd67728f21",
+      "id": "00000003-0351-4cfd-860c-32b0b4ffc791",
       "externalId": null,
-      "individualName": null,
-      "companyName": "Wayne Enterprises",
-      "email": "contact@wayneenterprises.test",
+      "individualName": "Maria Garcia",
+      "companyName": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
-      "officePhone": "+19945550199",
-      "addressString": "456 Market St, San Francisco, CA 94105",
+      "officePhone": null,
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
       "status": "ARCHIVED",
-      "memo": null
+      "memo": "VIP client"
     },
     "service": {
-      "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 11500
+      "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
+      "name": "Interior Design",
+      "billableRatePerHourAmount": 20500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -204,7 +193,7 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": true,
     "description": "Vendor coordination",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-79b1-4082-8d65-0f0692a459cf",
@@ -238,7 +227,7 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": false,
     "description": "Requirements gathering",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-4b46-4097-85f0-896231804c64",
@@ -272,31 +261,20 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": false,
     "description": null,
-    "memo": "Covered under retainer",
+    "memo": "Rush turnaround",
     "metadata": null,
-    "customer": {
-      "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Oscorp Industries",
-      "email": "contact@oscorpindustries.test",
-      "mobilePhone": null,
-      "officePhone": "+12095550198",
-      "addressString": "789 Broadway, New York, NY 10003",
-      "status": "ARCHIVED",
-      "memo": null
-    },
+    "customer": null,
     "service": {
-      "id": "00000007-045f-4a99-834f-2248873864e4",
-      "name": "Software Architecture",
-      "billableRatePerHourAmount": 10500
+      "id": "00000007-a0b6-452b-8812-70c20a3e49d9",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.031Z"),
     "updatedAt": new Date("2021-09-14T20:57:44.463Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "deletedAt": null
   },
   {
     "id": "00000008-9970-4ba4-8acd-f124d2458911",
@@ -306,7 +284,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": true,
     "description": "Kickoff meeting",
-    "memo": null,
+    "memo": "Billed at standard rate",
     "metadata": null,
     "customer": null,
     "service": {
@@ -329,9 +307,20 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": true,
     "description": "Stakeholder interview",
-    "memo": "Includes travel time",
+    "memo": "Rush turnaround",
     "metadata": null,
-    "customer": null,
+    "customer": {
+      "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
+      "externalId": null,
+      "individualName": null,
+      "companyName": "Acme Corp",
+      "email": "contact@acmecorp.test",
+      "mobilePhone": "+13365550103",
+      "officePhone": null,
+      "addressString": "55 Boylston St, Boston, MA 02116",
+      "status": "ACTIVE",
+      "memo": null
+    },
     "service": {
       "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
       "name": "Marketing Strategy",
@@ -352,7 +341,7 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Vendor coordination",
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-045f-4a99-834f-2248873864e4",
@@ -386,7 +375,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": true,
     "description": "Invoicing and wrap-up",
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -420,31 +409,31 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Final delivery",
-    "memo": "Includes travel time",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": {
-      "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
+      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
       "externalId": null,
-      "individualName": null,
-      "companyName": "Acme Corp",
-      "email": "contact@acmecorp.test",
-      "mobilePhone": "+13365550103",
-      "officePhone": null,
-      "addressString": "55 Boylston St, Boston, MA 02116",
+      "individualName": "Wei Chen",
+      "companyName": "Initech",
+      "email": "wei.chen@initech.test",
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
       "status": "ACTIVE",
       "memo": null
     },
     "service": {
-      "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 11500
+      "id": "00000007-045f-4a99-834f-2248873864e4",
+      "name": "Software Architecture",
+      "billableRatePerHourAmount": 10500
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2025-01-23T15:44:50.217Z"),
+    "createdAt": new Date("2025-02-22T21:52:39.050Z"),
     "updatedAt": new Date("2025-08-20T16:37:11.385Z"),
-    "deletedAt": null
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000008-c3c2-43d1-81aa-cac5a53ab58b",
@@ -454,7 +443,7 @@ export const timeEntries = [
     "durationMinutes": 300,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": null,
     "service": {
@@ -477,7 +466,7 @@ export const timeEntries = [
     "durationMinutes": 15,
     "billable": true,
     "description": "Content production",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -511,7 +500,7 @@ export const timeEntries = [
     "durationMinutes": 15,
     "billable": true,
     "description": "Status update",
-    "memo": null,
+    "memo": "Billed at standard rate",
     "metadata": null,
     "customer": {
       "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
@@ -545,7 +534,7 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-e14c-4f0d-8f51-ecbd67728f21",
@@ -582,16 +571,16 @@ export const timeEntries = [
     "memo": "Overtime approved",
     "metadata": null,
     "customer": {
-      "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
+      "id": "00000003-0351-4cfd-860c-32b0b4ffc791",
       "externalId": null,
-      "individualName": null,
-      "companyName": "Stark Industries",
-      "email": "contact@starkindustries.test",
+      "individualName": "Maria Garcia",
+      "companyName": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
       "officePhone": null,
-      "addressString": "456 Market St, San Francisco, CA 94105",
-      "status": "ACTIVE",
-      "memo": null
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": "VIP client"
     },
     "service": {
       "id": "00000007-0351-4cfd-860c-32b0b4ffc791",
@@ -613,7 +602,7 @@ export const timeEntries = [
     "durationMinutes": 240,
     "billable": false,
     "description": "Status update",
-    "memo": null,
+    "memo": "Covered under retainer",
     "metadata": null,
     "customer": null,
     "service": {
@@ -636,7 +625,7 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": true,
     "description": "Design review",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
@@ -670,7 +659,7 @@ export const timeEntries = [
     "durationMinutes": 60,
     "billable": true,
     "description": "Follow-up call",
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": null,
     "service": {
@@ -693,7 +682,30 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Final delivery",
-    "memo": "Billed at standard rate",
+    "memo": "Rush turnaround",
+    "metadata": null,
+    "customer": null,
+    "service": {
+      "id": "00000007-ce47-433a-8943-a740f2732a3f",
+      "name": "Product Strategy",
+      "billableRatePerHourAmount": 2500
+    },
+    "invoiceLineItem": null,
+    "status": "RECORDED",
+    "stoppedAt": null,
+    "createdAt": new Date("2020-01-12T15:06:56.756Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.983Z"),
+    "deletedAt": null
+  },
+  {
+    "id": "00000008-2660-4ff5-8873-5248bde601be",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "externalId": null,
+    "date": new CalendarDate(2025, 8, 8),
+    "durationMinutes": 90,
+    "billable": true,
+    "description": "Content production",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": {
       "id": "00000003-045f-4a99-834f-2248873864e4",
@@ -707,29 +719,6 @@ export const timeEntries = [
       "status": "ACTIVE",
       "memo": null
     },
-    "service": {
-      "id": "00000007-0351-4cfd-860c-32b0b4ffc791",
-      "name": "Financial Planning",
-      "billableRatePerHourAmount": 6500
-    },
-    "invoiceLineItem": null,
-    "status": "RECORDED",
-    "stoppedAt": null,
-    "createdAt": new Date("2022-11-06T20:16:41.609Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.983Z"),
-    "deletedAt": null
-  },
-  {
-    "id": "00000008-2660-4ff5-8873-5248bde601be",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "externalId": null,
-    "date": new CalendarDate(2025, 8, 8),
-    "durationMinutes": 90,
-    "billable": true,
-    "description": "Content production",
-    "memo": "Split across two projects",
-    "metadata": null,
-    "customer": null,
     "service": {
       "id": "00000007-4b46-4097-85f0-896231804c64",
       "name": "Graphic Design",
@@ -750,7 +739,7 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-79b1-4082-8d65-0f0692a459cf",
@@ -784,7 +773,7 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": true,
     "description": "Quarterly review",
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": null,
     "service": {
@@ -807,7 +796,7 @@ export const timeEntries = [
     "durationMinutes": 240,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": null,
     "service": {
@@ -830,7 +819,7 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Stakeholder interview",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
@@ -864,7 +853,7 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": false,
     "description": "Invoicing and wrap-up",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
@@ -898,7 +887,7 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": {
       "id": "00000003-e14c-4f0d-8f51-ecbd67728f21",
@@ -932,9 +921,20 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": true,
     "description": "Status update",
-    "memo": "Includes travel time",
+    "memo": "Rush turnaround",
     "metadata": null,
-    "customer": null,
+    "customer": {
+      "id": "00000003-e14c-4f0d-8f51-ecbd67728f21",
+      "externalId": null,
+      "individualName": null,
+      "companyName": "Wayne Enterprises",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
+      "memo": null
+    },
     "service": {
       "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
       "name": "Interior Design",
@@ -955,30 +955,30 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": false,
     "description": "Research and analysis",
-    "memo": "Pro bono - do not invoice",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": {
-      "id": "00000003-0351-4cfd-860c-32b0b4ffc791",
+      "id": "00000003-ce47-433a-8943-a740f2732a3f",
       "externalId": null,
-      "individualName": "Maria Garcia",
+      "individualName": "Amara Okafor",
       "companyName": null,
-      "email": "maria.garcia@example.com",
+      "email": "amara.okafor@example.com",
       "mobilePhone": null,
-      "officePhone": null,
+      "officePhone": "+13985550197",
       "addressString": "900 Biscayne Blvd, Miami, FL 33132",
       "status": "ARCHIVED",
-      "memo": "VIP client"
+      "memo": null
     },
     "service": {
-      "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
-      "name": "Interior Design",
-      "billableRatePerHourAmount": 20500
+      "id": "00000007-4b46-4097-85f0-896231804c64",
+      "name": "Graphic Design",
+      "billableRatePerHourAmount": 3500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.037Z"),
-    "updatedAt": new Date("2022-08-28T18:16:31.887Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.033Z"),
+    "updatedAt": new Date("2021-05-01T10:08:49.947Z"),
     "deletedAt": null
   },
   {
@@ -989,7 +989,7 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": false,
     "description": "Prototype build",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
@@ -1023,7 +1023,7 @@ export const timeEntries = [
     "durationMinutes": 45,
     "billable": true,
     "description": "Invoicing and wrap-up",
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-045f-4a99-834f-2248873864e4",
@@ -1057,7 +1057,7 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": true,
     "description": "Onboarding session",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": null,
     "service": {
@@ -1080,20 +1080,9 @@ export const timeEntries = [
     "durationMinutes": 300,
     "billable": true,
     "description": "Quarterly review",
-    "memo": "Billed at standard rate",
+    "memo": "Overtime approved",
     "metadata": null,
-    "customer": {
-      "id": "00000003-79b1-4082-8d65-0f0692a459cf",
-      "externalId": null,
-      "individualName": "Priya Patel",
-      "companyName": null,
-      "email": "priya.patel@example.com",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": "12 Elm St, Austin, TX 78701",
-      "status": "ARCHIVED",
-      "memo": null
-    },
+    "customer": null,
     "service": {
       "id": "00000007-a0b6-452b-8812-70c20a3e49d9",
       "name": "Project Management",
@@ -1102,8 +1091,8 @@ export const timeEntries = [
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-05-02T22:01:18.575Z"),
-    "updatedAt": new Date("2021-02-07T11:20:00.031Z"),
+    "createdAt": new Date("2024-11-13T11:58:49.837Z"),
+    "updatedAt": new Date("2025-03-21T04:14:41.041Z"),
     "deletedAt": null
   },
   {
@@ -1114,19 +1103,19 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": true,
     "description": "Draft revisions",
-    "memo": "Rush turnaround",
+    "memo": "Overtime approved",
     "metadata": null,
     "customer": {
-      "id": "00000003-0351-4cfd-860c-32b0b4ffc791",
+      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
       "externalId": null,
-      "individualName": "Maria Garcia",
-      "companyName": null,
-      "email": "maria.garcia@example.com",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
-      "status": "ARCHIVED",
-      "memo": "VIP client"
+      "individualName": "Wei Chen",
+      "companyName": "Initech",
+      "email": "wei.chen@initech.test",
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
+      "status": "ACTIVE",
+      "memo": null
     },
     "service": {
       "id": "00000007-4b46-4097-85f0-896231804c64",
@@ -1136,8 +1125,8 @@ export const timeEntries = [
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.033Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.033Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.037Z"),
+    "updatedAt": new Date("2021-09-04T12:24:53.742Z"),
     "deletedAt": null
   },
   {
@@ -1148,7 +1137,7 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": false,
     "description": "On-site visit",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-045f-4a99-834f-2248873864e4",
@@ -1182,7 +1171,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": true,
     "description": "Final delivery",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": null,
     "service": {
@@ -1205,30 +1194,19 @@ export const timeEntries = [
     "durationMinutes": 15,
     "billable": true,
     "description": null,
-    "memo": "Billed at standard rate",
+    "memo": "Rush turnaround",
     "metadata": null,
-    "customer": {
-      "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Oscorp Industries",
-      "email": "contact@oscorpindustries.test",
-      "mobilePhone": null,
-      "officePhone": "+12095550198",
-      "addressString": "789 Broadway, New York, NY 10003",
-      "status": "ARCHIVED",
-      "memo": null
-    },
+    "customer": null,
     "service": {
-      "id": "00000007-ce47-433a-8943-a740f2732a3f",
-      "name": "Product Strategy",
-      "billableRatePerHourAmount": 2500
+      "id": "00000007-a0b6-452b-8812-70c20a3e49d9",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2024-11-09T18:07:25.052Z"),
-    "updatedAt": new Date("2024-12-29T17:07:52.959Z"),
+    "createdAt": new Date("2021-03-22T01:45:47.399Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.984Z"),
     "deletedAt": null
   },
   {
@@ -1239,20 +1217,20 @@ export const timeEntries = [
     "durationMinutes": 15,
     "billable": true,
     "description": "Stakeholder interview",
-    "memo": "Billed at standard rate",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "00000007-045f-4a99-834f-2248873864e4",
-      "name": "Software Architecture",
-      "billableRatePerHourAmount": 10500
+      "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 11500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2022-01-22T13:51:24.243Z"),
-    "updatedAt": new Date("2023-01-06T20:37:07.748Z"),
-    "deletedAt": null
+    "createdAt": new Date("2021-11-09T08:47:22.909Z"),
+    "updatedAt": new Date("2022-01-22T13:51:24.243Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000008-ec00-4585-8819-6e0320bfec98",
@@ -1262,31 +1240,20 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": null,
-    "memo": "Covered under retainer",
+    "memo": "Overtime approved",
     "metadata": null,
-    "customer": {
-      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
-      "externalId": null,
-      "individualName": "Wei Chen",
-      "companyName": "Initech",
-      "email": "wei.chen@initech.test",
-      "mobilePhone": "+17965550168",
-      "officePhone": "+12285550168",
-      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
-      "status": "ACTIVE",
-      "memo": null
-    },
+    "customer": null,
     "service": {
-      "id": "00000007-a0b6-452b-8812-70c20a3e49d9",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 5000
+      "id": "00000007-ce47-433a-8943-a740f2732a3f",
+      "name": "Product Strategy",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.000Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.004Z"),
-    "deletedAt": null
+    "createdAt": new Date("2020-01-01T00:00:00.025Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.991Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000008-79b1-4082-8d65-0f0692a459cf",
@@ -1296,7 +1263,7 @@ export const timeEntries = [
     "durationMinutes": 300,
     "billable": true,
     "description": "Prototype build",
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": {
       "id": "00000003-ce47-433a-8943-a740f2732a3f",
@@ -1330,24 +1297,24 @@ export const timeEntries = [
     "durationMinutes": 45,
     "billable": true,
     "description": "Content production",
-    "memo": "Rush turnaround",
+    "memo": "Overtime approved",
     "metadata": null,
     "customer": {
-      "id": "00000003-79b1-4082-8d65-0f0692a459cf",
+      "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
       "externalId": null,
-      "individualName": "Priya Patel",
-      "companyName": null,
-      "email": "priya.patel@example.com",
+      "individualName": null,
+      "companyName": "Stark Industries",
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
       "officePhone": null,
-      "addressString": "12 Elm St, Austin, TX 78701",
-      "status": "ARCHIVED",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "service": {
-      "id": "00000007-0351-4cfd-860c-32b0b4ffc791",
-      "name": "Financial Planning",
-      "billableRatePerHourAmount": 6500
+      "id": "00000007-4b46-4097-85f0-896231804c64",
+      "name": "Graphic Design",
+      "billableRatePerHourAmount": 3500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1364,7 +1331,7 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": true,
     "description": "Kickoff meeting",
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": {
       "id": "00000003-d6fb-4ef5-8c75-46e387b4abad",
@@ -1398,7 +1365,7 @@ export const timeEntries = [
     "durationMinutes": 60,
     "billable": false,
     "description": null,
-    "memo": null,
+    "memo": "Billed at standard rate",
     "metadata": null,
     "customer": {
       "id": "00000003-ce47-433a-8943-a740f2732a3f",
@@ -1432,7 +1399,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": true,
     "description": "Bug triage",
-    "memo": null,
+    "memo": "Covered under retainer",
     "metadata": null,
     "customer": {
       "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
@@ -1466,7 +1433,7 @@ export const timeEntries = [
     "durationMinutes": 180,
     "billable": true,
     "description": "Requirements gathering",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -1500,7 +1467,7 @@ export const timeEntries = [
     "durationMinutes": 240,
     "billable": true,
     "description": "Stakeholder interview",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": null,
     "service": {
@@ -1523,7 +1490,41 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": true,
     "description": "Vendor coordination",
-    "memo": "Pro bono - do not invoice",
+    "memo": "Rush turnaround",
+    "metadata": null,
+    "customer": {
+      "id": "00000003-79b1-4082-8d65-0f0692a459cf",
+      "externalId": null,
+      "individualName": "Priya Patel",
+      "companyName": null,
+      "email": "priya.patel@example.com",
+      "mobilePhone": null,
+      "officePhone": null,
+      "addressString": "12 Elm St, Austin, TX 78701",
+      "status": "ARCHIVED",
+      "memo": null
+    },
+    "service": {
+      "id": "00000007-045f-4a99-834f-2248873864e4",
+      "name": "Software Architecture",
+      "billableRatePerHourAmount": 10500
+    },
+    "invoiceLineItem": null,
+    "status": "RECORDED",
+    "stoppedAt": null,
+    "createdAt": new Date("2022-08-02T21:08:51.932Z"),
+    "updatedAt": new Date("2023-06-05T12:54:14.491Z"),
+    "deletedAt": null
+  },
+  {
+    "id": "00000008-ce47-433a-8943-a740f2732a3f",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "externalId": null,
+    "date": new CalendarDate(2025, 2, 24),
+    "durationMinutes": 300,
+    "billable": true,
+    "description": "Follow-up call",
+    "memo": "Rush turnaround",
     "metadata": null,
     "customer": {
       "id": "00000003-ce47-433a-8943-a740f2732a3f",
@@ -1538,46 +1539,12 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000007-045f-4a99-834f-2248873864e4",
-      "name": "Software Architecture",
-      "billableRatePerHourAmount": 10500
+      "id": "00000007-4b46-4097-85f0-896231804c64",
+      "name": "Graphic Design",
+      "billableRatePerHourAmount": 3500
     },
     "invoiceLineItem": null,
-    "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.011Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.972Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
-  },
-  {
-    "id": "00000008-ce47-433a-8943-a740f2732a3f",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "externalId": null,
-    "date": new CalendarDate(2025, 2, 24),
-    "durationMinutes": 300,
-    "billable": true,
-    "description": "Follow-up call",
-    "memo": "Awaiting client approval",
-    "metadata": null,
-    "customer": {
-      "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Stark Industries",
-      "email": "contact@starkindustries.test",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": "456 Market St, San Francisco, CA 94105",
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "service": {
-      "id": "00000007-0351-4cfd-860c-32b0b4ffc791",
-      "name": "Financial Planning",
-      "billableRatePerHourAmount": 6500
-    },
-    "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
     "createdAt": new Date("2020-08-22T19:59:02.331Z"),
     "updatedAt": new Date("2022-09-16T05:12:56.758Z"),
@@ -1591,7 +1558,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": true,
     "description": "Bug triage",
-    "memo": null,
+    "memo": "Pro bono - do not invoice",
     "metadata": null,
     "customer": {
       "id": "00000003-79b1-4082-8d65-0f0692a459cf",
@@ -1625,7 +1592,7 @@ export const timeEntries = [
     "durationMinutes": 30,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -1659,7 +1626,7 @@ export const timeEntries = [
     "durationMinutes": 300,
     "billable": false,
     "description": "Follow-up call",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -1693,7 +1660,7 @@ export const timeEntries = [
     "durationMinutes": 120,
     "billable": false,
     "description": null,
-    "memo": null,
+    "memo": "Covered under retainer",
     "metadata": null,
     "customer": null,
     "service": {
@@ -1716,9 +1683,20 @@ export const timeEntries = [
     "durationMinutes": 90,
     "billable": true,
     "description": "Documentation",
-    "memo": "Pro bono - do not invoice",
+    "memo": "Overtime approved",
     "metadata": null,
-    "customer": null,
+    "customer": {
+      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
+      "externalId": null,
+      "individualName": "Wei Chen",
+      "companyName": "Initech",
+      "email": "wei.chen@initech.test",
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
+      "status": "ACTIVE",
+      "memo": null
+    },
     "service": {
       "id": "00000007-4b46-4097-85f0-896231804c64",
       "name": "Graphic Design",
@@ -1739,7 +1717,7 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Requirements gathering",
-    "memo": null,
+    "memo": "Split across two projects",
     "metadata": null,
     "customer": {
       "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
@@ -1773,31 +1751,20 @@ export const timeEntries = [
     "durationMinutes": 480,
     "billable": true,
     "description": "Status update",
-    "memo": "Billed at standard rate",
+    "memo": "Rush turnaround",
     "metadata": null,
-    "customer": {
-      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
-      "externalId": null,
-      "individualName": "Wei Chen",
-      "companyName": "Initech",
-      "email": "wei.chen@initech.test",
-      "mobilePhone": "+17965550168",
-      "officePhone": "+12285550168",
-      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
-      "status": "ACTIVE",
-      "memo": null
-    },
+    "customer": null,
     "service": {
-      "id": "00000007-ce47-433a-8943-a740f2732a3f",
-      "name": "Product Strategy",
-      "billableRatePerHourAmount": 2500
+      "id": "00000007-4b46-4097-85f0-896231804c64",
+      "name": "Graphic Design",
+      "billableRatePerHourAmount": 3500
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.036Z"),
-    "updatedAt": new Date("2024-02-14T02:56:17.378Z"),
-    "deletedAt": null
+    "createdAt": new Date("2025-12-31T23:59:58.971Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.997Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000008-4b46-4097-85f0-896231804c64",
@@ -1807,7 +1774,7 @@ export const timeEntries = [
     "durationMinutes": 15,
     "billable": true,
     "description": "Research and analysis",
-    "memo": null,
+    "memo": "Awaiting client approval",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
@@ -1841,7 +1808,7 @@ export const timeEntries = [
     "durationMinutes": 45,
     "billable": true,
     "description": null,
-    "memo": null,
+    "memo": "Includes travel time",
     "metadata": null,
     "customer": {
       "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",

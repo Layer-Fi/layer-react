@@ -254,4 +254,35 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/pages/time-tracking.mdx',
   },
+  {
+    storyId: 'views-timetracking--active-timer',
+    out: 'pages/time-tracking-active-timer.png',
+    viewport: 'desktop',
+    // The timer banner and the Overview card are the point; the entry table below repeats the
+    // page's own screenshot.
+    maxHeight: 460,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'views-timetracking--entry-detail',
+    out: 'pages/time-tracking-entry.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'views-timetracking--services-drawer',
+    out: 'pages/time-tracking-services.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'components-unifiedreports--mega-menu-open',
+    out: 'pages/unified-reports-mega-menu.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    maxHeight: 620,
+    page: 'embedded-components/pages/unified-reports.mdx',
+  },
 ]
