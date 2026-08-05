@@ -1,10 +1,13 @@
 @use 'breakpoints' as bp;
 
-/* The class now sits on the field itself rather than on a header column wrapper. */
+/*
+ * The class sits on the field itself rather than a header column wrapper. Named against
+ * the surface so it keeps measuring the card, not the header it happens to render in.
+ */
 .Layer__chart-of-accounts__actions {
   width: 15rem;
 
-  @include bp.container-tablet-down {
+  @include bp.container-tablet-down('layer-surface') {
     width: 12rem;
   }
 }

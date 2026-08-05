@@ -185,6 +185,11 @@ export const Panels: Story = {
           <Panel sidebarIsOpen fullWidthSidebar sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
+      <Section title='sidebar closed, fullWidthSidebar'>
+        <Container className='Layer__story-container'>
+          <Panel fullWidthSidebar sidebar={<Sidebar />}><Body /></Panel>
+        </Container>
+      </Section>
       <Section title='with a header'>
         <Container className='Layer__story-container'>
           <Panel

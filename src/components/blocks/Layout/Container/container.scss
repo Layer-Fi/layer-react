@@ -10,7 +10,13 @@
   border: var(--layout-container-border-width, 1px) solid var(--border-color);
   box-shadow: var(--layout-container-shadow, none);
   background-color: var(--layout-container-bg, var(--bg-color));
-  container: layer-card / inline-size;
+
+  /*
+   * `layer-surface` is the name shared with `View`, so a `Panel` can query whichever of
+   * the two it happens to sit in.
+   */
+  container-name: layer-card layer-surface;
+  container-type: inline-size;
 
   &::-webkit-scrollbar {
     height: var(--scrollbar-size);

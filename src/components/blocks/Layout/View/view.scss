@@ -1,6 +1,10 @@
 .Layer__LayoutView {
   position: relative;
 
+  /* Shares `layer-surface` with `Container` so a `Panel` can query either. */
+  container-name: layer-view-root layer-surface;
+  container-type: inline-size;
+
   &[data-layout='panel'] {
     --layout-view-main-padding: 0;
   }
