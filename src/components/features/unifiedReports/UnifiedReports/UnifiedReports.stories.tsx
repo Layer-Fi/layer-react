@@ -58,7 +58,10 @@ export const MegaMenuOpen: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    // The mega menu renders in a popover portaled to the body, outside the canvas.
+    const overlay = within(canvasElement.ownerDocument.body)
+
     await userEvent.click(await canvas.findByRole('button', { name: /Switch report/ }))
-    await canvas.findByText('Cash Flow Statement', undefined, { timeout: 10_000 })
+    await overlay.findByText('Cash Flow Statement', undefined, { timeout: 10_000 })
   },
 }

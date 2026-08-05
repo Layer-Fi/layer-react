@@ -108,8 +108,11 @@ export const EntryCreation: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    // Drawers and popovers portal to the body, so what they open isn't inside the canvas.
+    const overlay = within(canvasElement.ownerDocument.body)
+
     await userEvent.click(await canvas.findByRole('button', { name: /Add Entry/ }))
-    await canvas.findByRole('button', { name: /Save Entry/ }, { timeout: 10_000 })
+    await overlay.findByRole('button', { name: /Save Entry/ }, { timeout: 10_000 })
   },
 }
 
@@ -118,10 +121,12 @@ export const ServicesDrawer: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
+    const overlay = within(canvasElement.ownerDocument.body)
+
     await userEvent.click(
       await canvas.findByRole('button', { name: /Additional time tracking actions/ }),
     )
-    await userEvent.click(await canvas.findByRole('menuitem', { name: /Services/ }))
-    await canvas.findByRole('heading', { name: /Services/ }, { timeout: 10_000 })
+    await userEvent.click(await overlay.findByRole('menuitem', { name: /Services/ }))
+    await overlay.findByRole('heading', { name: /Services/ }, { timeout: 10_000 })
   },
 }
