@@ -1,5 +1,7 @@
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
 import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
 import { makeStableName } from '@schemas/common/accountIdentifier'
 
 import { makeBusiness } from '@fixtures/business/mocks'
@@ -67,3 +69,55 @@ export const categorizationRules = {
     updatedAt: new Date(Date.UTC(FIXTURE_YEAR, 3, 8, 12)),
   }),
 }
+
+const AMAZON_COUNTERPARTY_ID = '00000000-0000-4000-8000-000000000411'
+
+const baseRuleSuggestion: UpdateCategorizationRulesSuggestion = {
+  type: 'Create_Categorization_Rule_For_Counterparty',
+  newRule: {
+    createdBySuggestionId: '00000000-0000-4000-8000-000000000501',
+    category: makeStableName('OFFICE_EXPENSES'),
+    counterpartyFilter: AMAZON_COUNTERPARTY_ID,
+    applyRetroactively: true,
+  },
+  counterparty: { id: AMAZON_COUNTERPARTY_ID, name: 'Amazon', mccs: [] },
+  suggestionPrompt:
+    'Would you like to create a rule to automatically categorize transactions from Amazon as '
+    + 'Office Expenses? You have categorized all 4 transactions from Amazon this way so far.',
+  transactionsThatWillBeAffected: [
+    {
+      id: '0000000f-0000-4000-8000-000000000601',
+      date: new Date(Date.UTC(FIXTURE_YEAR, 8, 2, 12)),
+      direction: BankTransactionDirection.Debit,
+      amount: 5580,
+      counterpartyName: 'Amazon',
+      description: 'AMAZON MKTPL*ZX81Q3',
+    },
+    {
+      id: '0000000f-0000-4000-8000-000000000602',
+      date: new Date(Date.UTC(FIXTURE_YEAR, 8, 17, 12)),
+      direction: BankTransactionDirection.Debit,
+      amount: 2640,
+      counterpartyName: 'Amazon',
+      description: 'AMAZON MKTPL*4KD02M',
+    },
+    {
+      id: '0000000f-0000-4000-8000-000000000603',
+      date: new Date(Date.UTC(FIXTURE_YEAR, 8, 26, 12)),
+      direction: BankTransactionDirection.Debit,
+      amount: 1680,
+      counterpartyName: 'Amazon',
+      description: 'AMAZON MKTPL*R71PQ9',
+    },
+    {
+      id: '0000000f-0000-4000-8000-000000000604',
+      date: new Date(Date.UTC(FIXTURE_YEAR, 9, 11, 12)),
+      direction: BankTransactionDirection.Debit,
+      amount: 3690,
+      counterpartyName: 'Amazon',
+      description: 'AMAZON MKTPL*88CV1T',
+    },
+  ],
+}
+
+export const { make: makeCategorizationRuleSuggestion } = createFixtureFactory(baseRuleSuggestion)

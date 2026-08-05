@@ -102,3 +102,30 @@ export const DrawerOpen: Story = {
     await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
   },
 }
+
+export const DocsInAppLink: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
+  render: () => (
+    <Journal
+      renderInAppLink={({ entityName }) => (
+        <a
+          href='https://layerfi.com'
+          target='_blank'
+          rel='noopener noreferrer'
+          style={{ color: '#007bff', textDecoration: 'none', fontWeight: 500 }}
+        >
+          {entityName}
+        </a>
+      )}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const rows = await findEntryRows(canvas)
+    const entry = rows.find(row => row.textContent?.includes('Invoice payment'))
+    if (!entry) throw new Error('no invoice payment entry is on the first page')
+
+    await userEvent.click(entry)
+    await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
+  },
+}

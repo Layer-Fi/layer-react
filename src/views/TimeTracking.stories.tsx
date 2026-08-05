@@ -75,4 +75,6 @@ export default meta
 
 type Story = StoryObj<TimeTrackingStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
