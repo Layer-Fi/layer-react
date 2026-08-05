@@ -154,6 +154,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'views-mileagetracking--default',
     out: 'pages/mileage-tracking.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/pages/mileage-tracking.mdx',
   },
   {
@@ -193,5 +194,18 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     out: 'pages/unified-reports.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/unified-reports.mdx',
+  },
+  {
+    storyId: 'components-unifiedreports--default',
+    out: 'pages/unified-reports-mobile.png',
+    viewport: 'mobile',
+    page: 'embedded-components/pages/unified-reports.mdx',
+  },
+  {
+    storyId: 'views-timetracking--default',
+    out: 'pages/time-tracking.png',
+    viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
+    page: 'embedded-components/pages/time-tracking.mdx',
   },
 ]
