@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 
-import type { BalanceSheet } from '@internal-types/balanceSheet'
-import type { LineItem } from '@internal-types/lineItem'
+import type { BalanceSheet } from '@internal-types/features/reports/balanceSheet'
+import type { LineItem } from '@internal-types/features/reports/lineItem'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/features/reports/useTableExpandRow'
 import {

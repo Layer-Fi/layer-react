@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'

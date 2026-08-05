@@ -1,8 +1,8 @@
 import { type Key, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { hasMatch } from '@utils/features/bankTransactions/shared'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import {

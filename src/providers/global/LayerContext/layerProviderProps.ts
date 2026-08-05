@@ -1,4 +1,4 @@
-import { type EventCallbacks, type LayerThemeConfig } from '@internal-types/layerContext'
+import { type EventCallbacks, type LayerThemeConfig } from '@internal-types/shared/layerContext'
 import { type LayerError } from '@utils/shared/api/errorHandler'
 import { type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import type { Environment, EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'

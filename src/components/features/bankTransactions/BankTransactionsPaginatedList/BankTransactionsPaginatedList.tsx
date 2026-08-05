@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@providers/features/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'

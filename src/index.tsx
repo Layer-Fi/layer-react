@@ -60,6 +60,6 @@ export { EntityName, type LinkingMetadata } from './providers/common/InAppLink/I
 export { useLayerContext } from './providers/global/LayerContext/LayerContext'
 export { type EventCallbacks, LayerProvider } from './providers/global/LayerProvider/LayerProvider'
 export { type LayerEvent, LayerEventComponent, LayerEventType } from './schemas/common/layerEvents'
-export { DisplayState } from './types/bankTransactions'
-export { Direction } from './types/general'
+export { DisplayState } from './types/features/bankTransactions/bankTransaction'
+export { Direction } from './types/shared/money'
 export { SupportedLocale } from './utils/shared/i18n/supportedLocale'

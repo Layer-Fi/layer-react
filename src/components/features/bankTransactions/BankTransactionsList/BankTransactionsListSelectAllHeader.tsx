@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'

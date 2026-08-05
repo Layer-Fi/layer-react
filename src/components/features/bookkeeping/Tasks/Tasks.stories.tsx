@@ -12,7 +12,7 @@ import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
-import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
+import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
 
 type TasksStoryArgs = {
   mobile: boolean

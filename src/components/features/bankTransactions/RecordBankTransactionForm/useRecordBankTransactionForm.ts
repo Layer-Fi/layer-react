@@ -3,7 +3,7 @@ import { type CalendarDate, getLocalTimeZone, today } from '@internationalized/d
 import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import type { NonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import type { Classification } from '@schemas/features/categorization/classification'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'

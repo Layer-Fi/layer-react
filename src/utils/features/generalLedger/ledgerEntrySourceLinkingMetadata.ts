@@ -1,4 +1,4 @@
-import { EntityName, type LinkingMetadata } from '@internal-types/inAppLink'
+import { EntityName, type LinkingMetadata } from '@internal-types/shared/inAppLink'
 import type { LedgerEntrySourceType } from '@schemas/features/generalLedger/ledgerEntrySource'
 
 export const convertLedgerEntrySourceToLinkingMetadata = (ledgerEntrySource: LedgerEntrySourceType): LinkingMetadata => {

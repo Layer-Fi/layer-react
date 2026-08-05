@@ -1,6 +1,6 @@
 import { pick } from 'lodash-es'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus, InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
 import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
 import { MatchType } from '@schemas/features/bankTransactions/match'

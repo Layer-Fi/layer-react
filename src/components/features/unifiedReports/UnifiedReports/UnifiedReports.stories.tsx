@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { type DateSelectionMode } from '@utils/shared/date/dateRange'
 import { type UnifiedReportNavigationVariant, UnifiedReports } from '@features/unifiedReports/UnifiedReports/UnifiedReports'
@@ -49,4 +50,18 @@ export const Default: Story = {
 
 export const MenuNavigation: Story = {
   args: { navigationVariant: 'menu' },
+}
+
+export const MegaMenuOpen: Story = {
+  args: { navigationVariant: 'menu' },
+  tags: ['docs-screenshot'],
+  parameters: { chromatic: { viewports: [1280] } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // The mega menu renders in a popover portaled to the body, outside the canvas.
+    const overlay = within(canvasElement.ownerDocument.body)
+
+    await userEvent.click(await canvas.findByRole('button', { name: /Switch report/ }))
+    await overlay.findByText('Cash Flow Statement', undefined, { timeout: 10_000 })
+  },
 }

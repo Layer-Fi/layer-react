@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
-import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
-import { SplitAsOption } from '@internal-types/categorizationOption'
+import { type BankTransaction, type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { SplitAsOption } from '@internal-types/features/categorization/categorizationOption'
 import {
   calculateAddSplit,
   calculateRemoveSplit,

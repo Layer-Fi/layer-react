@@ -1,7 +1,7 @@
 import { Inbox, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { DisplayState } from '@internal-types/bankTransactions'
+import { DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@providers/features/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

@@ -14,7 +14,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 // Import boundaries. See the architecture section of AGENTS.md.
 const BOUNDARY_SEVERITY = 'error'
 
-const TEST_FILES = ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx']
+const TEST_FILES = ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx']
 
 // Every path alias, ordered lowest tier first. Drives the
 // `no-relative-parent-imports` ignore list and the import-sort groups, so adding
@@ -31,7 +31,7 @@ const TIER_ALIASES = [
   '@views',
 ]
 
-const TEST_ALIASES = ['@fixtures', '@msw', '@test-utils']
+const TEST_ALIASES = ['@fixtures', '@msw', '@testUtils']
 
 const ALIASES = [...TIER_ALIASES, ...TEST_ALIASES]
 
@@ -55,7 +55,7 @@ const aliasSortGroup = alias => `^(?:type:)?${alias.replaceAll('/', '\\/')}\\/`
 const LAYERS = [
   {
     name: 'foundation',
-    files: ['src/{types,schemas,utils,icons,assets}/**/*.{ts,tsx}'],
+    files: ['src/{types,schemas,utils,assets}/**/*.{ts,tsx}', 'src/components/icons/**/*.{ts,tsx}'],
     imports: ['@internal-types/**', '@schemas/**', '@utils/**', '@icons/**', '@assets/**'],
   },
   {
@@ -270,6 +270,7 @@ export default tsEslint.config(
         projectService: {
           allowDefaultProject: [
             '.storybook/main.ts',
+            '.storybook/tags.ts',
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
@@ -363,16 +364,17 @@ export default tsEslint.config(
       'src/**/*.spec.ts',
       'src/**/*.spec.tsx',
       'src/**/*.stories.tsx',
+      'src/**/*.storyData.tsx',
       'src/msw/**/*',
       'src/fixtures/**/*',
-      'src/test-utils/**/*',
+      'src/testUtils/**/*',
       'src/utils/shared/env/packageVersion.ts',
     ],
     rules: {
       'no-restricted-imports': ['error', {
         patterns: [
           {
-            group: ['*.css', '*.stories*', '@msw/*', '@fixtures/*', '@test-utils/*'],
+            group: ['*.css', '*.stories*', '*.storyData*', '@msw/*', '@fixtures/*', '@testUtils/*'],
             message: 'Production source may not import test-only code or stylesheets by path.',
           },
           {
@@ -389,7 +391,8 @@ export default tsEslint.config(
     files: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'src/**/*.stories.tsx',
-      'src/{msw,fixtures,test-utils}/**/*.{ts,tsx}',
+      'src/**/*.storyData.tsx',
+      'src/{msw,fixtures,testUtils}/**/*.{ts,tsx}',
     ],
     rules: {
       'no-restricted-imports': ['error', {
@@ -423,7 +426,7 @@ export default tsEslint.config(
     rules: {
       '@typescript-eslint/no-restricted-imports': [BOUNDARY_SEVERITY, {
         patterns: [{
-          group: ['@providers/**', '@hooks/**', '@api/**', '@components/**', '@ui/**', '@blocks/**', '@features/**', '@views/**', '@msw/**', '@test-utils/**'],
+          group: ['@providers/**', '@hooks/**', '@api/**', '@components/**', '@ui/**', '@blocks/**', '@features/**', '@views/**', '@msw/**', '@testUtils/**'],
           message: 'Fixtures are data, so they may only reach contracts (@schemas, @internal-types) and pure helpers (@utils).',
         }],
       }],

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { type AuthenticatedRequest, createKeyedFetcher, type SWRKeyContext } from '@utils/shared/swr/createKeyedFetcher'
 
-import { getRequestOptions } from '@test-utils/getRequestOptions'
+import { getRequestOptions } from '@testUtils/requests/getRequestOptions'
 
 type WidgetParams = { businessId: string, widgetId?: string }
 type RawWidget = { id: string, display_name: string }

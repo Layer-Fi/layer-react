@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
+import { type BankTransaction, type SuggestedMatch } from '@internal-types/features/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@utils/features/bankTransactions/matchLinkingMetadata'
 import { useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

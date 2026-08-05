@@ -1,6 +1,6 @@
 import { File } from 'lucide-react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import { IconBox } from '@ui/IconBox/IconBox'
 import { HStack } from '@ui/Stack/Stack'

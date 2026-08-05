@@ -1,4 +1,4 @@
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { isEditableCustomTransaction } from '@utils/features/bankTransactions/shared'
 import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/features/bankTransactions/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'

@@ -6,7 +6,8 @@ import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Spacer, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const Trigger = (props: React.ComponentProps<typeof Button>) => (
   <Button icon variant='ghost' {...props}><MoreHorizontal size={18} /></Button>

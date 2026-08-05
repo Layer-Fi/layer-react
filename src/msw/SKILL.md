@@ -111,7 +111,7 @@ MSW modules **must not import from `@hooks/*`** (value imports; type-only is fin
 load in every vitest run before per-test mocks apply, so pulling in a hook module breaks
 unrelated suites. This is an ESLint error. Share contracts through `@schemas` instead.
 
-`src/msw`, `src/fixtures`, and `src/test-utils` are also banned from production source: app
+`src/msw`, `src/fixtures`, and `src/testUtils` are also banned from production source: app
 code cannot import them.
 
 ## Response delay
@@ -123,5 +123,5 @@ visible). That delay is the main source of Chromatic flake — see
 ## Related
 
 - [`src/fixtures/SKILL.md`](../fixtures/SKILL.md) — the data these handlers serve
-- [`src/test-utils/SKILL.md`](../test-utils/SKILL.md) — using mocks in tests
+- [`src/testUtils/SKILL.md`](../testUtils/SKILL.md) — using mocks in tests
 - [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) — the hooks these endpoints back

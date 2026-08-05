@@ -10,8 +10,8 @@ import {
   makeSummariesStoryControls,
   type SummariesStoryArgs,
   summariesStoryDefaultArgs,
-} from '@test-utils/summariesStoryControls'
-import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@test-utils/withProfitAndLossStoryContext'
+} from '@testUtils/storybook/controls/summaries'
+import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
 
 const solopreneurStoryHandlers = [
   getAccountingConfiguration.mock(makeAccountingConfiguration({
@@ -59,4 +59,6 @@ export default meta
 
 type Story = StoryObj<SolopreneurOverviewStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

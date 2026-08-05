@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext } from 'react'
 
-import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 
 const EMPTY_STRING_OVERRIDES: BankTransactionsStringOverrides = {}
 

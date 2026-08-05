@@ -1,4 +1,4 @@
-import type { S3PresignedUrl } from '@internal-types/general'
+import type { S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { toLocalDateString } from '@utils/shared/time/timeUtils'
 

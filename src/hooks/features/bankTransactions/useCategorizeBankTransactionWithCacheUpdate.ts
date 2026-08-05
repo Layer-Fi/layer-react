@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import type { CategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePutCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'

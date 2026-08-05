@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'

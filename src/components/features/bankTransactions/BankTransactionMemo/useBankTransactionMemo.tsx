@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { usePatchBankTransactionMemo } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'

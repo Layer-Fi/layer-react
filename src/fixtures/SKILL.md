@@ -85,10 +85,10 @@ Commit the regenerated output alongside the change that caused it, or CI fails.
 
 Anchor fixture dates to `FIXTURE_YEAR` / `FIXTURE_YEAR_RANGE` (`@fixtures/constants/fixtureYear`).
 Never derive fixture data from the real clock — stories and snapshots drift as time passes. When a
-*test* needs a fixed now, use `setupFakeSystemTime` with the constants in `@test-utils/fixedDates`.
+*test* needs a fixed now, use `setupFakeSystemTime` with the constants in `@testUtils/dates/fixedDates`.
 
 ## Related
 
 - [`src/msw/SKILL.md`](../msw/SKILL.md) — handlers and stores that serve these fixtures
 - [`src/schemas/SKILL.md`](../schemas/SKILL.md) — the schemas generators derive from
-- [`src/test-utils/SKILL.md`](../test-utils/SKILL.md)
+- [`src/testUtils/SKILL.md`](../testUtils/SKILL.md)

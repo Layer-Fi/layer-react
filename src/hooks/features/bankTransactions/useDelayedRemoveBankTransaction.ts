@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 const DELAY_MS = 300

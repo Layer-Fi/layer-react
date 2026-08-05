@@ -1,4 +1,4 @@
-import { type S3PresignedUrl } from '@internal-types/general'
+import { type S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 

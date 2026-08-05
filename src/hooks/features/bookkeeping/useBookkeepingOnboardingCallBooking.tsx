@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { type CallBookingStringOverrides } from '@internal-types/callBooking'
+import { type CallBookingStringOverrides } from '@internal-types/features/bookkeeping/callBooking'
 import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { useGetBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
 import { useBookkeepingStatusGlobalCacheActions, useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'

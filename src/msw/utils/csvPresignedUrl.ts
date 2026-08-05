@@ -1,4 +1,4 @@
-import { type S3PresignedUrl } from '@internal-types/general'
+import { type S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 
 export const formatCsvCents = (cents: number) => (cents / 100).toFixed(2)
 

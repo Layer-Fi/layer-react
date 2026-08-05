@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 
 import { filterBankTransactions, sortBankTransactions } from '@msw/api/businesses/[business-id]/bank-transactions/listQuery'
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'

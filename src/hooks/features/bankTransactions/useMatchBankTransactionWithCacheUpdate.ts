@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { MatchType } from '@schemas/features/bankTransactions/match'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'

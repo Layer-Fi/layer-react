@@ -1,18 +1,23 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { PaginatedTable } from '@blocks/Table/PaginatedDataTable/PaginatedDataTable'
+import {
+  getPinnedCustomerColumnConfig,
+  PINNED_STORY_COLUMNS,
+  PINNED_STORY_COMPONENT_NAME,
+} from '@blocks/Table/PaginatedDataTable/PaginatedDataTable.storyData'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
   buildCustomerRows,
   type CustomerRow,
   getCustomerColumnConfig,
-  getPinnedCustomerColumnConfig,
-  PINNED_STORY_COMPONENT_NAME,
   TABLE_STORY_COMPONENT_NAME,
   TABLE_STORY_SLOTS,
+  TableStoryGridStyles,
   TableStoryStyles,
-} from '@test-utils/storybook/tableStoryData'
+} from '@testUtils/storybook/data/tables'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const COLUMN_CONFIG = getCustomerColumnConfig()
 const PINNED_COLUMN_CONFIG = getPinnedCustomerColumnConfig()
@@ -35,6 +40,7 @@ const meta: Meta<typeof PaginatedTable<CustomerRow>> = {
     Story => (
       <>
         <TableStoryStyles />
+        <TableStoryGridStyles componentName={PINNED_STORY_COMPONENT_NAME} columns={PINNED_STORY_COLUMNS} />
         <Story />
       </>
     ),

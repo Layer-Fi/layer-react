@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/features/linkedAccounts/plaidHostedLinkStatus'
 import { APIError } from '@utils/shared/api/apiError'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'

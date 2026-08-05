@@ -1,4 +1,4 @@
-import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
+import { type TaxCodeComboBoxOption } from '@utils/features/bankTransactions/taxCodeComboBoxOption'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { type TaxCodeSelectCommonProps } from '@features/bankTransactions/BankTransactionTaxCodeSelect/types'
 import { useBankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/useBankTransactionTaxCodeSelect'

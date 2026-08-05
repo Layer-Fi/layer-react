@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { AmountInput } from '@ui/Input/AmountInput'
 
-import { Gallery, Row } from '@test-utils/storybook/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Row } from '@testUtils/storybook/layout/Row'
 
 const noop = () => {}
 

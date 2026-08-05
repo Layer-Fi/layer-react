@@ -1,5 +1,5 @@
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { type BankTransactionTaxOption } from '@schemas/features/bankTransactions/bankTransaction'
 import { isClassificationExclusion } from '@schemas/features/categorization/classification'
 

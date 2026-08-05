@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo, useState } from 'react'
 import type { Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
-import { Direction } from '@internal-types/general'
+import { Direction } from '@internal-types/shared/money'
 import type { LedgerEntrySourceType } from '@schemas/features/generalLedger/ledgerEntrySource'
 import { convertLedgerEntrySourceToLinkingMetadata } from '@utils/features/generalLedger/ledgerEntrySourceLinkingMetadata'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'

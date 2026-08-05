@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import type { CategoriesListMode } from '@schemas/features/categorization/categoryList'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'

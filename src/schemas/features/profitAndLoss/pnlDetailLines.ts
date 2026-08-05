@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { Direction } from '@internal-types/shared/money'
 import { AccountSchema } from '@schemas/features/generalLedger/account'
 import { LedgerEntrySourceSchema } from '@schemas/features/generalLedger/ledgerEntrySource'
 

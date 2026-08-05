@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
 import { CategoryUpdateSchema } from '@schemas/features/bankTransactions/categoryUpdate'
 

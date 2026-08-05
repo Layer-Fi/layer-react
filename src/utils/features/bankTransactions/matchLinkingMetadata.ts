@@ -1,4 +1,4 @@
-import { EntityName, type LinkingMetadata } from '@internal-types/inAppLink'
+import { EntityName, type LinkingMetadata } from '@internal-types/shared/inAppLink'
 import type { MatchDetailsType } from '@schemas/features/bankTransactions/matchDetails'
 
 export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {

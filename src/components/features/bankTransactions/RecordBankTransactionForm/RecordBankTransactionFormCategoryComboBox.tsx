@@ -1,8 +1,8 @@
 import { useCallback, useId, useState } from 'react'
 import classNames from 'classnames'
 
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { type Classification } from '@schemas/features/categorization/classification'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'

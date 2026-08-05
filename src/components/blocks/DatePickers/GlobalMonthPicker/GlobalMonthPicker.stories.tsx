@@ -7,7 +7,7 @@ import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'
-import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
+import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalMonthPickerProps> = {
   title: 'Blocks/DatePickers/GlobalMonthPicker',

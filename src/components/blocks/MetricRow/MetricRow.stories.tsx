@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { MetricRow } from '@blocks/MetricRow/MetricRow'
 
-import { Gallery, Label } from '@test-utils/storybook/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Label } from '@testUtils/storybook/layout/Label'
 
 const meta: Meta<typeof MetricRow> = {
   title: 'Blocks/MetricRow',

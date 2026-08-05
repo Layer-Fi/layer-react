@@ -1,7 +1,7 @@
 import { addDays, endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { Direction } from '@internal-types/shared/money'
 import { PnlDetailLinesDataSchema } from '@schemas/features/profitAndLoss/pnlDetailLines'
 
 import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/constants'

@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useReceiptsContext } from '@providers/features/bankTransactions/Receipts/ReceiptsContext'
 import { ReceiptsProvider } from '@providers/features/bankTransactions/Receipts/ReceiptsProvider'

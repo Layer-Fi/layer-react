@@ -144,7 +144,7 @@ await filler.fill(FORM_DATA)
 ```
 
 Assert on the **request body** the mutation sent via the MSW handler's `onRequest`, not on form
-internals. Details in [`src/test-utils/SKILL.md`](../../../test-utils/SKILL.md).
+internals. Details in [`src/testUtils/SKILL.md`](../../../testUtils/SKILL.md).
 
 ## Related
 

@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo, useState } from 'react'
 import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { DetailedChartStringOverrides } from '@internal-types/profitAndLoss'
+import type { DetailedChartStringOverrides } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { humanizeTitle } from '@utils/features/profitAndLoss/profitAndLoss'

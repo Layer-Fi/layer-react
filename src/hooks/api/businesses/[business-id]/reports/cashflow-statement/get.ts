@@ -1,4 +1,4 @@
-import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
+import type { StatementOfCashFlow } from '@internal-types/features/reports/statementOfCashFlow'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

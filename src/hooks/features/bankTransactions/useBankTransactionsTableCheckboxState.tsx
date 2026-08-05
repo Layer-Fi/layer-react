@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 
 export const useBankTransactionsTableCheckboxState = ({ bankTransactions }: { bankTransactions: BankTransaction[] | undefined }) => {

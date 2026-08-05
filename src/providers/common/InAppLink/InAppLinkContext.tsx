@@ -1,8 +1,8 @@
 import { createContext, type ReactNode, useContext } from 'react'
 
-import { type LinkingMetadata } from '@internal-types/inAppLink'
+import { type LinkingMetadata } from '@internal-types/shared/inAppLink'
 
-export { EntityName, type LinkingMetadata, type RelatedEntityLinkingMetadata } from '@internal-types/inAppLink'
+export { EntityName, type LinkingMetadata, type RelatedEntityLinkingMetadata } from '@internal-types/shared/inAppLink'
 
 export interface InAppLinkContextType {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode

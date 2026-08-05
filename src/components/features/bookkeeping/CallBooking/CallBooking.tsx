@@ -34,7 +34,7 @@ const ONBOARDING_CALL_COVERAGE_ITEMS = [
   },
 ] as const
 
-import type { CallBookingStringOverrides } from '@internal-types/callBooking'
+import type { CallBookingStringOverrides } from '@internal-types/features/bookkeeping/callBooking'
 
 export type { CallBookingStringOverrides }
 

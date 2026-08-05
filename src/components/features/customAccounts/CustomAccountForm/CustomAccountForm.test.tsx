@@ -9,8 +9,8 @@ import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
 import { post as postCustomAccount } from '@msw/api/businesses/[business-id]/custom-accounts/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
-import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
-import { LayerTestProvider, TEST_LAYER_BUSINESS_ID } from '@test-utils/LayerTestProvider'
+import { createFormFiller, type FillFormSpec } from '@testUtils/forms/fillForm'
+import { LayerTestProvider, TEST_LAYER_BUSINESS_ID } from '@testUtils/render/LayerTestProvider'
 
 const FORM_DATA = [
   { kind: 'text', field: 'Account name', value: 'Operating Account' },

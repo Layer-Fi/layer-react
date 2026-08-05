@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { TransactionSource } from '@schemas/features/bankTransactions/base'
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/features/customAccounts/recordCustomTransaction'

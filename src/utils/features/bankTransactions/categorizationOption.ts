@@ -1,5 +1,5 @@
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
-import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/categorizationOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type Categorization, isSplitCategorization } from '@schemas/features/categorization/categorization'
 import { makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/features/tags/tag'

@@ -1,4 +1,4 @@
-import { type FileMetadata } from '@internal-types/fileUpload'
+import { type FileMetadata } from '@internal-types/shared/fileUpload'
 
 import { bankTransactionDocumentsStore, findDocuments } from '@msw/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/documents/store'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'

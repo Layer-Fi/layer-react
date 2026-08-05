@@ -14,8 +14,8 @@ import {
   makeSummariesStoryControls,
   type SummariesStoryArgs,
   summariesStoryDefaultArgs,
-} from '@test-utils/summariesStoryControls'
-import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@test-utils/withProfitAndLossStoryContext'
+} from '@testUtils/storybook/controls/summaries'
+import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
 
 const ONBOARDING_CALL_URL = 'https://calendly.com/layerfi/bookkeeping-onboarding'
 

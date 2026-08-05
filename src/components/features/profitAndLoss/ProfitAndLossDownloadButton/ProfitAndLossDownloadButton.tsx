@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 
-import type { MoneyFormat } from '@internal-types/general'
+import type { MoneyFormat } from '@internal-types/shared/money'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { ProfitAndLossDetailLinesDownloadButton } from '@features/profitAndLoss/ProfitAndLossDownloadButton/ProfitAndLossDetailLinesDownloadButton'
 import { ProfitAndLossFullReportDownloadButton } from '@features/profitAndLoss/ProfitAndLossDownloadButton/ProfitAndLossFullReportDownloadButton'

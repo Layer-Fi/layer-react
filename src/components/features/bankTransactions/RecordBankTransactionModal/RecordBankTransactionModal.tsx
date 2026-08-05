@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
+import { type BankTransaction, DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsFiltersContext } from '@providers/features/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { Button } from '@ui/Button/Button'

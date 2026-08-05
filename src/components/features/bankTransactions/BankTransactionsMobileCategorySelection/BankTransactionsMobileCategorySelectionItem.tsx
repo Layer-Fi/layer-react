@@ -1,7 +1,7 @@
 import { ChevronRight, SparklesIcon } from 'lucide-react'
 import { GridListItem } from 'react-aria-components/GridList'
 
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

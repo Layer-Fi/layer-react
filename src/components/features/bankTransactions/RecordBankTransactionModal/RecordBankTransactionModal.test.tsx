@@ -16,8 +16,8 @@ import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-i
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { server } from '@msw/node'
-import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+import { createFormFiller, type FillFormSpec } from '@testUtils/forms/fillForm'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
   <LayerTestProvider>

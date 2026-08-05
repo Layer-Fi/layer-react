@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { type MobileComponentType } from '@utils/features/bankTransactions/constants'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'

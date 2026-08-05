@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { File } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import {
   hasReceipts,
   isCategorized,

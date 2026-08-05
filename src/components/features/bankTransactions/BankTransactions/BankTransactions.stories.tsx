@@ -1,20 +1,22 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { userEvent, within } from 'storybook/test'
+import { screen, userEvent, within } from 'storybook/test'
 
-import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { makeCategorizationRuleSuggestion } from '@fixtures/categorizationRules/mocks'
 import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'
+import { put as putCategorizeBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,
   makeBankTransactionsStoryControls,
-} from '@test-utils/bankTransactionsStoryControls'
-import { findEntryRows } from '@test-utils/storybook/findEntryRows'
+} from '@testUtils/storybook/controls/bankTransactions'
+import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 type BankTransactionsStoryArgs = SharedBankTransactionsArgs & {
   pageSize: number
@@ -236,5 +238,41 @@ export const DocsCategorization: Story = {
     const toggle = within(row).getByRole('button', { name: 'Toggle details' })
     await userEvent.click(toggle)
     await canvas.findByLabelText('Categorize or match transaction')
+  },
+}
+
+// The rule suggestion rides back on the categorize response, so confirming any row raises it.
+const suggestRuleAfterCategorizing = putCategorizeBankTransaction.mock({
+  ...bankTransactions[0],
+  updateCategorizationRulesSuggestion: makeCategorizationRuleSuggestion(),
+})
+
+async function confirmFirstCategorizableRow(canvasElement: HTMLElement): Promise<void> {
+  const canvas = within(canvasElement)
+  const rows = await findEntryRows(canvas)
+  const row = rows.find(candidate =>
+    CATEGORIZABLE_DESCRIPTIONS.some(description => candidate.textContent?.includes(description)),
+  )
+  if (!row) throw new Error('no categorizable transaction row is on the first page')
+
+  await userEvent.click(within(row).getByRole('button', { name: 'Confirm' }))
+  // The dialog portals out of the canvas, so query the whole document.
+  await screen.findByText('Always use this category?', undefined, { timeout: 10_000 })
+}
+
+export const DocsRuleSuggestionPrompt: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
+  parameters: { msw: { handlers: [suggestRuleAfterCategorizing, ...handlers] } },
+  play: ({ canvasElement }) => confirmFirstCategorizableRow(canvasElement),
+}
+
+export const DocsRuleSuggestionPreview: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
+  parameters: { msw: { handlers: [suggestRuleAfterCategorizing, ...handlers] } },
+  play: async ({ canvasElement }) => {
+    await confirmFirstCategorizableRow(canvasElement)
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Yes, always categorize' }))
+    await screen.findByText(/transactions will be affected/)
   },
 }

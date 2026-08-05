@@ -3,8 +3,8 @@ import { useCallback, useContext, useMemo } from 'react'
 import {
   type BankTransaction,
   DisplayState,
-} from '@internal-types/bankTransactions'
-import { type TagFilterInput } from '@internal-types/tags'
+} from '@internal-types/features/bankTransactions/bankTransaction'
+import { type TagFilterInput } from '@internal-types/features/tags/tag'
 import { BankTransactionDirection, decodeBankTransactionDirection } from '@schemas/features/bankTransactions/base'
 import { type BankTransactionFilters } from '@utils/features/bankTransactions/shared'
 import { type UseBankTransactionsOptions, useGetListBankTransactions } from '@api/businesses/[business-id]/bank-transactions/get'

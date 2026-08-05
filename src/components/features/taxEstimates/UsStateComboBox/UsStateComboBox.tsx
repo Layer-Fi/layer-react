@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { US_STATES_CONFIG, type USState, type USStateCode, type USStateConfigRow } from '@internal-types/location'
+import { US_STATES_CONFIG, type USState, type USStateCode, type USStateConfigRow } from '@internal-types/features/taxEstimates/location'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 

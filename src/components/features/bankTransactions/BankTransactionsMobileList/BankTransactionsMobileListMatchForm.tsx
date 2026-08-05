@@ -2,8 +2,8 @@ import { useCallback, useRef, useState } from 'react'
 import { Paperclip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
-import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 import {
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/features/bankTransactions/shared'

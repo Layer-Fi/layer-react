@@ -1,6 +1,6 @@
 import { fromDate, toCalendarDate } from '@internationalized/date'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/common/nonRecursiveBigDecimal'
 import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
 import { isClassificationExclusion } from '@schemas/features/categorization/classification'

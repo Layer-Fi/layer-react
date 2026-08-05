@@ -10,12 +10,12 @@ import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,
   makeBankTransactionsStoryControls,
-} from '@test-utils/bankTransactionsStoryControls'
+} from '@testUtils/storybook/controls/bankTransactions'
 import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   linkedAccountsStoryDefaultArgs,
   makeLinkedAccountsStoryControls,
-} from '@test-utils/linkedAccountsStoryControls'
+} from '@testUtils/storybook/controls/linkedAccounts'
 
 type BankTransactionsWithLinkedAccountsStoryArgs =
   SharedBankTransactionsArgs & SharedLinkedAccountsArgs & {

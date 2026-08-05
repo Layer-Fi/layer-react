@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { type BankTransactionFilters } from '@utils/features/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'

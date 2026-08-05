@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type AccountSource } from '@internal-types/linkedAccounts'
-import type { Awaitable } from '@internal-types/utility/promises'
+import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'

@@ -4,7 +4,8 @@ import type { SeriesData } from '@ui/Chart/seriesTypes'
 import { LegendLayout } from '@ui/Legend/Legend'
 import { HorizontalBarChart } from '@blocks/HorizontalBarChart/HorizontalBarChart'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const DATA = {
   data: [

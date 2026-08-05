@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { ProfitAndLossChart, type ProfitAndLossChartProps } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChart'
 
-import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/withProfitAndLossStoryContext'
+import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
 
 const meta: Meta<ProfitAndLossChartProps> = {
   title: 'Components/ProfitAndLoss/Chart',

@@ -1,4 +1,4 @@
-import { type S3PresignedUrl } from '@internal-types/general'
+import { type S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 
 import { unifiedReportToCsvRows } from '@msw/api/businesses/[business-id]/reports/unified/[report-name]/exports/excel/toCsvRows'
 import {

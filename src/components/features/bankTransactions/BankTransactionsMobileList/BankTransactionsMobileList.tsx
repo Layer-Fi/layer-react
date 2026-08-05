@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useBulkSelectionActions } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/common/BulkSelectionStore/useMobileListBulkSelection'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'

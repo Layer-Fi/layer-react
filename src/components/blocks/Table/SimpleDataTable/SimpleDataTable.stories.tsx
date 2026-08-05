@@ -7,17 +7,17 @@ import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import { SimpleDataTable } from '@blocks/Table/SimpleDataTable/SimpleDataTable'
+import { CUSTOMER_ROWS, CustomerExpandedRow } from '@blocks/Table/SimpleDataTable/SimpleDataTable.storyData'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
-  CUSTOMER_ROWS,
-  CustomerExpandedRow,
   type CustomerRow,
   getCustomerColumnConfig,
   TABLE_STORY_COMPONENT_NAME,
   TABLE_STORY_SLOTS,
   TableStoryStyles,
-} from '@test-utils/storybook/tableStoryData'
+} from '@testUtils/storybook/data/tables'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const COLUMN_CONFIG = getCustomerColumnConfig()
 const SHORT_LIST = CUSTOMER_ROWS.slice(0, 4)

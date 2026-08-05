@@ -41,13 +41,15 @@ const DataTableHeaderMenuItemComponent = ({
 }
 
 export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled, isPending, slots }: DataTableHeaderMenuProps) => {
+  // The trigger is icon-only, so it needs the label itself — `DropdownMenu` only puts one on the
+  // dialog it opens.
   const Trigger = useCallback(() => {
     return (
-      <Button icon variant='outlined' isDisabled={isDisabled} isPending={isPending}>
+      <Button icon variant='outlined' isDisabled={isDisabled} isPending={isPending} aria-label={ariaLabel}>
         {slots?.Icon ? <slots.Icon /> : <MenuIcon size={14} />}
       </Button>
     )
-  }, [isDisabled, isPending, slots])
+  }, [ariaLabel, isDisabled, isPending, slots])
 
   return (
     <DropdownMenu

@@ -1,10 +1,10 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
-import type { TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/features/bankTransactions/taxCode'
+import type { TaxCodeComboBoxOption } from '@utils/features/bankTransactions/taxCodeComboBoxOption'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

@@ -3,8 +3,8 @@ import { type CalendarDate, getLocalTimeZone, today } from '@internationalized/d
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { isClassificationExclusion } from '@schemas/features/categorization/classification'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/features/bankTransactions/shared'
 import { dateNotBefore, dateNotInFuture, positiveAmount, required } from '@utils/shared/form/validators'

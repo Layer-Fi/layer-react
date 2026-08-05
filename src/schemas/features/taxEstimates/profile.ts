@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { US_STATE_VALUES } from '@internal-types/location'
+import { US_STATE_VALUES } from '@internal-types/features/taxEstimates/location'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { FilingStatusSchema } from '@schemas/features/taxEstimates/filingStatus'
 

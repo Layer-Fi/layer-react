@@ -7,7 +7,7 @@ import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-account
 import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   makeLinkedAccountsStoryControls,
-} from '@test-utils/linkedAccountsStoryControls'
+} from '@testUtils/storybook/controls/linkedAccounts'
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string

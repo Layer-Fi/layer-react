@@ -2,7 +2,7 @@ import { type MouseEvent, useState } from 'react'
 import { Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { Button } from '@ui/Button/Button'
 import { getRecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/formUtils'
 import { RecordBankTransactionModal } from '@features/bankTransactions/RecordBankTransactionModal/RecordBankTransactionModal'

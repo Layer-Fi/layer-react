@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
-import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/bankTransactionMatchOption'
-import { CategoryAsOption } from '@internal-types/categorizationOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type CategoriesListMode } from '@schemas/features/categorization/categoryList'
 import { type Classification } from '@schemas/features/categorization/classification'
 import { findCategoryOption, flattenCategories } from '@utils/features/categorization/categories'

@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type View as ViewType } from '@internal-types/general'
+import { type View as ViewType } from '@internal-types/shared/view'
 import { type DateSelectionMode, useGlobalDate } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useGetBalanceSheet } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { ReportsTableProvider } from '@providers/features/reports/ReportsTableContext/ReportsTableContext'

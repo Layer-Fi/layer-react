@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 
-import { DisplayState } from '@internal-types/bankTransactions'
+import { DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/features/bankTransactions/shared'
 import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { BookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'

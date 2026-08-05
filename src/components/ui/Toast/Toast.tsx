@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { type ToastData } from '@internal-types/toast'
+import { type ToastData } from '@internal-types/shared/toastData'
 
 import './toast.scss'
 

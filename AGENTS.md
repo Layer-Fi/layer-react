@@ -28,6 +28,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
 | Zustand stores, contexts, providers, feature visibility | [`src/providers/SKILL.md`](src/providers/SKILL.md) |
 | Pure helpers — whether one belongs in `utils`, and where | [`src/utils/SKILL.md`](src/utils/SKILL.md) |
+| Internal types — `features/` vs `shared/` vs `utility/` | [`src/types/SKILL.md`](src/types/SKILL.md) |
 | Component structure, loading/empty states, responsive UX | [`src/components/SKILL.md`](src/components/SKILL.md) |
 | Design-system primitives, style props, variant data attributes | [`src/components/ui/SKILL.md`](src/components/ui/SKILL.md) |
 | Building a form — fields, validators, submit and error handling | [`src/components/blocks/Form/SKILL.md`](src/components/blocks/Form/SKILL.md) |
@@ -37,7 +38,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Formatting money, numbers, percentages, dates, durations | [`src/utils/shared/i18n/SKILL.md`](src/utils/shared/i18n/SKILL.md) |
 | Mocking endpoints — MSW handlers, stateful stores | [`src/msw/SKILL.md`](src/msw/SKILL.md) |
 | Fixture data — handwritten factories vs generated rows | [`src/fixtures/SKILL.md`](src/fixtures/SKILL.md) |
-| Writing tests | [`src/test-utils/SKILL.md`](src/test-utils/SKILL.md) |
+| Writing tests | [`src/testUtils/SKILL.md`](src/testUtils/SKILL.md) |
 | Stories and visual regression | [`.storybook/SKILL.md`](.storybook/SKILL.md) |
 
 Those skills plus this file are the only convention docs — each is the single source of truth
@@ -52,7 +53,7 @@ release process.
 | Path | Alias | Contains |
 | --- | --- | --- |
 | `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract, split into `features/<domain>/` and `common/` |
-| `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
+| `src/types` | `@internal-types/*` | internal-only types (no wire format), split into `features/<domain>/`, `shared/<capability>`, `utility/` (type-level helpers) and `ambient/` (global declarations) |
 | `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
@@ -65,7 +66,7 @@ release process.
 | `src/styles` | — | design tokens and base CSS, bundled to `dist/index.css` |
 | `src/msw` | `@msw/*` | mock API, mirroring the same route tree as `hooks/api` |
 | `src/fixtures` | `@fixtures/*` | fixture factories, generators, and committed `generated/*.gen.ts` |
-| `src/test-utils` | `@test-utils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
+| `src/testUtils` | `@testUtils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
 
 ## Import boundaries
 
@@ -114,7 +115,7 @@ point. Domain lists are read from disk, so the rules cannot drift from the tree.
 
 Tests and stories (`*.test.*`, `*.stories.tsx`) are exempt from both axes: the boundaries protect
 the shipped artifact, and `tsconfig.build.json` excludes exactly those files. The reverse rule
-still holds — production source may not import `@msw`, `@fixtures`, `@test-utils` or `*.stories*`.
+still holds — production source may not import `@msw`, `@fixtures`, `@testUtils` or `*.stories*`.
 `src/fixtures` may reach only the foundation; `src/msw` adds `@fixtures`.
 
 `features/<domain>` reuses the domain names of `src/hooks/features/*`, `src/providers/features/*`
@@ -174,7 +175,7 @@ Each of these has broken something before:
   [Import boundaries](#import-boundaries); the table lives at the top of `eslint.config.mjs`.
 - **Every `@api` method file needs an MSW handler** at the mirrored path in `src/msw/api`;
   `npm run msw:check-coverage` enforces it in CI.
-- **Production source may not import** `@msw/*`, `@fixtures/*`, `@test-utils/*`, or `*.stories*`.
+- **Production source may not import** `@msw/*`, `@fixtures/*`, `@testUtils/*`, or `*.stories*`.
   Tests and stories are exempt from the tier and domain rules, but not from this one.
 - **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
   Chromatic's per-width iframe resizing.
@@ -214,15 +215,16 @@ Reach for these before writing your own:
 - `readonly`/`ReadonlyArray` for data you don't own; `asMutable` (`@utils/shared/array/asMutable`) at the
   boundary of an API that demands a mutable array.
 - Shared utility types live in `src/types/utility/**`: `OneOf` (exclusive unions),
-  `EnumWithUnknownValues` (open string enums), branded `EmailAddress`/`PhoneNumber`,
-  `pagination`, `promises`. Check there before writing a new type-level helper.
+  `EnumWithUnknownValues` (open string enums), `pagination`, `awaitable`, `table`. Check there
+  before writing a new type-level helper.
 - `src/types/**` is for internal-only types with no wire format. Anything the API sends or
-  receives is a schema.
+  receives is a schema. Runtime code (classes, data tables, guards) belongs with its owner in
+  `src/utils` or the feature — see [`src/types/SKILL.md`](src/types/SKILL.md).
 - Not yet enabled in `tsconfig.json` but worth honoring: `isolatedModules`, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`.
 
 Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
-`@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`. Adding one means editing `tsconfig.json`
+`@assets/*`, `@msw/*`, `@fixtures/*`, `@testUtils/*`. Adding one means editing `tsconfig.json`
 and the alias table in `eslint.config.mjs` — the latter feeds the sort order and the
 `no-relative-parent-imports` ignore list, so a missed entry breaks every import through it.
 
@@ -231,7 +233,7 @@ through the dependency stack: react → external → foundation (`@internal-type
 `@utils`, `@icons`, `@assets`) → context (`@providers/global`, `@providers/common`) →
 `@hooks/utils` → `@api` → `@providers/features` → `@hooks/features` → design system
 (`@components/utility`, `@ui`, `@blocks`) → (`@features`, `@views`) →
-(`@fixtures`, `@msw`, `@test-utils`) → styles.
+(`@fixtures`, `@msw`, `@testUtils`) → styles.
 
 The group list is generated from the same alias table that drives the boundary rules, so the two
 cannot drift. Run `lint:fix`; never sort by hand.

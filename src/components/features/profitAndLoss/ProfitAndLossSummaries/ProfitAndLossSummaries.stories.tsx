@@ -5,7 +5,7 @@ import {
   type ProfitAndLossSummariesReportingVariant,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
-import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/withProfitAndLossStoryContext'
+import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
 
 type ProfitAndLossSummariesStoryArgs = {
   actionable: boolean

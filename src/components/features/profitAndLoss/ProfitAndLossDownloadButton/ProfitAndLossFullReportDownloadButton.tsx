@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type MoneyFormat } from '@internal-types/general'
+import { type MoneyFormat } from '@internal-types/shared/money'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'

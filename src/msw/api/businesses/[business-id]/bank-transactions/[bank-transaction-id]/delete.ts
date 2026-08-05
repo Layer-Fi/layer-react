@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { toRecordCustomAccountTransactionResponse } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'

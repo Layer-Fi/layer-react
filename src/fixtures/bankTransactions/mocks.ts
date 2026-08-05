@@ -1,4 +1,4 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus, InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
 

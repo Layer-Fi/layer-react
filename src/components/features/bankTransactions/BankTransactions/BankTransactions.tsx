@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { type BankTransactionsStringOverrides } from '@internal-types/bankTransactionsStringOverrides'
+import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 import { type MobileComponentType } from '@utils/features/bankTransactions/constants'
 import { type BankTransactionFilters } from '@utils/features/bankTransactions/shared'
 import type { LayerError } from '@utils/shared/api/errorHandler'
