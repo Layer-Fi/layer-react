@@ -6,6 +6,7 @@ import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test
 
 const meta: Meta<ProfitAndLossChartProps> = {
   title: 'Components/ProfitAndLoss/Chart',
+  tags: ['public-api'],
   component: ProfitAndLossChart,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
@@ -27,4 +28,6 @@ export default meta
 
 type Story = StoryObj<ProfitAndLossChartProps>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

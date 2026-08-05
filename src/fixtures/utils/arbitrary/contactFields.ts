@@ -25,7 +25,9 @@ const emailForName = (individualName: string | null, companyName: string | null)
 export const individualNameArbitrary = nullableConstantFrom(individualNames)
 export const companyNameArbitrary = nullableConstantFrom(companyNames)
 
-export const generatedEmailArbitrary = nullableConstantFrom([GENERATED_EMAIL])
+// Always generated: a null email leaves the invoice detail view's email field blank, and the
+// individual-only contacts in the pool are the ones the docs screenshots open.
+export const generatedEmailArbitrary = (fc: typeof FastCheck) => fc.constant(GENERATED_EMAIL)
 
 const phoneNumberValueArbitrary = (fc: typeof FastCheck) =>
   fc.tuple(

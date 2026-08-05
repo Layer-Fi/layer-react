@@ -9,6 +9,7 @@ import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { LayerTestProvider } from '../src/test-utils/LayerTestProvider'
+import { DOCS_SCREENSHOT_TAG } from '../src/test-utils/storybook/tags'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
@@ -24,10 +25,20 @@ initialize({
   },
 })
 
-setMinimumResponseDelay(250)
+// Mocked responses resolve instantly, so a floor keeps loading states visible instead of flashing.
+// Every story keeps it except the ones backing docs images, which have to settle deterministically
+// — driven by the tag rather than per-story parameters so a `public-api` story can't quietly lose
+// its loading states just because it also feeds a screenshot.
+const DEFAULT_RESPONSE_DELAY = 250
+
+setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
 
 const preview: Preview = {
   loaders: [() => resetMockStores(), mswLoader],
+  beforeEach: ({ tags }: { tags?: string[] }) => {
+    setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
+    return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+  },
   parameters: {
     msw: { handlers },
     layout: 'fullscreen',

@@ -20,6 +20,7 @@ const handleTransactionsToReviewClick = () => window.alert('onTransactionsToRevi
 
 const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
   title: 'Components/ProfitAndLoss/Summaries',
+  tags: ['public-api'],
   component: ProfitAndLossSummaries,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
@@ -74,7 +75,9 @@ export default meta
 
 type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 
-export const ProfitAndLoss: Story = {}
+export const ProfitAndLoss: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const CashFlow: Story = {
   parameters: {

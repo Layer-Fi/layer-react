@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { LinkAccounts } from '@features/linkedAccounts/LinkAccounts/LinkAccounts'
 
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
+import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
 
 const clearBankAccounts = () => {
   bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))
@@ -25,6 +27,7 @@ function RestartingLinkAccounts() {
 
 const meta = {
   title: 'Components/LinkAccounts',
+  tags: ['public-api'],
   component: LinkAccounts,
   render: () => <RestartingLinkAccounts />,
   argTypes: {
@@ -61,5 +64,28 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
+  tags: ['docs-screenshot'],
   loaders: [clearBankAccounts],
+}
+
+// Both start from the seeded store; the link step renders a card per connected account.
+export const AccountsLinked: Story = {
+  parameters: { chromatic: { viewports: [1280] } },
+  tags: ['docs-screenshot'],
+}
+
+export const ConfirmingBusinessAccounts: Story = {
+  // Docs captures this at desktop only, and the interaction is desktop-shaped:
+  // the header collapses to icon buttons below the tablet breakpoint.
+  parameters: { chromatic: { viewports: [1280] } },
+  tags: ['docs-screenshot'],
+  loaders: [
+    () => bankAccountStore.all().forEach(
+      account => bankAccountStore.save(markAccountNeedingConfirmation(account)),
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(await canvas.findByRole('button', { name: /done linking/ }))
+  },
 }

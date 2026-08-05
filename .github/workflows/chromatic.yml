@@ -1,12 +1,17 @@
 name: Chromatic
 
-# Snapshot budget is controlled at three levels:
+# Snapshot budget is controlled at four levels:
 #   1. Trigger — path filters keep test-only, doc-only, and workflow-only PRs
 #      from starting a build at all, and drafts are skipped until review-ready.
 #   2. Concurrency — superseded commits on the same PR cancel the older build.
-#   3. TurboSnap (onlyChanged) — narrows to the stories whose Vite dependency
-#      graph the diff reaches, so a change under src/components/ui re-snapshots
-#      that component plus the feature stories rendering it.
+#   3. Scope (STORYBOOK_SCOPE=chromatic) — the build itself contains only the
+#      design system (ui/, blocks/) and agent scratch stories. Feature and view
+#      stories compose those primitives, so a regression in one surfaces in its
+#      primitive's snapshot, at a fraction of the cost. Scoping via the build
+#      rather than Chromatic's --only-story-files is deliberate: that flag is
+#      mutually exclusive with --only-changed, and TurboSnap is worth keeping.
+#   4. TurboSnap (onlyChanged) — narrows further to the stories whose Vite
+#      dependency graph the diff reaches.
 #
 # TurboSnap diffs against the newest ancestor build, so the push-on-main job
 # keeps a baseline available for PRs branched off main.
@@ -87,6 +92,8 @@ jobs:
         exitZeroOnChanges: true
         skip: ${{ github.event.pull_request.draft == true }}
         autoAcceptChanges: ${{ github.event_name == 'push' }}
+      env:
+        STORYBOOK_SCOPE: chromatic
 
     - name: Link published Storybook
       if: steps.chromatic.outputs.storybookUrl != ''

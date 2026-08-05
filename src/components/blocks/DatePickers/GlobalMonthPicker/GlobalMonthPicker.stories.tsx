@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { GlobalMonthPicker, type GlobalMonthPickerProps } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
@@ -10,6 +11,7 @@ import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalMonthPickerProps> = {
   title: 'Blocks/DatePickers/GlobalMonthPicker',
+  tags: ['public-api'],
   component: GlobalMonthPicker,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },
@@ -44,4 +46,7 @@ export default meta
 
 type Story = StoryObj<GlobalMonthPickerProps>
 
-export const Default: Story = {}
+export const Default: Story = {
+  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
+  tags: ['docs-screenshot'],
+}

@@ -13,6 +13,7 @@ type TimeTrackingStoryArgs = {
 
 const meta: Meta<TimeTrackingStoryArgs> = {
   title: 'Views/TimeTracking',
+  tags: ['public-api'],
   component: TimeTracking,
   parameters: {
     controls: { include: ['showTitle', 'onReportsClick', 'stringOverrides.title'] },

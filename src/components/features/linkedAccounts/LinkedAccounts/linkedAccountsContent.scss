@@ -14,14 +14,7 @@
 }
 
 .Layer__linked-accounts__grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  align-items: stretch;
-
-  @media screen and (width <= 650px) {
-    flex-wrap: nowrap;
-  }
+  display: contents;
 
   .Layer__linked-accounts__item {
     display: flex;

@@ -11,6 +11,7 @@ type UnifiedReportsStoryArgs = {
 
 const meta: Meta<UnifiedReportsStoryArgs> = {
   title: 'Components/UnifiedReports',
+  tags: ['public-api'],
   component: UnifiedReports,
   parameters: {
     controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode'] },
@@ -42,7 +43,9 @@ export default meta
 
 type Story = StoryObj<UnifiedReportsStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const MenuNavigation: Story = {
   args: { navigationVariant: 'menu' },

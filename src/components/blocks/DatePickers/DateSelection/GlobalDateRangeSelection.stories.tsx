@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { GlobalDateRangeSelection, type GlobalDateRangeSelectionProps } from '@blocks/DatePickers/DateSelection/GlobalDateRangeSelection'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
@@ -10,6 +11,7 @@ import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalDateRangeSelectionProps> = {
   title: 'Blocks/DatePickers/GlobalDateRangeSelection',
+  tags: ['public-api'],
   component: GlobalDateRangeSelection,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },
@@ -44,4 +46,7 @@ export default meta
 
 type Story = StoryObj<GlobalDateRangeSelectionProps>
 
-export const Default: Story = {}
+export const Default: Story = {
+  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
+  tags: ['docs-screenshot'],
+}

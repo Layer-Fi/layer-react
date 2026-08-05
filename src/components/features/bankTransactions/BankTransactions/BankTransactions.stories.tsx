@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
@@ -7,11 +8,13 @@ import { type BankTransactionsStringOverrides } from '@features/bankTransactions
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'
 import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,
   makeBankTransactionsStoryControls,
 } from '@test-utils/bankTransactionsStoryControls'
+import { findEntryRows } from '@test-utils/storybook/findEntryRows'
 
 type BankTransactionsStoryArgs = SharedBankTransactionsArgs & {
   pageSize: number
@@ -75,6 +78,7 @@ const bankTransactionsControls = makeBankTransactionsStoryControls()
 
 const meta: Meta<BankTransactionsStoryArgs> = {
   title: 'Components/BankTransactions',
+  tags: ['public-api'],
   component: BankTransactions,
   parameters: {
     controls: {
@@ -208,5 +212,29 @@ export const BookkeepingEnabled: Story = {
   },
 }
 
+const CATEGORIZABLE_DESCRIPTIONS = bankTransactions.flatMap(transaction =>
+  (transaction.suggestedMatches ?? []).length === 0 && transaction.description
+    ? [transaction.description]
+    : [],
+)
+
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {}
+
+// Same state, with a row expanded to show the categorize form the collapsed rows can't convey.
+// Split from `BookkeepingDisabled` so the public-api story stays free of interactions.
+export const DocsCategorization: Story = {
+  tags: ['!public-api', 'docs-screenshot'],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const rows = await findEntryRows(canvas)
+    const row = rows.find(candidate =>
+      CATEGORIZABLE_DESCRIPTIONS.some(description => candidate.textContent?.includes(description)),
+    )
+    if (!row) throw new Error('no categorizable transaction row is on the first page')
+
+    const toggle = within(row).getByRole('button', { name: 'Toggle details' })
+    await userEvent.click(toggle)
+    await canvas.findByLabelText('Categorize or match transaction')
+  },
+}

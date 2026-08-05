@@ -5,7 +5,8 @@ name: Release — Publish
 # the Release — Tag hook on PR merge), publishes to npm, and updates Linear:
 #   - alpha  (package.json is a prerelease) -> publish --tag alpha; sync Linear.
 #   - stable (plain version)                -> publish (latest); sync + complete
-#     the Linear release, then queue the next one (next_linear_release).
+#     the Linear release, then queue the next one (next_linear_release), and
+#     refresh the api-documentation screenshots (Docs — Screenshots).
 #
 # Tagging is NOT done here — the Release — Tag hook owns that.
 #
@@ -37,6 +38,10 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.r.outputs.version }}
+      type: ${{ steps.r.outputs.type }}
 
     steps:
     - uses: actions/checkout@v4
@@ -133,3 +138,14 @@ jobs:
         version: ${{ steps.r.outputs.next }}
         name: ${{ steps.r.outputs.next }}
         dry_run: ${{ inputs.dry_run }}
+
+  # Refresh the api-documentation screenshots against what just shipped. Opens a PR
+  # there; no PR if nothing moved.
+  docs-screenshots:
+    needs: publish
+    if: ${{ needs.publish.outputs.type == 'stable' && !inputs.dry_run }}
+    uses: ./.github/workflows/docs-screenshots.yml
+    with:
+      ref: v${{ needs.publish.outputs.version }}
+      dry_run: false
+    secrets: inherit

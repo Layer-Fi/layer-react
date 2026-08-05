@@ -13,6 +13,7 @@ type GeneralLedgerStoryArgs = {
 
 const meta: Meta<GeneralLedgerStoryArgs> = {
   title: 'Views/GeneralLedger',
+  tags: ['public-api'],
   component: GeneralLedgerView,
   parameters: {
     controls: {
@@ -89,4 +90,6 @@ export default meta
 
 type Story = StoryObj<GeneralLedgerStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

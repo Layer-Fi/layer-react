@@ -1,7 +1,10 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
+
+import { findEntryRows } from '@test-utils/storybook/findEntryRows'
 
 type JournalStoryArgs = {
   showTags: boolean
@@ -12,6 +15,7 @@ type JournalStoryArgs = {
 
 const meta: Meta<JournalStoryArgs> = {
   title: 'Components/Journal',
+  tags: ['public-api'],
   component: Journal,
   parameters: {
     controls: {
@@ -84,4 +88,17 @@ export default meta
 
 type Story = StoryObj<JournalStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
+
+export const DrawerOpen: Story = {
+  parameters: { chromatic: { viewports: [1280] } },
+  tags: ['docs-screenshot'],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const [, firstEntry] = await findEntryRows(canvas)
+    await userEvent.click(firstEntry)
+    await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
+  },
+}

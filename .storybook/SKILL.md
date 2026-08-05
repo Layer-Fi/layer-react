@@ -12,8 +12,11 @@ npm run storybook:build
 npm run chromatic          # needs CHROMATIC_PROJECT_TOKEN
 ```
 
-Every story is a Chromatic snapshot on every PR (`.github/workflows/chromatic.yml`, with
-TurboSnap so only affected stories re-snapshot). That makes story count a real cost.
+Chromatic snapshots the design system only — `src/components/ui/**`, `src/components/blocks/**`,
+and `*scratch.stories.tsx` (`onlyStoryFiles` in `.github/workflows/chromatic.yml`, plus
+TurboSnap so only affected stories re-snapshot). Feature and view stories compose those
+primitives, so a regression usually surfaces in the primitive's snapshot at a fraction of the
+cost. Story count in `ui/` and `blocks/` is therefore still a real cost; elsewhere it is not.
 
 ## The one rule
 
@@ -71,6 +74,34 @@ everything in `LayerTestProvider`. So:
 
 Constrain size and layout **in the component**, not in the story — a story that has to box a
 component to look right is reporting a component bug.
+
+## Some stories are load-bearing for the public docs
+
+`scripts/docs-screenshots.manifest.ts` maps story ids to images in
+`Layer-Fi/api-documentation`; every stable release recaptures them and opens a docs PR
+(`.github/workflows/docs-screenshots.yml`). Renaming or deleting one of those stories fails
+`npm run screenshots:check` on the PR — update the manifest in the same change.
+
+Every one of them also carries `tags: ['docs-screenshot']`, which surfaces the set under
+Storybook's sidebar tag filter. A CSF file has a single `title`, so a story can't also live in
+a `Docs/` folder without becoming a second story (and a second Chromatic snapshot) — the tag
+is the filterable stand-in. `screenshots:check` enforces tag ↔ manifest parity both ways.
+
+## `public-api` — what ships to GitHub Pages
+
+A separate, broader tag, set on the **meta** so it covers every story in the file: the
+component is exported from `src/index.tsx`. `STORYBOOK_PUBLIC_ONLY=true` filters the build to
+those stories (`experimental_indexers` in `main.ts`), and `storybook-pages.yml` sets it, so
+the public deploy shows the shipped API and nothing else.
+
+The two tags are independent — `public-api` is the whole exported surface, `docs-screenshot`
+the narrower set backing images on docs.layerfi.com. Most public stories carry only the first.
+Export a new component from `index.tsx` and you need `tags: ['public-api']` on its meta.
+
+A story that exists only to back a docs image still belongs next to its component, as the
+overlay-state exception above (`DrawerOpen`, `Creation`, `ConfirmingBusinessAccounts`). Drive
+it with a `play` function, and make the play *assert* the state it set up — the table can
+re-render as data lands and detach the node you just clicked.
 
 ## Flakiness
 

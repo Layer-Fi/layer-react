@@ -20,11 +20,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -153,12 +153,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -218,12 +218,12 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Oscorp Industries",
-      "email": null,
-      "mobilePhone": "+12095550198",
-      "officePhone": null,
-      "addressString": "123 Main St, Springfield, IL 62701",
+      "email": "contact@oscorpindustries.test",
+      "mobilePhone": null,
+      "officePhone": "+12095550198",
+      "addressString": "789 Broadway, New York, NY 10003",
       "status": "ARCHIVED",
-      "memo": "Follow up next quarter"
+      "memo": null
     },
     "lineItems": [
       {
@@ -269,9 +269,9 @@ export const invoices = [
       "individualName": "Wei Chen",
       "companyName": "Initech",
       "email": "wei.chen@initech.test",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
       "status": "ACTIVE",
       "memo": null
     },
@@ -363,12 +363,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Maria Garcia",
       "companyName": null,
-      "email": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
-      "officePhone": "+18995550197",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "officePhone": null,
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": "VIP client"
     },
     "lineItems": [
       {
@@ -413,11 +413,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Wayne Enterprises",
-      "email": null,
-      "mobilePhone": "+19945550199",
-      "officePhone": "+18085550151",
-      "addressString": "123 Main St, Springfield, IL 62701",
-      "status": "ACTIVE",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
       "memo": null
     },
     "lineItems": [
@@ -478,12 +478,12 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Oscorp Industries",
-      "email": null,
-      "mobilePhone": "+12095550198",
-      "officePhone": null,
-      "addressString": "123 Main St, Springfield, IL 62701",
+      "email": "contact@oscorpindustries.test",
+      "mobilePhone": null,
+      "officePhone": "+12095550198",
+      "addressString": "789 Broadway, New York, NY 10003",
       "status": "ARCHIVED",
-      "memo": "Follow up next quarter"
+      "memo": null
     },
     "lineItems": [
       {
@@ -558,12 +558,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -638,12 +638,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -719,11 +719,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -783,12 +783,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -879,9 +879,9 @@ export const invoices = [
       "individualName": "Wei Chen",
       "companyName": "Initech",
       "email": "wei.chen@initech.test",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
       "status": "ACTIVE",
       "memo": null
     },
@@ -958,11 +958,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Stark Industries",
-      "email": null,
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
+      "officePhone": null,
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "lineItems": [
@@ -1023,12 +1023,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Maria Garcia",
       "companyName": null,
-      "email": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
-      "officePhone": "+18995550197",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "officePhone": null,
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": "VIP client"
     },
     "lineItems": [
       {
@@ -1088,10 +1088,10 @@ export const invoices = [
       "externalId": null,
       "individualName": "Priya Patel",
       "companyName": null,
-      "email": null,
+      "email": "priya.patel@example.com",
       "mobilePhone": null,
-      "officePhone": "+18225550136",
-      "addressString": "789 Broadway, New York, NY 10003",
+      "officePhone": null,
+      "addressString": "12 Elm St, Austin, TX 78701",
       "status": "ARCHIVED",
       "memo": null
     },
@@ -1168,12 +1168,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -1264,9 +1264,9 @@ export const invoices = [
       "individualName": "Wei Chen",
       "companyName": "Initech",
       "email": "wei.chen@initech.test",
-      "mobilePhone": null,
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+17965550168",
+      "officePhone": "+12285550168",
+      "addressString": "1 Infinite Loop, Cupertino, CA 95014",
       "status": "ACTIVE",
       "memo": null
     },
@@ -1328,11 +1328,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Wayne Enterprises",
-      "email": null,
-      "mobilePhone": "+19945550199",
-      "officePhone": "+18085550151",
-      "addressString": "123 Main St, Springfield, IL 62701",
-      "status": "ACTIVE",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
       "memo": null
     },
     "lineItems": [
@@ -1409,11 +1409,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -1497,10 +1497,10 @@ export const invoices = [
       "externalId": null,
       "individualName": "Priya Patel",
       "companyName": null,
-      "email": null,
+      "email": "priya.patel@example.com",
       "mobilePhone": null,
-      "officePhone": "+18225550136",
-      "addressString": "789 Broadway, New York, NY 10003",
+      "officePhone": null,
+      "addressString": "12 Elm St, Austin, TX 78701",
       "status": "ARCHIVED",
       "memo": null
     },
@@ -1592,12 +1592,12 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Oscorp Industries",
-      "email": null,
-      "mobilePhone": "+12095550198",
-      "officePhone": null,
-      "addressString": "123 Main St, Springfield, IL 62701",
+      "email": "contact@oscorpindustries.test",
+      "mobilePhone": null,
+      "officePhone": "+12095550198",
+      "addressString": "789 Broadway, New York, NY 10003",
       "status": "ARCHIVED",
-      "memo": "Follow up next quarter"
+      "memo": null
     },
     "lineItems": [
       {
@@ -1688,9 +1688,9 @@ export const invoices = [
       "individualName": null,
       "companyName": "Acme Corp",
       "email": "contact@acmecorp.test",
-      "mobilePhone": "+12085550138",
+      "mobilePhone": "+13365550103",
       "officePhone": null,
-      "addressString": null,
+      "addressString": "55 Boylston St, Boston, MA 02116",
       "status": "ACTIVE",
       "memo": null
     },
@@ -1806,12 +1806,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Amara Okafor",
       "companyName": null,
-      "email": null,
-      "mobilePhone": "+13985550197",
-      "officePhone": "+19935550154",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "email": "amara.okafor@example.com",
+      "mobilePhone": null,
+      "officePhone": "+13985550197",
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": null
     },
     "lineItems": [
       {
@@ -1901,11 +1901,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Stark Industries",
-      "email": null,
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
+      "officePhone": null,
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "lineItems": [
@@ -1967,9 +1967,9 @@ export const invoices = [
       "individualName": null,
       "companyName": "Acme Corp",
       "email": "contact@acmecorp.test",
-      "mobilePhone": "+12085550138",
+      "mobilePhone": "+13365550103",
       "officePhone": null,
-      "addressString": null,
+      "addressString": "55 Boylston St, Boston, MA 02116",
       "status": "ACTIVE",
       "memo": null
     },
@@ -2031,12 +2031,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Maria Garcia",
       "companyName": null,
-      "email": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
-      "officePhone": "+18995550197",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "officePhone": null,
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": "VIP client"
     },
     "lineItems": [
       {
@@ -2111,12 +2111,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Maria Garcia",
       "companyName": null,
-      "email": null,
+      "email": "maria.garcia@example.com",
       "mobilePhone": null,
-      "officePhone": "+18995550197",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "officePhone": null,
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": "VIP client"
     },
     "lineItems": [
       {
@@ -2161,12 +2161,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Amara Okafor",
       "companyName": null,
-      "email": null,
-      "mobilePhone": "+13985550197",
-      "officePhone": "+19935550154",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "email": "amara.okafor@example.com",
+      "mobilePhone": null,
+      "officePhone": "+13985550197",
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": null
     },
     "lineItems": [
       {
@@ -2212,11 +2212,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -2261,11 +2261,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Stark Industries",
-      "email": null,
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
+      "officePhone": null,
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "lineItems": [
@@ -2341,11 +2341,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Stark Industries",
-      "email": null,
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
+      "officePhone": null,
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "lineItems": [
@@ -2436,11 +2436,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Wayne Enterprises",
-      "email": null,
-      "mobilePhone": "+19945550199",
-      "officePhone": "+18085550151",
-      "addressString": "123 Main St, Springfield, IL 62701",
-      "status": "ACTIVE",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
       "memo": null
     },
     "lineItems": [
@@ -2516,12 +2516,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -2612,11 +2612,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -2760,12 +2760,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Amara Okafor",
       "companyName": null,
-      "email": null,
-      "mobilePhone": "+13985550197",
-      "officePhone": "+19935550154",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "email": "amara.okafor@example.com",
+      "mobilePhone": null,
+      "officePhone": "+13985550197",
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": null
     },
     "lineItems": [
       {
@@ -2840,12 +2840,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Amara Okafor",
       "companyName": null,
-      "email": null,
-      "mobilePhone": "+13985550197",
-      "officePhone": "+19935550154",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "email": "amara.okafor@example.com",
+      "mobilePhone": null,
+      "officePhone": "+13985550197",
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": null
     },
     "lineItems": [
       {
@@ -2920,11 +2920,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Wayne Enterprises",
-      "email": null,
-      "mobilePhone": "+19945550199",
-      "officePhone": "+18085550151",
-      "addressString": "123 Main St, Springfield, IL 62701",
-      "status": "ACTIVE",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
       "memo": null
     },
     "lineItems": [
@@ -2985,12 +2985,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -3051,11 +3051,11 @@ export const invoices = [
       "individualName": null,
       "companyName": "Soylent Corp",
       "email": "contact@soylentcorp.test",
-      "mobilePhone": "+12035550101",
-      "officePhone": null,
-      "addressString": null,
+      "mobilePhone": "+18345550106",
+      "officePhone": "+19905550103",
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -3115,12 +3115,12 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Oscorp Industries",
-      "email": null,
-      "mobilePhone": "+12095550198",
-      "officePhone": null,
-      "addressString": "123 Main St, Springfield, IL 62701",
+      "email": "contact@oscorpindustries.test",
+      "mobilePhone": null,
+      "officePhone": "+12095550198",
+      "addressString": "789 Broadway, New York, NY 10003",
       "status": "ARCHIVED",
-      "memo": "Follow up next quarter"
+      "memo": null
     },
     "lineItems": [
       {
@@ -3195,12 +3195,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
@@ -3290,12 +3290,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Amara Okafor",
       "companyName": null,
-      "email": null,
-      "mobilePhone": "+13985550197",
-      "officePhone": "+19935550154",
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": "Referred by partner"
+      "email": "amara.okafor@example.com",
+      "mobilePhone": null,
+      "officePhone": "+13985550197",
+      "addressString": "900 Biscayne Blvd, Miami, FL 33132",
+      "status": "ARCHIVED",
+      "memo": null
     },
     "lineItems": [
       {
@@ -3340,11 +3340,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Wayne Enterprises",
-      "email": null,
-      "mobilePhone": "+19945550199",
-      "officePhone": "+18085550151",
-      "addressString": "123 Main St, Springfield, IL 62701",
-      "status": "ACTIVE",
+      "email": "contact@wayneenterprises.test",
+      "mobilePhone": null,
+      "officePhone": "+19945550199",
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ARCHIVED",
       "memo": null
     },
     "lineItems": [
@@ -3421,9 +3421,9 @@ export const invoices = [
       "individualName": null,
       "companyName": "Acme Corp",
       "email": "contact@acmecorp.test",
-      "mobilePhone": "+12085550138",
+      "mobilePhone": "+13365550103",
       "officePhone": null,
-      "addressString": null,
+      "addressString": "55 Boylston St, Boston, MA 02116",
       "status": "ACTIVE",
       "memo": null
     },
@@ -3485,11 +3485,11 @@ export const invoices = [
       "externalId": null,
       "individualName": null,
       "companyName": "Stark Industries",
-      "email": null,
+      "email": "contact@starkindustries.test",
       "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
+      "officePhone": null,
+      "addressString": "456 Market St, San Francisco, CA 94105",
+      "status": "ACTIVE",
       "memo": null
     },
     "lineItems": [
@@ -3550,12 +3550,12 @@ export const invoices = [
       "externalId": null,
       "individualName": "Jane Doe",
       "companyName": null,
-      "email": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
       "officePhone": null,
       "addressString": "30 Rockefeller Plaza, New York, NY 10112",
       "status": "ARCHIVED",
-      "memo": "Referred by partner"
+      "memo": null
     },
     "lineItems": [
       {
