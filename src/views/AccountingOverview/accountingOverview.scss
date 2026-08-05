@@ -11,7 +11,7 @@
   }
 
   &__ProfitAndLossCharts {
-    max-inline-size: 1406px;
+    max-inline-size: var(--layout-max-content-width);
   }
 
   &__ProfitAndLossChart {

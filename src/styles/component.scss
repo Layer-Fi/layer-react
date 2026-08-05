@@ -8,6 +8,6 @@
  */
 
 .Layer__component {
-  max-width: 1406px;
+  max-width: var(--layout-max-content-width);
   font-family: var(--font-family);
 }

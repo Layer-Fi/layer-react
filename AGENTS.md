@@ -153,8 +153,10 @@ Each of these has broken something before:
   `npm run msw:check-coverage` enforces it in CI.
 - **Production source may not import** `@msw/*`, `@fixtures/*`, `@testUtils/*`, or `*.stories*`.
   Tests and stories are exempt from the tier and domain rules, but not from this one.
-- **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
-  Chromatic's per-width iframe resizing.
+- **DOM structure is decided in JS; presentation is decided in CSS.** Swapping a subtree
+  (desktop table ↔ mobile list) needs `ResponsiveComponent` — hence Chromatic's per-width
+  iframe resizing. Reflowing what's already rendered is a query from
+  `src/styles/_breakpoints.scss`, never a raw width.
 - **Every story is a Chromatic snapshot.** Pack primitive variants into one gallery story
   rather than adding a story per variant.
 - **`react-hooks/exhaustive-deps` is an error.** Fix the dependencies; don't disable the rule.

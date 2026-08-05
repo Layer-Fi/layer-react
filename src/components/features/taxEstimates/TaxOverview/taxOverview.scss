@@ -1,5 +1,5 @@
 .Layer__TaxOverview {
-  inline-size: min(100%, 1406px);
+  inline-size: min(100%, var(--layout-max-content-width));
   container-type: inline-size;
 
   &__PrimaryColumn {
