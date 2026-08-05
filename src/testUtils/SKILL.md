@@ -129,7 +129,7 @@ will hang.
 
 - `getRequestOptions(mock, index?)` (`@testUtils/requests/getRequestOptions`) — pulls the
   `{ params, body }` options off the nth call of a mocked request function.
-- `@testUtils/storybook/layout/gallery` — `Gallery`, `Section`, `Matrix`, `Label` for story layout.
+- `@testUtils/storybook/layout/*` — one module per story-layout component (`Gallery`, `Section`, `Frame`, `Row`, `Col`, `Matrix`, `Label`).
 - `@testUtils/storybook/decorators/PinnedGlobalDateRange` — mounts a global date store fixed to a
   known range; `decorators/profitAndLoss` wraps it with the P&L handlers as a decorator.
 - `@testUtils/storybook/controls/*` — argTypes and arg→prop builders per feature.

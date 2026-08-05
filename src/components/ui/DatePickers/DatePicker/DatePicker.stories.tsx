@@ -4,7 +4,8 @@ import { userEvent, within } from 'storybook/test'
 
 import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
 
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const DATE = parseDate('2026-07-23')
 

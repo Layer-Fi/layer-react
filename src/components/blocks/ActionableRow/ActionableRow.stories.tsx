@@ -4,7 +4,8 @@ import { CreditCard } from 'lucide-react'
 import { Button } from '@ui/Button/Button'
 import { ActionableRow } from '@blocks/ActionableRow/ActionableRow'
 
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const noop = () => {}
 

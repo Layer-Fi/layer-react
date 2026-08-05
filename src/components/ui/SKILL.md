@@ -80,7 +80,7 @@ A primitive gets one `AllVariants` gallery story rendering the full variant × s
 matrix in a single snapshot, driven from the component's own exported unions so it stays
 exhaustive — plus a second story only for a state the gallery can't show (an open overlay, a
 distinct mobile rendering). Controls go on the `meta`, not a separate playground story. Use
-`Gallery`, `Section`, `Matrix`, and `Label` from `@testUtils/storybook/layout/gallery`. Details in
+`Gallery`, `Section`, `Matrix`, and `Label` from `@testUtils/storybook/layout/*` (one module per component). Details in
 [`.storybook/SKILL.md`](../../../.storybook/SKILL.md).
 
 ## Related

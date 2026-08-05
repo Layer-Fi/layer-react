@@ -10,7 +10,8 @@ import {
   TABLE_STORY_SLOTS,
   TableStoryStyles,
 } from '@testUtils/storybook/data/tables'
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const COLUMN_CONFIG = getCustomerColumnConfig()
 const LONG_LIST = buildCustomerRows(2000)

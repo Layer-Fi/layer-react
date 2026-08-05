@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BadgeLoader } from '@ui/Badge/BadgeLoader'
 
-import { Gallery, Matrix } from '@testUtils/storybook/layout/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Matrix } from '@testUtils/storybook/layout/Matrix'
 
 const VARIANTS = ['default', 'info', 'success', 'error', 'warning'] as const
 

@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Pagination } from '@ui/Pagination/Pagination'
 
-import { Gallery, Row } from '@testUtils/storybook/layout/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Row } from '@testUtils/storybook/layout/Row'
 
 const noop = () => {}
 

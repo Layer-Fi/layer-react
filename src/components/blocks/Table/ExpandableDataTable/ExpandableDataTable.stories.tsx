@@ -15,7 +15,8 @@ import { ExpandableDataTableProvider } from '@blocks/Table/ExpandableDataTable/E
 import { ExpandableDataTableToggleButton } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableToggleButton'
 
 import { TABLE_STORY_SLOTS, TableStoryGridStyles } from '@testUtils/storybook/data/tables'
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 

@@ -5,7 +5,8 @@ import { userEvent, within } from 'storybook/test'
 import { DateCalendar } from '@ui/DatePickers/DateCalendar/DateCalendar'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 // DateCalendar takes no value, so it always opens on the mocked clock's month: December
 // of the fixture year. Anchor the range and the hover query to that month.

@@ -34,7 +34,7 @@ Pack variants into a *single* render:
   (`MenuOpen`, `DrawerOpen`, `Open`) or a distinct mobile rendering (`Mobile`).
 - Drive the grid from the component's own exported unions (`ButtonVariant`, `ButtonSize`,
   `ButtonStatus`) so the matrix stays exhaustive as variants are added.
-- Use `Gallery`, `Section`, `Matrix`, `Label` from `@testUtils/storybook/layout/gallery`.
+- Use `Gallery`, `Section`, `Matrix`, `Label` from `@testUtils/storybook/layout/<Component>` — one module each.
 - Use `parameters: { chromatic: { disableSnapshot: true } }` for any story that adds no visual
   signal.
 

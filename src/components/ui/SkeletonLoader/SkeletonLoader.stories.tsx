@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { CircleSkeletonLoader, SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const meta: Meta<typeof SkeletonLoader> = {
   title: 'UI/SkeletonLoader',

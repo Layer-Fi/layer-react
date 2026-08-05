@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 
-import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
+import { Col } from '@testUtils/storybook/layout/Col'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const meta: Meta<typeof RadioGroup> = {
   title: 'UI/RadioGroup',

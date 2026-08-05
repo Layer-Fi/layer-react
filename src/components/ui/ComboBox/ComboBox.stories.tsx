@@ -3,7 +3,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 
-import { Gallery, Row } from '@testUtils/storybook/layout/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Row } from '@testUtils/storybook/layout/Row'
 
 const OPTIONS: ComboBoxOption[] = [
   { label: 'Checking', value: 'checking' },

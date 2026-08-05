@@ -6,7 +6,8 @@ import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack } from '@ui/Stack/Stack'
 
-import { Gallery, Row } from '@testUtils/storybook/layout/gallery'
+import { Gallery } from '@testUtils/storybook/layout/Gallery'
+import { Row } from '@testUtils/storybook/layout/Row'
 
 type Cell = {
   label: string
