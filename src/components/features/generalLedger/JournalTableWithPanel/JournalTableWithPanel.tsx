@@ -1,4 +1,4 @@
-import { type RefObject, useContext } from 'react'
+import { useContext } from 'react'
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -31,10 +31,8 @@ export interface JournalTableStringOverrides {
 }
 
 export const JournalTableWithPanel = ({
-  containerRef,
   stringOverrides,
 }: {
-  containerRef: RefObject<HTMLDivElement>
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
@@ -49,9 +47,8 @@ export const JournalTableWithPanel = ({
   return (
     <Panel
       className={`Layer__${COMPONENT_NAME}`}
-      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebar={<JournalSidebar />}
       sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
-      parentRef={containerRef}
     >
       <ViewHeader
         surface='panel'

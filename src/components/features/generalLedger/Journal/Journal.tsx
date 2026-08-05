@@ -79,7 +79,6 @@ const JournalTableView = ({
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
       <JournalTableWithPanel
-        containerRef={containerRef}
         stringOverrides={stringOverrides?.journalTable}
       />
     </Container>

@@ -1,5 +1,4 @@
 import {
-  type RefObject,
   useContext,
 } from 'react'
 
@@ -11,21 +10,17 @@ import { type LedgerAccountEntryDetailsStringOverrides } from '@features/general
 import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOverrides } from '@features/generalLedger/LedgerAccountLineItemsTable/LedgerAccountLineItemsTable'
 import { LedgerAccountPanelHeader } from '@features/generalLedger/LedgerAccountPanelHeader/LedgerAccountPanelHeader'
 
-import './ledgerAccountPanel.scss'
-
 export interface LedgerAccountStringOverrides {
   ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
   ledgerEntriesTable?: LedgerAccountLineItemsTableStringOverrides
 }
 
 export interface LedgerAccountProps {
-  containerRef: RefObject<HTMLDivElement>
   pageSize?: number
   stringOverrides?: LedgerAccountStringOverrides
 }
 
 export const LedgerAccountPanel = ({
-  containerRef,
   pageSize = 15,
   stringOverrides,
 }: LedgerAccountProps) => {
@@ -48,7 +43,6 @@ export const LedgerAccountPanel = ({
         />
       )}
       sidebarIsOpen={Boolean(selectedEntryId)}
-      parentRef={containerRef}
       className='Layer__LedgerAccountPanel'
     >
       <VStack>

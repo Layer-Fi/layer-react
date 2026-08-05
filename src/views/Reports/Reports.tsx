@@ -20,8 +20,6 @@ import { ProfitAndLossReport } from '@features/profitAndLoss/ProfitAndLossReport
 import { type ProfitAndLossTableStringOverrides } from '@features/profitAndLoss/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ReportsToggle } from '@views/Reports/ReportsToggle'
 
-import './reports.scss'
-
 export interface ReportsStringOverrides {
   title?: string
   downloadButton?: ProfitAndLossDownloadButtonStringOverrides
@@ -110,7 +108,7 @@ export const Reports = ({
     <ReportsHeaderContextProvider value={reportsHeaderContextValue}>
       <View title={resolvedTitle} showHeader={showTitle}>
         {!isMobileView && <ReportsToggle />}
-        <Container name='reports' ref={containerRef}>
+        <Container name='reports' overflow='hidden' ref={containerRef}>
           <ProfitAndLoss asContainer={false}>
             <ReportsPanel
               openReport={activeTab}

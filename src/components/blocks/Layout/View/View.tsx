@@ -75,7 +75,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
         )}
         {withSidebar
           ? (
-            <Panel sidebarIsOpen sidebar={sidebar} sidebarVariant={sidebarVariant} defaultSidebarHeight>
+            <Panel sidebarIsOpen sidebar={sidebar} sidebarVariant={sidebarVariant} fullWidthSidebar>
               {main}
             </Panel>
           )

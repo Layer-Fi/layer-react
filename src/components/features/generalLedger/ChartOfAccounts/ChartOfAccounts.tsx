@@ -73,7 +73,6 @@ const ChartOfAccountsContent = ({
       {selectedAccount
         ? (
           <LedgerAccountPanel
-            containerRef={containerRef}
             stringOverrides={stringOverrides?.ledgerAccount}
           />
         )
@@ -82,7 +81,6 @@ const ChartOfAccountsContent = ({
             asWidget={asWidget}
             withDateControl={withDateControl}
             withExpandAllButton={withExpandAllButton}
-            containerRef={containerRef}
             showAddAccountButton={showAddAccountButton}
             stringOverrides={stringOverrides?.chartOfAccountsTable}
             templateAccountsEditable={templateAccountsEditable}

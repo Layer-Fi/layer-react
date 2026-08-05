@@ -1,129 +1,111 @@
-.Layer__panel {
-  display: flex;
-  flex: 1;
-  align-items: flex-start;
-  height: 100%;
+@use 'breakpoints' as bp;
+
+/*
+ * The sidebar is a grid track that collapses to zero rather than a JS-measured
+ * max-height, so opening and closing animates without React measuring anything.
+ * Below the tablet breakpoint the track goes away and the sidebar overlays the content.
+ *
+ * Panel deliberately declares no `container-type`: nine feature stylesheets nest
+ * `@container` rules inside a panel and expect to measure the surrounding card. The
+ * queries here name `layer-card` and `layer-view` instead.
+ */
+
+.Layer__ViewPanel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--view-panel-sidebar-size, 0);
+  align-items: start;
+  block-size: 100%;
+  transition: grid-template-columns var(--transition-duration-default) ease-in-out;
+
+  &[data-sidebar='open'] {
+    --view-panel-sidebar-size: var(--layout-sidebar-inline-size);
+    --view-panel-sidebar-opacity: 1;
+    --view-panel-sidebar-overflow: auto;
+  }
+
+  &[data-full-width-sidebar] {
+    --view-panel-sidebar-size: minmax(0, 1fr);
+  }
+
+  &[data-rounded] {
+    --view-panel-radius: var(--border-radius-sm);
+  }
 }
 
-.Layer__panel__content {
+.Layer__ViewPanel__Content {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  width: 100%;
-  padding-bottom: var(--spacing-lg);
+  min-inline-size: 0;
+  padding-block-end: var(--spacing-lg);
+  border-start-start-radius: var(--view-panel-radius, 0);
+  border-end-start-radius: var(--view-panel-radius, 0);
 }
 
-.Layer__panel.Layer__panel--open {
-  .Layer__panel__content {
-    width: calc(100% - 480px);
-    border-right: 1px solid var(--color-base-300);
-  }
-}
-
-.Layer__panel .Layer__panel__content .Layer__component-header {
-  z-index: auto;
-  top: 0;
-  border-top-left-radius: var(--border-radius-sm);
-  border-top-right-radius: var(--border-radius-sm);
-  background: var(--color-base-0);
-  backdrop-filter: blur(6px);
-}
-
-.Layer__panel__sidebar {
+/*
+ * The sidebar owns the divider so the two columns can't both draw one - that is what the
+ * old `margin-left: -1px` was collapsing.
+ */
+.Layer__ViewPanel__Sidebar {
   position: sticky;
-  z-index: 10;
+  z-index: var(--z-index-panel-sidebar);
+  inset-block-start: 0;
 
-  top: 0;
   overflow: hidden;
-  height: 100%;
-  max-height: 0;
-  width: 480px;
-  max-width: 0;
-  border-top-right-radius: var(--border-radius-sm);
-  border-left: 1px solid var(--color-base-300);
-  background: var(--color-base-0);
+  overflow-y: var(--view-panel-sidebar-overflow, hidden);
+  block-size: 100%;
+  min-inline-size: 0;
+  border-start-end-radius: var(--border-radius-sm);
+  border-inline-start: var(--view-panel-sidebar-border-width, 1px) solid var(--color-base-300);
+  background: var(--view-panel-sidebar-bg, var(--color-base-0));
 
-  .Layer__panel__sidebar-content {
-    height: 100%;
-    width: 480px;
-    min-width: 240px;
-    opacity: 0.2;
-    transition: opacity 180ms ease-in-out;
+  &[data-variant='plain'] {
+    padding: var(--spacing-lg);
+
+    --view-panel-sidebar-border-width: 0;
+    --view-panel-sidebar-bg: none;
   }
 }
 
-.Layer__panel__sidebar[data-variant='plain'] {
-  padding: var(--spacing-lg);
-  border-left-width: 0;
-  background: none;
+.Layer__ViewPanel__SidebarContent {
+  block-size: 100%;
+  inline-size: 100%;
+  opacity: var(--view-panel-sidebar-opacity, 0.2);
+  transition: opacity var(--transition-duration-default) ease-in-out;
 }
 
-.Layer__panel__sidebar--default {
-  flex: 1;
-  width: 100%;
-  max-width: none;
-
-  .Layer__panel__sidebar-content {
-    width: 100%;
+/*
+ * Too narrow for two columns: the sidebar leaves the grid and covers the content.
+ */
+@include bp.container-tablet-down('layer-card') {
+  .Layer__ViewPanel {
+    --view-panel-sidebar-size: 0;
   }
-}
 
-.Layer__panel.Layer__panel--open .Layer__panel__sidebar {
-  overflow-y: auto;
-  max-height: none;
-  max-width: 480px;
-  margin-left: -1px;
-
-  .Layer__panel__sidebar-content {
-    opacity: 1;
-  }
-}
-
-@container (min-width: 1025px) {
-  .Layer__panel__sidebar.Layer__panel__sidebar--floating {
+  .Layer__ViewPanel__Sidebar {
     position: absolute;
-    top: 0;
-    right: 0;
-  }
-}
+    inset-block-start: 0;
+    inset-inline: 0;
 
-@container (max-width: 1024px) {
-  .Layer__panel__sidebar {
-    position: absolute;
-    width: 100%;
-    max-width: 100%;
-    border-radius: var(--border-radius-sm);
-    border-width: 0;
-    opacity: 0.2;
-    transform: translateY(-50px) scale(0.96);
-    transition:
-      transform 120ms ease-in-out,
-      opacity 120ms ease-in-out;
-
-    .Layer__panel__sidebar-content {
-      position: sticky;
-      top: 0;
-      height: min-content;
-    }
-  }
-
-  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
-    top: 0;
-    left: 0;
     display: flex;
     justify-content: center;
-    max-height: 100%;
-    width: 100%;
-    max-width: 100%;
-    margin-left: 0;
-    opacity: 1;
-    transform: translateY(0) scale(1);
+    max-block-size: 100%;
+    border-radius: var(--border-radius-sm);
+    border-inline-start-width: 0;
+    opacity: var(--view-panel-sidebar-opacity, 0.2);
+    transform: var(--view-panel-sidebar-transform, translateY(-50px) scale(0.96));
+    transition:
+      transform var(--transition-duration-fast) ease-in-out,
+      opacity var(--transition-duration-fast) ease-in-out;
   }
 
-  .Layer__panel.Layer__panel--open {
-    .Layer__panel__content {
-      width: 100%;
-      border-right: none;
-    }
+  .Layer__ViewPanel[data-sidebar='open'] {
+    --view-panel-sidebar-transform: none;
+  }
+
+  .Layer__ViewPanel__SidebarContent {
+    position: sticky;
+    inset-block-start: 0;
+    block-size: min-content;
   }
 }

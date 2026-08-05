@@ -180,9 +180,9 @@ export const Panels: Story = {
           <Panel sidebarIsOpen sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
-      <Section title='sidebar open, defaultSidebarHeight'>
+      <Section title='sidebar open, fullWidthSidebar'>
         <Container name='story-container'>
-          <Panel sidebarIsOpen defaultSidebarHeight sidebar={<Sidebar />}><Body /></Panel>
+          <Panel sidebarIsOpen fullWidthSidebar sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
       <Section title='with a header'>
