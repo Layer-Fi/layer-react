@@ -33,7 +33,7 @@ export type DocsScreenshot = {
   maxHeight?: number
   /**
    * Shoots the viewport instead of `#storybook-root`. Dialogs portal to `document.body`, so a
-   * root-scoped capture of a modal story is the page with the overlay missing.
+   * root-scoped capture of a modal story comes back with the overlay missing.
    */
   captureViewport?: boolean
   /** The .mdx page that renders this image. Reported in the PR body; never edited. */
@@ -209,10 +209,9 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
     storyId: 'components-journal--docs-in-app-link',
     out: 'components/journal-in-app-link.png',
-    // The link replaces the source badge in the entry drawer, which is a few pixels of a desktop
-    // page. Mobile stacks the drawer over the full width, so the top of the shot is the link.
+    // The link is a few pixels of a desktop page; mobile stacks the drawer over the full width.
     viewport: 'mobile',
-    // Ends on the transaction source section boundary; the sections below it are not the point.
+    // Lands on the transaction source section boundary.
     maxHeight: 292,
     page: 'embedded-components/linking.mdx',
   },

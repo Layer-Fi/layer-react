@@ -103,8 +103,6 @@ export const DrawerOpen: Story = {
   },
 }
 
-// Matches the anchor the in-app linking docs page renders in its `renderInAppLink` example,
-// rather than the Badge the interactive control uses.
 export const DocsInAppLink: Story = {
   tags: ['!public-api', 'docs-screenshot'],
   render: () => (
@@ -124,7 +122,6 @@ export const DocsInAppLink: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const rows = await findEntryRows(canvas)
-    // Only a sourced entry renders the link; an invoice payment matches the documented example.
     const entry = rows.find(row => row.textContent?.includes('Invoice payment'))
     if (!entry) throw new Error('no invoice payment entry is on the first page')
 
