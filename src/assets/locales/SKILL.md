@@ -47,10 +47,6 @@ only pull down what Crowdin already has. `prune` additionally uploads sources wi
 `--delete-obsolete`, deleting files and folders that no longer match the source config — needed
 after a namespace rename, and destructive, so it is opt-in.
 
-Things to know when the pipeline misbehaves: full pre-translation runs need the
-`CROWDIN_AI_PROMPT_ID` variable, and a stale folder left in the Crowdin project causes spurious
-"omitted" warnings on download — `prune` clears those.
-
 ## Changing the English text of an existing key
 
 **Change the key too.** Editing the default of `invoices:InvoiceTable.label.due_date` from
