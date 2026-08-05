@@ -12,7 +12,6 @@ export type ContainerVariant = 'default' | 'plain'
 export type ContainerOverflow = 'visible' | 'hidden' | 'auto'
 
 export interface ContainerProps {
-  name: string
   className?: string
   asWidget?: boolean
   elevated?: boolean
@@ -24,7 +23,6 @@ export interface ContainerProps {
 const Container = forwardRef<HTMLDivElement, ContainerProps>(
   (
     {
-      name,
       className,
       children,
       asWidget,
@@ -49,8 +47,6 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
         {...dataProperties}
         className={withLegacy(
           LAYOUT_CLASS_NAMES.CONTAINER,
-          // Consumers target this derived name; it is the one sanctioned concatenation.
-          `Layer__${name}`,
           elevated && LAYOUT_CLASS_NAMES.CONTAINER_ELEVATED.legacy,
           variant === 'plain' && LAYOUT_CLASS_NAMES.CONTAINER_PLAIN.legacy,
           asWidget && LAYOUT_CLASS_NAMES.CONTAINER_AS_WIDGET.legacy,

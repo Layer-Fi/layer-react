@@ -42,7 +42,7 @@ export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTi
     }
 
     return (
-      <Container name='ActiveTimeTracker'>
+      <Container className='Layer__ActiveTimeTracker'>
         <VStack pi='lg' pbe='md'>
           <DataState
             status={DataStateStatus.failed}

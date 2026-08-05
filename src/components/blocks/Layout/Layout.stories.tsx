@@ -47,19 +47,19 @@ export const Containers: Story = {
   render: () => (
     <Gallery>
       <Section title='default'>
-        <Container name='story-container'><Body /></Container>
+        <Container className='Layer__story-container'><Body /></Container>
       </Section>
       <Section title='elevated'>
-        <Container name='story-container' elevated><Body /></Container>
+        <Container className='Layer__story-container' elevated><Body /></Container>
       </Section>
       <Section title='plain'>
-        <Container name='story-container' variant='plain'><Body /></Container>
+        <Container className='Layer__story-container' variant='plain'><Body /></Container>
       </Section>
       <Section title='asWidget'>
-        <Container name='story-container' asWidget><Body /></Container>
+        <Container className='Layer__story-container' asWidget><Body /></Container>
       </Section>
       <Section title='with a deprecated header'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <DeprecatedHeader>
             <Heading level={2} size='md'>Legacy header</Heading>
             <Button>Action</Button>
@@ -97,7 +97,7 @@ export const Headers: Story = {
       </Section>
 
       <Section title='panel surface, title and actions'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <ViewHeader
             surface='panel'
             asHeader
@@ -108,7 +108,7 @@ export const Headers: Story = {
       </Section>
 
       <Section title='panel surface, sticky and rounded, with filters'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <ViewHeader
             surface='panel'
             asHeader
@@ -166,27 +166,27 @@ export const Panels: Story = {
   render: () => (
     <Gallery>
       <Section title='no sidebar'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <Panel><Body /></Panel>
         </Container>
       </Section>
       <Section title='sidebar closed'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <Panel sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
       <Section title='sidebar open'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <Panel sidebarIsOpen sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
       <Section title='sidebar open, fullWidthSidebar'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <Panel sidebarIsOpen fullWidthSidebar sidebar={<Sidebar />}><Body /></Panel>
         </Container>
       </Section>
       <Section title='with a header'>
-        <Container name='story-container'>
+        <Container className='Layer__story-container'>
           <Panel
             sidebarIsOpen
             sidebar={<Sidebar />}

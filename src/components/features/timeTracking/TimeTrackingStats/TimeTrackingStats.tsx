@@ -187,7 +187,7 @@ export const TimeTrackingStats = ({ selectedFilterParams }: TimeTrackingStatsPro
   const { data: summary, isLoading, isError } = useGetTimeTrackingSummary(selectedFilterParams)
 
   return (
-    <Container name='time-tracking-stats'>
+    <Container className='Layer__time-tracking-stats'>
       <ConditionalBlock
         data={summary}
         isLoading={isLoading}

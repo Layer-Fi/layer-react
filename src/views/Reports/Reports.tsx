@@ -108,7 +108,7 @@ export const Reports = ({
     <ReportsHeaderContextProvider value={reportsHeaderContextValue}>
       <View title={resolvedTitle} showHeader={showTitle}>
         {!isMobileView && <ReportsToggle />}
-        <Container name='reports' overflow='hidden' ref={containerRef}>
+        <Container className='Layer__reports' overflow='hidden' ref={containerRef}>
           <ProfitAndLoss asContainer={false}>
             <ReportsPanel
               openReport={activeTab}

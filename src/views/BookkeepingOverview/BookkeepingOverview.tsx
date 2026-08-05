@@ -172,8 +172,7 @@ export const BookkeepingOverview = ({
           onClick={() => (upperElementInFocus.current = false)}
         >
           <Container
-            name='bookkeeping-overview-profit-and-loss'
-            className='Layer__BookkeepingOverview__ProfitAndLossContainer'
+            className='Layer__bookkeeping-overview-profit-and-loss Layer__BookkeepingOverview__ProfitAndLossContainer'
             asWidget
           >
             <ProfitAndLossHeader

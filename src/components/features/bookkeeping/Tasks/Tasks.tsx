@@ -75,7 +75,7 @@ export function Tasks({
   }, [callBookings, data, isLoading, isLoadingCallBookings])
 
   return (
-    <Container name='tasks'>
+    <Container className='Layer__tasks'>
       <TasksPanelNotification
         onClickReconnectAccounts={onClickReconnectAccounts}
       />

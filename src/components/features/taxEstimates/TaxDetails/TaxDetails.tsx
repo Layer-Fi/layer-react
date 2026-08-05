@@ -10,7 +10,7 @@ const TaxDetailsHeader = () => <TaxEstimatesHeader type={TaxEstimatesHeaderType.
 export const TaxDetails = () => {
   return (
     <ResponsiveDetailView
-      name='TaxDetails'
+      className='Layer__TaxDetails'
       slots={{ Header: TaxDetailsHeader }}
       mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
     >

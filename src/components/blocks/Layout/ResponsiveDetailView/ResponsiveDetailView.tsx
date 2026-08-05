@@ -8,7 +8,7 @@ import { BaseDetailView } from '@blocks/Layout/BaseDetailView/BaseDetailView'
 import './responsiveDetailView.scss'
 
 type ResponsiveDetailViewProps = PropsWithChildren<{
-  name: string
+  className?: string
   slots: {
     Header: React.FC
   }
@@ -18,7 +18,7 @@ type ResponsiveDetailViewProps = PropsWithChildren<{
 }>
 
 export const ResponsiveDetailView = ({
-  name,
+  className,
   slots,
   children,
   mobileProps,
@@ -27,7 +27,7 @@ export const ResponsiveDetailView = ({
 
   if (isDesktop) {
     return (
-      <BaseDetailView name={name} slots={slots}>
+      <BaseDetailView className={className} slots={slots}>
         {children}
       </BaseDetailView>
     )

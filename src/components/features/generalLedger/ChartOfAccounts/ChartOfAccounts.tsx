@@ -69,7 +69,7 @@ const ChartOfAccountsContent = ({
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
-    <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
+    <Container className='Layer__chart-of-accounts' ref={containerRef} asWidget={asWidget}>
       {selectedAccount
         ? (
           <LedgerAccountPanel

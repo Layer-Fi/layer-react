@@ -187,7 +187,7 @@ export const InvoiceTable = ({
   const columnConfig = useMemo(() => getColumnConfig(onViewInvoice, t), [onViewInvoice, t])
 
   return (
-    <Container name='InvoiceTable'>
+    <Container className='Layer__InvoiceTable'>
       <DataTableHeader
         name={t('invoices:InvoiceTable.label.invoices', 'Invoices')}
         slots={{

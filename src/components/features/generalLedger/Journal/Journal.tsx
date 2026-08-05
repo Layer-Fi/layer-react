@@ -77,7 +77,7 @@ const JournalTableView = ({
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
-    <Container name='journal' ref={containerRef} asWidget={asWidget}>
+    <Container className='Layer__journal' ref={containerRef} asWidget={asWidget}>
       <JournalTableWithPanel
         stringOverrides={stringOverrides?.journalTable}
       />

@@ -89,8 +89,7 @@ export const AccountingOverview = ({
           variants={profitAndLossSummariesVariants}
         />
         <Container
-          name='accounting-overview-profit-and-loss'
-          className='Layer__AccountingOverview__ProfitAndLossContainer'
+          className='Layer__accounting-overview-profit-and-loss Layer__AccountingOverview__ProfitAndLossContainer'
           asWidget
         >
           <ProfitAndLossHeader
@@ -104,7 +103,7 @@ export const AccountingOverview = ({
           />
         </Container>
         {middleBanner && (
-          <Container name='accounting-overview-middle-banner'>
+          <Container className='Layer__accounting-overview-middle-banner'>
             {middleBanner}
           </Container>
         )}

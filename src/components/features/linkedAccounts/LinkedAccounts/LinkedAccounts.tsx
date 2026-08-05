@@ -17,7 +17,7 @@ import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHosted
 
 import './linkedAccounts.scss'
 
-const COMPONENT_NAME = 'linked-accounts'
+const COMPONENT_CLASS_NAME = 'Layer__linked-accounts'
 
 export interface LinkedAccountsProps {
   asWidget?: boolean
@@ -55,7 +55,7 @@ export const LinkedAccountsComponent = ({
   const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
 
   return (
-    <Container name={COMPONENT_NAME} elevated={elevated}>
+    <Container className={COMPONENT_CLASS_NAME} elevated={elevated}>
       <DeprecatedHeader className='Layer__linked-accounts__header'>
         <Heading level={3} size='sm'>
           {stringOverrides?.title || t('linkedAccounts:LinkedAccounts.label.linked_accounts', 'Linked Accounts')}

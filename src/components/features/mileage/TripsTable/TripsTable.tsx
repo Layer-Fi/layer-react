@@ -131,7 +131,7 @@ export const TripsTable = ({
   const onRecordTrip = useCallback(() => onViewOrUpsertTrip(null), [onViewOrUpsertTrip])
 
   return (
-    <Container name='TripsTable'>
+    <Container className='Layer__TripsTable'>
       <TripsTableHeader onRecordTrip={onRecordTrip} />
       <PaginatedTable
         ariaLabel={t('mileage:TripsTable.label.trips', 'Trips')}

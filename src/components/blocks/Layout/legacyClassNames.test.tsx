@@ -108,21 +108,21 @@ describe('layout legacy class names', () => {
 
   describe('Container', () => {
     it('emits the component and container classes on one element', () => {
-      const container = renderLayout(<Container name='journal'>body</Container>)
+      const container = renderLayout(<Container className='Layer__journal'>body</Container>)
 
       const element = queryLegacy(container, LAYOUT_CLASS_NAMES.CONTAINER)
       expectLegacyOn(element, LAYOUT_CLASS_NAMES.CONTAINER)
     })
 
     it('emits the name-derived class consumers target', () => {
-      const container = renderLayout(<Container name='journal'>body</Container>)
+      const container = renderLayout(<Container className='Layer__journal'>body</Container>)
 
       expect(container.querySelector('.Layer__journal')).not.toBeNull()
     })
 
     it('emits every variant modifier', () => {
       const container = renderLayout(
-        <Container name='journal' elevated variant='plain' asWidget>body</Container>,
+        <Container className='Layer__journal' elevated variant='plain' asWidget>body</Container>,
       )
 
       const element = queryLegacy(container, LAYOUT_CLASS_NAMES.CONTAINER)

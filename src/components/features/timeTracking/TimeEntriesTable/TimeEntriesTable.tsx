@@ -129,7 +129,7 @@ const TimeEntriesTableComponent = ({
   const columnConfig = useMemo(() => getColumnConfig(t), [t])
 
   return (
-    <Container name='TimeEntriesTable'>
+    <Container className='Layer__TimeEntriesTable'>
       <TimeEntriesTableHeader />
       <PaginatedTable
         ariaLabel={t('timeTracking:TimeEntriesTable.label.time_entries', 'Time Entries')}
