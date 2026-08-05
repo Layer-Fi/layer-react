@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useArchiveBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/delete'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'

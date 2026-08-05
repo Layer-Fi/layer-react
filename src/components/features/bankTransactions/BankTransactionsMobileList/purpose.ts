@@ -1,4 +1,4 @@
-import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import {
   type BankTransactionCategorization,
   BankTransactionSelectionVariant,

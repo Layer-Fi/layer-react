@@ -28,6 +28,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
 | Zustand stores, contexts, providers, feature visibility | [`src/providers/SKILL.md`](src/providers/SKILL.md) |
 | Pure helpers — whether one belongs in `utils`, and where | [`src/utils/SKILL.md`](src/utils/SKILL.md) |
+| Internal types — `features/` vs `shared/` vs `utility/` | [`src/types/SKILL.md`](src/types/SKILL.md) |
 | Component structure, loading/empty states, responsive UX | [`src/components/SKILL.md`](src/components/SKILL.md) |
 | Design-system primitives, style props, variant data attributes | [`src/components/ui/SKILL.md`](src/components/ui/SKILL.md) |
 | Building a form — fields, validators, submit and error handling | [`src/components/blocks/Form/SKILL.md`](src/components/blocks/Form/SKILL.md) |
@@ -52,7 +53,7 @@ release process.
 | Path | Alias | Contains |
 | --- | --- | --- |
 | `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
-| `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
+| `src/types` | `@internal-types/*` | internal-only types (no wire format), split into `features/<domain>/`, `shared/<capability>`, `utility/` (type-level helpers) and `ambient/` (global declarations) |
 | `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
@@ -170,7 +171,8 @@ Reach for these before writing your own:
   `EnumWithUnknownValues` (open string enums), `pagination`, `promises`, `table`. Check there
   before writing a new type-level helper.
 - `src/types/**` is for internal-only types with no wire format. Anything the API sends or
-  receives is a schema.
+  receives is a schema. Runtime code (classes, data tables, guards) belongs with its owner in
+  `src/utils` or the feature — see [`src/types/SKILL.md`](src/types/SKILL.md).
 - Not yet enabled in `tsconfig.json` but worth honoring: `isolatedModules`, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`.
 
 Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@api/*`, `@hooks/*`,

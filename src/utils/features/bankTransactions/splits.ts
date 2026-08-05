@@ -1,9 +1,9 @@
 import type { TFunction } from 'i18next'
 import { uniqBy } from 'lodash-es'
 
-import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { isApiCategorizationAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
+import { type BankTransaction, type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { isSplitCategorization } from '@schemas/categorization/categorization'
 import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tags/tag'

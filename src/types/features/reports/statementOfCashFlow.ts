@@ -1,4 +1,4 @@
-import { type LineItem } from '@internal-types/lineItem'
+import { type LineItem } from '@internal-types/features/reports/lineItem'
 
 export interface StatementOfCashFlow {
   business_id: string

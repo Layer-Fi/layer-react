@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 
-import type { OAuthResponse } from '@internal-types/authentication'
+import type { OAuthResponse } from '@internal-types/shared/authentication'
 import { useAuthInput } from '@providers/global/AuthInput/AuthInputProvider'
 import { type Environment, type EnvironmentConfigs } from '@providers/global/Environment/environmentConfigs'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'

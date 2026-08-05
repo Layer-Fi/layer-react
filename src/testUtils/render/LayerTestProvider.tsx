@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import { type LayerThemeConfig } from '@internal-types/layerContext'
+import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
 import { type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { type EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'
 import { LayerProvider } from '@providers/global/LayerProvider/LayerProvider'

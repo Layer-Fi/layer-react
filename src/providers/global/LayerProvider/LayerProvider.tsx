@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { SWRConfig } from 'swr'
 
-import { type LayerThemeConfig } from '@internal-types/layerContext'
+import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
 import { type LayerError } from '@utils/shared/api/errorHandler'
 import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { DEFAULT_SWR_CONFIG } from '@utils/shared/swr/defaultSWRConfig'

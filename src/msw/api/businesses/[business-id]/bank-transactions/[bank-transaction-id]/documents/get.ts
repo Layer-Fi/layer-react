@@ -1,4 +1,4 @@
-import { type DocumentS3Urls } from '@internal-types/bankTransactions'
+import { type DocumentS3Urls } from '@internal-types/features/bankTransactions/bankTransaction'
 
 import { findDocuments } from '@msw/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/documents/store'
 import { apiData } from '@msw/utils/apiResponse'

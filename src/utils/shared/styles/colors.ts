@@ -5,7 +5,7 @@ import {
   type ColorRGBNumberConfig,
   type ColorsPalette,
   type LayerThemeConfig,
-} from '@internal-types/layerContext'
+} from '@internal-types/shared/layerContext'
 
 const SHADES = {
   50: { s: 1, l: 98 },

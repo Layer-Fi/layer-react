@@ -1,4 +1,4 @@
-import { type ApiCategorizationAsOption, CategorizationOption, type CategoryAsOption, type PlaceholderAsOption, type SplitAsOption, type SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type ApiCategorizationAsOption, CategorizationOption, type CategoryAsOption, type PlaceholderAsOption, type SplitAsOption, type SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 
 export type BankTransactionCategoryComboBoxOption =
   CategoryAsOption |

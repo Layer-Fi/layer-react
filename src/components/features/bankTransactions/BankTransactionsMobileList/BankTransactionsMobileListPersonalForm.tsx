@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Paperclip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCategorized, isMoneyIn } from '@utils/features/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'

@@ -3,7 +3,7 @@ import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { DisplayState } from '@internal-types/bankTransactions'
+import { DisplayState } from '@internal-types/features/bankTransactions/bankTransaction'
 import { BankTransactionsDateFilterMode } from '@utils/features/bankTransactions/shared'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'

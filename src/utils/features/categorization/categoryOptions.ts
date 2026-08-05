@@ -1,4 +1,4 @@
-import { CategoryAsOption } from '@internal-types/categorizationOption'
+import { CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
 import { getLeafCategories } from '@utils/features/categorization/categories'
 

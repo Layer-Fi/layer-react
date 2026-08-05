@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Paperclip, Scissors, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { buildCategorizeBankTransactionPayloadForSplit, hasReceipts, isCategorized } from '@utils/features/bankTransactions/shared'
 import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'

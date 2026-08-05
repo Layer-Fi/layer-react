@@ -1,6 +1,6 @@
 import { type ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 
-import type { TimeRangePickerConfig } from '@internal-types/reports'
+import type { TimeRangePickerConfig } from '@internal-types/features/reports/reportView'
 import { type View as ViewType } from '@internal-types/shared/viewport'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { InAppLinkProvider, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'

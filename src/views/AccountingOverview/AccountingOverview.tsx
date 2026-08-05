@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type OnboardingStep } from '@internal-types/layerContext'
-import { type TagOption } from '@internal-types/tags'
+import { type TagOption } from '@internal-types/features/tags/tag'
+import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'

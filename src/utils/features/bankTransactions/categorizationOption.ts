@@ -1,4 +1,4 @@
-import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/categorizationOption'
+import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type Categorization, isSplitCategorization } from '@schemas/categorization/categorization'
 import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tags/tag'

@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 
-import { type LineItem } from '@internal-types/lineItem'
-import { type StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
+import { type LineItem } from '@internal-types/features/reports/lineItem'
+import { type StatementOfCashFlow } from '@internal-types/features/reports/statementOfCashFlow'
 import {
   ReportsTable,
   ReportsTableAmountCell,

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { type CategoryAsOption } from '@internal-types/categorizationOption'
+import { type CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type CategoriesListMode } from '@schemas/categorization/categoryList'
 import { type Classification } from '@schemas/categorization/classification'
 import { findCategoryOption } from '@utils/features/categorization/categories'

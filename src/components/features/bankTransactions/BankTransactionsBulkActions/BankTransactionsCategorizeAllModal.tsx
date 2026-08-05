@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/features/bankTransactions/taxCode'
 import type { TaxCodeComboBoxOption } from '@utils/features/bankTransactions/taxCodeComboBoxOption'
 import { tPlural } from '@utils/shared/i18n/plural'

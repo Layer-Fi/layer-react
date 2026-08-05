@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import type { USStateCode } from '@internal-types/location'
+import type { USStateCode } from '@internal-types/features/taxEstimates/location'
 import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
 import type { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 

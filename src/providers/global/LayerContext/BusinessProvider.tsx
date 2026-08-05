@@ -7,8 +7,8 @@ import {
   LayerContextActionName as Action,
   type LayerContextValues,
   type LayerThemeConfig,
-} from '@internal-types/layerContext'
-import { type ToastData } from '@internal-types/toast'
+} from '@internal-types/shared/layerContext'
+import { type ToastData } from '@internal-types/shared/toast'
 import { errorHandler, type LayerError } from '@utils/shared/api/errorHandler'
 import { buildColorsPalette } from '@utils/shared/styles/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'

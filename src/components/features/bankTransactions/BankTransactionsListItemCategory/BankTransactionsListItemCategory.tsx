@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionsCategorizedSelectedValue } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsSelectedValue } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsSelectedValue'

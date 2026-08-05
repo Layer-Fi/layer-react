@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type LineItem } from '@internal-types/lineItem'
+import { type LineItem } from '@internal-types/features/reports/lineItem'
 import { Alignment } from '@internal-types/utility/table'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { Button } from '@ui/Button/Button'

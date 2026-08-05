@@ -1,4 +1,4 @@
-import type { PublicToken } from '@internal-types/linkedAccounts'
+import type { PublicToken } from '@internal-types/features/linkedAccounts/linkedAccount'
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

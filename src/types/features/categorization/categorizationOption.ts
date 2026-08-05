@@ -1,4 +1,4 @@
-import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
+import type { Split, SuggestedMatch } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type Categorization } from '@schemas/categorization/categorization'
 import { type Classification, getClassificationFromCategorization, makeExclusion } from '@schemas/categorization/classification'
 import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'

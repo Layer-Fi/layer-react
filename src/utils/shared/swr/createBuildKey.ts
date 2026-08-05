@@ -1,4 +1,4 @@
-import type { OAuthResponse } from '@internal-types/authentication'
+import type { OAuthResponse } from '@internal-types/shared/authentication'
 import type { PaginatedResponse } from '@schemas/common/pagination'
 
 type AuthKeyInput = Partial<OAuthResponse> & { apiUrl?: string }

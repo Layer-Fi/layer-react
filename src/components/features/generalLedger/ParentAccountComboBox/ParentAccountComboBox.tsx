@@ -1,9 +1,7 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerBalances'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { useParentAccountOptions } from '@features/generalLedger/ParentAccountComboBox/useParentAccountOptions'
 
@@ -18,11 +16,7 @@ type ParentAccountComboBoxProps = {
 
 export const ParentAccountComboBox = ({ label, data, value, onChange, error, inline }: ParentAccountComboBoxProps) => {
   const { t } = useTranslation()
-  const parentOptions = useParentAccountOptions(data)
-  const options = useMemo<ComboBoxOption[]>(
-    () => parentOptions.map(option => ({ value: String(option.value), label: option.label })),
-    [parentOptions],
-  )
+  const options = useParentAccountOptions(data)
 
   return (
     <ComboBoxField label={label} inline={inline}>

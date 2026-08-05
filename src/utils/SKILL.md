@@ -25,7 +25,7 @@ Work down this list and stop at the first that fits:
 
 1. **An API contract, or a type derived from one** → `src/schemas/<domain>/`.
 2. **A React hook** → `src/hooks/features/<domain>/` or `src/hooks/utils/<capability>/`.
-3. **A type-level helper** (conditional types, branded types) → `src/types/utility/`.
+3. **A type-level helper** (conditional types, open enums) → `src/types/utility/`; a domain type with no wire format → `src/types/features/<domain>/` or `src/types/shared/`.
 4. **Used by exactly one component, hook, or provider** → beside that consumer, as its
    `utils.ts` / `formUtils.ts` / its own file in that directory. A 10-line helper with one
    importer does not earn a shared namespace.

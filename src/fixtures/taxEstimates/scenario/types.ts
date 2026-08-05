@@ -1,4 +1,4 @@
-import { type USStateCode } from '@internal-types/location'
+import { type USStateCode } from '@internal-types/features/taxEstimates/location'
 import { type FilingStatus } from '@schemas/taxEstimates/filingStatus'
 import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
 

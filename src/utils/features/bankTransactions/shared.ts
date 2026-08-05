@@ -1,9 +1,9 @@
 import { isWithinInterval } from 'date-fns'
 
-import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/features/bankTransactions/bankTransaction'
+import { SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
+import type { TagFilterInput } from '@internal-types/features/tags/tag'
 import { type DateRange } from '@internal-types/shared/dateRange'
-import type { TagFilterInput } from '@internal-types/tags'
 import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import type { CustomAccount } from '@schemas/customAccounts/customAccount'
