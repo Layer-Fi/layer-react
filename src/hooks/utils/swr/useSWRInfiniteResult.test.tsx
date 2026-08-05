@@ -2,8 +2,8 @@ import { renderHook } from '@testing-library/react'
 import { type SWRInfiniteResponse } from 'swr/infinite'
 import { describe, expect, it, vi } from 'vitest'
 
-import { SWRInfiniteResult } from '@internal-types/swr/SWRResponseTypes'
 import type { PaginatedResponse } from '@schemas/common/pagination'
+import { SWRInfiniteResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { useSWRInfiniteResult } from '@hooks/utils/swr/useSWRInfiniteResult'
 
 type Page = PaginatedResponse<{ id: string }>

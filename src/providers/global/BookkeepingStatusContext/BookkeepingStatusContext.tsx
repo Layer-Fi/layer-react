@@ -1,9 +1,9 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
-import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeeping/bookkeepingStatus'
 import { isActiveBookkeepingStatus as checkIsActiveBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { type SWRQueryResult } from '@hooks/utils/swr/SWRResponseTypes'
 
 type BookkeepingStatusContextValue = Pick<
   SWRQueryResult<BookkeepingStatusData>,

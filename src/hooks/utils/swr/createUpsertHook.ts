@@ -1,4 +1,4 @@
-import type { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
+import type { SWRMutationResult } from '@hooks/utils/swr/SWRResponseTypes'
 
 export enum UpsertMode {
   Create = 'Create',

@@ -2,11 +2,11 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { MutationRequest } from '@utils/shared/api/getAsMutation'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
 import { useLatestRef } from '@hooks/utils/react/useLatestRef'
+import { SWRMutationResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }

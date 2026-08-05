@@ -1,12 +1,12 @@
 import useSWR from 'swr'
 
-import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { AccountingConfigurationSchema } from '@schemas/business/accountingConfiguration'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/shared/swr/createKeyedFetcher'
 import { useAuth } from '@hooks/utils/auth/useAuth'
+import { SWRQueryResult } from '@hooks/utils/swr/SWRResponseTypes'
 
 export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
 

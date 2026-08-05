@@ -3,8 +3,8 @@ import { type SWRInfiniteResponse } from 'swr/infinite'
 import { type SWRMutationResponse } from 'swr/mutation'
 import { describe, expect, it, vi } from 'vitest'
 
-import { SWRInfiniteResult, SWRMutationResult, SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import type { PaginatedResponse } from '@schemas/common/pagination'
+import { SWRInfiniteResult, SWRMutationResult, SWRQueryResult } from '@hooks/utils/swr/SWRResponseTypes'
 
 describe('SWRQueryResult', () => {
   const baseResponse = {
