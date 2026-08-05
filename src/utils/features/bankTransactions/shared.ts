@@ -2,7 +2,7 @@ import { isWithinInterval } from 'date-fns'
 
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { type DateRange } from '@internal-types/general'
+import { type DateRange } from '@internal-types/shared/dateRange'
 import type { TagFilterInput } from '@internal-types/tags'
 import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'

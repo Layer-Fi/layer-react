@@ -1,4 +1,4 @@
-import type { MoneyFormat } from '@internal-types/general'
+import type { MoneyFormat } from '@internal-types/shared/money'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 
 export type TimeRangePickerConfig = {

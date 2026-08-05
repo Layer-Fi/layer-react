@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { GridList, GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
-import type { View } from '@internal-types/general'
+import type { View } from '@internal-types/shared/viewport'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'

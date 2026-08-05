@@ -1,4 +1,4 @@
-import type { S3PresignedUrl } from '@internal-types/general'
+import type { S3PresignedUrl } from '@internal-types/shared/s3'
 import { getAsMutation } from '@utils/shared/api/getAsMutation'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import type { GetStatementOfCashFlowParams } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
