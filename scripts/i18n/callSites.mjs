@@ -10,7 +10,7 @@
 import fs from 'node:fs'
 
 import { KEY_PATTERN } from './keyGrammar.mjs'
-import { isExempt, listSourceFiles } from './zones.mjs'
+import { isExempt, listSourceFiles } from './keyOwnership.mjs'
 
 /** `t('key', 'Default')` and `translationKey('key', 'Default')`. */
 const PLAIN_DEFAULT = new RegExp(String.raw`\b(?:t|translationKey)\(\s*(['"])(${KEY_PATTERN})\1\s*,\s*(['"])((?:[^\\]|\\.)*?)\3`, 'gs')

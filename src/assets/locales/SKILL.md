@@ -167,8 +167,8 @@ Alpha releases are exempt; untranslated strings are expected there.
 `npm run i18n:check` (CI: [`i18n-check`](../../../.github/workflows/i18n-check.yml)) fails on a key
 with two different English defaults, a key whose namespace or owner doesn't match its file, an
 `en-US`/`fr-CA` structural mismatch, and straight apostrophes. ESLint additionally flags a foreign
-namespace inline as you type. Both are generated from the same zone table, in
-`scripts/i18n/zones.mjs` and `eslint.config.mjs`.
+namespace inline as you type. Both derive the same namespace/owner rules, in
+`scripts/i18n/keyOwnership.mjs` and `eslint.config.mjs`.
 
 ## Strings outside JSX
 

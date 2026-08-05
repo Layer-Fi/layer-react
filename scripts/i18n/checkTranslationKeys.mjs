@@ -14,7 +14,8 @@ import fs from 'node:fs'
 
 import { collectCallSites } from './callSites.mjs'
 import { OWNER_EXEMPT_NAMESPACES, ownerOf, PLURAL_CATEGORIES, splitPluralCategory } from './keyGrammar.mjs'
-import { LOCALES, readLocale, SHARED_NAMESPACES, SOURCE_LOCALE, zoneFor } from './zones.mjs'
+import { SHARED_NAMESPACES, ownershipFor } from './keyOwnership.mjs'
+import { LOCALES, readLocale, SOURCE_LOCALE } from './localeManifests.mjs'
 
 const checkConflictingDefaults = (sites, fail) => {
   const byKey = new Map()
@@ -49,7 +50,7 @@ const checkKeyLocation = (sites, fail) => {
     const namespace = key.slice(0, separator)
     if (SHARED_NAMESPACES.includes(namespace) || OWNER_EXEMPT_NAMESPACES.includes(namespace)) continue
 
-    const zone = zoneFor(file)
+    const zone = ownershipFor(file)
     if (!zone || zone.grandfathered) continue
 
     if (!zone.allowsAnyDomain && namespace !== zone.namespace) {

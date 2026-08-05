@@ -109,6 +109,6 @@ breaks every import through the new alias.
 ## Translation keys follow the same domains
 
 A translation key's namespace is the domain (or tier) that owns the file using it, and the segment
-after it is the owning component: `invoices:InvoiceTable.action.view_invoice`. The zone table is
-generated from the same on-disk domain list as the boundary rules, in `scripts/i18n/zones.mjs` and
+after it is the owning file: `invoices:InvoiceTable.action.view_invoice`. Ownership is derived from
+the same on-disk domain list as the boundary rules, in `scripts/i18n/keyOwnership.mjs` and
 `eslint.config.mjs`. See [`src/assets/locales/SKILL.md`](assets/locales/SKILL.md).
