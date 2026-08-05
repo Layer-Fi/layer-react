@@ -99,6 +99,18 @@ jobs:
         node-version: '22'
         cache: 'npm'
 
+    # Runs against the checked-out tag, so it gates exactly what is about to ship rather than
+    # whatever main looks like now. Release — Prepare checks this too, but strings can land
+    # between cutting the release PR and tagging. Needs no dependencies, so it runs before
+    # npm ci and fails fast.
+    - name: Require translations for a stable release
+      if: ${{ steps.r.outputs.type == 'stable' }}
+      run: |
+        if ! node scripts/i18n/checkTranslationKeys.mjs --release; then
+          echo "::error::Tag v${{ steps.r.outputs.version }} contains untranslated strings. Merge the i18n PRs, cut a new patch release, and publish that instead."
+          exit 1
+        fi
+
     # Trusted publishing needs npm >= 11.5.1; pin it.
     - name: Upgrade npm for trusted publishing
       run: npm install -g npm@11.5.1

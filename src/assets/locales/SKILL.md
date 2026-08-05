@@ -136,6 +136,26 @@ Check `common.json` before adding a string to a domain namespace — "Cancel", "
 already exist. Because these keys have no owner to separate them, a shared key must have exactly
 one English default everywhere; if two call sites need different copy, they need different keys.
 
+## Stable releases require finished translations
+
+`npm run i18n:check-release` fails unless both halves of the pipeline have run:
+
+1. every key used in code exists in `en-US` — otherwise the string never reached Crowdin at all;
+2. every `en-US` key has a non-empty value in every translated locale — otherwise it renders
+   English through the fallback.
+
+[`Release — Prepare`](../../../.github/workflows/release-prepare.yml) runs it when
+`release_type=stable`, **before** the version bump. If it fails, Prepare dispatches the workflow
+that can fix it — `i18n-extract-keys` when keys are unextracted, `crowdin-sync` when they are
+merely untranslated — and then stops without cutting a release PR. Merge the PR it opens (an
+extract PR landing on `main` triggers the Crowdin sync itself), then re-run Prepare.
+
+[`Release — Publish`](../../../.github/workflows/release-publish.yml) runs it again against the
+checked-out tag, since strings can land between cutting the release PR and tagging. That one is a
+hard block on `npm publish --tag latest`.
+
+Alpha releases are exempt; untranslated strings are expected there.
+
 ### Enforcement
 
 `npm run i18n:check` (CI: [`i18n-check`](../../../.github/workflows/i18n-check.yml)) fails on a key

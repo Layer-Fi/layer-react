@@ -39,6 +39,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 jobs:
   prepare:
@@ -58,6 +59,45 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    # A stable release must not ship untranslated copy. The check needs no dependencies, so it
+    # runs before the version bump. Alpha releases are exempt — that is where untranslated
+    # strings are expected to live.
+    - name: Check translations are ready
+      if: ${{ inputs.release_type == 'stable' }}
+      id: i18n
+      continue-on-error: true
+      run: node scripts/i18n/checkTranslationKeys.mjs --release
+
+    # Start the pipeline that fixes it and stop: cutting a release PR now would only produce a
+    # tag that Release — Publish refuses.
+    - name: Start the translation pipeline and stop
+      if: ${{ inputs.release_type == 'stable' && steps.i18n.outcome == 'failure' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if [ "${{ steps.i18n.outputs.remedy }}" = "crowdin" ]; then
+          WORKFLOW=crowdin-sync.yml
+          BRANCH=i18n/crowdin-fr-ca
+        else
+          WORKFLOW=i18n-extract-keys.yml
+          BRANCH=i18n/extract-keys
+        fi
+
+        gh workflow run "$WORKFLOW" --ref main
+
+        {
+          echo "### Stable release blocked — translations are not ready"
+          echo
+          echo "Dispatched \`$WORKFLOW\`, which opens or updates the \`$BRANCH\` PR."
+          echo "Merge it — an extract PR landing on \`main\` triggers the Crowdin sync"
+          echo "automatically — then re-run this workflow once the translations are on \`main\`."
+          echo
+          echo "See the previous step for the exact keys."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::Translations are not ready for a stable release. Dispatched $WORKFLOW; merge the $BRANCH PR, then re-run."
+        exit 1
 
     - name: Compute next version
       id: ver

@@ -31,6 +31,7 @@
     "fixtures:generate": "tsx scripts/generate-fixtures.ts",
     "fixtures:check": "tsx scripts/generate-fixtures.ts --check",
     "i18n:check": "node scripts/i18n/checkTranslationKeys.mjs",
+    "i18n:check-release": "node scripts/i18n/checkTranslationKeys.mjs --release",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "msw:check-coverage": "tsx scripts/check-msw-coverage.ts",
     "lint:eslint": "eslint .",

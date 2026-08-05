@@ -263,7 +263,70 @@ const checkLocaleParity = (fail) => {
   }
 }
 
+/**
+ * Release gate. Every string a stable build renders must already be translated, which needs both
+ * halves of the pipeline to have run: extraction, so the key reached the manifest and therefore
+ * Crowdin at all, and Crowdin itself, so `fr-CA` has a value rather than falling back to English.
+ *
+ * Reports which half is unfinished so the caller can dispatch the workflow that fixes it.
+ */
+const checkReadyForRelease = () => {
+  const source = readLocale(SOURCE_LOCALE)
+  const sourceKeys = new Set(Object.keys(source))
+
+  const unextracted = [...new Set(
+    collectCallSites()
+      .filter(site => site.defaultValue !== undefined && !sourceKeys.has(site.key))
+      .map(site => site.key),
+  )].sort()
+
+  const untranslated = []
+  for (const locale of LOCALES) {
+    if (locale === SOURCE_LOCALE) continue
+    const target = readLocale(locale)
+    for (const key of Object.keys(source)) {
+      if (!(key in target) || String(target[key]).trim() === '') untranslated.push(`${locale} ${key}`)
+    }
+  }
+
+  return { unextracted, untranslated }
+}
+
+const runReleaseGate = () => {
+  const { unextracted, untranslated } = checkReadyForRelease()
+
+  if (unextracted.length === 0 && untranslated.length === 0) {
+    console.log('i18n: translations are ready for a stable release')
+    return
+  }
+
+  if (unextracted.length > 0) {
+    console.error(`\n${unextracted.length} key(s) used in code but absent from ${SOURCE_LOCALE}, so Crowdin never saw them:`)
+    for (const key of unextracted.slice(0, 40)) console.error(`  ${key}`)
+    if (unextracted.length > 40) console.error(`  …and ${unextracted.length - 40} more`)
+  }
+
+  if (untranslated.length > 0) {
+    console.error(`\n${untranslated.length} key(s) missing or empty in a translated locale:`)
+    for (const key of untranslated.slice(0, 40)) console.error(`  ${key}`)
+    if (untranslated.length > 40) console.error(`  …and ${untranslated.length - 40} more`)
+  }
+
+  // Consumed by Release — Prepare to dispatch the workflow that can actually fix this.
+  const remedy = unextracted.length > 0 ? 'extract' : 'crowdin'
+  if (process.env.GITHUB_OUTPUT) {
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `ready=false\nremedy=${remedy}\n`)
+  }
+  console.error(`\nTranslations are not ready for a stable release (remedy: ${remedy}).`)
+  process.exitCode = 1
+}
+
 const main = () => {
+  if (process.argv.includes('--release')) {
+    runReleaseGate()
+    return
+  }
+
   const failures = []
   const fail = message => failures.push(message)
   const sites = collectCallSites()
