@@ -3,7 +3,7 @@ import { Wifi } from 'lucide-react'
 
 import { DataState, type DataStateProps, DataStateStatus } from '@ui/DataState/DataState'
 
-import { Col, Frame, Gallery, Matrix, Section } from '@test-utils/storybook/gallery'
+import { Col, Frame, Gallery, Matrix, Section } from '@testUtils/storybook/layout/gallery'
 
 const STATUSES = Object.values(DataStateStatus)
 

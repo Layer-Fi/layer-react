@@ -7,7 +7,7 @@ import {
   ERROR_FIELD_VARIANTS,
   type FormFieldVariant,
   FormFieldVariantGallery,
-} from '@test-utils/storybook/formField'
+} from '@testUtils/storybook/layout/formField'
 
 const LABEL = 'Number of employees'
 const VALUE = 42

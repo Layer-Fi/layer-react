@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { Spacing } from '@ui/sharedUITypes'
 import { HStack, VStack } from '@ui/Stack/Stack'
 
-import { Col, Gallery, Row } from '@test-utils/storybook/gallery'
+import { Col, Gallery, Row } from '@testUtils/storybook/layout/gallery'
 
 const GAPS: Spacing[] = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl']
 

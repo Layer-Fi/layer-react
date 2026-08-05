@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { type DateRange } from '@utils/shared/date/dateRange'
 import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
 
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const INITIAL_RANGE: DateRange = {
   startDate: new Date(2026, 0, 1),

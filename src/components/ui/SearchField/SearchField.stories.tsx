@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { SearchField } from '@ui/SearchField/SearchField'
 
-import { Gallery, Row } from '@test-utils/storybook/gallery'
+import { Gallery, Row } from '@testUtils/storybook/layout/gallery'
 
 const noop = () => {}
 

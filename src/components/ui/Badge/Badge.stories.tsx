@@ -3,7 +3,7 @@ import { Check } from 'lucide-react'
 
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 
-import { Gallery, Matrix } from '@test-utils/storybook/gallery'
+import { Gallery, Matrix } from '@testUtils/storybook/layout/gallery'
 
 const VARIANTS = Object.values(BadgeVariant)
 const SIZES = Object.values(BadgeSize)

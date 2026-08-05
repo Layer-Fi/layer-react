@@ -1,6 +1,6 @@
 import { within } from '@testing-library/react'
 
-import { type ComboBoxFillArgs, type FormFillerContext } from '@test-utils/forms/types'
+import { type ComboBoxFillArgs, type FormFillerContext } from '@testUtils/forms/types'
 
 const getOptionQueries = (input: HTMLElement) => {
   const listBoxId = input.getAttribute('aria-controls')

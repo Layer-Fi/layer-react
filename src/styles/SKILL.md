@@ -9,7 +9,7 @@ applies_to: src/**/*.scss, src/styles/**
 ## Hard rules
 
 - **No `style` prop, no inline styles.** (Storybook gallery scaffolding in
-  `@test-utils/storybook/gallery` is the one sanctioned exception.)
+  `@testUtils/storybook/layout/gallery` is the one sanctioned exception.)
 - **No utility/atomic class strings** in `className`, and **never build a class name by
   concatenation**.
 - **Do not re-state styles** the target component or an ancestor stack already sets.

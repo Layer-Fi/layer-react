@@ -4,7 +4,7 @@ import { userEvent, within } from 'storybook/test'
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
 
-import { findEntryRows } from '@test-utils/storybook/findEntryRows'
+import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 type JournalStoryArgs = {
   showTags: boolean

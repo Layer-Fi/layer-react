@@ -1,5 +1,5 @@
-import { setCheckable } from '@test-utils/forms/checkable'
-import { type CheckboxFillArgs, type FormFillerContext } from '@test-utils/forms/types'
+import { setCheckable } from '@testUtils/forms/checkable'
+import { type CheckboxFillArgs, type FormFillerContext } from '@testUtils/forms/types'
 
 export function createCheckboxFiller(context: FormFillerContext) {
   return (args: CheckboxFillArgs) => {

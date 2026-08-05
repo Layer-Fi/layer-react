@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { FileThumb } from '@blocks/FileThumb/FileThumb'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const meta: Meta<typeof FileThumb> = {
   title: 'Blocks/FileThumb',

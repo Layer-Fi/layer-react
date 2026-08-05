@@ -1,15 +1,15 @@
 import { screen, within } from '@testing-library/react'
 import { type UserEvent } from '@testing-library/user-event'
 
-import { createCheckboxFiller } from '@test-utils/forms/checkbox'
-import { createComboBoxFiller } from '@test-utils/forms/comboBox'
-import { createNumberFiller } from '@test-utils/forms/number'
-import { createRadioFiller } from '@test-utils/forms/radio'
-import { createTextFiller } from '@test-utils/forms/text'
-import { createToggleFiller } from '@test-utils/forms/toggle'
-import { type FillFormSpec, type FormFillerContext } from '@test-utils/forms/types'
+import { createCheckboxFiller } from '@testUtils/forms/checkbox'
+import { createComboBoxFiller } from '@testUtils/forms/comboBox'
+import { createNumberFiller } from '@testUtils/forms/number'
+import { createRadioFiller } from '@testUtils/forms/radio'
+import { createTextFiller } from '@testUtils/forms/text'
+import { createToggleFiller } from '@testUtils/forms/toggle'
+import { type FillFormSpec, type FormFillerContext } from '@testUtils/forms/types'
 
-export type { FillFormSpec } from '@test-utils/forms/types'
+export type { FillFormSpec } from '@testUtils/forms/types'
 
 export function createFormFiller(user: UserEvent, scope?: HTMLElement) {
   const context: FormFillerContext = {

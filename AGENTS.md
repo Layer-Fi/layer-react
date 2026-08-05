@@ -37,7 +37,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Formatting money, numbers, percentages, dates, durations | [`src/utils/shared/i18n/SKILL.md`](src/utils/shared/i18n/SKILL.md) |
 | Mocking endpoints — MSW handlers, stateful stores | [`src/msw/SKILL.md`](src/msw/SKILL.md) |
 | Fixture data — handwritten factories vs generated rows | [`src/fixtures/SKILL.md`](src/fixtures/SKILL.md) |
-| Writing tests | [`src/test-utils/SKILL.md`](src/test-utils/SKILL.md) |
+| Writing tests | [`src/testUtils/SKILL.md`](src/testUtils/SKILL.md) |
 | Stories and visual regression | [`.storybook/SKILL.md`](.storybook/SKILL.md) |
 
 Those skills plus this file are the only convention docs — each is the single source of truth
@@ -65,7 +65,7 @@ release process.
 | `src/styles` | — | design tokens and base CSS, bundled to `dist/index.css` |
 | `src/msw` | `@msw/*` | mock API, mirroring the same route tree as `hooks/api` |
 | `src/fixtures` | `@fixtures/*` | fixture factories, generators, and committed `generated/*.gen.ts` |
-| `src/test-utils` | `@test-utils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
+| `src/testUtils` | `@testUtils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
 
 Dependencies point one way: views → features → blocks → ui. A `@ui` component never imports a
 schema, a fetching hook, or a feature.
@@ -128,7 +128,7 @@ Each of these has broken something before:
   at runtime. Wrap the hook in `@hooks/features/**` instead.
 - **Every `@api` method file needs an MSW handler** at the mirrored path in `src/msw/api`;
   `npm run msw:check-coverage` enforces it in CI.
-- **Production source may not import** `@msw/*`, `@fixtures/*`, `@test-utils/*`, or `*.stories*`.
+- **Production source may not import** `@msw/*`, `@fixtures/*`, `@testUtils/*`, or `*.stories*`.
 - **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
   Chromatic's per-width iframe resizing.
 - **Every story is a Chromatic snapshot.** Pack primitive variants into one gallery story
@@ -175,12 +175,12 @@ Reach for these before writing your own:
 
 Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
-`@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`.
+`@assets/*`, `@msw/*`, `@fixtures/*`, `@testUtils/*`.
 
 `simple-import-sort` enforces dependency-layer order: react → external →
 (`@internal-types`, `@schemas`) → `@utils` → `@api` → `@hooks` → `@providers` →
 (`@icons`, `@ui`, `@blocks`) → (`@components`, `@features`, `@views`) → `@assets` →
-(`@msw`, `@fixtures`, `@test-utils`) → styles.
+(`@msw`, `@fixtures`, `@testUtils`) → styles.
 
 Type imports are inline-style and enforced: `import { type Foo } from '…'`.
 

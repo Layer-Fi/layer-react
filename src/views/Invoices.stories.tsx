@@ -8,7 +8,7 @@ import { get as getAccountingConfiguration } from '@msw/api/businesses/[business
 import { handlers } from '@msw/handlers'
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { invoices } from '@fixtures/generated/invoices.gen'
-import { findEntryRows } from '@test-utils/storybook/findEntryRows'
+import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 const invoicesStoryHandlers = [
   getAccountingConfiguration.mock(makeAccountingConfiguration({ enableStripeOnboarding: true })),

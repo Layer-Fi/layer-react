@@ -2,7 +2,7 @@ import { join } from 'node:path'
 import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
-import { PUBLIC_API_TAG } from '../src/test-utils/storybook/tags'
+import { PUBLIC_API_TAG } from './tags'
 
 // Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page

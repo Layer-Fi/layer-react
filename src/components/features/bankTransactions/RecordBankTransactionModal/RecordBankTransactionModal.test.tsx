@@ -16,8 +16,8 @@ import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/cust
 import { server } from '@msw/node'
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
-import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+import { createFormFiller, type FillFormSpec } from '@testUtils/forms/fillForm'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
   <LayerTestProvider>

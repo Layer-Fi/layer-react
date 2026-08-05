@@ -4,7 +4,7 @@ import { ChartNoAxesColumn, CircleAlert, FileText, Receipt } from 'lucide-react'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Tabs } from '@ui/Tabs/Tabs'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const OPTIONS = [
   { label: 'Overview', value: 'overview' },

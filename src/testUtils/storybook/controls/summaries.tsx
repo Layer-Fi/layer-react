@@ -92,7 +92,7 @@ export const makeSummariesStoryControls = ({ stringOverridesPath, slotPropsPath,
   return { argTypes, controlNames }
 }
 
-export const buildSummariesReportingVariant = (
+const buildSummariesReportingVariant = (
   args: SummariesStoryArgs,
 ): ProfitAndLossSummariesReportingVariant =>
   args.reportingVariant === 'cashflow'

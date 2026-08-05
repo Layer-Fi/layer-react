@@ -3,7 +3,7 @@ import { Star } from 'lucide-react'
 
 import { Button, type ButtonVariant } from '@ui/Button/Button'
 
-import { Gallery, Matrix } from '@test-utils/storybook/gallery'
+import { Gallery, Matrix } from '@testUtils/storybook/layout/gallery'
 
 const VARIANTS: ButtonVariant[] = ['solid', 'ghost', 'outlined', 'text', 'branded']
 

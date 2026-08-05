@@ -12,7 +12,7 @@ import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
-import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
+import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
 
 type TasksStoryArgs = {
   mobile: boolean

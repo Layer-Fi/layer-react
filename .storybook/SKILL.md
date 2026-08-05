@@ -34,7 +34,7 @@ Pack variants into a *single* render:
   (`MenuOpen`, `DrawerOpen`, `Open`) or a distinct mobile rendering (`Mobile`).
 - Drive the grid from the component's own exported unions (`ButtonVariant`, `ButtonSize`,
   `ButtonStatus`) so the matrix stays exhaustive as variants are added.
-- Use `Gallery`, `Section`, `Matrix`, `Label` from `@test-utils/storybook/gallery`.
+- Use `Gallery`, `Section`, `Matrix`, `Label` from `@testUtils/storybook/layout/gallery`.
 - Use `parameters: { chromatic: { disableSnapshot: true } }` for any story that adds no visual
   signal.
 
@@ -69,8 +69,10 @@ everything in `LayerTestProvider`. So:
 - Generated fixtures (`@fixtures/generated/*`) are the right source for list/table volume.
 - Fixture dates are pinned to `FIXTURE_YEAR`, and `.storybook/mocks/systemDate` pins the
   clock, so snapshots don't drift over time.
-- Shared story context helpers live in `src/test-utils` (`withProfitAndLossStoryContext`,
-  `PinnedGlobalDateRange`, `*StoryControls`).
+- Shared story helpers live under `@testUtils/storybook` — `decorators/` (story context wrapping),
+  `controls/` (argTypes builders), `data/` (rows and column configs shared by several stories),
+  `interactions/` (play-function queries). Data only one story file uses goes next to that story
+  as `<Component>.storyData.tsx`.
 
 Constrain size and layout **in the component**, not in the story — a story that has to box a
 component to look right is reporting a component bug.

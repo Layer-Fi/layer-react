@@ -7,8 +7,8 @@ import { LayerProvider } from '@providers/global/LayerProvider/LayerProvider'
 
 export const TEST_LAYER_API_URL = 'https://api.test.layerfi.com'
 export const TEST_LAYER_BUSINESS_ID = 'test-business-id'
-export const TEST_LAYER_APP_ID = 'test-app-id'
-export const TEST_LAYER_APP_SECRET = 'test-app-secret'
+const TEST_LAYER_APP_ID = 'test-app-id'
+const TEST_LAYER_APP_SECRET = 'test-app-secret'
 
 const TEST_LAYER_ENVIRONMENT_CONFIG: EnvironmentConfigOverride = {
   environment: 'production',
@@ -23,7 +23,7 @@ export const TEST_LAYER_ACCESS_TOKEN = 'test-access-token'
  * Charts and themed surfaces read `--color-dark`/`--color-light` CSS variables
  * that only exist where a theme is set, so tests and stories get a default one.
  */
-export const TEST_LAYER_THEME: LayerThemeConfig = {
+const TEST_LAYER_THEME: LayerThemeConfig = {
   colors: {
     dark: { h: '218', s: '55%', l: '20%' },
     light: { h: '158', s: '35%', l: '75%' },

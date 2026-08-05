@@ -7,7 +7,7 @@ import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   makeLinkedAccountsStoryControls,
-} from '@test-utils/linkedAccountsStoryControls'
+} from '@testUtils/storybook/controls/linkedAccounts'
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string

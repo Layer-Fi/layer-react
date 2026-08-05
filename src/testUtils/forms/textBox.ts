@@ -1,4 +1,4 @@
-import { type FieldName, type FormFillerContext } from '@test-utils/forms/types'
+import { type FieldName, type FormFillerContext } from '@testUtils/forms/types'
 
 type TextBoxFillArgs = {
   field: FieldName

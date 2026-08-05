@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import { DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
-import { DOCS_SCREENSHOT_TAG } from '../src/test-utils/storybook/tags'
+import { DOCS_SCREENSHOT_TAG } from '../.storybook/tags'
 
 const INDEX_PATH = 'storybook-static/index.json'
 

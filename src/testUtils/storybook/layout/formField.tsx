@@ -3,7 +3,7 @@ import { type PropsWithChildren, type ReactNode } from 'react'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 /*
  * A real form sets these on its container: a fixed label column is what separates label from
@@ -20,7 +20,7 @@ type FormFieldHarnessProps = {
   errorText?: string
 }
 
-export function FormFieldHarness({
+function FormFieldHarness({
   defaultValue,
   errorText,
   children,

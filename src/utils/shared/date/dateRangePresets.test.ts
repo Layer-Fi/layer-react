@@ -11,7 +11,7 @@ import {
   rangeForRelativePreset,
 } from '@utils/shared/date/dateRangePresets'
 
-import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
+import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'
 import {
   CURRENT_YEAR_TO_DATE,
   END_OF_TODAY,
@@ -20,7 +20,7 @@ import {
   SIX_MONTHS_AFTER_NOW,
   THREE_MONTHS_BEFORE_NOW,
   TWO_YEARS_BEFORE_NOW,
-} from '@test-utils/fixedDates'
+} from '@testUtils/dates/fixedDates'
 
 setupFakeSystemTime(NOW)
 

@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Alignment } from '@internal-types/utility/table'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 
-import { Col, Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Gallery, Section } from '@testUtils/storybook/layout/gallery'
 
 type ColumnKey = 'account' | 'debit' | 'credit'
 

@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Heading, type HeadingSize } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
 
-import { Gallery, Row as BaseRow } from '@test-utils/storybook/gallery'
+import { Gallery, Row as BaseRow } from '@testUtils/storybook/layout/gallery'
 
 const HEADING_SIZES: HeadingSize[] = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']
 const TEXT_SIZES = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl'] as const

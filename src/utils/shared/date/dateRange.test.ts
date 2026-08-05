@@ -12,7 +12,7 @@ import {
   maybeInvertDateRange,
 } from '@utils/shared/date/dateRange'
 
-import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
+import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'
 import {
   END_OF_TODAY,
   FIVE_MONTHS_BEFORE_NOW,
@@ -22,7 +22,7 @@ import {
   THREE_MONTHS_BEFORE_NOW,
   TWO_MONTHS_BEFORE_NOW,
   TWO_YEARS_BEFORE_NOW,
-} from '@test-utils/fixedDates'
+} from '@testUtils/dates/fixedDates'
 
 setupFakeSystemTime(NOW)
 

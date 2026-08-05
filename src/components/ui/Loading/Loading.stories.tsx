@@ -5,7 +5,7 @@ import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
-import { Col, Frame, Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Frame, Gallery, Section } from '@testUtils/storybook/layout/gallery'
 
 const SIZES = [16, 24, 48]
 

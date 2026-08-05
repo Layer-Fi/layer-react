@@ -5,7 +5,7 @@ import { userEvent, within } from 'storybook/test'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const OPTIONS: ComboBoxOption[] = [
   { label: 'Profit and Loss', value: 'pnl' },

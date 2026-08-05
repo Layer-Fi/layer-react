@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Switch } from '@ui/Switch/Switch'
 
-import { Gallery, Row } from '@test-utils/storybook/gallery'
+import { Gallery, Row } from '@testUtils/storybook/layout/gallery'
 
 const meta: Meta<typeof Switch> = {
   title: 'UI/Switch',

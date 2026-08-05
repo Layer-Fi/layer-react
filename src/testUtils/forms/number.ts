@@ -1,5 +1,5 @@
-import { setTextBoxValue } from '@test-utils/forms/textBox'
-import { type FormFillerContext, type NumberFillArgs } from '@test-utils/forms/types'
+import { setTextBoxValue } from '@testUtils/forms/textBox'
+import { type FormFillerContext, type NumberFillArgs } from '@testUtils/forms/types'
 
 export function createNumberFiller(context: FormFillerContext) {
   return async (args: NumberFillArgs) => {

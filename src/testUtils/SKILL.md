@@ -1,7 +1,7 @@
 ---
 name: testing
 description: Testing conventions — vitest + Testing Library, LayerTestProvider as wrapper, MSW per-test mocks, form fillers, fixed clocks
-applies_to: src/**/*.test.ts, src/**/*.test.tsx, src/test-utils/**
+applies_to: src/**/*.test.ts, src/**/*.test.tsx, src/testUtils/**
 ---
 
 # Testing
@@ -9,6 +9,22 @@ applies_to: src/**/*.test.ts, src/**/*.test.tsx, src/test-utils/**
 `vitest` + `@testing-library/react` + `@testing-library/user-event`, jsdom environment.
 Tests are colocated with the code (`CustomAccountForm.test.tsx` next to
 `CustomAccountForm.tsx`).
+
+```
+Helpers live under `src/testUtils` (`@testUtils/*`), one directory per concern — put new ones
+where they belong instead of at the root:
+
+```
+render/       LayerTestProvider, renderHookWithAuth
+dates/        fakeSystemTime, fixedDates
+requests/     getRequestOptions
+forms/        fillForm + the per-kind fillers behind it
+storybook/    layout/ · controls/ · decorators/ · data/ · interactions/
+```
+
+Story data used by a single story file belongs next to that story as
+`<Component>.storyData.tsx`, not in `storybook/data/` — only genuinely shared rows, column
+configs, and slots live there.
 
 ```
 npm test                        # watch
@@ -39,10 +55,10 @@ render(<CustomAccountForm initialAccountName='' />, { wrapper: LayerTestProvider
 
 It mounts a real `LayerProvider` against a fake API host with a default theme (charts and
 themed surfaces read `--color-dark`/`--color-light`, which only exist under a theme). Exported
-constants — `TEST_LAYER_BUSINESS_ID`, `TEST_LAYER_API_URL`, `TEST_LAYER_ACCESS_TOKEN`,
-`TEST_LAYER_APP_ID` — are what you assert against; never hardcode those strings.
+constants — `TEST_LAYER_BUSINESS_ID`, `TEST_LAYER_API_URL`, `TEST_LAYER_ACCESS_TOKEN` — are what
+you assert against; never hardcode those strings.
 
-For hooks, use `renderHookWithAuth` (`@test-utils/renderHookWithAuth`), which renders inside
+For hooks, use `renderHookWithAuth` (`@testUtils/render/renderHookWithAuth`), which renders inside
 `LayerTestProvider` and resolves only once auth has landed — otherwise the first render fires
 with no token and the assertions race.
 
@@ -79,7 +95,7 @@ server.use(
 
 ## Filling forms
 
-Use the form fillers (`@test-utils/forms/fillForm`) rather than hand-driving inputs — they
+Use the form fillers (`@testUtils/forms/fillForm`) rather than hand-driving inputs — they
 know how each field type is wired (react-aria combo boxes need the listbox resolved via
 `aria-controls`, number fields need commit semantics, etc.):
 
@@ -101,8 +117,8 @@ reads as a diff of the base case.
 ## Time
 
 Tests that depend on "now" pin the clock with `setupFakeSystemTime(NOW)`
-(`@test-utils/fakeSystemTime`) — it wraps `vi.useFakeTimers()`/`setSystemTime` in
-`beforeEach`/`afterEach` for you. Use the pre-derived constants in `@test-utils/fixedDates`
+(`@testUtils/dates/fakeSystemTime`) — it wraps `vi.useFakeTimers()`/`setSystemTime` in
+`beforeEach`/`afterEach` for you. Use the pre-derived constants in `@testUtils/dates/fixedDates`
 (`NOW`, `END_OF_TODAY`, `CURRENT_MONTH_TO_DATE`, `PREVIOUS_MONTH_RANGE`, …) rather than
 constructing dates inline. Existing users pin the clock for pure date logic
 (`createScopedDateStore.test.tsx`, `dateRange.test.ts`); if you combine a fake clock with
@@ -111,11 +127,13 @@ will hang.
 
 ## Other helpers
 
-- `PinnedGlobalDateRange` — mounts a global date store fixed to a known range.
-- `withProfitAndLossStoryContext`, `*StoryControls` — shared Storybook/test context wiring.
-- `getRequestOptions(mock, index?)` — pulls the `{ params, body }` options off the nth call of
-  a mocked request function.
-- `@test-utils/storybook/gallery` — `Gallery`, `Section`, `Matrix`, `Label` for story layout.
+- `getRequestOptions(mock, index?)` (`@testUtils/requests/getRequestOptions`) — pulls the
+  `{ params, body }` options off the nth call of a mocked request function.
+- `@testUtils/storybook/layout/gallery` — `Gallery`, `Section`, `Matrix`, `Label` for story layout.
+- `@testUtils/storybook/decorators/PinnedGlobalDateRange` — mounts a global date store fixed to a
+  known range; `decorators/profitAndLoss` wraps it with the P&L handlers as a decorator.
+- `@testUtils/storybook/controls/*` — argTypes and arg→prop builders per feature.
+- `@testUtils/storybook/interactions/findEntryRows` — waits past skeleton rows in a play function.
 
 ## What to test
 
@@ -125,7 +143,7 @@ will hang.
   permission-gated.
 - Unit-test shared utilities and hook factories directly — see the `*.test.ts` files
   alongside `src/utils/swr/*` and `src/hooks/utils/swr/*` for the pattern.
-- `src/msw`, `src/fixtures`, and `src/test-utils` may not be imported by production source
+- `src/msw`, `src/fixtures`, and `src/testUtils` may not be imported by production source
   (ESLint enforces it); test files import them freely.
 
 ## Related

@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { SeriesData } from '@ui/Chart/seriesTypes'
 import { Legend, LegendLayout } from '@ui/Legend/Legend'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const ITEMS: SeriesData[] = [
   { name: 'income', displayName: 'Income', value: 12000 },

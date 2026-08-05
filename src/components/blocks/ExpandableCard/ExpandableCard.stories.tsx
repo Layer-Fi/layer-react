@@ -4,7 +4,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import { ExpandableCard } from '@blocks/ExpandableCard/ExpandableCard'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const noop = () => {}
 

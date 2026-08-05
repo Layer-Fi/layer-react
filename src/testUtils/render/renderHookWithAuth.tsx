@@ -3,7 +3,7 @@ import { expect } from 'vitest'
 
 import { useAuth } from '@hooks/utils/auth/useAuth'
 
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 /**
  * Renders a hook inside `LayerTestProvider` and resolves only after auth has landed.

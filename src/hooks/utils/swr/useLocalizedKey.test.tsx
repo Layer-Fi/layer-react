@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { useLocalizedKey } from '@hooks/utils/swr/useLocalizedKey'
 
-import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const frCaWrapper = ({ children }: PropsWithChildren) => (
   <LayerTestProvider locale={SupportedLocale.frCA}>{children}</LayerTestProvider>

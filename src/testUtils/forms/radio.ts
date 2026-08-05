@@ -1,6 +1,6 @@
 import { within } from '@testing-library/react'
 
-import { type FormFillerContext, type RadioFillArgs } from '@test-utils/forms/types'
+import { type FormFillerContext, type RadioFillArgs } from '@testUtils/forms/types'
 
 export function createRadioFiller({ ui, user }: FormFillerContext) {
   return async ({ field, option }: RadioFillArgs) => {

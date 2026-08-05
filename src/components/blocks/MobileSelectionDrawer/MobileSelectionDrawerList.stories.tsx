@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { MobileSelectionDrawerList } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerList'
 
-import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Frame, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const OPTIONS: ComboBoxOption[] = [
   { label: 'Profit and Loss', value: 'pnl' },

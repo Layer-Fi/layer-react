@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 
-import { Gallery, Row, Section } from '@test-utils/storybook/gallery'
+import { Gallery, Row, Section } from '@testUtils/storybook/layout/gallery'
 
 const VARIANTS = ['default', 'round', 'error', 'branded'] as const
 const SIZES = ['sm', 'md', 'lg'] as const

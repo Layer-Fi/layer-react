@@ -8,9 +8,9 @@ import { type MutationRequest } from '@utils/shared/api/getAsMutation'
 import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-import { getRequestOptions } from '@test-utils/getRequestOptions'
-import { LayerTestProvider, TEST_LAYER_ACCESS_TOKEN, TEST_LAYER_API_URL, TEST_LAYER_BUSINESS_ID } from '@test-utils/LayerTestProvider'
-import { renderHookWithAuth } from '@test-utils/renderHookWithAuth'
+import { LayerTestProvider, TEST_LAYER_ACCESS_TOKEN, TEST_LAYER_API_URL, TEST_LAYER_BUSINESS_ID } from '@testUtils/render/LayerTestProvider'
+import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
+import { getRequestOptions } from '@testUtils/requests/getRequestOptions'
 
 const frCaWrapper = ({ children }: PropsWithChildren) => (
   <LayerTestProvider locale={SupportedLocale.frCA}>{children}</LayerTestProvider>

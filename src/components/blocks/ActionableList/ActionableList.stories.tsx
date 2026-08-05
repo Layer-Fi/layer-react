@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { ActionableList, type ActionableListOption } from '@blocks/ActionableList/ActionableList'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@testUtils/storybook/layout/gallery'
 
 const meta: Meta<typeof ActionableList> = {
   title: 'Blocks/ActionableList',
