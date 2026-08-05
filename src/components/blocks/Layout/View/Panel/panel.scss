@@ -14,7 +14,13 @@
 .Layer__ViewPanel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--view-panel-sidebar-size, 0);
+
+  /*
+   * `--track` is set only by the overlay query, so it wins there without having to
+   * out-specify the `[data-sidebar]` rules below - a container query adds no specificity,
+   * so a plain `.Layer__ViewPanel` override inside one would lose to them.
+   */
+  grid-template-columns: minmax(0, 1fr) var(--view-panel-sidebar-track, var(--view-panel-sidebar-size, 0));
   align-items: start;
   block-size: 100%;
   transition: grid-template-columns var(--transition-duration-default) ease-in-out;
@@ -26,8 +32,11 @@
   }
 
   &[data-full-width-sidebar][data-sidebar='open'] {
-    /* Only once open - a closed sidebar still collapses to nothing. */
-    --view-panel-sidebar-size: minmax(0, 1fr);
+    /*
+     * Grows into the space the content leaves, capped at the sidebar width - the grid
+     * equivalent of the `flex: 1` plus `max-width` this replaced. Only once open.
+     */
+    --view-panel-sidebar-size: minmax(0, var(--layout-sidebar-inline-size));
   }
 
   &[data-rounded] {
@@ -88,7 +97,7 @@
  */
 @include bp.container-tablet-down('layer-surface') {
   .Layer__ViewPanel {
-    --view-panel-sidebar-size: 0;
+    --view-panel-sidebar-track: 0;
   }
 
   .Layer__ViewPanel__Sidebar {
