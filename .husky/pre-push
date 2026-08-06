@@ -1,8 +1,12 @@
 # core.hooksPath is absolute, so worktrees run this hook with their own root as
-# cwd. A fresh worktree has no node_modules; skip rather than fail the push.
+# cwd. A fresh worktree has no node_modules; install rather than skip the checks.
 if [ ! -d node_modules ]; then
-  echo "husky - skipping pre-push checks (no node_modules in $(pwd))"
-  exit 0
+  echo "husky - no node_modules in $(pwd), running npm ci"
+  # npm ci runs prepare -> husky, which resets the shared core.hooksPath to a
+  # relative path and so strips hooks from every other worktree. Put it back.
+  hooks_path=$(git config core.hooksPath)
+  npm ci
+  git config core.hooksPath "$hooks_path"
 fi
 
 npm run lint
