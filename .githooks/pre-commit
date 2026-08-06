@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+export PATH="node_modules/.bin:$PATH"
+
+if [ ! -d node_modules ]; then
+  echo "git hooks - skipping lint-staged (no node_modules in $(pwd))"
+  exit 0
+fi
+
+npx lint-staged
