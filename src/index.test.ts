@@ -2,9 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import * as publicApi from './index'
 
-// The public surface is the package's contract. Snapshotting it means removing or renaming an
-// export shows up as a failing test in review instead of as a breaking change in a consumer's
-// build. Adding an export is an intentional one-line update here.
+// A removed or renamed export fails here in review rather than in a consumer's build. Adding one
+// is an intentional update to this snapshot.
 describe('public API', () => {
   it('exports a stable set of names', () => {
     expect(Object.keys(publicApi).sort()).toMatchInlineSnapshot(`

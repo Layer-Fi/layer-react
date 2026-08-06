@@ -3,9 +3,7 @@ import { assertType, describe, expectTypeOf, it } from 'vitest'
 
 import type { EventCallbacks, GlobalMonthPicker, LayerProvider } from './index'
 
-// Consumers hit the types before they hit the runtime, so the types are part of the contract too.
-// These are written from a consumer's point of view — valid usage must compile, and invalid usage
-// must not, which a runtime test cannot express.
+// `@ts-expect-error` asserts invalid usage does *not* compile, which no runtime test can express.
 
 type ProviderProps = ComponentProps<typeof LayerProvider>
 type MonthPickerProps = ComponentProps<typeof GlobalMonthPicker>
