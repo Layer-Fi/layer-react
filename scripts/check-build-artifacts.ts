@@ -10,6 +10,10 @@ function exportedPaths(node: unknown): string[] {
   return Object.values(node).flatMap(exportedPaths)
 }
 
+// TypeScript resolves this as a sibling of dist/index.css under `allowArbitraryExtensions`, so it
+// appears in no `exports` entry and cannot be derived.
+const IMPLICIT_ARTIFACTS = ['dist/index.d.css.ts']
+
 function declaredArtifacts(): string[] {
   return [...new Set([
     pkg.main,
@@ -17,6 +21,7 @@ function declaredArtifacts(): string[] {
     pkg.types,
     pkg.style,
     ...exportedPaths(pkg.exports),
+    ...IMPLICIT_ARTIFACTS,
   ]
     .filter((value): value is string => typeof value === 'string')
     .map(value => value.replace(/^\.\//, '')))]

@@ -1,0 +1,11 @@
+{
+  // Separate from the root config, whose `rootDir` is `./src`: these tests read the built
+  // `dist/index.d.ts`, and pulling dist into the main program would make `npm run typecheck`
+  // depend on a build. Only `npm run test:types` needs the package built.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "../dist/index.d.ts"]
+}

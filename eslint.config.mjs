@@ -388,6 +388,14 @@ export default tsEslint.config(
     },
   },
   {
+    // The self-reference resolves to `dist/`, which the rule reads as a parent import. Reaching the
+    // built package is the entire point of these tests.
+    files: ['type-tests/**/*.ts'],
+    rules: {
+      'import/no-relative-parent-imports': 'off',
+    },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/consistent-type-imports': ['error', {

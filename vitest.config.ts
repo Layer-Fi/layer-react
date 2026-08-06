@@ -13,5 +13,10 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, '.claude/**'],
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
+    // Its own tsconfig: these read the built `dist/index.d.ts`, which the root config excludes.
+    typecheck: {
+      tsconfig: './type-tests/tsconfig.json',
+      include: ['type-tests/**/*.test-d.ts'],
+    },
   },
 })
