@@ -1,0 +1,9 @@
+# core.hooksPath is absolute, so worktrees run this hook with their own root as
+# cwd. A fresh worktree has no node_modules; skip rather than fail the push.
+if [ ! -d node_modules ]; then
+  echo "husky - skipping pre-push checks (no node_modules in $(pwd))"
+  exit 0
+fi
+
+npm run lint
+npm run typecheck

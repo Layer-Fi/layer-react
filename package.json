@@ -117,6 +117,7 @@
     "vitest": "^4.1.9"
   },
   "lint-staged": {
+    "*.{js,jsx,mjs,cjs,ts,tsx}": "eslint --fix --no-warn-ignored",
     "*.{css,scss}": "stylelint --fix"
   },
   "overrides": {

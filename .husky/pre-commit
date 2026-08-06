@@ -1,1 +1,6 @@
+if [ ! -d node_modules ]; then
+  echo "husky - skipping lint-staged (no node_modules in $(pwd))"
+  exit 0
+fi
+
 npx lint-staged
