@@ -41,10 +41,6 @@ jobs:
             run: npm run msw:check-coverage
           - name: Translations
             run: npm run i18n:check
-          # `lint:package`, `test:types` and `size` all read `dist/`, so they ride the job that
-          # already builds rather than rebuilding in jobs of their own.
-          - name: Build
-            run: npm run build && npm run build:check && npm run lint:package && npm run test:types && npm run size
 
     steps:
     - uses: actions/checkout@v4
@@ -59,6 +55,46 @@ jobs:
 
     - name: ${{ matrix.name }}
       run: ${{ matrix.run }}
+
+  # Its own job rather than a matrix entry: everything after the build reads `dist/`, so they share
+  # one build, and as separate steps a red run reports every failure instead of only the first.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      id: build
+      run: npm run build
+
+    # `!cancelled()` so one failing check does not skip the rest — without a status function the
+    # `if` gets an implicit `success()`. Still gated on the build: without `dist/` these would only
+    # report a missing file.
+    - name: Check build artifacts
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run build:check
+
+    - name: Lint the package manifest
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run lint:package
+
+    - name: Type contracts
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run test:types
+
+    - name: Size budgets
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run size
 
   # Its own job rather than a matrix entry: it needs no dependencies, and it inspects the PR head
   # rather than the merge commit, so it shares none of the setup above.
