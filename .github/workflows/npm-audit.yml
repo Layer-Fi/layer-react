@@ -192,7 +192,9 @@ jobs:
             };
 
             const runUrl = `${process.env.GITHUB_SERVER_URL}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`;
-            const linked = runtime.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`));
+            // Every finding's PRs, not just the consumer-facing ones — a merge-ready dev PR is still
+            // work waiting. `vulns` is severity-ordered, so the links come out worst-first.
+            const linked = vulns.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`));
 
             core.setOutput('slack', [
               `[${repo.owner}/${repo.repo}] npm audit — ${vulns.length} findings`,
