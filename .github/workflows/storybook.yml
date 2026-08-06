@@ -4,7 +4,8 @@ name: Storybook
 # scoped to the design system — so it stays, but a PR that cannot affect a story should not pay
 # for a Storybook build, a Chromium install and a full render pass.
 #
-# No `branches` filter, deliberately: PRs stacked on a non-main base still get this.
+# No `branches` filter, unlike the other PR workflows: the paths above already gate this, so
+# leaving it open costs nothing and keeps the occasional PR against a non-main base covered.
 
 on:
   pull_request:
