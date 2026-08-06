@@ -43,7 +43,7 @@
     "DurationSpan": {
       "label": {
         "less_than_one_minute": "< 1 min",
-        "zero_minutes": "0 min"
+        "zero_minutes": "0 min"
       }
     }
   }

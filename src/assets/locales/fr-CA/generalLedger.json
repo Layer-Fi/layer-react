@@ -244,7 +244,7 @@
   },
   "ReverseLedgerEntryButton": {
     "action": {
-      "reverse_entry": "Contre-passer l’écriture"
+      "reverse_entry": "Contrepasser l’écriture"
     },
     "error": {
       "operation_retry": "L’opération a échoué. Réessayez."
