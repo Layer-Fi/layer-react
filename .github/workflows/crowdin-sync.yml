@@ -39,7 +39,8 @@ on:
     branches:
       - main
     paths:
-      - src/assets/locales/**
+      # Manifests only — SKILL.md lives here too and must not reach Crowdin.
+      - src/assets/locales/**/*.json
 
 permissions:
   contents: write
@@ -74,8 +75,8 @@ jobs:
         ENGLISH=true
         TRANSLATIONS=true
         if git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
-          git diff --quiet "$BEFORE_SHA" HEAD -- src/assets/locales/en-US && ENGLISH=false
-          git diff --quiet "$BEFORE_SHA" HEAD -- src/assets/locales ':!src/assets/locales/en-US' && TRANSLATIONS=false
+          git diff --quiet "$BEFORE_SHA" HEAD -- 'src/assets/locales/en-US/*.json' && ENGLISH=false
+          git diff --quiet "$BEFORE_SHA" HEAD -- 'src/assets/locales/*/*.json' ':!src/assets/locales/en-US' && TRANSLATIONS=false
         fi
         echo "english=$ENGLISH" >> "$GITHUB_OUTPUT"
         echo "translations=$TRANSLATIONS" >> "$GITHUB_OUTPUT"
@@ -83,7 +84,7 @@ jobs:
     # Before the translations below: Crowdin only accepts a translation for a source string it
     # already has, so a push that adds or renames a namespace file fails without this.
     - name: Upload sources to Crowdin
-      if: ${{ github.event_name == 'push' || inputs.pretranslate || inputs.prune }}
+      if: ${{ steps.changed.outputs.english == 'true' || steps.changed.outputs.translations == 'true' || inputs.pretranslate || inputs.prune }}
       uses: crowdin/github-action@v2
       with:
         upload_sources: true
