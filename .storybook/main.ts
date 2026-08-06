@@ -49,6 +49,13 @@ const config: StorybookConfig = {
   viteFinal: viteConfig => ({
     ...viteConfig,
     base: process.env.STORYBOOK_BASE_PATH ?? viteConfig.base,
+    build: {
+      ...viteConfig.build,
+      // vite.config.ts targets es2016 for consumers, but Storybook bundles dependencies the
+      // library leaves external — @formatjs/intl-durationformat ships BigInt literals, which
+      // cannot be lowered that far. Storybook only ever runs in a modern browser.
+      target: 'es2020',
+    },
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
