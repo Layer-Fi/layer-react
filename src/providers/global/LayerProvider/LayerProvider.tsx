@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { type PropsWithChildren, useMemo } from 'react'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
@@ -6,6 +6,7 @@ import type { LayerEvent } from '@schemas/common/layerEvents'
 import { type LayerError } from '@utils/shared/api/errorHandler'
 import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { DEFAULT_SWR_CONFIG } from '@utils/shared/swr/defaultSWRConfig'
+import { cacheRegistrationMiddleware, useIsolatedCacheProvider } from '@utils/shared/swr/isolatedSWRCache'
 import { localeKeyMiddleware } from '@utils/shared/swr/localeKeyMiddleware'
 import { AuthInputProvider } from '@providers/global/AuthInput/AuthInputProvider'
 import type { Environment, EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'
@@ -48,10 +49,9 @@ export const LayerProvider = ({
   usePlaidSandbox,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
-  const [cache] = useState(() => new Map())
-  const provider = useCallback(() => cache, [cache])
+  const provider = useIsolatedCacheProvider()
   const swrConfig = useMemo(
-    () => ({ ...DEFAULT_SWR_CONFIG, use: [localeKeyMiddleware], provider }),
+    () => ({ ...DEFAULT_SWR_CONFIG, use: [cacheRegistrationMiddleware, localeKeyMiddleware], provider }),
     [provider],
   )
 
