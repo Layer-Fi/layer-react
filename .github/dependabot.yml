@@ -2,7 +2,6 @@ version: 2
 
 # Lanes are separated by consumer exposure, not by convenience. Security updates are opened by
 # Dependabot regardless of the groups/limits below and are never grouped with unrelated upgrades.
-# See docs/dependency-policy.md for the triage rules these lanes are built around.
 updates:
   - package-ecosystem: npm
     directory: '/'
@@ -18,8 +17,8 @@ updates:
       prefix: 'chore(deps)'
       prefix-development: 'chore(deps-dev)'
 
-    # First matching group wins, so these run most-specific first. Each group is scoped so that a
-    # red PR points at one ecosystem instead of an unattributable pile of upgrades.
+    # First matching group wins, so these run most-specific first: a red PR points at one
+    # ecosystem rather than an unattributable pile.
     groups:
       storybook:
         applies-to: version-updates
@@ -61,8 +60,7 @@ updates:
         update-types:
           - minor
           - patch
-      # Runtime patches ship to consumers but are low-risk in aggregate. Runtime *minors* are
-      # deliberately left ungrouped so each one gets its own reviewable PR.
+      # Runtime *minors* are deliberately ungrouped, so each gets its own reviewable PR.
       runtime-patch:
         applies-to: version-updates
         dependency-type: production
@@ -70,13 +68,13 @@ updates:
           - patch
 
     ignore:
-      # Majors are scheduled, manually-reviewed work (monthly `npm outdated` review) rather than
-      # a PR that sits open and consumes the whole weekly limit. Security majors still come through.
+      # Majors are scheduled manual work; an open one would consume the whole weekly limit.
+      # Security majors still come through.
       - dependency-name: '*'
         update-types:
           - version-update:semver-major
-      # Both are intentional aliases (`npm:@typescript/typescript6`, `npm:typescript@^7`) that
-      # Dependabot cannot reason about, and `overrides.react-intl.typescript` points at `$typescript`.
+      # Intentional aliases Dependabot cannot reason about; `overrides.react-intl.typescript`
+      # points at `$typescript`.
       - dependency-name: typescript
       - dependency-name: '@typescript/native'
 

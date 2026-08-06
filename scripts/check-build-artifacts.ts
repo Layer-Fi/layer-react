@@ -1,14 +1,16 @@
 import fs from 'node:fs'
 import pkg from '../package.json'
 
-// Every path package.json points a consumer at. Derived rather than listed, so adding an export
-// without building it fails here instead of at install time in someone else's app.
-// Only the values: the keys of `exports` are subpath specifiers, not files on disk.
+// Derived from package.json rather than listed, so adding an export without building it fails
+// here instead of in someone else's install. Values only — `exports` keys are subpath specifiers.
 function exportedPaths(node: unknown): string[] {
   if (typeof node === 'string') return [node]
   if (node === null || typeof node !== 'object') return []
   return Object.values(node).flatMap(exportedPaths)
 }
+
+// Resolved implicitly as a sibling of dist/index.css, so it appears in no `exports` entry.
+const IMPLICIT_ARTIFACTS = ['dist/index.d.css.ts']
 
 function declaredArtifacts(): string[] {
   return [...new Set([
@@ -17,6 +19,7 @@ function declaredArtifacts(): string[] {
     pkg.types,
     pkg.style,
     ...exportedPaths(pkg.exports),
+    ...IMPLICIT_ARTIFACTS,
   ]
     .filter((value): value is string => typeof value === 'string')
     .map(value => value.replace(/^\.\//, '')))]
