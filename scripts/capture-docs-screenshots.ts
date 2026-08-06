@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { chromium } from 'playwright'
+import { chromium, type Page } from 'playwright'
 import { type DocsScreenshot, DOCS_SCREENSHOT_WIDTHS, DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
 import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serve-storybook-static'
 
@@ -11,6 +11,21 @@ const SETTLE_MS = 750
 // Ceiling on the Inter webfont preflight, so an unresponsive rsms.me fails the run rather
 // than hanging it.
 const FONT_LOAD_TIMEOUT_MS = 30_000
+
+// A stalled font response leaves document.fonts.ready pending forever, and page.evaluate has no
+// timeout of its own — so bound the wait in the page.
+//
+// Declaring a helper inside the callback would break this: tsx compiles with esbuild's keepNames,
+// which wraps named function bindings in a __name() call that does not exist in the page.
+function hasInterLoaded(page: Page) {
+  return page.evaluate(async (timeoutMs) => {
+    await Promise.race([
+      document.fonts.ready,
+      new Promise(resolve => setTimeout(resolve, timeoutMs)),
+    ])
+    return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
+  }, FONT_LOAD_TIMEOUT_MS)
+}
 
 function parseArgs() {
   const args = process.argv.slice(2)
@@ -42,8 +57,9 @@ async function main() {
   const failures: string[] = []
 
   // src/styles/index.scss pulls Inter from rsms.me, so every capture depends on that host being
-  // reachable. A silent fallback to the generic sans reads as a diff on all 36 images, so check
-  // the face actually loaded before capturing anything.
+  // reachable. A silent fallback to the generic sans reads as a diff on all 36 images, so fail
+  // fast here rather than after working through the whole manifest. Each capture re-checks in its
+  // own context, which is what actually guarantees the font for a given image.
   async function requireInterWebFont(storyId: string) {
     const page = await browser.newPage()
     let isLoaded = false
@@ -55,18 +71,7 @@ async function main() {
       await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`, { timeout: FONT_LOAD_TIMEOUT_MS })
       await page.waitForSelector('#storybook-root > *', { timeout: FONT_LOAD_TIMEOUT_MS })
 
-      // A stalled font response leaves document.fonts.ready pending forever, and page.evaluate
-      // has no timeout of its own — so bound the wait in the page.
-      //
-      // Declaring a helper in here would break the check: tsx compiles with esbuild's keepNames,
-      // which wraps named function bindings in a __name() call that does not exist in the page.
-      isLoaded = await page.evaluate(async (timeoutMs) => {
-        await Promise.race([
-          document.fonts.ready,
-          new Promise(resolve => setTimeout(resolve, timeoutMs)),
-        ])
-        return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
-      }, FONT_LOAD_TIMEOUT_MS)
+      isLoaded = await hasInterLoaded(page)
     }
     catch (error) {
       console.error(`Could not verify the Inter webfont: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`)
@@ -114,6 +119,12 @@ async function main() {
       })
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(SETTLE_MS)
+
+      // Contexts do not share a cache, so this story fetched the font itself and could have
+      // missed even though the preflight passed. Throwing here earns the retry below.
+      if (!await hasInterLoaded(page)) {
+        throw new Error('the Inter webfont (https://rsms.me/inter/inter.css) did not load')
+      }
 
       // Storybook ships the error display hidden in every iframe; only a shown one is real.
       if (await page.locator('.sb-show-errordisplay').count() > 0) {
