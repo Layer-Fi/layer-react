@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react'
 import type { Cache, Middleware, SWRHook } from 'swr'
 import { initCache, SWRGlobalState, useSWRConfig } from 'swr/_internal'
 
@@ -62,10 +63,20 @@ export const cacheRegistrationMiddleware: Middleware = (useSWRNext: SWRHook) => 
 }
 
 /**
- * Releases the focus/reconnect listeners installed by the most recent re-registration.
- * `SWRConfig` only ever releases the listeners from its own initial registration.
+ * A cache scoped to this mount, so our entries stay out of the host app's SWR cache and our
+ * cache-wide invalidations never touch theirs.
+ *
+ * Pair with {@link cacheRegistrationMiddleware} — the cleanup here releases the listeners
+ * installed by re-registration, which `SWRConfig` never does (it only ever releases the set
+ * from its own first registration).
  */
-export function releaseCacheRegistration(cache: Cache) {
-  releaseByCache.get(cache)?.()
-  releaseByCache.delete(cache)
+export function useIsolatedCacheProvider() {
+  const [cache] = useState(() => new Map())
+
+  useEffect(() => () => {
+    releaseByCache.get(cache)?.()
+    releaseByCache.delete(cache)
+  }, [cache])
+
+  return useCallback(() => cache, [cache])
 }
