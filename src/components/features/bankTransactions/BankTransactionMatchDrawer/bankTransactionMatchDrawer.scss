@@ -1,0 +1,9 @@
+.Layer__BankTransactionsMatchDrawer__ListContainer {
+  height: 100%;
+  padding-inline: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+}
+
+.Layer__BankTransactionsMatchDrawer__List {
+  overflow-y: auto;
+}
