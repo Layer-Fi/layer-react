@@ -28,9 +28,8 @@ export function bundleCss(): Plugin {
       }
 
       if (parts.length > 0) {
-        // Each part carries its own `@charset`, and concatenating them leaves one partway down
-        // the file — invalid, and every consumer's postcss build warns about it. Hoist a single
-        // declaration to the top instead.
+        // Concatenating leaves a part's own `@charset` partway down the file, which is invalid and
+        // warns in every consumer's postcss build. Strip them and hoist one to the top.
         const merged = parts
           .map(part => part.replace(/^[ \t]*@charset[^;]*;[ \t]*\r?\n?/gim, ''))
           .join('\n')

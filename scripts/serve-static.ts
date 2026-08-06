@@ -28,7 +28,7 @@ export function serveStatic(root: string, port: number) {
       file = path.join(resolvedRoot, requested === '/' ? 'index.html' : requested)
     }
     catch {
-      // Malformed percent-encoding throws, which would otherwise take the server down mid-run.
+      // Malformed percent-encoding throws, which would take the server down mid-run.
       res.writeHead(400).end()
       return
     }

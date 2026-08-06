@@ -1,16 +1,13 @@
 name: Consumer matrix
 
-# Installs the packed tarball into throwaway consumer apps and builds them. Every other PR check
-# reads from the repo, so this is the only one that can fail on a broken published artifact:
-# a missing `exports` condition, a file left out of `files`, a top-level `window` reference, or a
-# declaration file that resolves under only one module mode.
+# Installs the packed tarball into throwaway consumer apps and builds them — the only PR check that
+# reads the published artifact rather than the repo.
 
 on:
   pull_request:
     branches: [ main ]
-    # Globbed rather than enumerated: the type-packaging inputs (`scripts/build-types.ts`,
-    # `tsconfig.dts.json`, `tsconfig.build.json`, `rollup.dts.config.mjs`) all produce
-    # `dist/index.d.ts`, and listing files one by one is how they got missed.
+    # Globbed, not enumerated: the type-packaging inputs also produce `dist/index.d.ts`, and
+    # listing files one by one is how they got missed.
     paths:
       - 'src/**'
       - 'consumer-fixtures/**'
@@ -48,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # The vite-esm fixture is loaded in a real browser to catch mount-time failures.
+      # vite-esm loads in a real browser to catch mount-time failures.
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 

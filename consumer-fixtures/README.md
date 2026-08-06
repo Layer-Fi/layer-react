@@ -6,6 +6,9 @@ published package is broken: a missing `exports` condition, a file left out of `
 `window` reference, or a declaration file that only resolves under one module resolution mode are all
 invisible to `vitest` and to `build.yml`'s "does `dist/` contain four non-empty files" check.
 
+`npm pack` runs the `prepare` script regardless of `--ignore-scripts`, so a checkout without
+`husky` installed fails here with `sh: husky: command not found`. Run `npm ci` first.
+
 Run them with:
 
 ```
@@ -26,8 +29,8 @@ the script from the tarball under test.
 ## Adding a fixture
 
 Create a directory with a `package.json` that has a `verify` script and whatever deps it needs, then
-add it to `FIXTURES` in `scripts/pack-and-test-consumers.ts`. Keep dependencies minimal; the PR lane
-runs a subset and the release lane runs all of them, so install time is the main cost.
+add it to `FIXTURES` in `scripts/pack-and-test-consumers.ts`. Keep dependencies minimal — every
+fixture runs on every PR, so install time is the main cost.
 
-`react`/`react-dom` versions are injected by the script so one fixture can be run against several
-peer versions without duplicating it.
+Each fixture pins its own `react`/`react-dom`; the script injects nothing version-specific, so
+covering a second peer version means a second fixture directory.

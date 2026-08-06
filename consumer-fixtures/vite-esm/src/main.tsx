@@ -4,14 +4,12 @@ import '@layerfi/components/index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-// `Object.keys` on the namespace is not statically analysable, so nothing can be tree-shaken away
-// and `vite build` has to resolve every public entry's transitive imports out of the tarball. A
-// hand-listed subset would drift as the API grows.
+// `Object.keys` on the namespace defeats tree-shaking, so `vite build` has to resolve every
+// export's transitive imports out of the tarball.
 const exportCount = Object.keys(layer).length
 
-// Rendering the data-driven components would only produce network noise. Mounting the provider is
-// what exercises the runtime path; with no credentials passed, every SWR key stays null and nothing
-// is fetched.
+// No credentials, so every SWR key stays null and nothing is fetched. Rendering the data-driven
+// components would only add network noise; mounting the provider is the runtime path that matters.
 const eventCallbacks: EventCallbacks = {}
 
 function App() {

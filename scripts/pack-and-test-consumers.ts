@@ -5,9 +5,8 @@ import path from 'node:path'
 import { chromium } from 'playwright'
 import { serveStatic } from './serve-static'
 
-// Tests the artifact consumers install, not the source tree. `vitest` and `build.yml` both read
-// from the repo, so a missing `exports` condition, a file left out of `files`, a top-level `window`
-// reference, or a declaration file that only resolves under one module mode all pass CI today.
+// Tests the artifact consumers install, not the source tree: `vitest` and `build.yml` both read
+// from the repo, so a broken published package passes CI today.
 
 const FIXTURES_ROOT = 'consumer-fixtures'
 const PREVIEW_PORT = 6008
@@ -73,7 +72,7 @@ async function checkInBrowser(dist: string, cwd: string) {
   let browser
 
   try {
-    // Inside the try: a launch failure would otherwise leave the server holding the port.
+    // Inside the try, or a launch failure leaves the server holding the port.
     browser = await chromium.launch()
     const page = await browser.newPage()
 
@@ -102,8 +101,8 @@ async function runFixture(fixture: typeof FIXTURES[number], tarball: string) {
   console.info(`\n=== ${fixture.name} ===`)
 
   try {
-    // `--no-package-lock` keeps fixture lockfiles out of the repo, and `--no-save` on the
-    // tarball keeps npm from writing its temp path into the fixture's manifest.
+    // `--no-package-lock` keeps lockfiles out of the repo; `--no-save` keeps npm from writing the
+    // tarball's temp path into the fixture manifest.
     run('npm', ['install', '--no-package-lock', '--no-audit', '--no-fund'], cwd)
     run('npm', ['install', '--no-package-lock', '--no-save', '--no-audit', '--no-fund', tarball], cwd)
     run('npm', ['run', 'verify'], cwd)
@@ -124,8 +123,7 @@ async function runFixture(fixture: typeof FIXTURES[number], tarball: string) {
   return true
 }
 
-// Returns false rather than exiting, so the caller's cleanup actually runs — `process.exit()`
-// skips `finally`.
+// Returns a status rather than exiting: `process.exit()` would skip the `finally` cleanup.
 async function main() {
   const requested = process.argv.filter((_, index) => process.argv[index - 1] === '--fixture')
   const unknown = requested.filter(name => !FIXTURES.some(fixture => fixture.name === name))

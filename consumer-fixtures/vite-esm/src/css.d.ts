@@ -1,9 +1,4 @@
-// FINDING (fix proposed for the packaging phase): consumers on TypeScript 5.6+ with
-// `noUncheckedSideEffectImports` enabled — which this library's own tsconfig turns on — cannot
-// `import '@layerfi/components/index.css'` without declaring it themselves. The `exports` entry
-// resolves fine for bundlers, but tsc wants a declaration and the package ships none.
-//
-// The library-side fix is to emit `dist/index.d.css.ts` and let consumers set
-// `allowArbitraryExtensions`. Until then every consumer needs this shim, so the fixture carries
-// it to document the cost rather than hiding it by loosening the compiler options.
+// Every consumer needs this shim: under `noUncheckedSideEffectImports` (TS 5.6+) the CSS import
+// needs a declaration and the package ships none. Kept here rather than loosening the fixture's
+// compiler options, so the cost stays visible. Library-side fix (`dist/index.d.css.ts`) is phase 3.
 declare module '@layerfi/components/index.css'
