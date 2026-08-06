@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   audit:
@@ -43,7 +42,10 @@ jobs:
             audit-all.json
             audit-prod.json
 
-      - name: Create/update daily vulnerability issue
+      # Reports to the run summary rather than an issue: Dependabot alerts already track
+      # per-advisory state for this repo, so a second tracker would only duplicate it.
+      - name: Summarize audit
+        id: report
         uses: actions/github-script@v7
         env:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
@@ -63,7 +65,9 @@ jobs:
             const prod = read('audit-prod.json');
 
             if (!all?.vulnerabilities) {
-              console.log('No vulnerability data available.');
+              core.setOutput('total', 'unknown');
+              core.setOutput('runtime', 'unknown');
+              core.setFailed('audit-all.json missing or unparseable.');
               return;
             }
 
@@ -81,14 +85,17 @@ jobs:
               core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
             }
 
-            if (vulns.length === 0) {
-              console.log('No moderate+ vulnerabilities found.');
-              return;
-            }
-
             const runtimeNames = new Set(toList(prod).map(v => v.name));
             const runtime = prodAvailable ? vulns.filter(v => runtimeNames.has(v.name)) : vulns;
             const dev = prodAvailable ? vulns.filter(v => !runtimeNames.has(v.name)) : [];
+
+            core.setOutput('total', String(vulns.length));
+            core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
+
+            if (vulns.length === 0) {
+              await core.summary.addRaw('No moderate+ vulnerabilities.\n').write();
+              return;
+            }
 
             const describeVia = v => Array.isArray(v.via)
               ? v.via.map(x => (typeof x === 'string' ? x : x.title || x.name)).join(', ')
@@ -110,10 +117,11 @@ jobs:
               return header + body + truncated;
             };
 
-            const body = [
+            const alerts = `https://github.com/${context.repo.owner}/${context.repo.repo}/security/dependabot`;
+
+            const summary = [
               prodAvailable
-                ? `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
-                  + `**${dev.length}** dev/CI-only (moderate+).\n`
+                ? `**${runtime.length}** consumer-facing, **${dev.length}** dev/CI-only (moderate+).\n`
                 : '> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n'
                   + `> exposure could not be separated. All **${vulns.length}** moderate+ findings are\n`
                   + '> listed below as potentially consumer-facing. The workflow run is marked failed.\n',
@@ -122,48 +130,34 @@ jobs:
               `## Dev / CI only — ${dev.length}\n`,
               table(dev),
               '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
-                + '> Triage rules and SLAs: `docs/dependency-policy.md`.\n',
+                + `> Per-advisory state lives in [Dependabot alerts](${alerts}); triage rules and SLAs:\n`
+                + '> `docs/dependency-policy.md`.\n',
               process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
             ].filter(Boolean).join('\n');
 
-            const repo = { owner: context.repo.owner, repo: context.repo.repo };
-            const open = await github.rest.issues.listForRepo({
-              ...repo,
-              labels: 'automated-vuln-report',
-              state: 'open'
-            });
+            await core.summary.addRaw(summary).write();
 
-            if (open.data?.length > 0) {
-              const issueNumber = open.data[0].number;
-              await github.rest.issues.createComment({ ...repo, issue_number: issueNumber, body });
-              console.log(`Appended comment to issue #${issueNumber}`);
-            } else {
-              const created = await github.rest.issues.create({
-                ...repo,
-                title: `Daily npm audit — ${new Date().toISOString().slice(0, 10)}`,
-                body,
-                labels: ['automated-vuln-report']
-              });
-              console.log(`Created issue #${created.data.number}`);
-            }
-
-      # A broken audit is when the ping matters most, so this runs on failure too.
+      # A broken audit is when the ping matters most, so this runs on failure too. Counts come
+      # from the step above rather than a second jq pass, so both reports cannot disagree.
       - name: Send Slack notification
         if: ${{ !cancelled() }}
+        env:
+          RUNTIME: ${{ steps.report.outputs.runtime }}
+          TOTAL: ${{ steps.report.outputs.total }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "${{ secrets.SLACK_WEBHOOK }}" ]; then
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
-          # `|| echo unknown` is load-bearing: under `bash -e` a bare assignment from a failing jq
-          # exits the step, and an unreadable audit must still report rather than look like zero.
-          count() { jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' "$1" 2>/dev/null || echo unknown; }
-          RUNTIME=$(count audit-prod.json)
-          TOTAL=$(count audit-all.json)
-          if [ "$TOTAL" != "0" ]; then
-            PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" \
-              '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ vulnerabilities — see GitHub issues for details.")}')
-            curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
-          else
+          # Unset when the summarize step died before setting outputs — still worth a ping, and
+          # `unknown` must not take the "nothing to report" branch the way 0 would.
+          RUNTIME=${RUNTIME:-unknown}
+          TOTAL=${TOTAL:-unknown}
+          if [ "$TOTAL" = "0" ]; then
             echo "No vulnerabilities to report to Slack."
+            exit 0
           fi
+          PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" --arg url "$RUN_URL" \
+            '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ — <" + $url + "|run summary>")}')
+          curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
