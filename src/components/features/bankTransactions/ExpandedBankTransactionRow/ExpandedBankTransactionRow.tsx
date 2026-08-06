@@ -49,6 +49,7 @@ import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorS
 import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './expandedBankTransactionRow.scss'
+import { BankTransactionMatchDrawer } from '../BankTransactionMatchDrawer/BankTransactionMatchDrawer'
 
 export type ExpandedRowState = {
   splits: Split[]
@@ -162,6 +163,7 @@ export const ExpandedBankTransactionRow = ({
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
+  const [isBankTransactionMatchDrawerOpen, setIsBankTransactionMatchDrawerOpen] = useState(false)
 
   const toggleOptions = useMemo(() => [
     {
@@ -171,7 +173,8 @@ export const ExpandedBankTransactionRow = ({
     {
       value: BankTransactionSelectionVariant.MATCH,
       label: t('bankTransactions:label.match', 'Match'),
-      disabled: !hasMatch(bankTransaction),
+      // disabled: !hasMatch(bankTransaction),
+      // user should be able to manually access matching flow, even without initial suggested match
       disabledMessage: t('bankTransactions:error.matching_transactions_not_found', 'We could not find matching transactions'),
     },
   ], [t, bankTransaction])
@@ -200,7 +203,7 @@ export const ExpandedBankTransactionRow = ({
             id={`expanded-${bankTransaction.id}`}
           >
             <div className='Layer__expanded-bank-transaction-row__content-panels'>
-              <div
+              {hasMatch(bankTransaction) ? (<div
                 className={classNames(
                   'Layer__expanded-bank-transaction-row__content-panel',
                   {
@@ -220,8 +223,22 @@ export const ExpandedBankTransactionRow = ({
                     matchFormError={matchFormError}
                   />
                 </div>
-              </div>
-
+              </div>)
+              : (<div className={classNames(
+                'Layer__expanded-bank-transaction-row__content-panel',
+                {
+                  'Layer__expanded-bank-transaction-row__content-panel--active': purpose === BankTransactionSelectionVariant.MATCH,
+                },
+              )}>
+                <div className='Layer__expanded-bank-transaction-row__content-panel-container'>
+                  
+                  <p className='Layer__expanded-bank-transaction-row__content-empty-message'>{
+                  t('bankTransactions:error.no_suggested_matches_found', 'No suggested matches found')}</p>
+                  <Button variant='solid' onClick={() => setIsBankTransactionMatchDrawerOpen(true)}>
+                    {t('common:action.match', 'Match')}
+                  </Button>
+                </div>
+              </div>)}
               <div
                 className={classNames(
                   'Layer__expanded-bank-transaction-row__splits',
@@ -367,6 +384,12 @@ export const ExpandedBankTransactionRow = ({
             />
           </div>
         </VStack>
+        
+        <BankTransactionMatchDrawer
+          isOpen={isBankTransactionMatchDrawerOpen}
+          onOpenChange={setIsBankTransactionMatchDrawerOpen}
+          bankTransaction={bankTransaction}
+        />
       </div>
     </div>
   )
