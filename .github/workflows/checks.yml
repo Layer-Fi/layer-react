@@ -41,8 +41,10 @@ jobs:
             run: npm run msw:check-coverage
           - name: Translations
             run: npm run i18n:check
+          # `lint:package` and `test:types` both read `dist/`, so they ride along here rather than
+          # rebuilding in a job of their own.
           - name: Build
-            run: npm run build && npm run build:check
+            run: npm run build && npm run build:check && npm run lint:package && npm run test:types
 
     steps:
     - uses: actions/checkout@v4

@@ -5,8 +5,8 @@ import path from 'node:path'
 import { chromium } from 'playwright'
 import { serveStatic } from './serve-static'
 
-// Tests the artifact consumers install, not the source tree: `vitest` and `build.yml` both read
-// from the repo, so a broken published package passes CI today.
+// Tests the artifact consumers install, not the source tree: every other check reads the repo,
+// so a broken published package passes them.
 
 const FIXTURES_ROOT = 'consumer-fixtures'
 const PREVIEW_PORT = 6008
@@ -101,8 +101,8 @@ async function runFixture(fixture: typeof FIXTURES[number], tarball: string) {
   console.info(`\n=== ${fixture.name} ===`)
 
   try {
-    // `--no-package-lock` keeps lockfiles out of the repo; `--no-save` keeps npm from writing the
-    // tarball's temp path into the fixture manifest.
+    // `--no-package-lock` keeps lockfiles out of the repo; `--no-save` keeps the tarball's temp
+    // path out of the fixture manifest.
     run('npm', ['install', '--no-package-lock', '--no-audit', '--no-fund'], cwd)
     run('npm', ['install', '--no-package-lock', '--no-save', '--no-audit', '--no-fund', tarball], cwd)
     run('npm', ['run', 'verify'], cwd)
