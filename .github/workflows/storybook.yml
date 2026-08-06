@@ -1,10 +1,35 @@
 name: Storybook
 
+# Rendering every story is the only check that covers feature and view stories — Chromatic is
+# scoped to the design system — so it stays, but a PR that cannot affect a story should not pay
+# for a Storybook build, a Chromium install and a full render pass.
+
 on:
   pull_request:
+    branches: [ main ]
+    paths:
+      - src/**
+      - '!src/**/*.test.ts'
+      - '!src/**/*.test.tsx'
+      - '!src/**/*.test-d.ts'
+      - '!src/**/SKILL.md'
+      - .storybook/**
+      - scripts/check-stories-render.ts
+      - scripts/check-docs-screenshots.ts
+      - scripts/docs-screenshots.manifest.ts
+      - scripts/serve-storybook-static.ts
+      - vite.config.ts
+      - tsconfig.json
+      - package.json
+      - package-lock.json
+      - .github/workflows/storybook.yml
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
