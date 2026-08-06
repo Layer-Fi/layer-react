@@ -52,6 +52,7 @@ concurrency:
 
 jobs:
   sync:
+    name: Crowdin sync
     runs-on: ubuntu-latest
 
     steps:

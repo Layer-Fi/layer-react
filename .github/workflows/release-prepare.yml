@@ -43,6 +43,7 @@ permissions:
 
 jobs:
   prepare:
+    name: Prepare release
     runs-on: ubuntu-latest
 
     steps:

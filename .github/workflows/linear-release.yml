@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   sync:
+    name: Sync Linear release
     runs-on: ubuntu-latest
 
     steps:

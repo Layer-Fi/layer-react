@@ -37,6 +37,7 @@ permissions:
 
 jobs:
   publish:
+    name: Publish
     runs-on: ubuntu-latest
 
     outputs:
@@ -170,6 +171,7 @@ jobs:
   # Refresh the api-documentation screenshots against what just shipped. Opens a PR
   # there; no PR if nothing moved.
   docs-screenshots:
+    name: Refresh docs screenshots
     needs: publish
     if: ${{ needs.publish.outputs.type == 'stable' && !inputs.dry_run }}
     uses: ./.github/workflows/docs-screenshots.yml
