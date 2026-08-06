@@ -37,27 +37,25 @@ async function main() {
   const browser = await chromium.launch()
   const failures: string[] = []
 
-  // A host without Inter captures the whole set in the fallback sans, which reads as a diff on
-  // every image. Compare against a family that cannot exist: equal widths mean both fell back.
-  async function requireInter() {
+  // src/styles/index.scss pulls Inter from rsms.me, so every capture depends on that host being
+  // reachable. A silent fallback to the generic sans reads as a diff on all 36 images, so check
+  // the face actually loaded before capturing anything.
+  async function requireInterWebFont(storyId: string) {
     const page = await browser.newPage()
     try {
+      await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`)
+      await page.waitForSelector('#storybook-root > *', { timeout: 30_000 })
+
       // Declaring a helper in here would break the check: tsx compiles with esbuild's keepNames,
       // which wraps named function bindings in a __name() call that does not exist in the page.
-      const widths = await page.evaluate((sample) => {
-        const context = document.createElement('canvas').getContext('2d')
-        if (context === null) return null
+      const isLoaded = await page.evaluate(async () => {
+        await document.fonts.ready
+        return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
+      })
 
-        context.font = '48px Inter'
-        const inter = context.measureText(sample).width
-        context.font = '48px __Layer__MissingFont__'
-
-        return { inter, fallback: context.measureText(sample).width }
-      }, 'Revenue December 2025')
-
-      if (widths === null || widths.inter === widths.fallback) {
-        console.error('Inter is not installed on this host, so every capture would use the fallback sans.')
-        console.error('Install it (macOS: `brew install --cask font-inter`, Debian/Ubuntu: `apt-get install fonts-inter`) and re-run.')
+      if (!isLoaded) {
+        console.error('The Inter webfont (https://rsms.me/inter/inter.css) did not load, so every capture')
+        console.error('would fall back to the generic sans. Check network access to rsms.me and re-run.')
         await browser.close()
         server.close()
         process.exit(1)
@@ -68,7 +66,7 @@ async function main() {
     }
   }
 
-  await requireInter()
+  await requireInterWebFont(targets[0].storyId)
 
   async function capture({ storyId, out: file, viewport, interactAt, maxHeight, captureViewport }: DocsScreenshot) {
     const context = await browser.newContext({

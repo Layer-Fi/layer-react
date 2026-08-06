@@ -32,7 +32,7 @@ on:
         type: string
         default: main
       dry_run:
-        description: 'Capture and upload artifacts, but open no PR'
+        description: 'Dry run'
         type: boolean
         default: true
 
@@ -58,14 +58,6 @@ jobs:
 
     - name: Install Chromium
       run: npx playwright install --with-deps chromium
-
-    # --font-family resolves to Inter, which the runner doesn't ship. Without it every capture
-    # silently falls back to the generic sans and the whole image set changes.
-    - name: Install Inter
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y fonts-inter fonts-inter-variable
-        fc-cache -f
 
     - name: Build Storybook
       run: npm run storybook:build
