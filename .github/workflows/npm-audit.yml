@@ -138,18 +138,20 @@ jobs:
               const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
               for (const pr of openPrs.filter(pr => pr.user?.login === 'dependabot[bot]')) {
                 for (const name of packagesIn(pr)) {
-                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), `[#${pr.number}](${pr.html_url})`]);
+                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), { number: pr.number, url: pr.html_url }]);
                 }
               }
             } catch (error) {
               core.warning(`Could not list open PRs, omitting fix links: ${error.message}`);
             }
 
+            const prLinks = v => (fixPrs.get(v.name) ?? []).map(pr => `[#${pr.number}](${pr.url})`).join(', ');
+
             const table = (rows) => {
               if (rows.length === 0) return '_None._\n';
               const header = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
               const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${fixPrs.get(v.name)?.join(', ') ?? '—'} | ${describeVia(v)} |\n`)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${prLinks(v) || '—'} | ${describeVia(v)} |\n`)
                 .join('');
               const truncated = rows.length > 50
                 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
@@ -177,16 +179,43 @@ jobs:
 
             await core.summary.addRaw(summary).write();
 
+            // Slack gets counts, not rows: it has no table primitive, and a fixed-width block would
+            // not reflow on mobile. One bolded header per environment, then a bullet per severity.
+            const SEVERITY_EMOJI = { critical: '🚨', high: '🔴', moderate: '🟠', low: '🟡' };
+
+            const section = (title, rows) => {
+              const bullets = [...SEVERITIES].reverse()
+                .map(severity => ({ severity, count: rows.filter(v => v.severity === severity).length }))
+                .filter(({ count }) => count > 0)
+                .map(({ severity, count }) => `• ${SEVERITY_EMOJI[severity]} ${count} ${severity}`);
+              return [`*${title} (${rows.length})*`, ...(bullets.length ? bullets : ['• none'])].join('\n');
+            };
+
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`;
+            const linked = runtime.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`));
+
+            core.setOutput('slack', [
+              `[${repo.owner}/${repo.repo}] npm audit — ${vulns.length} findings`,
+              prodAvailable
+                ? section('Consumer-facing', runtime)
+                : section(`⚠️ Potentially consumer-facing — prod audit unusable, split unknown`, vulns),
+              prodAvailable ? section('Dev / CI only', dev) : '',
+              linked.length ? `Open fix PRs: ${[...new Set(linked)].join(' ')}` : '',
+              `Details: <${runUrl}|run summary> · <${alerts}|Dependabot alerts>`,
+            ].filter(Boolean).join('\n\n'));
+
       # A broken audit is when the ping matters most, so this runs on failure too. Counts come
       # from the step above rather than a second jq pass, so both reports cannot disagree.
       - name: Send Slack notification
         if: ${{ !cancelled() }}
         env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TEXT: ${{ steps.report.outputs.slack }}
           RUNTIME: ${{ steps.report.outputs.runtime }}
           TOTAL: ${{ steps.report.outputs.total }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -z "${{ secrets.SLACK_WEBHOOK }}" ]; then
+          if [ -z "$SLACK_WEBHOOK" ]; then
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
@@ -198,9 +227,11 @@ jobs:
             echo "No vulnerabilities to report to Slack."
             exit 0
           fi
-          PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" --arg url "$RUN_URL" \
-            '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total — <" + $url + "|run summary>")}')
+          if [ -z "$SLACK_TEXT" ]; then
+            SLACK_TEXT="[$GITHUB_REPOSITORY] npm audit: $RUNTIME consumer-facing, $TOTAL total — <$RUN_URL|run summary>"
+          fi
+          PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" '{text: $text}')
           # --fail-with-body: Slack answers a dead or revoked webhook with 4xx and a reason, which
           # plain `curl -s` would swallow as exit 0 — a lost ping that looks like a delivered one.
           curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
-            --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
+            --data "$PAYLOAD" "$SLACK_WEBHOOK"
