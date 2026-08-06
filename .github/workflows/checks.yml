@@ -114,6 +114,6 @@ jobs:
           echo "No scratch stories found."
           exit 0
         fi
-        echo "$FILES" | sed 's/^/  - /'
+        while IFS= read -r file; do echo "  - $file"; done <<< "$FILES"
         echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
         exit 1
