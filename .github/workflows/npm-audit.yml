@@ -121,34 +121,32 @@ jobs:
 
             const repo = { owner: context.repo.owner, repo: context.repo.repo };
 
-            // Single-package PRs name it in the title; grouped PRs list each one in the body as
-            // "Updates `pkg` from". Fix links are a convenience, so a failed lookup just omits them.
+            // A single-package PR names it in the title, a grouped PR lists each one in the body.
+            const packagesIn = (pr) => {
+              const grouped = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
+              const single = pr.title.match(/bump (@?[\w./-]+) from/i);
+              return single ? [...grouped, single[1]] : grouped;
+            };
+
+            // Fix links are a convenience: a failed listing empties the column rather than taking
+            // the report down. pulls.list returns newest first, so the first match wins.
             const fixPrs = new Map();
             try {
-              const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
-              for (const pr of open) {
-                if (pr.user?.login !== 'dependabot[bot]') continue;
-                const names = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
-                const titled = pr.title.match(/[Bb]ump (@?[\w./-]+) from/);
-                if (titled) names.push(titled[1]);
-                for (const name of names) {
-                  if (!fixPrs.has(name)) fixPrs.set(name, pr);
+              const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              for (const pr of openPrs.filter(pr => pr.user?.login === 'dependabot[bot]')) {
+                for (const name of packagesIn(pr)) {
+                  if (!fixPrs.has(name)) fixPrs.set(name, `[#${pr.number}](${pr.html_url})`);
                 }
               }
             } catch (error) {
               core.warning(`Could not list open PRs, omitting fix links: ${error.message}`);
             }
 
-            const describePr = (v) => {
-              const pr = fixPrs.get(v.name);
-              return pr ? `[#${pr.number}](${pr.html_url})` : '—';
-            };
-
             const table = (rows) => {
               if (rows.length === 0) return '_None._\n';
               const header = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
               const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${describePr(v)} | ${describeVia(v)} |\n`)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${fixPrs.get(v.name) ?? '—'} | ${describeVia(v)} |\n`)
                 .join('');
               const truncated = rows.length > 50
                 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
@@ -156,7 +154,7 @@ jobs:
               return header + body + truncated;
             };
 
-            const alerts = `https://github.com/${context.repo.owner}/${context.repo.repo}/security/dependabot`;
+            const alerts = `https://github.com/${repo.owner}/${repo.repo}/security/dependabot`;
 
             const summary = [
               prodAvailable
