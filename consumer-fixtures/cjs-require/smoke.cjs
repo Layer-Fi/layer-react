@@ -3,22 +3,10 @@
 // would otherwise only surface in a consumer's app.
 const pkg = require('@layerfi/components')
 
-const REQUIRED_EXPORTS = [
-  'LayerProvider',
-  'BankTransactions',
-  'ProfitAndLoss',
-  'BalanceSheet',
-  'ChartOfAccounts',
-  'Journal',
-  'LinkedAccounts',
-  'Tasks',
-  'useLayerContext',
-]
-
-const missing = REQUIRED_EXPORTS.filter(name => typeof pkg[name] === 'undefined')
-
-if (missing.length > 0) {
-  console.error(`Missing from the CJS build: ${missing.join(', ')}`)
+// Interop, not API surface: a broken ESM→CJS wrapper resolves and executes but leaves the
+// namespace empty. Enumerating exports here would only duplicate the public-API snapshot.
+if (typeof pkg.LayerProvider !== 'function') {
+  console.error(`require() resolved but LayerProvider is ${typeof pkg.LayerProvider}`)
   process.exit(1)
 }
 

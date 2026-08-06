@@ -8,16 +8,19 @@ name: Consumer matrix
 on:
   pull_request:
     branches: [ main ]
+    # Globbed rather than enumerated: the type-packaging inputs (`scripts/build-types.ts`,
+    # `tsconfig.dts.json`, `tsconfig.build.json`, `rollup.dts.config.mjs`) all produce
+    # `dist/index.d.ts`, and listing files one by one is how they got missed.
     paths:
       - 'src/**'
       - 'consumer-fixtures/**'
-      - 'scripts/pack-and-test-consumers.ts'
-      - 'scripts/serve-static.ts'
-      - 'vite.config.ts'
+      - 'scripts/**'
       - 'vite/**'
+      - 'vite.config.ts'
+      - 'tsconfig*.json'
+      - 'rollup*.mjs'
       - 'package.json'
       - 'package-lock.json'
-      - 'tsconfig.json'
       - '.github/workflows/consumer-matrix.yml'
   workflow_call: {}
   workflow_dispatch: {}

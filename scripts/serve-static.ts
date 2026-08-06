@@ -19,11 +19,23 @@ const MIME: Record<string, string> = {
 }
 
 export function serveStatic(root: string, port: number) {
-  const server = http.createServer((req, res) => {
-    const requested = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname)
-    const file = path.join(root, requested === '/' ? 'index.html' : requested)
+  const resolvedRoot = path.resolve(root)
 
-    if (!path.resolve(file).startsWith(path.resolve(root)) || !fs.existsSync(file)) {
+  const server = http.createServer((req, res) => {
+    let file: string
+    try {
+      const requested = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname)
+      file = path.join(resolvedRoot, requested === '/' ? 'index.html' : requested)
+    }
+    catch {
+      // Malformed percent-encoding throws, which would otherwise take the server down mid-run.
+      res.writeHead(400).end()
+      return
+    }
+
+    // `path.relative` rather than a prefix test: `/tmp/root2` starts with `/tmp/root`.
+    const relative = path.relative(resolvedRoot, file)
+    if (relative.startsWith('..') || path.isAbsolute(relative) || !fs.existsSync(file)) {
       res.writeHead(404).end()
       return
     }
