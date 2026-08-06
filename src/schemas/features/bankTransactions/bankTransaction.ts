@@ -121,6 +121,9 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(SuggestedMatchSchema)),
     Schema.fromKey('suggested_matches'),
   ),
+  // TODO: match shape might have to change due to multiple
+  // matches: Schema.Array(MatchSchema),
+  // match is multiple
   match: Schema.NullishOr(MatchSchema),
   transactionTags: pipe(
     Schema.propertySignature(Schema.Array(TransactionTagSchema)),

@@ -41,6 +41,7 @@ export const MatchSchema = Schema.Struct({
     Schema.fromKey('bank_transaction'),
   ),
   details: MatchDetailsSchema,
+  // TODO:match details schema change, account for multiple matches
 })
 
 export type Match = typeof MatchSchema.Type
