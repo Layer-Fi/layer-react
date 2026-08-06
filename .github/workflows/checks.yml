@@ -80,15 +80,15 @@ jobs:
     # `!cancelled()` so one failing check does not skip the rest — without a status function the
     # `if` gets an implicit `success()`. Still gated on the build: without `dist/` these would only
     # report a missing file.
-    - name: Check build artifacts
+    - name: Entrypoints
       if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       run: npm run build:check
 
-    - name: Lint the package manifest
+    - name: Package exports
       if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       run: npm run lint:package
 
-    - name: Type contracts
+    - name: Published types
       if: ${{ !cancelled() && steps.build.outcome == 'success' }}
       run: npm run test:types
 
