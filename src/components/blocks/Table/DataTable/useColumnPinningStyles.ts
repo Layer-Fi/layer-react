@@ -69,30 +69,56 @@ export const useColumnPinningStyles = <TData>(
     const container = containerRef.current
     if (!container) return
 
-    const resizeObserver = new ResizeObserver(() => measure())
+    let measureFrame: number | null = null
+    let subscribeFrame: number | null = null
 
-    // Measure and compute sticky offsets before paint so pinned columns move together.
+    const onNextFrame = (frame: number | null, run: () => void) => {
+      if (frame !== null) return frame
+      return requestAnimationFrame(run)
+    }
+
     const measure = () => {
       const cells = getLeafHeaderCells(container)
       if (cells.length === 0) return
-
-      // Keep offsets in sync when column widths change after the initial layout.
-      resizeObserver.disconnect()
-      cells.forEach(cell => resizeObserver.observe(cell))
 
       const widths = getColumnHeaderWidths(leafColumnIds, cells)
       const nextPinningStyles = computePinningStyles(headerGroups, widths)
       setPinningStyles(current => arePinningStylesEqual(current, nextPinningStyles) ? current : nextPinningStyles)
     }
 
+    // Measuring writes sticky offsets back onto the observed cells, so defer out of the observer
+    // callback to avoid "ResizeObserver loop completed with undelivered notifications".
+    const resizeObserver = new ResizeObserver(() => {
+      measureFrame = onNextFrame(measureFrame, () => {
+        measureFrame = null
+        measure()
+      })
+    })
+
+    // Subscribing fires an initial observation, which is what drives the measure. Only the mutation
+    // observer may call this — resizing into it would re-arm the observer on every callback.
+    const subscribeToHeaderCells = () => {
+      resizeObserver.disconnect()
+      getLeafHeaderCells(container).forEach(cell => resizeObserver.observe(cell))
+    }
+
+    // Compute sticky offsets before paint so pinned columns land in place on the first frame.
     measure()
+    subscribeToHeaderCells()
 
     // react-aria builds its collection after the first commit, so the header cells this measures
-    // don't exist yet on the ARIA path — watch for them instead of measuring once.
-    const mutationObserver = new MutationObserver(() => measure())
+    // don't exist yet on the ARIA path — resubscribe as they appear and change.
+    const mutationObserver = new MutationObserver(() => {
+      subscribeFrame = onNextFrame(subscribeFrame, () => {
+        subscribeFrame = null
+        subscribeToHeaderCells()
+      })
+    })
     mutationObserver.observe(container, { childList: true, subtree: true })
 
     return () => {
+      if (measureFrame !== null) cancelAnimationFrame(measureFrame)
+      if (subscribeFrame !== null) cancelAnimationFrame(subscribeFrame)
       resizeObserver.disconnect()
       mutationObserver.disconnect()
     }
