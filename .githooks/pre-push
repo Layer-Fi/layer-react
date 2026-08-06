@@ -1,4 +1,8 @@
 #!/usr/bin/env sh
+# git execs this directly, so -e is not inherited from anywhere; without it the
+# hook would exit with only the last command's status and mask earlier failures.
+set -e
+
 export PATH="node_modules/.bin:$PATH"
 
 # core.hooksPath is relative, so a worktree resolves its own tracked copy of this
