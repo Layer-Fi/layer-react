@@ -80,7 +80,7 @@ jobs:
             // empty runtime set would report "0 consumer-facing" and hide real exposure, so fail
             // toward over-reporting: treat everything as potentially consumer-facing and mark the
             // step failed so someone looks.
-            const prodAvailable = Boolean(prod && prod.vulnerabilities);
+            const prodAvailable = !!(prod && prod.vulnerabilities);
             if (!prodAvailable) {
               core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
             }
@@ -172,8 +172,10 @@ jobs:
             exit 1
           fi
           count() { jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' "$1" 2>/dev/null; }
-          RUNTIME=$(count audit-prod.json); RUNTIME=${RUNTIME:-unknown}
-          TOTAL=$(count audit-all.json); TOTAL=${TOTAL:-0}
+          # `|| true` inside the substitution: the step runs under `bash -e`, where a failing jq in a
+          # bare assignment exits before the fallbacks below can apply.
+          RUNTIME=$(count audit-prod.json || true); RUNTIME=${RUNTIME:-unknown}
+          TOTAL=$(count audit-all.json || true); TOTAL=${TOTAL:-unknown}
           if [ "$TOTAL" != "0" ]; then
             PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" \
               '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ vulnerabilities — see GitHub issues for details.")}')
