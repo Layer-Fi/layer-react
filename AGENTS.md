@@ -45,7 +45,11 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 Those skills plus this file are the only convention docs — each is the single source of truth
 for its area, so update the relevant one when a convention changes rather than describing it
 somewhere new. Cross-cutting rules (TypeScript, imports, lint, commands, CI) live here, because
-they belong to no single directory. The remaining root docs are not agent instructions:
+they belong to no single directory. [`.cursor/BUGBOT.md`](.cursor/BUGBOT.md) and
+[`.augment/code_review_guidelines.yaml`](.augment/code_review_guidelines.yaml) are the same idea
+for the PR reviewers — the two say the same thing in each tool's format, so update both whenever a
+non-negotiable here changes, or they drift silently.
+The remaining root docs are not agent instructions:
 [`README.md`](README.md) is consumer-facing usage and [`PUBLISHING.md`](PUBLISHING.md) is the
 release process.
 
