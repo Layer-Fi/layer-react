@@ -39,7 +39,7 @@
     "lint:stylelint": "stylelint '**/*.{css,scss}'",
     "migrate:aliases": "tsx scripts/migrate-import-aliases.ts",
     "prepack": "npm run typecheck && npm run build:clean",
-    "prepare": "husky",
+    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "screenshots:capture": "tsx scripts/capture-docs-screenshots.ts",
     "screenshots:check": "tsx scripts/check-docs-screenshots.ts",
     "stories:check-render": "tsx scripts/check-stories-render.ts",
@@ -90,7 +90,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.1.4",
-    "husky": "^9.1.7",
     "i18next-cli": "^1.49.4",
     "jsdom": "^27.0.1",
     "lint-staged": "^16.2.3",
@@ -117,6 +116,7 @@
     "vitest": "^4.1.9"
   },
   "lint-staged": {
+    "*.{js,jsx,mjs,cjs,ts,tsx}": "eslint --fix --no-warn-ignored",
     "*.{css,scss}": "stylelint --fix"
   },
   "overrides": {
