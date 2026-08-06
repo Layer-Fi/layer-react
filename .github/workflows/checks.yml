@@ -4,7 +4,7 @@ name: Checks
 # keeps them as separate, independently reportable jobs while the setup lives in one place.
 #
 # Anything with its own shape stays in its own file: Bundle Size (two builds against different
-# refs), Storybook, Chromatic, and Scratch Stories Guard (needs no npm install at all).
+# refs), Storybook, and Chromatic.
 
 on:
   pull_request:
@@ -57,3 +57,25 @@ jobs:
 
     - name: ${{ matrix.name }}
       run: ${{ matrix.run }}
+
+  # Its own job rather than a matrix entry: it needs no dependencies, and it inspects the PR head
+  # rather than the merge commit, so it shares none of the setup above.
+  scratch-stories:
+    name: Scratch stories
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check for scratch stories
+      run: |
+        FILES=$(git ls-files '*scratch.stories.tsx')
+        if [ -z "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        echo "$FILES" | sed 's/^/  - /'
+        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
+        exit 1
