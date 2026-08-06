@@ -120,17 +120,19 @@ async function main() {
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(SETTLE_MS)
 
-      // Contexts do not share a cache, so this story fetched the font itself and could have
-      // missed even though the preflight passed. Throwing here earns the retry below.
-      if (!await hasInterLoaded(page)) {
-        throw new Error('the Inter webfont (https://rsms.me/inter/inter.css) did not load')
-      }
-
       // Storybook ships the error display hidden in every iframe; only a shown one is real.
       if (await page.locator('.sb-show-errordisplay').count() > 0) {
         crashes.push(await page.locator('#error-message').innerText())
       }
       if (crashes.length > 0) throw new Error(crashes.join('\n'))
+
+      // After the crash checks: a face only reaches `loaded` once something renders with it, so a
+      // story that died before mounting any text would look like a font failure. Contexts do not
+      // share a cache, so this story fetched the font itself and could have missed even though the
+      // preflight passed. Throwing here earns the retry below.
+      if (!await hasInterLoaded(page)) {
+        throw new Error('the Inter webfont (https://rsms.me/inter/inter.css) did not load')
+      }
 
       if (interactAt && interactAt !== viewport) {
         await page.setViewportSize({ width: DOCS_SCREENSHOT_WIDTHS[viewport], height: 900 })
