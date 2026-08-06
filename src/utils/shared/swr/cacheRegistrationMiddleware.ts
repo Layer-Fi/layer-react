@@ -3,9 +3,39 @@ import { initCache, SWRGlobalState, useSWRConfig } from 'swr/_internal'
 
 const releaseByCache = new WeakMap<Cache, () => void>()
 
-// Position of the teardown function in `initCache`'s tuple. Asserted in tests so an swr
-// upgrade that reorders it fails loudly instead of silently leaking event listeners.
+// Position of the teardown function in `initCache`'s tuple, as of swr 2.5.0.
 export const RELEASE_INDEX = 3
+
+let teardownIndexIsTrusted: boolean | undefined
+
+/**
+ * `swr` is externalized in the published build, so consumers resolve their own version and
+ * never run our tests. `initCache`'s tuple already grew from 4 entries to 5 in 2.5.0, and a
+ * future release could reorder it — calling the wrong entry would be worse than not cleaning
+ * up, since a neighbouring entry (`unload`) wipes the cache.
+ *
+ * So confirm the position against a throwaway cache before trusting it: the teardown is the
+ * entry that removes the registration. If that no longer holds we skip release tracking and
+ * leave one listener set per hide/reveal behind, rather than calling something destructive.
+ */
+function canTrustTeardownIndex() {
+  if (teardownIndexIsTrusted === undefined) {
+    const probe = new Map()
+    const teardown = initCache(probe)?.[RELEASE_INDEX]
+
+    if (typeof teardown === 'function') {
+      teardown()
+      teardownIndexIsTrusted = !SWRGlobalState.has(probe)
+    }
+    else {
+      teardownIndexIsTrusted = false
+    }
+
+    SWRGlobalState.delete(probe)
+  }
+
+  return teardownIndexIsTrusted
+}
 
 /**
  * `SWRConfig` registers a custom cache provider during render, but unregisters it in a
@@ -23,7 +53,7 @@ export const cacheRegistrationMiddleware: Middleware = (useSWRNext: SWRHook) => 
 
   if (!SWRGlobalState.has(cache)) {
     const release = initCache(cache)?.[RELEASE_INDEX]
-    if (typeof release === 'function') {
+    if (typeof release === 'function' && canTrustTeardownIndex()) {
       releaseByCache.set(cache, release)
     }
   }

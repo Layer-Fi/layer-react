@@ -1,8 +1,8 @@
 import { type PropsWithChildren, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { act, render, screen } from '@testing-library/react'
 import useSWR, { SWRConfig } from 'swr'
-import { initCache } from 'swr/_internal'
-import { describe, expect, it } from 'vitest'
+import { initCache, SWRGlobalState } from 'swr/_internal'
+import { describe, expect, it, vi } from 'vitest'
 
 import { cacheRegistrationMiddleware, RELEASE_INDEX, releaseCacheRegistration } from '@utils/shared/swr/cacheRegistrationMiddleware'
 
@@ -49,9 +49,84 @@ function createSuspender() {
 
 describe('cacheRegistrationMiddleware', () => {
   it('still finds the teardown function at the tuple position it assumes', () => {
-    const cacheContext = initCache(new Map())
+    const probe = new Map()
+    const teardown = initCache(probe)?.[RELEASE_INDEX]
 
-    expect(typeof cacheContext?.[RELEASE_INDEX]).toBe('function')
+    expect(typeof teardown).toBe('function')
+
+    // The teardown is identified by removing the registration; the runtime guard in the
+    // middleware relies on this to detect an swr release that reorders the tuple.
+    ;(teardown as () => void)()
+    expect(SWRGlobalState.has(probe)).toBe(false)
+  })
+
+  it('leaves no event listeners behind across repeated hide/reveal cycles', async () => {
+    const added: string[] = []
+    const removed: string[] = []
+
+    vi.spyOn(document, 'addEventListener').mockImplementation((type, ...rest) => {
+      added.push(String(type))
+      return EventTarget.prototype.addEventListener.call(document, type, ...rest)
+    })
+    vi.spyOn(document, 'removeEventListener').mockImplementation((type, ...rest) => {
+      removed.push(String(type))
+      return EventTarget.prototype.removeEventListener.call(document, type, ...rest)
+    })
+
+    let resolveCurrent: (() => void) | undefined
+    let generation = 0
+
+    function Suspender({ suspend, gen }: { suspend: boolean, gen: number }) {
+      if (suspend && gen === generation) {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error -- how React signals suspension
+        throw new Promise<void>((res) => {
+          resolveCurrent = () => {
+            generation++
+            res()
+          }
+        })
+      }
+      return null
+    }
+
+    function App({ suspend, gen }: { suspend: boolean, gen: number }) {
+      return (
+        <Suspense fallback={<div>loading</div>}>
+          <Suspender suspend={suspend} gen={gen} />
+          <IsolatedCacheProvider withMiddleware>
+            <Consumer />
+          </IsolatedCacheProvider>
+        </Suspense>
+      )
+    }
+
+    const { rerender, unmount } = render(<App suspend={false} gen={0} />)
+    expect(await screen.findByText('value:key')).toBeTruthy()
+
+    const liveAfterCycle: number[] = []
+    for (let cycle = 0; cycle < 3; cycle++) {
+      rerender(<App suspend gen={generation} />)
+      await act(async () => {
+        resolveCurrent?.()
+        await Promise.resolve()
+      })
+      rerender(<App suspend={false} gen={generation} />)
+      expect(await screen.findByText('value:key')).toBeTruthy()
+
+      liveAfterCycle.push(
+        added.filter(type => type === 'visibilitychange').length
+        - removed.filter(type => type === 'visibilitychange').length,
+      )
+    }
+
+    // Exactly one live listener set at all times — not one more per cycle.
+    expect(liveAfterCycle).toEqual([1, 1, 1])
+
+    unmount()
+
+    const liveAfterUnmount = added.filter(type => type === 'visibilitychange').length
+      - removed.filter(type => type === 'visibilitychange').length
+    expect(liveAfterUnmount).toBeLessThanOrEqual(0)
   })
 
   it('keeps a per-mount cache provider usable when a Suspense boundary above it re-suspends', async () => {
