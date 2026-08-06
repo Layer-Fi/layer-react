@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   bundle-size:
+    name: Bundle size
     runs-on: ubuntu-latest
 
     env:

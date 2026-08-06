@@ -33,6 +33,7 @@ concurrency:
 
 jobs:
   build:
+    name: Storybook
     runs-on: ubuntu-latest
 
     steps:
