@@ -122,20 +122,23 @@ jobs:
             const repo = { owner: context.repo.owner, repo: context.repo.repo };
 
             // A single-package PR names it in the title, a grouped PR lists each one in the body.
+            // Deduped, since a PR may well name the same package in both places.
             const packagesIn = (pr) => {
               const grouped = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
               const single = pr.title.match(/bump (@?[\w./-]+) from/i);
-              return single ? [...grouped, single[1]] : grouped;
+              return [...new Set(single ? [...grouped, single[1]] : grouped)];
             };
 
-            // Fix links are a convenience: a failed listing empties the column rather than taking
-            // the report down. pulls.list returns newest first, so the first match wins.
+            // A package can appear in more than one PR — security updates bypass grouping, so a
+            // grouped version bump and a standalone security bump can both be open. List all of
+            // them, newest first (pulls.list order). Links are a convenience: a failed listing
+            // empties the column rather than taking the report down.
             const fixPrs = new Map();
             try {
               const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
               for (const pr of openPrs.filter(pr => pr.user?.login === 'dependabot[bot]')) {
                 for (const name of packagesIn(pr)) {
-                  if (!fixPrs.has(name)) fixPrs.set(name, `[#${pr.number}](${pr.html_url})`);
+                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), `[#${pr.number}](${pr.html_url})`]);
                 }
               }
             } catch (error) {
@@ -146,7 +149,7 @@ jobs:
               if (rows.length === 0) return '_None._\n';
               const header = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
               const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${fixPrs.get(v.name) ?? '—'} | ${describeVia(v)} |\n`)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${fixPrs.get(v.name)?.join(', ') ?? '—'} | ${describeVia(v)} |\n`)
                 .join('');
               const truncated = rows.length > 50
                 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
