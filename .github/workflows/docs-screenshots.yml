@@ -42,7 +42,10 @@ permissions:
 jobs:
   screenshots:
     name: Capture screenshots
-    runs-on: ubuntu-latest
+    # macOS so the captures keep rasterising through CoreText. The docs images live on
+    # macOS renders today; capturing on Linux reruns every PNG through FreeType, which
+    # rewrites all 36 images for no visual gain.
+    runs-on: macos-latest
     timeout-minutes: 30
 
     steps:
@@ -59,7 +62,7 @@ jobs:
       run: npm ci
 
     - name: Install Chromium
-      run: npx playwright install --with-deps chromium
+      run: npx playwright install chromium
 
     - name: Build Storybook
       run: npm run storybook:build
