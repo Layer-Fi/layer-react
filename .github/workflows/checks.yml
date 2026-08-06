@@ -1,0 +1,57 @@
+name: Checks
+
+# The single-command PR checks, which differed only in the command they ran. A matrix
+# keeps them as separate, independently reportable jobs while the setup lives in one place.
+#
+# Anything with its own shape stays in its own file: Build (artifact validation),
+# Bundle Size (two builds), Storybook, Chromatic, Scratch Stories Guard (no npm install).
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # One failing check must not cancel the others — a PR should see every failure at once.
+      fail-fast: false
+      matrix:
+        include:
+          - name: ESLint
+            run: npm run lint:eslint
+          - name: StyleLint
+            run: npm run lint:stylelint
+          - name: TypeScript
+            run: npm run typecheck
+          - name: Vitest
+            run: npm test -- --run
+          - name: Fixtures
+            run: npm run fixtures:check
+          - name: MSW coverage
+            run: npm run msw:check-coverage
+          - name: i18n
+            run: npm run i18n:check
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: ${{ matrix.name }}
+      run: ${{ matrix.run }}
