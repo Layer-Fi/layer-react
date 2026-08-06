@@ -1,6 +1,5 @@
-// Self-reference, so this resolves through the `exports` map to the built declarations the way a
-// consumer does — not from `src`, which skips the rollup-dts step where a contract can break.
-// `@ts-expect-error` asserts invalid usage does *not* compile, which no runtime test can express.
+// Self-referenced, so it resolves through the `exports` map to the built declarations a consumer
+// gets, not `src`. `@ts-expect-error` asserts invalid usage does *not* compile.
 import type { EventCallbacks, LayerProvider } from '@layerfi/components'
 import type { ComponentProps } from 'react'
 import { assertType, describe, it } from 'vitest'
