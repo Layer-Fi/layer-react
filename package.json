@@ -43,12 +43,14 @@
     "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "screenshots:capture": "tsx scripts/capture-docs-screenshots.ts",
     "screenshots:check": "tsx scripts/check-docs-screenshots.ts",
+    "size": "size-limit",
     "stories:check-render": "tsx scripts/check-stories-render.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "size": "size-limit"
+    "test:consumers": "tsx scripts/pack-and-test-consumers.ts",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

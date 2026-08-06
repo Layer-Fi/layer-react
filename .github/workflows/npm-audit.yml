@@ -2,8 +2,12 @@ name: Daily npm audit
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # daily at 08:00 UTC (adjust to your preferred time)
-  workflow_dispatch: {}   # manual run option
+    - cron: '0 16 * * *'   # daily at 16:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: read   # to link findings to the Dependabot PR that fixes them
 
 jobs:
   audit:
@@ -16,86 +20,208 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install
         run: npm ci
 
+      # The production-only tree is what consumers inherit; the difference is dev/CI-only.
+      # Peer dependencies appear in neither — npm audit does not cover them.
       - name: Run npm audit
-        run: npm audit --json > audit.json || true
+        run: |
+          npm audit --json > audit-all.json || true
+          npm audit --omit=dev --json > audit-prod.json || true
 
-      - name: Create/update daily vulnerability issue
-        uses: actions/github-script@v6
+      # The artifact is a convenience; a failed upload must not take the report down with it.
+      - name: Upload audit JSON
+        id: upload
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit
+          path: |
+            audit-all.json
+            audit-prod.json
+
+      # Reports to the run summary rather than an issue: Dependabot alerts already track
+      # per-advisory state for this repo, so a second tracker would only duplicate it.
+      - name: Summarize audit
+        id: report
+        uses: actions/github-script@v7
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
         with:
           script: |
             const fs = require('fs');
-            const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
-            if (!audit || !audit.vulnerabilities) {
-              console.log('No vulnerability data available.');
+
+            const read = (file) => {
+              try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return null; }
+            };
+
+            const all = read('audit-all.json');
+            const prod = read('audit-prod.json');
+
+            if (!all?.vulnerabilities) {
+              core.setOutput('total', 'unknown');
+              core.setOutput('runtime', 'unknown');
+              core.setFailed('audit-all.json missing or unparseable.');
               return;
             }
-            // Convert vulnerabilities into an array and pick ones above threshold
-            const vulns = Object.entries(audit.vulnerabilities)
+
+            // Ascending, so indexOf doubles as the sort rank. `info` is excluded as noise.
+            const SEVERITIES = ['low', 'moderate', 'high', 'critical'];
+            const toList = audit => Object.entries(audit?.vulnerabilities ?? {})
               .map(([name, info]) => ({ name, ...info }))
-              // only keep moderate+ (customize severity threshold)
-              .filter(v => ['moderate', 'high', 'critical'].includes(v.severity));
+              .filter(v => SEVERITIES.includes(v.severity))
+              .sort((a, b) => SEVERITIES.indexOf(b.severity) - SEVERITIES.indexOf(a.severity)
+                || a.name.localeCompare(b.name));
+
+            const vulns = toList(all);
+
+            // An empty runtime set would read as "0 consumer-facing" and hide real exposure, so an
+            // unusable prod audit over-reports and fails the run instead.
+            const prodAvailable = !!prod?.vulnerabilities;
+            if (!prodAvailable) {
+              core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
+            }
+
+            const inProd = new Set(toList(prod).map(v => v.name));
+            const [runtime, dev] = prodAvailable
+              ? [vulns.filter(v => inProd.has(v.name)), vulns.filter(v => !inProd.has(v.name))]
+              : [vulns, []];
+
+            core.setOutput('total', String(vulns.length));
+            core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
+
             if (vulns.length === 0) {
-              console.log('No moderate+ vulnerabilities found.');
+              await core.summary.addRaw('No vulnerabilities.\n').write();
               return;
             }
 
-            // Build issue body
-            let body = `Automated daily npm audit report — found **${vulns.length}** vulnerabilities.\n\n`;
-            body += "| package | severity | via | title |\n";
-            body += "|---|---:|---|---|\n";
-            for (const v of vulns.slice(0, 50)) { // limit to 50 entries
-              const via = Array.isArray(v.via) ? v.via.map(x=> (typeof x === 'string' ? x : x.title || x.name)).join(", ") : v.via;
-              body += `| ${v.name} | ${v.severity} | ${via} | ${v.title || ''} |\n`;
-            }
-            body += `\n\nFull audit JSON attached to the issue.`;
+            // Both renderers walk this, so neither repeats the prod-available branch.
+            const groups = prodAvailable
+              ? [{ title: 'Consumer-facing', rows: runtime }, { title: 'Dev / CI only', rows: dev }]
+              : [{ title: '⚠️ Potentially consumer-facing — prod/dev split unknown', rows: vulns }];
 
-            // Try to find an existing "Daily npm audit" issue to update
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: 'automated-vuln-report',
-              state: 'open'
-            });
+            // npm repeats a title per dependency path; a bare string is the package that pulled the
+            // advisory in, not a title.
+            const describeVia = (v) => {
+              if (!Array.isArray(v.via)) return v.via;
+              const titles = v.via.map(x => (typeof x === 'string' ? `via \`${x}\`` : x.title || x.name));
+              return [...new Set(titles)].join(', ');
+            };
 
-            if (issues.data && issues.data.length > 0) {
-              const issueNumber = issues.data[0].number;
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber,
-                body: body
-              });
-              console.log(`Appended comment to issue #${issueNumber}`);
-            } else {
-              const newIssue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `Daily npm audit — ${new Date().toISOString().slice(0,10)}`,
-                body: body,
-                labels: ['automated-vuln-report']
-              });
-              console.log(`Created issue #${newIssue.data.number}`);
+            // `true` means a patched version already satisfies the declared range — a lockfile
+            // refresh. An object means a manifest change. Anything else is no known fix.
+            const describeFix = (v) => {
+              if (v.fixAvailable === true) return 'yes — `npm audit fix`';
+              if (!v.fixAvailable?.version) return 'no';
+              const target = `${v.fixAvailable.name}@${v.fixAvailable.version}`;
+              return v.fixAvailable.isSemVerMajor ? `${target} (major)` : target;
+            };
+
+            const repo = { owner: context.repo.owner, repo: context.repo.repo };
+            const slug = `${repo.owner}/${repo.repo}`;
+
+            // Single-package PRs name it in the title, grouped PRs in the body. Deduped, since one
+            // PR can do both.
+            const packagesIn = (pr) => {
+              const grouped = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
+              const single = pr.title.match(/bump (@?[\w./-]+) from/i);
+              return [...new Set(single ? [...grouped, single[1]] : grouped)];
+            };
+
+            // A package can sit in several open PRs at once — security updates bypass grouping — so
+            // keep them all. Links are a convenience: a failed listing just empties the column.
+            const fixPrs = new Map();
+            try {
+              const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              for (const pr of openPrs.filter(pr => pr.user?.login === 'dependabot[bot]')) {
+                for (const name of packagesIn(pr)) {
+                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), { number: pr.number, url: pr.html_url }]);
+                }
+              }
+            } catch (error) {
+              core.warning(`Could not list open PRs, omitting fix links: ${error.message}`);
             }
+
+            const prs = v => (fixPrs.get(v.name) ?? []).map(pr => `[#${pr.number}](${pr.url})`).join(', ');
+
+            const table = (rows) => {
+              if (rows.length === 0) return '_None._\n';
+              const head = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
+              const body = rows.slice(0, 50)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${prs(v) || '—'} | ${describeVia(v)} |\n`)
+                .join('');
+              return head + body + (rows.length > 50 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n` : '');
+            };
+
+            const alerts = `https://github.com/${slug}/security/dependabot`;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${slug}/actions/runs/${context.runId}`;
+
+            await core.summary.addRaw([
+              prodAvailable
+                ? `**${runtime.length}** consumer-facing, **${dev.length}** dev/CI-only, most severe first.\n`
+                : `> ⚠️ The production-only audit did not produce usable output, so all **${vulns.length}**\n`
+                  + '> findings are listed as potentially consumer-facing. The run is marked failed.\n',
+              ...groups.map(g => `## ${g.title} — ${g.rows.length}\n\n${table(g.rows)}`),
+              '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
+                + `> Per-advisory state lives in [Dependabot alerts](${alerts}); triage rules and SLAs:\n`
+                + '> `docs/dependency-policy.md`.\n',
+              process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
+            ].filter(Boolean).join('\n')).write();
+
+            // Slack has no table primitive and code blocks do not reflow on mobile, so it gets a
+            // header per environment and a bullet per severity.
+            const EMOJI = { critical: '🚨', high: '🔴', moderate: '🟠', low: '🟡' };
+            const bullets = (rows) => {
+              const lines = [...SEVERITIES].reverse()
+                .map(severity => [severity, rows.filter(v => v.severity === severity).length])
+                .filter(([, count]) => count > 0)
+                .map(([severity, count]) => `• ${EMOJI[severity]} ${count} ${severity}`);
+              return lines.length ? lines : ['• none'];
+            };
+
+            // Every finding's PRs, not just consumer-facing ones — a merge-ready dev PR is still work
+            // waiting. `vulns` is severity-ordered, so these come out worst-first.
+            const linked = new Set(vulns.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`)));
+
+            core.setOutput('slack', [
+              `[${slug}] npm audit — ${vulns.length} findings`,
+              ...groups.map(g => [`*${g.title} (${g.rows.length})*`, ...bullets(g.rows)].join('\n')),
+              linked.size ? `Open fix PRs: ${[...linked].join(' ')}` : '',
+              `Details: <${runUrl}|run summary> · <${alerts}|Dependabot alerts>`,
+            ].filter(Boolean).join('\n\n'));
+
+      # A broken audit is when the ping matters most, so this runs on failure too. Counts come
+      # from the step above rather than a second jq pass, so both reports cannot disagree.
       - name: Send Slack notification
-        if: ${{ success() }}
+        if: ${{ !cancelled() }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TEXT: ${{ steps.report.outputs.slack }}
+          RUNTIME: ${{ steps.report.outputs.runtime }}
+          TOTAL: ${{ steps.report.outputs.total }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -z "${{ secrets.SLACK_WEBHOOK }}" ]; then
+          if [ -z "$SLACK_WEBHOOK" ]; then
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
-          jq -r '.vulnerabilities | to_entries | length' audit.json > /tmp/count.txt || true
-          COUNT=$(cat /tmp/count.txt || echo 0)
-          if [ "$COUNT" -gt "0" ]; then
-            PAYLOAD=$(jq -n --arg c "$COUNT" --arg repo "${{ github.repository }}" '{text: ("[" + $repo + "] npm audit found " + $c + " vulnerabilities — see GitHub issues for details.")}')
-            curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
-          else
+          # Unset when the summarize step died before setting outputs — still worth a ping, and
+          # `unknown` must not take the "nothing to report" branch the way 0 would.
+          RUNTIME=${RUNTIME:-unknown}
+          TOTAL=${TOTAL:-unknown}
+          if [ "$TOTAL" = "0" ]; then
             echo "No vulnerabilities to report to Slack."
+            exit 0
           fi
-
-
+          if [ -z "$SLACK_TEXT" ]; then
+            SLACK_TEXT="[$GITHUB_REPOSITORY] npm audit: $RUNTIME consumer-facing, $TOTAL total — <$RUN_URL|run summary>"
+          fi
+          PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" '{text: $text}')
+          # --fail-with-body: Slack answers a dead or revoked webhook with 4xx and a reason, which
+          # plain `curl -s` would swallow as exit 0 — a lost ping that looks like a delivered one.
+          curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" "$SLACK_WEBHOOK"
