@@ -42,17 +42,20 @@ async function main() {
   async function requireInter() {
     const page = await browser.newPage()
     try {
-      const isAvailable = await page.evaluate(() => {
-        const measure = (family: string) => {
-          const context = document.createElement('canvas').getContext('2d')
-          if (context === null) return 0
-          context.font = `48px ${family}`
-          return context.measureText('Revenue December 2025').width
-        }
-        return measure('Inter') !== measure('__Layer__MissingFont__')
-      })
+      // Declaring a helper in here would break the check: tsx compiles with esbuild's keepNames,
+      // which wraps named function bindings in a __name() call that does not exist in the page.
+      const widths = await page.evaluate((sample) => {
+        const context = document.createElement('canvas').getContext('2d')
+        if (context === null) return null
 
-      if (!isAvailable) {
+        context.font = '48px Inter'
+        const inter = context.measureText(sample).width
+        context.font = '48px __Layer__MissingFont__'
+
+        return { inter, fallback: context.measureText(sample).width }
+      }, 'Revenue December 2025')
+
+      if (widths === null || widths.inter === widths.fallback) {
         console.error('Inter is not installed on this host, so every capture would use the fallback sans.')
         console.error('Install it (macOS: `brew install --cask font-inter`, Debian/Ubuntu: `apt-get install fonts-inter`) and re-run.')
         await browser.close()
