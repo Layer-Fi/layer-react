@@ -7,10 +7,17 @@
     "ignore": ["react", "react-dom"]
   },
   {
-    "name": "single component (tree-shaking)",
+    "name": "single component, small (GlobalMonthPicker)",
     "path": "dist/esm/index.mjs",
     "import": "{ GlobalMonthPicker }",
     "limit": "600 kB",
+    "ignore": ["react", "react-dom"]
+  },
+  {
+    "name": "single component, large (BankTransactions)",
+    "path": "dist/esm/index.mjs",
+    "import": "{ BankTransactions }",
+    "limit": "650 kB",
     "ignore": ["react", "react-dom"]
   },
   {

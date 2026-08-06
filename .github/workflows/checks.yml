@@ -41,8 +41,9 @@ jobs:
             run: npm run msw:check-coverage
           - name: Translations
             run: npm run i18n:check
+          # `size` reads dist/, so it rides the job that already builds.
           - name: Build
-            run: npm run build && npm run build:check
+            run: npm run build && npm run build:check && npm run size
 
     steps:
     - uses: actions/checkout@v4

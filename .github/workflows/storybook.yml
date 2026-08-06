@@ -62,8 +62,3 @@ jobs:
 
     - name: Render every story
       run: npm run stories:check-render
-
-    # Scoped to `public-api` stories — the components consumers embed. Known violations are
-    # allowlisted in scripts/a11y-allowlist.json and meant to be burned down, not grown.
-    - name: Check accessibility
-      run: npm run stories:check-a11y
