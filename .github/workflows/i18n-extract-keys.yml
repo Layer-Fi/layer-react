@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   collect:
+    name: Extract keys
     runs-on: ubuntu-latest
 
     steps:

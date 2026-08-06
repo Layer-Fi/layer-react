@@ -6,6 +6,7 @@ on:
 
 jobs:
   cleanup:
+    name: Remove scratch stories
     if: >-
       github.event.review.state == 'approved'
       && github.event.pull_request.base.ref == 'main'

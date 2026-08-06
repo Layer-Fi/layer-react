@@ -30,6 +30,7 @@ permissions:
 
 jobs:
   tag:
+    name: Tag release
     # Merged Release — Prepare PRs, or an explicit manual retag.
     if: >-
       github.event_name == 'workflow_dispatch' ||
