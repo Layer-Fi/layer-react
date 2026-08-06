@@ -3,8 +3,8 @@ name: Checks
 # The single-command PR checks, which differed only in the command they ran. A matrix
 # keeps them as separate, independently reportable jobs while the setup lives in one place.
 #
-# Anything with its own shape stays in its own file: Build (artifact validation),
-# Bundle Size (two builds), Storybook, Chromatic, Scratch Stories Guard (no npm install).
+# Anything with its own shape stays in its own file: Bundle Size (two builds against different
+# refs), Storybook, Chromatic, and Scratch Stories Guard (needs no npm install at all).
 
 on:
   pull_request:
@@ -41,6 +41,8 @@ jobs:
             run: npm run msw:check-coverage
           - name: i18n
             run: npm run i18n:check
+          - name: Build
+            run: npm run build && npm run build:check
 
     steps:
     - uses: actions/checkout@v4
