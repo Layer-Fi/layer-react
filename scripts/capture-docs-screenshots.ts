@@ -8,6 +8,10 @@ import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serv
 // preview.tsx adds a 250ms floor to every mocked response.
 const SETTLE_MS = 750
 
+// Ceiling on the Inter webfont preflight, so an unresponsive rsms.me fails the run rather
+// than hanging it.
+const FONT_LOAD_TIMEOUT_MS = 30_000
+
 function parseArgs() {
   const args = process.argv.slice(2)
   const out = args[args.indexOf('--out') + 1]
@@ -42,27 +46,41 @@ async function main() {
   // the face actually loaded before capturing anything.
   async function requireInterWebFont(storyId: string) {
     const page = await browser.newPage()
-    try {
-      await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`)
-      await page.waitForSelector('#storybook-root > *', { timeout: 30_000 })
+    let isLoaded = false
 
+    try {
+      // An unreachable rsms.me stalls the stylesheet, which can hold up `load` and time the
+      // navigation out. Any failure in here means the same thing as a missing face, so report it
+      // the same way rather than crashing with a navigation error.
+      await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`, { timeout: FONT_LOAD_TIMEOUT_MS })
+      await page.waitForSelector('#storybook-root > *', { timeout: FONT_LOAD_TIMEOUT_MS })
+
+      // A stalled font response leaves document.fonts.ready pending forever, and page.evaluate
+      // has no timeout of its own — so bound the wait in the page.
+      //
       // Declaring a helper in here would break the check: tsx compiles with esbuild's keepNames,
       // which wraps named function bindings in a __name() call that does not exist in the page.
-      const isLoaded = await page.evaluate(async () => {
-        await document.fonts.ready
+      isLoaded = await page.evaluate(async (timeoutMs) => {
+        await Promise.race([
+          document.fonts.ready,
+          new Promise(resolve => setTimeout(resolve, timeoutMs)),
+        ])
         return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
-      })
-
-      if (!isLoaded) {
-        console.error('The Inter webfont (https://rsms.me/inter/inter.css) did not load, so every capture')
-        console.error('would fall back to the generic sans. Check network access to rsms.me and re-run.')
-        await browser.close()
-        server.close()
-        process.exit(1)
-      }
+      }, FONT_LOAD_TIMEOUT_MS)
+    }
+    catch (error) {
+      console.error(`Could not verify the Inter webfont: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`)
     }
     finally {
       await page.close()
+    }
+
+    if (!isLoaded) {
+      console.error('The Inter webfont (https://rsms.me/inter/inter.css) did not load, so every capture')
+      console.error('would fall back to the generic sans. Check network access to rsms.me and re-run.')
+      await browser.close()
+      server.close()
+      process.exit(1)
     }
   }
 
