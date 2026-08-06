@@ -69,16 +69,33 @@ export const useColumnPinningStyles = <TData>(
     const container = containerRef.current
     if (!container) return
 
-    const resizeObserver = new ResizeObserver(() => measure())
+    let frame: number | null = null
+    let observedCells: HTMLElement[] = []
+
+    // Measuring writes sticky offsets back onto the observed cells, so defer out of the
+    // observer callback to avoid "ResizeObserver loop completed with undelivered notifications".
+    const scheduleMeasure = () => {
+      if (frame !== null) return
+      frame = requestAnimationFrame(() => {
+        frame = null
+        measure()
+      })
+    }
+
+    const resizeObserver = new ResizeObserver(scheduleMeasure)
 
     // Measure and compute sticky offsets before paint so pinned columns move together.
     const measure = () => {
       const cells = getLeafHeaderCells(container)
       if (cells.length === 0) return
 
-      // Keep offsets in sync when column widths change after the initial layout.
-      resizeObserver.disconnect()
-      cells.forEach(cell => resizeObserver.observe(cell))
+      // Keep offsets in sync when column widths change after the initial layout. Re-observing the
+      // same cells re-fires the observer, so only resubscribe when the cell set actually changes.
+      if (cells.length !== observedCells.length || cells.some((cell, index) => cell !== observedCells[index])) {
+        resizeObserver.disconnect()
+        cells.forEach(cell => resizeObserver.observe(cell))
+        observedCells = cells
+      }
 
       const widths = getColumnHeaderWidths(leafColumnIds, cells)
       const nextPinningStyles = computePinningStyles(headerGroups, widths)
@@ -89,10 +106,11 @@ export const useColumnPinningStyles = <TData>(
 
     // react-aria builds its collection after the first commit, so the header cells this measures
     // don't exist yet on the ARIA path — watch for them instead of measuring once.
-    const mutationObserver = new MutationObserver(() => measure())
+    const mutationObserver = new MutationObserver(scheduleMeasure)
     mutationObserver.observe(container, { childList: true, subtree: true })
 
     return () => {
+      if (frame !== null) cancelAnimationFrame(frame)
       resizeObserver.disconnect()
       mutationObserver.disconnect()
     }
