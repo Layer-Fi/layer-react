@@ -71,10 +71,13 @@ jobs:
               return;
             }
 
-            const SEVERITIES = ['moderate', 'high', 'critical'];
+            // Ascending, so indexOf doubles as the sort rank. `info` is excluded as noise.
+            const SEVERITIES = ['low', 'moderate', 'high', 'critical'];
             const toList = audit => Object.entries(audit?.vulnerabilities ?? {})
               .map(([name, info]) => ({ name, ...info }))
-              .filter(v => SEVERITIES.includes(v.severity));
+              .filter(v => SEVERITIES.includes(v.severity))
+              .sort((a, b) => SEVERITIES.indexOf(b.severity) - SEVERITIES.indexOf(a.severity)
+                || a.name.localeCompare(b.name));
 
             const vulns = toList(all);
 
@@ -93,17 +96,27 @@ jobs:
             core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
 
             if (vulns.length === 0) {
-              await core.summary.addRaw('No moderate+ vulnerabilities.\n').write();
+              await core.summary.addRaw('No vulnerabilities.\n').write();
               return;
             }
 
-            const describeVia = v => Array.isArray(v.via)
-              ? v.via.map(x => (typeof x === 'string' ? x : x.title || x.name)).join(', ')
-              : v.via;
+            // npm emits one `via` entry per dependency path, so titles repeat; a bare string is a
+            // package that pulled the advisory in rather than an advisory title of its own.
+            const describeVia = (v) => {
+              if (!Array.isArray(v.via)) return v.via;
+              const seen = v.via.map(x => (typeof x === 'string' ? `via \`${x}\`` : x.title || x.name));
+              return [...new Set(seen)].join(', ');
+            };
 
-            const describeFix = v => v.fixAvailable === false
-              ? 'no'
-              : (v.fixAvailable?.version ? `${v.fixAvailable.name}@${v.fixAvailable.version}` : 'yes');
+            // A bare `fixAvailable: true` names no target version, so say where the bump lands:
+            // our own declared range for a direct dependency, someone else's for a transitive one.
+            const describeFix = (v) => {
+              if (v.fixAvailable === false) return 'no';
+              if (!v.fixAvailable?.version) return v.isDirect ? 'yes — bump ours' : 'yes — via parent';
+              return v.fixAvailable.isSemVerMajor
+                ? `${v.fixAvailable.name}@${v.fixAvailable.version} (major)`
+                : `${v.fixAvailable.name}@${v.fixAvailable.version}`;
+            };
 
             const table = (rows) => {
               if (rows.length === 0) return '_None._\n';
@@ -121,9 +134,9 @@ jobs:
 
             const summary = [
               prodAvailable
-                ? `**${runtime.length}** consumer-facing, **${dev.length}** dev/CI-only (moderate+).\n`
+                ? `**${runtime.length}** consumer-facing, **${dev.length}** dev/CI-only, most severe first.\n`
                 : '> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n'
-                  + `> exposure could not be separated. All **${vulns.length}** moderate+ findings are\n`
+                  + `> exposure could not be separated. All **${vulns.length}** findings are\n`
                   + '> listed below as potentially consumer-facing. The workflow run is marked failed.\n',
               `## Runtime (reaches consumers) — ${runtime.length}\n`,
               table(runtime),
@@ -159,5 +172,5 @@ jobs:
             exit 0
           fi
           PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" --arg url "$RUN_URL" \
-            '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ — <" + $url + "|run summary>")}')
+            '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total — <" + $url + "|run summary>")}')
           curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
