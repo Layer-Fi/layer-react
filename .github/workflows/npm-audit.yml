@@ -3,7 +3,7 @@ name: Daily npm audit
 on:
   schedule:
     - cron: '0 16 * * *'   # daily at 16:00 UTC
-  workflow_dispatch: {}   # manual run option
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -25,16 +25,14 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Two audits: the full tree, and the production-only tree. Anything present in the
-      # production audit reaches consumers who install @layerfi/components; the difference is
-      # dev/CI-only exposure. npm audit covers neither set's peer dependencies.
+      # The production-only tree is what consumers inherit; the difference is dev/CI-only.
+      # Peer dependencies appear in neither — npm audit does not cover them.
       - name: Run npm audit
         run: |
           npm audit --json > audit-all.json || true
           npm audit --omit=dev --json > audit-prod.json || true
 
-      # The artifact is a convenience; the report is the point. A failed upload must not take the
-      # issue and the Slack ping down with it — the script already treats ARTIFACT_URL as optional.
+      # The artifact is a convenience; a failed upload must not take the report down with it.
       - name: Upload audit JSON
         id: upload
         continue-on-error: true
@@ -64,7 +62,7 @@ jobs:
             const all = read('audit-all.json');
             const prod = read('audit-prod.json');
 
-            if (!all || !all.vulnerabilities) {
+            if (!all?.vulnerabilities) {
               console.log('No vulnerability data available.');
               return;
             }
@@ -76,94 +74,80 @@ jobs:
 
             const vulns = toList(all);
 
-            // Without the production audit there is no way to split the two sets. Defaulting to an
-            // empty runtime set would report "0 consumer-facing" and hide real exposure, so fail
-            // toward over-reporting: treat everything as potentially consumer-facing and mark the
-            // step failed so someone looks.
-            const prodAvailable = !!(prod && prod.vulnerabilities);
+            // Reporting an empty runtime set would read as "0 consumer-facing" and hide real
+            // exposure, so an unusable prod audit over-reports and fails the run instead.
+            const prodAvailable = !!prod?.vulnerabilities;
             if (!prodAvailable) {
               core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
             }
-
-            const runtimeNames = new Set(toList(prod).map(v => v.name));
-            const runtime = prodAvailable ? vulns.filter(v => runtimeNames.has(v.name)) : vulns;
-            const dev = prodAvailable ? vulns.filter(v => !runtimeNames.has(v.name)) : [];
 
             if (vulns.length === 0) {
               console.log('No moderate+ vulnerabilities found.');
               return;
             }
 
-            const describeVia = (v) => Array.isArray(v.via)
+            const runtimeNames = new Set(toList(prod).map(v => v.name));
+            const runtime = prodAvailable ? vulns.filter(v => runtimeNames.has(v.name)) : vulns;
+            const dev = prodAvailable ? vulns.filter(v => !runtimeNames.has(v.name)) : [];
+
+            const describeVia = v => Array.isArray(v.via)
               ? v.via.map(x => (typeof x === 'string' ? x : x.title || x.name)).join(', ')
               : v.via;
 
+            const describeFix = v => v.fixAvailable === false
+              ? 'no'
+              : (v.fixAvailable?.version ? `${v.fixAvailable.name}@${v.fixAvailable.version}` : 'yes');
+
             const table = (rows) => {
-              let out = '| package | severity | fix available | advisories |\n';
-              out += '|---|---:|---|---|\n';
-              for (const v of rows.slice(0, 50)) {
-                const fix = v.fixAvailable === false
-                  ? 'no'
-                  : (v.fixAvailable?.version ? `${v.fixAvailable.name}@${v.fixAvailable.version}` : 'yes');
-                out += `| ${v.name} | ${v.severity} | ${fix} | ${describeVia(v)} |\n`;
-              }
-              if (rows.length > 50) out += `\n_+${rows.length - 50} more (see the audit JSON)._\n`;
-              return out;
+              if (rows.length === 0) return '_None._\n';
+              const header = '| package | severity | fix available | advisories |\n|---|---:|---|---|\n';
+              const body = rows.slice(0, 50)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${describeVia(v)} |\n`)
+                .join('');
+              const truncated = rows.length > 50
+                ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
+                : '';
+              return header + body + truncated;
             };
 
-            let body = prodAvailable
-              ? `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
-                + `**${dev.length}** dev/CI-only (moderate+).\n\n`
-              : `> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n`
-                + `> exposure could not be separated. All **${vulns.length}** moderate+ findings are\n`
-                + `> listed below as potentially consumer-facing. The workflow run is marked failed.\n\n`;
+            const body = [
+              prodAvailable
+                ? `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
+                  + `**${dev.length}** dev/CI-only (moderate+).\n`
+                : '> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n'
+                  + `> exposure could not be separated. All **${vulns.length}** moderate+ findings are\n`
+                  + '> listed below as potentially consumer-facing. The workflow run is marked failed.\n',
+              `## Runtime (reaches consumers) — ${runtime.length}\n`,
+              table(runtime),
+              `## Dev / CI only — ${dev.length}\n`,
+              table(dev),
+              '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
+                + '> Triage rules and SLAs: `docs/dependency-policy.md`.\n',
+              process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
+            ].filter(Boolean).join('\n');
 
-            body += `## Runtime (reaches consumers) — ${runtime.length}\n\n`;
-            body += runtime.length
-              ? table(runtime)
-              : '_None._\n';
-
-            body += `\n## Dev / CI only — ${dev.length}\n\n`;
-            body += dev.length
-              ? table(dev)
-              : '_None._\n';
-
-            body += '\n> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n';
-            body += '> Triage rules and SLAs: `docs/dependency-policy.md`.\n';
-
-            if (process.env.ARTIFACT_URL) {
-              body += `\nFull audit JSON: ${process.env.ARTIFACT_URL}\n`;
-            }
-
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+            const repo = { owner: context.repo.owner, repo: context.repo.repo };
+            const open = await github.rest.issues.listForRepo({
+              ...repo,
               labels: 'automated-vuln-report',
               state: 'open'
             });
 
-            if (issues.data && issues.data.length > 0) {
-              const issueNumber = issues.data[0].number;
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber,
-                body: body
-              });
+            if (open.data?.length > 0) {
+              const issueNumber = open.data[0].number;
+              await github.rest.issues.createComment({ ...repo, issue_number: issueNumber, body });
               console.log(`Appended comment to issue #${issueNumber}`);
             } else {
-              const newIssue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `Daily npm audit — ${new Date().toISOString().slice(0,10)}`,
-                body: body,
+              const created = await github.rest.issues.create({
+                ...repo,
+                title: `Daily npm audit — ${new Date().toISOString().slice(0, 10)}`,
+                body,
                 labels: ['automated-vuln-report']
               });
-              console.log(`Created issue #${newIssue.data.number}`);
+              console.log(`Created issue #${created.data.number}`);
             }
 
-      # `!cancelled()` rather than `success()`: a broken audit or a failed upload is exactly when
-      # the ping matters most, and skipping it would make a silent failure look like a clean day.
+      # A broken audit is when the ping matters most, so this runs on failure too.
       - name: Send Slack notification
         if: ${{ !cancelled() }}
         run: |
@@ -171,11 +155,11 @@ jobs:
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
-          count() { jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' "$1" 2>/dev/null; }
-          # `|| true` inside the substitution: the step runs under `bash -e`, where a failing jq in a
-          # bare assignment exits before the fallbacks below can apply.
-          RUNTIME=$(count audit-prod.json || true); RUNTIME=${RUNTIME:-unknown}
-          TOTAL=$(count audit-all.json || true); TOTAL=${TOTAL:-unknown}
+          # `|| echo unknown` is load-bearing: under `bash -e` a bare assignment from a failing jq
+          # exits the step, and an unreadable audit must still report rather than look like zero.
+          count() { jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' "$1" 2>/dev/null || echo unknown; }
+          RUNTIME=$(count audit-prod.json)
+          TOTAL=$(count audit-all.json)
           if [ "$TOTAL" != "0" ]; then
             PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" \
               '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ vulnerabilities — see GitHub issues for details.")}')
