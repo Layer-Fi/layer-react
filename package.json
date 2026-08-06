@@ -55,6 +55,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "test": "vitest",
+    "test:consumers": "tsx scripts/pack-and-test-consumers.ts",
     "test:types": "vitest --typecheck.only --run",
     "typecheck": "tsc --noEmit"
   },
