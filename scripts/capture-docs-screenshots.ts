@@ -37,6 +37,36 @@ async function main() {
   const browser = await chromium.launch()
   const failures: string[] = []
 
+  // A host without Inter captures the whole set in the fallback sans, which reads as a diff on
+  // every image. Compare against a family that cannot exist: equal widths mean both fell back.
+  async function requireInter() {
+    const page = await browser.newPage()
+    try {
+      const isAvailable = await page.evaluate(() => {
+        const measure = (family: string) => {
+          const context = document.createElement('canvas').getContext('2d')
+          if (context === null) return 0
+          context.font = `48px ${family}`
+          return context.measureText('Revenue December 2025').width
+        }
+        return measure('Inter') !== measure('__Layer__MissingFont__')
+      })
+
+      if (!isAvailable) {
+        console.error('Inter is not installed on this host, so every capture would use the fallback sans.')
+        console.error('Install it (macOS: `brew install --cask font-inter`, Debian/Ubuntu: `apt-get install fonts-inter`) and re-run.')
+        await browser.close()
+        server.close()
+        process.exit(1)
+      }
+    }
+    finally {
+      await page.close()
+    }
+  }
+
+  await requireInter()
+
   async function capture({ storyId, out: file, viewport, interactAt, maxHeight, captureViewport }: DocsScreenshot) {
     const context = await browser.newContext({
       viewport: { width: DOCS_SCREENSHOT_WIDTHS[interactAt ?? viewport], height: 900 },
