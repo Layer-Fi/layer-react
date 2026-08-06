@@ -32,7 +32,7 @@ on:
         type: string
         default: main
       dry_run:
-        description: 'Capture and upload artifacts, but open no PR'
+        description: 'Dry run'
         type: boolean
         default: true
 
