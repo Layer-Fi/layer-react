@@ -28,7 +28,7 @@ configs, and slots live there.
 
 ```
 npm test                        # watch
-npm test -- --run               # single pass (CI: vitest.yml)
+npm test -- --run               # single pass (CI: Checks / Vitest)
 npm test -- --run path/to/file  # one file
 ```
 

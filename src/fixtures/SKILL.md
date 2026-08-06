@@ -76,7 +76,7 @@ hand`. **Never edit those files** — change the schema or the generator instead
 
 ```
 npm run fixtures:generate     # rewrite the .gen.ts files
-npm run fixtures:check        # fail if any is stale (CI: fixtures.yml)
+npm run fixtures:check        # fail if any is stale (CI: Checks / Fixtures)
 ```
 
 Commit the regenerated output alongside the change that caused it, or CI fails.
