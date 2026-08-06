@@ -109,14 +109,14 @@ jobs:
               return [...new Set(seen)].join(', ');
             };
 
-            // A bare `fixAvailable: true` names no target version, so say where the bump lands:
-            // our own declared range for a direct dependency, someone else's for a transitive one.
+            // `true` means a patched version already satisfies the declared range, so the fix is a
+            // lockfile refresh. An object means a manifest change to that version. Anything else —
+            // false, null, absent — is no known fix, and must not read as one.
             const describeFix = (v) => {
-              if (v.fixAvailable === false) return 'no';
-              if (!v.fixAvailable?.version) return v.isDirect ? 'yes — bump ours' : 'yes — via parent';
-              return v.fixAvailable.isSemVerMajor
-                ? `${v.fixAvailable.name}@${v.fixAvailable.version} (major)`
-                : `${v.fixAvailable.name}@${v.fixAvailable.version}`;
+              if (v.fixAvailable === true) return 'yes — `npm audit fix`';
+              if (!v.fixAvailable?.version) return 'no';
+              const target = `${v.fixAvailable.name}@${v.fixAvailable.version}`;
+              return v.fixAvailable.isSemVerMajor ? `${target} (major)` : target;
             };
 
             const repo = { owner: context.repo.owner, repo: context.repo.repo };
@@ -200,4 +200,7 @@ jobs:
           fi
           PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" --arg url "$RUN_URL" \
             '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total — <" + $url + "|run summary>")}')
-          curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
+          # --fail-with-body: Slack answers a dead or revoked webhook with 4xx and a reason, which
+          # plain `curl -s` would swallow as exit 0 — a lost ping that looks like a delivered one.
+          curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
