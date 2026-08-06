@@ -254,10 +254,10 @@
   },
   "BankTransactionsSyncingStatus": {
     "label": {
-      "may_take_up_to_hours_one": "Cela peut prendre jusqu’à {{displayCount}} heure.",
-      "may_take_up_to_hours_other": "Cela peut prendre jusqu’à {{displayCount}} heures.",
-      "may_take_up_to_minutes_one": "Cela peut prendre jusqu’à {{displayCount}} minute.",
-      "may_take_up_to_minutes_other": "Cela peut prendre jusqu’à {{displayCount}} minutes."
+      "may_take_up_to_hours_one": "Cela peut prendre jusqu’à {{displayCount}} heure.",
+      "may_take_up_to_hours_other": "Cela peut prendre jusqu’à {{displayCount}} heures.",
+      "may_take_up_to_minutes_one": "Cela peut prendre jusqu’à {{displayCount}} minute.",
+      "may_take_up_to_minutes_other": "Cela peut prendre jusqu’à {{displayCount}} minutes."
     },
     "state": {
       "syncing_account_data": "Synchronisation des données du compte",
@@ -309,7 +309,7 @@
       "add_new_split": "Ajouter une nouvelle répartition",
       "set_customer_vendor": "Sélectionner un client ou un fournisseur",
       "split_label": "Répartir",
-      "split_number_label": "Répartition no {{number}}"
+      "split_number_label": "Répartition no {{number}}"
     },
     "error": {
       "matching_transactions_not_found": "Nous n’avons pas trouvé de transactions correspondantes",
