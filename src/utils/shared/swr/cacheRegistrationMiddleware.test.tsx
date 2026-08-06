@@ -119,8 +119,13 @@ describe('cacheRegistrationMiddleware', () => {
       )
     }
 
-    // Exactly one live listener set at all times — not one more per cycle.
-    expect(liveAfterCycle).toEqual([1, 1, 1])
+    // Fail rather than pass vacuously if swr stops registering document listeners and this
+    // stops measuring anything.
+    expect(liveAfterCycle[0]).toBeGreaterThan(0)
+
+    // The count itself depends on which events swr's focus preset registers; what matters is
+    // that re-registering does not add a set per cycle.
+    expect(new Set(liveAfterCycle).size).toBe(1)
 
     unmount()
 
