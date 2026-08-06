@@ -12,18 +12,27 @@ const SETTLE_MS = 750
 // than hanging it.
 const FONT_LOAD_TIMEOUT_MS = 30_000
 
-// A stalled font response leaves document.fonts.ready pending forever, and page.evaluate has no
-// timeout of its own — so bound the wait in the page.
+// Poll rather than awaiting document.fonts.ready once: the face arrives via an @import in
+// src/styles/index.scss, so it is not even registered until that sheet lands, and fonts.ready can
+// resolve before then. A single check is a false negative waiting to happen.
+//
+// Bounded because page.evaluate has no timeout of its own — a stalled response would otherwise
+// leave this pending forever.
 //
 // Declaring a helper inside the callback would break this: tsx compiles with esbuild's keepNames,
 // which wraps named function bindings in a __name() call that does not exist in the page.
 function hasInterLoaded(page: Page) {
   return page.evaluate(async (timeoutMs) => {
-    await Promise.race([
-      document.fonts.ready,
-      new Promise(resolve => setTimeout(resolve, timeoutMs)),
-    ])
-    return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
+    const deadline = Date.now() + timeoutMs
+
+    while (Date.now() < deadline) {
+      if (Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')) {
+        return true
+      }
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+
+    return false
   }, FONT_LOAD_TIMEOUT_MS)
 }
 
