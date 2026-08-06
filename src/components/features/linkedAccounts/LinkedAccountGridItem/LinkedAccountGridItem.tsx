@@ -156,7 +156,7 @@ export const LinkedAccountGridItem = ({
     })
   }
 
-  if (accountMissingOpeningBalance(bankAccount)) {
+  if (!plaidAccount && accountMissingOpeningBalance(bankAccount)) {
     additionalConfigs.push({
       name: t('linkedAccounts:LinkedAccountGridItem.action.add_opening_balance', 'Add opening balance'),
       action: () => {
