@@ -37,9 +37,9 @@ jobs:
             run: npm test -- --run
           - name: Fixtures
             run: npm run fixtures:check
-          - name: MSW coverage
+          - name: API mocks
             run: npm run msw:check-coverage
-          - name: i18n
+          - name: Translations
             run: npm run i18n:check
           - name: Build
             run: npm run build && npm run build:check

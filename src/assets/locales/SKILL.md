@@ -167,7 +167,7 @@ Alpha releases are exempt; untranslated strings are expected there.
 
 ### Enforcement
 
-`npm run i18n:check` (CI: [`Checks / i18n`](../../../.github/workflows/checks.yml)) fails on a key
+`npm run i18n:check` (CI: [`Checks / Translations`](../../../.github/workflows/checks.yml)) fails on a key
 with two different English defaults, a key whose namespace or owner doesn't match its file, an
 `en-US`/`fr-CA` structural mismatch, and straight apostrophes. ESLint additionally flags a foreign
 namespace inline as you type. Both derive the same namespace/owner rules, in
