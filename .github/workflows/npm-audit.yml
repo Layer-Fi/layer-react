@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read   # to link findings to the Dependabot PR that fixes them
 
 jobs:
   audit:
@@ -118,11 +119,36 @@ jobs:
                 : `${v.fixAvailable.name}@${v.fixAvailable.version}`;
             };
 
+            const repo = { owner: context.repo.owner, repo: context.repo.repo };
+
+            // Single-package PRs name it in the title; grouped PRs list each one in the body as
+            // "Updates `pkg` from". Fix links are a convenience, so a failed lookup just omits them.
+            const fixPrs = new Map();
+            try {
+              const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              for (const pr of open) {
+                if (pr.user?.login !== 'dependabot[bot]') continue;
+                const names = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
+                const titled = pr.title.match(/[Bb]ump (@?[\w./-]+) from/);
+                if (titled) names.push(titled[1]);
+                for (const name of names) {
+                  if (!fixPrs.has(name)) fixPrs.set(name, pr);
+                }
+              }
+            } catch (error) {
+              core.warning(`Could not list open PRs, omitting fix links: ${error.message}`);
+            }
+
+            const describePr = (v) => {
+              const pr = fixPrs.get(v.name);
+              return pr ? `[#${pr.number}](${pr.html_url})` : '—';
+            };
+
             const table = (rows) => {
               if (rows.length === 0) return '_None._\n';
-              const header = '| package | severity | fix available | advisories |\n|---|---:|---|---|\n';
+              const header = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
               const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${describeVia(v)} |\n`)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${describePr(v)} | ${describeVia(v)} |\n`)
                 .join('');
               const truncated = rows.length > 50
                 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
