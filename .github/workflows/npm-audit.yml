@@ -55,11 +55,7 @@ jobs:
             const fs = require('fs');
 
             const read = (file) => {
-              try {
-                return JSON.parse(fs.readFileSync(file, 'utf8'));
-              } catch {
-                return null;
-              }
+              try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return null; }
             };
 
             const all = read('audit-all.json');
@@ -82,16 +78,17 @@ jobs:
 
             const vulns = toList(all);
 
-            // Reporting an empty runtime set would read as "0 consumer-facing" and hide real
-            // exposure, so an unusable prod audit over-reports and fails the run instead.
+            // An empty runtime set would read as "0 consumer-facing" and hide real exposure, so an
+            // unusable prod audit over-reports and fails the run instead.
             const prodAvailable = !!prod?.vulnerabilities;
             if (!prodAvailable) {
               core.setFailed('audit-prod.json missing or unparseable — cannot split runtime from dev exposure.');
             }
 
-            const runtimeNames = new Set(toList(prod).map(v => v.name));
-            const runtime = prodAvailable ? vulns.filter(v => runtimeNames.has(v.name)) : vulns;
-            const dev = prodAvailable ? vulns.filter(v => !runtimeNames.has(v.name)) : [];
+            const inProd = new Set(toList(prod).map(v => v.name));
+            const [runtime, dev] = prodAvailable
+              ? [vulns.filter(v => inProd.has(v.name)), vulns.filter(v => !inProd.has(v.name))]
+              : [vulns, []];
 
             core.setOutput('total', String(vulns.length));
             core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
@@ -101,17 +98,21 @@ jobs:
               return;
             }
 
-            // npm emits one `via` entry per dependency path, so titles repeat; a bare string is a
-            // package that pulled the advisory in rather than an advisory title of its own.
+            // Both renderers walk this, so neither repeats the prod-available branch.
+            const groups = prodAvailable
+              ? [{ title: 'Consumer-facing', rows: runtime }, { title: 'Dev / CI only', rows: dev }]
+              : [{ title: '⚠️ Potentially consumer-facing — prod/dev split unknown', rows: vulns }];
+
+            // npm repeats a title per dependency path; a bare string is the package that pulled the
+            // advisory in, not a title.
             const describeVia = (v) => {
               if (!Array.isArray(v.via)) return v.via;
-              const seen = v.via.map(x => (typeof x === 'string' ? `via \`${x}\`` : x.title || x.name));
-              return [...new Set(seen)].join(', ');
+              const titles = v.via.map(x => (typeof x === 'string' ? `via \`${x}\`` : x.title || x.name));
+              return [...new Set(titles)].join(', ');
             };
 
-            // `true` means a patched version already satisfies the declared range, so the fix is a
-            // lockfile refresh. An object means a manifest change to that version. Anything else —
-            // false, null, absent — is no known fix, and must not read as one.
+            // `true` means a patched version already satisfies the declared range — a lockfile
+            // refresh. An object means a manifest change. Anything else is no known fix.
             const describeFix = (v) => {
               if (v.fixAvailable === true) return 'yes — `npm audit fix`';
               if (!v.fixAvailable?.version) return 'no';
@@ -120,19 +121,18 @@ jobs:
             };
 
             const repo = { owner: context.repo.owner, repo: context.repo.repo };
+            const slug = `${repo.owner}/${repo.repo}`;
 
-            // A single-package PR names it in the title, a grouped PR lists each one in the body.
-            // Deduped, since a PR may well name the same package in both places.
+            // Single-package PRs name it in the title, grouped PRs in the body. Deduped, since one
+            // PR can do both.
             const packagesIn = (pr) => {
               const grouped = [...(pr.body ?? '').matchAll(/^Updates `([^`]+)` from/gm)].map(m => m[1]);
               const single = pr.title.match(/bump (@?[\w./-]+) from/i);
               return [...new Set(single ? [...grouped, single[1]] : grouped)];
             };
 
-            // A package can appear in more than one PR — security updates bypass grouping, so a
-            // grouped version bump and a standalone security bump can both be open. List all of
-            // them, newest first (pulls.list order). Links are a convenience: a failed listing
-            // empties the column rather than taking the report down.
+            // A package can sit in several open PRs at once — security updates bypass grouping — so
+            // keep them all. Links are a convenience: a failed listing just empties the column.
             const fixPrs = new Map();
             try {
               const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
@@ -145,64 +145,51 @@ jobs:
               core.warning(`Could not list open PRs, omitting fix links: ${error.message}`);
             }
 
-            const prLinks = v => (fixPrs.get(v.name) ?? []).map(pr => `[#${pr.number}](${pr.url})`).join(', ');
+            const prs = v => (fixPrs.get(v.name) ?? []).map(pr => `[#${pr.number}](${pr.url})`).join(', ');
 
             const table = (rows) => {
               if (rows.length === 0) return '_None._\n';
-              const header = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
+              const head = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
               const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${prLinks(v) || '—'} | ${describeVia(v)} |\n`)
+                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${prs(v) || '—'} | ${describeVia(v)} |\n`)
                 .join('');
-              const truncated = rows.length > 50
-                ? `\n_+${rows.length - 50} more (see the audit JSON)._\n`
-                : '';
-              return header + body + truncated;
+              return head + body + (rows.length > 50 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n` : '');
             };
 
-            const alerts = `https://github.com/${repo.owner}/${repo.repo}/security/dependabot`;
+            const alerts = `https://github.com/${slug}/security/dependabot`;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${slug}/actions/runs/${context.runId}`;
 
-            const summary = [
+            await core.summary.addRaw([
               prodAvailable
                 ? `**${runtime.length}** consumer-facing, **${dev.length}** dev/CI-only, most severe first.\n`
-                : '> ⚠️ The production-only audit did not produce usable output, so runtime and dev\n'
-                  + `> exposure could not be separated. All **${vulns.length}** findings are\n`
-                  + '> listed below as potentially consumer-facing. The workflow run is marked failed.\n',
-              `## Runtime (reaches consumers) — ${runtime.length}\n`,
-              table(runtime),
-              `## Dev / CI only — ${dev.length}\n`,
-              table(dev),
+                : `> ⚠️ The production-only audit did not produce usable output, so all **${vulns.length}**\n`
+                  + '> findings are listed as potentially consumer-facing. The run is marked failed.\n',
+              ...groups.map(g => `## ${g.title} — ${g.rows.length}\n\n${table(g.rows)}`),
               '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
                 + `> Per-advisory state lives in [Dependabot alerts](${alerts}); triage rules and SLAs:\n`
                 + '> `docs/dependency-policy.md`.\n',
               process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
-            ].filter(Boolean).join('\n');
+            ].filter(Boolean).join('\n')).write();
 
-            await core.summary.addRaw(summary).write();
-
-            // Slack gets counts, not rows: it has no table primitive, and a fixed-width block would
-            // not reflow on mobile. One bolded header per environment, then a bullet per severity.
-            const SEVERITY_EMOJI = { critical: '🚨', high: '🔴', moderate: '🟠', low: '🟡' };
-
-            const section = (title, rows) => {
-              const bullets = [...SEVERITIES].reverse()
-                .map(severity => ({ severity, count: rows.filter(v => v.severity === severity).length }))
-                .filter(({ count }) => count > 0)
-                .map(({ severity, count }) => `• ${SEVERITY_EMOJI[severity]} ${count} ${severity}`);
-              return [`*${title} (${rows.length})*`, ...(bullets.length ? bullets : ['• none'])].join('\n');
+            // Slack has no table primitive and code blocks do not reflow on mobile, so it gets a
+            // header per environment and a bullet per severity.
+            const EMOJI = { critical: '🚨', high: '🔴', moderate: '🟠', low: '🟡' };
+            const bullets = (rows) => {
+              const lines = [...SEVERITIES].reverse()
+                .map(severity => [severity, rows.filter(v => v.severity === severity).length])
+                .filter(([, count]) => count > 0)
+                .map(([severity, count]) => `• ${EMOJI[severity]} ${count} ${severity}`);
+              return lines.length ? lines : ['• none'];
             };
 
-            const runUrl = `${process.env.GITHUB_SERVER_URL}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`;
-            // Every finding's PRs, not just the consumer-facing ones — a merge-ready dev PR is still
-            // work waiting. `vulns` is severity-ordered, so the links come out worst-first.
-            const linked = vulns.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`));
+            // Every finding's PRs, not just consumer-facing ones — a merge-ready dev PR is still work
+            // waiting. `vulns` is severity-ordered, so these come out worst-first.
+            const linked = new Set(vulns.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`)));
 
             core.setOutput('slack', [
-              `[${repo.owner}/${repo.repo}] npm audit — ${vulns.length} findings`,
-              prodAvailable
-                ? section('Consumer-facing', runtime)
-                : section(`⚠️ Potentially consumer-facing — prod audit unusable, split unknown`, vulns),
-              prodAvailable ? section('Dev / CI only', dev) : '',
-              linked.length ? `Open fix PRs: ${[...new Set(linked)].join(' ')}` : '',
+              `[${slug}] npm audit — ${vulns.length} findings`,
+              ...groups.map(g => [`*${g.title} (${g.rows.length})*`, ...bullets(g.rows)].join('\n')),
+              linked.size ? `Open fix PRs: ${[...linked].join(' ')}` : '',
               `Details: <${runUrl}|run summary> · <${alerts}|Dependabot alerts>`,
             ].filter(Boolean).join('\n\n'));
 
