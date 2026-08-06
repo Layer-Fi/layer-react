@@ -51,6 +51,7 @@
     "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "screenshots:capture": "tsx scripts/capture-docs-screenshots.ts",
     "screenshots:check": "tsx scripts/check-docs-screenshots.ts",
+    "size": "size-limit",
     "stories:check-render": "tsx scripts/check-stories-render.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
@@ -86,6 +87,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
+    "@size-limit/preset-small-lib": "^13.0.3",
     "@storybook/react-vite": "^10.4.6",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@stylistic/stylelint-config": "^2.0.0",
@@ -121,6 +123,7 @@
     "rollup": "^4.62.0",
     "rollup-plugin-dts": "^6.4.1",
     "sass-embedded": "^1.100.0",
+    "size-limit": "^13.0.3",
     "storybook": "^10.4.6",
     "stylelint": "^16.21.0",
     "stylelint-config-standard": "^38.0.0",
