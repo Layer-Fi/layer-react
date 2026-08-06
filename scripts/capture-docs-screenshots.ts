@@ -1,31 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { chromium, type Page } from 'playwright'
+import { chromium } from 'playwright'
 import { type DocsScreenshot, DOCS_SCREENSHOT_WIDTHS, DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
 import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serve-storybook-static'
 
 // The story is rendered before its data lands, so settle after the network goes quiet.
 // preview.tsx adds a 250ms floor to every mocked response.
 const SETTLE_MS = 750
-
-// Ceiling on the Inter webfont preflight, so an unresponsive rsms.me fails the run rather
-// than hanging it.
-const FONT_LOAD_TIMEOUT_MS = 30_000
-
-// A stalled font response leaves document.fonts.ready pending forever, and page.evaluate has no
-// timeout of its own — so bound the wait in the page.
-//
-// Declaring a helper inside the callback would break this: tsx compiles with esbuild's keepNames,
-// which wraps named function bindings in a __name() call that does not exist in the page.
-function hasInterLoaded(page: Page) {
-  return page.evaluate(async (timeoutMs) => {
-    await Promise.race([
-      document.fonts.ready,
-      new Promise(resolve => setTimeout(resolve, timeoutMs)),
-    ])
-    return Array.from(document.fonts).some(face => face.family === 'InterVariable' && face.status === 'loaded')
-  }, FONT_LOAD_TIMEOUT_MS)
-}
 
 function parseArgs() {
   const args = process.argv.slice(2)
@@ -55,41 +36,6 @@ async function main() {
   const { server, origin } = await serveStorybookStatic()
   const browser = await chromium.launch()
   const failures: string[] = []
-
-  // src/styles/index.scss pulls Inter from rsms.me, so every capture depends on that host being
-  // reachable. A silent fallback to the generic sans reads as a diff on all 36 images, so fail
-  // fast here rather than after working through the whole manifest. Each capture re-checks in its
-  // own context, which is what actually guarantees the font for a given image.
-  async function requireInterWebFont(storyId: string) {
-    const page = await browser.newPage()
-    let isLoaded = false
-
-    try {
-      // An unreachable rsms.me stalls the stylesheet, which can hold up `load` and time the
-      // navigation out. Any failure in here means the same thing as a missing face, so report it
-      // the same way rather than crashing with a navigation error.
-      await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`, { timeout: FONT_LOAD_TIMEOUT_MS })
-      await page.waitForSelector('#storybook-root > *', { timeout: FONT_LOAD_TIMEOUT_MS })
-
-      isLoaded = await hasInterLoaded(page)
-    }
-    catch (error) {
-      console.error(`Could not verify the Inter webfont: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`)
-    }
-    finally {
-      await page.close()
-    }
-
-    if (!isLoaded) {
-      console.error('The Inter webfont (https://rsms.me/inter/inter.css) did not load, so every capture')
-      console.error('would fall back to the generic sans. Check network access to rsms.me and re-run.')
-      await browser.close()
-      server.close()
-      process.exit(1)
-    }
-  }
-
-  await requireInterWebFont(targets[0].storyId)
 
   async function capture({ storyId, out: file, viewport, interactAt, maxHeight, captureViewport }: DocsScreenshot) {
     const context = await browser.newContext({
@@ -125,14 +71,6 @@ async function main() {
         crashes.push(await page.locator('#error-message').innerText())
       }
       if (crashes.length > 0) throw new Error(crashes.join('\n'))
-
-      // After the crash checks: a face only reaches `loaded` once something renders with it, so a
-      // story that died before mounting any text would look like a font failure. Contexts do not
-      // share a cache, so this story fetched the font itself and could have missed even though the
-      // preflight passed. Throwing here earns the retry below.
-      if (!await hasInterLoaded(page)) {
-        throw new Error('the Inter webfont (https://rsms.me/inter/inter.css) did not load')
-      }
 
       if (interactAt && interactAt !== viewport) {
         await page.setViewportSize({ width: DOCS_SCREENSHOT_WIDTHS[viewport], height: 900 })
