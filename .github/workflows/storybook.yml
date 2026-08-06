@@ -3,12 +3,10 @@ name: Storybook
 # Rendering every story is the only check that covers feature and view stories — Chromatic is
 # scoped to the design system — so it stays, but a PR that cannot affect a story should not pay
 # for a Storybook build, a Chromium install and a full render pass.
-#
-# No `branches` filter, unlike the other PR workflows: the paths above already gate this, so
-# leaving it open costs nothing and keeps the occasional PR against a non-main base covered.
 
 on:
   pull_request:
+    branches: [ main ]
     paths:
       - src/**
       - '!src/**/*.test.ts'
