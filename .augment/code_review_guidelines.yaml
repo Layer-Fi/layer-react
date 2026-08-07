@@ -7,9 +7,10 @@
 # already fails the PR on: import order and boundaries, react-hooks/exhaustive-deps,
 # inline type imports, unused vars, quotes, semicolons, indent, CSS property order.
 
+# src/assets/locales/** is deliberately NOT ignored: a hand edit there is a bug we want
+# flagged. The generated diffs land on the i18n/extract-keys and Crowdin bot branches.
 file_paths_to_ignore:
   - "src/fixtures/generated/**"
-  - "src/assets/locales/**"
   - "consumer-fixtures/**"
   - "dist/**"
   - "storybook-static/**"
@@ -44,6 +45,7 @@ areas:
     globs:
       - "src/**/*.ts"
       - "src/**/*.tsx"
+      - "src/assets/locales/**"
     rules:
       - id: "all_strings_translated"
         description: "Every user-visible string goes through t('ns:category.key', 'Default') with an inline default — including aria-label, title, placeholder, table headers, and empty-state copy. A hardcoded string is untranslatable for consumers."
@@ -58,6 +60,7 @@ areas:
     globs:
       - "src/schemas/**"
       - "src/hooks/api/**"
+      - "src/types/**"
     rules:
       - id: "nullish_or_by_default"
         description: "Optional or nullable API fields use Schema.NullishOr, not NullOr or optional alone. The backend omits a field on one endpoint and returns null on another; anything narrower has broken decoding before."
@@ -76,13 +79,17 @@ areas:
         severity: "medium"
 
   mocks_and_fixtures:
-    description: "MSW mocks and generated fixture data"
+    description: "MSW mocks, generated fixture data, and the test payloads that use them"
     globs:
       - "src/msw/**"
       - "src/fixtures/**"
+      - "src/testUtils/**"
+      - "**/*.test.ts"
+      - "**/*.test.tsx"
+      - "**/*.storyData.tsx"
     rules:
       - id: "no_handwritten_snake_case"
-        description: "Never hand-write snake_case JSON in mocks or fixtures. Mocks hold decoded values and encode through the schema, so wire-format changes propagate automatically. Hand-written wire JSON silently rots."
+        description: "Never hand-write snake_case JSON in mocks, fixtures, or tests. Mocks hold decoded values and encode through the schema, so wire-format changes propagate automatically. Hand-written wire JSON silently rots."
         severity: "high"
 
       - id: "msw_no_runtime_hook_imports"

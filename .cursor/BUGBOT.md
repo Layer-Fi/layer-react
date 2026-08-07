@@ -34,8 +34,8 @@ in each directory.
 
 - Optional or nullable API fields declared as anything other than `Schema.NullishOr`. The backend
   omits a field on one endpoint and returns `null` on another.
-- Hand-written snake_case JSON in mocks, fixtures, or tests. Mocks hold decoded values and encode
-  through the schema.
+- Hand-written snake_case JSON anywhere it stands in for a wire payload — mocks, fixtures, tests,
+  `*.storyData.tsx`. Mocks hold decoded values and encode through the schema.
 - A new or renamed method file under `src/hooks/api/**` with no MSW handler at the mirrored path
   in `src/msw/api/**` — and the handler must be **registered in the enclosing `handlers.ts`**.
   Unhandled `layerfi.com` requests fail Vitest and Storybook.
@@ -115,7 +115,6 @@ in each directory.
   order, import boundaries, relative-parent imports, `react-hooks/exhaustive-deps`, inline type
   imports, unused variables, quotes, semicolons, indentation, line length, or CSS property order.
 - `src/fixtures/generated/*.gen.ts` — generated output, committed on purpose.
-- `src/assets/locales/**` — generated from code and Crowdin.
 - `consumer-fixtures/**` — deliberately minimal smoke apps, outside the lint config.
 - `dist/`, `storybook-static/`, `package-lock.json`.
 - `.claude/worktrees/**`.
