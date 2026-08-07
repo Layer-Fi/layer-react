@@ -14,3 +14,6 @@ consumer-fixtures/*/node_modules/
 consumer-fixtures/*/dist/
 consumer-fixtures/*/package-lock.json
 consumer-fixtures/*/*.tgz
+
+# Written by `npm run audit:floors` when handed an output path.
+audit-floors.json

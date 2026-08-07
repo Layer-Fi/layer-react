@@ -55,6 +55,21 @@ catch (error) {
 
 const findings = Object.entries(report.vulnerabilities ?? {})
   .filter(([, v]) => v.via.some(via => typeof via === 'object'))
+  .map(([name, v]) => ({
+    name,
+    range: v.range,
+    severity: v.severity,
+    advisories: v.via
+      .filter((via): via is { title: string, url: string } => typeof via === 'object')
+      .map(({ title, url }) => ({ title, url })),
+  }))
+
+// The audit workflow folds this into the one Slack report, so the findings have to outlive the
+// process rather than only reaching the log.
+const outPath = process.argv[2]
+if (outPath) {
+  writeFileSync(outPath, JSON.stringify({ audited: Object.keys(floors).length, unpinnable, findings }))
+}
 
 console.info(`\nAudited ${Object.keys(floors).length} declared floors.`)
 if (unpinnable.length > 0) {
@@ -67,12 +82,9 @@ if (findings.length === 0) {
 }
 
 console.error('\nDeclared ranges admit vulnerable versions:\n')
-for (const [name, v] of findings) {
-  const titles = v.via
-    .filter((via): via is { title: string, url: string } => typeof via === 'object')
-    .map(via => `      ${via.title} — ${via.url}`)
-  console.error(`  ${name} ${v.range} (${v.severity})`)
-  console.error(titles.join('\n'))
+for (const finding of findings) {
+  console.error(`  ${finding.name} ${finding.range} (${finding.severity})`)
+  console.error(finding.advisories.map(({ title, url }) => `      ${title} — ${url}`).join('\n'))
 }
 console.error(
   `\nRaise the floor in package.json past each vulnerable range. Bumping the lockfile alone `

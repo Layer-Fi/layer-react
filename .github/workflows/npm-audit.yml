@@ -4,33 +4,20 @@ on:
   schedule:
     - cron: '0 16 * * *'   # daily at 16:00 UTC
   workflow_dispatch: {}
+  # Floors are a property of what we publish, so the change that moves them is gated rather than
+  # the next nightly run catching it. package-lock.json is absent deliberately: floors come from
+  # the declared ranges, so a lockfile-only change cannot move them.
+  pull_request:
+    paths:
+      - package.json
+      - scripts/audit-declared-floors.ts
+      - .github/workflows/npm-audit.yml
 
 permissions:
   contents: read
   pull-requests: read   # to link findings to the Dependabot PR that fixes them
 
 jobs:
-  # Gating, unlike the report below: a vulnerable floor is a defect in what we publish, and the
-  # committed lockfile cannot reveal it.
-  floors:
-    name: Declared floors
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Use Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          cache: 'npm'
-
-      - name: Install
-        run: npm ci
-
-      - name: Audit declared floors
-        run: npm run audit:floors
-
   audit:
     name: Report
     runs-on: ubuntu-latest
@@ -46,6 +33,14 @@ jobs:
 
       - name: Install
         run: npm ci
+
+      # The lockfile audit below cannot see this: consumers resolve our declared ranges, so a
+      # lockfile-only bump patches CI and leaves the published floor vulnerable. Non-blocking here
+      # so the report still runs; the gate is the final step.
+      - name: Audit declared floors
+        id: floors
+        continue-on-error: true
+        run: npm run audit:floors -- audit-floors.json
 
       # The production-only tree is what consumers inherit. Peers appear in neither.
       - name: Run npm audit
@@ -63,6 +58,7 @@ jobs:
           path: |
             audit-all.json
             audit-prod.json
+            audit-floors.json
 
       # Run summary rather than an issue: Dependabot alerts already track per-advisory state.
       - name: Summarize audit
@@ -80,6 +76,9 @@ jobs:
 
             const all = read('audit-all.json');
             const prod = read('audit-prod.json');
+            // Absent only if the floors step crashed before writing; the gate step still fails.
+            const floors = read('audit-floors.json');
+            const floorFindings = floors?.findings ?? [];
 
             if (!all?.vulnerabilities) {
               core.setOutput('total', 'unknown');
@@ -112,8 +111,12 @@ jobs:
             core.setOutput('total', String(vulns.length));
             core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
 
-            if (vulns.length === 0) {
-              await core.summary.addRaw('No vulnerabilities.\n').write();
+            core.setOutput('floors', String(floorFindings.length));
+
+            // A clean lockfile with a vulnerable floor is the whole point of this report, so the
+            // quiet exit needs both to be clean.
+            if (vulns.length === 0 && floorFindings.length === 0) {
+              await core.summary.addRaw('No vulnerabilities, and no declared floor admits one.\n').write();
               return;
             }
 
@@ -189,6 +192,11 @@ jobs:
                 : `> ⚠️ The production-only audit did not produce usable output, so all **${vulns.length}**\n`
                   + '> findings are listed as potentially consumer-facing. The run is marked failed.\n',
               ...groups.map(g => `## ${g.title} — ${g.rows.length}\n\n${table(g.rows)}`),
+              `## Declared floors — ${floorFindings.length}\n\n${floorFindings.length === 0
+                ? '_None._\n'
+                : '| package | vulnerable range | severity | advisories |\n|---|---|---:|---|\n'
+                  + floorFindings.map(f => `| ${f.name} | \`${f.range}\` | ${f.severity} | `
+                    + `${f.advisories.map(a => `[${a.title}](${a.url})`).join(', ')} |\n`).join('')}`,
               '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
                 + `> Per-advisory state lives in [Dependabot alerts](${alerts}).\n`,
               process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
@@ -228,7 +236,7 @@ jobs:
             ).values()].sort((a, b) => a.number - b.number);
 
             const blocks = capBlocks([
-              header(`npm audit — ${vulns.length} findings`),
+              header(`npm audit — ${vulns.length} findings, ${floorFindings.length} vulnerable floors`),
               contextBlock(`*${slug}* · <${runUrl}|run summary>`),
               ...(prodAvailable
                 ? []
@@ -239,25 +247,39 @@ jobs:
                 meta: metaLine(severityTally(g.rows), fixableNote(g.rows)),
                 lines: g.rows.length ? packageLines(g.rows) : [],
               })),
+              // Always shown, empty included: "no vulnerable floors" is the claim the lockfile
+              // audit above cannot make, so its absence would read as unchecked.
+              ...group({
+                title: 'Vulnerable Floors',
+                count: floorFindings.length,
+                meta: metaLine(
+                  severityTally(floorFindings),
+                  floors ? 'lowest versions our published ranges admit' : '⚠️ floor audit produced no output',
+                ),
+                lines: floorFindings.map(f => row(SEVERITY_EMOJI[f.severity], f.name, `admits \`${f.range}\``)),
+              }),
               ...(prRows.length ? group({ title: 'Open Fix PRs', lines: prRows.map(prLine) }) : []),
               contextBlock(`<${alerts}|Dependabot alerts> · peer dependencies (\`react\`, \`react-dom\`) are not covered by \`npm audit\``),
             ]);
 
             // `runtime` is every finding when the prod audit failed, so the split is not stated.
             core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} findings, ${
-              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}`);
+              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}, ${
+              floorFindings.length} vulnerable floors`);
             core.setOutput('slack_blocks', JSON.stringify(blocks));
 
       # Runs on failure too: a broken audit is when the ping matters most. Counts come from the
-      # step above, so the two reports cannot disagree.
+      # step above, so the two reports cannot disagree. Skipped on pull_request, where this
+      # workflow is a gate and the channel would get a message per push.
       - name: Send Slack notification
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_TEXT: ${{ steps.report.outputs.slack }}
           SLACK_BLOCKS: ${{ steps.report.outputs.slack_blocks }}
           RUNTIME: ${{ steps.report.outputs.runtime }}
           TOTAL: ${{ steps.report.outputs.total }}
+          FLOORS: ${{ steps.report.outputs.floors }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "$SLACK_WEBHOOK" ]; then
@@ -267,8 +289,10 @@ jobs:
           # Unset if the summarize step died first; `unknown` must not take the "nothing" branch.
           RUNTIME=${RUNTIME:-unknown}
           TOTAL=${TOTAL:-unknown}
-          if [ "$TOTAL" = "0" ]; then
-            echo "No vulnerabilities to report to Slack."
+          FLOORS=${FLOORS:-unknown}
+          # A clean lockfile is not silence-worthy on its own: a vulnerable floor still ships.
+          if [ "$TOTAL" = "0" ] && [ "$FLOORS" = "0" ]; then
+            echo "Nothing to report to Slack: no vulnerabilities and no vulnerable floors."
             exit 0
           fi
           if [ -z "$SLACK_TEXT" ]; then
@@ -284,3 +308,10 @@ jobs:
           # Slack answers a dead webhook with 4xx; plain `curl -s` would swallow that as exit 0.
           curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
             --data "$PAYLOAD" "$SLACK_WEBHOOK"
+
+      # Last, so a vulnerable floor is reported and notified before it fails the run.
+      - name: Gate on declared floors
+        if: ${{ steps.floors.outcome == 'failure' }}
+        run: |
+          echo "::error::Declared dependency floors admit known-vulnerable versions. See the run summary."
+          exit 1

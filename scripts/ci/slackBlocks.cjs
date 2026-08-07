@@ -25,11 +25,13 @@ const sections = (lines) => {
   return chunks.filter(chunk => chunk.length).map(chunk => section(chunk.join('\n')))
 }
 
-const group = ({ title, count, meta, lines }) => [
+// An empty group gets a header rather than a body line: nothing to report is the result worth
+// reading at a glance, and the meta line above it still carries the legend.
+const group = ({ title, count, meta, lines = [] }) => [
   divider(),
   section(`*[${count ?? lines.length}] ${title}*`),
   ...(meta ? [context(meta)] : []),
-  ...sections(lines),
+  ...(lines.length > 0 ? sections(lines) : [header('None! ✨')]),
 ]
 
 const prLine = pr => `[<${pr.url}|#${pr.number}>] ${truncate(pr.title, 88)}`
