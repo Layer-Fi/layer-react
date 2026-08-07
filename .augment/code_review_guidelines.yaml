@@ -224,7 +224,3 @@ areas:
       - id: "gallery_over_per_variant_stories"
         description: "Every story is a billed Chromatic snapshot. Pack primitive variants into a single gallery story instead of adding one story per variant."
         severity: "low"
-
-      - id: "no_scratch_stories_on_branch"
-        description: "*scratch.stories.tsx files are local-only and must not reach the branch. CI has a guard for this."
-        severity: "medium"

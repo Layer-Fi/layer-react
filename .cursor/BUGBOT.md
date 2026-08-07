@@ -3,128 +3,146 @@
 ## Context
 
 `@layerfi/components` is Layer's embeddable React accounting component library, published to npm
-from `src/index.tsx`. Consumers nest our components under `LayerProvider` and brand them with CSS
-variables, so **everything must be themeable, localizable, and mountable more than once on a
-page**. Most rules below exist to protect one of those three properties.
+from `src/index.tsx`. Consumers nest our components under `LayerProvider`, brand them with CSS
+variables, and embed them at arbitrary widths inside their own layouts. Everything here must be
+themeable, localizable, responsive, and mountable more than once on a page. Most rules below exist
+to protect one of those four properties.
 
 Stack: React 18, SWR (server state), Zustand (UI state), Effect `Schema` (every API contract),
-TanStack Form/Table, SCSS. Tests run on Vitest with MSW; UI coverage is mostly Storybook +
-Chromatic. Full conventions live in [`AGENTS.md`](../AGENTS.md) and the colocated `SKILL.md` file
-in each directory.
+TanStack Form/Table, SCSS. Tests run on Vitest with MSW; UI coverage is mostly Storybook and
+Chromatic. Full conventions live in [`AGENTS.md`](../AGENTS.md) and the colocated `SKILL.md` in
+each directory. [`.augment/code_review_guidelines.yaml`](../.augment/code_review_guidelines.yaml)
+is this same rule set in Augment's format — keep the two in sync.
 
 ## What to flag
 
 ### Money, numbers, and dates
 
-- Currency, percentage, number, or date values formatted by hand — string concatenation,
-  `toFixed`, `Intl.NumberFormat` inline, `toLocaleDateString`. Use `useIntlFormatter()` or
-  `<MoneySpan>`.
-- Currency values that are not **cents**, or percent values that are not **fractions**. A
-  currency input handed dollars, or a percent input handed `7` instead of `0.07`, is a bug.
-- A date formatter given a format string instead of a `DateFormat` enum value.
+- Currency values that are not cents, or percent values that are not fractions. Everything in this
+  codebase uses cents and fractions. A currency input handed dollars, or a percent input handed
+  `7` instead of `0.07`, is a real bug — check unit consistency wherever a monetary or percentage
+  value crosses a boundary.
+- Currency, percentages, numbers, or dates formatted by hand: string concatenation, `toFixed`,
+  inline `Intl.NumberFormat`, `toLocaleDateString`. Use `useIntlFormatter()` or `<MoneySpan>`.
+  Hand-formatting breaks localization for consumers.
+- A date formatter given a format string. Pass a `DateFormat` enum value.
+- Raw `BigDecimal` held in form or React state. It triggers TS2589 (excessively deep type
+  instantiation). Use `NonRecursiveBigDecimal` and thread the rich type as a prop.
 
 ### Strings
 
-- Any user-visible string not routed through `t('ns:category.key', 'Default')` with an inline
-  default — including `aria-label`, `title`, `placeholder`, table headers, and empty-state copy.
-- Edits to `src/assets/locales/**`. Those files are generated from code and Crowdin; the string
-  belongs in the `t()` call's inline default.
+- A user-visible string that does not go through `t('ns:category.key', 'Default')` with an inline
+  default. This includes `aria-label`, `title`, `placeholder`, table headers, and empty-state copy.
+  A hardcoded string is untranslatable for consumers.
+- Any edit to `src/assets/locales/**`. Those files are generated from the `t()` inline defaults and
+  Crowdin. The string belongs in the `t()` call.
 
-### Schemas and mocks
+### API contracts
 
-- Optional or nullable API fields declared as anything other than `Schema.NullishOr`. The backend
-  omits a field on one endpoint and returns `null` on another.
-- Hand-written snake_case JSON anywhere it stands in for a wire payload — mocks, fixtures, tests,
-  `*.storyData.tsx`. Mocks hold decoded values and encode through the schema.
-- A new or renamed method file under `src/hooks/api/**` with no MSW handler at the mirrored path
-  in `src/msw/api/**` — and the handler must be **registered in the enclosing `handlers.ts`**.
-  Unhandled `layerfi.com` requests fail Vitest and Storybook.
-- A changed fixture schema or generator without regenerated, committed
-  `src/fixtures/generated/*.gen.ts`.
-- Value imports of `@api/*` or `@hooks/*` inside `src/msw`. Handlers load before per-test mocks
-  apply and would break unrelated suites. Share contracts through `@schemas`.
+- An optional or nullable API field declared as anything other than `Schema.NullishOr`. The backend
+  omits a field on one endpoint and returns `null` on another; anything narrower has broken
+  decoding before.
+- A method file under `src/hooks/api/**` with no matching MSW handler at the mirrored path in
+  `src/msw/api/**`, registered in the enclosing `handlers.ts`. Unhandled `layerfi.com` requests
+  hard-fail Vitest and Storybook, and `npm run msw:check-coverage` fails CI.
+- A schema that looks invented rather than derived from a known contract. Say the API contract
+  should be confirmed before the schema lands.
+- A wire-format type added under `src/types/**`. That directory is internal-only types. Anything
+  the API sends or receives is an Effect schema in `src/schemas`.
+
+### Mocks, fixtures, and test payloads
+
+- Hand-written snake_case JSON in mocks, fixtures, tests, or `*.storyData.tsx`. Mocks hold decoded
+  values and encode through the schema, so wire-format changes propagate automatically.
+  Hand-written wire JSON silently rots.
+- A value import of `@api/*` or `@hooks/*` inside `src/msw`. Type imports are fine. Handlers load
+  before per-test mocks apply, so a runtime import breaks unrelated Vitest suites.
+- A change to a fixture schema or generator without regenerated, committed
+  `src/fixtures/generated/*.gen.ts`. Run `npm run fixtures:generate`; CI fails on staleness.
 
 ### State and data
 
-- `useSWR` or `fetch` called directly in feature code. Use the factories in `@hooks/utils/swr`
-  (`createQueryHook`, `createInfiniteQueryHook`, `createMutationHook`).
-- `businessId` or auth passed down from a component. Both are injected.
-- Server data mirrored into a Zustand store. SWR owns server state, Zustand owns UI state,
-  Context is dependency injection.
-- `setState` called during render.
-- `useEffect` + `setState` producing a value that could be derived during render instead.
-- A write with no corresponding cache invalidation (`createResourceGlobalCacheActions` +
-  `useOnTriggerSuccess`).
-
-### Memoization
-
-- `useCallback` or `useMemo` wrapping a primitive, or wrapping a value that is neither a prop to
-  a `memo()`ed child nor a dependency-array entry nor an expensive computation.
-- An object or array literal returned from a custom hook without `useMemo`.
+- `useSWR` or `fetch` in feature code. Use the factories in `@hooks/utils/swr` —
+  `createQueryHook`, `createInfiniteQueryHook`, `createMutationHook`. They own auth, `businessId`,
+  locale cache keying, and error handling.
+- `businessId` or auth passed down as a prop. Both are injected by the provider stack; threading
+  them works around the injection.
+- Server data mirrored into a Zustand store. SWR owns server state. A duplicate goes stale and
+  diverges from the cache.
+- `setState` called during render. Use an effect, or derive the value.
+- `useEffect` plus `setState` producing a value that could be derived during render from props or
+  existing state. Derived values are always consistent and skip the extra render.
+- A mutation that does not invalidate the caches it affects. Use
+  `createResourceGlobalCacheActions` with `useOnTriggerSuccess`; an uninvalidated write leaves
+  stale data on screen.
+- `useCallback` or `useMemo` on a primitive, or on anything that is not a prop to a `memo()`ed
+  child, a dependency-array entry, or a genuinely expensive computation. Conversely, flag an
+  unmemoized object or array literal returned from a custom hook — it breaks every consumer's
+  dependency arrays.
 
 ### Components and styling
 
-- New markup that reimplements something already in `@ui`. Build on the primitive; genuinely new
-  primitives go in `src/components/ui`.
-- Raw `<div>` where `<HStack>`/`<VStack>` fits; raw `<span>`/`<p>`/`<label>` where
-  `<Span>`/`<P>`/`<Label>` fits.
+- New markup that duplicates an existing `@ui` primitive. Reach for `HStack`/`VStack` instead of a
+  raw `div`, and `Span`/`P`/`Label`/`Header` instead of raw text elements. Genuinely new reusable
+  primitives go in `src/components/ui`, not inside a feature.
 - The `style` prop, inline styles, utility class strings, or class names built by concatenation.
-- Hard-coded colors or spacing. Both come from `src/styles/variables.scss`.
-- Variants expressed as extra class names instead of `data-*` attributes via `toDataProperties`.
-- `&__Element` nesting in SCSS. Write flat, greppable selectors; nest only modifiers of the
-  current selector.
-- A new data-dense surface — table, list, selection or filter UI — with no mobile variant. We are
-  embedded at arbitrary widths inside consumer layouts; desktop-only is broken for real users.
-  Render per-size variants with `ResponsiveComponent` (`slots` + `resolveVariant`).
-- A hand-built mobile card list or bottom sheet. Use `@blocks/MobileList`
-  (`MobileList`, `PaginatedMobileList`, `MobileListItem`, `MobileListSection`) and
-  `@blocks/MobileSelectionDrawer`.
+  Consumers restyle us by class name; concatenated names are ungreppable and unthemeable.
+- Hardcoded hex colors or pixel spacing. Both come from `src/styles/variables.scss`, or consumer
+  theming breaks.
+- A variant expressed as a conditional class name. Use `data-*` attributes via `toDataProperties`
+  and select on them in SCSS.
+- `&__Element` nesting in SCSS. Nest only modifiers of the current selector — a name built by
+  concatenation cannot be found by searching for it.
+- A new data-dense surface — table, list, selection or filter UI — with only a desktop layout that
+  reflows. We are embedded at arbitrary widths, so desktop-only is broken for a real subset of
+  users. Render per-size variants with `ResponsiveComponent`
+  (`@components/utility/ResponsiveComponent`) using a `slots` record and a `resolveVariant`
+  function.
+- A hand-built mobile card list or bottom sheet. `MobileList`, `PaginatedMobileList`,
+  `MobileListItem`, and `MobileListSection` are in `@blocks/MobileList`; `MobileSelectionDrawer`
+  and `MobileSelectionDrawerWithTrigger` are in `@blocks/MobileSelectionDrawer`. A bespoke one
+  diverges from the rest of the library's mobile behavior.
 - Hardcoded pixel thresholds or inline width ternaries scattered through JSX. Size classes come
-  from `BREAKPOINTS` in `@utils/shared/size/screenSizeBreakpoints`; read size with
-  `useElementSize` / `useElementViewSize`.
-- CSS variables referenced outside a `.Layer__component` / `.Layer__Portal` ancestor. Portals and
-  bare primitives in stories need one.
-
-### Reuse before reinvention
-
-- Hand-rolled loading, empty, or error branches instead of `ConditionalBlock` (one object),
-  `ConditionalList` (an array), `DataState`, `SkeletonLoader`, or `SkeletonTableLoader`.
-- A hand-built table instead of `SimpleDataTable` / `DataTable` / `PaginatedDataTable` /
-  `ExpandableDataTable` / `VirtualizedDataTable`, or pagination state managed by hand instead of
-  `@hooks/utils/pagination`.
-- A form not built on `useAppForm` + the `Form*Field` components, or a validator duplicated
-  instead of taken from `@utils/shared/form/validators`.
+  from `BREAKPOINTS` in `@utils/shared/size/screenSizeBreakpoints` (mobile under 500, tablet under
+  760, desktop above); read element size with `useElementSize` or `useElementViewSize`.
+- CSS variables referenced outside a `.Layer__component` or `.Layer__Portal` ancestor. Portals and
+  bare primitives rendered outside one silently lose all theming.
+- Hand-rolled loading, empty, or error branches. Use `ConditionalBlock` for a single data object
+  and `ConditionalList` for an array, with `DataState`, `SkeletonLoader`, and
+  `SkeletonTableLoader` for the visuals.
+- A hand-built table, or pagination state managed by hand. Use `SimpleDataTable`, `DataTable`,
+  `PaginatedDataTable`, `ExpandableDataTable`, or `VirtualizedDataTable`, and take pagination
+  state from `@hooks/utils/pagination`.
+- A form not built on `useAppForm` plus the `Form*Field` components, or a validator reimplemented
+  inline instead of taken from `@utils/shared/form/validators`.
 
 ### TypeScript
 
-- An `as` cast with no short comment explaining why it is safe.
+- An `as` cast with no short comment saying why it is safe. Unexplained casts at boundaries hide
+  decoding bugs.
 - A type restated by hand where it could be derived: `typeof Schema.Type`,
-  `Parameters<typeof useHook>[0]`, `Pick<…>`, `ReturnType<…>`.
-- Raw `BigDecimal` held in form or React state. It triggers TS2589 — use
-  `NonRecursiveBigDecimal`.
-- A wire-format type added under `src/types/**`. Anything the API sends or receives is a schema.
+  `Parameters<typeof useHook>[0]`, `Pick<…>`, `ReturnType<…>`. Restated types drift from their
+  source.
 
-### Published surface
+### Published API and stories
 
-- Any change to the exports in `src/index.tsx`. Say plainly that this is a public API change and
-  must be called out in the PR description.
-
-### Stories
-
-- One story per primitive variant. Every story is a Chromatic snapshot — pack variants into a
-  single gallery story.
-- A `*scratch.stories.tsx` file reaching the branch.
+- Any addition, removal, or rename in the exports of `src/index.tsx`. Say plainly that this is a
+  public API change for `@layerfi/components` consumers and must be called out in the PR
+  description.
+- One story per primitive variant. Every story is a billed Chromatic snapshot — pack variants into
+  a single gallery story.
 
 ## What to leave alone
 
-- Anything ESLint, stylelint, or `tsc --noEmit` already fails the PR on. Do not comment on import
+- Anything ESLint, stylelint, or `tsc --noEmit` already fails the PR on. Say nothing about import
   order, import boundaries, relative-parent imports, `react-hooks/exhaustive-deps`,
   `no-explicit-any` and the `no-unsafe-*` family, inline type imports, unused variables, quotes,
   semicolons, indentation, line length, or CSS property order.
 - `src/fixtures/generated/*.gen.ts` — generated output, committed on purpose.
 - `consumer-fixtures/**` — deliberately minimal smoke apps, outside the lint config.
-- `dist/`, `storybook-static/`, `package-lock.json`.
-- `.claude/worktrees/**`.
+- `*scratch.stories.tsx` — these are expected on a branch and are stripped automatically on
+  approval.
+- `dist/`, `storybook-static/`, `package-lock.json`, `.claude/`.
 
 ## Tone
 
