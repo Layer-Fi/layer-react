@@ -1,0 +1,174 @@
+name: Weekly npm outdated
+
+# Majors are ignored in dependabot.yml so an open major PR cannot consume the weekly limit. This
+# is what keeps them visible instead: a report, not a PR.
+
+on:
+  schedule:
+    - cron: '0 16 * * 1'   # Mondays 16:00 UTC, after Dependabot's 13:00 lane
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  outdated:
+    name: Outdated
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      # Exits non-zero whenever anything is outdated, which is the normal case here.
+      - name: Run npm outdated
+        run: npm outdated --long --json > outdated.json || true
+
+      - name: Summarize outdated
+        id: report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const {
+              capBlocks, context: contextBlock, group, header, limited, metaLine, row, section, tally,
+            } = require('./scripts/ci/slackBlocks.cjs');
+
+            const read = (file) => {
+              try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return null; }
+            };
+
+            const outdated = read('outdated.json');
+            if (!outdated) {
+              core.setOutput('total', 'unknown');
+              core.setFailed('outdated.json missing or unparseable.');
+              return;
+            }
+
+            // Peers are the consumer's choice of version, not ours to bump, and their `@types`
+            // track the peer's major. `typescript` and `@typescript/native` are intentional
+            // aliases Dependabot already ignores.
+            const peers = Object.keys(
+              JSON.parse(fs.readFileSync('package.json', 'utf8')).peerDependencies ?? {},
+            );
+            const EXCLUDED = new Set([
+              'typescript',
+              '@typescript/native',
+              ...peers,
+              ...peers.map(name => `@types/${name.replace('@', '').replace('/', '__')}`),
+            ]);
+
+            // `latest` is a dist-tag, so it can be a prerelease and can even sort below what is
+            // installed. Dependabot would not offer either, so neither does this.
+            const release = v => String(v ?? '').split('-')[0].split('.').map(Number);
+            const rank = v => release(v).slice(0, 3).reduce((acc, n) => acc * 1e5 + (n || 0), 0);
+
+            const rows = Object.entries(outdated)
+              .filter(([name]) => !EXCLUDED.has(name))
+              .filter(([, info]) => info.type === 'dependencies' || info.type === 'devDependencies')
+              // No `current` means the package is not installed — an install problem, not a gap.
+              .filter(([, info]) => info.current && !String(info.latest).includes('-'))
+              .filter(([, info]) => rank(info.latest) > rank(info.current))
+              .map(([name, info]) => ({
+                name,
+                current: info.current,
+                latest: info.latest,
+                where: info.type === 'dependencies' ? 'prod' : 'dev',
+                isMajor: release(info.latest)[0] > release(info.current)[0],
+              }))
+              // Runtime first: it is the half that reaches consumers.
+              .sort((a, b) => (a.where === b.where
+                ? a.name.localeCompare(b.name)
+                : Number(a.where === 'dev') - Number(b.where === 'dev')));
+
+            const majors = rows.filter(r => r.isMajor);
+            const minors = rows.filter(r => !r.isMajor);
+
+            core.setOutput('total', String(rows.length));
+
+            const treeTally = (list) => {
+              const runtime = list.filter(r => r.where === 'prod').length;
+              return tally([['📦', runtime, 'runtime'], ['🔧', list.length - runtime, 'dev']]);
+            };
+
+            const line = r => row(r.where === 'prod' ? '📦' : '🔧', r.name, `${r.current} → ${r.latest}`);
+
+            const table = (title, list) => {
+              if (list.length === 0) return `## ${title}\n\n_None._\n`;
+              const head = '| package | current | latest | tree |\n|---|---|---|---|\n';
+              return `## ${title} — ${list.length}\n\n${head}${
+                list.map(r => `| ${r.name} | ${r.current} | ${r.latest} | ${r.where} |\n`).join('')}`;
+            };
+
+            const slug = `${context.repo.owner}/${context.repo.repo}`;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${slug}/actions/runs/${context.runId}`;
+
+            await core.summary.addRaw([
+              `**${majors.length}** behind by a major, **${minors.length}** by a minor or patch.\n`,
+              table('Majors — Dependabot will not open these', majors),
+              table('Minors and patches — Dependabot lane', minors),
+            ].join('\n')).write();
+
+            const blocks = capBlocks([
+              header(`npm outdated — ${rows.length} packages`),
+              contextBlock(`*${slug}* · <${runUrl}|run summary>`),
+              ...group({
+                title: 'Major',
+                count: majors.length,
+                meta: metaLine(treeTally(majors), 'ignored by Dependabot — these only move if someone moves them'),
+                lines: majors.length ? limited(majors.map(line), 40) : ['_None._'],
+              }),
+              ...(minors.length
+                ? group({
+                  title: 'Minor / Patch',
+                  count: minors.length,
+                  meta: metaLine(treeTally(minors), 'opened weekly by Dependabot'),
+                  lines: limited(minors.map(line), 20),
+                })
+                : []),
+              contextBlock(`Excluded: ${peers.map(name => `\`${name}\``).join(', ')} and their \`@types\`, \`typescript\`, \`@typescript/native\``),
+            ]);
+
+            core.setOutput('slack', `[${slug}] npm outdated — ${rows.length} packages, ${majors.length} major`);
+            core.setOutput('slack_blocks', JSON.stringify(blocks));
+
+      - name: Send Slack notification
+        if: ${{ !cancelled() }}
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TEXT: ${{ steps.report.outputs.slack }}
+          SLACK_BLOCKS: ${{ steps.report.outputs.slack_blocks }}
+          TOTAL: ${{ steps.report.outputs.total }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "ERROR: SLACK_WEBHOOK secret not configured."
+            exit 1
+          fi
+          # Unset if the summarize step died first; `unknown` must not take the "nothing" branch.
+          TOTAL=${TOTAL:-unknown}
+          if [ "$TOTAL" = "0" ]; then
+            echo "Nothing outdated to report to Slack."
+            exit 0
+          fi
+          if [ -z "$SLACK_TEXT" ]; then
+            SLACK_TEXT="[$GITHUB_REPOSITORY] npm outdated — see <$RUN_URL|run summary>"
+          fi
+          # Blocks are dropped if the step above never produced them, so a broken summarize
+          # still pages someone.
+          if [ -n "$SLACK_BLOCKS" ]; then
+            PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" --argjson blocks "$SLACK_BLOCKS" '{text: $text, blocks: $blocks}')
+          else
+            PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" '{text: $text}')
+          fi
+          # Slack answers a dead webhook with 4xx; plain `curl -s` would swallow that as exit 0.
+          curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" "$SLACK_WEBHOOK"
