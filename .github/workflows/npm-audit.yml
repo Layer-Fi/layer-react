@@ -235,7 +235,7 @@ jobs:
             ).values()].sort((a, b) => a.number - b.number);
 
             const blocks = capBlocks([
-              header(`npm audit — ${vulns.length} findings, ${floorFindings.length} vulnerable floors`),
+              header(`npm audit — ${vulns.length} findings, ${floorFindings.length} vulnerable declared floors`),
               contextBlock(`*${slug}* · <${runUrl}|run summary>`),
               ...(prodAvailable
                 ? []
@@ -249,7 +249,7 @@ jobs:
               // Always shown, empty included: "no vulnerable floors" is the claim the lockfile
               // audit above cannot make, so its absence would read as unchecked.
               ...group({
-                title: 'Vulnerable Floors',
+                title: 'Declared Floors',
                 count: floorFindings.length,
                 meta: metaLine(
                   severityTally(floorFindings),
@@ -264,7 +264,7 @@ jobs:
             // `runtime` is every finding when the prod audit failed, so the split is not stated.
             core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} findings, ${
               prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}, ${
-              floorFindings.length} vulnerable floors`);
+              floorFindings.length} vulnerable declared floors`);
             core.setOutput('slack_blocks', JSON.stringify(blocks));
 
       # Runs on failure too: a broken audit is when the ping matters most. Counts come from the
