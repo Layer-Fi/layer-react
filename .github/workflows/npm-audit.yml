@@ -244,8 +244,12 @@ jobs:
               vulns.flatMap(v => fixPrs.get(v.name) ?? []).map(pr => [pr.number, pr]),
             ).values()].sort((a, b) => a.number - b.number);
 
+            // One source for both headlines, so the notification preview and the message it opens
+            // cannot state different counts.
+            const counts = `${vulns.length} packages, ${floors ? floorFindings.length : '?'} floors`;
+
             const blocks = capBlocks([
-              header(`npm audit — ${vulns.length} packages, ${floors ? floorFindings.length : '?'} floors`),
+              header(`npm audit — ${counts}`),
               contextBlock(`*${slug}* · <${runUrl}|run summary>`),
               ...(prodAvailable
                 ? []
@@ -275,9 +279,8 @@ jobs:
             ]);
 
             // `runtime` is every finding when the prod audit failed, so the split is not stated.
-            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} packages (${
-              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}), ${
-              floors ? floorFindings.length : 'unknown'} vulnerable floors`);
+            core.setOutput('slack', `[${slug}] npm audit — ${counts} · ${
+              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}`);
             core.setOutput('slack_blocks', JSON.stringify(blocks));
 
       # Runs on failure too: a broken audit is when the ping matters most. Counts come from the
