@@ -34,8 +34,9 @@ is this same rule set in Augment's format — keep the two in sync.
 - A user-visible string that does not go through `t('ns:category.key', 'Default')` with an inline
   default. This includes `aria-label`, `title`, `placeholder`, table headers, and empty-state copy.
   A hardcoded string is untranslatable for consumers.
-- Any edit to `src/assets/locales/**`. Those files are generated from the `t()` inline defaults and
-  Crowdin. The string belongs in the `t()` call.
+- A hand edit to the translation JSON under `src/assets/locales`. It is generated from the `t()`
+  inline defaults and Crowdin, so the edit is overwritten on the next extract; the string belongs
+  in the `t()` call. (`src/assets/locales/SKILL.md` is hand-maintained — leave it alone.)
 
 ### API contracts
 
@@ -52,9 +53,10 @@ is this same rule set in Augment's format — keep the two in sync.
 
 ### Mocks, fixtures, and test payloads
 
-- Hand-written snake_case JSON in mocks, fixtures, tests, or `*.storyData.tsx`. Mocks hold decoded
-  values and encode through the schema, so wire-format changes propagate automatically.
-  Hand-written wire JSON silently rots.
+- Hand-written snake_case JSON where a decoded value belongs — mocks, fixtures, `*.storyData.tsx`,
+  component tests. Mocks hold decoded values and encode through the schema, so wire-format changes
+  propagate automatically. Schema decoder tests under `src/schemas` are the exception: they must
+  supply encoded wire payloads to exercise decoding, so snake_case there is correct.
 - A value import of `@api/*` or `@hooks/*` inside `src/msw`. Type imports are fine. Handlers load
   before per-test mocks apply, so a runtime import breaks unrelated Vitest suites.
 - A change to a fixture schema or generator without regenerated, committed

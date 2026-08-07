@@ -46,14 +46,16 @@ areas:
     globs:
       - "src/**/*.ts"
       - "src/**/*.tsx"
-      - "src/assets/locales/**"
+      # The generated translation output only — src/assets/locales/SKILL.md is hand-maintained.
+      - "src/assets/locales/**/*.json"
+      - "src/assets/locales/**/index.ts"
     rules:
       - id: "all_strings_translated"
         description: "Every user-visible string goes through t('ns:category.key', 'Default') with an inline default — including aria-label, title, placeholder, table headers, and empty-state copy. A hardcoded string is untranslatable for consumers."
         severity: "high"
 
       - id: "no_locale_file_edits"
-        description: "Never edit src/assets/locales/**. Those files are generated from the t() inline defaults and Crowdin. The string belongs in the t() call."
+        description: "Never hand-edit the translation JSON under src/assets/locales. It is generated from the t() inline defaults and Crowdin, so an edit here is overwritten on the next extract. The string belongs in the t() call."
         severity: "high"
 
   api_contracts:
@@ -90,7 +92,7 @@ areas:
       - "**/*.storyData.tsx"
     rules:
       - id: "no_handwritten_snake_case"
-        description: "Never hand-write snake_case JSON in mocks, fixtures, or tests. Mocks hold decoded values and encode through the schema, so wire-format changes propagate automatically. Hand-written wire JSON silently rots."
+        description: "Never hand-write snake_case JSON where a decoded value belongs — mocks, fixtures, storyData, and component tests. Mocks hold decoded values and encode through the schema, so wire-format changes propagate automatically. Do NOT flag schema decoder tests under src/schemas: those must supply encoded wire payloads to exercise decoding, and snake_case there is correct."
         severity: "high"
 
       - id: "msw_no_runtime_hook_imports"
