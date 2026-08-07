@@ -124,7 +124,7 @@ jobs:
                 title: 'Major',
                 count: majors.length,
                 meta: metaLine(treeTally(majors), 'ignored by Dependabot — these only move if someone moves them'),
-                lines: majors.length ? limited(majors.map(line), 40) : ['_None._'],
+                lines: limited(majors.map(line), 40),
               }),
               ...(minors.length
                 ? group({
