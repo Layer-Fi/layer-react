@@ -39,14 +39,15 @@ const prLine = pr => `[<${pr.url}|#${pr.number}>] ${truncate(pr.title, 88)}`
 const SEP = '  ·  '
 const ROW_SEP = ' · '
 
-// The group line both reports use: non-zero counts, then whatever note belongs beside them.
+// The group line both reports use: the counts, then whatever note belongs beside them.
 const metaLine = (...parts) => parts.filter(Boolean).join(SEP)
 
 // One finding per line: the package, then whatever facts that report has about it. Only the
 // name is code-formatted — a row of boxes is what the versions used to read as.
 const row = (icon, name, ...facts) => [`${icon} \`${name}\``, ...facts.filter(Boolean)].join(ROW_SEP)
+// Zeros are kept: the legend reads the same in every group, so a missing severity is a real zero
+// rather than a row that might have been dropped.
 const tally = entries => entries
-  .filter(([, count]) => count > 0)
   .map(([emoji, count, label]) => `${emoji} ${count} ${label}`)
   .join(SEP)
 

@@ -208,8 +208,7 @@ jobs:
             } = require('./scripts/ci/slackBlocks.cjs');
 
             const severityTally = rows => tally([...SEVERITIES].reverse()
-              .map(severity => [SEVERITY_EMOJI[severity], rows.filter(v => v.severity === severity).length, severity]))
-              || 'none';
+              .map(severity => [SEVERITY_EMOJI[severity], rows.filter(v => v.severity === severity).length, severity]));
 
             // Counted per group instead, so only findings that need a decision are annotated.
             const slackFix = (v) => {
