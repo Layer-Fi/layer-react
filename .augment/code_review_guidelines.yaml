@@ -1,0 +1,228 @@
+# Augment Code Review guidelines for @layerfi/components
+#
+# Companion to .cursor/BUGBOT.md — same rules, Augment's schema. Both are distilled from
+# AGENTS.md and the colocated SKILL.md files; update all three together.
+#
+# Deliberately omits anything eslint.config.mjs, stylelint.config.mjs, or `tsc --noEmit`
+# already fails the PR on: import order and boundaries, react-hooks/exhaustive-deps,
+# no-explicit-any and the no-unsafe-* family, inline type imports, unused vars, quotes,
+# semicolons, indent, CSS property order.
+
+# src/assets/locales/** is deliberately NOT ignored: a hand edit there is a bug we want
+# flagged. The generated diffs land on the i18n/extract-keys and Crowdin bot branches.
+file_paths_to_ignore:
+  - "src/fixtures/generated/**"
+  - "consumer-fixtures/**"
+  - "dist/**"
+  - "storybook-static/**"
+  - "package-lock.json"
+  - ".claude/**"
+
+areas:
+  formatting_and_money:
+    description: "Money, number, and date formatting in an embeddable, localizable library"
+    globs:
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+    rules:
+      - id: "currency_values_are_cents"
+        description: "Currency values are cents and percent values are fractions, everywhere in this codebase. A currency input handed dollars, or a percent input handed 7 instead of 0.07, is a real bug. Check unit consistency whenever a monetary or percentage value crosses a boundary."
+        severity: "high"
+
+      - id: "no_hand_formatting"
+        description: "Never format currency, percentages, numbers, or dates by hand — no string concatenation, toFixed, inline Intl.NumberFormat, or toLocaleDateString. Use useIntlFormatter() or <MoneySpan>. Hand-formatting breaks localization for consumers."
+        severity: "high"
+
+      - id: "date_format_enum"
+        description: "Date formatters take a DateFormat enum value, never a format string."
+        severity: "medium"
+
+      - id: "no_raw_bigdecimal_in_state"
+        description: "Raw BigDecimal held in form or React state triggers TypeScript error TS2589 (excessively deep type instantiation). Use NonRecursiveBigDecimal and thread the rich type as a prop instead."
+        severity: "high"
+
+  internationalization:
+    description: "Every user-visible string must be translatable"
+    globs:
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+      # The generated translation output only — src/assets/locales/SKILL.md is hand-maintained.
+      - "src/assets/locales/**/*.json"
+      - "src/assets/locales/**/index.ts"
+    rules:
+      - id: "all_strings_translated"
+        description: "Every user-visible string goes through t('ns:category.key', 'Default') with an inline default — including aria-label, title, placeholder, table headers, and empty-state copy. A hardcoded string is untranslatable for consumers."
+        severity: "high"
+
+      - id: "no_locale_file_edits"
+        description: "Never hand-edit the translation JSON under src/assets/locales. It is generated from the t() inline defaults and Crowdin, so an edit here is overwritten on the next extract. The string belongs in the t() call."
+        severity: "high"
+
+  api_contracts:
+    description: "Effect Schema definitions are the source of truth for every API contract"
+    globs:
+      - "src/schemas/**"
+      - "src/hooks/api/**"
+      - "src/types/**"
+    rules:
+      - id: "nullish_or_by_default"
+        description: "Optional or nullable API fields use Schema.NullishOr, not NullOr or optional alone. The backend omits a field on one endpoint and returns null on another; anything narrower has broken decoding before."
+        severity: "high"
+
+      - id: "msw_handler_required"
+        description: "Every method file under src/hooks/api/** needs a matching MSW handler at the mirrored path in src/msw/api/**, registered in the enclosing handlers.ts. Unhandled layerfi.com requests hard-fail Vitest and Storybook, and CI enforces coverage via npm run msw:check-coverage."
+        severity: "high"
+
+      - id: "schema_before_guessing"
+        description: "Do not invent a schema for a backend response. If the PR adds a schema for an endpoint whose contract is not obviously established, flag that the API contract should be confirmed first."
+        severity: "medium"
+
+      - id: "no_wire_types_in_types_dir"
+        description: "src/types/** is for internal-only types with no wire format. Anything the API sends or receives belongs in src/schemas as an Effect schema."
+        severity: "medium"
+
+  mocks_and_fixtures:
+    description: "MSW mocks, generated fixture data, and the test payloads that use them"
+    globs:
+      - "src/msw/**"
+      - "src/fixtures/**"
+      - "src/testUtils/**"
+      - "**/*.test.ts"
+      - "**/*.test.tsx"
+      - "**/*.storyData.tsx"
+    rules:
+      - id: "no_handwritten_snake_case"
+        description: "Never hand-write snake_case JSON where a decoded value belongs — mocks, fixtures, storyData, and component tests. Mocks hold decoded values and encode through the schema, so wire-format changes propagate automatically. Do NOT flag schema decoder tests under src/schemas: those must supply encoded wire payloads to exercise decoding, and snake_case there is correct."
+        severity: "high"
+
+      - id: "msw_no_runtime_hook_imports"
+        description: "src/msw may not value-import @api/* or @hooks/*. Type imports are fine. Handlers load before per-test mocks apply, so a runtime import breaks unrelated Vitest suites."
+        severity: "high"
+
+      - id: "regenerate_committed_fixtures"
+        description: "A change to a fixture schema or generator must come with regenerated, committed src/fixtures/generated/*.gen.ts from npm run fixtures:generate. CI fails on staleness."
+        severity: "high"
+
+  state_and_data:
+    description: "SWR owns server state, Zustand owns UI state, Context is dependency injection"
+    globs:
+      - "src/hooks/**"
+      - "src/providers/**"
+      - "src/components/**"
+      - "src/views/**"
+    rules:
+      - id: "no_raw_swr_or_fetch"
+        description: "No useSWR or fetch in feature code. Use the factories in @hooks/utils/swr — createQueryHook, createInfiniteQueryHook, createMutationHook. They own auth, businessId, locale cache keying, and error handling."
+        severity: "high"
+
+      - id: "no_threaded_business_id"
+        description: "businessId and auth are injected by the provider stack. A component passing either down as a prop is working around the injection."
+        severity: "medium"
+
+      - id: "no_server_state_in_stores"
+        description: "Never mirror server data into a Zustand store. SWR owns server state. Duplicated server state goes stale and diverges from the cache."
+        severity: "high"
+
+      - id: "no_setstate_during_render"
+        description: "Never call setState during render. Use an effect, or derive the value."
+        severity: "high"
+
+      - id: "derive_dont_synchronize"
+        description: "Do not use useEffect plus setState to produce a value that can be derived during render from props or existing state. Derived values are always consistent and skip the extra render."
+        severity: "high"
+
+      - id: "invalidate_after_writes"
+        description: "A mutation must invalidate the caches it affects — createResourceGlobalCacheActions plus useOnTriggerSuccess. A write with no invalidation leaves stale data on screen."
+        severity: "medium"
+
+      - id: "memoize_deliberately"
+        description: "useCallback and useMemo only for props to memo()ed children, dependency-array entries, or genuinely expensive computations. Never memoize primitives. Do memoize object and array literals returned from a custom hook — unmemoized returns break every consumer's dependency arrays."
+        severity: "medium"
+
+  components_and_styling:
+    description: "Design-system primitives and themeable CSS for a library that must be brandable and mountable more than once per page"
+    globs:
+      - "src/components/**"
+      - "src/views/**"
+      - "src/styles/**"
+      - "**/*.scss"
+    rules:
+      - id: "build_on_ui_primitives"
+        description: "Build on @ui before writing new markup. Reach for HStack/VStack instead of raw div, and Span/P/Label/Header instead of raw text elements. Genuinely new reusable primitives go in src/components/ui, not inside a feature."
+        severity: "medium"
+
+      - id: "no_inline_styles_or_class_concat"
+        description: "No style prop, no inline styles, no utility class strings, and no class names built by concatenation. Consumers restyle us by class name; concatenated names are ungreppable and unthemeable."
+        severity: "high"
+
+      - id: "tokens_not_hardcoded_values"
+        description: "Colors and spacing come from src/styles/variables.scss. Hardcoded hex values or pixel spacing break consumer theming."
+        severity: "high"
+
+      - id: "variants_as_data_attributes"
+        description: "Express component variants as data-* attributes via toDataProperties and select on them in SCSS, rather than adding conditional class names."
+        severity: "medium"
+
+      - id: "flat_greppable_selectors"
+        description: "Write flat, greppable SCSS selectors. Nest only modifiers of the current selector; never build element names with &__Element, since the resulting class cannot be found by searching for it."
+        severity: "medium"
+
+      - id: "mobile_variant_required"
+        description: "Any new data-dense surface — a table, a list, a selection or filter UI — needs a mobile variant, not just a desktop one that reflows. The library is embedded at arbitrary widths inside consumer layouts, so a desktop-only surface is broken for a real subset of users. Render per-size variants with ResponsiveComponent (@components/utility/ResponsiveComponent) using a slots record and a resolveVariant function."
+        severity: "high"
+
+      - id: "use_existing_mobile_surfaces"
+        description: "Do not reimplement a mobile list or a mobile drawer. MobileList, PaginatedMobileList, MobileListItem, and MobileListSection live in @blocks/MobileList; MobileSelectionDrawer and MobileSelectionDrawerWithTrigger live in @blocks/MobileSelectionDrawer. A bespoke card list or bottom sheet diverges from the rest of the library's mobile behavior."
+        severity: "medium"
+
+      - id: "size_classes_from_breakpoints"
+        description: "Responsiveness is JS-driven off measured width, not CSS media queries alone. Size classes come from BREAKPOINTS in @utils/shared/size/screenSizeBreakpoints (mobile under 500, tablet under 760, desktop above). Read element size with @hooks/utils/size/useElementSize or useElementViewSize. Flag hardcoded pixel thresholds and inline width ternaries scattered through JSX."
+        severity: "medium"
+
+      - id: "css_variables_need_layer_root"
+        description: "CSS variables only exist under the design-system root classes (.Layer__component, .Layer__Portal). Portals and bare primitives rendered outside one will silently lose all theming."
+        severity: "high"
+
+      - id: "reuse_conditional_render_abstractions"
+        description: "Do not hand-roll loading, empty, or error branches. Use ConditionalBlock for a single data object and ConditionalList for an array, with DataState, SkeletonLoader, and SkeletonTableLoader for the visuals. Hand-rolled branches drift from the rest of the library's loading and empty UX."
+        severity: "medium"
+
+      - id: "reuse_table_abstractions"
+        description: "Do not hand-build tables. Use SimpleDataTable, DataTable, PaginatedDataTable, ExpandableDataTable, or VirtualizedDataTable, and take pagination state from @hooks/utils/pagination rather than managing it by hand."
+        severity: "medium"
+
+      - id: "forms_use_app_form"
+        description: "Forms are built on useAppForm plus the Form*Field components, with validators from @utils/shared/form/validators rather than reimplemented inline."
+        severity: "medium"
+
+  typescript:
+    description: "Type safety across the library"
+    globs:
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
+    rules:
+      - id: "explain_casts"
+        description: "An `as` cast needs a short comment saying why it is safe. Unexplained casts at boundaries hide decoding bugs."
+        severity: "medium"
+
+      - id: "derive_types"
+        description: "Derive types rather than restating them by hand: typeof Schema.Type, Parameters<typeof useHook>[0], Pick<...>, ReturnType<...>. Hand-restated types drift from their source."
+        severity: "medium"
+
+  published_api:
+    description: "The npm package surface"
+    globs:
+      - "src/index.tsx"
+    rules:
+      - id: "index_exports_are_public_api"
+        description: "Anything exported from src/index.tsx is public API for @layerfi/components consumers. Flag any addition, removal, or rename here and state plainly that it is a public API change that must be called out in the PR description."
+        severity: "high"
+
+  stories:
+    description: "Storybook stories, each of which is a Chromatic snapshot"
+    globs:
+      - "**/*.stories.tsx"
+    rules:
+      - id: "gallery_over_per_variant_stories"
+        description: "Every story is a billed Chromatic snapshot. Pack primitive variants into a single gallery story instead of adding one story per variant."
+        severity: "low"
