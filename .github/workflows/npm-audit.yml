@@ -1,4 +1,4 @@
-name: Daily npm audit
+name: NPM Audit
 
 on:
   schedule:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   audit:
-    name: Audit
+    name: Report
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -1,4 +1,4 @@
-name: Weekly npm outdated
+name: NPM Outdated
 
 # Majors are ignored in dependabot.yml so an open major PR cannot consume the weekly limit. This
 # is what keeps them visible instead: a report, not a PR.
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   outdated:
-    name: Outdated
+    name: Report
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
