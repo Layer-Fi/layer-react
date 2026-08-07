@@ -12,7 +12,6 @@ import {
 
 const meta: Meta<LandingPageStoryArgs> = {
   title: 'Views/LandingPage',
-  tags: ['public-api'],
   parameters: {
     controls: { include: landingPageStoryControlsInclude },
   },
@@ -33,18 +32,21 @@ export default meta
 type Story = StoryObj<LandingPageStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
 }
 
 export const AccountingOnly: Story = {
+  tags: ['public-api'],
   args: { availableOffers: ['accounting'] },
 }
 
 export const BookkeepingOnly: Story = {
+  tags: ['public-api'],
   args: { availableOffers: ['bookkeeping'] },
 }
 
 export const FullyCustomized: Story = {
+  tags: ['public-api'],
   args: {
     heroImageUrl: 'https://images.unsplash.com/photo-1734079692160-fcbe4be6ab96?auto=format&fit=crop&w=1600&q=80',
     heroTitle: 'Bookkeeping built for {{industry}}',

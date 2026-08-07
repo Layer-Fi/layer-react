@@ -21,9 +21,10 @@ const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
 // STORYBOOK_SCOPE. Doing it here rather than through Chromatic's --only-story-files matters:
 // that flag is mutually exclusive with --only-changed (TurboSnap), and we want both.
 //
-//   public    — components exported from src/index.tsx, tagged `public-api` on the meta.
-//               What the GitHub Pages deploy ships. Distinct from `docs-screenshot`, the
-//               narrower set backing images on docs.layerfi.com; a story can carry both.
+//   public    — stories tagged `public-api`, the shipped surface of components exported from
+//               src/index.tsx. What the GitHub Pages deploy ships. Distinct from
+//               `docs-screenshot`, the narrower set backing images on docs.layerfi.com; a
+//               story can carry both.
 //   chromatic — the design system plus agent scratch stories. Features and views compose
 //               these primitives, so a regression generally surfaces here first.
 const SCOPE = process.env.STORYBOOK_SCOPE
