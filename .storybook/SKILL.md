@@ -91,17 +91,19 @@ is the filterable stand-in. `screenshots:check` enforces tag ↔ manifest parity
 
 ## `public-api` — what ships to GitHub Pages
 
-A separate, broader tag, set on the **meta** so it covers every story in the file: the
-component is exported from `src/index.tsx`. `STORYBOOK_PUBLIC_ONLY=true` filters the build to
-those stories (`experimental_indexers` in `main.ts`), and `storybook-pages.yml` sets it, so
-the public deploy shows the shipped API and nothing else.
+A separate, broader tag, opted into on **each individual story** that should ship — never on
+the meta. `STORYBOOK_PUBLIC_ONLY=true` filters the build to those stories
+(`experimental_indexers` in `main.ts`), and `storybook-pages.yml` sets it, so the public deploy
+shows the shipped API and nothing else. Opt-in per story is fail-closed: a new story on a
+public component stays private until someone tags it.
 
 The two tags are independent — `public-api` is the whole exported surface, `docs-screenshot`
-the narrower set backing images on docs.layerfi.com. Most public stories carry only the first.
-Export a new component from `index.tsx` and you need `tags: ['public-api']` on its meta.
+the narrower set backing images on docs.layerfi.com. Most public stories carry only the first;
+a docs-only story carries only the second and simply omits `public-api`. Export a new component
+from `index.tsx` and each story of it you want on GitHub Pages needs `tags: ['public-api']`.
 
 A story that exists only to back a docs image still belongs next to its component, as the
-overlay-state exception above (`DrawerOpen`, `Creation`, `ConfirmingBusinessAccounts`). Drive
+overlay-state exception above (`DrawerOpen`, `Creation`, `ConfirmingAccounts`). Drive
 it with a `play` function, and make the play *assert* the state it set up — the table can
 re-render as data lands and detach the node you just clicked.
 

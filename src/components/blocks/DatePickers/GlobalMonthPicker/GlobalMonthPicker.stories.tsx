@@ -11,7 +11,6 @@ import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlo
 
 const meta: Meta<GlobalMonthPickerProps> = {
   title: 'Blocks/DatePickers/GlobalMonthPicker',
-  tags: ['public-api'],
   component: GlobalMonthPicker,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },
@@ -47,6 +46,6 @@ export default meta
 type Story = StoryObj<GlobalMonthPickerProps>
 
 export const Default: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
-  tags: ['docs-screenshot'],
 }

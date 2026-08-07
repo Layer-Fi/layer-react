@@ -7,7 +7,6 @@ import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlo
 
 const meta: Meta<typeof MileageTracking> = {
   title: 'Views/MileageTracking',
-  tags: ['public-api'],
   component: MileageTracking,
   args: {
     showTitle: true,
@@ -32,5 +31,5 @@ export default meta
 type Story = StoryObj<typeof MileageTracking>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
 }

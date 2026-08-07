@@ -58,7 +58,6 @@ const summariesControls = makeSummariesStoryControls({
 
 const meta: Meta<BookkeepingOverviewStoryArgs> = {
   title: 'Views/Overview/Bookkeeping',
-  tags: ['public-api'],
   component: BookkeepingOverview,
   parameters: {
     msw: {
@@ -95,10 +94,11 @@ export default meta
 type Story = StoryObj<BookkeepingOverviewStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
 }
 
 export const OnboardingCallCard: Story = {
+  tags: ['public-api'],
   name: 'Onboarding call card (empty)',
   parameters: {
     msw: {
@@ -108,6 +108,7 @@ export const OnboardingCallCard: Story = {
 }
 
 export const ScheduledOnboardingCallCard: Story = {
+  tags: ['public-api'],
   name: 'Onboarding call card (scheduled)',
   parameters: {
     msw: {

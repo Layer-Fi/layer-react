@@ -31,7 +31,6 @@ type SolopreneurOverviewStoryArgs = SummariesStoryArgs & Pick<SolopreneurOvervie
 
 const meta: Meta<SolopreneurOverviewStoryArgs> = {
   title: 'Views/Overview/Solopreneur',
-  tags: ['public-api'],
   component: SolopreneurOverview,
   parameters: {
     msw: { handlers: solopreneurStoryHandlers },
@@ -60,5 +59,5 @@ export default meta
 type Story = StoryObj<SolopreneurOverviewStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
 }
