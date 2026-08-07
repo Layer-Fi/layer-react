@@ -174,14 +174,27 @@ jobs:
 
             const prs = v => (fixPrs.get(v.name) ?? []).map(pr => `[#${pr.number}](${pr.url})`).join(', ');
 
-            const table = (rows) => {
+            // Both summary tables. The cap keeps a pathological audit from blowing the 1MB
+            // summary limit; the count above each table is the real total either way.
+            const mdTable = (columns, rows, cells) => {
               if (rows.length === 0) return '_None._\n';
-              const head = '| package | severity | fix available | open PR | advisories |\n|---|---:|---|---|---|\n';
-              const body = rows.slice(0, 50)
-                .map(v => `| ${v.name} | ${v.severity} | ${describeFix(v)} | ${prs(v) || '—'} | ${describeVia(v)} |\n`)
-                .join('');
+              const head = `| ${columns.map(([label]) => label).join(' | ')} |\n`
+                + `|${columns.map(([, align]) => align).join('|')}|\n`;
+              const body = rows.slice(0, 50).map(r => `| ${cells(r).join(' | ')} |\n`).join('');
               return head + body + (rows.length > 50 ? `\n_+${rows.length - 50} more (see the audit JSON)._\n` : '');
             };
+
+            const table = rows => mdTable(
+              [['package', '---'], ['severity', '---:'], ['fix available', '---'], ['open PR', '---'], ['advisories', '---']],
+              rows,
+              v => [v.name, v.severity, describeFix(v), prs(v) || '—', describeVia(v)],
+            );
+
+            const floorTable = rows => mdTable(
+              [['package', '---'], ['vulnerable range', '---'], ['severity', '---:'], ['advisories', '---']],
+              rows,
+              f => [f.name, `\`${f.range}\``, f.severity, f.advisories.map(a => `[${a.title}](${a.url})`).join(', ')],
+            );
 
             const alerts = `https://github.com/${slug}/security/dependabot`;
             const runUrl = `${process.env.GITHUB_SERVER_URL}/${slug}/actions/runs/${context.runId}`;
@@ -192,11 +205,7 @@ jobs:
                 : `> ⚠️ The production-only audit did not produce usable output, so all **${vulns.length}**\n`
                   + '> findings are listed as potentially consumer-facing. The run is marked failed.\n',
               ...groups.map(g => `## ${g.title} — ${g.rows.length}\n\n${table(g.rows)}`),
-              `## Declared floors — ${floorFindings.length}\n\n${floorFindings.length === 0
-                ? '_None._\n'
-                : '| package | vulnerable range | severity | advisories |\n|---|---|---:|---|\n'
-                  + floorFindings.map(f => `| ${f.name} | \`${f.range}\` | ${f.severity} | `
-                    + `${f.advisories.map(a => `[${a.title}](${a.url})`).join(', ')} |\n`).join('')}`,
+              `## Declared floors — ${floorFindings.length}\n\n${floorTable(floorFindings)}`,
               '> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n'
                 + `> Per-advisory state lives in [Dependabot alerts](${alerts}).\n`,
               process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
