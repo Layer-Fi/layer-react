@@ -1,4 +1,4 @@
-name: Scratch Stories Cleanup
+name: Scratch Stories
 
 on:
   pull_request_review:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   cleanup:
-    name: Remove scratch stories
+    name: Cleanup
     if: >-
       github.event.review.state == 'approved'
       && github.event.pull_request.base.ref == 'main'
