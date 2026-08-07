@@ -1,8 +1,12 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { ChartOfAccounts } from '@features/generalLedger/ChartOfAccounts/ChartOfAccounts'
 
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { handlers } from '@msw/handlers'
 import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 const meta: Meta<typeof ChartOfAccounts> = {
@@ -45,6 +49,24 @@ export const ScratchManualEntryReversal: Story = {
 export const ScratchNonManualEntryNoReversal: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await openFirstEntryForAccount(canvasElement, 'Equipment & Machinery', 'Expense')
+
+    await waitFor(async () => {
+      await expect(canvas.queryByRole('button', { name: /Reverse entry/ })).toBeNull()
+    })
+  },
+}
+
+export const ScratchManualEntryActiveBookkeepingNoReversal: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...handlers,
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = await openFirstEntryForAccount(canvasElement, 'Income Tax', 'Manual')
 
     await waitFor(async () => {
       await expect(canvas.queryByRole('button', { name: /Reverse entry/ })).toBeNull()
