@@ -244,7 +244,8 @@ jobs:
             ).values()].sort((a, b) => a.number - b.number);
 
             const blocks = capBlocks([
-              header(`npm audit — ${vulns.length} findings, ${floorFindings.length} vulnerable declared floors`),
+              // One total; every group below carries its own count.
+              header(`npm audit — ${vulns.length + floorFindings.length} findings`),
               contextBlock(`*${slug}* · <${runUrl}|run summary>`),
               ...(prodAvailable
                 ? []
@@ -271,7 +272,7 @@ jobs:
             ]);
 
             // `runtime` is every finding when the prod audit failed, so the split is not stated.
-            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} findings, ${
+            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length + floorFindings.length} findings: ${
               prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}, ${
               floorFindings.length} vulnerable declared floors`);
             core.setOutput('slack_blocks', JSON.stringify(blocks));
