@@ -1,6 +1,7 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { LedgerAccountLineItemSchema } from '@schemas/features/generalLedger/ledgerEntry'
+import { type LedgerAccountLineItem, LedgerAccountLineItemSchema } from '@schemas/features/generalLedger/ledgerEntry'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_LEDGER_ACCOUNT_LINES_TAG_KEY = '#list-ledger-account-lines'
@@ -36,3 +37,5 @@ export const useGetListLedgerAccountLines = createInfiniteQueryHook({
   request: listLedgerAccountLines,
   schema: ListLedgerAccountLinesResponseSchema,
 })
+
+export const useLedgerAccountLinesCacheActions = createInfiniteQueryGlobalCacheActions<LedgerAccountLineItem>(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)
