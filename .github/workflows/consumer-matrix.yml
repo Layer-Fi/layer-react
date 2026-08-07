@@ -1,4 +1,4 @@
-name: Consumer matrix
+name: Consumers
 
 # Installs the packed tarball into throwaway consumer apps and builds them — the only PR check that
 # reads the published artifact rather than the repo.
@@ -31,6 +31,7 @@ concurrency:
 
 jobs:
   consumers:
+    name: Matrix
     runs-on: ubuntu-latest
 
     steps:
