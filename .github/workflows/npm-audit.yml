@@ -76,7 +76,8 @@ jobs:
 
             const all = read('audit-all.json');
             const prod = read('audit-prod.json');
-            // Absent only if the floors step crashed before writing; the gate step still fails.
+            // Absent if the floors step crashed before writing. That is not zero findings, and
+            // must not be reported as any number, or a crashed audit reads as an all-clear.
             const floors = read('audit-floors.json');
             const floorFindings = floors?.findings ?? [];
 
@@ -111,11 +112,11 @@ jobs:
             core.setOutput('total', String(vulns.length));
             core.setOutput('runtime', prodAvailable ? String(runtime.length) : 'unknown');
 
-            core.setOutput('floors', String(floorFindings.length));
+            core.setOutput('floors', floors ? String(floorFindings.length) : 'unknown');
 
             // A clean lockfile with a vulnerable floor is the whole point of this report, so the
-            // quiet exit needs both to be clean.
-            if (vulns.length === 0 && floorFindings.length === 0) {
+            // quiet exit needs both to be clean — and a missing floor report is not clean.
+            if (vulns.length === 0 && floors && floorFindings.length === 0) {
               await core.summary.addRaw('No vulnerabilities, and no declared floor admits one.\n').write();
               return;
             }
@@ -244,8 +245,7 @@ jobs:
             ).values()].sort((a, b) => a.number - b.number);
 
             const blocks = capBlocks([
-              // One total; every group below carries its own count.
-              header(`npm audit — ${vulns.length + floorFindings.length} findings`),
+              header(`npm audit — ${vulns.length} packages, ${floors ? floorFindings.length : '?'} floors`),
               contextBlock(`*${slug}* · <${runUrl}|run summary>`),
               ...(prodAvailable
                 ? []
@@ -260,21 +260,24 @@ jobs:
               // audit above cannot make, so its absence would read as unchecked.
               ...group({
                 title: 'Declared Floors',
-                count: floorFindings.length,
-                meta: metaLine(
-                  severityTally(floorFindings),
-                  floors ? 'lowest versions our published ranges admit' : '⚠️ floor audit produced no output',
-                ),
-                lines: floorFindings.map(f => row(SEVERITY_EMOJI[f.severity], f.name, `admits \`${f.range}\``)),
+                count: floors ? floorFindings.length : '?',
+                meta: floors
+                  ? metaLine(severityTally(floorFindings), 'lowest versions our published ranges admit')
+                  : '⚠️ the floor audit produced no output, so nothing here was checked',
+                // Never the empty-group treatment when the report is missing: "None!" would be a
+                // claim this run cannot make.
+                lines: floors
+                  ? floorFindings.map(f => row(SEVERITY_EMOJI[f.severity], f.name, `admits \`${f.range}\``))
+                  : ['_no result_'],
               }),
               ...(prRows.length ? group({ title: 'Open Fix PRs', lines: prRows.map(prLine) }) : []),
               contextBlock(`<${alerts}|Dependabot alerts> · peer dependencies (\`react\`, \`react-dom\`) are not covered by \`npm audit\``),
             ]);
 
             // `runtime` is every finding when the prod audit failed, so the split is not stated.
-            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length + floorFindings.length} findings: ${
-              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}, ${
-              floorFindings.length} vulnerable declared floors`);
+            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} packages (${
+              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}), ${
+              floors ? floorFindings.length : 'unknown'} vulnerable floors`);
             core.setOutput('slack_blocks', JSON.stringify(blocks));
 
       # Runs on failure too: a broken audit is when the ping matters most. Counts come from the

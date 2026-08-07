@@ -10,6 +10,7 @@ import path from 'node:path'
 
 const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
   dependencies?: Record<string, string>
+  optionalDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
 }
 
@@ -17,7 +18,9 @@ const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as {
 // is reported rather than silently dropped, so a range we cannot pin never reads as "covered".
 const FLOOR = /^[~^]?(\d+\.\d+\.\d+(?:-[\w.]+)?)$/
 
-const declared = { ...pkg.dependencies, ...pkg.peerDependencies }
+// Optionals are installed for the platforms they support, so a vulnerable optional floor reaches
+// consumers exactly like a regular one.
+const declared = { ...pkg.dependencies, ...pkg.optionalDependencies, ...pkg.peerDependencies }
 const floors: Record<string, string> = {}
 const unpinnable: string[] = []
 
@@ -72,22 +75,31 @@ if (outPath) {
 }
 
 console.info(`\nAudited ${Object.keys(floors).length} declared floors.`)
-if (unpinnable.length > 0) {
-  console.info(`Not reducible to a floor, audit them by hand: ${unpinnable.join(', ')}`)
-}
 
-if (findings.length === 0) {
+if (findings.length === 0 && unpinnable.length === 0) {
   console.info('No advisories affect the lowest versions our ranges admit.')
   process.exit(0)
 }
 
-console.error('\nDeclared ranges admit vulnerable versions:\n')
-for (const finding of findings) {
-  console.error(`  ${finding.name} ${finding.range} (${finding.severity})`)
-  console.error(finding.advisories.map(({ title, url }) => `      ${title} — ${url}`).join('\n'))
+if (findings.length > 0) {
+  console.error('\nDeclared ranges admit vulnerable versions:\n')
+  for (const finding of findings) {
+    console.error(`  ${finding.name} ${finding.range} (${finding.severity})`)
+    console.error(finding.advisories.map(({ title, url }) => `      ${title} — ${url}`).join('\n'))
+  }
+  console.error(
+    `\nRaise the floor in package.json past each vulnerable range. Bumping the lockfile alone `
+    + `fixes CI and leaves consumers exposed.\n`,
+  )
 }
-console.error(
-  `\nRaise the floor in package.json past each vulnerable range. Bumping the lockfile alone `
-  + `fixes CI and leaves consumers exposed.\n`,
-)
+
+// Failing rather than noting it: a range this cannot reduce is a range nothing above audits, and
+// passing would report the whole surface as covered when part of it was never checked.
+if (unpinnable.length > 0) {
+  console.error(
+    `\nThese ranges have no single floor to audit: ${unpinnable.join(', ')}\n`
+    + `Narrow them to \`^\`/\`~\`/exact, or teach this script to reduce the form they use.\n`,
+  )
+}
+
 process.exit(1)
