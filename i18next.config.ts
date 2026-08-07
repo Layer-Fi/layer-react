@@ -1,10 +1,12 @@
-import { defineConfig } from 'i18next-cli'
+// Type-only on purpose: a value import makes tsx `require()` i18next-cli's CJS build, which
+// reaches an ESM-only transitive dep and fails to resolve. `defineConfig` is identity.
+import type { I18nextToolkitConfig } from 'i18next-cli'
 
 import conditionalPlugin from './scripts/i18next/conditionalPlugin'
 import pluralPlugin from './scripts/i18next/pluralPlugin'
 import translationKeyPlugin from './scripts/i18next/translationKeyPlugin'
 
-export default defineConfig({
+const config: I18nextToolkitConfig = {
   locales: ['en-US', 'fr-CA'],
   plugins: [conditionalPlugin, pluralPlugin, translationKeyPlugin],
   extract: {
@@ -14,4 +16,6 @@ export default defineConfig({
     ignore: ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx'],
     output: 'src/assets/locales/{{language}}/{{namespace}}.json',
   },
-})
+}
+
+export default config

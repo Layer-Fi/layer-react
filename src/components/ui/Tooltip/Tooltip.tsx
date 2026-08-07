@@ -5,6 +5,7 @@ import {
   isValidElement,
   type ReactNode,
   type Ref,
+  useCallback,
 } from 'react'
 import type { Placement } from '@floating-ui/react'
 import { FloatingPortal, useMergeRefs } from '@floating-ui/react'
@@ -53,7 +54,9 @@ export const TooltipTrigger = forwardRef<
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
     : null
-  const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
+  // Wrapped because floating-ui declares the setters as methods, which reads as an unbound `this`.
+  const setReference = useCallback((node: HTMLElement | null) => context.refs.setReference(node), [context.refs])
+  const ref = useMergeRefs([setReference, propRef, childrenRef])
 
   const dataProperties = toDataProperties({ variant })
 
@@ -91,7 +94,8 @@ export const TooltipContent = forwardRef<
   TooltipContentProps
 >(function TooltipContent({ wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
-  const ref = useMergeRefs([context.refs.setFloating, propRef])
+  const setFloating = useCallback((node: HTMLElement | null) => context.refs.setFloating(node), [context.refs])
+  const ref = useMergeRefs([setFloating, propRef])
 
   const dataProperties = toDataProperties({ 'word-break': wordBreak })
 

@@ -17,8 +17,8 @@ updates:
       prefix: 'chore(deps)'
       prefix-development: 'chore(deps-dev)'
 
-    # First matching group wins, so these run most-specific first: a red PR points at one
-    # ecosystem rather than an unattributable pile.
+    # Definition order does not decide overlaps, so dev-tooling excludes the narrow groups by
+    # pattern rather than relying on being declared last.
     groups:
       storybook:
         applies-to: version-updates
@@ -57,6 +57,23 @@ updates:
       dev-tooling:
         applies-to: version-updates
         dependency-type: development
+        exclude-patterns:
+          - storybook
+          - '@storybook/*'
+          - msw-storybook-addon
+          - chromatic
+          - eslint
+          - eslint-*
+          - '@stylistic/*'
+          - stylelint
+          - stylelint-*
+          - typescript-eslint
+          - vitest
+          - '@vitest/*'
+          - '@testing-library/*'
+          - jsdom
+          - playwright
+          - msw
         update-types:
           - minor
           - patch

@@ -1,4 +1,4 @@
-name: Daily npm audit
+name: NPM Audit
 
 on:
   schedule:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   audit:
-    name: Audit
+    name: Report
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -98,8 +98,15 @@ jobs:
 
             // Both renderers walk this, so neither repeats the prod-available branch.
             const groups = prodAvailable
-              ? [{ title: 'Consumer-facing', rows: runtime }, { title: 'Dev / CI only', rows: dev }]
-              : [{ title: '⚠️ Potentially consumer-facing — prod/dev split unknown', rows: vulns }];
+              ? [
+                { title: 'Consumer-facing', slackTitle: 'Consumer Facing', rows: runtime },
+                { title: 'Dev / CI only', slackTitle: 'Dev / CI', rows: dev },
+              ]
+              : [{
+                title: '⚠️ Potentially consumer-facing — prod/dev split unknown',
+                slackTitle: 'All findings',
+                rows: vulns,
+              }];
 
             // npm repeats a title per dependency path; a bare string is the package, not a title.
             const describeVia = (v) => {
@@ -133,7 +140,8 @@ jobs:
               const openPrs = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
               for (const pr of openPrs.filter(pr => pr.user?.login === 'dependabot[bot]')) {
                 for (const name of packagesIn(pr)) {
-                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), { number: pr.number, url: pr.html_url }]);
+                  const entry = { number: pr.number, url: pr.html_url, title: pr.title };
+                  fixPrs.set(name, [...(fixPrs.get(name) ?? []), entry]);
                 }
               }
             } catch (error) {
@@ -165,25 +173,59 @@ jobs:
               process.env.ARTIFACT_URL ? `Full audit JSON: ${process.env.ARTIFACT_URL}\n` : '',
             ].filter(Boolean).join('\n')).write();
 
-            // Slack has no table primitive, and code blocks do not reflow on mobile.
-            const EMOJI = { critical: '🚨', high: '🔴', moderate: '🟠', low: '🟡' };
-            const bullets = (rows) => {
-              const lines = [...SEVERITIES].reverse()
-                .map(severity => [severity, rows.filter(v => v.severity === severity).length])
-                .filter(([, count]) => count > 0)
-                .map(([severity, count]) => `• ${EMOJI[severity]} ${count} ${severity}`);
-              return lines.length ? lines : ['• none'];
+            const {
+              SEVERITY_EMOJI, capBlocks, context: contextBlock, group, header, limited, metaLine, prLine,
+              row, section, tally,
+            } = require('./scripts/ci/slackBlocks.cjs');
+
+            const severityTally = rows => tally([...SEVERITIES].reverse()
+              .map(severity => [SEVERITY_EMOJI[severity], rows.filter(v => v.severity === severity).length, severity]))
+              || 'none';
+
+            // Counted per group instead, so only findings that need a decision are annotated.
+            const slackFix = (v) => {
+              if (v.fixAvailable === true) return '';
+              if (!v.fixAvailable?.version) return '_no fix_';
+              const target = `fix \`${v.fixAvailable.name}@${v.fixAvailable.version}\``;
+              return v.fixAvailable.isSemVerMajor ? `${target} *(major)*` : target;
             };
 
-            // Every finding's PRs: a merge-ready dev PR is still work waiting. Severity-ordered.
-            const linked = new Set(vulns.flatMap(v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`)));
+            const slackPrs = v => (fixPrs.get(v.name) ?? []).map(pr => `<${pr.url}|#${pr.number}>`).join(' ');
 
-            core.setOutput('slack', [
-              `[${slug}] npm audit — ${vulns.length} findings`,
-              ...groups.map(g => [`*${g.title} (${g.rows.length})*`, ...bullets(g.rows)].join('\n')),
-              linked.size ? `Open fix PRs: ${[...linked].join(' ')}` : '',
-              `Details: <${runUrl}|run summary> · <${alerts}|Dependabot alerts>`,
-            ].filter(Boolean).join('\n\n'));
+            const packageLines = rows => limited(
+              rows.map(v => row(SEVERITY_EMOJI[v.severity], v.name, slackFix(v), slackPrs(v))), 40,
+            );
+
+            const fixableNote = (rows) => {
+              const count = rows.filter(v => v.fixAvailable === true).length;
+              return count && `${count} of ${rows.length} clear with \`npm audit fix\``;
+            };
+
+            // Every finding's PRs: a merge-ready dev PR is still work waiting.
+            const prRows = [...new Map(
+              vulns.flatMap(v => fixPrs.get(v.name) ?? []).map(pr => [pr.number, pr]),
+            ).values()].sort((a, b) => a.number - b.number);
+
+            const blocks = capBlocks([
+              header(`npm audit — ${vulns.length} findings`),
+              contextBlock(`*${slug}* · <${runUrl}|run summary>`),
+              ...(prodAvailable
+                ? []
+                : [section('⚠️ The production-only audit produced no usable output, so every finding below is listed as *potentially consumer-facing*.')]),
+              ...groups.flatMap(g => group({
+                title: g.slackTitle ?? g.title,
+                count: g.rows.length,
+                meta: metaLine(severityTally(g.rows), fixableNote(g.rows)),
+                lines: g.rows.length ? packageLines(g.rows) : [],
+              })),
+              ...(prRows.length ? group({ title: 'Open Fix PRs', lines: prRows.map(prLine) }) : []),
+              contextBlock(`<${alerts}|Dependabot alerts> · peer dependencies (\`react\`, \`react-dom\`) are not covered by \`npm audit\``),
+            ]);
+
+            // `runtime` is every finding when the prod audit failed, so the split is not stated.
+            core.setOutput('slack', `[${slug}] npm audit — ${vulns.length} findings, ${
+              prodAvailable ? `${runtime.length} consumer-facing` : 'prod/dev split unknown'}`);
+            core.setOutput('slack_blocks', JSON.stringify(blocks));
 
       # Runs on failure too: a broken audit is when the ping matters most. Counts come from the
       # step above, so the two reports cannot disagree.
@@ -192,6 +234,7 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_TEXT: ${{ steps.report.outputs.slack }}
+          SLACK_BLOCKS: ${{ steps.report.outputs.slack_blocks }}
           RUNTIME: ${{ steps.report.outputs.runtime }}
           TOTAL: ${{ steps.report.outputs.total }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -210,7 +253,13 @@ jobs:
           if [ -z "$SLACK_TEXT" ]; then
             SLACK_TEXT="[$GITHUB_REPOSITORY] npm audit: $RUNTIME consumer-facing, $TOTAL total — <$RUN_URL|run summary>"
           fi
-          PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" '{text: $text}')
+          # Blocks are dropped if the step above never produced them, so a broken summarize
+          # still pages someone.
+          if [ -n "$SLACK_BLOCKS" ]; then
+            PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" --argjson blocks "$SLACK_BLOCKS" '{text: $text, blocks: $blocks}')
+          else
+            PAYLOAD=$(jq -n --arg text "$SLACK_TEXT" '{text: $text}')
+          fi
           # Slack answers a dead webhook with 4xx; plain `curl -s` would swallow that as exit 0.
           curl -sS --fail-with-body -X POST -H 'Content-type: application/json' \
             --data "$PAYLOAD" "$SLACK_WEBHOOK"
