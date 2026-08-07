@@ -25,6 +25,8 @@ export interface LedgerEntryDetailsProps {
   onClose: () => void
   /** When provided, a "Reverse entry" action is rendered for the entry. */
   onReverse?: () => Promise<void>
+  /** When true a bookkeeper owns the ledger, so the "Reverse entry" action is disabled. */
+  isBookkeepingEnabled?: boolean
   stringOverrides?: LedgerEntryDetailStringOverrides
 }
 
@@ -34,6 +36,7 @@ export const LedgerEntryDetails = ({
   isError,
   onClose,
   onReverse,
+  isBookkeepingEnabled = false,
   stringOverrides,
 }: LedgerEntryDetailsProps) => {
   const { t } = useTranslation()
@@ -131,7 +134,11 @@ export const LedgerEntryDetails = ({
         />
       </LedgerEntryDetailSection>
       {onReverse && (
-        <ReverseLedgerEntryButton onReverse={onReverse} alreadyReversed={Boolean(entry?.reversalId)} />
+        <ReverseLedgerEntryButton
+          onReverse={onReverse}
+          alreadyReversed={Boolean(entry?.reversalId)}
+          isBookkeepingEnabled={isBookkeepingEnabled}
+        />
       )}
     </VStack>
   )

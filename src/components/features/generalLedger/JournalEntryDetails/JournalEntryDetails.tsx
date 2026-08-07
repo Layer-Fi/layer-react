@@ -2,6 +2,7 @@ import { useCallback, useContext, useMemo } from 'react'
 
 import { EntryType } from '@schemas/features/generalLedger/ledgerEntry'
 import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/post'
+import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 import { JournalContext } from '@providers/features/generalLedger/JournalContext/JournalContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 
@@ -14,6 +15,7 @@ export const JournalEntryDetails = () => {
   } = useContext(JournalContext)
 
   const { trigger: reverseEntry } = usePostReverseJournalEntry()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
 
   const entry = useMemo(
     () => (selectedEntryId && data ? data.find(x => x.id === selectedEntryId) : undefined),
@@ -31,6 +33,7 @@ export const JournalEntryDetails = () => {
       entry={entry}
       onClose={closeSelectedEntry}
       onReverse={entry?.entryType === EntryType.Manual ? handleReverse : undefined}
+      isBookkeepingEnabled={isActiveBookkeepingStatus}
     />
   )
 }

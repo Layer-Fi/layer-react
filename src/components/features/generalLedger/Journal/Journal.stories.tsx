@@ -1,9 +1,16 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { userEvent, within } from 'storybook/test'
+import { expect, userEvent, within } from 'storybook/test'
 
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { EntryType } from '@schemas/features/generalLedger/ledgerEntry'
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
 
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { ledgerEntries } from '@fixtures/generated/ledgerEntries.gen'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { get as getLedgerEntries } from '@msw/api/businesses/[business-id]/ledger/entries/get'
+import { handlers } from '@msw/handlers'
 import { findEntryRows } from '@testUtils/storybook/interactions/findEntryRows'
 
 type JournalStoryArgs = {
@@ -100,6 +107,49 @@ export const DrawerOpen: Story = {
     const [, firstEntry] = await findEntryRows(canvas)
     await userEvent.click(firstEntry)
     await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
+  },
+}
+
+// Only manual entries offer the reverse action, and the fixtures put them past the first page.
+const manualEntriesFirst = getLedgerEntries.mock(
+  ledgerEntries.filter(entry => entry.entryType === EntryType.Manual),
+)
+
+async function openReverseAction(canvasElement: HTMLElement) {
+  const canvas = within(canvasElement)
+  const [, firstEntry] = await findEntryRows(canvas)
+  await userEvent.click(firstEntry)
+  await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
+  return canvas.findByRole('button', { name: 'Reverse entry' })
+}
+
+// The global mock's status is NOT_PURCHASED, so reversing an entry is allowed.
+export const ReverseEntry: Story = {
+  parameters: {
+    chromatic: { viewports: [1280] },
+    msw: { handlers: [manualEntriesFirst, ...handlers] },
+  },
+  play: async ({ canvasElement }) => {
+    const reverse = await openReverseAction(canvasElement)
+    await expect(reverse).toBeEnabled()
+  },
+}
+
+// ACTIVE (a bookkeeping client) disables reversing an entry.
+export const ReverseEntryBookkeepingEnabled: Story = {
+  parameters: {
+    chromatic: { viewports: [1280] },
+    msw: {
+      handlers: [
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        manualEntriesFirst,
+        ...handlers,
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const reverse = await openReverseAction(canvasElement)
+    await expect(reverse).toBeDisabled()
   },
 }
 
