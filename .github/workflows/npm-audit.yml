@@ -320,6 +320,8 @@ jobs:
       # Last, so a vulnerable floor is reported and notified before it fails the run.
       - name: Gate on declared floors
         if: ${{ steps.floors.outcome == 'failure' }}
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          echo "::error::Declared dependency floors admit known-vulnerable versions. See the run summary."
+          echo "::error::Declared dependency floors admit known-vulnerable versions. Which ones, and the advisories: ${RUN_URL} (the run's Summary tab). Full output is in the 'Audit declared floors' step above."
           exit 1
