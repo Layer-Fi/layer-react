@@ -73,8 +73,15 @@ in each directory.
 - Variants expressed as extra class names instead of `data-*` attributes via `toDataProperties`.
 - `&__Element` nesting in SCSS. Write flat, greppable selectors; nest only modifiers of the
   current selector.
-- Media queries for responsive behavior. Responsiveness is measured in JS — use
-  `ResponsiveComponent`.
+- A new data-dense surface — table, list, selection or filter UI — with no mobile variant. We are
+  embedded at arbitrary widths inside consumer layouts; desktop-only is broken for real users.
+  Render per-size variants with `ResponsiveComponent` (`slots` + `resolveVariant`).
+- A hand-built mobile card list or bottom sheet. Use `@blocks/MobileList`
+  (`MobileList`, `PaginatedMobileList`, `MobileListItem`, `MobileListSection`) and
+  `@blocks/MobileSelectionDrawer`.
+- Hardcoded pixel thresholds or inline width ternaries scattered through JSX. Size classes come
+  from `BREAKPOINTS` in `@utils/shared/size/screenSizeBreakpoints`; read size with
+  `useElementSize` / `useElementViewSize`.
 - CSS variables referenced outside a `.Layer__component` / `.Layer__Portal` ancestor. Portals and
   bare primitives in stories need one.
 
@@ -83,14 +90,13 @@ in each directory.
 - Hand-rolled loading, empty, or error branches instead of `ConditionalBlock` (one object),
   `ConditionalList` (an array), `DataState`, `SkeletonLoader`, or `SkeletonTableLoader`.
 - A hand-built table instead of `SimpleDataTable` / `DataTable` / `PaginatedDataTable` /
-  `ExpandableDataTable` / `VirtualizedDataTable`.
+  `ExpandableDataTable` / `VirtualizedDataTable`, or pagination state managed by hand instead of
+  `@hooks/utils/pagination`.
 - A form not built on `useAppForm` + the `Form*Field` components, or a validator duplicated
   instead of taken from `@utils/shared/form/validators`.
-- Pagination state managed by hand instead of `@hooks/utils/pagination`.
 
 ### TypeScript
 
-- `any`. Use `unknown` and narrow.
 - An `as` cast with no short comment explaining why it is safe.
 - A type restated by hand where it could be derived: `typeof Schema.Type`,
   `Parameters<typeof useHook>[0]`, `Pick<…>`, `ReturnType<…>`.
@@ -112,8 +118,9 @@ in each directory.
 ## What to leave alone
 
 - Anything ESLint, stylelint, or `tsc --noEmit` already fails the PR on. Do not comment on import
-  order, import boundaries, relative-parent imports, `react-hooks/exhaustive-deps`, inline type
-  imports, unused variables, quotes, semicolons, indentation, line length, or CSS property order.
+  order, import boundaries, relative-parent imports, `react-hooks/exhaustive-deps`,
+  `no-explicit-any` and the `no-unsafe-*` family, inline type imports, unused variables, quotes,
+  semicolons, indentation, line length, or CSS property order.
 - `src/fixtures/generated/*.gen.ts` — generated output, committed on purpose.
 - `consumer-fixtures/**` — deliberately minimal smoke apps, outside the lint config.
 - `dist/`, `storybook-static/`, `package-lock.json`.

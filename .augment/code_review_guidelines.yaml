@@ -5,7 +5,8 @@
 #
 # Deliberately omits anything eslint.config.mjs, stylelint.config.mjs, or `tsc --noEmit`
 # already fails the PR on: import order and boundaries, react-hooks/exhaustive-deps,
-# inline type imports, unused vars, quotes, semicolons, indent, CSS property order.
+# no-explicit-any and the no-unsafe-* family, inline type imports, unused vars, quotes,
+# semicolons, indent, CSS property order.
 
 # src/assets/locales/** is deliberately NOT ignored: a hand edit there is a bug we want
 # flagged. The generated diffs land on the i18n/extract-keys and Crowdin bot branches.
@@ -164,16 +165,28 @@ areas:
         description: "Write flat, greppable SCSS selectors. Nest only modifiers of the current selector; never build element names with &__Element, since the resulting class cannot be found by searching for it."
         severity: "medium"
 
-      - id: "responsive_in_js_not_css"
-        description: "Responsiveness is measured in JavaScript, not media queries, because the library is embedded at arbitrary widths inside consumer layouts. Use ResponsiveComponent."
+      - id: "mobile_variant_required"
+        description: "Any new data-dense surface — a table, a list, a selection or filter UI — needs a mobile variant, not just a desktop one that reflows. The library is embedded at arbitrary widths inside consumer layouts, so a desktop-only surface is broken for a real subset of users. Render per-size variants with ResponsiveComponent (@components/utility/ResponsiveComponent) using a slots record and a resolveVariant function."
         severity: "high"
+
+      - id: "use_existing_mobile_surfaces"
+        description: "Do not reimplement a mobile list or a mobile drawer. MobileList, PaginatedMobileList, MobileListItem, and MobileListSection live in @blocks/MobileList; MobileSelectionDrawer and MobileSelectionDrawerWithTrigger live in @blocks/MobileSelectionDrawer. A bespoke card list or bottom sheet diverges from the rest of the library's mobile behavior."
+        severity: "medium"
+
+      - id: "size_classes_from_breakpoints"
+        description: "Responsiveness is JS-driven off measured width, not CSS media queries alone. Size classes come from BREAKPOINTS in @utils/shared/size/screenSizeBreakpoints (mobile under 500, tablet under 760, desktop above). Read element size with @hooks/utils/size/useElementSize or useElementViewSize. Flag hardcoded pixel thresholds and inline width ternaries scattered through JSX."
+        severity: "medium"
 
       - id: "css_variables_need_layer_root"
         description: "CSS variables only exist under the design-system root classes (.Layer__component, .Layer__Portal). Portals and bare primitives rendered outside one will silently lose all theming."
         severity: "high"
 
-      - id: "reuse_state_and_table_abstractions"
-        description: "Do not hand-roll loading, empty, or error branches — use ConditionalBlock for one object, ConditionalList for an array, plus DataState, SkeletonLoader, SkeletonTableLoader. Do not hand-build tables; use SimpleDataTable, DataTable, PaginatedDataTable, ExpandableDataTable, or VirtualizedDataTable. Do not hand-roll pagination state; use @hooks/utils/pagination."
+      - id: "reuse_conditional_render_abstractions"
+        description: "Do not hand-roll loading, empty, or error branches. Use ConditionalBlock for a single data object and ConditionalList for an array, with DataState, SkeletonLoader, and SkeletonTableLoader for the visuals. Hand-rolled branches drift from the rest of the library's loading and empty UX."
+        severity: "medium"
+
+      - id: "reuse_table_abstractions"
+        description: "Do not hand-build tables. Use SimpleDataTable, DataTable, PaginatedDataTable, ExpandableDataTable, or VirtualizedDataTable, and take pagination state from @hooks/utils/pagination rather than managing it by hand."
         severity: "medium"
 
       - id: "forms_use_app_form"
@@ -186,10 +199,6 @@ areas:
       - "src/**/*.ts"
       - "src/**/*.tsx"
     rules:
-      - id: "no_any"
-        description: "No any. Use unknown and narrow it."
-        severity: "high"
-
       - id: "explain_casts"
         description: "An `as` cast needs a short comment saying why it is safe. Unexplained casts at boundaries hide decoding bugs."
         severity: "medium"
