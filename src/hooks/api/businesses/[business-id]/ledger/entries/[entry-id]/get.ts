@@ -1,7 +1,8 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
+import { type LedgerEntry, LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'
 
@@ -25,3 +26,5 @@ export const useGetLedgerAccountsEntry = createQueryHook({
   request: getLedgerAccountsEntry,
   schema: LedgerAccountsEntryResponseSchema,
 })
+
+export const useLedgerAccountsEntryCacheActions = createResourceGlobalCacheActions<LedgerEntry>(LEDGER_ACCOUNTS_ENTRY_TAG_KEY)

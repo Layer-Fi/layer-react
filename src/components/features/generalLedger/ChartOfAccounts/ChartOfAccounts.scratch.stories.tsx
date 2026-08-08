@@ -46,6 +46,22 @@ export const ScratchManualEntryReversal: Story = {
   },
 }
 
+export const ScratchManualEntryReversalRefreshesDrawer: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = await openFirstEntryForAccount(canvasElement, 'Income Tax', 'Manual')
+
+    const reverseButton = await canvas.findByRole('button', { name: /Reverse entry/ }, { timeout: 10_000 })
+    await expect(canvas.queryByText('Reversal')).toBeNull()
+
+    await userEvent.click(reverseButton)
+
+    await canvas.findByText('Reversal', undefined, { timeout: 20_000 })
+    await waitFor(async () => {
+      await expect(await canvas.findByRole('button', { name: /Reverse entry/ })).toBeDisabled()
+    }, { timeout: 20_000 })
+  },
+}
+
 export const ScratchNonManualEntryNoReversal: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await openFirstEntryForAccount(canvasElement, 'Equipment & Machinery', 'Expense')
