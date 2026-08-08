@@ -20,12 +20,28 @@ export default meta
 
 type Story = StoryObj<typeof ChartOfAccounts>
 
-const openFirstEntryForAccount = async (canvasElement: HTMLElement, accountName: string, entryType: string) => {
+// Leaving the account panel remounts the table collapsed, and it collapses again as refetched
+// balances land, so re-expand until the account's row is on screen.
+const findAccountRow = async (canvasElement: HTMLElement, accountName: string) => {
   const canvas = within(canvasElement)
 
   await findEntryRows(canvas)
-  await userEvent.click(await canvas.findByRole('button', { name: 'Expand All' }))
-  await userEvent.click(await canvas.findByRole('button', { name: accountName }, { timeout: 10_000 }))
+
+  return waitFor(async () => {
+    const expandAll = canvas.queryByRole('button', { name: 'Expand All' })
+    if (expandAll) await userEvent.click(expandAll)
+
+    const accountRow = canvas.getByRole('button', { name: accountName }).closest('[role="row"]')
+    if (!(accountRow instanceof HTMLElement)) throw new Error(`no row for ${accountName}`)
+    return accountRow
+  }, { timeout: 20_000 })
+}
+
+const openFirstEntryForAccount = async (canvasElement: HTMLElement, accountName: string, entryType: string) => {
+  const canvas = within(canvasElement)
+
+  await findAccountRow(canvasElement, accountName)
+  await userEvent.click(canvas.getByRole('button', { name: accountName }))
   await canvas.findByText('Current balance', undefined, { timeout: 10_000 })
 
   // The line items table re-renders as revalidation settles, detaching the row that was just found.
@@ -58,6 +74,23 @@ export const ScratchManualEntryReversalRefreshesDrawer: Story = {
     await canvas.findByText('Reversal', undefined, { timeout: 20_000 })
     await waitFor(async () => {
       await expect(await canvas.findByRole('button', { name: /Reverse entry/ })).toBeDisabled()
+    }, { timeout: 20_000 })
+  },
+}
+
+export const ScratchReversalRefreshesAccountBalance: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    const balanceBefore = (await findAccountRow(canvasElement, 'Income Tax')).textContent
+
+    await openFirstEntryForAccount(canvasElement, 'Income Tax', 'Manual')
+    await userEvent.click(await canvas.findByRole('button', { name: /Reverse entry/ }, { timeout: 10_000 }))
+    await userEvent.click(await canvas.findByRole('button', { name: 'Back' }))
+
+    await waitFor(async () => {
+      const accountRow = await findAccountRow(canvasElement, 'Income Tax')
+      await expect(accountRow.textContent).not.toEqual(balanceBefore)
     }, { timeout: 20_000 })
   },
 }
