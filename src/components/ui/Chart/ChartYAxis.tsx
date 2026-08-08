@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { YAxis, type YAxisProps } from 'recharts'
+import { YAxis, type YAxisProps, type YAxisTickContentProps } from 'recharts'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
@@ -7,24 +7,22 @@ import './ChartYAxis.scss'
 
 type FormatFn = (value?: string | number) => string | number | undefined
 
-interface CustomizedYTickProps {
-  verticalAnchor?: unknown
-  visibleTicksCount?: unknown
-  tickFormatter?: unknown
+type CustomizedYTickProps = Omit<YAxisTickContentProps, 'payload'> & {
+  payload: Omit<YAxisTickContentProps['payload'], 'value'> & { value: string | number }
   format: FormatFn
-  payload: { value: string | number }
 }
 
 const CustomizedYTick = ({
-  verticalAnchor: _verticalAnchor,
-  visibleTicksCount: _visibleTicksCount,
-  tickFormatter: _tickFormatter,
   format,
   payload,
-  ...restProps
+  x,
+  y,
+  fill,
+  stroke,
+  textAnchor,
 }: CustomizedYTickProps) => {
   return (
-    <text {...restProps} className='Layer__ChartYAxis__tick'>
+    <text x={x} y={y} fill={fill} stroke={stroke} textAnchor={textAnchor} className='Layer__ChartYAxis__tick'>
       <tspan dy='0.355em'>{format(payload.value)}</tspan>
     </text>
   )
@@ -54,7 +52,7 @@ export const ChartYAxis = ({ format, ...props }: ChartYAxisProps) => {
   }, [formatNumber])
 
   const yAxisFormat = format ?? formatYAxisValue
-  const tick = (tickProps: CustomizedYTickProps) => (
+  const tick = (tickProps: YAxisTickContentProps) => (
     <CustomizedYTick {...tickProps} format={yAxisFormat} />
   )
 
