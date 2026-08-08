@@ -1,5 +1,3 @@
-import { type RefObject } from 'react'
-
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
@@ -22,7 +20,6 @@ export interface ChartOfAccountsTableStringOverrides {
 }
 
 export const ChartOfAccountsTableWithPanel = ({
-  containerRef,
   asWidget = false,
   withDateControl = false,
   withExpandAllButton = false,
@@ -30,7 +27,6 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides,
   templateAccountsEditable,
 }: {
-  containerRef: RefObject<HTMLDivElement>
   asWidget?: boolean
   withDateControl?: boolean
   withExpandAllButton?: boolean
@@ -55,7 +51,6 @@ export const ChartOfAccountsTableWithPanel = ({
           />
         )}
         sidebarIsOpen={!!formMode}
-        parentRef={containerRef}
       >
         <ChartOfAccountsTableHeader
           asWidget={asWidget}

@@ -1,8 +1,16 @@
+@use 'breakpoints' as bp;
+
+/*
+ * The back button is the mobile affordance; the close button is the desktop one. The
+ * query has to measure the surrounding surface, not this header - the header renders in
+ * the panel sidebar and is narrow at every viewport size.
+ */
+
 .Layer__JournalEntryDetailHeader--VisibleOnLarge {
   display: none;
 }
 
-@container (min-width: 1024px) {
+@include bp.container-desktop-up('layer-surface') {
   .Layer__JournalEntryDetailHeader--HiddenOnLarge {
     display: none;
   }

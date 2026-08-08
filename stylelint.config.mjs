@@ -278,4 +278,32 @@ export default {
     '@stylistic/no-missing-end-of-source-newline': true,
     '@stylistic/string-quotes': 'single',
   },
+
+  overrides: [
+    {
+      // The container-name mixins take the name as an argument, so stylelint only ever
+      // sees the interpolation. The literal names are checked at each call site.
+      files: ['src/styles/_breakpoints.scss'],
+      rules: { 'container-name-pattern': null },
+    },
+    {
+      // The layout primitives were, for years, configured by other stylesheets reaching
+      // in and out-specifying them. Every one of those overrides is now a prop or a
+      // documented custom property; this keeps them from growing back.
+      files: ['src/**/*.scss'],
+      ignoreFiles: ['src/components/blocks/Layout/**/*.scss', 'src/styles/*.scss'],
+      rules: {
+        'selector-disallowed-list': [
+          [
+            /\.Layer__(LayoutView|LayoutContainer|ViewPanel|ViewHeader)/,
+            /\.Layer__(view|view-main|view-header|panel|component-container|component-header)\b/,
+            /\.Layer__(HeaderContainer|HeaderRow|HeaderCol)\b/,
+          ],
+          {
+            message: 'Configure the layout primitive with a prop or its documented custom property instead of selecting its class.',
+          },
+        ],
+      },
+    },
+  ],
 }

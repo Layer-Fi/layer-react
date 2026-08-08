@@ -1,6 +1,6 @@
-.Layer__view,
-.Layer__component,
-.Layer__Portal {
+@use 'roots';
+
+@include roots.internal-token-roots {
   /*
    * Background
    */
@@ -37,4 +37,32 @@
 
   --button-border-color-ghost: var(--color-base-300);
   --button-border-color-ghost-active: var(--color-base-800);
+
+  /*
+   * Layering. Kept below the public `--z-index-mobile-panel` so a mobile panel still
+   * covers a sticky header.
+   */
+  --z-index-sticky-header: 10;
+  --z-index-panel-sidebar: 10;
+  --z-index-panel-overlay: 100;
+
+  /*
+   * Effects
+   */
+  --blur-sticky: 6px;
+
+  /*
+   * Motion
+   */
+  --transition-duration-fast: 120ms;
+  --transition-duration-default: 180ms;
+
+  /*
+   * Scrollbars
+   */
+  --scrollbar-size: 6px;
+  --scrollbar-radius: var(--border-radius-3xs);
+  --scrollbar-track: var(--color-base-100);
+  --scrollbar-thumb: var(--color-base-300);
+  --scrollbar-thumb-hovered: var(--color-base-500);
 }

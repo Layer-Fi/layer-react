@@ -35,7 +35,7 @@ const ProfitAndLoss = ({
     <ProfitAndLossContext.Provider value={contextData}>
       {asContainer
         ? (
-          <Container name='profit-and-loss'>{children}</Container>
+          <Container className='Layer__profit-and-loss'>{children}</Container>
         )
         : (
           children

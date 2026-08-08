@@ -235,7 +235,7 @@ export const LandingPage = ({
   )
 
   return (
-    <View viewClassName={baseClassName} showHeader={false}>
+    <View className={baseClassName} showHeader={false}>
       <div className='Layer__LandingPage__content'>
         {renderMainContent()}
         {RenderOffers}

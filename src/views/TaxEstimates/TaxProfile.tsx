@@ -29,7 +29,7 @@ export const TaxProfile = () => {
   return (
     <BaseDetailView
       slots={{ Header: TaxProfileHeader, BackIcon: ChevronLeft }}
-      name='TaxProfile'
+      className='Layer__TaxProfile'
       onGoBack={hasSavedTaxProfile ? handleGoBack : undefined}
     >
       <TaxProfileForm taxProfile={taxProfile} />

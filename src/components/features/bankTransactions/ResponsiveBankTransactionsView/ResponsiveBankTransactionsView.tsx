@@ -20,7 +20,7 @@ import { SuggestedCategorizationRuleUpdatesDialog } from '@features/categorizati
 import './responsiveBankTransactionsView.scss'
 
 // Kept as the Container name so the published Layer__bank-transactions class is unchanged.
-const COMPONENT_NAME = 'bank-transactions'
+const COMPONENT_CLASS_NAME = 'Layer__bank-transactions'
 
 export type ResponsiveBankTransactionsViewProps = Pick<
   BankTransactionsProps,
@@ -96,9 +96,8 @@ export const ResponsiveBankTransactionsView = ({
 
   return (
     <Container
-      className='Layer__Public'
-      transparentBg={listView && mobileComponent === 'mobileList'}
-      name={COMPONENT_NAME}
+      className={`${COMPONENT_CLASS_NAME} Layer__Public`}
+      variant={listView && mobileComponent === 'mobileList' ? 'plain' : 'default'}
       asWidget={asWidget}
       ref={containerRef}
     >

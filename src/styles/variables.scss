@@ -1,11 +1,6 @@
-.Layer__component,
-.Layer__Portal,
-.Layer__view,
-.Layer__UI__Tooltip,
-.Layer__toasts-container,
-.Layer__drawer,
-.Layer__variables,
-.Layer__tasks-component {
+@use 'roots';
+
+@include roots.token-roots {
   /* Explicit Colors */
   --color-black: #1a1a1a;
   --color-white: white;
@@ -50,6 +45,21 @@
 
   /* View Sizing */
   --max-component-width: 1408px;
+
+  /*
+   * Layout. `--layout-max-content-width` aliases the older name so an existing consumer
+   * override of `--max-component-width` keeps taking effect.
+   */
+  --layout-max-content-width: var(--max-component-width);
+
+  --layout-sidebar-inline-size: 480px;
+
+  --layout-view-padding: var(--spacing-lg);
+
+  --layout-header-height: 68px;
+  --layout-header-height-lg: 76px;
+  --layout-header-height-sm: 44px;
+  --layout-header-height-compact: 36px;
 
   /* Transparency */
   --base-transparent-1: hsl(220deg 43% 11% / 1%);
@@ -201,14 +211,7 @@
 }
 
 @media (width <= 768px) {
-  .Layer__component,
-  .Layer__Portal,
-  .Layer__view,
-  .Layer__UI__Tooltip,
-  .Layer__toasts-container,
-  .Layer__drawer,
-  .Layer__variables,
-  .Layer__tasks-component {
+  @include roots.token-roots {
     --text-heading: 20px;
   }
 }

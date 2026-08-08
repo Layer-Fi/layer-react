@@ -1,6 +1,6 @@
 .Layer__InvoiceTable {
   overflow: hidden;
-  width: clamp(48rem, 100%, 1406px);
+  width: clamp(48rem, 100%, var(--layout-max-content-width));
 }
 
 .Layer__InvoiceTable__SearchField {

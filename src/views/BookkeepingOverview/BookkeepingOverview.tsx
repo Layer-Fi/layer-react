@@ -9,9 +9,6 @@ import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping
 import { VStack } from '@ui/Stack/Stack'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
@@ -132,18 +129,11 @@ export const BookkeepingOverview = ({
       tagFilter={profitAndLossTagFilter}
     >
       <View
-        viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
+        className='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
         title={stringOverrides?.title || title || t('views:BookkeepingOverview.label.bookkeeping_overview', 'Bookkeeping overview')}
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
+        header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
         withSidebar={width > 1100}
+        sidebarVariant='plain'
         sidebar={(
           <VStack gap='lg'>
             <BookkeepingOverviewTasksContent
@@ -182,13 +172,8 @@ export const BookkeepingOverview = ({
           onClick={() => (upperElementInFocus.current = false)}
         >
           <Container
-            name='bookkeeping-overview-profit-and-loss'
-            className='Layer__BookkeepingOverview__ProfitAndLossContainer'
+            className='Layer__bookkeeping-overview-profit-and-loss Layer__BookkeepingOverview__ProfitAndLossContainer'
             asWidget
-            style={{
-              position: 'relative',
-              zIndex: 2,
-            }}
           >
             <ProfitAndLossHeader
               stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}

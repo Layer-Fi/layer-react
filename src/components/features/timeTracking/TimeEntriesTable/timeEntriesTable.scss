@@ -1,6 +1,6 @@
 .Layer__TimeEntriesTable {
   overflow: hidden;
-  width: min(100%, 1406px);
+  width: min(100%, var(--layout-max-content-width));
 }
 
 .Layer__UI__Table__TimeEntriesTable {

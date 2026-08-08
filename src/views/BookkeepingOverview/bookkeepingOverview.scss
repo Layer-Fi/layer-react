@@ -1,53 +1,35 @@
 .Layer__bookkeeping-overview--view {
-  .Layer__panel .Layer__panel__content .Layer__component-header {
-    z-index: 1;
-  }
-
-  .Layer__panel.Layer__panel--open .Layer__panel__content {
-    border-right: none;
-  }
-
-  .Layer__panel__sidebar {
-    padding: var(--spacing-lg);
-    border-left: none;
-    background: none;
-  }
-
-  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
-    max-width: 560px;
-  }
+  /* The tasks list needs more room than the default sidebar track. */
+  --layout-sidebar-inline-size: 560px;
 }
 
+/* Matches the width at which this view asks for a sidebar at all. */
 @media screen and (width >= 1100px) {
   .Layer__bookkeeping-overview--view {
-    .Layer__panel__content {
-      max-width: 1406px;
-    }
-
-    .Layer__view-main.Layer__view-main {
-      padding-right: 0;
-    }
+    --view-panel-content-max-inline-size: var(--layout-max-content-width);
   }
 }
 
-.Layer__BookkeepingOverview {
-  &__ProfitAndLossContainer {
-    display: flex;
-    flex-direction: column;
-  }
+.Layer__BookkeepingOverview__ProfitAndLossContainer {
+  /* Lifts the card above the tasks panel that scrolls up behind it. */
+  position: relative;
+  z-index: 2;
 
-  &__ProfitAndLossHeader {
-    padding-block-start: var(--spacing-lg);
-    padding-block-end: 0;
-    padding-inline: var(--spacing-lg);
-  }
+  display: flex;
+  flex-direction: column;
+}
 
-  &__ProfitAndLossCharts {
-    max-inline-size: 1406px;
-  }
+.Layer__BookkeepingOverview__ProfitAndLossHeader {
+  padding-block-start: var(--spacing-lg);
+  padding-block-end: 0;
+  padding-inline: var(--spacing-lg);
+}
 
-  &__ProfitAndLossChart {
-    box-sizing: border-box;
-    inline-size: 100%;
-  }
+.Layer__BookkeepingOverview__ProfitAndLossCharts {
+  max-inline-size: var(--layout-max-content-width);
+}
+
+.Layer__BookkeepingOverview__ProfitAndLossChart {
+  box-sizing: border-box;
+  inline-size: 100%;
 }

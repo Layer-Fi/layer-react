@@ -1,4 +1,4 @@
-import { type RefObject, useContext } from 'react'
+import { useContext } from 'react'
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,12 +7,9 @@ import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/Boo
 import { JournalContext } from '@providers/features/generalLedger/JournalContext/JournalContext'
 import { useJournalNavigation } from '@providers/features/generalLedger/JournalStore/JournalStoreProvider'
 import { Button } from '@ui/Button/Button'
-import { Heading } from '@ui/Typography/Heading'
 import { LedgerDateRangeSelection } from '@blocks/DatePickers/DateSelection/LedgerDateRangeSelection'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
+import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 import { JournalEntriesDownloadButton } from '@features/generalLedger/JournalEntriesDownloadButton/JournalEntriesDownloadButton'
 import { JournalSidebar } from '@features/generalLedger/JournalSidebar/JournalSidebar'
 import { JournalTable } from '@features/generalLedger/JournalTable/JournalTable'
@@ -34,10 +31,8 @@ export interface JournalTableStringOverrides {
 }
 
 export const JournalTableWithPanel = ({
-  containerRef,
   stringOverrides,
 }: {
-  containerRef: RefObject<HTMLDivElement>
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
@@ -52,44 +47,37 @@ export const JournalTableWithPanel = ({
   return (
     <Panel
       className={`Layer__${COMPONENT_NAME}`}
-      sidebar={<JournalSidebar parentRef={containerRef} />}
+      sidebar={<JournalSidebar />}
       sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
-      parentRef={containerRef}
     >
-      <Header
+      <ViewHeader
+        surface='panel'
         className={`Layer__${COMPONENT_NAME}__header`}
         asHeader
         sticky
         rounded
-      >
-        <HeaderRow>
-          <HeaderCol>
-            <Heading level={2} size='md'>
-              {stringOverrides?.componentTitle || t('generalLedger:JournalTableWithPanel.label.journal', 'Journal')}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol>
-            <JournalEntriesDownloadButton
-              filterByDateRange
-              icon={!isDesktop}
-            />
-            {showAddEntryButton && (
-              <Button
-                onPress={() => toCreateEntry()}
+        title={stringOverrides?.componentTitle || t('generalLedger:JournalTableWithPanel.label.journal', 'Journal')}
+        slots={{
+          Actions: (
+            <>
+              <JournalEntriesDownloadButton
+                filterByDateRange
                 icon={!isDesktop}
-                aria-label={!isDesktop ? addEntryLabel : undefined}
-              >
-                {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
-              </Button>
-            )}
-          </HeaderCol>
-        </HeaderRow>
-        <HeaderRow scrollable>
-          <HeaderCol>
-            <LedgerDateRangeSelection />
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
+              />
+              {showAddEntryButton && (
+                <Button
+                  onPress={() => toCreateEntry()}
+                  icon={!isDesktop}
+                  aria-label={!isDesktop ? addEntryLabel : undefined}
+                >
+                  {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
+                </Button>
+              )}
+            </>
+          ),
+          Filters: <LedgerDateRangeSelection />,
+        }}
+      />
 
       <JournalTable stringOverrides={stringOverrides} />
     </Panel>

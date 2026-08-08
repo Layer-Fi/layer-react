@@ -10,9 +10,6 @@ import { useResolvedReportView } from '@hooks/features/reports/useResolvedReport
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { BALANCE_SHEET_ROWS_CONFIG } from '@features/balanceSheet/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@features/balanceSheet/BalanceSheetDownloadButton/BalanceSheetDownloadButton'
@@ -101,32 +98,27 @@ const BalanceSheetView = ({
   return (
     <ReportsTableProvider>
       <View
-        type='panel'
+        layout='panel'
         ref={containerRef}
         header={(
-          <Header ref={headerRef}>
-            <HeaderRow>
-              <HeaderCol fluid>
-                <Stack
-                  direction={isCompact ? 'column-reverse' : 'row'}
-                  align={isCompact ? undefined : 'end'}
-                  justify='space-between'
-                  gap='xs'
-                  pb='sm'
-                  fluid
-                >
-                  <CombinedDateSelection mode={dateSelectionMode} isCompact={isCompact} />
-                  <HStack gap='xs' justify='end' fluid={isCompact}>
-                    {isMobileView && <ReportsMobileSelectionTrigger />}
-                    <BalanceSheetDownloadButton
-                      effectiveDate={effectiveDate}
-                      icon={isMobileView}
-                    />
-                  </HStack>
-                </Stack>
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
+          <Stack
+            ref={headerRef}
+            direction={isCompact ? 'column-reverse' : 'row'}
+            align={isCompact ? undefined : 'end'}
+            justify='space-between'
+            gap='xs'
+            pb='sm'
+            fluid
+          >
+            <CombinedDateSelection mode={dateSelectionMode} isCompact={isCompact} />
+            <HStack gap='xs' justify='end' fluid={isCompact}>
+              {isMobileView && <ReportsMobileSelectionTrigger />}
+              <BalanceSheetDownloadButton
+                effectiveDate={effectiveDate}
+                icon={isMobileView}
+              />
+            </HStack>
+          </Stack>
         )}
       >
         {content}

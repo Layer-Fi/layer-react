@@ -1,5 +1,8 @@
 .Layer__ErrorBoundaryMessage {
   padding: var(--spacing-xl);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
 
   .Layer__data-state__text > .Layer__Span:last-child {
     margin-bottom: 0;

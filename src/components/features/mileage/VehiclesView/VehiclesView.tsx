@@ -130,7 +130,7 @@ export const VehiclesView = () => {
     <>
       <BaseDetailView
         slots={{ Header, BackIcon: ChevronLeft }}
-        name='VehiclesView'
+        className='Layer__VehiclesView'
         onGoBack={toTrips}
       >
         {isMobileVariant && hasArchivedVehicles && (

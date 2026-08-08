@@ -16,7 +16,7 @@ export const MileageTrackingStats = () => {
 
   if (isError) {
     return (
-      <Container name='mileage-tracking-stats'>
+      <Container className='Layer__mileage-tracking-stats'>
         <DataState status={DataStateStatus.failed} title={t('mileage:MileageTrackingStats.error.load_mileage_summary_data', 'Failed to load mileage summary data')} spacing />
       </Container>
     )
@@ -24,7 +24,7 @@ export const MileageTrackingStats = () => {
 
   if (isLoading || !mileageData) {
     return (
-      <Container name='mileage-tracking-stats'>
+      <Container className='Layer__mileage-tracking-stats'>
         <HStack className='Layer__MileageTrackingStats__Content' gap='lg' justify='center' align='center'>
           <Loader />
         </HStack>
@@ -33,7 +33,7 @@ export const MileageTrackingStats = () => {
   }
 
   return (
-    <Container name='mileage-tracking-stats'>
+    <Container className='Layer__mileage-tracking-stats'>
       <div className='Layer__MileageTrackingStats__Content'>
         <VStack className='Layer__MileageTrackingStats__Cards' gap='md' justify='center'>
           <MileageTrackingStatsCard

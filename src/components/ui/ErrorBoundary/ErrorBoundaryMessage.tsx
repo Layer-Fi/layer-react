@@ -7,6 +7,8 @@ import './errorBoundaryMessage.scss'
 export const ErrorBoundaryMessage = () => {
   const { t } = useTranslation()
   return (
+    // `Layer__component` is the token root; the card chrome is this sheet's, since a
+    // primitive may not import `Container` from `blocks`.
     <div className='Layer__component Layer__component-container Layer__ErrorBoundaryMessage'>
       <DataState
         status={DataStateStatus.failed}
