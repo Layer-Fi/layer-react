@@ -1,5 +1,8 @@
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useLedgerAccountLinesCacheActions } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
+import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'
+import { useLedgerAccountsEntryCacheActions } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/get'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
 import { useBalanceSheetGlobalCacheActions } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { useStatementOfCashFlowGlobalCacheActions } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
@@ -21,12 +24,18 @@ export const usePostReverseJournalEntry = createMutationHook({
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
     const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+    const { forceReload: forceReloadLedgerAccountLines } = useLedgerAccountLinesCacheActions()
+    const { forceReload: forceReloadLedgerAccountsEntry } = useLedgerAccountsEntryCacheActions()
+    const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
     const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
     const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
     const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
 
     return () => {
       void forceReloadLedgerEntries()
+      void forceReloadLedgerAccountLines()
+      void forceReloadLedgerAccountsEntry()
+      void invalidateLedgerBalances()
       void debouncedInvalidateProfitAndLoss()
 
       void invalidateBalanceSheet()
