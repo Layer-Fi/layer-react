@@ -65,6 +65,9 @@ export const MenuNavigation: Story = {
 // without switching the report — only a fresh mount shows the behavior.
 export const DeepLinkedReport: Story = {
   args: { defaultReportKey: 'BALANCE_SHEET' },
+  // The report heading only renders in the desktop base header, so the play function
+  // needs a desktop width to assert against.
+  parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
