@@ -12,6 +12,7 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
@@ -42,7 +43,11 @@ export interface AccountingOverviewProps {
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
+  chartColors?: ProfitAndLossChartColors
+  /** @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead */
   chartColorsList?: string[]
+  barSize?: number
+  lineStrokeWidth?: number
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   slotProps?: {
@@ -57,7 +62,10 @@ export const AccountingOverview = ({
   showTitle = true,
   onTransactionsToReviewClick,
   middleBanner,
+  chartColors,
   chartColorsList,
+  barSize,
+  lineStrokeWidth,
   stringOverrides,
   tagFilter = undefined,
   slotProps,
@@ -94,6 +102,7 @@ export const AccountingOverview = ({
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          chartColors={chartColors}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           reportingVariant={profitAndLossSummariesReportingVariant}
@@ -112,6 +121,8 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}
             hideLegend
+            barSize={barSize}
+            lineStrokeWidth={lineStrokeWidth}
           />
         </Container>
         {middleBanner && (
@@ -122,6 +133,7 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartColors={chartColors}
           chartColorsList={chartColorsList}
         />
       </View>

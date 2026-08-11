@@ -2,7 +2,11 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
-import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import {
+  type ProfitAndLossChartColors,
+  resolveScopedChartColorList,
+  resolveUncategorizedColor,
+} from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import {
   SummariesContent,
   type SummariesTiles,
@@ -39,6 +43,10 @@ export type ProfitAndLossSummariesSlotProps = {
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
+  chartColors?: ProfitAndLossChartColors
+  /**
+   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
+   */
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
@@ -61,6 +69,7 @@ export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
+  chartColors,
   chartColorsList,
   reportingVariant,
   onTransactionsToReviewClick,
@@ -74,7 +83,11 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
+  const revenueSwatchColor =
+    resolveScopedChartColorList('revenue', chartColors, chartColorsList)?.[0] ?? DEFAULT_CHART_COLORS[0]
+  const expensesSwatchColor =
+    resolveScopedChartColorList('expenses', chartColors, chartColorsList)?.[0] ?? DEFAULT_CHART_COLORS[0]
+  const uncategorizedSwatchColor = resolveUncategorizedColor(chartColors)
 
   const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <ProfitAndLossSummaryTileFooter
@@ -83,18 +96,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_revenue', 'Categorized revenue'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: revenueSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    revenueSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -105,18 +119,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_expenses', 'Categorized expenses'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: expensesSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    expensesSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -201,6 +216,7 @@ export function ProfitAndLossSummaries({
       mode={mode}
       tiles={tiles}
       actionable={actionable}
+      chartColors={chartColors}
       chartColorsList={chartColorsList}
       slots={{
         unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick

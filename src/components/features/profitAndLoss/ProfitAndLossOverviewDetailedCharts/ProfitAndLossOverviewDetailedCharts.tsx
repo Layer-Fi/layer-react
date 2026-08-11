@@ -7,12 +7,17 @@ import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@blocks/Layout/Container/Container'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 
 type ProfitAndLossOverviewDetailedChartsVariant = 'accounting' | 'bookkeeping'
 
 interface ProfitAndLossOverviewDetailedChartsProps {
   variant: ProfitAndLossOverviewDetailedChartsVariant
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
+  chartColors?: ProfitAndLossChartColors
+  /**
+   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
+   */
   chartColorsList?: string[]
 }
 
@@ -21,6 +26,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const ProfitAndLossOverviewDetailedCharts = ({
   variant,
   detailedChartsStringOverrides,
+  chartColors,
   chartColorsList,
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
@@ -69,6 +75,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               scope={pnlToggle}
               hideClose={true}
               stringOverrides={detailedChartsStringOverrides}
+              chartColors={chartColors}
               chartColorsList={chartColorsList}
             />
           </Container>
@@ -80,6 +87,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 scope='revenue'
                 hideClose={true}
                 stringOverrides={detailedChartsStringOverrides}
+                chartColors={chartColors}
                 chartColorsList={chartColorsList}
               />
             </Container>
@@ -88,6 +96,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 scope='expenses'
                 hideClose={true}
                 stringOverrides={detailedChartsStringOverrides}
+                chartColors={chartColors}
                 chartColorsList={chartColorsList}
               />
             </Container>

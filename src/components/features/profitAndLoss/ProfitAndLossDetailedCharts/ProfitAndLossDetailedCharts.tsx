@@ -17,7 +17,13 @@ import { DetailedTable, type DetailedTableStringOverrides } from '@blocks/Detail
 import { ProfitAndLossDetailedChartsHeader } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedChartsHeader'
 import { ProfitAndLossDetailReportModal } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailReportModal'
 import { usePnlDetailedTableRows } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
-import { isLineItemUncategorized, mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import {
+  isLineItemUncategorized,
+  mapTypesToColors,
+  type ProfitAndLossChartColors,
+  resolveScopedChartColorList,
+  resolveUncategorizedColor,
+} from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 import './profitAndLossDetailedCharts.scss'
@@ -60,6 +66,7 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose = false,
   hideHeader = false,
   showDatePicker = false,
+  chartColors,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -68,6 +75,10 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose?: boolean
   hideHeader?: boolean
   showDatePicker?: boolean
+  chartColors?: ProfitAndLossChartColors
+  /**
+   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
+   */
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps
@@ -133,8 +144,12 @@ export const ProfitAndLossDetailedCharts = ({
   }, [])
 
   const typeColorMapping = useMemo(
-    () => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList),
-    [chartData, chartColorsList],
+    () => mapTypesToColors<PnlChartLineItem>(
+      chartData,
+      resolveScopedChartColorList(activeScope, chartColors, chartColorsList),
+      resolveUncategorizedColor(chartColors),
+    ),
+    [chartData, activeScope, chartColors, chartColorsList],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
     (item: PnlChartLineItem) => typeColorMapping(item.name),

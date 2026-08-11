@@ -7,6 +7,7 @@ import { mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedC
 type ProfitAndLossMiniChartProps = {
   data: PnlChartLineItem[]
   chartColorsList?: string[]
+  uncategorizedColor?: string
 }
 
 const CHART_DIMENSION = 52
@@ -16,6 +17,7 @@ const OUTER_RADIUS = 16
 export function ProfitAndLossSummariesMiniChart({
   data,
   chartColorsList,
+  uncategorizedColor,
 }: ProfitAndLossMiniChartProps) {
   const chartData = useMemo(() => data.map(x => ({
     ...x,
@@ -24,7 +26,10 @@ export function ProfitAndLossSummariesMiniChart({
   )),
   [data])
 
-  const typeColorMapping = useMemo(() => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList), [chartData, chartColorsList])
+  const typeColorMapping = useMemo(
+    () => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList, uncategorizedColor),
+    [chartData, chartColorsList, uncategorizedColor],
+  )
 
   return (
     <PieChart width={CHART_DIMENSION} height={CHART_DIMENSION}>

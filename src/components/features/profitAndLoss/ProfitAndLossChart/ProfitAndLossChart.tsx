@@ -43,14 +43,21 @@ export interface ProfitAndLossChartProps {
     values: string[]
   }
   hideLegend?: boolean
+  barSize?: number
+  lineStrokeWidth?: number
 }
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
 
-export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndLossChartProps) => {
+export const ProfitAndLossChart = ({
+  tagFilter,
+  hideLegend = false,
+  barSize: barSizeOverride,
+  lineStrokeWidth = 1,
+}: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
-  const barSize = compactView ? 10 : 20
+  const barSize = barSizeOverride ?? (compactView ? 10 : 20)
   const cursorWidth = barSize * 2.2
 
   const { getColor, business } = useLayerContext()
@@ -183,7 +190,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
               fill: 'var(--color-base-0)',
               stroke: 'var(--color-base-1000)',
             }}
-            strokeWidth={1}
+            strokeWidth={lineStrokeWidth}
             type='linear'
             dataKey='netProfit'
             stroke='var(--pnl-chart-line-color, var(--color-base-1000))'

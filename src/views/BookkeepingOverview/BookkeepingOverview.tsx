@@ -17,6 +17,7 @@ import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeep
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
@@ -82,7 +83,13 @@ export interface BookkeepingOverviewProps {
     }
   }
 
+  chartColors?: ProfitAndLossChartColors
+  /**
+   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
+   */
   chartColorsList?: string[]
+  barSize?: number
+  lineStrokeWidth?: number
   onClickReconnectAccounts?: () => void
   tagFilter?: TagOption
   /**
@@ -95,7 +102,10 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  chartColors,
   chartColorsList,
+  barSize,
+  lineStrokeWidth,
   stringOverrides,
   slotProps,
   tagFilter = undefined,
@@ -199,6 +209,7 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartColors={chartColors}
                 chartColorsList={chartColorsList}
                 reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
@@ -207,12 +218,15 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Chart
               hideLegend
               tagFilter={profitAndLossTagFilter}
+              barSize={barSize}
+              lineStrokeWidth={lineStrokeWidth}
             />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartColors={chartColors}
           chartColorsList={chartColorsList}
         />
       </View>

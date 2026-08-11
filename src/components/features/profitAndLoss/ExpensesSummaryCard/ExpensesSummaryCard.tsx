@@ -9,10 +9,15 @@ import {
   useSummaryCardSlots,
 } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 
 import './expensesSummaryCard.scss'
 
 type StylingProps = {
+  chartColors?: ProfitAndLossChartColors
+  /**
+   * @deprecated Use `chartColors.expenses` instead
+   */
   chartColorsList?: string[]
 }
 
@@ -30,7 +35,7 @@ export const ExpensesSummaryCard = ({
   className,
 }: ExpensesSummaryCardProps) => {
   const { t } = useTranslation()
-  const { chartColorsList } = stylingProps ?? {}
+  const { chartColors, chartColorsList } = stylingProps ?? {}
 
   const slots = useSummaryCardSlots({
     defaultTitle: t('common:label.expenses', 'Expenses'),
@@ -53,6 +58,7 @@ export const ExpensesSummaryCard = ({
         scope='expenses'
         hideClose
         hideHeader
+        chartColors={chartColors}
         chartColorsList={chartColorsList}
         stringOverrides={resolvedStringOverrides}
         slotProps={{ detailedTable: { showTypeColumn: false } }}
