@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
@@ -17,7 +18,6 @@ import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeep
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
@@ -83,12 +83,13 @@ export interface BookkeepingOverviewProps {
     }
   }
 
-  chartColors?: ProfitAndLossChartColors
+  /** Colors and sizing for every P&L chart in this view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /**
+   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
+   * of `chartConfig.colors` is omitted.
+   */
   chartColorsList?: string[]
-  barSize?: number
-  lineStrokeWidth?: number
-  donutInnerRadius?: string | number
-  donutOuterRadius?: string | number
   onClickReconnectAccounts?: () => void
   tagFilter?: TagOption
   /**
@@ -101,12 +102,8 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
-  chartColors,
+  chartConfig,
   chartColorsList,
-  barSize,
-  lineStrokeWidth,
-  donutInnerRadius,
-  donutOuterRadius,
   stringOverrides,
   slotProps,
   tagFilter = undefined,
@@ -141,6 +138,8 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
+      chartConfig={chartConfig}
+      chartColorsList={chartColorsList}
     >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
@@ -210,8 +209,6 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-                chartColors={chartColors}
-                chartColorsList={chartColorsList}
                 reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
               />
@@ -219,18 +216,12 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Chart
               hideLegend
               tagFilter={profitAndLossTagFilter}
-              barSize={barSize}
-              lineStrokeWidth={lineStrokeWidth}
             />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-          chartColors={chartColors}
-          chartColorsList={chartColorsList}
-          donutInnerRadius={donutInnerRadius}
-          donutOuterRadius={donutOuterRadius}
         />
       </View>
       {isCalendlyVisible && (

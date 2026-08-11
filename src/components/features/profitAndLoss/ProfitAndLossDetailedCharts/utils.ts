@@ -1,27 +1,8 @@
-import { type Scope } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
+import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/styles/chartColors'
 import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@ui/Chart/seriesTypes'
 
 export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
-
-export const UNCATEGORIZED_CHART_COLOR = '#EEEEF0'
-
-export type ProfitAndLossChartColors = {
-  revenue?: string[]
-  expenses?: string[]
-  uncategorized?: string
-}
-
-export const resolveScopedChartColorList = (
-  scope: Scope,
-  chartColors?: ProfitAndLossChartColors,
-  chartColorsList?: string[],
-): string[] | undefined =>
-  (scope === 'revenue' ? chartColors?.revenue : chartColors?.expenses) ?? chartColorsList
-
-export const resolveUncategorizedColor = (chartColors?: ProfitAndLossChartColors): string =>
-  chartColors?.uncategorized ?? UNCATEGORIZED_CHART_COLOR
 
 export const isLineItemUncategorized = (item: PnlChartLineItem) => {
   return UNCATEGORIZED_TYPES.includes(item.name)

@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -12,7 +13,6 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { type ProfitAndLossChartColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
@@ -43,12 +43,13 @@ export interface AccountingOverviewProps {
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
-  chartColors?: ProfitAndLossChartColors
+  /** Colors and sizing for every P&L chart in this view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /**
+   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
+   * of `chartConfig.colors` is omitted.
+   */
   chartColorsList?: string[]
-  barSize?: number
-  lineStrokeWidth?: number
-  donutInnerRadius?: string | number
-  donutOuterRadius?: string | number
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   slotProps?: {
@@ -63,12 +64,8 @@ export const AccountingOverview = ({
   showTitle = true,
   onTransactionsToReviewClick,
   middleBanner,
-  chartColors,
+  chartConfig,
   chartColorsList,
-  barSize,
-  lineStrokeWidth,
-  donutInnerRadius,
-  donutOuterRadius,
   stringOverrides,
   tagFilter = undefined,
   slotProps,
@@ -88,6 +85,8 @@ export const AccountingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
+      chartConfig={chartConfig}
+      chartColorsList={chartColorsList}
     >
       <View
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
@@ -105,8 +104,6 @@ export const AccountingOverview = ({
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-          chartColors={chartColors}
-          chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           reportingVariant={profitAndLossSummariesReportingVariant}
           variants={profitAndLossSummariesVariants}
@@ -124,8 +121,6 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}
             hideLegend
-            barSize={barSize}
-            lineStrokeWidth={lineStrokeWidth}
           />
         </Container>
         {middleBanner && (
@@ -136,10 +131,6 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-          chartColors={chartColors}
-          chartColorsList={chartColorsList}
-          donutInnerRadius={donutInnerRadius}
-          donutOuterRadius={donutOuterRadius}
         />
       </View>
     </ProfitAndLoss>

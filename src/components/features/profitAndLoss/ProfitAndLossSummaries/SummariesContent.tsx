@@ -1,13 +1,8 @@
-import { type ReactNode, useCallback, useContext, useMemo } from 'react'
+import { type ReactNode, useContext, useMemo } from 'react'
 
 import { type SidebarScope } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
-import {
-  type ProfitAndLossChartColors,
-  resolveScopedChartColorList,
-  resolveUncategorizedColor,
-} from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,
@@ -41,8 +36,6 @@ type SummariesContentProps = {
   mode: ProfitAndLossSummariesMode
   tiles: SummariesTiles
   actionable?: boolean
-  chartColors?: ProfitAndLossChartColors
-  chartColorsList?: string[]
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
   }
@@ -52,8 +45,6 @@ export function SummariesContent({
   mode,
   tiles,
   actionable = false,
-  chartColors,
-  chartColorsList,
   slots,
 }: SummariesContentProps) {
   const { sidebarScope, setSidebarScope } = useContext(ProfitAndLossContext)
@@ -79,17 +70,12 @@ export function SummariesContent({
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = summaryTiles.length + unstable_AdditionalListItems.length
 
-  const renderChart = useCallback((chartData: PnlChartLineItem[] | undefined, scope: SidebarScope) => {
-    if (!chartData) return null
+  /** Only the revenue and expenses tiles carry chart data; the net tile has none. */
+  const renderChart = (chartData: PnlChartLineItem[] | undefined, scope: SidebarScope) => {
+    if (!chartData || !scope) return null
 
-    return (
-      <ProfitAndLossSummariesMiniChart
-        data={chartData}
-        chartColorsList={scope ? resolveScopedChartColorList(scope, chartColors, chartColorsList) : chartColorsList}
-        uncategorizedColor={resolveUncategorizedColor(chartColors)}
-      />
-    )
-  }, [chartColors, chartColorsList])
+    return <ProfitAndLossSummariesMiniChart data={chartData} scope={scope} />
+  }
 
   return (
     <section className='Layer__component Layer__ProfitAndLossSummaries'>

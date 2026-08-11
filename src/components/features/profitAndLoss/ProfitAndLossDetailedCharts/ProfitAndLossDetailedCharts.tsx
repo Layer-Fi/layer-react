@@ -6,6 +6,10 @@ import type { DetailedChartStringOverrides } from '@internal-types/features/prof
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { humanizeTitle } from '@utils/features/profitAndLoss/profitAndLoss'
+import {
+  useProfitAndLossChartPalette,
+  useProfitAndLossDonutChartConfig,
+} from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { createPnlLineItemComparator, type Scope, type SelectedLineItem, type SidebarScope } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { type ColorSelector } from '@ui/Chart/seriesTypes'
@@ -17,13 +21,7 @@ import { DetailedTable, type DetailedTableStringOverrides } from '@blocks/Detail
 import { ProfitAndLossDetailedChartsHeader } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedChartsHeader'
 import { ProfitAndLossDetailReportModal } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailReportModal'
 import { usePnlDetailedTableRows } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
-import {
-  isLineItemUncategorized,
-  mapTypesToColors,
-  type ProfitAndLossChartColors,
-  resolveScopedChartColorList,
-  resolveUncategorizedColor,
-} from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import { isLineItemUncategorized, mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 
 import './profitAndLossDetailedCharts.scss'
@@ -66,10 +64,6 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose = false,
   hideHeader = false,
   showDatePicker = false,
-  chartColors,
-  chartColorsList,
-  donutInnerRadius,
-  donutOuterRadius,
   stringOverrides,
   slotProps,
 }: {
@@ -77,10 +71,6 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose?: boolean
   hideHeader?: boolean
   showDatePicker?: boolean
-  chartColors?: ProfitAndLossChartColors
-  chartColorsList?: string[]
-  donutInnerRadius?: string | number
-  donutOuterRadius?: string | number
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
@@ -144,13 +134,12 @@ export const ProfitAndLossDetailedCharts = ({
     setIsModalOpen(true)
   }, [])
 
+  const { palette, uncategorized, uncategorizedOverride } = useProfitAndLossChartPalette(activeScope)
+  const { innerRadius, outerRadius } = useProfitAndLossDonutChartConfig()
+
   const typeColorMapping = useMemo(
-    () => mapTypesToColors<PnlChartLineItem>(
-      chartData,
-      resolveScopedChartColorList(activeScope, chartColors, chartColorsList),
-      resolveUncategorizedColor(chartColors),
-    ),
-    [chartData, activeScope, chartColors, chartColorsList],
+    () => mapTypesToColors<PnlChartLineItem>(chartData, palette, uncategorized),
+    [chartData, palette, uncategorized],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
     (item: PnlChartLineItem) => typeColorMapping(item.name),
@@ -175,10 +164,10 @@ export const ProfitAndLossDetailedCharts = ({
   const stylingProps = useMemo(() => ({
     colorSelector,
     fallbackFillSelector,
-    fallbackFillColor: chartColors?.uncategorized,
-    innerRadius: donutInnerRadius,
-    outerRadius: donutOuterRadius,
-  }), [colorSelector, fallbackFillSelector, chartColors?.uncategorized, donutInnerRadius, donutOuterRadius])
+    fallbackFillColor: uncategorizedOverride,
+    innerRadius,
+    outerRadius,
+  }), [colorSelector, fallbackFillSelector, uncategorizedOverride, innerRadius, outerRadius])
 
   const sortedTableData = useMemo(() => {
     if (sortParams.sortBy === sortByField && sortParams.sortOrder === sortOrder) {

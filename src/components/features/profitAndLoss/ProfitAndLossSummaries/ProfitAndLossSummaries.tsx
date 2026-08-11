@@ -1,12 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
-import {
-  type ProfitAndLossChartColors,
-  resolveScopedChartColorList,
-  resolveUncategorizedColor,
-} from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import { useProfitAndLossChartPalette } from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import {
   SummariesContent,
   type SummariesTiles,
@@ -43,8 +38,6 @@ export type ProfitAndLossSummariesSlotProps = {
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
-  chartColors?: ProfitAndLossChartColors
-  chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
    * @deprecated This prop no longer has any effect; the summaries tiles size themselves
@@ -66,8 +59,6 @@ export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
-  chartColors,
-  chartColorsList,
   reportingVariant,
   onTransactionsToReviewClick,
 }: ProfitAndLossSummariesProps) {
@@ -80,11 +71,12 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const revenueSwatchColor =
-    resolveScopedChartColorList('revenue', chartColors, chartColorsList)?.[0] ?? DEFAULT_CHART_COLORS[0]
-  const expensesSwatchColor =
-    resolveScopedChartColorList('expenses', chartColors, chartColorsList)?.[0] ?? DEFAULT_CHART_COLORS[0]
-  const uncategorizedSwatchColor = resolveUncategorizedColor(chartColors)
+  const revenuePalette = useProfitAndLossChartPalette('revenue')
+  const expensesPalette = useProfitAndLossChartPalette('expenses')
+
+  const revenueSwatchColor = revenuePalette.palette[0]
+  const expensesSwatchColor = expensesPalette.palette[0]
+  const uncategorizedSwatchColor = revenuePalette.uncategorized
 
   const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <ProfitAndLossSummaryTileFooter
@@ -213,8 +205,6 @@ export function ProfitAndLossSummaries({
       mode={mode}
       tiles={tiles}
       actionable={actionable}
-      chartColors={chartColors}
-      chartColorsList={chartColorsList}
       slots={{
         unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
           ? [
