@@ -84,9 +84,6 @@ export interface BookkeepingOverviewProps {
   }
 
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
   barSize?: number
   lineStrokeWidth?: number

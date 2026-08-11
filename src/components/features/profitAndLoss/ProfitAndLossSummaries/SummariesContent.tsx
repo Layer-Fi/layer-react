@@ -42,9 +42,6 @@ type SummariesContentProps = {
   tiles: SummariesTiles
   actionable?: boolean
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]

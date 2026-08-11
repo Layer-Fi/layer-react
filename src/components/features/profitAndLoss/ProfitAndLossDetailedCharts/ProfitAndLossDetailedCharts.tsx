@@ -76,9 +76,6 @@ export const ProfitAndLossDetailedCharts = ({
   hideHeader?: boolean
   showDatePicker?: boolean
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps

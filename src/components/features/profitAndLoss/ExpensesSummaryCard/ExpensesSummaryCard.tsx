@@ -15,9 +15,6 @@ import './expensesSummaryCard.scss'
 
 type StylingProps = {
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
 }
 

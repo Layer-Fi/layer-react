@@ -44,9 +44,6 @@ type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**

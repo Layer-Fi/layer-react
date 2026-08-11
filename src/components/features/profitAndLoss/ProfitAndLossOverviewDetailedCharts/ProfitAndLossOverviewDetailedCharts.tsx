@@ -15,9 +15,6 @@ interface ProfitAndLossOverviewDetailedChartsProps {
   variant: ProfitAndLossOverviewDetailedChartsVariant
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   chartColors?: ProfitAndLossChartColors
-  /**
-   * @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead
-   */
   chartColorsList?: string[]
 }
 

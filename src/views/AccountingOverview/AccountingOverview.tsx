@@ -44,7 +44,6 @@ export interface AccountingOverviewProps {
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
   chartColors?: ProfitAndLossChartColors
-  /** @deprecated Use `chartColors.revenue` / `chartColors.expenses` instead */
   chartColorsList?: string[]
   barSize?: number
   lineStrokeWidth?: number
