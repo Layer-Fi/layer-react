@@ -1,5 +1,7 @@
 import { type ReactNode } from 'react'
+import classNames from 'classnames'
 
+import { BANK_TRANSACTIONS_LEGACY_CLASS_NAMES } from '@utils/shared/styles/legacy-styling/legacy-styling-bank-transactions'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { SubmitAction, SubmitButton, type SubmitButtonProps } from '@ui/Button/SubmitButton'
 
@@ -25,7 +27,13 @@ export const BankTransactionsSubmitButton = ({
   const dataProperties = toDataProperties({ active: isActive, error: isError })
 
   return (
-    <span className='Layer__BankTransactionsSubmitButton' {...dataProperties}>
+    <span
+      className={classNames(
+        'Layer__BankTransactionsSubmitButton',
+        BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.submitButton,
+      )}
+      {...dataProperties}
+    >
       <SubmitButton
         iconBox
         withRetry

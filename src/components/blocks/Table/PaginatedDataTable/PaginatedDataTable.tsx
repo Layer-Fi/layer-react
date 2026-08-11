@@ -45,6 +45,7 @@ export function PaginatedTable<TData extends { id: string }>({
   getRowClassName,
   selectionProps,
   expandedRowProps,
+  legacyClassNames,
 }: PaginatedTableProps<TData>) {
   const { pageSize = 20, hasMore, fetchMore, pageIndex, onPageIndexChange, autoResetPageIndexRef } = paginationProps
   const { changePaginationSource, onPaginationChange, pagination } = usePaginatedTableState({
@@ -119,6 +120,7 @@ export function PaginatedTable<TData extends { id: string }>({
         isRowSelected={isRowSelected}
         getRowClassName={getRowClassName}
         renderExpandedRow={expandedRowProps?.render}
+        legacyClassNames={legacyClassNames}
       />
       {!isError && !isLoading && (
         <Pagination

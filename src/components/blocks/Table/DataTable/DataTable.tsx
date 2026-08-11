@@ -1,6 +1,6 @@
 import { Fragment, type MouseEvent, type PropsWithChildren, useCallback, useMemo, useRef } from 'react'
 import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
-import classNames from 'classnames'
+import classNames, { type Argument } from 'classnames'
 
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
@@ -23,6 +23,22 @@ export type ClickableRowProps<TData> = {
   isRowClickable: (row: RowType<TData>) => boolean
 }
 
+/**
+ * Extra class names emitted purely so selectors written against an earlier release keep matching.
+ * The table itself never styles these; each is looked up by column id so a caller can hand over a
+ * map without the table knowing which release it is compatible with.
+ *
+ * See `@utils/shared/styles/legacy-styling` for the bank transactions map and the reasoning.
+ */
+export type DataTableLegacyClassNames = {
+  /** Appended to each `<th>`. */
+  column?: (columnId: string) => Argument
+  /** Appended to each `<td>`. */
+  cell?: (columnId: string) => Argument
+  /** Appended to the `<td>` that holds an expanded row. */
+  expandedRowCell?: Argument
+}
+
 export interface BaseDataTableProps {
   componentName: string
   ariaLabel: string
@@ -35,6 +51,7 @@ export interface BaseDataTableProps {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: readonly any[]
+  legacyClassNames?: DataTableLegacyClassNames
 }
 
 export interface DataTableProps<TData> extends BaseDataTableProps {
@@ -64,6 +81,7 @@ export const DataTable = <TData extends object>({
   isRowSelected,
   getRowClassName,
   renderExpandedRow,
+  legacyClassNames,
 }: DataTableProps<TData>) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const nonAria = !!renderExpandedRow || headerGroups.length > 1 || numColumns === 0
@@ -82,7 +100,10 @@ export const DataTable = <TData extends object>({
     <Column
       key={header.id}
       isRowHeader={header.column.columnDef.meta?.isRowHeader}
-      className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+      className={classNames(
+        `Layer__UI__Table-Column__${componentName}--${header.id}`,
+        legacyClassNames?.column?.(header.id),
+      )}
       alignment={header.column.columnDef.meta?.alignment}
       pinned={getEffectivePinnedSide(header.column.getIsPinned())}
       style={pinningStyles.get(header.column.id)}
@@ -95,7 +116,7 @@ export const DataTable = <TData extends object>({
           ? header.column.columnDef.header(header.getContext())
           : header.column.columnDef.header)}
     </Column>
-  ), [componentName, getEffectivePinnedSide, nonAria, pinningStyles])
+  ), [componentName, getEffectivePinnedSide, legacyClassNames, nonAria, pinningStyles])
 
   const renderHeaderContent = useMemo(() => {
     if (showLoadingFallbackHeaders) {
@@ -177,7 +198,10 @@ export const DataTable = <TData extends object>({
                     {row.getVisibleCells().map(cell => (
                       <Cell
                         key={`${row.id}-${cell.id}`}
-                        className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
+                        className={classNames(
+                          `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,
+                          legacyClassNames?.cell?.(cell.column.id),
+                        )}
                         alignment={cell.column.columnDef.meta?.alignment}
                         pinned={getEffectivePinnedSide(cell.column.getIsPinned())}
                         style={pinningStyles.get(cell.column.id)}
@@ -196,6 +220,7 @@ export const DataTable = <TData extends object>({
                         className={classNames(
                           'Layer__DataTable__ExpandedRowCell',
                           row.getIsExpanded() && 'Layer__DataTable__ExpandedRowCell--expanded',
+                          legacyClassNames?.expandedRowCell,
                         )}
                       >
                         <AnimatedPresenceElement

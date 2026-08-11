@@ -1,0 +1,65 @@
+/*
+ * Legacy styling for `@layerfi/components`, scoped to bank transactions.
+ *
+ * Companion to `legacy-styling.ts`, which re-emits the class names the 0.1.123–0.1.144 table
+ * rewrite removed. Re-emitting a class is free only if nothing styles it; where 0.1.122 *did*
+ * attach a declaration to a class and 0.1.144 has no equivalent, the declaration lives here.
+ *
+ * Everything sits in the `layer-legacy` cascade layer, declared first so it is the lowest layer in
+ * the stylesheet. Unlayered rules beat layered ones regardless of specificity, which gives exactly
+ * the semantics we want:
+ *
+ *   - where 0.1.144 has an opinion, its (unlayered) rule wins and nothing here changes rendering;
+ *   - where 0.1.144 says nothing, the 0.1.122 declaration applies;
+ *   - a customer's stylesheet is unlayered and loads after ours, so it still beats both.
+ *
+ * Everything is scoped under `.Layer__bank-transactions__table` on purpose. The class names being
+ * restored — `Layer__table-cell`, `Layer__table-header` — were generic in 0.1.122 and are still
+ * generic-looking; unscoped, they would reach into tables this file has no business styling.
+ */
+
+@layer layer-legacy {
+  /* The category column was separated from the amount column by a divider. */
+  .Layer__bank-transactions__table .Layer__bank-transaction-row__actions-cell {
+    border-left: 1px solid var(--border-color);
+  }
+
+  /* The expanded row's cell carried the expansion's own padding, so the cell had none. */
+  .Layer__bank-transactions__table .Layer__bank-transaction-row__expanded-td {
+    padding: 0;
+  }
+
+  /* Amount was the only right-aligned column; 0.1.144 expresses this as `[data-align="end"]`. */
+  .Layer__bank-transactions__table .Layer__table-cell--amount {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  /* The category header was the table's "primary" header. */
+  .Layer__bank-transactions__table .Layer__table-header--primary {
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color-primary);
+  }
+
+  /* The category cell's flex row was allowed to shrink rather than force the column wider. */
+  .Layer__bank-transactions__table .Layer__bank-transaction-row__category-hstack {
+    max-width: 100%;
+  }
+}
+
+/*
+ * Deliberately not restored
+ * ------------------------------------------------------------------------------------------------
+ * 0.1.122 drove the table's geometry through the per-column classes: fixed widths on
+ * `Layer__bank-transactions__date-col` and `--account-col`, and hand-computed sticky offsets on
+ * `Layer__table-cell__amount-col` and `Layer__table-cell__category-col` (`right: var(--right-adjust)`,
+ * where `--right-adjust` was derived from the now-removed receipts column).
+ *
+ * 0.1.144 pins those columns from JavaScript instead — `useColumnPinningStyles` writes `position`
+ * and `right` as inline styles, which no stylesheet rule can lose to a cascade layer against. Even
+ * layered, re-adding the old widths would fight the measured ones and misalign the pinned columns.
+ *
+ * `Layer__bank-transactions__documents-col` is absent for a different reason: the receipts column
+ * is not rendered at all, so there is no element to style. `legacy-styling.ts` records both of
+ * these in `BANK_TRANSACTIONS_STRUCTURAL_CHANGES`.
+ */

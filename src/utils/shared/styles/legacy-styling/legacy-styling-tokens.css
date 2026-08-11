@@ -1,0 +1,47 @@
+/*
+ * Legacy design tokens. Renamed tokens fail silently — the old name is still accepted and
+ * inherited, and read by nothing — so this re-points what 0.1.144 reads at the former names.
+ * Rationale, and the dead tokens deliberately left alone, in legacy-styling-tokens.ts.
+ *
+ * The declarations below are unlayered on purpose: they must beat `internal_variables.scss`, and
+ * layered always loses to unlayered. The selector list is copied verbatim from that file so
+ * specificity ties and source order decides — `src/styles/index.scss` forwards this immediately
+ * after it. A platform stylesheet loads after ours entirely, so a platform setting the new name
+ * still wins. Keep the selector list in sync; widening it would start overriding platforms.
+ */
+
+@layer layer-legacy;
+
+.Layer__view,
+.Layer__component,
+.Layer__Portal {
+  /* `.Layer__btn--primary` → `.Layer__UI__Button[data-variant="solid"]`: same element, new names. */
+  --button-bg-default: var(--btn-bg-color-primary, var(--color-base-1000));
+  --button-fg-default: var(--btn-color-primary, var(--color-base-0));
+}
+
+/*
+ * Secondary button. `.Layer__btn--secondary` → `[data-variant="outlined"]`, which inlined
+ * `--color-base-*` instead of routing through tokens, so the alias has to be the rule itself.
+ * `--button-border-color-ghost` is a current token that the same rewrite left unread.
+ *
+ * Layered: these override a rule rather than a default, so the button's own stylesheet should win
+ * anything it states more specifically.
+ */
+
+@layer layer-legacy {
+  .Layer__UI__Button[data-variant='outlined'] {
+    border-color: var(--button-border-color-ghost, var(--color-base-300));
+    background-color: var(--btn-secondary-bg-color, var(--color-base-0));
+    color: var(--btn-secondary-color, var(--color-base-900));
+  }
+
+  /*
+   * 0.1.144 dropped 0.1.133's global `::placeholder` rule and its token. `revert-layer` resolves to
+   * the user agent value when the token is unset, so only a platform that set it sees a change —
+   * spelling the 0.1.133 default here would restyle every placeholder for everyone.
+   */
+  ::placeholder {
+    color: var(--input-placeholder-color, revert-layer);
+  }
+}

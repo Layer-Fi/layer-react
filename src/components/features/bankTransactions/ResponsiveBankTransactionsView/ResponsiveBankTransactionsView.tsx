@@ -1,7 +1,9 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import classNames from 'classnames'
 
 import { BankTransactionsViewVariant } from '@utils/features/bankTransactions/constants'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
+import { BANK_TRANSACTIONS_LEGACY_CLASS_NAMES } from '@utils/shared/styles/legacy-styling/legacy-styling-bank-transactions'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
@@ -61,7 +63,7 @@ export const ResponsiveBankTransactionsView = ({
 
   const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
 
-  const { isLoading, hasMore, fetchMore } = useBankTransactionsContext()
+  const { display, isLoading, hasMore, fetchMore } = useBankTransactionsContext()
   const { isSyncing } = useBankAccountsContext()
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
@@ -96,7 +98,7 @@ export const ResponsiveBankTransactionsView = ({
 
   return (
     <Container
-      className='Layer__Public'
+      className={classNames('Layer__Public', BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.root(display))}
       transparentBg={listView && mobileComponent === 'mobileList'}
       name={COMPONENT_NAME}
       asWidget={asWidget}

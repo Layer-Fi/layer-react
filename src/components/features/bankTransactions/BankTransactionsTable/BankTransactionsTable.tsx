@@ -8,6 +8,7 @@ import { type BankTransaction, DisplayState } from '@internal-types/features/ban
 import { type BankTransactionsTableStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 import { Alignment } from '@internal-types/utility/table'
 import { isMoneyIn } from '@utils/features/bankTransactions/shared'
+import { BANK_TRANSACTIONS_LEGACY_CLASS_NAMES } from '@utils/shared/styles/legacy-styling/legacy-styling-bank-transactions'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
@@ -18,7 +19,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/fe
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import type { ClickableRowProps } from '@blocks/Table/DataTable/DataTable'
+import type { ClickableRowProps, DataTableLegacyClassNames } from '@blocks/Table/DataTable/DataTable'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import type { DataTableExpandedRowProps } from '@blocks/Table/DataTable/utils/rows/expandedRows'
 import type { DataTableSelectionProps } from '@blocks/Table/DataTable/utils/rows/selection'
@@ -112,6 +113,16 @@ const getColumnConfig = ({
     ),
   },
 ]
+
+/**
+ * Classes the 0.1.122 table put on these same cells. Emitted alongside the current ones so a
+ * platform stylesheet written before the table rewrite keeps matching; we never style them.
+ */
+const LEGACY_CLASS_NAMES: DataTableLegacyClassNames = {
+  column: BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.column,
+  cell: BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.cell,
+  expandedRowCell: BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.expandedRowCell,
+}
 
 const getRowSelectionState = (selectedIds: Set<string>): RowSelectionState => {
   const rowSelection: RowSelectionState = {}
@@ -230,7 +241,7 @@ export const BankTransactionsTable = () => {
 
   const tableProps = {
     ariaLabel: t('bankTransactions:BankTransactionsTable.label.bank_transactions', 'Bank transactions'),
-    className: 'Layer__bank-transactions__table',
+    className: classNames('Layer__bank-transactions__table', BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.table),
     data: bankTransactions,
     isLoading,
     isError,
@@ -244,6 +255,7 @@ export const BankTransactionsTable = () => {
     getRowClassName,
     selectionProps,
     expandedRowProps,
+    legacyClassNames: LEGACY_CLASS_NAMES,
   }
 
   return (

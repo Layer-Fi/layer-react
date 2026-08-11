@@ -145,5 +145,14 @@
 
 .Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
   z-index: 3;
+}
+
+/*
+ * A pinned header needs an opaque background or rows show through as they scroll under it, but the
+ * colour is a theming decision. Wrapped in `:where()` for zero specificity so a platform styling the
+ * header — which reaches the unpinned columns easily — also reaches these two, instead of ending up
+ * with a header that is themed for four columns and default white for the pinned ones.
+ */
+:where(.Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned]) {
   background-color: var(--color-base-0);
 }

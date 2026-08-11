@@ -1,11 +1,13 @@
 import { type PropsWithChildren } from 'react'
 import type { Row } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { CircleAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { isCategorized } from '@utils/features/bankTransactions/shared'
+import { BANK_TRANSACTIONS_LEGACY_CLASS_NAMES } from '@utils/shared/styles/legacy-styling/legacy-styling-bank-transactions'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsStringOverrides } from '@providers/features/bankTransactions/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { useBankTransactionsCategorizationActions } from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -50,7 +52,14 @@ const BankTransactionCategoryCellContainer = ({
   className,
   ...restProps
 }: BankTransactionCategoryCellContainerProps) => (
-  <HStack gap='md' align='center' justify='end' fluid {...restProps} className={className}>
+  <HStack
+    gap='md'
+    align='center'
+    justify='end'
+    fluid
+    {...restProps}
+    className={classNames(className, BANK_TRANSACTIONS_LEGACY_CLASS_NAMES.categoryCellContainer)}
+  >
     {children}
   </HStack>
 )

@@ -1,5 +1,12 @@
 @forward './variables';
 @forward './internal_variables';
+
+/*
+ * Immediately after the defaults it overrides: the token aliases are unlayered and rely on source
+ * order to beat `internal_variables`. See legacy-styling-tokens.css.
+ */
+@forward '../utils/shared/styles/legacy-styling/legacy-styling-tokens.css';
+@forward '../utils/shared/styles/legacy-styling/legacy-styling-bank-transactions.css';
 @forward './global';
 @forward './charts';
 @forward './component';
