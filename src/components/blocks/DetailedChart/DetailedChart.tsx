@@ -29,6 +29,7 @@ export type DetailedChartProps<T extends SeriesData> = {
   stylingProps: {
     colorSelector: ColorSelector<T>
     fallbackFillSelector?: FallbackFillSelector<T>
+    fallbackFillColor?: string
     innerRadius?: string | number
     outerRadius?: string | number
   }
@@ -219,7 +220,7 @@ export const DetailedChart = <T extends SeriesData>({
                           interactionProps.hoveredItem && !active && 'Layer__DetailedChart__Slice--inactive',
                         )}
                         fill={isFallbackSlice && fill
-                          ? 'url(#layer-pie-dots-pattern)'
+                          ? stylingProps.fallbackFillColor ?? 'url(#layer-pie-dots-pattern)'
                           : fill}
                         opacity={colorMapping.opacity}
                         onMouseEnter={() => interactionProps.setHoveredItem(entry)}

@@ -175,9 +175,10 @@ export const ProfitAndLossDetailedCharts = ({
   const stylingProps = useMemo(() => ({
     colorSelector,
     fallbackFillSelector,
+    fallbackFillColor: chartColors?.uncategorized,
     innerRadius: donutInnerRadius,
     outerRadius: donutOuterRadius,
-  }), [colorSelector, fallbackFillSelector, donutInnerRadius, donutOuterRadius])
+  }), [colorSelector, fallbackFillSelector, chartColors?.uncategorized, donutInnerRadius, donutOuterRadius])
 
   const sortedTableData = useMemo(() => {
     if (sortParams.sortBy === sortByField && sortParams.sortOrder === sortOrder) {

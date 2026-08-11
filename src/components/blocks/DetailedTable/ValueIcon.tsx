@@ -7,12 +7,17 @@ export const ValueIcon = <T extends SeriesData>({
   item,
   colorSelector,
   fallbackFillSelector,
+  fallbackFillColor,
 }: {
   item: T
   colorSelector: ColorSelector<T>
   fallbackFillSelector?: FallbackFillSelector<T>
+  fallbackFillColor?: string
 }) => {
   if (fallbackFillSelector?.(item)) {
+    if (fallbackFillColor) {
+      return <RegularValueIcon colorMapping={{ color: fallbackFillColor, opacity: 1 }} />
+    }
     return <UncategorizedValueIcon />
   }
   return <RegularValueIcon colorMapping={colorSelector(item)} />
