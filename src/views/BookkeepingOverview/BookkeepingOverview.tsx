@@ -87,6 +87,8 @@ export interface BookkeepingOverviewProps {
   chartColorsList?: string[]
   barSize?: number
   lineStrokeWidth?: number
+  donutInnerRadius?: string | number
+  donutOuterRadius?: string | number
   onClickReconnectAccounts?: () => void
   tagFilter?: TagOption
   /**
@@ -103,6 +105,8 @@ export const BookkeepingOverview = ({
   chartColorsList,
   barSize,
   lineStrokeWidth,
+  donutInnerRadius,
+  donutOuterRadius,
   stringOverrides,
   slotProps,
   tagFilter = undefined,
@@ -225,6 +229,8 @@ export const BookkeepingOverview = ({
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
           chartColors={chartColors}
           chartColorsList={chartColorsList}
+          donutInnerRadius={donutInnerRadius}
+          donutOuterRadius={donutOuterRadius}
         />
       </View>
       {isCalendlyVisible && (

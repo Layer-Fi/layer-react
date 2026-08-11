@@ -16,6 +16,8 @@ interface ProfitAndLossOverviewDetailedChartsProps {
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   chartColors?: ProfitAndLossChartColors
   chartColorsList?: string[]
+  donutInnerRadius?: string | number
+  donutOuterRadius?: string | number
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -25,6 +27,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
   detailedChartsStringOverrides,
   chartColors,
   chartColorsList,
+  donutInnerRadius,
+  donutOuterRadius,
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -74,6 +78,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               stringOverrides={detailedChartsStringOverrides}
               chartColors={chartColors}
               chartColorsList={chartColorsList}
+              donutInnerRadius={donutInnerRadius}
+              donutOuterRadius={donutOuterRadius}
             />
           </Container>
         )
@@ -86,6 +92,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 stringOverrides={detailedChartsStringOverrides}
                 chartColors={chartColors}
                 chartColorsList={chartColorsList}
+                donutInnerRadius={donutInnerRadius}
+                donutOuterRadius={donutOuterRadius}
               />
             </Container>
             <Container name={chartContainerName}>
@@ -95,6 +103,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 stringOverrides={detailedChartsStringOverrides}
                 chartColors={chartColors}
                 chartColorsList={chartColorsList}
+                donutInnerRadius={donutInnerRadius}
+                donutOuterRadius={donutOuterRadius}
               />
             </Container>
           </HStack>

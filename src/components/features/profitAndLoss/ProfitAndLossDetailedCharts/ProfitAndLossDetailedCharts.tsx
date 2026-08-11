@@ -68,6 +68,8 @@ export const ProfitAndLossDetailedCharts = ({
   showDatePicker = false,
   chartColors,
   chartColorsList,
+  donutInnerRadius,
+  donutOuterRadius,
   stringOverrides,
   slotProps,
 }: {
@@ -77,6 +79,8 @@ export const ProfitAndLossDetailedCharts = ({
   showDatePicker?: boolean
   chartColors?: ProfitAndLossChartColors
   chartColorsList?: string[]
+  donutInnerRadius?: string | number
+  donutOuterRadius?: string | number
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
@@ -171,7 +175,9 @@ export const ProfitAndLossDetailedCharts = ({
   const stylingProps = useMemo(() => ({
     colorSelector,
     fallbackFillSelector,
-  }), [colorSelector, fallbackFillSelector])
+    innerRadius: donutInnerRadius,
+    outerRadius: donutOuterRadius,
+  }), [colorSelector, fallbackFillSelector, donutInnerRadius, donutOuterRadius])
 
   const sortedTableData = useMemo(() => {
     if (sortParams.sortBy === sortByField && sortParams.sortOrder === sortOrder) {

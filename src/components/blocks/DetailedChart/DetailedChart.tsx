@@ -29,11 +29,16 @@ export type DetailedChartProps<T extends SeriesData> = {
   stylingProps: {
     colorSelector: ColorSelector<T>
     fallbackFillSelector?: FallbackFillSelector<T>
+    innerRadius?: string | number
+    outerRadius?: string | number
   }
   slots?: {
     Header?: React.ReactNode
   }
 }
+
+const DEFAULT_INNER_RADIUS = '91%'
+const DEFAULT_OUTER_RADIUS = '100%'
 
 export const DetailedChart = <T extends SeriesData>({
   data,
@@ -45,6 +50,9 @@ export const DetailedChart = <T extends SeriesData>({
   const { t } = useTranslation()
   const { formatPercent, formatCurrencyFromCents } = useIntlFormatter()
   const { data: chartData, total } = data
+
+  const innerRadius = stylingProps.innerRadius ?? DEFAULT_INNER_RADIUS
+  const outerRadius = stylingProps.outerRadius ?? DEFAULT_OUTER_RADIUS
 
   const normalizedChartData = useMemo(() => chartData.map(x => ({
     ...x,
@@ -169,8 +177,8 @@ export const DetailedChart = <T extends SeriesData>({
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius='91%'
-                  outerRadius='100%'
+                  innerRadius={innerRadius}
+                  outerRadius={outerRadius}
                   paddingAngle={0}
                   fill='#F8F8FA'
                   animationDuration={200}
@@ -186,8 +194,8 @@ export const DetailedChart = <T extends SeriesData>({
                   nameKey='displayName'
                   cx='50%'
                   cy='50%'
-                  innerRadius='91%'
-                  outerRadius='100%'
+                  innerRadius={innerRadius}
+                  outerRadius={outerRadius}
                   paddingAngle={0.5}
                   fill='#8884d8'
                   animationDuration={200}

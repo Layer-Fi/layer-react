@@ -47,6 +47,8 @@ export interface AccountingOverviewProps {
   chartColorsList?: string[]
   barSize?: number
   lineStrokeWidth?: number
+  donutInnerRadius?: string | number
+  donutOuterRadius?: string | number
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   slotProps?: {
@@ -65,6 +67,8 @@ export const AccountingOverview = ({
   chartColorsList,
   barSize,
   lineStrokeWidth,
+  donutInnerRadius,
+  donutOuterRadius,
   stringOverrides,
   tagFilter = undefined,
   slotProps,
@@ -134,6 +138,8 @@ export const AccountingOverview = ({
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
           chartColors={chartColors}
           chartColorsList={chartColorsList}
+          donutInnerRadius={donutInnerRadius}
+          donutOuterRadius={donutOuterRadius}
         />
       </View>
     </ProfitAndLoss>

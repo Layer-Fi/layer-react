@@ -27,6 +27,8 @@ const CHART_COLORS: ProfitAndLossChartColors = {
 type ScratchStoryArgs = {
   scope: 'revenue' | 'expenses'
   chartColors?: ProfitAndLossChartColors
+  donutInnerRadius?: string | number
+  donutOuterRadius?: string | number
 }
 
 const meta: Meta<ScratchStoryArgs> = {
@@ -45,11 +47,13 @@ const meta: Meta<ScratchStoryArgs> = {
   args: {
     scope: 'expenses',
   },
-  render: ({ scope, chartColors }) => (
+  render: ({ scope, chartColors, donutInnerRadius, donutOuterRadius }) => (
     <ProfitAndLossDetailedCharts
       scope={scope}
       hideClose
       chartColors={chartColors}
+      donutInnerRadius={donutInnerRadius}
+      donutOuterRadius={donutOuterRadius}
     />
   ),
 }
@@ -70,4 +74,9 @@ export const ExpensesScopedColors: Story = {
 export const RevenueScopedColors: Story = {
   name: 'Revenue — scoped colors',
   args: { scope: 'revenue', chartColors: CHART_COLORS },
+}
+
+export const ExpensesThickDonut: Story = {
+  name: 'Expenses — custom donut thickness',
+  args: { donutInnerRadius: '70%', donutOuterRadius: '100%' },
 }
