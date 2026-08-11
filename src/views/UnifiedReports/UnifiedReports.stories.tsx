@@ -9,14 +9,17 @@ type UnifiedReportsStoryArgs = {
   navigationVariant: UnifiedReportNavigationVariant
   showTitle: boolean
   dateSelectionMode: DateSelectionMode
+  defaultReportKey?: string
 }
+
+const REPORT_KEYS = ['PROFIT_AND_LOSS', 'BALANCE_SHEET', 'CASHFLOW_STATEMENT', 'TRIAL_BALANCE', 'AR_AGING']
 
 const meta: Meta<UnifiedReportsStoryArgs> = {
   title: 'Components/UnifiedReports',
   tags: ['public-api'],
   component: UnifiedReports,
   parameters: {
-    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode'] },
+    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode', 'defaultReportKey'] },
   },
   args: {
     navigationVariant: 'sidebar',
@@ -38,6 +41,11 @@ const meta: Meta<UnifiedReportsStoryArgs> = {
       options: ['full', 'month', 'year'] satisfies DateSelectionMode[],
       description: 'How report controls read from the global date store.',
     },
+    defaultReportKey: {
+      control: 'select',
+      options: REPORT_KEYS,
+      description: 'Report to land on instead of the default report. Read once when the report configuration loads, so changing this control does not switch the report — reload the story to see it apply.',
+    },
   },
 }
 
@@ -51,6 +59,17 @@ export const Default: Story = {
 
 export const MenuNavigation: Story = {
   args: { navigationVariant: 'menu' },
+}
+
+// `defaultReportKey` is read once at hydration, so changing the control on `Default` re-renders
+// without switching the report — only a fresh mount shows the behavior.
+export const DeepLinkedReport: Story = {
+  args: { defaultReportKey: 'BALANCE_SHEET' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await canvas.findByRole('heading', { name: 'Balance Sheet' }, { timeout: 10_000 })
+  },
 }
 
 export const MegaMenuOpen: Story = {

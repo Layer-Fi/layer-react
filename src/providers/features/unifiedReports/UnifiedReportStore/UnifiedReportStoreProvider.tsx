@@ -241,6 +241,14 @@ const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | n
 const hasReportWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
   groups.some(group => group.reports.some(report => report.key === key))
 
+const findReportByKey = (groups: ReadonlyArray<ReportGroup>, key: string): ReportConfig | null => {
+  for (const group of groups) {
+    const match = group.reports.find(report => report.key === key)
+    if (match) return match
+  }
+  return null
+}
+
 const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
   createStore<UnifiedReportStoreShape>(set => ({
     baseReport: null,
@@ -266,7 +274,7 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
     },
   }))
 
-function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
+function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>, defaultReportKey?: string) {
   const { data } = useGetReportConfig()
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)
@@ -275,9 +283,14 @@ function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) 
     if (!data) return
     if (baseReport && hasReportWithKey(data, baseReport.key)) return
 
-    const defaultReport = findDefaultReport(data)
-    if (defaultReport) setBaseReport(defaultReport)
-  }, [data, baseReport, setBaseReport])
+    const requestedReport = defaultReportKey != null ? findReportByKey(data, defaultReportKey) : null
+    if (defaultReportKey != null && requestedReport == null) {
+      console.warn(`UnifiedReports: no report with key "${defaultReportKey}" in this business's report config; falling back to the default report.`)
+    }
+
+    const report = requestedReport ?? findDefaultReport(data)
+    if (report) setBaseReport(report)
+  }, [data, baseReport, setBaseReport, defaultReportKey])
 }
 
 function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShape>, dateSelectionMode: DateSelectionMode) {
@@ -288,11 +301,16 @@ function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShap
 
 type UnifiedReportStoreProviderProps = {
   dateSelectionMode?: DateSelectionMode
+  defaultReportKey?: string
 }
 
-export function UnifiedReportStoreProvider({ children, dateSelectionMode = 'full' }: PropsWithChildren<UnifiedReportStoreProviderProps>) {
+export function UnifiedReportStoreProvider({
+  children,
+  dateSelectionMode = 'full',
+  defaultReportKey,
+}: PropsWithChildren<UnifiedReportStoreProviderProps>) {
   const [store] = useState(() => createUnifiedReportStore(dateSelectionMode))
-  useHydrateUnifiedReportStore(store)
+  useHydrateUnifiedReportStore(store, defaultReportKey)
   useSyncExternalDateSelectionMode(store, dateSelectionMode)
 
   return (

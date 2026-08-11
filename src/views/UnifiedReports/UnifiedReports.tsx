@@ -17,6 +17,13 @@ type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
   navigationVariant?: UnifiedReportNavigationVariant
   showTitle?: boolean
+  /**
+   * Report key (e.g. `PROFIT_AND_LOSS`) to land on instead of the default report.
+   * Read when the report configuration loads — later changes do not switch the report
+   * (`defaultValue` semantics). Unknown keys fall back to the default report with a console warning.
+   * Report switches are observable via the `ReportsNavigated` event.
+   */
+  defaultReportKey?: string
 }
 
 const UnifiedReportContent = ({
@@ -43,9 +50,9 @@ const UnifiedReportContent = ({
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true }: UnifiedReportProps) => {
+export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true, defaultReportKey }: UnifiedReportProps) => {
   return (
-    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
+    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode} defaultReportKey={defaultReportKey}>
       <ExpandableDataTableProvider>
         <UnifiedReportContent navigationVariant={navigationVariant} showTitle={showTitle} />
       </ExpandableDataTableProvider>
