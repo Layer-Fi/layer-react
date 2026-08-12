@@ -28,9 +28,12 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
 import { ProfitAndLossChartBar } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartBar'
-import { PROFIT_AND_LOSS_BAR_CONFIG } from '@features/profitAndLoss/ProfitAndLossChart/profitAndLossChartBarConfig'
+import { getProfitAndLossBarConfig } from '@features/profitAndLoss/ProfitAndLossChart/profitAndLossChartBarConfig'
 import { ProfitAndLossChartLegend } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartLegend'
-import { ProfitAndLossChartPatternDefs } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
+import {
+  ProfitAndLossChartPatternDefs,
+  useStripePatterns,
+} from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 import { ProfitAndLossChartStateCard } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { transformPnLData } from '@features/profitAndLoss/ProfitAndLossChart/transformPnLData'
@@ -55,6 +58,12 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
 
   const { getColor, business } = useLayerContext()
   const activationDate = useBusinessActivationDate()
+
+  const stripePatterns = useStripePatterns()
+  const barConfig = useMemo(
+    () => getProfitAndLossBarConfig(stripePatterns.fills),
+    [stripePatterns.fills],
+  )
 
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
@@ -157,7 +166,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
           onClick={onClick}
           className='Layer__profit-and-loss-chart'
         >
-          <ProfitAndLossChartPatternDefs />
+          <ProfitAndLossChartPatternDefs ids={stripePatterns.ids} />
           <ReferenceLine y={0} stroke={getColor(300)?.hex ?? '#EBEDF0'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />
           <ProfitAndLossChartTooltip cursorWidth={cursorWidth} />
           <CartesianGrid
@@ -165,11 +174,11 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
             stroke={getColor(200)?.hex ?? 'var(--color-base-0)'}
             strokeDasharray='5 5'
           />
-          {!hideLegend && <ProfitAndLossChartLegend />}
+          {!hideLegend && <ProfitAndLossChartLegend stripeFills={stripePatterns.fills} />}
           <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
           <XAxis dataKey='name' xAxisId='expenses' tickLine={false} height={0} hide />
           <ChartYAxis />
-          {PROFIT_AND_LOSS_BAR_CONFIG.map(config => (
+          {barConfig.map(config => (
             <ProfitAndLossChartBar
               key={config.dataKey}
               barSize={barSize}

@@ -1,18 +1,16 @@
 import { type ChartDataPoint } from '@features/profitAndLoss/ProfitAndLossChart/chartDataPoint'
-import {
-  STRIPE_PATTERN_DARK_FILL,
-  STRIPE_PATTERN_FILL,
-} from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
+import { type StripePatternVariant } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 
 export interface BarConfig {
   dataKey: keyof ChartDataPoint
   xAxisId: 'revenue' | 'expenses'
+  stripeVariant?: StripePatternVariant
   cellFill?: string
   className: string
   barAnimation?: boolean
 }
 
-export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
+const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   // Revenue xAxisId - stacks upward (positive values)
   {
     dataKey: 'loadingBar',
@@ -22,13 +20,13 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   {
     dataKey: 'expensesUncategorizedBarInverse',
     xAxisId: 'revenue',
-    cellFill: STRIPE_PATTERN_DARK_FILL,
+    stripeVariant: 'expenses',
     className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
   },
   {
     dataKey: 'expensesBarInverse',
     xAxisId: 'revenue',
-    cellFill: STRIPE_PATTERN_DARK_FILL,
+    stripeVariant: 'expenses',
     className: 'Layer__profit-and-loss-chart__bar--expenses',
   },
   {
@@ -39,7 +37,7 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   {
     dataKey: 'revenueUncategorizedBar',
     xAxisId: 'revenue',
-    cellFill: STRIPE_PATTERN_FILL,
+    stripeVariant: 'income',
     className: 'Layer__profit-and-loss-chart__bar--income-uncategorized',
   },
   // Expenses xAxisId - stacks downward (negative values)
@@ -51,7 +49,7 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   {
     dataKey: 'revenueUncategorizedBarInverse',
     xAxisId: 'expenses',
-    cellFill: STRIPE_PATTERN_FILL,
+    stripeVariant: 'income',
     className: 'Layer__profit-and-loss-chart__bar--income-uncategorized',
   },
   {
@@ -67,10 +65,18 @@ export const PROFIT_AND_LOSS_BAR_CONFIG: BarConfig[] = [
   {
     dataKey: 'expensesUncategorizedBar',
     xAxisId: 'expenses',
-    cellFill: STRIPE_PATTERN_DARK_FILL,
+    stripeVariant: 'expenses',
     className: 'Layer__profit-and-loss-chart__bar--expenses-uncategorized',
   },
 ]
+
+export const getProfitAndLossBarConfig = (
+  stripeFills: Record<StripePatternVariant, string>,
+): BarConfig[] =>
+  PROFIT_AND_LOSS_BAR_CONFIG.map(config => ({
+    ...config,
+    cellFill: config.stripeVariant ? stripeFills[config.stripeVariant] : undefined,
+  }))
 
 const computeBarStackOrder = (xAxisId: 'revenue' | 'expenses'): (keyof ChartDataPoint)[] =>
   PROFIT_AND_LOSS_BAR_CONFIG

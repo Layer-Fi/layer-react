@@ -1,15 +1,15 @@
-#layer-bar-stripe-pattern rect {
-  fill: var(--color-light);
+.Layer__ProfitAndLossChart__StripePattern[data-variant='income'] rect {
+  fill: var(--bar-color-income);
 }
 
-#layer-bar-stripe-pattern line {
-  stroke: var(--color-light);
+.Layer__ProfitAndLossChart__StripePattern[data-variant='income'] line {
+  stroke: var(--bar-color-income);
 }
 
-#layer-bar-stripe-pattern-dark rect {
-  fill: var(--color-dark);
+.Layer__ProfitAndLossChart__StripePattern[data-variant='expenses'] rect {
+  fill: var(--bar-color-expenses);
 }
 
-#layer-bar-stripe-pattern-dark line {
-  stroke: var(--color-dark);
+.Layer__ProfitAndLossChart__StripePattern[data-variant='expenses'] line {
+  stroke: var(--bar-color-expenses);
 }
