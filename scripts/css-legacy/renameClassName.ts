@@ -4,13 +4,19 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 /**
- * Renames a class name across source and styles, and keeps the old name in the DOM.
+ * Renames a class name across source and styles, and seeds the map that keeps the old name in the
+ * DOM.
  *
  *     npx tsx scripts/css-legacy/renameClassName.ts Layer__badge Layer__Badge [--dry]
  *
  * The rename is the easy half. Shipping it without the old name is what broke consumers between
  * v0.1.122 and today, so every rename adds the old name to a `createLegacyClassNames` map beside
  * the element that carries it.
+ *
+ * The map alone emits nothing: each renamed element still has to pass the new name through the
+ * composer, `className={legacyClassNames('Layer__Badge')}`. That edit is left to a human because
+ * it depends on how the element builds its class names. The files needing it are listed on exit,
+ * and `npm run css:check-legacy-keys` fails until every seeded entry is reached.
  */
 
 const UTIL_IMPORT = "import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'"
@@ -69,13 +75,18 @@ if (touched.length === 0) {
 
 console.log(`${oldName} → ${newName}${isDryRun ? '  (dry run)' : ''}\n`)
 
+const needsCallSiteEdit: string[] = []
+
 for (const file of touched) {
   const source = fs.readFileSync(file, 'utf8')
   let updated = renameIn(source)
 
   // Only the modules that render the class need to keep emitting the old one.
   const rendersIt = /\.tsx?$/.test(file) && /className|classNames|CLASS_NAME/.test(source)
-  if (rendersIt) updated = addLegacyEntry(updated)
+  if (rendersIt) {
+    updated = addLegacyEntry(updated)
+    needsCallSiteEdit.push(file)
+  }
 
   if (updated === source) continue
   if (!isDryRun) fs.writeFileSync(file, updated)
@@ -83,6 +94,13 @@ for (const file of touched) {
 }
 
 console.log(`\n${sources.length} source files, ${styles.length} stylesheets`)
+
+if (needsCallSiteEdit.length > 0) {
+  console.log(`\nStill emitting only ${newName} — pass it through the composer in each of these:`)
+  for (const file of needsCallSiteEdit) console.log(`  ${file}`)
+  console.log(`\n    className={legacyClassNames('${newName}')}`)
+}
+
 console.log(isDryRun
   ? '\nDry run — nothing written.'
   : '\nNext: npm run lint -- --fix && npm run css:check-legacy-keys')

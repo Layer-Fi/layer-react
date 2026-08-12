@@ -61,10 +61,9 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    # Kept out of the check step below: that one is continue-on-error, so an install failure
-    # there would read as a translation failure.
+    # Kept out of the check steps below: those are non-blocking, so an install failure there would
+    # read as a check failure. Runs for alpha too — the class-name scan needs the dependencies.
     - name: Install dependencies
-      if: ${{ inputs.release_type == 'stable' }}
       run: npm ci
 
     # Informational, never blocking: dropping a class name is sometimes deliberate. It is reported
