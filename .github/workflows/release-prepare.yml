@@ -163,19 +163,24 @@ jobs:
         git checkout -b "$BR"
         git commit -am "chore(release): v$V"
         git push origin "$BR"
+
+        BODY="$RUNNER_TEMP/pr-body.md"
+        {
+          echo "Automated ${{ inputs.release_type }} bump to \`$V\`. Merging triggers Release — Tag"
+          echo "(creates tag v$V + GitHub Release); then run Release — Publish to ship to npm and"
+          echo "update Linear."
+          echo
+          echo "### Class names"
+          echo
+          echo "$DROPPED"
+          echo
+          echo "A dropped class name is a silent break: consumers style against these, and nothing"
+          echo "in their build tells them it is gone. If any are listed, either restore them with"
+          echo "\`npm run css:rename\` or accept the break deliberately and note it in the release."
+        } > "$BODY"
+
         URL=$(gh pr create --base main --head "$BR" \
           --title "chore(release): v$V" \
-          --body "$(cat <<EOF
-Automated ${{ inputs.release_type }} bump to \`$V\`. Merging triggers Release — Tag (creates tag v$V + GitHub Release); then run Release — Publish to ship to npm and update Linear.
-
-### Class names
-
-$DROPPED
-
-A dropped class name is a silent break: consumers style against these, and nothing in their build
-tells them it is gone. If any are listed, either restore them with \`npm run css:rename\` or accept
-the break deliberately and note it in the release.
-EOF
-)")
+          --body-file "$BODY")
         echo "Opened $URL"
         echo "[Release PR for v$V]($URL)" >> "$GITHUB_STEP_SUMMARY"
