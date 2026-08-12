@@ -101,18 +101,17 @@ which is domain-agnostic and shared).
 Prefer adding a new small context over widening an existing one — a fat context re-renders
 every consumer on any change, and narrow units can be mounted independently where needed.
 
-### Config contexts replace prop drilling
+### Context does not replace component configuration
 
-A consumer-facing config (string overrides, styling, feature flags) that several components need
-is a **context**, never a prop threaded through the components in between. Mount the provider at
-the domain root (`ProfitAndLoss` takes one `chartConfig` and mounts
-`ProfitAndLossChartConfigProvider`) and have leaves read purpose-named hooks that return
-**resolved** values. `ProfitAndLossChartConfigProvider` normalizes the legacy root
-`chartColorsList` into scoped colors; public leaf components may pass their retained
-`chartColorsList` to `useProfitAndLossChartPalette` as a per-instance override.
+Context is appropriate for an implicit value that is stable for the life of a subtree. It is not
+a reason to remove a consumer-facing, per-instance configuration prop. A component that renders or
+owns a configurable element accepts the config explicitly; a composed view forwards it through
+targeted `slotProps`, with separate configs when separate instances may differ. Do not mount a
+domain provider merely to avoid that wiring.
 
-`src/components/SKILL.md` has the full decision list — CSS variable, `slotProps`, config context,
-plain prop.
+Use a config context only when the value is genuinely dependency injection rather than component
+configuration, and scope it so mounting the feature more than once does not leak values between
+instances. `src/components/SKILL.md` has the full customization decision list.
 
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,

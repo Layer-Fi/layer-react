@@ -147,8 +147,8 @@ areas:
       - "src/styles/**"
       - "**/*.scss"
     rules:
-      - id: "no_styling_prop_drilling"
-        description: "A component may not declare and forward a styling prop it does not use, and a view API must not grow one prop per styling knob. Use a CSS custom property when CSS can reach the value, slots or slotProps for one named element, and a config context when multiple descendants need it. A plain prop is appropriate only when the value stops at that component."
+      - id: "explicit_component_config"
+        description: "Flag a consumer-facing component config hidden or removed behind context, a view-level config that ambiguously controls several configurable subcomponents, or one prop added per styling knob. Components take one nested config explicitly; composed views forward targeted configs through slotProps, with separate configs when instances may differ. Use context only for genuinely implicit, subtree-stable dependency injection."
         severity: "medium"
 
       - id: "build_on_ui_primitives"

@@ -149,36 +149,42 @@ Three rules that follow:
   caller's over its own defaults: `slotProps={{ Title: { size: 'md', ...slotProps?.Title } }}`
 - **Memoize a computed `slots`/`slotProps` object**, since it's an object prop.
 
-## Customization: never drill a styling prop
+## Consumer-facing customization
 
-**No component may declare a prop it doesn't use**, and view props must not grow one-per-knob.
-Work down this list, stopping at the first that fits:
+Keep customization explicit at the component boundary. Do not hide or remove a consumer-facing
+prop behind a context merely to avoid forwarding it through a composed view. Choose the mechanism
+that matches what the consumer is configuring:
 
-1. **A CSS custom property**, if CSS can reach it — the default, and it costs zero props. Works
-   inside SVG charts too: a CSS declaration beats the presentation attribute the chart library
-   renders, which is how `--pnl-chart-line-stroke-width` sets the P&L line width.
-2. **`slots` / `slotProps`**, if it configures one named element of *one* component (above).
-3. **A config context**, as soon as a value would otherwise pass through a component that doesn't
-   use it. One nested type, a provider at the domain root, a narrow hook per leaf.
-4. **A prop**, only when the value stops at that component.
+1. **A CSS custom property**, when CSS can reach the value and the customization is naturally
+   inherited. This costs zero React props and works inside SVG charts too: a CSS declaration beats
+   the presentation attribute the chart library renders, which is how
+   `--pnl-chart-line-stroke-width` sets the P&L line width.
+2. **`slots` / `slotProps`**, when configuring a named element inside a component or view. A view
+   with several charts nests each config under the slot for the subcomponent it targets; it may
+   expose several chart configs when those chart instances can differ.
+3. **A component prop**, when the component renders or owns the configurable element. Prefer one
+   nested config object over one prop per knob. Thin composed components may forward that config
+   to the child they own so the public API remains explicit.
+4. **Context**, only for a genuinely implicit, subtree-stable dependency. Context must not erase a
+   per-instance consumer API; if two instances on one page may need different values, use props.
 
-`ProfitAndLossChartConfigContext` is the reference for (3):
+P&L chart configuration is the reference:
 
-- One nested field per chart — `{ colors, trendChart: { barSize }, donutChart: { … } }` — so a new
-  knob adds a **field, never a prop**. Group by element, like `slotProps` keys.
-- The provider mounts at the domain root (`ProfitAndLoss`, one `chartConfig` prop), so every view
-  under it gets the behaviour without being wired up.
-- Leaves read purpose-named hooks that return **resolved** values. The provider normalizes the
-  legacy root `chartColorsList`; public leaf components pass their retained `chartColorsList` to
-  the hook only as a per-instance override.
-- `@ui`/`@blocks` never read a feature context. A shared block keeps its `stylingProps`; the
-  `@features` component reads the context and builds them — `DetailedChart` is shared by P&L and
-  tax estimates for exactly this reason.
+- `ProfitAndLoss.Chart`, `ProfitAndLoss.Summaries`, and `ProfitAndLoss.DetailedCharts` each accept
+  `chartConfig` directly.
+- Accounting and bookkeeping overviews place configs under the targeted P&L summary, trend-chart,
+  revenue-detail, and expense-detail `slotProps`; Solopreneur does the same for its summaries and
+  individual summary cards.
+- The nested `ProfitAndLossChartConfig` groups related knobs without making the root
+  `ProfitAndLoss` component an ambient styling provider.
+- Existing `chartColorsList` props remain supported as compatibility fallbacks where they were
+  already consumer-facing.
+- `@ui`/`@blocks` remain domain-agnostic. A feature component converts its config into the shared
+  block's `stylingProps`; `DetailedChart` stays reusable by both P&L and tax estimates.
 
 Two traps: an override must not silently disable a responsive default (`barSize` needs
-`compactBarSize`, not one fixed width), and when compatibility requires retaining an old prop,
-normalize it into the new config at the provider boundary instead of threading both
-representations through the component tree.
+`compactBarSize`, not one fixed width), and a new config must preserve existing consumer-facing
+props unless a breaking change is intentional.
 
 ## Forms
 
