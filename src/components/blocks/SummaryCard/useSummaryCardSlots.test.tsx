@@ -6,11 +6,7 @@ import { useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { NOW } from '@testUtils/dates/fixedDates'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
-/*
- * `setupFakeSystemTime` uses plain `vi.useFakeTimers()`, which stalls `renderHookWithAuth`'s
- * internal `waitFor` polling. `shouldAdvanceTime` keeps real timers ticking under the pinned
- * clock, so the global date store's "this month" default still resolves deterministically.
- */
+// `shouldAdvanceTime` avoids stalling renderHookWithAuth's internal `waitFor` polling, unlike plain `setupFakeSystemTime`
 beforeEach(() => {
   vi.useFakeTimers({ shouldAdvanceTime: true })
   vi.setSystemTime(NOW)
