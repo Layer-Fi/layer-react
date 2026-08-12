@@ -147,6 +147,10 @@ areas:
       - "src/styles/**"
       - "**/*.scss"
     rules:
+      - id: "no_styling_prop_drilling"
+        description: "A component may not declare and forward a styling prop it does not use, and a view API must not grow one prop per styling knob. Use a CSS custom property when CSS can reach the value, slots or slotProps for one named element, and a config context when multiple descendants need it. A plain prop is appropriate only when the value stops at that component."
+        severity: "medium"
+
       - id: "build_on_ui_primitives"
         description: "Build on @ui before writing new markup. Reach for HStack/VStack instead of raw div, and Span/P/Label/Header instead of raw text elements. Genuinely new reusable primitives go in src/components/ui, not inside a feature."
         severity: "medium"
