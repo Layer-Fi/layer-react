@@ -6,18 +6,23 @@ import { ExpandSummaryCardButton, type ExpandSummaryCardButtonProps } from '@blo
 
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const renderExpandButton = (props: ExpandSummaryCardButtonProps) => {
+const DEFAULT_PROPS: ExpandSummaryCardButtonProps = {
+  callback: vi.fn(),
+  ariaLabel: 'View revenue details',
+}
+
+const renderExpandButton = (props: Partial<ExpandSummaryCardButtonProps> = {}) => {
   const user = userEvent.setup()
 
   return {
     user,
-    ...render(<ExpandSummaryCardButton {...props} />, { wrapper: LayerTestProvider }),
+    ...render(<ExpandSummaryCardButton {...DEFAULT_PROPS} {...props} />, { wrapper: LayerTestProvider }),
   }
 }
 
 describe('ExpandSummaryCardButton', () => {
   it('renders a button with the given accessible label', () => {
-    renderExpandButton({ callback: vi.fn(), ariaLabel: 'View revenue details' })
+    renderExpandButton()
 
     expect(screen.getByRole('button', { name: 'View revenue details' })).toBeInTheDocument()
   })
@@ -25,7 +30,7 @@ describe('ExpandSummaryCardButton', () => {
   it('invokes the callback when pressed', async () => {
     const callback = vi.fn()
 
-    const { user } = renderExpandButton({ callback, ariaLabel: 'View revenue details' })
+    const { user } = renderExpandButton({ callback })
 
     await user.click(screen.getByRole('button', { name: 'View revenue details' }))
 

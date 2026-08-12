@@ -20,12 +20,18 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-const renderSlots = (params: Parameters<typeof useSummaryCardSlots>[0]) =>
-  renderHookWithAuth(() => useSummaryCardSlots(params))
+type UseSummaryCardSlotsParams = Parameters<typeof useSummaryCardSlots>[0]
+
+const DEFAULT_PARAMS: UseSummaryCardSlotsParams = {
+  defaultTitle: 'Revenue',
+}
+
+const renderSlots = (params: Partial<UseSummaryCardSlotsParams> = {}) =>
+  renderHookWithAuth(() => useSummaryCardSlots({ ...DEFAULT_PARAMS, ...params }))
 
 describe('useSummaryCardSlots', () => {
   it('uses the default title and formats the subtitle from the global date', async () => {
-    const { result } = await renderSlots({ defaultTitle: 'Revenue' })
+    const { result } = await renderSlots()
 
     expect(result.current.title).toBe('Revenue')
     expect(result.current.subtitle).toBe('June 2026')
@@ -34,10 +40,7 @@ describe('useSummaryCardSlots', () => {
   })
 
   it('prefers a title override over the default title', async () => {
-    const { result } = await renderSlots({
-      defaultTitle: 'Revenue',
-      stringOverrides: { title: 'Net income' },
-    })
+    const { result } = await renderSlots({ stringOverrides: { title: 'Net income' } })
 
     expect(result.current.title).toBe('Net income')
   })
@@ -45,31 +48,25 @@ describe('useSummaryCardSlots', () => {
   it('passes the legend through unchanged', async () => {
     const legend = 'Legend content'
 
-    const { result } = await renderSlots({ defaultTitle: 'Revenue', legend })
+    const { result } = await renderSlots({ legend })
 
     expect(result.current.legend).toBe(legend)
   })
 
   it('formats the subtitle using the given date format', async () => {
-    const { result } = await renderSlots({
-      defaultTitle: 'Revenue',
-      subtitleDateFormat: DateFormat.MonthYearShort,
-    })
+    const { result } = await renderSlots({ subtitleDateFormat: DateFormat.MonthYearShort })
 
     expect(result.current.subtitle).toBe('Jun 2026')
   })
 
   it('builds an expand action only when onClickExpand is given, and invokes it when pressed', async () => {
-    const { result: withoutHandler } = await renderSlots({ defaultTitle: 'Revenue' })
+    const { result: withoutHandler } = await renderSlots()
 
     expect(withoutHandler.current.primaryAction).toBeUndefined()
 
     const onClickExpand = vi.fn()
 
-    const { result: withHandler } = await renderSlots({
-      defaultTitle: 'Revenue',
-      interactionProps: { onClickExpand },
-    })
+    const { result: withHandler } = await renderSlots({ interactionProps: { onClickExpand } })
 
     expect(withHandler.current.primaryAction).toBeDefined()
   })
