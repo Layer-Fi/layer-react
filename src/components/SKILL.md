@@ -149,6 +149,35 @@ Three rules that follow:
   caller's over its own defaults: `slotProps={{ Title: { size: 'md', ...slotProps?.Title } }}`
 - **Memoize a computed `slots`/`slotProps` object**, since it's an object prop.
 
+## Customization: never drill a styling prop
+
+**No component may declare a prop it doesn't use**, and view props must not grow one-per-knob.
+Work down this list, stopping at the first that fits:
+
+1. **A CSS custom property**, if CSS can reach it — the default, and it costs zero props. Works
+   inside SVG charts too: a CSS declaration beats the presentation attribute the chart library
+   renders, which is how `--pnl-chart-line-stroke-width` sets the P&L line width.
+2. **`slots` / `slotProps`**, if it configures one named element of *one* component (above).
+3. **A config context**, as soon as a value would otherwise pass through a component that doesn't
+   use it. One nested type, a provider at the domain root, a narrow hook per leaf.
+4. **A prop**, only when the value stops at that component.
+
+`ProfitAndLossChartConfigContext` is the reference for (3):
+
+- One nested field per chart — `{ colors, trendChart: { barSize }, donutChart: { … } }` — so a new
+  knob adds a **field, never a prop**. Group by element, like `slotProps` keys.
+- The provider mounts at the domain root (`ProfitAndLoss`, one `chartConfig` prop), so every view
+  under it gets the behaviour without being wired up.
+- Leaves read purpose-named hooks that return **resolved** values, keeping defaults and legacy
+  fallbacks in one place instead of at each call site.
+- `@ui`/`@blocks` never read a feature context. A shared block keeps its `stylingProps`; the
+  `@features` component reads the context and builds them — `DetailedChart` is shared by P&L and
+  tax estimates for exactly this reason.
+
+Two traps: an override must not silently disable a responsive default (`barSize` needs
+`compactBarSize`, not one fixed width), and a new config supersedes an old prop by folding it in
+at the provider, not by shipping both as siblings.
+
 ## Forms
 
 Forms use TanStack Form through `useAppForm` (`@blocks/Form/useForm`) with the

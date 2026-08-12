@@ -101,6 +101,18 @@ which is domain-agnostic and shared).
 Prefer adding a new small context over widening an existing one — a fat context re-renders
 every consumer on any change, and narrow units can be mounted independently where needed.
 
+### Config contexts replace prop drilling
+
+A consumer-facing config (string overrides, styling, feature flags) that several components need
+is a **context**, never a prop threaded through the components in between. Mount the provider at
+the domain root (`ProfitAndLoss` takes one `chartConfig` and mounts
+`ProfitAndLossChartConfigProvider`) and have leaves read purpose-named hooks that return
+**resolved** values — `useProfitAndLossChartPalette(scope)` folds the legacy flat
+`chartColorsList` into the scoped `colors`, so no call site has to know both exist.
+
+`src/components/SKILL.md` has the full decision list — CSS variable, `slotProps`, config context,
+plain prop.
+
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,
 `useEnvironment`) rather than `useContext` directly.
