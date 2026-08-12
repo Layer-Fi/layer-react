@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
@@ -82,6 +83,12 @@ export interface BookkeepingOverviewProps {
     }
   }
 
+  /** Colors and sizing for every P&L chart in this view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /**
+   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
+   * of `chartConfig.colors` is omitted.
+   */
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
   tagFilter?: TagOption
@@ -95,6 +102,7 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  chartConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -130,6 +138,8 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
+      chartConfig={chartConfig}
+      chartColorsList={chartColorsList}
     >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
@@ -199,7 +209,6 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-                chartColorsList={chartColorsList}
                 reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
               />
@@ -213,7 +222,6 @@ export const BookkeepingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-          chartColorsList={chartColorsList}
         />
       </View>
       {isCalendlyVisible && (

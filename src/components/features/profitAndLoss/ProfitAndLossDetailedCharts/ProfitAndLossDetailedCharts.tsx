@@ -6,6 +6,10 @@ import type { DetailedChartStringOverrides } from '@internal-types/features/prof
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { humanizeTitle } from '@utils/features/profitAndLoss/profitAndLoss'
+import {
+  useProfitAndLossChartPalette,
+  useProfitAndLossDonutChartConfig,
+} from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { createPnlLineItemComparator, type Scope, type SelectedLineItem, type SidebarScope } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { type ColorSelector } from '@ui/Chart/seriesTypes'
@@ -68,6 +72,7 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose?: boolean
   hideHeader?: boolean
   showDatePicker?: boolean
+  /** Per-instance palette override. Wins over `chartConfig.colors` from the enclosing view. */
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps
@@ -132,9 +137,13 @@ export const ProfitAndLossDetailedCharts = ({
     setIsModalOpen(true)
   }, [])
 
+  const { palette, uncategorized, uncategorizedOverride } =
+    useProfitAndLossChartPalette(activeScope, chartColorsList)
+  const { innerRadius, outerRadius } = useProfitAndLossDonutChartConfig()
+
   const typeColorMapping = useMemo(
-    () => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList),
-    [chartData, chartColorsList],
+    () => mapTypesToColors<PnlChartLineItem>(chartData, palette, uncategorized),
+    [chartData, palette, uncategorized],
   )
   const colorSelector: ColorSelector<PnlChartLineItem> = useCallback(
     (item: PnlChartLineItem) => typeColorMapping(item.name),
@@ -159,7 +168,10 @@ export const ProfitAndLossDetailedCharts = ({
   const stylingProps = useMemo(() => ({
     colorSelector,
     fallbackFillSelector,
-  }), [colorSelector, fallbackFillSelector])
+    fallbackFillColor: uncategorizedOverride,
+    innerRadius,
+    outerRadius,
+  }), [colorSelector, fallbackFillSelector, uncategorizedOverride, innerRadius, outerRadius])
 
   const sortedTableData = useMemo(() => {
     if (sortParams.sortBy === sortByField && sortParams.sortOrder === sortOrder) {

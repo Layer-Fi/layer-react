@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -42,6 +43,12 @@ export interface AccountingOverviewProps {
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
+  /** Colors and sizing for every P&L chart in this view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /**
+   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
+   * of `chartConfig.colors` is omitted.
+   */
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
@@ -57,6 +64,7 @@ export const AccountingOverview = ({
   showTitle = true,
   onTransactionsToReviewClick,
   middleBanner,
+  chartConfig,
   chartColorsList,
   stringOverrides,
   tagFilter = undefined,
@@ -77,6 +85,8 @@ export const AccountingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
+      chartConfig={chartConfig}
+      chartColorsList={chartColorsList}
     >
       <View
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
@@ -94,7 +104,6 @@ export const AccountingOverview = ({
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
-          chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           reportingVariant={profitAndLossSummariesReportingVariant}
           variants={profitAndLossSummariesVariants}
@@ -122,7 +131,6 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
-          chartColorsList={chartColorsList}
         />
       </View>
     </ProfitAndLoss>

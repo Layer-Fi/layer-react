@@ -4,6 +4,7 @@ import { SolopreneurOverview, type SolopreneurOverviewProps } from '@views/Solop
 
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
+import { CUSTOM_CHART_CONFIG } from '@testUtils/storybook/controls/chartConfig'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,
@@ -27,7 +28,8 @@ const summariesControls = makeSummariesStoryControls({
   category: 'P&L summaries',
 })
 
-type SolopreneurOverviewStoryArgs = SummariesStoryArgs & Pick<SolopreneurOverviewProps, 'chartColorsList'>
+type SolopreneurOverviewStoryArgs = SummariesStoryArgs
+  & Pick<SolopreneurOverviewProps, 'chartConfig' | 'chartColorsList'>
 
 const meta: Meta<SolopreneurOverviewStoryArgs> = {
   title: 'Views/Overview/Solopreneur',
@@ -44,11 +46,13 @@ const meta: Meta<SolopreneurOverviewStoryArgs> = {
     reportingVariant: 'cashflow',
   },
   argTypes: {
+    chartConfig: { table: { disable: true } },
     chartColorsList: { table: { disable: true } },
     ...summariesControls.argTypes,
   },
   render: args => (
     <SolopreneurOverview
+      chartConfig={args.chartConfig}
       stringOverrides={{ profitAndLossSummaries: buildSummariesStringOverrides(args) }}
       slotProps={{ profitAndLoss: { summaries: buildSummariesSlotProps(args) } }}
     />
@@ -61,4 +65,8 @@ type Story = StoryObj<SolopreneurOverviewStoryArgs>
 
 export const Default: Story = {
   tags: ['docs-screenshot'],
+}
+
+export const CustomChartConfig: Story = {
+  args: { chartConfig: CUSTOM_CHART_CONFIG },
 }

@@ -13,7 +13,6 @@ type ProfitAndLossOverviewDetailedChartsVariant = 'accounting' | 'bookkeeping'
 interface ProfitAndLossOverviewDetailedChartsProps {
   variant: ProfitAndLossOverviewDetailedChartsVariant
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
-  chartColorsList?: string[]
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -21,7 +20,6 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const ProfitAndLossOverviewDetailedCharts = ({
   variant,
   detailedChartsStringOverrides,
-  chartColorsList,
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -69,7 +67,6 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               scope={pnlToggle}
               hideClose={true}
               stringOverrides={detailedChartsStringOverrides}
-              chartColorsList={chartColorsList}
             />
           </Container>
         )
@@ -80,7 +77,6 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 scope='revenue'
                 hideClose={true}
                 stringOverrides={detailedChartsStringOverrides}
-                chartColorsList={chartColorsList}
               />
             </Container>
             <Container name={chartContainerName}>
@@ -88,7 +84,6 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 scope='expenses'
                 hideClose={true}
                 stringOverrides={detailedChartsStringOverrides}
-                chartColorsList={chartColorsList}
               />
             </Container>
           </HStack>

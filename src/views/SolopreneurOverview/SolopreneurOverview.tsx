@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
@@ -57,6 +58,12 @@ interface SolopreneurOverviewInteractionProps {
 }
 
 export interface SolopreneurOverviewProps {
+  /** Colors and sizing for every P&L chart in this view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /**
+   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
+   * of `chartConfig.colors` is omitted.
+   */
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
@@ -70,6 +77,7 @@ export interface SolopreneurOverviewProps {
 
 export const SolopreneurOverview = ({
   interactionProps,
+  chartConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -80,7 +88,7 @@ export const SolopreneurOverview = ({
 
   return (
 
-    <ProfitAndLoss asContainer={false}>
+    <ProfitAndLoss asContainer={false} chartConfig={chartConfig} chartColorsList={chartColorsList}>
       <View
         title={stringOverrides?.title || t('common:label.overview', 'Overview')}
         showHeader
@@ -100,7 +108,6 @@ export const SolopreneurOverview = ({
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
-          chartColorsList={chartColorsList}
           reportingVariant={
             slotProps?.profitAndLoss?.summaries?.reportingVariant
             ?? SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT
@@ -114,7 +121,6 @@ export const SolopreneurOverview = ({
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
-            stylingProps={{ chartColorsList }}
             stringOverrides={stringOverrides?.summaryCards?.expenses}
             interactionProps={interactionProps?.summaryCards?.expenses}
           />

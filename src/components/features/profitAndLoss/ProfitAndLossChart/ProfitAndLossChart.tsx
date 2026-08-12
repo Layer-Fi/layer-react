@@ -24,6 +24,7 @@ import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { useProfitAndLossTrendChartConfig } from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
@@ -47,10 +48,23 @@ export interface ProfitAndLossChartProps {
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
 
-export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndLossChartProps) => {
+const DEFAULT_BAR_SIZE = 20
+const DEFAULT_COMPACT_BAR_SIZE = 10
+
+export const ProfitAndLossChart = ({
+  tagFilter,
+  hideLegend = false,
+}: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
-  const barSize = compactView ? 10 : 20
+  const { barSize: configuredBarSize, compactBarSize: configuredCompactBarSize } =
+    useProfitAndLossTrendChartConfig()
+
+  const fullBarSize = configuredBarSize ?? DEFAULT_BAR_SIZE
+  const compactBarSize = configuredCompactBarSize
+    ?? (configuredBarSize === undefined ? DEFAULT_COMPACT_BAR_SIZE : Math.round(configuredBarSize / 2))
+
+  const barSize = compactView ? compactBarSize : fullBarSize
   const cursorWidth = barSize * 2.2
 
   const { getColor, business } = useLayerContext()

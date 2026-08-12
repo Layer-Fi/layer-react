@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
-import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import {
+  ProfitAndLossChartConfigProvider,
+  useProfitAndLossChartPalette,
+} from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import {
   SummariesContent,
   type SummariesTiles,
@@ -39,6 +41,7 @@ export type ProfitAndLossSummariesSlotProps = {
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
+  /** Per-instance palette override. Wins over `chartConfig.colors` from the enclosing view. */
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
@@ -74,7 +77,12 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
+  const revenuePalette = useProfitAndLossChartPalette('revenue', chartColorsList)
+  const expensesPalette = useProfitAndLossChartPalette('expenses', chartColorsList)
+
+  const revenueSwatchColor = revenuePalette.palette[0]
+  const expensesSwatchColor = expensesPalette.palette[0]
+  const uncategorizedSwatchColor = revenuePalette.uncategorized
 
   const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <ProfitAndLossSummaryTileFooter
@@ -83,18 +91,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_revenue', 'Categorized revenue'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: revenueSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    revenueSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -105,18 +114,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_expenses', 'Categorized expenses'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: expensesSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    expensesSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -197,21 +207,24 @@ export function ProfitAndLossSummaries({
   }), [revenue, expenses, net])
 
   return (
-    <SummariesContent
-      mode={mode}
-      tiles={tiles}
-      actionable={actionable}
-      chartColorsList={chartColorsList}
-      slots={{
-        unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
-          ? [
-            <TransactionsToReview
-              key='transactions-to-review'
-              onClick={onTransactionsToReviewClick}
-            />,
-          ]
-          : undefined,
-      }}
-    />
+    // Carries the per-instance override to the mini charts, which read the config themselves.
+    // A no-op pass-through when `chartColorsList` is unset, since the provider merges over its parent.
+    <ProfitAndLossChartConfigProvider chartColorsList={chartColorsList}>
+      <SummariesContent
+        mode={mode}
+        tiles={tiles}
+        actionable={actionable}
+        slots={{
+          unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
+            ? [
+              <TransactionsToReview
+                key='transactions-to-review'
+                onClick={onTransactionsToReviewClick}
+              />,
+            ]
+            : undefined,
+        }}
+      />
+    </ProfitAndLossChartConfigProvider>
   )
 }

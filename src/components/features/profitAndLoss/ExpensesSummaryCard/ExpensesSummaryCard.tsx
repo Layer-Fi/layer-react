@@ -12,25 +12,18 @@ import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOver
 
 import './expensesSummaryCard.scss'
 
-type StylingProps = {
-  chartColorsList?: string[]
-}
-
 export type ExpensesSummaryCardProps = {
-  stylingProps?: StylingProps
   interactionProps?: SummaryCardInteractionProps
   stringOverrides?: SummaryCardStringOverrides
   className?: string
 }
 
 export const ExpensesSummaryCard = ({
-  stylingProps,
   interactionProps,
   stringOverrides,
   className,
 }: ExpensesSummaryCardProps) => {
   const { t } = useTranslation()
-  const { chartColorsList } = stylingProps ?? {}
 
   const slots = useSummaryCardSlots({
     defaultTitle: t('common:label.expenses', 'Expenses'),
@@ -53,7 +46,6 @@ export const ExpensesSummaryCard = ({
         scope='expenses'
         hideClose
         hideHeader
-        chartColorsList={chartColorsList}
         stringOverrides={resolvedStringOverrides}
         slotProps={{ detailedTable: { showTypeColumn: false } }}
       />
