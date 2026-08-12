@@ -1,30 +1,21 @@
 import { createContext, type ReactNode, useContext, useMemo } from 'react'
 
 import { type Scope } from '@internal-types/features/profitAndLoss/profitAndLoss'
-import {
-  type ProfitAndLossChartConfig,
-} from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/styles/chartColors'
 
-const EMPTY_CONFIG: ProfitAndLossChartConfig = {}
+const EMPTY: ProfitAndLossChartConfig = {}
 
-const ProfitAndLossChartConfigContext = createContext<ProfitAndLossChartConfig>(EMPTY_CONFIG)
+const ProfitAndLossChartConfigContext = createContext<ProfitAndLossChartConfig>(EMPTY)
 
-type ProfitAndLossChartConfigProviderProps = {
+type ProviderProps = {
   children: ReactNode
   chartConfig?: ProfitAndLossChartConfig
-  /**
-   * Legacy flat palette applied to both scopes. Normalized into `colors` here so the fallback
-   * chain lives in exactly one place.
-   */
+  /** Legacy flat palette. Folded into both scopes here, so the fallback lives in one place. */
   chartColorsList?: string[]
 }
 
-export const ProfitAndLossChartConfigProvider = ({
-  children,
-  chartConfig,
-  chartColorsList,
-}: ProfitAndLossChartConfigProviderProps) => {
+export const ProfitAndLossChartConfigProvider = ({ children, chartConfig, chartColorsList }: ProviderProps) => {
   const value = useMemo(() => ({
     ...chartConfig,
     colors: {
@@ -41,19 +32,11 @@ export const ProfitAndLossChartConfigProvider = ({
   )
 }
 
-export type ProfitAndLossChartPalette = {
-  /** Never empty — falls back to the built-in palette. */
-  palette: string[]
-  /** Resolved color for uncategorized line items, for swatches and mini chart slices. */
-  uncategorized: string
-  /**
-   * Set only when the consumer overrode it. `undefined` keeps the dot-pattern fill on donut
-   * slices and the default uncategorized icon in the detailed table.
-   */
-  uncategorizedOverride: string | undefined
-}
-
-export const useProfitAndLossChartPalette = (scope: Scope): ProfitAndLossChartPalette => {
+/**
+ * `uncategorizedOverride` is set only when the consumer overrode it — `undefined` keeps the
+ * dot-pattern donut fill and the default uncategorized table icon.
+ */
+export const useProfitAndLossChartPalette = (scope: Scope) => {
   const { colors } = useContext(ProfitAndLossChartConfigContext)
   const scoped = scope === 'revenue' ? colors?.revenue : colors?.expenses
   const uncategorized = colors?.uncategorized
@@ -65,12 +48,11 @@ export const useProfitAndLossChartPalette = (scope: Scope): ProfitAndLossChartPa
   }), [scoped, uncategorized])
 }
 
-const EMPTY_TREND_CHART_CONFIG: NonNullable<ProfitAndLossChartConfig['trendChart']> = {}
+const EMPTY_TREND: NonNullable<ProfitAndLossChartConfig['trendChart']> = {}
+const EMPTY_DONUT: NonNullable<ProfitAndLossChartConfig['donutChart']> = {}
 
 export const useProfitAndLossTrendChartConfig = () =>
-  useContext(ProfitAndLossChartConfigContext).trendChart ?? EMPTY_TREND_CHART_CONFIG
-
-const EMPTY_DONUT_CHART_CONFIG: NonNullable<ProfitAndLossChartConfig['donutChart']> = {}
+  useContext(ProfitAndLossChartConfigContext).trendChart ?? EMPTY_TREND
 
 export const useProfitAndLossDonutChartConfig = () =>
-  useContext(ProfitAndLossChartConfigContext).donutChart ?? EMPTY_DONUT_CHART_CONFIG
+  useContext(ProfitAndLossChartConfigContext).donutChart ?? EMPTY_DONUT

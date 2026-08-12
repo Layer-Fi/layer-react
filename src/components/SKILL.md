@@ -151,51 +151,32 @@ Three rules that follow:
 
 ## Customization: never drill a styling prop
 
-When a consumer needs to customize how something looks, **the number of new props on a view must
-not grow with the number of knobs**, and no component may declare a prop it doesn't itself use.
-Adding `chartColors`, `barSize`, `lineStrokeWidth`, `donutInnerRadius`, `donutOuterRadius` to a
-view and forwarding all five through four layers is the anti-pattern this section exists to
-prevent — it makes the seventh knob cost a prop declaration in seven files.
+**No component may declare a prop it doesn't use**, and view props must not grow one-per-knob.
+Work down this list, stopping at the first that fits:
 
-Work down this list and stop at the first mechanism that fits:
+1. **A CSS custom property**, if CSS can reach it — the default, and it costs zero props. Works
+   inside SVG charts too: a CSS declaration beats the presentation attribute the chart library
+   renders, which is how `--pnl-chart-line-stroke-width` sets the P&L line width.
+2. **`slots` / `slotProps`**, if it configures one named element of *one* component (above).
+3. **A config context**, as soon as a value would otherwise pass through a component that doesn't
+   use it. One nested type, a provider at the domain root, a narrow hook per leaf.
+4. **A prop**, only when the value stops at that component.
 
-1. **A CSS custom property**, if CSS can reach it. This is the default and costs zero props.
-   `--pnl-chart-line-color`, `--bar-color-income`, and the `--text-*` sizes all work this way; a
-   consumer sets them from their own stylesheet. It still applies inside SVG charts — a CSS
-   declaration overrides the presentation attribute a chart library renders, which is how
-   `--pnl-chart-line-stroke-width` controls the P&L line.
-2. **`slots` / `slotProps`**, if the knob configures one named internal element of *one*
-   component. See the section above.
-3. **A config context**, if one value must reach several components across a feature subtree.
-   Define one nested config type, mount a provider at the domain root, and have each leaf read a
-   narrow hook. Intermediate components declare nothing.
-4. **A prop**, only when the value belongs to that component alone and goes no further.
+`ProfitAndLossChartConfigContext` is the reference for (3):
 
-Reach for (3) as soon as a value would otherwise pass through a component that doesn't use it.
-The canonical example is `ProfitAndLossChartConfigContext`
-(`@providers/features/profitAndLoss/ProfitAndLossChartConfigContext`):
+- One nested field per chart — `{ colors, trendChart: { barSize }, donutChart: { … } }` — so a new
+  knob adds a **field, never a prop**. Group by element, like `slotProps` keys.
+- The provider mounts at the domain root (`ProfitAndLoss`, one `chartConfig` prop), so every view
+  under it gets the behaviour without being wired up.
+- Leaves read purpose-named hooks that return **resolved** values, keeping defaults and legacy
+  fallbacks in one place instead of at each call site.
+- `@ui`/`@blocks` never read a feature context. A shared block keeps its `stylingProps`; the
+  `@features` component reads the context and builds them — `DetailedChart` is shared by P&L and
+  tax estimates for exactly this reason.
 
-- One nested type per concern — `{ colors, trendChart: { barSize }, donutChart: { innerRadius } }`
-  — so a new knob adds a **field**, never a prop. Group by the element being configured, the same
-  way `slotProps` keys name elements.
-- The provider mounts once at the domain root (`ProfitAndLoss`), which takes a single
-  `chartConfig` prop. Every view under it — including ones nobody thought to wire up — gets the
-  behaviour for free.
-- Leaves read purpose-named hooks (`useProfitAndLossChartPalette(scope)`), never the raw context,
-  and the hooks return **resolved** values so defaults and legacy fallbacks live in exactly one
-  place instead of at each call site.
-- `@ui` and `@blocks` never read a feature context. A `@blocks` component shared across domains
-  keeps its `stylingProps`; the `@features` component that renders it reads the context and builds
-  those props. `DetailedChart` is shared by P&L and tax estimates for precisely this reason.
-
-Two follow-on rules:
-
-- **A styling override must not silently disable responsive behaviour.** If a value has a
-  responsive default (`barSize` is 20, or 10 when compact), an override has to preserve both
-  branches — expose `compactBarSize` or derive it — not collapse them into one fixed value.
-- **Prefer widening an existing config over adding a sibling prop.** `chartColors` next to
-  `chartColorsList` is two APIs for one thing; fold the older one into the new shape at the
-  provider boundary and keep it working.
+Two traps: an override must not silently disable a responsive default (`barSize` needs
+`compactBarSize`, not one fixed width), and a new config supersedes an old prop by folding it in
+at the provider, not by shipping both as siblings.
 
 ## Forms
 

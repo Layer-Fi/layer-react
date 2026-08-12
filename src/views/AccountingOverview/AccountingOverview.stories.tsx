@@ -2,6 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { AccountingOverview, type AccountingOverviewProps } from '@views/AccountingOverview/AccountingOverview'
 
+import { CUSTOM_CHART_CONFIG } from '@testUtils/storybook/controls/chartConfig'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,
@@ -14,20 +15,6 @@ import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@testUtils
 type AccountingOverviewStoryArgs = SummariesStoryArgs
   & Pick<AccountingOverviewProps, 'chartConfig'>
   & { showTitle: boolean }
-
-/**
- * One config reaches every P&L chart in the view: the summaries mini donuts and tile swatches,
- * the trend chart, and both scope donuts — each scope with its own palette.
- */
-const CUSTOM_CHART_CONFIG: AccountingOverviewProps['chartConfig'] = {
-  colors: {
-    revenue: ['#0B7285', '#1098AD', '#22B8CF'],
-    expenses: ['#A61E4D', '#C2255C', '#E64980'],
-    uncategorized: '#FFD43B',
-  },
-  trendChart: { barSize: 36 },
-  donutChart: { innerRadius: '70%' },
-}
 
 const summariesControls = makeSummariesStoryControls({
   stringOverridesPath: 'stringOverrides.profitAndLoss.summaries',

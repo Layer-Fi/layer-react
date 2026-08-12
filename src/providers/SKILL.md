@@ -103,16 +103,15 @@ every consumer on any change, and narrow units can be mounted independently wher
 
 ### Config contexts replace prop drilling
 
-A consumer-facing config (string overrides, styling, feature flags) that several components in a
-subtree need is a **context**, not a prop threaded through the components in between. Mount the
-provider at the domain root — `ProfitAndLoss` takes one `chartConfig` prop and mounts
-`ProfitAndLossChartConfigProvider` — and let leaves read purpose-named hooks. Have those hooks
-return **resolved** values, so defaults and legacy fallbacks live in one place rather than at each
-call site: `useProfitAndLossChartPalette(scope)` folds the older flat `chartColorsList` into the
-newer scoped `colors` so no consumer has to know both exist.
+A consumer-facing config (string overrides, styling, feature flags) that several components need
+is a **context**, never a prop threaded through the components in between. Mount the provider at
+the domain root (`ProfitAndLoss` takes one `chartConfig` and mounts
+`ProfitAndLossChartConfigProvider`) and have leaves read purpose-named hooks that return
+**resolved** values — `useProfitAndLossChartPalette(scope)` folds the legacy flat
+`chartColorsList` into the scoped `colors`, so no call site has to know both exist.
 
-`src/components/SKILL.md` has the full decision list — CSS variable, then `slotProps`, then a
-config context, then a plain prop — and the rules for what a `@blocks` component may read.
+`src/components/SKILL.md` has the full decision list — CSS variable, `slotProps`, config context,
+plain prop.
 
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,

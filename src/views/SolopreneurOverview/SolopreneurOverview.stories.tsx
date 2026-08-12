@@ -4,6 +4,7 @@ import { SolopreneurOverview, type SolopreneurOverviewProps } from '@views/Solop
 
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
+import { CUSTOM_CHART_CONFIG } from '@testUtils/storybook/controls/chartConfig'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,
@@ -29,20 +30,6 @@ const summariesControls = makeSummariesStoryControls({
 
 type SolopreneurOverviewStoryArgs = SummariesStoryArgs
   & Pick<SolopreneurOverviewProps, 'chartConfig' | 'chartColorsList'>
-
-/**
- * One config reaches every P&L chart in the view: the summaries mini donuts and tile swatches,
- * the expenses summary card donut, and the P&L summary card trend chart.
- */
-const CUSTOM_CHART_CONFIG: SolopreneurOverviewProps['chartConfig'] = {
-  colors: {
-    revenue: ['#0B7285', '#1098AD', '#22B8CF'],
-    expenses: ['#A61E4D', '#C2255C', '#E64980'],
-    uncategorized: '#FFD43B',
-  },
-  trendChart: { barSize: 28 },
-  donutChart: { innerRadius: '70%' },
-}
 
 const meta: Meta<SolopreneurOverviewStoryArgs> = {
   title: 'Views/Overview/Solopreneur',
