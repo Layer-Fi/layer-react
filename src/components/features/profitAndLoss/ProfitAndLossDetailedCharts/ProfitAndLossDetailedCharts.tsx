@@ -3,13 +3,10 @@ import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { DetailedChartStringOverrides } from '@internal-types/features/profitAndLoss/profitAndLoss'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { humanizeTitle } from '@utils/features/profitAndLoss/profitAndLoss'
-import {
-  useProfitAndLossChartPalette,
-  useProfitAndLossDonutChartConfig,
-} from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { createPnlLineItemComparator, type Scope, type SelectedLineItem, type SidebarScope } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { type ColorSelector } from '@ui/Chart/seriesTypes'
@@ -23,6 +20,7 @@ import { ProfitAndLossDetailReportModal } from '@features/profitAndLoss/ProfitAn
 import { usePnlDetailedTableRows } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
 import { isLineItemUncategorized, mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
+import { resolveProfitAndLossChartPalette } from '@features/profitAndLoss/utils'
 
 import './profitAndLossDetailedCharts.scss'
 
@@ -64,6 +62,7 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose = false,
   hideHeader = false,
   showDatePicker = false,
+  chartConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -72,7 +71,8 @@ export const ProfitAndLossDetailedCharts = ({
   hideClose?: boolean
   hideHeader?: boolean
   showDatePicker?: boolean
-  /** Per-instance palette override. Wins over `chartConfig.colors` from the enclosing view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /** Legacy flat palette. `chartConfig.colors` takes precedence when both are supplied. */
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
   slotProps?: ProfitAndLossDetailedChartsSlotProps
@@ -138,8 +138,8 @@ export const ProfitAndLossDetailedCharts = ({
   }, [])
 
   const { palette, uncategorized, uncategorizedOverride } =
-    useProfitAndLossChartPalette(activeScope, chartColorsList)
-  const { innerRadius, outerRadius } = useProfitAndLossDonutChartConfig()
+    resolveProfitAndLossChartPalette(activeScope, chartConfig, chartColorsList)
+  const { innerRadius, outerRadius } = chartConfig?.donutChart ?? {}
 
   const typeColorMapping = useMemo(
     () => mapTypesToColors<PnlChartLineItem>(chartData, palette, uncategorized),

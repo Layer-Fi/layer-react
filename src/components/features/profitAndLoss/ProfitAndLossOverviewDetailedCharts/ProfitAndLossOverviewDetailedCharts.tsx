@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -13,6 +14,11 @@ type ProfitAndLossOverviewDetailedChartsVariant = 'accounting' | 'bookkeeping'
 interface ProfitAndLossOverviewDetailedChartsProps {
   variant: ProfitAndLossOverviewDetailedChartsVariant
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
+  chartConfigByScope?: {
+    revenue?: ProfitAndLossChartConfig
+    expenses?: ProfitAndLossChartConfig
+  }
+  chartColorsList?: string[]
 }
 
 type PnlToggleOption = 'revenue' | 'expenses'
@@ -20,6 +26,8 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const ProfitAndLossOverviewDetailedCharts = ({
   variant,
   detailedChartsStringOverrides,
+  chartConfigByScope,
+  chartColorsList,
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
   const [pnlToggle, setPnlToggle] = useState<PnlToggleOption>('expenses')
@@ -66,6 +74,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
             <ProfitAndLoss.DetailedCharts
               scope={pnlToggle}
               hideClose={true}
+              chartConfig={chartConfigByScope?.[pnlToggle]}
+              chartColorsList={chartColorsList}
               stringOverrides={detailedChartsStringOverrides}
             />
           </Container>
@@ -76,6 +86,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               <ProfitAndLoss.DetailedCharts
                 scope='revenue'
                 hideClose={true}
+                chartConfig={chartConfigByScope?.revenue}
+                chartColorsList={chartColorsList}
                 stringOverrides={detailedChartsStringOverrides}
               />
             </Container>
@@ -83,6 +95,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               <ProfitAndLoss.DetailedCharts
                 scope='expenses'
                 hideClose={true}
+                chartConfig={chartConfigByScope?.expenses}
+                chartColorsList={chartColorsList}
                 stringOverrides={detailedChartsStringOverrides}
               />
             </Container>

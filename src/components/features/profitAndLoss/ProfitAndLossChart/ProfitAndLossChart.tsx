@@ -16,6 +16,7 @@ import {
   XAxis,
 } from 'recharts'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { isDateAllowedToBrowse } from '@utils/features/business/business'
 import { areChartWindowsEqual, getChartWindow } from '@utils/features/profitAndLoss/chartWindow'
@@ -24,7 +25,6 @@ import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { useProfitAndLossTrendChartConfig } from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
@@ -44,6 +44,7 @@ export interface ProfitAndLossChartProps {
     values: string[]
   }
   hideLegend?: boolean
+  chartConfig?: ProfitAndLossChartConfig
 }
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
@@ -54,11 +55,11 @@ const DEFAULT_COMPACT_BAR_SIZE = 10
 export const ProfitAndLossChart = ({
   tagFilter,
   hideLegend = false,
+  chartConfig,
 }: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
-  const { barSize: configuredBarSize, compactBarSize: configuredCompactBarSize } =
-    useProfitAndLossTrendChartConfig()
+  const { barSize: configuredBarSize, compactBarSize: configuredCompactBarSize } = chartConfig?.trendChart ?? {}
 
   const fullBarSize = configuredBarSize ?? DEFAULT_BAR_SIZE
   const compactBarSize = configuredCompactBarSize

@@ -2,13 +2,16 @@ import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { type Scope } from '@internal-types/features/profitAndLoss/profitAndLoss'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
-import { useProfitAndLossChartPalette } from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
 import { mapTypesToColors } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import { resolveProfitAndLossChartPalette } from '@features/profitAndLoss/utils'
 
 type ProfitAndLossMiniChartProps = {
   data: PnlChartLineItem[]
   scope: Scope
+  chartConfig?: ProfitAndLossChartConfig
+  chartColorsList?: string[]
 }
 
 const CHART_DIMENSION = 52
@@ -18,8 +21,10 @@ const OUTER_RADIUS = 16
 export function ProfitAndLossSummariesMiniChart({
   data,
   scope,
+  chartConfig,
+  chartColorsList,
 }: ProfitAndLossMiniChartProps) {
-  const { palette, uncategorized } = useProfitAndLossChartPalette(scope)
+  const { palette, uncategorized } = resolveProfitAndLossChartPalette(scope, chartConfig, chartColorsList)
 
   const chartData = useMemo(() => data.map(x => ({
     ...x,

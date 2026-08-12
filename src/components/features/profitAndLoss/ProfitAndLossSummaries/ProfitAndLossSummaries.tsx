@@ -1,10 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  ProfitAndLossChartConfigProvider,
-  useProfitAndLossChartPalette,
-} from '@providers/features/profitAndLoss/ProfitAndLossChartConfigContext/ProfitAndLossChartConfigContext'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import {
   SummariesContent,
   type SummariesTiles,
@@ -15,6 +12,7 @@ import type { Variants } from '@features/profitAndLoss/ProfitAndLossSummaries/ty
 import { ProfitAndLossSummaryTileFooter } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooter'
 import { TransactionsToReview } from '@features/profitAndLoss/TransactionsToReview/TransactionsToReview'
 import { UncategorizedTransactionsBadge } from '@features/profitAndLoss/UncategorizedTransactionsBadge/UncategorizedTransactionsBadge'
+import { resolveProfitAndLossChartPalette } from '@features/profitAndLoss/utils'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -30,6 +28,7 @@ export type ProfitAndLossSummariesReportingVariant =
   | { type: 'cashflow', showProfitAndLossBreakdown?: boolean }
 
 export type ProfitAndLossSummariesSlotProps = {
+  chartConfig?: ProfitAndLossChartConfig
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
    * @deprecated This prop no longer has any effect; the summaries tiles size themselves
@@ -41,7 +40,8 @@ export type ProfitAndLossSummariesSlotProps = {
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
-  /** Per-instance palette override. Wins over `chartConfig.colors` from the enclosing view. */
+  chartConfig?: ProfitAndLossChartConfig
+  /** Legacy flat palette. `chartConfig.colors` takes precedence when both are supplied. */
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
@@ -64,6 +64,7 @@ export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
+  chartConfig,
   chartColorsList,
   reportingVariant,
   onTransactionsToReviewClick,
@@ -77,8 +78,8 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const revenuePalette = useProfitAndLossChartPalette('revenue', chartColorsList)
-  const expensesPalette = useProfitAndLossChartPalette('expenses', chartColorsList)
+  const revenuePalette = resolveProfitAndLossChartPalette('revenue', chartConfig, chartColorsList)
+  const expensesPalette = resolveProfitAndLossChartPalette('expenses', chartConfig, chartColorsList)
 
   const revenueSwatchColor = revenuePalette.palette[0]
   const expensesSwatchColor = expensesPalette.palette[0]
@@ -207,24 +208,22 @@ export function ProfitAndLossSummaries({
   }), [revenue, expenses, net])
 
   return (
-    // Carries the per-instance override to the mini charts, which read the config themselves.
-    // A no-op pass-through when `chartColorsList` is unset, since the provider merges over its parent.
-    <ProfitAndLossChartConfigProvider chartColorsList={chartColorsList}>
-      <SummariesContent
-        mode={mode}
-        tiles={tiles}
-        actionable={actionable}
-        slots={{
-          unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
-            ? [
-              <TransactionsToReview
-                key='transactions-to-review'
-                onClick={onTransactionsToReviewClick}
-              />,
-            ]
-            : undefined,
-        }}
-      />
-    </ProfitAndLossChartConfigProvider>
+    <SummariesContent
+      mode={mode}
+      tiles={tiles}
+      actionable={actionable}
+      chartConfig={chartConfig}
+      chartColorsList={chartColorsList}
+      slots={{
+        unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
+          ? [
+            <TransactionsToReview
+              key='transactions-to-review'
+              onClick={onTransactionsToReviewClick}
+            />,
+          ]
+          : undefined,
+      }}
+    />
   )
 }

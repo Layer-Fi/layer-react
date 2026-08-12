@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { SolopreneurOverview, type SolopreneurOverviewProps } from '@views/SolopreneurOverview/SolopreneurOverview'
 
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
@@ -29,7 +30,8 @@ const summariesControls = makeSummariesStoryControls({
 })
 
 type SolopreneurOverviewStoryArgs = SummariesStoryArgs
-  & Pick<SolopreneurOverviewProps, 'chartConfig' | 'chartColorsList'>
+  & Pick<SolopreneurOverviewProps, 'chartColorsList'>
+  & { chartConfig?: ProfitAndLossChartConfig }
 
 const meta: Meta<SolopreneurOverviewStoryArgs> = {
   title: 'Views/Overview/Solopreneur',
@@ -52,9 +54,16 @@ const meta: Meta<SolopreneurOverviewStoryArgs> = {
   },
   render: args => (
     <SolopreneurOverview
-      chartConfig={args.chartConfig}
       stringOverrides={{ profitAndLossSummaries: buildSummariesStringOverrides(args) }}
-      slotProps={{ profitAndLoss: { summaries: buildSummariesSlotProps(args) } }}
+      slotProps={{
+        profitAndLoss: {
+          summaries: { ...buildSummariesSlotProps(args), chartConfig: args.chartConfig },
+        },
+        summaryCards: {
+          profitAndLoss: { chartConfig: args.chartConfig },
+          expenses: { chartConfig: args.chartConfig },
+        },
+      }}
     />
   ),
 }

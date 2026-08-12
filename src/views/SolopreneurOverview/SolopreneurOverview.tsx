@@ -58,12 +58,6 @@ interface SolopreneurOverviewInteractionProps {
 }
 
 export interface SolopreneurOverviewProps {
-  /** Colors and sizing for every P&L chart in this view. */
-  chartConfig?: ProfitAndLossChartConfig
-  /**
-   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
-   * of `chartConfig.colors` is omitted.
-   */
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
@@ -71,13 +65,16 @@ export interface SolopreneurOverviewProps {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
     }
+    summaryCards?: {
+      profitAndLoss?: { chartConfig?: ProfitAndLossChartConfig }
+      expenses?: { chartConfig?: ProfitAndLossChartConfig }
+    }
   }
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
 export const SolopreneurOverview = ({
   interactionProps,
-  chartConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -88,7 +85,7 @@ export const SolopreneurOverview = ({
 
   return (
 
-    <ProfitAndLoss asContainer={false} chartConfig={chartConfig} chartColorsList={chartColorsList}>
+    <ProfitAndLoss asContainer={false}>
       <View
         title={stringOverrides?.title || t('common:label.overview', 'Overview')}
         showHeader
@@ -108,6 +105,8 @@ export const SolopreneurOverview = ({
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
+          chartColorsList={chartColorsList}
           reportingVariant={
             slotProps?.profitAndLoss?.summaries?.reportingVariant
             ?? SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT
@@ -117,10 +116,15 @@ export const SolopreneurOverview = ({
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
+            stylingProps={{ chartConfig: slotProps?.summaryCards?.profitAndLoss?.chartConfig }}
             stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
+            stylingProps={{
+              chartConfig: slotProps?.summaryCards?.expenses?.chartConfig,
+              chartColorsList,
+            }}
             stringOverrides={stringOverrides?.summaryCards?.expenses}
             interactionProps={interactionProps?.summaryCards?.expenses}
           />

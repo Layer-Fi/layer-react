@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import {
   type SummaryCardInteractionProps,
@@ -12,13 +13,20 @@ import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOver
 
 import './expensesSummaryCard.scss'
 
+type StylingProps = {
+  chartConfig?: ProfitAndLossChartConfig
+  chartColorsList?: string[]
+}
+
 export type ExpensesSummaryCardProps = {
+  stylingProps?: StylingProps
   interactionProps?: SummaryCardInteractionProps
   stringOverrides?: SummaryCardStringOverrides
   className?: string
 }
 
 export const ExpensesSummaryCard = ({
+  stylingProps,
   interactionProps,
   stringOverrides,
   className,
@@ -46,6 +54,8 @@ export const ExpensesSummaryCard = ({
         scope='expenses'
         hideClose
         hideHeader
+        chartConfig={stylingProps?.chartConfig}
+        chartColorsList={stylingProps?.chartColorsList}
         stringOverrides={resolvedStringOverrides}
         slotProps={{ detailedTable: { showTypeColumn: false } }}
       />

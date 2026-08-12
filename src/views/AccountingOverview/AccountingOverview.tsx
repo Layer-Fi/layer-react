@@ -43,18 +43,17 @@ export interface AccountingOverviewProps {
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
-  /** Colors and sizing for every P&L chart in this view. */
-  chartConfig?: ProfitAndLossChartConfig
-  /**
-   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
-   * of `chartConfig.colors` is omitted.
-   */
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   slotProps?: {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
+      }
     }
   }
 }
@@ -64,7 +63,6 @@ export const AccountingOverview = ({
   showTitle = true,
   onTransactionsToReviewClick,
   middleBanner,
-  chartConfig,
   chartColorsList,
   stringOverrides,
   tagFilter = undefined,
@@ -85,8 +83,6 @@ export const AccountingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
-      chartConfig={chartConfig}
-      chartColorsList={chartColorsList}
     >
       <View
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
@@ -104,6 +100,8 @@ export const AccountingOverview = ({
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
+          chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           reportingVariant={profitAndLossSummariesReportingVariant}
           variants={profitAndLossSummariesVariants}
@@ -121,6 +119,7 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}
             hideLegend
+            chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
           />
         </Container>
         {middleBanner && (
@@ -131,6 +130,11 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
+          chartColorsList={chartColorsList}
         />
       </View>
     </ProfitAndLoss>

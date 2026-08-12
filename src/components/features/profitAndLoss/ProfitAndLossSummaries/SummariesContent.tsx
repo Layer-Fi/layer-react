@@ -1,6 +1,7 @@
 import { type ReactNode, useContext, useMemo } from 'react'
 
 import { type SidebarScope } from '@internal-types/features/profitAndLoss/profitAndLoss'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import {
@@ -36,6 +37,8 @@ type SummariesContentProps = {
   mode: ProfitAndLossSummariesMode
   tiles: SummariesTiles
   actionable?: boolean
+  chartConfig?: ProfitAndLossChartConfig
+  chartColorsList?: string[]
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
   }
@@ -45,6 +48,8 @@ export function SummariesContent({
   mode,
   tiles,
   actionable = false,
+  chartConfig,
+  chartColorsList,
   slots,
 }: SummariesContentProps) {
   const { sidebarScope, setSidebarScope } = useContext(ProfitAndLossContext)
@@ -74,7 +79,14 @@ export function SummariesContent({
   const renderChart = (chartData: PnlChartLineItem[] | undefined, scope: SidebarScope) => {
     if (!chartData || !scope) return null
 
-    return <ProfitAndLossSummariesMiniChart data={chartData} scope={scope} />
+    return (
+      <ProfitAndLossSummariesMiniChart
+        data={chartData}
+        scope={scope}
+        chartConfig={chartConfig}
+        chartColorsList={chartColorsList}
+      />
+    )
   }
 
   return (

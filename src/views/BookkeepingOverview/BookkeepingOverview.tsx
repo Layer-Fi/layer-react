@@ -80,15 +80,14 @@ export interface BookkeepingOverviewProps {
   slotProps?: {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
+      }
     }
   }
 
-  /** Colors and sizing for every P&L chart in this view. */
-  chartConfig?: ProfitAndLossChartConfig
-  /**
-   * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
-   * of `chartConfig.colors` is omitted.
-   */
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
   tagFilter?: TagOption
@@ -102,7 +101,6 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
-  chartConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -138,8 +136,6 @@ export const BookkeepingOverview = ({
     <ProfitAndLoss
       asContainer={false}
       tagFilter={profitAndLossTagFilter}
-      chartConfig={chartConfig}
-      chartColorsList={chartColorsList}
     >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
@@ -209,6 +205,8 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
+                chartColorsList={chartColorsList}
                 reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
               />
@@ -216,12 +214,18 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Chart
               hideLegend
               tagFilter={profitAndLossTagFilter}
+              chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
             />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
+          chartColorsList={chartColorsList}
         />
       </View>
       {isCalendlyVisible && (
