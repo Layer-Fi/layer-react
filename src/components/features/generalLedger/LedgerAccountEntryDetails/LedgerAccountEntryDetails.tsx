@@ -14,6 +14,7 @@ const legacyClassNames = createLegacyClassNames({
   'details:root': 'Layer__ledger-account__entry-details',
   'details:header': 'Layer__ledger-account__entry-details__header',
   'details:lineItems': 'Layer__ledger-account__entry-details__line-items',
+  'details:lineItemsTable': 'Layer__ledger-account__entry-details__table',
 })
 
 export { LedgerEntrySourceDetailView } from '@blocks/LedgerEntry/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
@@ -39,6 +40,7 @@ export const LedgerAccountEntryDetails = ({
         root: legacyClassNames('details:root'),
         header: legacyClassNames('details:header'),
         lineItems: legacyClassNames('details:lineItems'),
+        lineItemsTable: legacyClassNames('details:lineItemsTable'),
       }}
     />
   )

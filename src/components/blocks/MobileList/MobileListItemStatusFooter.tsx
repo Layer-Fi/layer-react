@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import type { LucideIcon } from 'lucide-react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
@@ -8,9 +9,9 @@ import { Span } from '@ui/Typography/Text'
 import './mobileListItemStatusFooter.scss'
 
 const legacyClassNames = createLegacyClassNames({
-  Layer__MobileListItemStatusFooter: ['Layer__UI__MobileListItemStatusFooter', 'Layer__InvoicesMobileListItem__StatusFooter'],
-  Layer__MobileListItemStatusFooter__Icon: ['Layer__UI__MobileListItemStatusFooter__Icon', 'Layer__InvoicesMobileListItem__StatusFooter__Icon'],
-  Layer__MobileListItemStatusFooter__Dot: ['Layer__UI__MobileListItemStatusFooter__Dot', 'Layer__InvoicesMobileListItem__StatusFooter__Dot'],
+  Layer__MobileListItemStatusFooter: 'Layer__UI__MobileListItemStatusFooter',
+  Layer__MobileListItemStatusFooter__Icon: 'Layer__UI__MobileListItemStatusFooter__Icon',
+  Layer__MobileListItemStatusFooter__Dot: 'Layer__UI__MobileListItemStatusFooter__Dot',
 })
 
 type MobileListItemStatusFooterProps = {
@@ -20,6 +21,11 @@ type MobileListItemStatusFooterProps = {
   slots?: {
     Icon?: LucideIcon
   }
+  /**
+   * Class names the calling feature shipped under. Several mobile lists render this footer now but
+   * named their elements differently before, so each passes its own.
+   */
+  legacyClassNames?: { root?: string, icon?: string, dot?: string }
 }
 
 export const MobileListItemStatusFooter = ({
@@ -27,15 +33,21 @@ export const MobileListItemStatusFooter = ({
   text,
   subText,
   slots,
+  legacyClassNames: callerLegacyClassNames,
 }: MobileListItemStatusFooterProps) => {
   const Icon = slots?.Icon
 
   return (
-    <HStack align='center' justify='space-between' className={legacyClassNames('Layer__MobileListItemStatusFooter')} data-status-variant={variant}>
+    <HStack
+      align='center'
+      justify='space-between'
+      className={classNames(legacyClassNames('Layer__MobileListItemStatusFooter'), callerLegacyClassNames?.root)}
+      data-status-variant={variant}
+    >
       <HStack align='center' gap='2xs'>
         {Icon
-          ? <Icon size={14} className={legacyClassNames('Layer__MobileListItemStatusFooter__Icon')} />
-          : <span className={legacyClassNames('Layer__MobileListItemStatusFooter__Dot')} />}
+          ? <Icon size={14} className={classNames(legacyClassNames('Layer__MobileListItemStatusFooter__Icon'), callerLegacyClassNames?.icon)} />
+          : <span className={classNames(legacyClassNames('Layer__MobileListItemStatusFooter__Dot'), callerLegacyClassNames?.dot)} />}
         <Span weight='bold' size='sm'>{text}</Span>
       </HStack>
       {subText && <Span variant='subtle' size='sm'>{subText}</Span>}

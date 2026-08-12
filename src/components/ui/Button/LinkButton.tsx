@@ -63,6 +63,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
             `variant:${variant}`,
             icon && 'state:icon',
             fullWidth && 'state:fullWidth',
+            restProps.isDisabled && 'state:disabled',
           ),
           className,
         )}

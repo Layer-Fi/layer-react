@@ -30,7 +30,7 @@ export interface LedgerEntryDetailsProps {
    * Class names the calling feature shipped under. Journal and ledger-account details render the
    * same component now but named their elements differently before, so each passes its own.
    */
-  legacyClassNames?: { root?: string, header?: string, lineItems?: string }
+  legacyClassNames?: { root?: string, header?: string, lineItems?: string, lineItemsTable?: string }
 }
 
 export const LedgerEntryDetails = ({
@@ -131,6 +131,7 @@ export const LedgerEntryDetails = ({
       >
         <LedgerEntryDetailsLineItemsTable
           className={legacyClassNames?.lineItems}
+          tableClassName={legacyClassNames?.lineItemsTable}
           lineItems={entry?.lineItems}
           isLoading={isLoading}
           isError={isError}

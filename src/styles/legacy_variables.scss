@@ -24,6 +24,10 @@
 .Layer__component ::placeholder,
 .Layer__Portal ::placeholder,
 .Layer__view ::placeholder,
-.Layer__drawer ::placeholder {
+.Layer__UI__Tooltip ::placeholder,
+.Layer__toasts-container ::placeholder,
+.Layer__drawer ::placeholder,
+.Layer__variables ::placeholder,
+.Layer__tasks-component ::placeholder {
   color: var(--input-placeholder-color);
 }

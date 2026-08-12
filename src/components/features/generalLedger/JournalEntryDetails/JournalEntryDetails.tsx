@@ -13,6 +13,7 @@ import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/L
 const legacyClassNames = createLegacyClassNames({
   'details:root': 'Layer__journal__entry-details',
   'details:lineItems': 'Layer__journal__entry-details__line-items',
+  'details:lineItemsTable': 'Layer__journal__entry-details__table',
 })
 
 export const JournalEntryDetails = () => {
@@ -43,6 +44,7 @@ export const JournalEntryDetails = () => {
       legacyClassNames={{
         root: legacyClassNames('details:root'),
         lineItems: legacyClassNames('details:lineItems'),
+        lineItemsTable: legacyClassNames('details:lineItemsTable'),
       }}
       onReverse={entry?.entryType === EntryType.Manual ? handleReverse : undefined}
     />

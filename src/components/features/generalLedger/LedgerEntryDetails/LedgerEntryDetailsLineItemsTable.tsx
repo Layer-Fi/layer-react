@@ -18,7 +18,6 @@ import { type LedgerEntryDetailsLineItemsTableStringOverrides } from '@features/
 import './ledgerEntryDetailsLineItemsTable.scss'
 
 const COMPONENT_NAME = 'LedgerEntryLineItems'
-const LEGACY_TABLE_CLASS_NAMES = 'Layer__journal__entry-details__table Layer__ledger-account__entry-details__table'
 
 type LineItem = LedgerEntry['lineItems'][number]
 
@@ -32,6 +31,8 @@ type LineItemRow = {
 
 interface LedgerEntryDetailsLineItemsTableProps {
   className?: string
+  /** The name the calling feature's table shipped under; journal and ledger-account differ. */
+  tableClassName?: string
   lineItems: ReadonlyArray<LineItem> | undefined
   isLoading?: boolean
   isError?: boolean
@@ -64,6 +65,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
   isError,
   stringOverrides,
   className,
+  tableClassName,
 }: LedgerEntryDetailsLineItemsTableProps) => {
   const { t } = useTranslation()
 
@@ -145,7 +147,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
     <div className={classNames('Layer__LedgerEntryDetails__LineItems', className)}>
       <SimpleDataTable<LineItemRow>
         componentName={COMPONENT_NAME}
-        className={LEGACY_TABLE_CLASS_NAMES}
+        className={tableClassName}
         ariaLabel={t('generalLedger:LedgerEntryDetails.LedgerEntryDetailsLineItemsTable.label.line_items', 'Line items')}
         columnConfig={columnConfig}
         data={rows}
