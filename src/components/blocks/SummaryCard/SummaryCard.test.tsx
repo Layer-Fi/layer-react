@@ -1,3 +1,4 @@
+import { type ReactElement } from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
@@ -5,13 +6,14 @@ import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
+const renderSummaryCard = (ui: ReactElement) => render(ui, { wrapper: LayerTestProvider })
+
 describe('SummaryCard', () => {
   it('renders a string title as a heading and the children as content', () => {
-    render(
+    renderSummaryCard(
       <SummaryCard slots={{ title: 'Revenue' }}>
         <span>Card content</span>
       </SummaryCard>,
-      { wrapper: LayerTestProvider },
     )
 
     expect(screen.getByRole('heading', { name: 'Revenue' })).toBeInTheDocument()
@@ -19,11 +21,10 @@ describe('SummaryCard', () => {
   })
 
   it('renders a non-string title node as-is, without wrapping it in a heading', () => {
-    render(
+    renderSummaryCard(
       <SummaryCard slots={{ title: <button type='button'>Custom title</button> }}>
         <span>Card content</span>
       </SummaryCard>,
-      { wrapper: LayerTestProvider },
     )
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument()
@@ -31,11 +32,10 @@ describe('SummaryCard', () => {
   })
 
   it('renders a string subtitle and omits the subtitle wrapper when none is given', () => {
-    const { rerender } = render(
+    const { rerender } = renderSummaryCard(
       <SummaryCard slots={{ title: 'Revenue', subtitle: 'Last 30 days' }}>
         <span>Card content</span>
       </SummaryCard>,
-      { wrapper: LayerTestProvider },
     )
 
     expect(screen.getByText('Last 30 days')).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('SummaryCard', () => {
   })
 
   it('renders legend and primaryAction when provided', () => {
-    render(
+    renderSummaryCard(
       <SummaryCard
         slots={{
           title: 'Revenue',
@@ -60,7 +60,6 @@ describe('SummaryCard', () => {
       >
         <span>Card content</span>
       </SummaryCard>,
-      { wrapper: LayerTestProvider },
     )
 
     expect(screen.getByText('Legend content')).toBeInTheDocument()
