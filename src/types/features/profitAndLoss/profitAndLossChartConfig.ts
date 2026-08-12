@@ -14,6 +14,7 @@ export type ProfitAndLossChartConfig = {
     /** Bar width below 620px wide. Defaults to half `barSize`. */
     compactBarSize?: number
   }
+  /** The scope donuts in the detailed charts and the expenses card, not the summary mini donuts. */
   donutChart?: {
     innerRadius?: string | number
     outerRadius?: string | number

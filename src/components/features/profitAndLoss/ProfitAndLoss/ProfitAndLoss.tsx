@@ -23,7 +23,11 @@ type Props = PropsWithChildren<{
   comparisonConfig?: unknown
   reportingBasis?: ReportingBasis
   asContainer?: boolean
-  /** Colors and sizing for every P&L chart in this subtree. */
+  /**
+   * Chart styling for this subtree. `colors` reaches every P&L chart; the sizing sections are
+   * per-chart, since the fixed-size summary mini donuts take pixel radii rather than the
+   * detailed donut's percentages.
+   */
   chartConfig?: ProfitAndLossChartConfig
   /**
    * Flat palette applied to both scopes. Fully supported; it is the fallback for whichever side
