@@ -168,15 +168,17 @@ Work down this list, stopping at the first that fits:
   knob adds a **field, never a prop**. Group by element, like `slotProps` keys.
 - The provider mounts at the domain root (`ProfitAndLoss`, one `chartConfig` prop), so every view
   under it gets the behaviour without being wired up.
-- Leaves read purpose-named hooks that return **resolved** values, keeping defaults and legacy
-  fallbacks in one place instead of at each call site.
+- Leaves read purpose-named hooks that return **resolved** values. The provider normalizes the
+  legacy root `chartColorsList`; public leaf components pass their retained `chartColorsList` to
+  the hook only as a per-instance override.
 - `@ui`/`@blocks` never read a feature context. A shared block keeps its `stylingProps`; the
   `@features` component reads the context and builds them — `DetailedChart` is shared by P&L and
   tax estimates for exactly this reason.
 
 Two traps: an override must not silently disable a responsive default (`barSize` needs
-`compactBarSize`, not one fixed width), and a new config supersedes an old prop by folding it in
-at the provider, not by shipping both as siblings.
+`compactBarSize`, not one fixed width), and when compatibility requires retaining an old prop,
+normalize it into the new config at the provider boundary instead of threading both
+representations through the component tree.
 
 ## Forms
 

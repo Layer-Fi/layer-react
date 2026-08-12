@@ -107,8 +107,9 @@ A consumer-facing config (string overrides, styling, feature flags) that several
 is a **context**, never a prop threaded through the components in between. Mount the provider at
 the domain root (`ProfitAndLoss` takes one `chartConfig` and mounts
 `ProfitAndLossChartConfigProvider`) and have leaves read purpose-named hooks that return
-**resolved** values — `useProfitAndLossChartPalette(scope)` folds the legacy flat
-`chartColorsList` into the scoped `colors`, so no call site has to know both exist.
+**resolved** values. `ProfitAndLossChartConfigProvider` normalizes the legacy root
+`chartColorsList` into scoped colors; public leaf components may pass their retained
+`chartColorsList` to `useProfitAndLossChartPalette` as a per-instance override.
 
 `src/components/SKILL.md` has the full decision list — CSS variable, `slotProps`, config context,
 plain prop.
