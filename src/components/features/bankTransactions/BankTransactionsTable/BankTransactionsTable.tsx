@@ -32,6 +32,32 @@ import { ExpandedBankTransactionRow } from '@features/bankTransactions/ExpandedB
 
 import './bankTransactionsTable.scss'
 
+const LEGACY_CELL = 'Layer__bank-transactions__table-cell'
+const LEGACY_HEADER = 'Layer__bank-transactions__table-header'
+
+const LEGACY_CLASS_NAMES = {
+  Date: {
+    cell: `${LEGACY_CELL} Layer__bank-transaction-table__date-col`,
+    column: `${LEGACY_HEADER} ${LEGACY_HEADER}--primary Layer__bank-transactions__date-col`,
+  },
+  Transaction: {
+    cell: `${LEGACY_CELL} Layer__bank-transactions__tx-col`,
+    column: LEGACY_HEADER,
+  },
+  Account: {
+    cell: `${LEGACY_CELL} Layer__bank-transactions__account-col`,
+    column: LEGACY_HEADER,
+  },
+  Amount: {
+    cell: `${LEGACY_CELL} ${LEGACY_CELL}--amount Layer__table-cell--amount Layer__table-cell__amount-col Layer__bank-transactions__amount-col`,
+    column: LEGACY_HEADER,
+  },
+  Category: {
+    cell: `${LEGACY_CELL} Layer__bank-transactions__category-col Layer__table-cell__category-col Layer__bank-transaction-row__actions-cell`,
+    column: LEGACY_HEADER,
+  },
+} as const
+
 const COMPONENT_NAME = 'BankTransactionsTable'
 
 enum BankTransactionColumns {
@@ -74,18 +100,21 @@ const getColumnConfig = ({
     header: stringOverrides?.dateColumnHeaderText || t('common:label.date', 'Date'),
     cell: (row: BankTransactionRowType) => <BankTransactionDateCell bankTransaction={row.original} />,
     isRowHeader: true,
+    legacyClassNames: LEGACY_CLASS_NAMES.Date,
   },
   {
     id: BankTransactionColumns.Transaction,
     header: stringOverrides?.transactionColumnHeaderText
       || t('common:label.transaction', 'Transaction'),
     cell: (row: BankTransactionRowType) => <BankTransactionDescriptionCell bankTransaction={row.original} />,
+    legacyClassNames: LEGACY_CLASS_NAMES.Transaction,
   },
   {
     id: BankTransactionColumns.Account,
     header: stringOverrides?.accountColumnHeaderText
       || t('common:label.account', 'Account'),
     cell: (row: BankTransactionRowType) => <BankTransactionAccountCell bankTransaction={row.original} />,
+    legacyClassNames: LEGACY_CLASS_NAMES.Account,
   },
   {
     id: BankTransactionColumns.Amount,
@@ -94,6 +123,7 @@ const getColumnConfig = ({
     alignment: Alignment.Right,
     pinning: 'right',
     cell: (row: BankTransactionRowType) => <BankTransactionAmountCell bankTransaction={row.original} />,
+    legacyClassNames: LEGACY_CLASS_NAMES.Amount,
   },
   {
     id: BankTransactionColumns.Category,
@@ -104,6 +134,7 @@ const getColumnConfig = ({
         || t('common:label.category', 'Category')),
     pinning: 'right',
     preventRowClick: true,
+    legacyClassNames: LEGACY_CLASS_NAMES.Category,
     cell: (row: BankTransactionRowType) => (
       <BankTransactionCategoryCell
         row={row}

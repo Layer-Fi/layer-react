@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
@@ -8,6 +9,10 @@ import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/
 import { UnifiedReportComboBoxOption } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/unifiedReportComboBoxOption'
 
 import './unifiedReportsMobileSelectionDrawer.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReportsMobileSelectionDrawer: 'Layer__ReportsMobileSelectionDrawer',
+})
 
 export function UnifiedReportsMobileSelectionDrawer() {
   const { t } = useTranslation()
@@ -39,7 +44,7 @@ export function UnifiedReportsMobileSelectionDrawer() {
   }, [setBaseReport])
 
   return (
-    <HStack className='Layer__UnifiedReportsMobileSelectionDrawer'>
+    <HStack className={legacyClassNames('Layer__UnifiedReportsMobileSelectionDrawer')}>
       <MobileSelectionDrawerWithTrigger<UnifiedReportComboBoxOption>
         ariaLabel={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.reports_navigation', 'Reports navigation')}
         heading={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.select_report', 'Select report')}

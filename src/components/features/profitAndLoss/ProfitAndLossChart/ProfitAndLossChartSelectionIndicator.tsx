@@ -4,7 +4,13 @@ type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
   selected?: boolean
 }
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+
 import './profitAndLossChartSelectionIndicator.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ProfitAndLossChart__SelectionIndicator: 'Layer__profit-and-loss-chart__selection-indicator',
+})
 
 const X_AXIS_LABEL_INSET = 14
 
@@ -27,7 +33,7 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
 
   return (
     <rect
-      className='Layer__ProfitAndLossChart__SelectionIndicator'
+      className={legacyClassNames('Layer__ProfitAndLossChart__SelectionIndicator')}
       rx={borderRadius}
       ry={borderRadius}
       x={x - margin}

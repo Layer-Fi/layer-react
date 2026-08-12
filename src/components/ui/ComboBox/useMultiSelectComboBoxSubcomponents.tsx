@@ -9,12 +9,17 @@ import {
 } from 'react-select'
 
 import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ComboBoxMultiValue: 'Layer__select__multi-value',
+})
 
 const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly T[] | null | undefined): number => {
   if (!selectedValues) {
@@ -53,7 +58,7 @@ const buildCustomMultiValue = <T extends ComboBoxOption>() => {
     }
 
     return (
-      <components.MultiValue {...restProps} className={COMBO_BOX_CLASS_NAMES.MULTI_VALUE}>
+      <components.MultiValue {...restProps} className={legacyClassNames('Layer__ComboBoxMultiValue')}>
         {children}
       </components.MultiValue>
     )

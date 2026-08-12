@@ -1,21 +1,25 @@
 import { forwardRef } from 'react'
+import classNames from 'classnames'
 import {
   Link as ReactAriaLink,
   type LinkProps as ReactAriaLinkProps,
 } from 'react-aria-components/Link'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { BUTTON_CLASS_NAMES, type ButtonStyleProps } from '@ui/Button/Button'
+import { type ButtonStyleProps } from '@ui/Button/Button'
+import { legacyClassNames } from '@ui/Button/Button'
 
 import './button.scss'
 
 type LinkButtonProps = Omit<ReactAriaLinkProps, 'className'> & ButtonStyleProps & {
   external?: true
+  className?: string
 }
 
 export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
   function LinkButton({
     children,
+    className,
     ellipsis,
     icon,
     inset,
@@ -52,7 +56,16 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
         href={href}
         target={effectiveTarget}
         rel={effectiveRel}
-        className={BUTTON_CLASS_NAMES.DEFAULT}
+        className={classNames(
+          legacyClassNames(
+            'Layer__UI__Button',
+            'state:asLink',
+            `variant:${variant}`,
+            icon && 'state:icon',
+            fullWidth && 'state:fullWidth',
+          ),
+          className,
+        )}
         ref={ref}
       >
         {children}

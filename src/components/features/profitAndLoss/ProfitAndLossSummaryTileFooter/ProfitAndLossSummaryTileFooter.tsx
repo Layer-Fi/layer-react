@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 
+import { legacyClassNames } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooterRow'
 import {
   ProfitAndLossSummaryTileFooterRow,
   type ProfitAndLossSummaryTileFooterRowConfig,
@@ -21,7 +22,7 @@ export function ProfitAndLossSummaryTileFooter({
   slots,
 }: ProfitAndLossSummaryTileFooterProps) {
   return (
-    <div className='Layer__ProfitAndLossSummaryTileFooter'>
+    <div className={legacyClassNames('Layer__ProfitAndLossSummaryTileFooter')}>
       {rows.map(row => (
         <ProfitAndLossSummaryTileFooterRow key={row.label} row={row} isLoading={isLoading} />
       ))}

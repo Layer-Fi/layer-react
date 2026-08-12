@@ -1,0 +1,29 @@
+/*
+ * Custom properties that v0.1.122 declared and current styles no longer do. Consumers read these in
+ * their own CSS, so the names stay resolvable at the same values.
+ */
+.Layer__component,
+.Layer__Portal,
+.Layer__view,
+.Layer__UI__Tooltip,
+.Layer__toasts-container,
+.Layer__drawer,
+.Layer__variables,
+.Layer__tasks-component {
+  --table-bg: var(--color-white);
+  --text-heading-page: var(--text-heading);
+  --text-heading-view: var(--text-heading-secondary);
+  --input-placeholder-color: var(--color-base-500);
+}
+
+/*
+ * v0.1.122 read this from a bare `::placeholder` rule, which styled placeholders across the whole
+ * host page. Scoped here so setting the token still works without the library reaching outside its
+ * own tree again.
+ */
+.Layer__component ::placeholder,
+.Layer__Portal ::placeholder,
+.Layer__view ::placeholder,
+.Layer__drawer ::placeholder {
+  color: var(--input-placeholder-color);
+}

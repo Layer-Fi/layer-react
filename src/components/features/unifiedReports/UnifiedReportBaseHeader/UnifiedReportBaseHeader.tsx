@@ -1,5 +1,6 @@
 import { type UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
@@ -11,6 +12,10 @@ import { UnifiedReportHeaderButtons } from '@features/unifiedReports/UnifiedRepo
 import { UnifiedReportsMegaMenu } from '@features/unifiedReports/UnifiedReportsMegaMenu/UnifiedReportsMegaMenu'
 
 import './unifiedReportBaseHeader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReports__BaseHeader: 'Layer__UnifiedReport__BaseHeader',
+})
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width <= BREAKPOINTS.MOBILE ? 'Mobile' : 'Desktop'
@@ -55,7 +60,7 @@ export const UnifiedReportBaseHeader = ({ navigationVariant }: UnifiedReportBase
   const { isDesktop } = useSizeClass()
 
   return (
-    <VStack className='Layer__UnifiedReports__BaseHeader'>
+    <VStack className={legacyClassNames('Layer__UnifiedReports__BaseHeader')}>
       {isDesktop && (
         <ResponsiveComponent
           resolveVariant={resolveVariant}

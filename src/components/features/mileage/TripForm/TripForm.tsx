@@ -6,6 +6,7 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, TripPurpose } from '@schemas/features/mileage/trip'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -18,6 +19,16 @@ import { TripPurposeComboBox } from '@features/mileage/TripPurposeComboBox/TripP
 import { VehicleSelector } from '@features/mileage/VehicleSelector/VehicleSelector'
 
 import './tripForm.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'field:tripDate': 'Layer__TripForm__Field__TripDate',
+  'field:start': 'Layer__TripForm__Field__StartAddress',
+  'field:end': 'Layer__TripForm__Field__EndAddress',
+  'field:distance': 'Layer__TripForm__Field__Distance',
+  'field:purpose': 'Layer__TripForm__Field__Purpose',
+  'field:description': 'Layer__TripForm__Field__Description',
+  'field:vehicle': 'Layer__TripForm__Field__Vehicle',
+})
 
 export type TripFormProps = {
   trip?: Trip
@@ -61,7 +72,7 @@ export const TripForm = (props: TripFormProps) => {
             label={t('mileage:TripForm.label.trip_date', 'Trip date')}
             inline={isInline}
             isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field'
+            className={classNames('Layer__TripForm__Field', legacyClassNames('field:tripDate'))}
           />
         )}
       </form.AppField>
@@ -74,7 +85,7 @@ export const TripForm = (props: TripFormProps) => {
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline={isInline}
-            className='Layer__TripForm__Field'
+            className={classNames('Layer__TripForm__Field', legacyClassNames('field:start'))}
           />
         )}
       </form.Field>
@@ -87,7 +98,7 @@ export const TripForm = (props: TripFormProps) => {
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline={isInline}
-            className='Layer__TripForm__Field'
+            className={classNames('Layer__TripForm__Field', legacyClassNames('field:end'))}
           />
         )}
       </form.Field>
@@ -101,7 +112,7 @@ export const TripForm = (props: TripFormProps) => {
             maxDecimalPlaces={2}
             allowEmpty
             placeholder={t('mileage:TripForm.label.enter_distance', 'Enter distance')}
-            className='Layer__TripForm__Field'
+            className={classNames('Layer__TripForm__Field', legacyClassNames('field:distance'))}
             errorText={isDistanceIncalculable
               ? t('mileage:TripForm.error.distance_incalculable', 'No route found between these addresses.')
               : undefined}
@@ -117,7 +128,7 @@ export const TripForm = (props: TripFormProps) => {
               onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
               isReadOnly={isReadOnly}
               inline={isInline}
-              className='Layer__TripForm__Field'
+              className={classNames('Layer__TripForm__Field', legacyClassNames('field:purpose'))}
             />
             <FieldErrors errors={field.state.meta.errors} className='Layer__TripForm__FieldError' />
           </>
@@ -131,7 +142,7 @@ export const TripForm = (props: TripFormProps) => {
             inline={isInline}
             isReadOnly={isReadOnly}
             placeholder={t('common:action.add_description', 'Add description')}
-            className='Layer__TripForm__Field'
+            className={classNames('Layer__TripForm__Field', legacyClassNames('field:description'))}
           />
         )}
       </form.AppField>
@@ -144,7 +155,7 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             inline={isInline}
             placeholder={t('mileage:TripForm.action.add_vehicle_label', 'Add vehicle')}
-            containerClassName='Layer__TripForm__Field'
+            containerClassName={classNames('Layer__TripForm__Field', legacyClassNames('field:vehicle'))}
           />
         )}
       </form.Field>

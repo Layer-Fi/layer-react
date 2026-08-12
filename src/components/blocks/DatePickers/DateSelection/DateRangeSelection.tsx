@@ -2,11 +2,17 @@ import classNames from 'classnames'
 
 import { type DateRange } from '@utils/shared/date/dateRange'
 import type { DatePreset, SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'
 import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
 import './dateRangeSelection.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__DateRangeSelection': 'Layer__GlobalDateRangeSelection',
+  'Layer__DateRangeSelection--compact': 'Layer__GlobalDateRangeSelection--compact',
+})
 
 type DateRangeSelectionProps = {
   dateRange: DateRange
@@ -31,8 +37,8 @@ export const DateRangeSelection = ({
 
   return (
     <div
-      className={classNames('Layer__DateRangeSelection Layer__variables', {
-        'Layer__DateRangeSelection--compact': isCompact,
+      className={classNames(legacyClassNames('Layer__DateRangeSelection'), 'Layer__variables', {
+        [legacyClassNames('Layer__DateRangeSelection--compact')]: isCompact,
       })}
     >
       <DateSelectionComboBox

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { type BookkeepingPeriod } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { tPlural } from '@utils/shared/i18n/plural'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -13,6 +14,11 @@ import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
 import './taskStatusBadge.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'badge:label': 'Layer__TasksBadge__Label',
+  'Layer__TasksBadge': 'Layer__tasks__badge',
+})
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -97,13 +103,14 @@ const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
   const dataProperties = toDataProperties({ status: color, icononly: !display })
 
   return (
-    <HStack className='Layer__TasksBadge' {...dataProperties}>
+    <HStack className={legacyClassNames('Layer__TasksBadge')} {...dataProperties}>
       <HStack align='center' justify='center' className='Layer__TasksBadge__Icon' data-status={color}>
         {icon}
       </HStack>
       {display
         ? (
           <P
+            className={legacyClassNames('badge:label')}
             size='sm'
             status={color}
             invert={color === 'warning' ? true : undefined}

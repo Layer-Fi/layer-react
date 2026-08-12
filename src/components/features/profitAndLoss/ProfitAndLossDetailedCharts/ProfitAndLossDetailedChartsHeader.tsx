@@ -1,4 +1,5 @@
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BackButton } from '@ui/Button/BackButton'
@@ -9,6 +10,11 @@ import { Span } from '@ui/Typography/Text'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 import './profitAndLossDetailedChartsHeader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'header:date': 'Layer__ProfitAndLossDetailedChartsHeader__date',
+  'Layer__ProfitAndLossDetailedChartsHeader': 'Layer__profit-and-loss-detailed-charts__header',
+})
 
 type HeaderTitleProps = {
   title: string
@@ -24,7 +30,7 @@ const HeaderTitle = ({ isMobile, title, dateLabel, showDatePicker }: HeaderTitle
         {title}
       </Heading>
       {!showDatePicker && (
-        <Span size='sm' variant='subtle'>
+        <Span size='sm' variant='subtle' className={legacyClassNames('header:date')}>
           {dateLabel}
         </Span>
       )}
@@ -82,7 +88,7 @@ export const ProfitAndLossDetailedChartsHeader = ({
   }
 
   return (
-    <header className='Layer__ProfitAndLossDetailedChartsHeader'>
+    <header className={legacyClassNames('Layer__ProfitAndLossDetailedChartsHeader')}>
       {!isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
       <HeaderTitle {...headerProps} />
       {isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}

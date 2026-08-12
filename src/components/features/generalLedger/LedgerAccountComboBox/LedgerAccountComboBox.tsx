@@ -1,13 +1,25 @@
 import { useCallback, useMemo } from 'react'
+import classNames from 'classnames'
 
 import { type CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
 import { type CategoriesListMode } from '@schemas/features/categorization/categoryList'
 import { type Classification } from '@schemas/features/categorization/classification'
 import { findCategoryOption } from '@utils/features/categorization/categories'
 import { flattenCategories, withoutExclusions } from '@utils/features/categorization/categoryOptions'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
+
+/*
+ * The wrapper div became a shared `ComboBoxField`, so neither generation of this name survives.
+ * Both are emitted here, at this one usage, rather than on `ComboBoxField` itself — that is shared
+ * with every other combo box field in the package.
+ */
+const legacyClassNames = createLegacyClassNames({
+  'Layer__LedgerAccountComboBox': 'Layer__LedgerAccountCombobox',
+  'Layer__LedgerAccountComboBox--inline': 'Layer__LedgerAccountCombobox--inline',
+})
 
 type LedgerAccountComboBoxProps = {
   label: string
@@ -54,7 +66,15 @@ export const LedgerAccountComboBox = ({
   }, [onValueChange])
 
   return (
-    <ComboBoxField label={label} className={className} inline={inline} showLabel={showLabel}>
+    <ComboBoxField
+      label={label}
+      className={classNames(
+        legacyClassNames('Layer__LedgerAccountComboBox', inline && 'Layer__LedgerAccountComboBox--inline'),
+        className,
+      )}
+      inline={inline}
+      showLabel={showLabel}
+    >
       {controlProps => (
         <ComboBox
           {...controlProps}

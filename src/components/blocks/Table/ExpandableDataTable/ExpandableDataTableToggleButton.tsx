@@ -2,9 +2,15 @@ import { useCallback, useContext } from 'react'
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { ExpandableDataTableContext } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
+
+const legacyClassNames = createLegacyClassNames({
+  'toggle:default': ['Layer__expand-collapse-all-rows-btn', 'Layer__expand-collpase-all-rows-btn'],
+  'toggle:iconOnly': 'Layer__expand-collapse-all-rows-btn--sm',
+})
 
 type ExpandableDataTableToggleButtonProps = {
   icon?: boolean
@@ -34,6 +40,7 @@ export const ExpandableDataTableToggleButton = ({ icon }: ExpandableDataTableTog
 
   return (
     <Button
+      className={legacyClassNames(resolvedIcon ? 'toggle:iconOnly' : 'toggle:default')}
       icon={resolvedIcon}
       variant='outlined'
       onPress={onClickExpandOrCollapse}

@@ -1,16 +1,33 @@
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
+import classNames from 'classnames'
 import {
   Button as ReactAriaButton,
   type ButtonProps as ReactAriaButtonProps,
 } from 'react-aria-components/Button'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './button.scss'
+
+export const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__Button': 'Layer__btn',
+  'variant:solid': 'Layer__btn--primary',
+  'variant:branded': 'Layer__btn--primary',
+  'variant:outlined': 'Layer__btn--secondary',
+  'variant:ghost': 'Layer__btn--tertiary',
+  'variant:text': ['Layer__btn--tertiary', 'Layer__text-btn'],
+  'state:icon': ['Layer__btn--icon-only', 'Layer__icon-btn'],
+  'state:fullWidth': 'Layer__btn--full-width',
+  'state:tooltip': 'Layer__btn--with-tooltip',
+  'state:disabled': 'Layer__btn--disabled',
+  'state:processing': 'Layer__btn--processing',
+  'state:asLink': 'Layer__btn--as-link',
+})
 
 export const BUTTON_CLASS_NAMES = {
   DEFAULT: 'Layer__UI__Button',
@@ -53,7 +70,9 @@ export type ButtonStyleProps = {
   underline?: true
 }
 
-export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps
+export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps & {
+  className?: string
+}
 
 const Button = forwardRef<
   HTMLButtonElement,
@@ -61,6 +80,7 @@ const Button = forwardRef<
 >((
   {
     children,
+    className,
     ellipsis,
     icon,
     inset,
@@ -93,7 +113,18 @@ const Button = forwardRef<
     <ReactAriaButton
       {...restProps}
       {...dataProperties}
-      className={BUTTON_CLASS_NAMES.DEFAULT}
+      className={classNames(
+        legacyClassNames(
+          'Layer__UI__Button',
+          `variant:${variant}`,
+          icon && 'state:icon',
+          fullWidth && 'state:fullWidth',
+          tooltip != null && 'state:tooltip',
+          restProps.isDisabled && 'state:disabled',
+          isPending && 'state:processing',
+        ),
+        className,
+      )}
       ref={ref}
     >
       {withRenderProp(children, (node) => {

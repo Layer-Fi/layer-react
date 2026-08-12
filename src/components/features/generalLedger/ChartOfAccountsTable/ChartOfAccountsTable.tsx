@@ -28,6 +28,15 @@ import { type ChartOfAccountsTableStringOverrides } from '@features/generalLedge
 
 import './chartOfAccountsTable.scss'
 
+const LEGACY_CLASS_NAMES = {
+  AccountNumber: { column: 'Layer__chart-of-accounts--accountnumber' },
+  Name: { column: 'Layer__chart-of-accounts--name' },
+  Type: { column: 'Layer__chart-of-accounts--type' },
+  Subtype: { column: 'Layer__chart-of-accounts--subtype' },
+  Balance: { column: 'Layer__chart-of-accounts--balance' },
+  Actions: { column: 'Layer__chart-of-accounts--actions' },
+} as const
+
 enum ChartOfAccountsColumn {
   AccountNumber = 'AccountNumber',
   Name = 'Name',
@@ -38,6 +47,7 @@ enum ChartOfAccountsColumn {
 }
 
 const COMPONENT_NAME = 'chart-of-accounts'
+const LEGACY_TABLE_CLASS_NAME = 'Layer__chart-of-accounts__table'
 
 const getSubRows = (row: AugmentedLedgerAccountBalance): AugmentedLedgerAccountBalance[] | undefined => {
   return row.subAccounts.length > 0 ? asMutable(row.subAccounts) : undefined
@@ -191,6 +201,7 @@ export const ChartOfAccountsTable = ({
   const columnConfig = useMemo<ColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
       id: ChartOfAccountsColumn.AccountNumber,
+      legacyClassNames: LEGACY_CLASS_NAMES.AccountNumber,
       header: stringOverrides?.numberColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_number', 'Account Number'),
       cell: (row: Row<AugmentedLedgerAccountBalance>) =>
         renderHighlightedValue(row, row.original.accountNumber || ''),
@@ -199,6 +210,7 @@ export const ChartOfAccountsTable = ({
     const columns: ColumnConfig<AugmentedLedgerAccountBalance> = [
       {
         id: ChartOfAccountsColumn.Name,
+        legacyClassNames: LEGACY_CLASS_NAMES.Name,
         header: stringOverrides?.nameColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_name_title_case', 'Account Name'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           <Button variant='text' ellipsis onClick={e => onClickView(row, e)}>
@@ -209,6 +221,7 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Type,
+        legacyClassNames: LEGACY_CLASS_NAMES.Type,
         header: stringOverrides?.typeColumnHeader || t('common:label.type', 'Type'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           renderHighlightedNonRootValue(row, row.original.accountType?.displayName || '')
@@ -216,6 +229,7 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Subtype,
+        legacyClassNames: LEGACY_CLASS_NAMES.Subtype,
         header: stringOverrides?.subtypeColumnHeader || t('generalLedger:ChartOfAccountsTable.label.sub_type', 'Sub-Type'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           renderHighlightedNonRootValue(row, row.original.accountSubtype?.displayName || '')
@@ -223,12 +237,14 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Balance,
+        legacyClassNames: LEGACY_CLASS_NAMES.Balance,
         header: stringOverrides?.balanceColumnHeader || t('common:label.balance', 'Balance'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) =>
           renderHighlightedValue(row, formatCurrencyFromCents(row.original.balance)),
       },
       {
         id: ChartOfAccountsColumn.Actions,
+        legacyClassNames: LEGACY_CLASS_NAMES.Actions,
         header: null,
         alignment: Alignment.Right,
         cell: (row: Row<AugmentedLedgerAccountBalance>) => {
@@ -299,6 +315,7 @@ export const ChartOfAccountsTable = ({
     <>
       <ExpandableDataTable
         componentName={COMPONENT_NAME}
+        className={LEGACY_TABLE_CLASS_NAME}
         ariaLabel={t('generalLedger:ChartOfAccountsTable.label.chart_of_accounts', 'Chart of Accounts')}
         columnConfig={columnConfig}
         data={filteredAccounts ? asMutable(filteredAccounts) : undefined}

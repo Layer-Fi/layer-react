@@ -9,6 +9,7 @@ export type BaseColumn = {
   alignment?: Alignment
   isRowHeader?: boolean
   preventRowClick?: boolean
+  legacyClassNames?: { cell?: string, column?: string }
 }
 
 export type CellRenderer<TData> = ((row: Row<TData>) => React.ReactNode)
@@ -24,6 +25,7 @@ export const getColumnMeta = (col: BaseColumn) => ({
   alignment: col.alignment,
   isRowHeader: col.isRowHeader ?? false,
   preventRowClick: col.preventRowClick,
+  legacyClassNames: col.legacyClassNames,
 })
 
 export const getColumnDefs = <TData>(

@@ -1,6 +1,7 @@
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { SearchField } from '@ui/SearchField/SearchField'
@@ -14,6 +15,10 @@ import { AccountBalancesDownloadButton } from '@features/generalLedger/AccountBa
 import { type ChartOfAccountsTableStringOverrides } from '@features/generalLedger/ChartOfAccountsTableWithPanel/ChartOfAccountsTableWithPanel'
 
 import './chartOfAccountsTableHeader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__chart-of-accounts__actions': 'Layer__chart-of-accounts--actions',
+})
 
 type ChartOfAccountsTableHeaderProps = {
   asWidget: boolean
@@ -69,7 +74,7 @@ export const ChartOfAccountsTableHeader = ({
         <HeaderCol>
           {withDateControl && <LedgerDateRangeSelection />}
         </HeaderCol>
-        <HeaderCol className='Layer__chart-of-accounts__actions'>
+        <HeaderCol className={legacyClassNames('Layer__chart-of-accounts__actions')}>
           <SearchField
             label={t('generalLedger:ChartOfAccountsTableHeader.label.search_accounts', 'Search accounts')}
             value={inputValue}

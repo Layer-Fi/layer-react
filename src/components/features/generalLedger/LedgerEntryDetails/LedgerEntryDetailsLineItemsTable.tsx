@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { Alignment } from '@internal-types/utility/table'
@@ -17,6 +18,7 @@ import { type LedgerEntryDetailsLineItemsTableStringOverrides } from '@features/
 import './ledgerEntryDetailsLineItemsTable.scss'
 
 const COMPONENT_NAME = 'LedgerEntryLineItems'
+const LEGACY_TABLE_CLASS_NAMES = 'Layer__journal__entry-details__table Layer__ledger-account__entry-details__table'
 
 type LineItem = LedgerEntry['lineItems'][number]
 
@@ -29,6 +31,7 @@ type LineItemRow = {
 }
 
 interface LedgerEntryDetailsLineItemsTableProps {
+  className?: string
   lineItems: ReadonlyArray<LineItem> | undefined
   isLoading?: boolean
   isError?: boolean
@@ -60,6 +63,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
   isLoading,
   isError,
   stringOverrides,
+  className,
 }: LedgerEntryDetailsLineItemsTableProps) => {
   const { t } = useTranslation()
 
@@ -138,9 +142,10 @@ export const LedgerEntryDetailsLineItemsTable = ({
   }), [t])
 
   return (
-    <div className='Layer__LedgerEntryDetails__LineItems'>
+    <div className={classNames('Layer__LedgerEntryDetails__LineItems', className)}>
       <SimpleDataTable<LineItemRow>
         componentName={COMPONENT_NAME}
+        className={LEGACY_TABLE_CLASS_NAMES}
         ariaLabel={t('generalLedger:LedgerEntryDetails.LedgerEntryDetailsLineItemsTable.label.line_items', 'Line items')}
         columnConfig={columnConfig}
         data={rows}

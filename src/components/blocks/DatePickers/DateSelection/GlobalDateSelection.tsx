@@ -1,10 +1,15 @@
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGlobalDatePreset, useGlobalDatePresetActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'
 import { GlobalDatePicker } from '@blocks/DatePickers/GlobalDatePicker/GlobalDatePicker'
 
 import './globalDateSelection.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__GlobalDateSelection--compact': 'Layer__GlobalDateSelection--mobile',
+})
 
 type GlobalDateSelectionProps = {
   showLabels?: boolean
@@ -18,7 +23,7 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: G
   return (
     <div
       className={classNames('Layer__GlobalDateSelection Layer__variables', {
-        'Layer__GlobalDateSelection--compact': isCompact,
+        [legacyClassNames('Layer__GlobalDateSelection--compact')]: isCompact,
       })}
     >
       <DateSelectionComboBox

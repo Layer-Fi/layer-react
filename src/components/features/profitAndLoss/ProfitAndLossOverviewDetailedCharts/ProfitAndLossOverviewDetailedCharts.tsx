@@ -1,12 +1,18 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Container } from '@blocks/Layout/Container/Container'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__AccountingOverview__ProfitAndLossCharts: 'Layer__accounting-overview-profit-and-loss-charts',
+  Layer__BookkeepingOverview__ProfitAndLossCharts: 'Layer__bookkeeping-overview-profit-and-loss-charts',
+})
 
 type ProfitAndLossOverviewDetailedChartsVariant = 'accounting' | 'bookkeeping'
 
@@ -44,8 +50,8 @@ export const ProfitAndLossOverviewDetailedCharts = ({
   ), [detailedChartsStringOverrides, t])
 
   const chartsWrapperClassName = variant === 'accounting'
-    ? 'Layer__AccountingOverview__ProfitAndLossCharts'
-    : 'Layer__BookkeepingOverview__ProfitAndLossCharts'
+    ? legacyClassNames('Layer__AccountingOverview__ProfitAndLossCharts')
+    : legacyClassNames('Layer__BookkeepingOverview__ProfitAndLossCharts')
 
   const chartContainerName = variant === 'accounting'
     ? 'AccountingOverview__ProfitAndLossChart'

@@ -3,10 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice } from '@schemas/features/invoices/invoice'
 import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
 import { getCustomerName } from '@utils/features/customerVendor/customer'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
+
+const legacyClassNames = createLegacyClassNames({
+  'item:amount': 'Layer__InvoicesMobileListItem__Amount',
+})
 
 const InvoicesMobileListItemAmount = ({ invoice }: { invoice: Invoice }) => {
   const { t } = useTranslation()
@@ -15,7 +20,7 @@ const InvoicesMobileListItemAmount = ({ invoice }: { invoice: Invoice }) => {
   const isPartiallyPaid = invoice.status === InvoiceStatus.PartiallyPaid
 
   return (
-    <VStack gap='3xs' align='end'>
+    <VStack gap='3xs' align='end' className={legacyClassNames('item:amount')}>
       <Span weight='bold' numeric='tabular-nums'>{formatCurrencyFromCents(invoice.totalAmount)}</Span>
       {isPartiallyPaid && (
         <Span variant='subtle' size='sm' numeric='tabular-nums'>

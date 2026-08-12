@@ -1,10 +1,15 @@
 import { useTranslation } from 'react-i18next'
 
 import type { TaxSummarySection } from '@schemas/features/taxEstimates/summary'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Badge, type BadgeProps, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan, type MoneySpanProps } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+
+const legacyClassNames = createLegacyClassNames({
+  'equation:operator': ['Layer__TaxSummaryCard__Operator', 'Layer__TaxDetails__Operator'],
+})
 
 type EquationSize = 'md' | 'lg'
 
@@ -38,14 +43,14 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
           Badge: { children: t('common:label.total', 'Total') },
         }}
       />
-      <Span size={size} variant='subtle'>-</Span>
+      <Span className={legacyClassNames('equation:operator')} size={size} variant='subtle'>-</Span>
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesPaid, size },
           Badge: { children: t('taxEstimates:TaxSummaryCard.TaxSummaryCardEquation.label.taxes_paid', 'Taxes Paid') },
         }}
       />
-      <Span size={size} variant='subtle'>=</Span>
+      <Span className={legacyClassNames('equation:operator')} size={size} variant='subtle'>=</Span>
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesOwed, size },

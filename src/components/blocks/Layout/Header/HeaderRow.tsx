@@ -1,9 +1,14 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './headerRow.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__HeaderRow: 'Layer__header__row',
+})
 
 interface HeaderRowProps {
   className?: string
@@ -18,7 +23,7 @@ export const HeaderRow = ({ className, children, direction, style, scrollable }:
   const dataProps = toDataProperties({ direction, scrollable })
 
   return (
-    <div {...dataProps} className={classNames('Layer__HeaderRow', className)} style={style}>
+    <div {...dataProps} className={classNames(legacyClassNames('Layer__HeaderRow'), className)} style={style}>
       {children}
     </div>
   )

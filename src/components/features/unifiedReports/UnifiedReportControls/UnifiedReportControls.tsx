@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { ReportControl } from '@schemas/features/unifiedReports/reportConfig'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import {
@@ -20,6 +21,10 @@ import { UnifiedReportReportingBasisControl } from '@features/unifiedReports/Uni
 import { UnifiedReportTagControl } from '@features/unifiedReports/UnifiedReportTagControl/UnifiedReportTagControl'
 
 import './unifiedReportControls.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReports__AdditionalControls: 'Layer__UnifiedReport__AdditionalControls',
+})
 
 const COMPACT_DATE_SELECTION_BREAKPOINT = 560
 
@@ -79,7 +84,7 @@ export const UnifiedReportControls = () => {
       >
         <UnifiedReportDateSelection isCompact={isCompact} />
         {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
-          <div className='Layer__UnifiedReports__AdditionalControls'>
+          <div className={legacyClassNames('Layer__UnifiedReports__AdditionalControls')}>
             {hasYear && <GlobalYearPicker showLabel />}
             {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
             {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}

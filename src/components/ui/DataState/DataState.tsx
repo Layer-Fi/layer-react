@@ -3,11 +3,21 @@ import classNames from 'classnames'
 import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 
 import './dataState.scss'
+
+/*
+ * The title and description carried their own names until the switch to `Span`, which takes the
+ * styling from props now.
+ */
+const legacyClassNames = createLegacyClassNames({
+  'state:title': 'Layer__data-state__title',
+  'state:description': 'Layer__data-state__description',
+})
 
 export enum DataStateStatus {
   allDone = 'allDone',
@@ -95,6 +105,7 @@ export const DataState = ({
       {getIcon(status, icon)}
       <div className='Layer__data-state__text'>
         <Span
+          className={legacyClassNames('state:title')}
           size={titleSize}
           weight='bold'
           variant='placeholder'
@@ -104,6 +115,7 @@ export const DataState = ({
           {title}
         </Span>
         <Span
+          className={legacyClassNames('state:description')}
           size={inline ? 'sm' : 'md'}
           status='disabled'
           align={inline ? undefined : 'center'}

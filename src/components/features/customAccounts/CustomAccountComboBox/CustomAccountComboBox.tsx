@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@schemas/features/customAccounts/customAccount'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -12,6 +13,16 @@ import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@featu
 import { CustomAccountForm } from '@features/customAccounts/CustomAccountForm/CustomAccountForm'
 
 import './customAccountComboBox.scss'
+
+/*
+ * This field had its own wrapper class until `FormFieldShell` took over the layout. It was dropped
+ * rather than renamed, so there is no current name to sit alongside — these keys name the state that
+ * produced it and emit only the old name.
+ */
+const legacyClassNames = createLegacyClassNames({
+  'field:default': 'Layer__CustomAccountComboBox__Field',
+  'field:inline': 'Layer__CustomAccountComboBox__Field--inline',
+})
 
 type CustomAccountComboBoxProps = {
   label: string
@@ -76,7 +87,13 @@ export function CustomAccountComboBox({
 
   return (
     <VStack gap='xs' className={className}>
-      <ComboBoxField label={label} inline={inline} showLabel={showLabel} inputId={inputId}>
+      <ComboBoxField
+        label={label}
+        className={legacyClassNames('field:default', inline && 'field:inline')}
+        inline={inline}
+        showLabel={showLabel}
+        inputId={inputId}
+      >
         {controlProps => (
           <CreatableComboBox<AccountOption>
             {...controlProps}

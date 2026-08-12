@@ -12,6 +12,7 @@ import classNames from 'classnames'
 import { type Alignment } from '@internal-types/utility/table'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { DataTableSkeleton } from '@blocks/Table/DataTable/DataTableSkeleton'
+import { LEGACY_TABLE_CELL_CLASS_NAME, LEGACY_TABLE_CELL_CONTENT_CLASS_NAME, LEGACY_TABLE_CLASS_NAME, LEGACY_TABLE_HEADER_CLASS_NAME, LEGACY_TABLE_WRAPPER_CLASS_NAME } from '@blocks/Table/DataTable/legacyClassNames'
 import { type ColumnConfig, getColumnDefs } from '@blocks/Table/DataTable/utils/column'
 
 import '@blocks/Table/DataTable/dataTable.scss'
@@ -23,6 +24,7 @@ declare module '@tanstack/react-table' {
     isRowHeader: boolean
     alignment?: Alignment
     preventRowClick?: boolean
+    legacyClassNames?: { cell?: string, column?: string }
   }
 }
 
@@ -106,7 +108,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     overscan,
   })
 
-  const tableClassName = classNames(CSS_PREFIX, `Layer__UI__Table__${componentName}`)
+  const tableClassName = classNames(LEGACY_TABLE_CLASS_NAME, CSS_PREFIX, `Layer__UI__Table__${componentName}`)
 
   const renderHeader = () => (
     <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
@@ -116,8 +118,10 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
           isRowHeader={header.column.columnDef.meta?.isRowHeader}
           alignment={header.column.columnDef.meta?.alignment}
           className={classNames(
+            LEGACY_TABLE_HEADER_CLASS_NAME,
             `${CSS_PREFIX}__header-cell`,
             `Layer__UI__Table-Column__${componentName}--${header.id}`,
+            header.column.columnDef.meta?.legacyClassNames?.column,
           )}
         >
           {flexRender(header.column.columnDef.header, header.getContext())}
@@ -130,7 +134,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
   // The same full-width fallback row DataTable renders. react-aria requires one cell per column,
   // so the state sits in the first — spanning the row — and the rest are hidden placeholders.
   const renderFallbackRow = (State: React.FC) => (
-    <div className={`${CSS_PREFIX}__container`} style={{ height: renderedTableHeight }}>
+    <div className={classNames(LEGACY_TABLE_WRAPPER_CLASS_NAME, `${CSS_PREFIX}__container`)} style={{ height: renderedTableHeight }}>
       <Table className={tableClassName} aria-label={ariaLabel}>
         {renderHeader()}
         <TableBody>
@@ -161,7 +165,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
 
   if (isLoading) {
     return (
-      <div className={`${CSS_PREFIX}__container`} style={{ height: renderedTableHeight }}>
+      <div className={classNames(LEGACY_TABLE_WRAPPER_CLASS_NAME, `${CSS_PREFIX}__container`)} style={{ height: renderedTableHeight }}>
         <Table className={tableClassName} aria-label={ariaLabel}>
           {renderHeader()}
           <TableBody>
@@ -182,7 +186,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
   const totalSize = rowVirtualizer.getTotalSize()
 
   return (
-    <div className={`${CSS_PREFIX}__container`} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
+    <div className={classNames(LEGACY_TABLE_WRAPPER_CLASS_NAME, `${CSS_PREFIX}__container`)} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
       <Table className={tableClassName} aria-label={ariaLabel}>
         {renderHeader()}
         <TableBody style={{ height: totalSize }}>
@@ -201,8 +205,11 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
                     key={cell.id}
                     alignment={cell.column.columnDef.meta?.alignment}
                     className={classNames(
+                      LEGACY_TABLE_CELL_CLASS_NAME,
+                      LEGACY_TABLE_CELL_CONTENT_CLASS_NAME,
                       `${CSS_PREFIX}__cell`,
                       `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,
+                      cell.column.columnDef.meta?.legacyClassNames?.cell,
                     )}
                     style={{ ...(virtualRow.index === 0 && ({ borderTop: 'none' })) }}
                   >

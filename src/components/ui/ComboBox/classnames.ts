@@ -16,6 +16,7 @@ export const COMBO_BOX_CLASS_NAMES = {
     'Layer__ComboBoxMenu',
   ),
   MENU_LIST: 'Layer__ComboBoxMenuList',
+  MENU_PORTAL: 'Layer__ComboBoxMenuPortal',
 
   GROUP: 'Layer__ComboBoxGroup',
   GROUP_HEADING: 'Layer__ComboBoxGroupHeading',
@@ -29,6 +30,8 @@ export const COMBO_BOX_CLASS_NAMES = {
   LOADING_INDICATOR: 'Layer__ComboBoxLoadingIndicator',
   DROPDOWN_INDICATOR: 'Layer__ComboBoxDropdownIndicator',
 
+  SINGLE_VALUE: 'Layer__ComboBoxSingleValue',
   MULTI_VALUE: 'Layer__ComboBoxMultiValue',
   MULTI_VALUE_LABEL: 'Layer__ComboBoxMultiValueLabel',
+  MULTI_VALUE_REMOVE: 'Layer__ComboBoxMultiValueRemove',
 }

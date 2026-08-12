@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
 import { type LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
@@ -26,6 +27,12 @@ import { ParentAccountComboBox } from '@features/generalLedger/ParentAccountComb
 import { flattenAccounts } from '@features/generalLedger/utils'
 
 import './chartOfAccountsForm.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ChartOfAccountsForm__FormError: 'Layer__chart-of-accounts__form__error-message',
+  Layer__ChartOfAccountsForm: 'Layer__chart-of-accounts__form',
+  Layer__ChartOfAccountsForm__EditEntry: 'Layer__chart-of-accounts__form-edit-entry',
+})
 
 export type ChartOfAccountsFormMode =
   | { action: 'new' }
@@ -98,7 +105,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
   }, [])
 
   return (
-    <Form className='Layer__ChartOfAccountsForm' onSubmit={blockNativeOnSubmit}>
+    <Form className={legacyClassNames('Layer__ChartOfAccountsForm')} onSubmit={blockNativeOnSubmit}>
       <HStack className='Layer__ChartOfAccountsForm__Header' justify='space-between' align='center' gap='md'>
         <Heading level={3} size='sm'>
           {isEdit
@@ -109,7 +116,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       </HStack>
 
       {submitError && (
-        <HStack className='Layer__ChartOfAccountsForm__FormError' pb='sm' pi='md'>
+        <HStack className={legacyClassNames('Layer__ChartOfAccountsForm__FormError')} pb='sm' pi='md'>
           <DataState
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
@@ -121,7 +128,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       )}
 
       {account && (
-        <HStack className='Layer__ChartOfAccountsForm__EditEntry' justify='space-between' align='center' gap='md'>
+        <HStack className={legacyClassNames('Layer__ChartOfAccountsForm__EditEntry')} justify='space-between' align='center' gap='md'>
           <Span weight='bold'>{account.name}</Span>
           <MoneySpan weight='bold' amount={account.balance} />
         </HStack>
