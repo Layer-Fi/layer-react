@@ -1,15 +1,15 @@
 #layer-bar-stripe-pattern rect {
-  fill: var(--color-light);
+  fill: var(--bar-color-income);
 }
 
 #layer-bar-stripe-pattern line {
-  stroke: var(--color-light);
+  stroke: var(--bar-color-income);
 }
 
 #layer-bar-stripe-pattern-dark rect {
-  fill: var(--color-dark);
+  fill: var(--bar-color-expenses);
 }
 
 #layer-bar-stripe-pattern-dark line {
-  stroke: var(--color-dark);
+  stroke: var(--bar-color-expenses);
 }
