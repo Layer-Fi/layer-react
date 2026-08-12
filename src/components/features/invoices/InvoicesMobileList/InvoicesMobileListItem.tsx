@@ -9,8 +9,10 @@ import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
 
+/* Invoice-specific, so the shared content receives these rather than emitting them for every list. */
 const legacyClassNames = createLegacyClassNames({
   'item:amount': 'Layer__InvoicesMobileListItem__Amount',
+  'item:root': 'Layer__InvoicesMobileListItem',
 })
 
 const InvoicesMobileListItemAmount = ({ invoice }: { invoice: Invoice }) => {
@@ -40,6 +42,7 @@ export const InvoicesMobileListItem = ({ invoice }: { invoice: Invoice }) => {
     <MobileListItemContent
       title={invoice.invoiceNumber ?? ''}
       slots={{ Value: <InvoicesMobileListItemAmount invoice={invoice} /> }}
+      legacyClassNames={{ root: legacyClassNames('item:root') }}
     >
       <Span size='sm' ellipsis>{getCustomerName(invoice.customer)}</Span>
       {invoice.sentAt && <Span variant='subtle' size='sm'>{formatDate(invoice.sentAt)}</Span>}

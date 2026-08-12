@@ -16,13 +16,23 @@ type MobileListItemContentProps = PropsWithChildren<{
   slots?: {
     Value?: ReactNode
   }
+  /**
+   * Class names the calling feature shipped under. Several mobile lists render this content now but
+   * named their elements differently before, so each passes its own.
+   */
+  legacyClassNames?: { root?: string }
 }>
 
-export const MobileListItemContent = ({ title, slots, children }: MobileListItemContentProps) => {
+export const MobileListItemContent = ({
+  title,
+  slots,
+  legacyClassNames: callerLegacyClassNames,
+  children,
+}: MobileListItemContentProps) => {
   const { Value } = slots ?? {}
 
   return (
-    <VStack gap='3xs'>
+    <VStack gap='3xs' className={callerLegacyClassNames?.root}>
       <HStack fluid justify='space-between' align='start' gap='sm' className={legacyClassNames('Layer__MobileListItemContent__TitleRow')}>
         <Span weight='bold' ellipsis className={legacyClassNames('Layer__MobileListItemContent__Title')}>{title}</Span>
         {Value}

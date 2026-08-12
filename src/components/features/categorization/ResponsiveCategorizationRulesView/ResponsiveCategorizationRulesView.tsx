@@ -6,6 +6,7 @@ import type { CategorizationRule } from '@schemas/features/categorization/catego
 import { CategoriesListMode } from '@schemas/features/categorization/categoryList'
 import { flattenCategories } from '@utils/features/categorization/categories'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -28,6 +29,11 @@ import { getCategorizationRuleCounterpartyLabel } from '@features/categorization
 
 import './responsiveCategorizationRulesView.scss'
 
+const legacyClassNames = createLegacyClassNames({
+  Layer__ResponsiveCategorizationRulesView__EmptyState: 'Layer__CategorizationRulesView__EmptyState',
+  Layer__ResponsiveCategorizationRulesView__ErrorState: 'Layer__CategorizationRulesView__ErrorState',
+})
+
 const CategorizationRulesEmptyState = ({ isFiltered }: { isFiltered: boolean }) => {
   const { t } = useTranslation()
   return (
@@ -41,7 +47,7 @@ const CategorizationRulesEmptyState = ({ isFiltered }: { isFiltered: boolean }) 
         : t('categorization:ResponsiveCategorizationRulesView.empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
       icon={isFiltered ? <Search /> : <PencilRuler />}
       spacing
-      className='Layer__ResponsiveCategorizationRulesView__EmptyState'
+      className={legacyClassNames('Layer__ResponsiveCategorizationRulesView__EmptyState')}
     />
   )
 }
@@ -54,7 +60,7 @@ const CategorizationRulesErrorState = () => {
       title={t('categorization:ResponsiveCategorizationRulesView.error.couldnt_load_data', 'We couldn’t load your categorization rules')}
       description={t('categorization:ResponsiveCategorizationRulesView.error.load_categorization_rules', 'An error occurred while loading your categorization rules. Please check your connection and try again.')}
       spacing
-      className='Layer__ResponsiveCategorizationRulesView__ErrorState'
+      className={legacyClassNames('Layer__ResponsiveCategorizationRulesView__ErrorState')}
     />
   )
 }
@@ -160,7 +166,7 @@ export const ResponsiveCategorizationRulesView = () => {
   }), [categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState])
 
   const DesktopView = useMemo(() => (
-    <Container name='ResponsiveCategorizationRulesView'>
+    <Container name='ResponsiveCategorizationRulesView' className='Layer__CategorizationRulesView'>
       <CategorizationRulesHeader
         onGoBack={toBankTransactionsTable}
         onCreateRule={onCreateRule}

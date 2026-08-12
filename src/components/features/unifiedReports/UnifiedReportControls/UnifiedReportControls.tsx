@@ -23,7 +23,7 @@ import { UnifiedReportTagControl } from '@features/unifiedReports/UnifiedReportT
 import './unifiedReportControls.scss'
 
 const legacyClassNames = createLegacyClassNames({
-  Layer__UnifiedReports__AdditionalControls: 'Layer__UnifiedReport__AdditionalControls',
+  Layer__UnifiedReports__AdditionalControls: ['Layer__UnifiedReport__AdditionalControls', 'Layer__ProfitAndLossCompareOptions__Container'],
 })
 
 const COMPACT_DATE_SELECTION_BREAKPOINT = 560

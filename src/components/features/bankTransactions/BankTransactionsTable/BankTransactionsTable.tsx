@@ -33,27 +33,29 @@ import { ExpandedBankTransactionRow } from '@features/bankTransactions/ExpandedB
 import './bankTransactionsTable.scss'
 
 const LEGACY_CELL = 'Layer__bank-transactions__table-cell'
+/* The content name sat on an inner span; the table puts cell and content names on one element. */
+const LEGACY_CELL_WITH_CONTENT = `${LEGACY_CELL} Layer__bank-transactions__table-cell-content`
 const LEGACY_HEADER = 'Layer__bank-transactions__table-header'
 
 const LEGACY_CLASS_NAMES = {
   Date: {
-    cell: `${LEGACY_CELL} Layer__bank-transaction-table__date-col`,
+    cell: `${LEGACY_CELL_WITH_CONTENT} Layer__bank-transaction-table__date-col`,
     column: `${LEGACY_HEADER} ${LEGACY_HEADER}--primary Layer__bank-transactions__date-col`,
   },
   Transaction: {
-    cell: `${LEGACY_CELL} Layer__bank-transactions__tx-col`,
+    cell: `${LEGACY_CELL_WITH_CONTENT} Layer__bank-transactions__tx-col`,
     column: LEGACY_HEADER,
   },
   Account: {
-    cell: `${LEGACY_CELL} Layer__bank-transactions__account-col`,
+    cell: `${LEGACY_CELL_WITH_CONTENT} Layer__bank-transactions__account-col`,
     column: LEGACY_HEADER,
   },
   Amount: {
-    cell: `${LEGACY_CELL} ${LEGACY_CELL}--amount Layer__table-cell--amount Layer__table-cell__amount-col Layer__bank-transactions__amount-col`,
+    cell: `${LEGACY_CELL_WITH_CONTENT} ${LEGACY_CELL}--amount Layer__table-cell--amount Layer__table-cell__amount-col Layer__bank-transactions__amount-col`,
     column: LEGACY_HEADER,
   },
   Category: {
-    cell: `${LEGACY_CELL} Layer__bank-transactions__category-col Layer__table-cell__category-col Layer__bank-transaction-row__actions-cell`,
+    cell: `${LEGACY_CELL_WITH_CONTENT} Layer__bank-transactions__category-col Layer__table-cell__category-col Layer__bank-transaction-row__actions-cell`,
     column: LEGACY_HEADER,
   },
 } as const

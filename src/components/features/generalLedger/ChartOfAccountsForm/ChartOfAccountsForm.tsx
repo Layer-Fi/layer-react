@@ -29,9 +29,12 @@ import { flattenAccounts } from '@features/generalLedger/utils'
 import './chartOfAccountsForm.scss'
 
 const legacyClassNames = createLegacyClassNames({
-  Layer__ChartOfAccountsForm__FormError: 'Layer__chart-of-accounts__form__error-message',
-  Layer__ChartOfAccountsForm: 'Layer__chart-of-accounts__form',
-  Layer__ChartOfAccountsForm__EditEntry: 'Layer__chart-of-accounts__form-edit-entry',
+  'Layer__ChartOfAccountsForm__FormError': 'Layer__chart-of-accounts__form__error-message',
+  'Layer__ChartOfAccountsForm': 'Layer__chart-of-accounts__form',
+  'Layer__ChartOfAccountsForm__EditEntry': 'Layer__chart-of-accounts__form-edit-entry',
+  /* This form named its combobox fields; the shared field does not, so they arrive from here. */
+  'field:comboBox': 'Layer__ChartOfAccountsForm__ComboBoxField',
+  'field:comboBoxInline': ['Layer__ChartOfAccountsForm__ComboBoxField', 'Layer__ChartOfAccountsForm__ComboBoxField--inline'],
 })
 
 export type ChartOfAccountsFormMode =
@@ -69,6 +72,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
   const { isMobile } = useSizeClass()
   const inline = !isMobile
+  const comboBoxClassName = legacyClassNames(inline ? 'field:comboBoxInline' : 'field:comboBox')
 
   const cancelLabel = stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')
 
@@ -144,6 +148,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               onChange={onChangeParent}
               error={field.state.meta.errors[0]}
               inline={inline}
+              className={comboBoxClassName}
             />
           )}
         </form.Field>
@@ -181,6 +186,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   isDisabled={isEdit || parent !== null}
                   error={field.state.meta.errors[0]}
                   inline={inline}
+                  className={comboBoxClassName}
                 />
               )}
             </form.Field>
@@ -198,6 +204,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   onChange={field.handleChange}
                   error={field.state.meta.errors[0]}
                   inline={inline}
+                  className={comboBoxClassName}
                 />
               )}
             </form.Field>
@@ -212,6 +219,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               onChange={value => field.handleChange(value as LedgerEntryDirection | null)}
               error={field.state.meta.errors[0]}
               inline={inline}
+              className={comboBoxClassName}
             />
           )}
         </form.Field>

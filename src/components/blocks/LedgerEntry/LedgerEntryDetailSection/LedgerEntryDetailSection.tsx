@@ -7,6 +7,7 @@ import './ledgerEntryDetailSection.scss'
 
 const legacyClassNames = createLegacyClassNames({
   Layer__LedgerEntryDetailSection: 'Layer__EntryDetailSection',
+  Layer__LedgerEntryDetailSection__Grid: 'Layer__EntryDetailSection__Grid',
 })
 
 export interface LedgerEntryDetailSectionProps {
@@ -22,7 +23,7 @@ export const LedgerEntryDetailSection = ({ title, children }: LedgerEntryDetailS
           {title}
         </Heading>
       )}
-      <dl className='Layer__LedgerEntryDetailSection__Grid'>{children}</dl>
+      <dl className={legacyClassNames('Layer__LedgerEntryDetailSection__Grid')}>{children}</dl>
     </section>
   )
 }
