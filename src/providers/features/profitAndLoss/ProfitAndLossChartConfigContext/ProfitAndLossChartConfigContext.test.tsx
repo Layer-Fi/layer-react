@@ -104,6 +104,27 @@ describe('nested providers', () => {
     expect(renderHook(useProfitAndLossDonutChartConfig, { wrapper: Nested }).result.current)
       .toEqual({ innerRadius: '70%' })
   })
+
+  it('merges a section field by field instead of replacing it', () => {
+    function Nested({ children }: PropsWithChildren) {
+      return (
+        <ProfitAndLossChartConfigProvider
+          chartConfig={{ donutChart: { innerRadius: '70%' }, trendChart: { barSize: 36 } }}
+        >
+          <ProfitAndLossChartConfigProvider
+            chartConfig={{ donutChart: { outerRadius: '90%' }, trendChart: { compactBarSize: 8 } }}
+          >
+            {children}
+          </ProfitAndLossChartConfigProvider>
+        </ProfitAndLossChartConfigProvider>
+      )
+    }
+
+    expect(renderHook(useProfitAndLossDonutChartConfig, { wrapper: Nested }).result.current)
+      .toEqual({ innerRadius: '70%', outerRadius: '90%' })
+    expect(renderHook(useProfitAndLossTrendChartConfig, { wrapper: Nested }).result.current)
+      .toEqual({ barSize: 36, compactBarSize: 8 })
+  })
 })
 
 describe('chart section hooks', () => {

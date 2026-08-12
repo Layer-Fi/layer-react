@@ -16,13 +16,15 @@ type ProviderProps = {
 }
 
 /**
- * Merges over any enclosing provider, so a component may re-mount this to override one section
- * for its own subtree without discarding the rest of the view's config.
+ * Merges field by field over any enclosing provider, so a component may re-mount this to override
+ * individual settings for its own subtree while everything it leaves unset keeps the value the
+ * view supplied. Setting `donutChart.outerRadius` here does not drop an outer `innerRadius`.
  */
 export const ProfitAndLossChartConfigProvider = ({ children, chartConfig, chartColorsList }: ProviderProps) => {
   const parent = useContext(ProfitAndLossChartConfigContext)
 
   const value = useMemo(() => ({
+    // Spread first so a field added to the config type later still carries through.
     ...parent,
     ...chartConfig,
     colors: {
@@ -30,6 +32,8 @@ export const ProfitAndLossChartConfigProvider = ({ children, chartConfig, chartC
       expenses: chartConfig?.colors?.expenses ?? chartColorsList ?? parent.colors?.expenses,
       uncategorized: chartConfig?.colors?.uncategorized ?? parent.colors?.uncategorized,
     },
+    trendChart: { ...parent.trendChart, ...chartConfig?.trendChart },
+    donutChart: { ...parent.donutChart, ...chartConfig?.donutChart },
   }), [parent, chartConfig, chartColorsList])
 
   return (
