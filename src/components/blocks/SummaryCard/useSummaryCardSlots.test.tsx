@@ -1,9 +1,12 @@
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
 
 import { NOW } from '@testUtils/dates/fixedDates'
+import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
 // `shouldAdvanceTime` avoids stalling renderHookWithAuth's internal `waitFor` polling, unlike plain `setupFakeSystemTime`
@@ -55,15 +58,22 @@ describe('useSummaryCardSlots', () => {
     expect(result.current.subtitle).toBe('Jun 2026')
   })
 
-  it('builds an expand action only when onClickExpand is given, and invokes it when pressed', async () => {
-    const { result: withoutHandler } = await renderSlots()
+  it('builds no expand action when onClickExpand is omitted', async () => {
+    const { result } = await renderSlots()
 
-    expect(withoutHandler.current.primaryAction).toBeUndefined()
+    expect(result.current.primaryAction).toBeUndefined()
+  })
 
+  it('builds an expand action that invokes onClickExpand when pressed', async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     const onClickExpand = vi.fn()
 
-    const { result: withHandler } = await renderSlots({ interactionProps: { onClickExpand } })
+    const { result } = await renderSlots({ interactionProps: { onClickExpand } })
 
-    expect(withHandler.current.primaryAction).toBeDefined()
+    render(<>{result.current.primaryAction}</>, { wrapper: LayerTestProvider })
+
+    await user.click(screen.getByRole('button', { name: 'View' }))
+
+    expect(onClickExpand).toHaveBeenCalledTimes(1)
   })
 })
