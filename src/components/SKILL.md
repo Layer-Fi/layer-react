@@ -156,34 +156,26 @@ prop behind a context merely to avoid forwarding it through a composed view. Cho
 that matches what the consumer is configuring:
 
 1. **A CSS custom property**, when CSS can reach the value and the customization is naturally
-   inherited. This costs zero React props and works inside SVG charts too: a CSS declaration beats
-   the presentation attribute the chart library renders, which is how
-   `--pnl-chart-line-stroke-width` sets the P&L line width.
+   inherited. It costs zero React props and reaches inside SVG charts, where a CSS declaration
+   beats the chart library's presentation attribute — how `--pnl-chart-line-stroke-width` sets the
+   P&L line width.
 2. **`slots` / `slotProps`**, when configuring a named element inside a component or view. A view
-   with several charts nests each config under the slot for the subcomponent it targets; it may
-   expose several chart configs when those chart instances can differ.
+   with several charts nests each config under the slot it targets, so instances that may differ
+   get separate configs.
 3. **A component prop**, when the component renders or owns the configurable element. Prefer one
-   nested config object over one prop per knob. Thin composed components may forward that config
-   to the child they own so the public API remains explicit.
+   nested config object over one prop per knob.
 4. **Context**, only for a genuinely implicit, subtree-stable dependency. Context must not erase a
    per-instance consumer API; if two instances on one page may need different values, use props.
 
-P&L chart configuration is the reference:
+P&L chart configuration is the reference: `ProfitAndLoss.Chart`, `.Summaries`, `.DetailedCharts`,
+and `ProfitAndLossSummaryCard` each take a nested `chartConfig` directly; the overviews expose it
+under the `slotProps` of the chart it targets; and the legacy flat `chartColorsList` stays
+supported as a fallback where it was already consumer-facing. `@ui`/`@blocks` stay
+domain-agnostic — a feature component converts its config into the shared block's `stylingProps`,
+so `DetailedChart` remains reusable by both P&L and tax estimates.
 
-- `ProfitAndLoss.Chart`, `ProfitAndLoss.Summaries`, and `ProfitAndLoss.DetailedCharts` each accept
-  `chartConfig` directly.
-- Accounting and bookkeeping overviews place configs under the targeted P&L summary, trend-chart,
-  revenue-detail, and expense-detail `slotProps`; Solopreneur does the same for its summaries and
-  individual summary cards.
-- The nested `ProfitAndLossChartConfig` groups related knobs without making the root
-  `ProfitAndLoss` component an ambient styling provider.
-- Existing `chartColorsList` props remain supported as compatibility fallbacks where they were
-  already consumer-facing.
-- `@ui`/`@blocks` remain domain-agnostic. A feature component converts its config into the shared
-  block's `stylingProps`; `DetailedChart` stays reusable by both P&L and tax estimates.
-
-Two traps: an override must not silently disable a responsive default (`barSize` needs
-`compactBarSize`, not one fixed width), and a new config must preserve existing consumer-facing
+Two traps: an override must not silently disable a responsive default (`barWidth` needs
+`compactBarWidth`, not one fixed width), and a new config must preserve existing consumer-facing
 props unless a breaking change is intentional.
 
 ## Forms
