@@ -17,16 +17,14 @@ import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend
 import './profitAndLossSummaryCard.scss'
 
 export type ProfitAndLossSummaryCardProps = {
-  stylingProps?: {
-    chartConfig?: ProfitAndLossChartConfig
-  }
+  chartConfig?: ProfitAndLossChartConfig
   interactionProps?: SummaryCardInteractionProps
   stringOverrides?: SummaryCardStringOverrides
   className?: string
 }
 
 export const ProfitAndLossSummaryCard = ({
-  stylingProps,
+  chartConfig,
   interactionProps,
   stringOverrides,
   className,
@@ -52,7 +50,7 @@ export const ProfitAndLossSummaryCard = ({
       className={classNames('Layer__ProfitAndLossSummaryCard', 'Layer__UI__Chart--focusReset', className)}
       slots={slots}
     >
-      <ProfitAndLossChart tagFilter={tagFilter} hideLegend chartConfig={stylingProps?.chartConfig} />
+      <ProfitAndLossChart tagFilter={tagFilter} hideLegend chartConfig={chartConfig} />
       {!isDesktop && legend}
     </SummaryCard>
   )

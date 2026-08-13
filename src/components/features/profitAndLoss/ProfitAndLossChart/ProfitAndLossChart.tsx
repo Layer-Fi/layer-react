@@ -35,6 +35,7 @@ import { ProfitAndLossChartPatternDefs } from '@features/profitAndLoss/ProfitAnd
 import { ProfitAndLossChartStateCard } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { transformPnLData } from '@features/profitAndLoss/ProfitAndLossChart/transformPnLData'
+import { resolveProfitAndLossTrendBarWidth } from '@features/profitAndLoss/utils'
 
 import './profitAndLossChart.scss'
 
@@ -49,9 +50,6 @@ export interface ProfitAndLossChartProps {
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
 
-const DEFAULT_BAR_SIZE = 20
-const DEFAULT_COMPACT_BAR_SIZE = 10
-
 export const ProfitAndLossChart = ({
   tagFilter,
   hideLegend = false,
@@ -59,13 +57,8 @@ export const ProfitAndLossChart = ({
 }: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
-  const { barSize: configuredBarSize, compactBarSize: configuredCompactBarSize } = chartConfig?.trendChart ?? {}
 
-  const fullBarSize = configuredBarSize ?? DEFAULT_BAR_SIZE
-  const compactBarSize = configuredCompactBarSize
-    ?? (configuredBarSize === undefined ? DEFAULT_COMPACT_BAR_SIZE : Math.round(configuredBarSize / 2))
-
-  const barSize = compactView ? compactBarSize : fullBarSize
+  const barSize = resolveProfitAndLossTrendBarWidth({ compactView, chartConfig })
   const cursorWidth = barSize * 2.2
 
   const { getColor, business } = useLayerContext()

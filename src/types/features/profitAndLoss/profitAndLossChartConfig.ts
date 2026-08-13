@@ -10,9 +10,9 @@ export type ProfitAndLossChartConfig = {
   /** Shared by the donuts, the summary mini charts, and the summary tile swatches. */
   colors?: ProfitAndLossChartColors
   trendChart?: {
-    barSize?: number
-    /** Bar width below 620px wide. Defaults to half `barSize`. */
-    compactBarSize?: number
+    barWidth?: number
+    /** Bar width below 620px wide. Defaults to half `barWidth`. */
+    compactBarWidth?: number
   }
   /** The scope donuts in the detailed charts and the expenses card, not the summary mini donuts. */
   donutChart?: {

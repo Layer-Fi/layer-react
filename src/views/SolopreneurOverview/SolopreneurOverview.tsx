@@ -116,7 +116,7 @@ export const SolopreneurOverview = ({
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
-            stylingProps={{ chartConfig: slotProps?.summaryCards?.profitAndLoss?.chartConfig }}
+            chartConfig={slotProps?.summaryCards?.profitAndLoss?.chartConfig}
             stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
