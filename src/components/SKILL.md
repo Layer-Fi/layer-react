@@ -171,8 +171,8 @@ P&L chart configuration is the reference: `ProfitAndLoss.Chart`, `.Summaries`, `
 and `ProfitAndLossSummaryCard` each take a nested `chartConfig` directly; the overviews expose it
 under the `slotProps` of the chart it targets; and the legacy flat `chartColorsList` stays
 supported as a fallback where it was already consumer-facing. `@ui`/`@blocks` stay
-domain-agnostic — a feature component converts its config into the shared block's `stylingProps`,
-so `DetailedChart` remains reusable by both P&L and tax estimates.
+domain-agnostic — a feature component translates its domain config into whatever the child below
+it takes, so `DetailedChart` remains reusable by both P&L and tax estimates.
 
 Two traps: an override must not silently disable a responsive default (`barWidth` needs
 `compactBarWidth`, not one fixed width), and a new config must preserve existing consumer-facing
