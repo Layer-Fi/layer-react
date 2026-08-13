@@ -35,7 +35,7 @@ import { ProfitAndLossChartPatternDefs } from '@features/profitAndLoss/ProfitAnd
 import { ProfitAndLossChartStateCard } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { transformPnLData } from '@features/profitAndLoss/ProfitAndLossChart/transformPnLData'
-import { resolveProfitAndLossTrendBarWidth } from '@features/profitAndLoss/utils'
+import { resolveProfitAndLossBarWidth } from '@features/profitAndLoss/utils'
 
 import './profitAndLossChart.scss'
 
@@ -58,7 +58,7 @@ export const ProfitAndLossChart = ({
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
 
-  const barSize = resolveProfitAndLossTrendBarWidth({ compactView, chartConfig })
+  const barSize = resolveProfitAndLossBarWidth({ compactView, chartConfig })
   const cursorWidth = barSize * 2.2
 
   const { getColor, business } = useLayerContext()

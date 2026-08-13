@@ -9,7 +9,7 @@ export type ProfitAndLossChartColors = {
 export type ProfitAndLossChartConfig = {
   /** Shared by the donuts, the summary mini charts, and the summary tile swatches. */
   colors?: ProfitAndLossChartColors
-  trendChart?: {
+  barChart?: {
     barWidth?: number
     /** Bar width below 620px wide. Defaults to half `barWidth`. */
     compactBarWidth?: number

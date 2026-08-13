@@ -7,6 +7,6 @@ export const CUSTOM_CHART_CONFIG: ProfitAndLossChartConfig = {
     expenses: ['#A61E4D', '#C2255C', '#E64980'],
     uncategorized: '#FFD43B',
   },
-  trendChart: { barWidth: 36 },
+  barChart: { barWidth: 36 },
   donutChart: { innerRadius: '70%' },
 }

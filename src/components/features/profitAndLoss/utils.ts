@@ -5,10 +5,10 @@ import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/s
 const DEFAULT_BAR_WIDTH = 20
 const DEFAULT_COMPACT_BAR_WIDTH = 10
 
-export const resolveProfitAndLossTrendBarWidth = (
+export const resolveProfitAndLossBarWidth = (
   { compactView, chartConfig }: { compactView: boolean, chartConfig?: ProfitAndLossChartConfig },
 ) => {
-  const { barWidth, compactBarWidth } = chartConfig?.trendChart ?? {}
+  const { barWidth, compactBarWidth } = chartConfig?.barChart ?? {}
 
   if (!compactView) {
     return barWidth ?? DEFAULT_BAR_WIDTH

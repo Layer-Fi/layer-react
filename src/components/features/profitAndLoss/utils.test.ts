@@ -4,8 +4,8 @@ import { type Scope } from '@internal-types/features/profitAndLoss/profitAndLoss
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/styles/chartColors'
 import {
+  resolveProfitAndLossBarWidth,
   resolveProfitAndLossChartPalette,
-  resolveProfitAndLossTrendBarWidth,
 } from '@features/profitAndLoss/utils'
 
 const paletteFor = (scope: Scope, chartConfig?: ProfitAndLossChartConfig, chartColorsList?: string[]) =>
@@ -58,30 +58,30 @@ describe('resolveProfitAndLossChartPalette', () => {
   })
 })
 
-describe('resolveProfitAndLossTrendBarWidth', () => {
+describe('resolveProfitAndLossBarWidth', () => {
   it('falls back to the defaults when unset', () => {
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: false })).toBe(20)
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: true })).toBe(10)
+    expect(resolveProfitAndLossBarWidth({ compactView: false })).toBe(20)
+    expect(resolveProfitAndLossBarWidth({ compactView: true })).toBe(10)
   })
 
   it('halves a configured width for the compact view', () => {
-    const chartConfig = { trendChart: { barWidth: 36 } }
+    const chartConfig = { barChart: { barWidth: 36 } }
 
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(36)
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(18)
+    expect(resolveProfitAndLossBarWidth({ compactView: false, chartConfig })).toBe(36)
+    expect(resolveProfitAndLossBarWidth({ compactView: true, chartConfig })).toBe(18)
   })
 
   it('prefers an explicit compact width over halving', () => {
-    const chartConfig = { trendChart: { barWidth: 36, compactBarWidth: 30 } }
+    const chartConfig = { barChart: { barWidth: 36, compactBarWidth: 30 } }
 
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(36)
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(30)
+    expect(resolveProfitAndLossBarWidth({ compactView: false, chartConfig })).toBe(36)
+    expect(resolveProfitAndLossBarWidth({ compactView: true, chartConfig })).toBe(30)
   })
 
   it('applies a compact width without a full width', () => {
-    const chartConfig = { trendChart: { compactBarWidth: 4 } }
+    const chartConfig = { barChart: { compactBarWidth: 4 } }
 
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(20)
-    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(4)
+    expect(resolveProfitAndLossBarWidth({ compactView: false, chartConfig })).toBe(20)
+    expect(resolveProfitAndLossBarWidth({ compactView: true, chartConfig })).toBe(4)
   })
 })
