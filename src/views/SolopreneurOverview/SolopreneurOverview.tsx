@@ -121,10 +121,8 @@ export const SolopreneurOverview = ({
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
-            stylingProps={{
-              chartConfig: slotProps?.summaryCards?.expenses?.chartConfig,
-              chartColorsList,
-            }}
+            chartConfig={slotProps?.summaryCards?.expenses?.chartConfig}
+            chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.summaryCards?.expenses}
             interactionProps={interactionProps?.summaryCards?.expenses}
           />
