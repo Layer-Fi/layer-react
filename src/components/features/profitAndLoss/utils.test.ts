@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { type Scope } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/styles/chartColors'
 import {
@@ -7,85 +8,80 @@ import {
   resolveProfitAndLossTrendBarWidth,
 } from '@features/profitAndLoss/utils'
 
-type PaletteProps = {
-  chartConfig?: ProfitAndLossChartConfig
-  chartColorsList?: string[]
-}
-
-const expectPalettes = (
-  props: PaletteProps,
-  expected: { revenue: string[], expenses: string[] },
-) => {
-  expect(resolveProfitAndLossChartPalette('revenue', props.chartConfig, props.chartColorsList).palette)
-    .toEqual(expected.revenue)
-  expect(resolveProfitAndLossChartPalette('expenses', props.chartConfig, props.chartColorsList).palette)
-    .toEqual(expected.expenses)
-}
+const paletteFor = (scope: Scope, chartConfig?: ProfitAndLossChartConfig, chartColorsList?: string[]) =>
+  resolveProfitAndLossChartPalette(scope, chartConfig, chartColorsList).palette
 
 describe('resolveProfitAndLossChartPalette', () => {
   it('prefers the scoped list over the flat list', () => {
-    expectPalettes(
-      { chartConfig: { colors: { revenue: ['#111'], expenses: ['#222'] } }, chartColorsList: ['#444'] },
-      { revenue: ['#111'], expenses: ['#222'] },
-    )
+    const chartConfig = { colors: { revenue: ['#111'], expenses: ['#222'] } }
+
+    expect(paletteFor('revenue', chartConfig, ['#444'])).toEqual(['#111'])
+    expect(paletteFor('expenses', chartConfig, ['#444'])).toEqual(['#222'])
   })
 
   it('falls back to the flat list for the omitted scope', () => {
-    expectPalettes(
-      { chartConfig: { colors: { expenses: ['#222'] } }, chartColorsList: ['#444'] },
-      { revenue: ['#444'], expenses: ['#222'] },
-    )
+    const chartConfig = { colors: { expenses: ['#222'] } }
+
+    expect(paletteFor('revenue', chartConfig, ['#444'])).toEqual(['#444'])
+    expect(paletteFor('expenses', chartConfig, ['#444'])).toEqual(['#222'])
   })
 
   it('applies the flat list to both scopes', () => {
-    expectPalettes({ chartColorsList: ['#444'] }, { revenue: ['#444'], expenses: ['#444'] })
+    expect(paletteFor('revenue', undefined, ['#444'])).toEqual(['#444'])
+    expect(paletteFor('expenses', undefined, ['#444'])).toEqual(['#444'])
   })
 
   it('falls back to the defaults when unset', () => {
-    expectPalettes({}, { revenue: DEFAULT_CHART_COLORS, expenses: DEFAULT_CHART_COLORS })
+    expect(paletteFor('revenue')).toEqual(DEFAULT_CHART_COLORS)
+    expect(paletteFor('expenses')).toEqual(DEFAULT_CHART_COLORS)
   })
 
-  it('falls back to the defaults when the list is empty', () => {
-    expectPalettes(
-      { chartConfig: { colors: { revenue: [], expenses: [] } } },
-      { revenue: DEFAULT_CHART_COLORS, expenses: DEFAULT_CHART_COLORS },
-    )
+  it('falls back to the defaults when the scoped list is empty', () => {
+    const chartConfig = { colors: { revenue: [], expenses: [] } }
+
+    expect(paletteFor('revenue', chartConfig)).toEqual(DEFAULT_CHART_COLORS)
+    expect(paletteFor('expenses', chartConfig)).toEqual(DEFAULT_CHART_COLORS)
   })
 
-  it('distinguishes an overridden uncategorized color from the default', () => {
-    const overridden = resolveProfitAndLossChartPalette('revenue', { colors: { uncategorized: '#333' } })
-    expect(overridden).toMatchObject({ uncategorized: '#333', uncategorizedOverride: '#333' })
+  it('reports an overridden uncategorized color as an override', () => {
+    const resolved = resolveProfitAndLossChartPalette('revenue', { colors: { uncategorized: '#333' } })
 
-    const defaulted = resolveProfitAndLossChartPalette('revenue')
-    expect(defaulted).toMatchObject({
-      uncategorized: UNCATEGORIZED_CHART_COLOR,
-      uncategorizedOverride: undefined,
-    })
+    expect(resolved.uncategorized).toBe('#333')
+    expect(resolved.uncategorizedOverride).toBe('#333')
+  })
+
+  it('defaults the uncategorized color without reporting an override', () => {
+    const resolved = resolveProfitAndLossChartPalette('revenue')
+
+    expect(resolved.uncategorized).toBe(UNCATEGORIZED_CHART_COLOR)
+    expect(resolved.uncategorizedOverride).toBeUndefined()
   })
 })
 
-const expectBarWidths = (
-  chartConfig: ProfitAndLossChartConfig | undefined,
-  expected: { full: number, compact: number },
-) => {
-  expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(expected.full)
-  expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(expected.compact)
-}
-
 describe('resolveProfitAndLossTrendBarWidth', () => {
   it('falls back to the defaults when unset', () => {
-    expectBarWidths(undefined, { full: 20, compact: 10 })
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: false })).toBe(20)
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: true })).toBe(10)
   })
 
   it('halves a configured width for the compact view', () => {
-    expectBarWidths({ trendChart: { barWidth: 36 } }, { full: 36, compact: 18 })
+    const chartConfig = { trendChart: { barWidth: 36 } }
+
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(36)
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(18)
   })
 
-  it('prefers an explicit compact width', () => {
-    expectBarWidths({ trendChart: { barWidth: 36, compactBarWidth: 30 } }, { full: 36, compact: 30 })
+  it('prefers an explicit compact width over halving', () => {
+    const chartConfig = { trendChart: { barWidth: 36, compactBarWidth: 30 } }
+
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(36)
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(30)
   })
 
   it('applies a compact width without a full width', () => {
-    expectBarWidths({ trendChart: { compactBarWidth: 4 } }, { full: 20, compact: 4 })
+    const chartConfig = { trendChart: { compactBarWidth: 4 } }
+
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: false, chartConfig })).toBe(20)
+    expect(resolveProfitAndLossTrendBarWidth({ compactView: true, chartConfig })).toBe(4)
   })
 })
