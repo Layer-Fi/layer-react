@@ -20,7 +20,8 @@ export default defineConfig({
         'src/testUtils/**',
         'src/types/**',
         'src/**/*.stories.tsx',
-        'src/**/*.test.{ts,tsx}',
+        'src/**/*.storyData.tsx',
+        'src/**/*.{test,spec}.{ts,tsx}',
       ],
       reporter: ['text-summary', 'html', 'lcov', 'json-summary'],
       // A backstop against a real drop, not a target. Integer-valued and left ~1pt below actual: a
