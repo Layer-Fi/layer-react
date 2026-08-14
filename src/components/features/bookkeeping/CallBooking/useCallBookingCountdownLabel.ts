@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/shared/i18n/plural'
 
-export const MS_PER_HOUR = 60 * 60 * 1000
-export const MS_PER_DAY = 24 * MS_PER_HOUR
+const MS_PER_HOUR = 60 * 60 * 1000
+const MS_PER_DAY = 24 * MS_PER_HOUR
 
 enum CountdownKind {
   Days = 'days',

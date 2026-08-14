@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { MS_PER_DAY, MS_PER_HOUR, useCallBookingCountdownLabel } from '@features/bookkeeping/CallBooking/useCallBookingCountdownLabel'
+import { useCallBookingCountdownLabel } from '@features/bookkeeping/CallBooking/useCallBookingCountdownLabel'
 
 import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'
-import { NOW } from '@testUtils/dates/fixedDates'
+import { MS_PER_DAY, MS_PER_HOUR, NOW } from '@testUtils/dates/fixedDates'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 setupFakeSystemTime(NOW)
