@@ -34,7 +34,7 @@ jobs:
           - name: TypeScript
             run: npm run typecheck
           - name: Vitest
-            run: npm test -- --run
+            run: npm run test:coverage
           - name: Fixtures
             run: npm run fixtures:check
           - name: API mocks

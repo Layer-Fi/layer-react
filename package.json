@@ -36,6 +36,7 @@
     "css:scan-releases": "tsx scripts/css-legacy/scanReleases.ts",
     "css:check-legacy-keys": "tsx scripts/css-legacy/checkUnusedLegacyKeys.ts",
     "css:rename": "tsx scripts/css-legacy/renameClassName.ts",
+    "coverage:floor": "tsx scripts/check-coverage-floor.ts",
     "clear:react": "rm -rf ./node_modules/react && rm -rf ./node_modules/react-dom",
     "dev": "npm run dev:js & npm run dev:types",
     "dev:js": "vite build --mode esm --watch",
@@ -61,6 +62,7 @@
     "storybook:build": "storybook build",
     "test": "vitest",
     "test:consumers": "tsx scripts/pack-and-test-consumers.ts",
+    "test:coverage": "vitest --run --coverage",
     "test:types": "vitest --typecheck.only --run",
     "typecheck": "tsc --noEmit"
   },
@@ -105,6 +107,7 @@
     "@types/react-dom": "^18.2.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^4.1.9",
     "chokidar-cli": "^3.0.0",
     "chromatic": "^18.0.1",
     "eslint": "^9.26.0",

@@ -10,6 +10,11 @@
   font-size: 0.75rem;
 }
 
+/* Pairs with --pnl-chart-line-color; overrides the stroke-width attribute recharts renders. */
+.Layer__profit-and-loss-chart .recharts-line-curve {
+  stroke-width: var(--pnl-chart-line-stroke-width, 1);
+}
+
 .Layer__profit-and-loss-chart__bar--loading {
   fill: var(--color-base-50);
   animation: layer_chart_bar_loading_anim 2s linear infinite;

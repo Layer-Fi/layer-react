@@ -101,6 +101,15 @@ which is domain-agnostic and shared).
 Prefer adding a new small context over widening an existing one — a fat context re-renders
 every consumer on any change, and narrow units can be mounted independently where needed.
 
+### Context does not replace component configuration
+
+Context is appropriate for an implicit value that is stable for the life of a subtree. It is not a
+reason to remove a consumer-facing, per-instance configuration prop. A component that renders or
+owns a configurable element accepts the config explicitly; a composed view forwards it through
+targeted `slotProps`, with separate configs when instances may differ. Do not mount a domain
+provider merely to avoid that wiring, and never let a context erase a per-instance prop.
+`src/components/SKILL.md` has the full customization decision list.
+
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,
 `useEnvironment`) rather than `useContext` directly.

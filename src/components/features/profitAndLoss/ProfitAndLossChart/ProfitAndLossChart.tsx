@@ -16,6 +16,7 @@ import {
   XAxis,
 } from 'recharts'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { isDateAllowedToBrowse } from '@utils/features/business/business'
 import { areChartWindowsEqual, getChartWindow } from '@utils/features/profitAndLoss/chartWindow'
@@ -34,6 +35,7 @@ import { ProfitAndLossChartPatternDefs } from '@features/profitAndLoss/ProfitAnd
 import { ProfitAndLossChartStateCard } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartStateCard'
 import { ProfitAndLossChartTooltip } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { transformPnLData } from '@features/profitAndLoss/ProfitAndLossChart/transformPnLData'
+import { resolveProfitAndLossBarWidth } from '@features/profitAndLoss/utils'
 
 import './profitAndLossChart.scss'
 
@@ -43,14 +45,20 @@ export interface ProfitAndLossChartProps {
     values: string[]
   }
   hideLegend?: boolean
+  chartConfig?: ProfitAndLossChartConfig
 }
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
 
-export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndLossChartProps) => {
+export const ProfitAndLossChart = ({
+  tagFilter,
+  hideLegend = false,
+  chartConfig,
+}: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
-  const barSize = compactView ? 10 : 20
+
+  const barSize = resolveProfitAndLossBarWidth({ compactView, chartConfig })
   const cursorWidth = barSize * 2.2
 
   const { getColor, business } = useLayerContext()
@@ -183,7 +191,6 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
               fill: 'var(--color-base-0)',
               stroke: 'var(--color-base-1000)',
             }}
-            strokeWidth={1}
             type='linear'
             dataKey='netProfit'
             stroke='var(--pnl-chart-line-color, var(--color-base-1000))'

@@ -40,6 +40,7 @@ interface DetailedTableBaseProps<T extends SeriesData> {
   stylingProps: {
     colorSelector: ColorSelector<T>
     fallbackFillSelector?: FallbackFillSelector<T>
+    fallbackFillColor?: string
   }
   interactionProps: {
     hoveredItem: T | undefined

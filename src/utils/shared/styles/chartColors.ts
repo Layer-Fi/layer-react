@@ -1,3 +1,5 @@
+export const UNCATEGORIZED_CHART_COLOR = '#EEEEF0'
+
 export const DEFAULT_CHART_COLORS = [
   '#008028',
   '#7417B3',
