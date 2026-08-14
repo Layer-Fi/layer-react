@@ -183,7 +183,6 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
               fill: 'var(--color-base-0)',
               stroke: 'var(--color-base-1000)',
             }}
-            strokeWidth={1}
             type='linear'
             dataKey='netProfit'
             stroke='var(--pnl-chart-line-color, var(--color-base-1000))'
