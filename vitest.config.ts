@@ -47,8 +47,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, '.claude/**'],
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
-    // v8 instrumentation adds ~40% to test time, which puts the slower component tests over the
-    // 5s default when the whole suite runs concurrently.
+    // v8 instrumentation put RecordBankTransactionModal over the 5s default.
     testTimeout: 15_000,
     // Its own tsconfig: these read the built `dist/index.d.ts`, which the root config excludes.
     typecheck: {
