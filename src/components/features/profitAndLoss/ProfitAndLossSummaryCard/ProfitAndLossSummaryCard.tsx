@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
@@ -16,12 +17,14 @@ import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend
 import './profitAndLossSummaryCard.scss'
 
 export type ProfitAndLossSummaryCardProps = {
+  chartConfig?: ProfitAndLossChartConfig
   interactionProps?: SummaryCardInteractionProps
   stringOverrides?: SummaryCardStringOverrides
   className?: string
 }
 
 export const ProfitAndLossSummaryCard = ({
+  chartConfig,
   interactionProps,
   stringOverrides,
   className,
@@ -47,7 +50,7 @@ export const ProfitAndLossSummaryCard = ({
       className={classNames('Layer__ProfitAndLossSummaryCard', 'Layer__UI__Chart--focusReset', className)}
       slots={slots}
     >
-      <ProfitAndLossChart tagFilter={tagFilter} hideLegend />
+      <ProfitAndLossChart tagFilter={tagFilter} hideLegend chartConfig={chartConfig} />
       {!isDesktop && legend}
     </SummaryCard>
   )

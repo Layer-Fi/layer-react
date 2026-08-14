@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
@@ -79,6 +80,11 @@ export interface BookkeepingOverviewProps {
   slotProps?: {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
+      }
     }
   }
 
@@ -199,6 +205,7 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
                 chartColorsList={chartColorsList}
                 reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
@@ -207,12 +214,17 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Chart
               hideLegend
               tagFilter={profitAndLossTagFilter}
+              chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
             />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
           chartColorsList={chartColorsList}
         />
       </View>

@@ -1,5 +1,7 @@
-import { type ReactNode, useCallback, useContext, useMemo } from 'react'
+import { type ReactNode, useContext, useMemo } from 'react'
 
+import { type SidebarScope } from '@internal-types/features/profitAndLoss/profitAndLoss'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import {
@@ -35,6 +37,7 @@ type SummariesContentProps = {
   mode: ProfitAndLossSummariesMode
   tiles: SummariesTiles
   actionable?: boolean
+  chartConfig?: ProfitAndLossChartConfig
   chartColorsList?: string[]
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
@@ -45,6 +48,7 @@ export function SummariesContent({
   mode,
   tiles,
   actionable = false,
+  chartConfig,
   chartColorsList,
   slots,
 }: SummariesContentProps) {
@@ -71,11 +75,19 @@ export function SummariesContent({
   const { unstable_AdditionalListItems = [] } = slots ?? {}
   const listItemCount = summaryTiles.length + unstable_AdditionalListItems.length
 
-  const renderChart = useCallback((chartData: PnlChartLineItem[] | undefined) => {
-    if (!chartData) return null
+  /** Only the revenue and expenses tiles carry chart data; the net tile has none. */
+  const renderChart = (chartData: PnlChartLineItem[] | undefined, scope: SidebarScope) => {
+    if (!chartData || !scope) return null
 
-    return <ProfitAndLossSummariesMiniChart data={chartData} chartColorsList={chartColorsList} />
-  }, [chartColorsList])
+    return (
+      <ProfitAndLossSummariesMiniChart
+        data={chartData}
+        scope={scope}
+        chartConfig={chartConfig}
+        chartColorsList={chartColorsList}
+      />
+    )
+  }
 
   return (
     <section className='Layer__component Layer__ProfitAndLossSummaries'>
@@ -105,7 +117,7 @@ export function SummariesContent({
               isExpense={isExpense}
               mode={mode}
               slots={{
-                Chart: amount < 0 ? null : renderChart(chartData),
+                Chart: amount < 0 ? null : renderChart(chartData, scope),
                 Footer: config.renderFooter?.(breakdown, isLoading),
               }}
             />

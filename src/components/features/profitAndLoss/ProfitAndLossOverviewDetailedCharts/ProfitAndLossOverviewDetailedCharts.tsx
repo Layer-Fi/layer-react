@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -13,6 +14,10 @@ type ProfitAndLossOverviewDetailedChartsVariant = 'accounting' | 'bookkeeping'
 interface ProfitAndLossOverviewDetailedChartsProps {
   variant: ProfitAndLossOverviewDetailedChartsVariant
   detailedChartsStringOverrides?: ProfitAndLossDetailedChartsStringOverrides
+  chartConfigByScope?: {
+    revenue?: ProfitAndLossChartConfig
+    expenses?: ProfitAndLossChartConfig
+  }
   chartColorsList?: string[]
 }
 
@@ -21,6 +26,7 @@ type PnlToggleOption = 'revenue' | 'expenses'
 export const ProfitAndLossOverviewDetailedCharts = ({
   variant,
   detailedChartsStringOverrides,
+  chartConfigByScope,
   chartColorsList,
 }: ProfitAndLossOverviewDetailedChartsProps) => {
   const { t } = useTranslation()
@@ -68,8 +74,9 @@ export const ProfitAndLossOverviewDetailedCharts = ({
             <ProfitAndLoss.DetailedCharts
               scope={pnlToggle}
               hideClose={true}
-              stringOverrides={detailedChartsStringOverrides}
+              chartConfig={chartConfigByScope?.[pnlToggle]}
               chartColorsList={chartColorsList}
+              stringOverrides={detailedChartsStringOverrides}
             />
           </Container>
         )
@@ -79,16 +86,18 @@ export const ProfitAndLossOverviewDetailedCharts = ({
               <ProfitAndLoss.DetailedCharts
                 scope='revenue'
                 hideClose={true}
-                stringOverrides={detailedChartsStringOverrides}
+                chartConfig={chartConfigByScope?.revenue}
                 chartColorsList={chartColorsList}
+                stringOverrides={detailedChartsStringOverrides}
               />
             </Container>
             <Container name={chartContainerName}>
               <ProfitAndLoss.DetailedCharts
                 scope='expenses'
                 hideClose={true}
-                stringOverrides={detailedChartsStringOverrides}
+                chartConfig={chartConfigByScope?.expenses}
                 chartColorsList={chartColorsList}
+                stringOverrides={detailedChartsStringOverrides}
               />
             </Container>
           </HStack>

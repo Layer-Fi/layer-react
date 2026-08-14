@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
@@ -64,6 +65,10 @@ export interface SolopreneurOverviewProps {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
     }
+    summaryCards?: {
+      profitAndLoss?: { chartConfig?: ProfitAndLossChartConfig }
+      expenses?: { chartConfig?: ProfitAndLossChartConfig }
+    }
   }
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
@@ -100,6 +105,7 @@ export const SolopreneurOverview = ({
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
           chartColorsList={chartColorsList}
           reportingVariant={
             slotProps?.profitAndLoss?.summaries?.reportingVariant
@@ -110,11 +116,13 @@ export const SolopreneurOverview = ({
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
+            chartConfig={slotProps?.summaryCards?.profitAndLoss?.chartConfig}
             stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
-            stylingProps={{ chartColorsList }}
+            chartConfig={slotProps?.summaryCards?.expenses?.chartConfig}
+            chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.summaryCards?.expenses}
             interactionProps={interactionProps?.summaryCards?.expenses}
           />
