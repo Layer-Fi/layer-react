@@ -2,6 +2,7 @@ import { type PropsWithChildren } from 'react'
 import { act, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { type UnifiedReportsDefaultState } from '@internal-types/features/unifiedReports/defaultState'
 import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
 import {
   UnifiedReportStoreProvider,
@@ -14,7 +15,7 @@ import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
 // `renderHookWithAuth` spreads options over its own default wrapper, so this has to nest
 // `LayerTestProvider` itself or auth never lands.
-const renderWithReportStore = (props?: { defaultReportKey?: string }) =>
+const renderWithReportStore = (props?: { defaultState?: UnifiedReportsDefaultState }) =>
   renderHookWithAuth(useBaseUnifiedReport, {
     wrapper: ({ children }: PropsWithChildren) => (
       <LayerTestProvider>
@@ -39,7 +40,7 @@ describe('UnifiedReportStoreProvider', () => {
   })
 
   it('hydrates to the requested report', async () => {
-    const { result } = await renderWithReportStore({ defaultReportKey: 'BALANCE_SHEET' })
+    const { result } = await renderWithReportStore({ defaultState: { reportKey: 'BALANCE_SHEET' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('BALANCE_SHEET'))
   })
@@ -47,14 +48,14 @@ describe('UnifiedReportStoreProvider', () => {
   it('warns and falls back to the default report when the requested key is unknown', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    const { result } = await renderWithReportStore({ defaultReportKey: 'NOT_A_REPORT' })
+    const { result } = await renderWithReportStore({ defaultState: { reportKey: 'NOT_A_REPORT' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('PROFIT_AND_LOSS'))
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('NOT_A_REPORT'))
   })
 
   it('does not re-assert the requested report over user navigation', async () => {
-    const { result, rerender } = await renderWithReportStore({ defaultReportKey: 'BALANCE_SHEET' })
+    const { result, rerender } = await renderWithReportStore({ defaultState: { reportKey: 'BALANCE_SHEET' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('BALANCE_SHEET'))
 

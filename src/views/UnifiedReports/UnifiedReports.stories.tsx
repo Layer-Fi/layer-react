@@ -1,6 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
+import { type UnifiedReportsDefaultState } from '@internal-types/features/unifiedReports/defaultState'
 import { type UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { type DateSelectionMode } from '@utils/shared/date/dateRange'
 import { UnifiedReports } from '@views/UnifiedReports/UnifiedReports'
@@ -9,17 +10,15 @@ type UnifiedReportsStoryArgs = {
   navigationVariant: UnifiedReportNavigationVariant
   showTitle: boolean
   dateSelectionMode: DateSelectionMode
-  defaultReportKey?: string
+  defaultState?: UnifiedReportsDefaultState
 }
-
-const REPORT_KEYS = ['PROFIT_AND_LOSS', 'BALANCE_SHEET', 'CASHFLOW_STATEMENT', 'TRIAL_BALANCE', 'AR_AGING']
 
 const meta: Meta<UnifiedReportsStoryArgs> = {
   title: 'Components/UnifiedReports',
   tags: ['public-api'],
   component: UnifiedReports,
   parameters: {
-    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode', 'defaultReportKey'] },
+    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode', 'defaultState'] },
   },
   args: {
     navigationVariant: 'sidebar',
@@ -41,10 +40,9 @@ const meta: Meta<UnifiedReportsStoryArgs> = {
       options: ['full', 'month', 'year'] satisfies DateSelectionMode[],
       description: 'How report controls read from the global date store.',
     },
-    defaultReportKey: {
-      control: 'select',
-      options: REPORT_KEYS,
-      description: 'Report to land on instead of the default report. Read once when the report configuration loads, so changing this control does not switch the report — reload the story to see it apply.',
+    defaultState: {
+      control: 'object',
+      description: 'Initial landing state (e.g. `{ reportKey: "BALANCE_SHEET" }`). Read once when the report configuration loads, so changing this control does not switch the report — reload the story to see it apply.',
     },
   },
 }
@@ -61,10 +59,10 @@ export const MenuNavigation: Story = {
   args: { navigationVariant: 'menu' },
 }
 
-// `defaultReportKey` is read once at hydration, so changing the control on `Default` re-renders
+// `defaultState` is read once at hydration, so changing the control on `Default` re-renders
 // without switching the report — only a fresh mount shows the behavior.
 export const DeepLinkedReport: Story = {
-  args: { defaultReportKey: 'BALANCE_SHEET' },
+  args: { defaultState: { reportKey: 'BALANCE_SHEET' } },
   // The report heading only renders in the desktop base header, so the play function
   // needs a desktop width to assert against.
   parameters: { chromatic: { viewports: [1280] } },

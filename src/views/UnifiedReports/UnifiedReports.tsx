@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import type { UnifiedReportsDefaultState } from '@internal-types/features/unifiedReports/defaultState'
 import type { UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -18,12 +19,12 @@ type UnifiedReportProps = {
   navigationVariant?: UnifiedReportNavigationVariant
   showTitle?: boolean
   /**
-   * Report key (e.g. `PROFIT_AND_LOSS`) to land on instead of the default report.
+   * Initial landing state (e.g. `{ reportKey: 'PROFIT_AND_LOSS' }`) instead of the server default.
    * Read when the report configuration loads — later changes do not switch the report
-   * (`defaultValue` semantics). Unknown keys fall back to the default report with a console warning.
+   * (`defaultValue` semantics). Unknown report keys fall back to the default report with a console warning.
    * Report switches are observable via the `ReportsNavigated` event.
    */
-  defaultReportKey?: string
+  defaultState?: UnifiedReportsDefaultState
 }
 
 const UnifiedReportContent = ({
@@ -50,9 +51,9 @@ const UnifiedReportContent = ({
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true, defaultReportKey }: UnifiedReportProps) => {
+export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true, defaultState }: UnifiedReportProps) => {
   return (
-    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode} defaultReportKey={defaultReportKey}>
+    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode} defaultState={defaultState}>
       <ExpandableDataTableProvider>
         <UnifiedReportContent navigationVariant={navigationVariant} showTitle={showTitle} />
       </ExpandableDataTableProvider>
