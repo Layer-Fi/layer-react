@@ -33,9 +33,6 @@ npm run coverage:floor -- --write # raise any floor with 2pt+ of slack
 
 Run it after landing a batch of tests, and commit the raise on its own.
 
-Note: the vitest glob excludes `.claude/**`, so agent worktrees are skipped by a bare
-`npm test`. Passing explicit file paths still works inside one.
-
 ## Helpers
 
 Helpers live under `src/testUtils` (`@testUtils/*`), one directory per concern — put new ones
@@ -68,9 +65,8 @@ There is no `globals: true` — import `describe`/`it`/`expect`/`vi` from `vites
 ## Rendering
 
 Pass `LayerTestProvider` **directly as the `wrapper`** — don't write a redundant wrapper component
-around it. (General RTL advice warns against the name `wrapper`; that's about naming a `render`
-*return value*, an enzyme habit. This is RTL's own render *option*.) It mounts a real `LayerProvider`
-against a fake API host with a default theme — charts and themed surfaces read
+around it. It mounts a real `LayerProvider` against a fake API host with a default theme —
+charts and themed surfaces read
 `--color-dark`/`--color-light`, which only exist under a theme. Assert against the exported
 `TEST_LAYER_BUSINESS_ID` / `TEST_LAYER_API_URL` / `TEST_LAYER_ACCESS_TOKEN`; never hardcode them.
 
@@ -229,18 +225,11 @@ will hang.
 
 ### Anti-pattern quick reference
 
+Rules stated in full above aren't repeated here. These are the remaining ones:
+
 | Don't | Do |
 | --- | --- |
-| `render(<Thing />)` inline in each `it()` | one module-scope `renderThing()` helper, used by every test |
 | `container.querySelector('.btn')` | `screen.getByRole('button', { name: /save/i })` |
-| `getByTestId('submit')` | `getByRole('button', { name: /submit/i })` |
-| `fireEvent.change(input, …)` | `await user.type(input, …)` |
-| `user.click(...)` un-awaited | `await user.click(...)` |
-| `await waitFor(() => screen.getByText('x'))` | `await screen.findByText('x')` |
-| `expect(queryByText('x')).toBeInTheDocument()` | `expect(getByText('x')).toBeInTheDocument()` |
-| 3 assertions in one `waitFor` | 1 inside, the rest after |
-| `user.click` inside `waitFor` | click first, then `waitFor` |
-| `act(() => …)` to silence a warning | await the visible consequence |
 | `expect(el.disabled).toBe(true)` | `expect(el).toBeDisabled()` |
 | `vi.mock('fetch')` | `server.use(endpoint.mock(…, { onRequest }))` |
 | asserting hook internals / call counts | assert rendered output and request body |
