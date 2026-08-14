@@ -61,11 +61,11 @@ describe('ActionableList', () => {
     expect(onClick).toHaveBeenCalledWith(OPTIONS[1])
   })
 
-  it('renders a chevron for link options and omits the selection indicator', () => {
-    const { container } = renderActionableList({ options: LINK_OPTIONS })
+  it('applies link styling only to link options', () => {
+    renderActionableList({ options: [...OPTIONS, ...LINK_OPTIONS] })
 
-    expect(container.querySelector('.Layer__ActionableList__Select')).not.toBeInTheDocument()
-    expect(container.querySelector('svg')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Manage connections' })).toHaveClass('Layer__ActionableList__Item--asLink')
+    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveClass('Layer__ActionableList__Item--asLink')
   })
 
   it('applies secondary styling only to secondary options', () => {
