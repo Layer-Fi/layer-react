@@ -84,6 +84,11 @@ is this same rule set in Augment's format — keep the two in sync.
 
 ### Components and styling
 
+- A consumer-facing component config hidden or removed behind context, a view-level config that
+  ambiguously controls several configurable subcomponents, or one prop added per styling knob.
+  Components take one nested config explicitly; composed views forward targeted configs through
+  `slotProps`, with separate configs when instances may differ. Use context only for genuinely
+  implicit, subtree-stable dependency injection.
 - New markup that duplicates an existing `@ui` primitive. Reach for `HStack`/`VStack` instead of a
   raw `div`, and `Span`/`P`/`Label`/`Header` instead of raw text elements. Genuinely new reusable
   primitives go in `src/components/ui`, not inside a feature.
