@@ -4,34 +4,18 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 import { type LayerEvent, LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
-import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { CallBookingPurpose, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { CallBooking, type CallBookingProps } from '@features/bookkeeping/CallBooking/CallBooking'
 
+import { makeCallBooking } from '@fixtures/bookkeeping/mocks'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const MOCK_ONBOARDING_CALL_BOOKING: CallBookingData = {
-  id: 'call-booking-1',
-  businessId: 'business-1',
-  externalId: 'external-1',
-  purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
-  state: CallBookingState.SCHEDULED,
-  callType: CallBookingType.ZOOM,
-  eventStartAt: new Date('2026-08-20T15:30:00.000Z'),
-  eventEndAt: null,
-  callLink: new URL('https://zoom.us/j/123456789'),
-  cancellationReason: null,
-  didAttend: null,
-  bookkeeperName: 'Jamie Bookkeeper',
-  bookkeeperEmail: 'jamie@layerfi.com',
-  createdAt: new Date('2026-08-01T00:00:00.000Z'),
-  updatedAt: new Date('2026-08-01T00:00:00.000Z'),
-}
+const MOCK_ONBOARDING_CALL_BOOKING = makeCallBooking()
 
-const MOCK_ADHOC_CALL_BOOKING: CallBookingData = {
-  ...MOCK_ONBOARDING_CALL_BOOKING,
+const MOCK_ADHOC_CALL_BOOKING = makeCallBooking({
   purpose: CallBookingPurpose.ADHOC,
   callType: CallBookingType.GOOGLE_MEET,
-}
+})
 
 const renderCallBooking = (props: Partial<CallBookingProps> = {}, onEvent?: (event: LayerEvent) => void) => {
   const user = userEvent.setup()
@@ -86,10 +70,15 @@ describe('CallBooking', () => {
     expect(screen.getByText('Meet with our bookkeeping team')).toBeInTheDocument()
     expect(screen.getByText('Zoom')).toBeInTheDocument()
     expect(screen.getByRole('list')).toBeInTheDocument()
-    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+
+    const coverageItems = screen.getAllByRole('listitem')
+    expect(coverageItems).toHaveLength(3)
+    expect(coverageItems[0]).toHaveTextContent('Introduce your bookkeeper')
+    expect(coverageItems[1]).toHaveTextContent('Walk through our bookkeeping process')
+    expect(coverageItems[2]).toHaveTextContent('Connect your business bank accounts and credit cards')
 
     const joinLink = screen.getByRole('link', { name: /join call/i })
-    expect(joinLink).toHaveAttribute('href', 'https://zoom.us/j/123456789')
+    expect(joinLink).toHaveAttribute('href', MOCK_ONBOARDING_CALL_BOOKING.callLink.toString())
   })
 
   it('renders ad hoc call details without the onboarding coverage list', () => {
