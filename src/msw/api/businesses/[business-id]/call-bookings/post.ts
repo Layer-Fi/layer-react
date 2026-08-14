@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 import { type CallBooking, CallBookingItemResponseSchema, CallBookingState } from '@schemas/features/bookkeeping/callBooking'
 import { CreateCallBookingBodySchema } from '@schemas/features/bookkeeping/createCallBookingBody'
 
+import { makeCallBooking } from '@fixtures/bookkeeping/mocks'
 import { callBookingStore } from '@msw/api/businesses/[business-id]/call-bookings/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -24,7 +25,7 @@ export const post = createMockEndpoint({
     const { externalId, purpose, callType } = decodeCreateCallBookingBody(await readRequestJson(request))
 
     const now = new Date()
-    const booking: CallBooking = {
+    const booking: CallBooking = makeCallBooking({
       id: crypto.randomUUID(),
       businessId: String(params.businessId),
       externalId,
@@ -34,11 +35,9 @@ export const post = createMockEndpoint({
       eventStartAt: new Date(now.getTime() + 24 * HOUR_MS),
       eventEndAt: new Date(now.getTime() + 25 * HOUR_MS),
       callLink: new URL('https://meet.example.com/mock-call-booking'),
-      bookkeeperName: 'Alex Morgan',
-      bookkeeperEmail: 'alex.morgan@example.com',
       createdAt: now,
       updatedAt: now,
-    }
+    })
 
     // One upcoming call at a time: a new booking replaces any existing one.
     callBookingStore.all().forEach(({ id }) => callBookingStore.deleteById(id))
