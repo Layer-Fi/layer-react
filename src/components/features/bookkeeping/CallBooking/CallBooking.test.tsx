@@ -1,7 +1,9 @@
+import { type PropsWithChildren } from 'react'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { type LayerEvent, LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { CallBooking, type CallBookingProps } from '@features/bookkeeping/CallBooking/CallBooking'
 
@@ -31,25 +33,38 @@ const MOCK_ADHOC_CALL_BOOKING: CallBookingData = {
   callType: CallBookingType.GOOGLE_MEET,
 }
 
-const renderCallBooking = (props: Partial<CallBookingProps> = {}) => {
+const renderCallBooking = (props: Partial<CallBookingProps> = {}, onEvent?: (event: LayerEvent) => void) => {
   const user = userEvent.setup()
+
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <LayerTestProvider eventCallbacks={onEvent ? { onEvent } : undefined}>{children}</LayerTestProvider>
+  )
 
   return {
     user,
-    ...render(<CallBooking {...props} />, { wrapper: LayerTestProvider }),
+    ...render(<CallBooking {...props} />, { wrapper }),
   }
 }
 
 describe('CallBooking', () => {
   it('renders the empty state and emits an event when scheduling a call', async () => {
     const onBookCall = vi.fn()
-    const { user } = renderCallBooking({ onBookCall })
+    const onEvent = vi.fn<(event: LayerEvent) => void>()
+    const { user } = renderCallBooking({ onBookCall }, onEvent)
 
     expect(screen.getByRole('heading', { name: 'Ready to get started?' })).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Schedule a call' }))
 
     expect(onBookCall).toHaveBeenCalledTimes(1)
+    expect(onEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: LayerEventType.BookkeepingScheduleCallClicked,
+        version: 1,
+        payload: {},
+        metadata: expect.objectContaining({ component: LayerEventComponent.BookkeepingOverview }) as object,
+      }),
+    )
   })
 
   it('renders empty-state string overrides when provided', () => {

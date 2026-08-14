@@ -33,7 +33,7 @@ describe('useCallBookingCountdownLabel', () => {
   })
 
   it('uses singular day phrasing for exactly one day out', () => {
-    const oneDayOut = new Date(NOW.getTime() + 24 * 60 * 60 * 1000 + 60 * 60 * 1000)
+    const oneDayOut = new Date(NOW.getTime() + 24 * 60 * 60 * 1000)
     const { result } = renderCountdownLabel(oneDayOut)
 
     expect(result.current).toBe('in 1 day')
@@ -47,7 +47,7 @@ describe('useCallBookingCountdownLabel', () => {
   })
 
   it('uses singular hour phrasing for exactly one hour out', () => {
-    const oneHourOut = new Date(NOW.getTime() + 60 * 60 * 1000 + 60 * 1000)
+    const oneHourOut = new Date(NOW.getTime() + 60 * 60 * 1000)
     const { result } = renderCountdownLabel(oneHourOut)
 
     expect(result.current).toBe('in 1 hour')
