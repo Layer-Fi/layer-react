@@ -1,0 +1,9 @@
+.Layer__TableControls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Layer__TableControls__FilterTokens {
+  display: flex;
+  gap: var(--spacing-md);
+}

@@ -1,0 +1,35 @@
+.Layer__FilterToken {
+  display: inline-flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--outline-subtle);
+  background-color: var(--bg-default);
+  font-size: var(--text-sm);
+  color: var(--fg-default);
+  --filter-token-size: 1.75rem;
+  --filter-token-value-max-inline-size: 12rem;
+
+  &:hover {
+    border-color: var(--outline-default);
+  }
+
+  .Layer__UI__Button {
+    border-radius: 0;
+  }
+}
+
+.Layer__FilterToken__Content {
+  display: flex;
+  align-items: center;
+  color: var(--fg-default);
+}
+
+.Layer__FilterToken__Content__Field {
+  padding-inline: var(--spacing-md);
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-md);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+}
