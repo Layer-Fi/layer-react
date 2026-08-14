@@ -23,7 +23,9 @@ export default defineConfig({
         'src/**/*.storyData.tsx',
         'src/**/*.{test,spec}.{ts,tsx}',
       ],
-      reporter: ['text-summary', 'html', 'lcov', 'json-summary'],
+      // text-summary prints in CI; json-summary is what `npm run coverage:floor` reads. The html
+      // and lcov reporters write generated JS and CSS that both linters then have to ignore.
+      reporter: ['text-summary', 'json-summary'],
       // A backstop against a real drop, not a target. Integer-valued and left ~1pt below actual: a
       // global percentage also moves when the denominator does (measured drift between branches is
       // ~0.2pt), so a floor set at actual fails PRs that changed nothing about testing.

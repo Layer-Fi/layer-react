@@ -288,7 +288,7 @@ const i18nConfigs = [
 
 export default tsEslint.config(
   {
-    ignores: ['coverage/**', 'dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**', '**/*.gen.ts', '.storybook/public/**', 'storybook-static/**', 'consumer-fixtures/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**', '**/*.gen.ts', '.storybook/public/**', 'storybook-static/**', 'consumer-fixtures/**'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
