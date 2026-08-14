@@ -15,6 +15,8 @@ const LINK_OPTIONS: ActionableListOption<string>[] = [
   { id: 'manage', label: 'Manage connections', value: 'manage', asLink: true },
 ]
 
+const SECONDARY_OPTION: ActionableListOption<string> = { id: 'other', label: 'Other account', value: 'other', secondary: true }
+
 const renderActionableList = (props: Partial<React.ComponentProps<typeof ActionableList<string>>> = {}) => {
   const user = userEvent.setup()
   const onClick = vi.fn()
@@ -64,6 +66,13 @@ describe('ActionableList', () => {
 
     expect(container.querySelector('.Layer__ActionableList__Select')).not.toBeInTheDocument()
     expect(container.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('applies secondary styling only to secondary options', () => {
+    renderActionableList({ options: [...OPTIONS, SECONDARY_OPTION] })
+
+    expect(screen.getByRole('button', { name: 'Other account' })).toHaveClass('Layer__ActionableList__Item--secondary')
+    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveClass('Layer__ActionableList__Item--secondary')
   })
 
   it('marks the item matching selectedId as selected', () => {
