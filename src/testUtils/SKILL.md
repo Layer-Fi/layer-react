@@ -225,11 +225,18 @@ will hang.
 
 ### Anti-pattern quick reference
 
-Rules stated in full above aren't repeated here. These are the remaining ones:
-
 | Don't | Do |
 | --- | --- |
+| `render(<Thing />)` inline in each `it()` | one module-scope `renderThing()` helper, used by every test |
 | `container.querySelector('.btn')` | `screen.getByRole('button', { name: /save/i })` |
+| `getByTestId('submit')` | `getByRole('button', { name: /submit/i })` |
+| `fireEvent.change(input, …)` | `await user.type(input, …)` |
+| `user.click(...)` un-awaited | `await user.click(...)` |
+| `await waitFor(() => screen.getByText('x'))` | `await screen.findByText('x')` |
+| `expect(queryByText('x')).toBeInTheDocument()` | `expect(getByText('x')).toBeInTheDocument()` |
+| 3 assertions in one `waitFor` | 1 inside, the rest after |
+| `user.click` inside `waitFor` | click first, then `waitFor` |
+| `act(() => …)` to silence a warning | await the visible consequence |
 | `expect(el.disabled).toBe(true)` | `expect(el).toBeDisabled()` |
 | `vi.mock('fetch')` | `server.use(endpoint.mock(…, { onRequest }))` |
 | asserting hook internals / call counts | assert rendered output and request body |
