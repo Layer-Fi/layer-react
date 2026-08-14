@@ -26,15 +26,7 @@ export default defineConfig({
       // text-summary prints in CI; json-summary is what `npm run coverage:floor` reads. The html
       // and lcov reporters write generated JS and CSS that both linters then have to ignore.
       reporter: ['text-summary', 'json-summary'],
-      // A backstop against a real drop, not a target. Integer-valued and left ~1pt below actual: a
-      // global percentage also moves when the denominator does (measured drift between branches is
-      // ~0.2pt), so a floor set at actual fails PRs that changed nothing about testing.
-      //
-      // Raising it is the ratchet, and it is deliberate rather than automatic — `autoUpdate` would
-      // have every concurrent PR rewriting these four lines. Run `npm run coverage:floor` to see
-      // the headroom; when a metric sits 2pt or more above its floor, raise that floor by one in
-      // its own PR. That keeps the slack in [1pt, 2pt): loose enough to absorb drift, tight enough
-      // that deleting a suite still fails.
+      // A backstop against a real drop, not a target — see src/testUtils/SKILL.md.
       thresholds: {
         autoUpdate: false,
         lines: 30,

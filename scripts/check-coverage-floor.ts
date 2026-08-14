@@ -1,9 +1,7 @@
 import fs from 'node:fs'
 
 // Reports headroom between actual coverage and the committed floors in vitest.config.ts, and with
-// --write raises any floor that has 2pt or more of slack. The floors are a backstop, so raising
-// them is a deliberate act in its own PR — never something a normal test run does, which is what
-// keeps concurrent PRs off these four lines.
+// --write raises any floor that has 2pt or more of slack. See src/testUtils/SKILL.md.
 
 const SUMMARY_PATH = 'coverage/coverage-summary.json'
 const CONFIG_PATH = 'vitest.config.ts'
