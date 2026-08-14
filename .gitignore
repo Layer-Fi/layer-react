@@ -8,6 +8,7 @@ node_modules/
 .agents/
 .claude/
 storybook-static
+coverage/
 
 # Consumer fixtures install the packed tarball fresh on every run.
 consumer-fixtures/*/node_modules/
