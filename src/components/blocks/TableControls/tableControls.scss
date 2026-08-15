@@ -1,9 +1,11 @@
 .Layer__TableControls {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .Layer__TableControls__FilterTokens {
   display: flex;
   gap: var(--spacing-md);
+  flex-wrap: wrap;
 }
