@@ -16,14 +16,27 @@ export function TableControlsDemo() {
         id: 'amount',
         props: {
           field: 'Amount',
-          operator: 'is greater than',
+          operator: 'gt',
           operatorOptions: [
             { value: 'lt', label: 'is less than' },
             { value: 'gt', label: 'is greater than' },
             { value: 'eq', label: 'is equal to' },
           ],
           value: '$100',
-          onOperatorChange: () => alert('operator change'),
+          onOperatorChange: (operator: string) => {
+            setFilterTokens(prevState => {
+              const newState = new Map(prevState)
+              const newProps = prevState.get('amount')!.props
+              newState.set('amount', {
+                id: 'amount',
+                props: {
+                  ...newProps,
+                  operator,
+                }
+              })
+              return newState
+            })
+          },
           onRemove: () => handleRemoveToken('amount')(),
           valueType: 'string',
           onValueChange: (value: string) => {
@@ -34,7 +47,7 @@ export function TableControlsDemo() {
                 id: 'amount',
                 props: {
                   ...newProps,
-                  value
+                  value,
                 }
               })
               return newState
@@ -78,7 +91,7 @@ export function TableControlsDemo() {
             onValueChange: (value: string) => {
             setFilterTokens(prevState => {
               const newState = new Map(prevState)
-              const newProps = prevState.get('amount')!.props
+              const newProps = prevState.get('bankAccount')!.props
               newState.set('bankAccount', {
                 id: 'bankAccount',
                 props: {
@@ -108,10 +121,13 @@ export function TableControlsDemo() {
     const amountFilter = filterTokens.get('amount')
     const bankAccountFilter = filterTokens.get('bankAccount')
     const amount = amountFilter?.props.value
+    const operator = amountFilter?.props.operator
     const query = bankAccountFilter?.props.value
 
+    console.log('operator', operator)
+
     return {
-      amount: amount ? { min: Number(amount.replaceAll('$', '')) } : undefined,
+      amount: amount ? (operator === 'gt' ? { min: Number(amount.replaceAll('$', '')) } : { max: Number(amount.replaceAll('$', '')) }) : undefined,
       query
     }
   }, [filterTokens])
