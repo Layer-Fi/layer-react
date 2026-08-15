@@ -9,7 +9,7 @@ const meta: Meta<typeof FilterToken> = {
   title: 'Blocks/TableControls/FilterToken',
   component: FilterToken,
   args: {
-    onClose: () => alert('closed!')
+    onRemove: () => alert('removed!')
   },
   decorators: [
     Story => (
@@ -30,7 +30,7 @@ const AMOUNT_OPERATOR_OPTIONS = [
   { value: 'eq', label: 'is equal to' },
 ]
 
-const AmountFilterTokenExample = (args: Pick<FilterTokenProps, 'onClose'>) => {
+const AmountFilterTokenExample = (args: Pick<FilterTokenProps, 'onRemove'>) => {
   const [operator, setOperator] = useState('lt')
   const [value, setValue] = useState('$100')
 
@@ -59,7 +59,7 @@ const CATEGORY_VALUE_OPTIONS = [
   { value: 'transfer', label: 'Transfer' },
 ]
 
-const CategoryFilterTokenExample = (args: Pick<FilterTokenProps, 'onClose'>) => {
+const CategoryFilterTokenExample = (args: Pick<FilterTokenProps, 'onRemove'>) => {
   const [operator, setOperator] = useState('is')
   const [value, setValue] = useState('sales')
 

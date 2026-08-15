@@ -22,7 +22,7 @@ type FilterTokenBaseProps = {
     value: string;
   }[]
   value: string;
-  onClose: () => void;
+  onRemove: () => void;
   onOperatorChange: (operatorValue: string) => void;
   onValueChange: (newValue: string) => void;
 }
@@ -39,7 +39,7 @@ export type FilterTokenProps = FilterTokenBaseProps & (
 )
 
 export function FilterToken(props: FilterTokenProps) {
-  const { field, operator, operatorOptions, onOperatorChange, onValueChange, value, onClose } = props
+  const { field, operator, operatorOptions, onOperatorChange, onValueChange, value, onRemove } = props
   const { t } = useTranslation()
 
   const [isValueModalOpen, setIsValueModalOpen] = useState(false)
@@ -113,7 +113,7 @@ export function FilterToken(props: FilterTokenProps) {
       <Button
         variant="ghost"
         icon
-        onPress={onClose}
+        onPress={onRemove}
         aria-label={t('blocks:FilterToken.action.remove_filter', 'Remove {{field}} filter', { field })}
       >
         <X size={14} />

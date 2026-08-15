@@ -4,7 +4,7 @@ import './tableControls.scss'
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 
-type TableControls = {
+export type TableControlsProps = {
   filterTokens: {
     id: string;
     props: FilterTokenProps;
@@ -13,7 +13,7 @@ type TableControls = {
   onClear: () => void;
 }
 
-export function TableControls({filterTokens, onAddFilter, onClear}: TableControls) {
+export function TableControls({filterTokens, onAddFilter, onClear}: TableControlsProps) {
   const { t } = useTranslation()
 
   return (
