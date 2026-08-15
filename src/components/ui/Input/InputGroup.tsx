@@ -14,10 +14,10 @@ import './inputGroup.scss'
 const INPUT_GROUP_BASE_CLASS_NAME = 'Layer__UI__InputGroup'
 
 const legacyClassNames = createLegacyClassNames({
-  [INPUT_GROUP_BASE_CLASS_NAME]: ['Layer__input-group', 'Layer__InputGroup'],
+  Layer__UI__InputGroup: ['Layer__input-group', 'Layer__InputGroup'],
 })
 
-const INPUT_GROUP_CLASS_NAME = legacyClassNames(INPUT_GROUP_BASE_CLASS_NAME)
+const INPUT_GROUP_CLASS_NAME = legacyClassNames('Layer__UI__InputGroup')
 
 type InputGroupProps = ReactAriaGroupProps & {
   actionCount?: 1 | 2
