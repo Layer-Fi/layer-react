@@ -26,7 +26,20 @@ export function TableControlsDemo() {
           onOperatorChange: () => alert('operator change'),
           onRemove: () => handleRemoveToken('amount')(),
           valueType: 'string',
-          onValueChange: () => alert ('value changed')
+          onValueChange: (value: string) => {
+            setFilterTokens(prevState => {
+              const newState = new Map(prevState)
+              const newProps = prevState.get('amount')!.props
+              newState.set('amount', {
+                id: 'amount',
+                props: {
+                  ...newProps,
+                  value
+                }
+              })
+              return newState
+            })
+          }
         }
       }],
     ]))
@@ -62,7 +75,20 @@ export function TableControlsDemo() {
               { value: 'bank of america', label: 'Bank of America' },
             ],
             value: 'chase',
-            onValueChange: () => alert ('value changed')
+            onValueChange: (value: string) => {
+            setFilterTokens(prevState => {
+              const newState = new Map(prevState)
+              const newProps = prevState.get('amount')!.props
+              newState.set('bankAccount', {
+                id: 'bankAccount',
+                props: {
+                  ...newProps,
+                  value
+                }
+              })
+              return newState
+            })
+          }
           }
         })
         return newState
