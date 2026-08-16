@@ -92,7 +92,7 @@ is the filterable stand-in. `screenshots:check` enforces tag ↔ manifest parity
 ## `public-api` — what ships to GitHub Pages
 
 A separate, broader tag, opted into on **each individual story** that should ship — never on
-the meta. `STORYBOOK_PUBLIC_ONLY=true` filters the build to those stories
+the meta. `STORYBOOK_SCOPE=public` filters the build to those stories
 (`experimental_indexers` in `main.ts`), and `storybook-pages.yml` sets it, so the public deploy
 shows the shipped API and nothing else. Opt-in per story is fail-closed: a new story on a
 public component stays private until someone tags it.
