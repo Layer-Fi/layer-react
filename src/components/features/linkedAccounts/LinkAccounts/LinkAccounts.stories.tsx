@@ -27,7 +27,6 @@ function RestartingLinkAccounts() {
 
 const meta = {
   title: 'Components/LinkAccounts',
-  tags: ['public-api'],
   component: LinkAccounts,
   render: () => <RestartingLinkAccounts />,
   argTypes: {
@@ -64,21 +63,21 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
   loaders: [clearBankAccounts],
 }
 
 // Both start from the seeded store; the link step renders a card per connected account.
 export const AccountsLinked: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   parameters: { chromatic: { viewports: [1280] } },
-  tags: ['docs-screenshot'],
 }
 
-export const ConfirmingBusinessAccounts: Story = {
+export const ConfirmingAccounts: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   // Docs captures this at desktop only, and the interaction is desktop-shaped:
   // the header collapses to icon buttons below the tablet breakpoint.
   parameters: { chromatic: { viewports: [1280] } },
-  tags: ['docs-screenshot'],
   loaders: [
     () => bankAccountStore.all().forEach(
       account => bankAccountStore.save(markAccountNeedingConfirmation(account)),
