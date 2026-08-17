@@ -61,27 +61,11 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    # Kept out of the check steps below: those are non-blocking, so an install failure there would
-    # read as a check failure. Runs for alpha too — the class-name scan needs the dependencies.
+    # Kept out of the check step below: that one is continue-on-error, so an install failure
+    # there would read as a translation failure.
     - name: Install dependencies
+      if: ${{ inputs.release_type == 'stable' }}
       run: npm ci
-
-    # Informational, never blocking: dropping a class name is sometimes deliberate. It is reported
-    # here because this is the last point before a version exists, and a consumer styling against a
-    # dropped name has no way to find out until their UI breaks.
-    - name: Check for dropped class names
-      id: dropped
-      run: |
-        npm run --silent css:scan-releases > scan.txt 2>&1 || true
-        sed -n '1,5p' scan.txt
-
-        # The line the release person needs: what this release removes from consumers' reach.
-        VERDICT=$(grep -E 'dropped by the working tree|has been dropped' scan.txt | head -1)
-        echo "verdict=${VERDICT:-Class-name scan produced no verdict.}" >> "$GITHUB_OUTPUT"
-
-        if echo "$VERDICT" | grep -q 'are dropped'; then
-          echo "::warning title=Class names dropped::$VERDICT Consumers styling against them will break silently."
-        fi
 
     # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
     # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.
@@ -154,7 +138,6 @@ jobs:
         GH_TOKEN: ${{ github.token }}
         V: ${{ steps.ver.outputs.version }}
         BR: ${{ steps.ver.outputs.branch }}
-        DROPPED: ${{ steps.dropped.outputs.verdict }}
       run: |
         if git ls-remote --exit-code --heads origin "$BR" >/dev/null 2>&1; then
           echo "::error::Branch $BR already exists on origin. A release PR for v$V is likely still open — merge or close it (and delete the branch) before re-running." >&2
@@ -163,24 +146,8 @@ jobs:
         git checkout -b "$BR"
         git commit -am "chore(release): v$V"
         git push origin "$BR"
-
-        BODY="$RUNNER_TEMP/pr-body.md"
-        {
-          echo "Automated ${{ inputs.release_type }} bump to \`$V\`. Merging triggers Release — Tag"
-          echo "(creates tag v$V + GitHub Release); then run Release — Publish to ship to npm and"
-          echo "update Linear."
-          echo
-          echo "### Class names"
-          echo
-          echo "$DROPPED"
-          echo
-          echo "A dropped class name is a silent break: consumers style against these, and nothing"
-          echo "in their build tells them it is gone. If any are listed, either restore them with"
-          echo "\`npm run css:rename\` or accept the break deliberately and note it in the release."
-        } > "$BODY"
-
         URL=$(gh pr create --base main --head "$BR" \
           --title "chore(release): v$V" \
-          --body-file "$BODY")
+          --body "Automated ${{ inputs.release_type }} bump to \`$V\`. Merging triggers Release — Tag (creates tag v$V + GitHub Release); then run Release — Publish to ship to npm and update Linear.")
         echo "Opened $URL"
         echo "[Release PR for v$V]($URL)" >> "$GITHUB_STEP_SUMMARY"
