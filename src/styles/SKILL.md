@@ -83,6 +83,63 @@ Use a descendant combinator only when the element genuinely can't own a class (t
 markup). Prefer `data-*` attribute selectors to `--modifier` classes for variants — see
 [`../components/ui/SKILL.md`](../components/ui/SKILL.md).
 
+## Breakpoints
+
+`_breakpoints.scss` holds the size-class thresholds, mirrored from `BREAKPOINTS` in
+`@utils/shared/size/screenSizeBreakpoints` and guarded by `breakpoints.test.ts`. Never
+write a raw width:
+
+```scss
+@use 'breakpoints' as bp;
+
+.Layer__MyComponent {
+  @include bp.container-tablet-down {
+    flex-direction: column;
+  }
+}
+```
+
+`mobile` / `tablet-down` / `desktop-up` are `@media`; the `container-` variants are
+`@container` and take an optional container name — `layer-card` (a `Container`),
+`layer-view` (a `View`'s body), `layer-view-header`. Name the container whenever the
+nearest one isn't obviously the one you mean.
+
+The partials resolve through Sass `loadPaths`, configured in **three** places —
+`vite.config.ts`, `vitest.config.ts` and `.storybook/main.ts` — because Storybook builds
+its own Vite config.
+
+## Legacy class names
+
+Consumers style against the emitted class names (the README tells them to), so a rename
+has to keep shipping the old string **on the same element**. `layerClassName` in
+`@utils/shared/styles/legacyClassNames` pairs a current name with the names it replaced,
+and `withLegacy` emits both. The layout primitives' full contract lives in one map,
+`blocks/Layout/layoutClassNames.ts`, locked by `legacyClassNames.test.tsx`.
+
+Legacy names are **inert**: no rule targets them. Rules key on the current BEM name only.
+
+This constrains specificity. A consumer override of `.Layer__panel__sidebar` has always
+competed at one class, so a replacement rule setting the same property must not exceed
+one class on that element either — otherwise the override silently stops winning. Set a
+custom property from the `data-*` variant and consume it in the single-class rule:
+
+```scss
+.Layer__ViewPanel[data-sidebar='open'] {
+  --view-panel-sidebar-size: var(--layout-sidebar-inline-size);
+}
+
+.Layer__ViewPanel__Sidebar {
+  inline-size: var(--view-panel-sidebar-size, 0);
+}
+```
+
+## Don't reach into another component
+
+A stylesheet configures a component through its props, or through a custom property that
+component documents as an extension point — never by selecting its class from outside.
+`selector-disallowed-list` in `stylelint.config.mjs` enforces this for the layout
+primitives. The same rule applies everywhere; it is only mechanically checked there.
+
 ## Formatting (enforced by stylelint)
 
 `npm run lint:stylelint` / `lint:fix`. Notable rules:

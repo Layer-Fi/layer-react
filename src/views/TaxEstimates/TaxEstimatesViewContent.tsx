@@ -14,7 +14,7 @@ export const TaxEstimatesViewContent = () => {
 
   if (onboardingStatus === OnboardingStatus.FeatureDisabled) {
     return (
-      <Container name='tax-estimates'>
+      <Container className='Layer__tax-estimates'>
         <DataState
           status={DataStateStatus.info}
           title={t('common:state.feature_not_enabled', 'Feature not enabled')}
@@ -34,7 +34,7 @@ export const TaxEstimatesViewContent = () => {
 
   if (onboardingStatus === OnboardingStatus.Loading) {
     return (
-      <Container name='tax-estimates'>
+      <Container className='Layer__tax-estimates'>
         <Loader />
       </Container>
     )
@@ -42,7 +42,7 @@ export const TaxEstimatesViewContent = () => {
 
   if (onboardingStatus === OnboardingStatus.Error) {
     return (
-      <Container name='tax-estimates'>
+      <Container className='Layer__tax-estimates'>
         <DataState status={DataStateStatus.failed} title={t('views:TaxEstimates.TaxEstimatesViewContent.error.load_tax_information', 'Unable to load tax information')} description={t('views:TaxEstimates.TaxEstimatesViewContent.error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
       </Container>
     )

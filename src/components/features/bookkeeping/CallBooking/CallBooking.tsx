@@ -135,7 +135,7 @@ export const CallBooking = ({
 
   if (callBooking == null) {
     return (
-      <Container name='CallBooking'>
+      <Container className='Layer__CallBooking'>
         <EmptyState
           onBookCall={onBookCall}
           stringOverrides={stringOverrides}
@@ -156,7 +156,7 @@ export const CallBooking = ({
   const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
 
   return (
-    <Container name='CallBooking'>
+    <Container className='Layer__CallBooking'>
       <VStack pi='lg' pb='lg'>
         <HStack className='Layer__CallBooking__HeaderRow' align='start' gap='xl'>
           <DateTile date={callBooking.eventStartAt} />

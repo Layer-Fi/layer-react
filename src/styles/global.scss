@@ -1,23 +1,28 @@
+/*
+ * Scrollbars for everything inside a Layer subtree. `Container` styles its own scrollbar
+ * from the same tokens; this covers every descendant it cannot reach.
+ */
+
 .Layer__component *,
 .Layer__view * {
   scrollbar-width: thin;
 
   &::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
+    height: var(--scrollbar-size);
+    width: var(--scrollbar-size);
   }
 
   &::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background: #f1f1f1;
+    border-radius: var(--scrollbar-radius);
+    background: var(--scrollbar-track);
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background: #e2e2e2;
+    border-radius: var(--scrollbar-radius);
+    background: var(--scrollbar-thumb);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #999;
+    background: var(--scrollbar-thumb-hovered);
   }
 }

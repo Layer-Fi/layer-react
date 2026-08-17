@@ -84,7 +84,7 @@ export const InvoiceDetail = () => {
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : ChevronLeft }} name='InvoiceDetail' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : ChevronLeft }} className='Layer__InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         {showInvoiceForm && (
           <InvoiceForm

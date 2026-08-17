@@ -54,7 +54,7 @@ export const TaxPayments = () => {
   }), [data, isError, isLoading])
 
   return (
-    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
+    <ResponsiveDetailView className='Layer__TaxPayments' slots={{ Header }}>
       {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
     </ResponsiveDetailView>
   )

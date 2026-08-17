@@ -73,7 +73,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
       {/* {route === TaxEstimatesRoute.Overview && <TaxOverview />} */}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
-      <Container name='TaxEstimatesDisclaimer' transparentBg>
+      <Container className='Layer__TaxEstimatesDisclaimer' variant='plain'>
         <P size='xs' variant='subtle'>
           <em>
             {t(

@@ -69,11 +69,10 @@ const ChartOfAccountsContent = ({
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
-    <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
+    <Container className='Layer__chart-of-accounts' ref={containerRef} asWidget={asWidget}>
       {selectedAccount
         ? (
           <LedgerAccountPanel
-            containerRef={containerRef}
             stringOverrides={stringOverrides?.ledgerAccount}
           />
         )
@@ -82,7 +81,6 @@ const ChartOfAccountsContent = ({
             asWidget={asWidget}
             withDateControl={withDateControl}
             withExpandAllButton={withExpandAllButton}
-            containerRef={containerRef}
             showAddAccountButton={showAddAccountButton}
             stringOverrides={stringOverrides?.chartOfAccountsTable}
             templateAccountsEditable={templateAccountsEditable}

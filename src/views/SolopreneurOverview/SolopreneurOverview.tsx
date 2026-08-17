@@ -4,9 +4,6 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
@@ -89,15 +86,7 @@ export const SolopreneurOverview = ({
       <View
         title={stringOverrides?.title || t('common:label.overview', 'Overview')}
         showHeader
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
+        header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
       >
         <SolopreneurOnboardingBanner
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}

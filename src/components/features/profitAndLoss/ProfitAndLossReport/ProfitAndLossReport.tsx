@@ -7,9 +7,6 @@ import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAn
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ProfitAndLossDetailReport } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type BreadcrumbItem } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
@@ -84,38 +81,33 @@ export const ProfitAndLossReport = ({
     if (hideHeader) return null
 
     return (
-      <Header ref={headerRef}>
-        <HeaderRow>
-          <HeaderCol fluid>
-            <Stack
-              direction={isCompact ? 'column-reverse' : 'row'}
-              align={isCompact ? undefined : 'end'}
-              justify='space-between'
-              gap='xs'
-              pb='sm'
-              fluid
-            >
-              <HStack gap='xs'>
-                <CombinedDateRangeSelection mode={dateSelectionMode} isCompact={isCompact} />
-              </HStack>
-              <HStack gap='xs' justify='end' fluid={isCompact}>
-                {isMobileView && <ReportsMobileSelectionTrigger />}
-                <ProfitAndLossDownloadButton
-                  stringOverrides={stringOverrides?.downloadButton}
-                  moneyFormat={csvMoneyFormat}
-                  icon={isMobileView}
-                />
-              </HStack>
-            </Stack>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
+      <Stack
+        ref={headerRef}
+        direction={isCompact ? 'column-reverse' : 'row'}
+        align={isCompact ? undefined : 'end'}
+        justify='space-between'
+        gap='xs'
+        pb='sm'
+        fluid
+      >
+        <HStack gap='xs'>
+          <CombinedDateRangeSelection mode={dateSelectionMode} isCompact={isCompact} />
+        </HStack>
+        <HStack gap='xs' justify='end' fluid={isCompact}>
+          {isMobileView && <ReportsMobileSelectionTrigger />}
+          <ProfitAndLossDownloadButton
+            stringOverrides={stringOverrides?.downloadButton}
+            moneyFormat={csvMoneyFormat}
+            icon={isMobileView}
+          />
+        </HStack>
+      </Stack>
     )
   }, [csvMoneyFormat, dateSelectionMode, headerRef, hideHeader, isCompact, isMobileView, stringOverrides?.downloadButton])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
-      <View type='panel' header={header}>
+      <View layout='panel' header={header}>
         {selectedLineItem
           ? (
             <ProfitAndLossDetailReport

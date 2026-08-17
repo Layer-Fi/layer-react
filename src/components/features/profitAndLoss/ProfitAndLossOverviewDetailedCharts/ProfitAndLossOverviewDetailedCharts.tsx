@@ -53,9 +53,9 @@ export const ProfitAndLossOverviewDetailedCharts = ({
     ? 'Layer__AccountingOverview__ProfitAndLossCharts'
     : 'Layer__BookkeepingOverview__ProfitAndLossCharts'
 
-  const chartContainerName = variant === 'accounting'
-    ? 'AccountingOverview__ProfitAndLossChart'
-    : 'BookkeepingOverview__ProfitAndLossChart'
+  const chartContainerClassName = variant === 'accounting'
+    ? 'Layer__AccountingOverview__ProfitAndLossChart'
+    : 'Layer__BookkeepingOverview__ProfitAndLossChart'
 
   return (
     <VStack className={chartsWrapperClassName} gap='md' ref={elementRef}>
@@ -70,7 +70,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
         )}
       {isCompact
         ? (
-          <Container name={chartContainerName}>
+          <Container className={chartContainerClassName}>
             <ProfitAndLoss.DetailedCharts
               scope={pnlToggle}
               hideClose={true}
@@ -82,7 +82,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
         )
         : (
           <HStack gap='md'>
-            <Container name={chartContainerName}>
+            <Container className={chartContainerClassName}>
               <ProfitAndLoss.DetailedCharts
                 scope='revenue'
                 hideClose={true}
@@ -91,7 +91,7 @@ export const ProfitAndLossOverviewDetailedCharts = ({
                 stringOverrides={detailedChartsStringOverrides}
               />
             </Container>
-            <Container name={chartContainerName}>
+            <Container className={chartContainerClassName}>
               <ProfitAndLoss.DetailedCharts
                 scope='expenses'
                 hideClose={true}

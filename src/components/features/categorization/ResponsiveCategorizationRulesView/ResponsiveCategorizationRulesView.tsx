@@ -160,7 +160,7 @@ export const ResponsiveCategorizationRulesView = () => {
   }), [categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState])
 
   const DesktopView = useMemo(() => (
-    <Container name='ResponsiveCategorizationRulesView'>
+    <Container className='Layer__ResponsiveCategorizationRulesView'>
       <CategorizationRulesHeader
         onGoBack={toBankTransactionsTable}
         onCreateRule={onCreateRule}

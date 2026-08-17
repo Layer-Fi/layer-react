@@ -229,7 +229,7 @@ export const ProfitAndLossDetailReport = ({
 
   if (selectedSource) {
     return (
-      <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
+      <BaseDetailView slots={{ Header }} className='Layer__ProfitAndLossDetailReport' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
           <LedgerEntryDetailSection
             title={stringOverrides?.sourceDetailsTitle || t('profitAndLoss:ProfitAndLossDetailReport.label.transaction_source', 'Transaction source')}
@@ -245,7 +245,7 @@ export const ProfitAndLossDetailReport = ({
   }
 
   return (
-    <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={onClose} borderless>
+    <BaseDetailView slots={{ Header }} className='Layer__ProfitAndLossDetailReport' onGoBack={onClose} borderless>
       <VStack className='Layer__ProfitAndLossDetailReport'>
         <VirtualizedDataTable<ProcessedPnlDetailLine>
           componentName={COMPONENT_NAME}

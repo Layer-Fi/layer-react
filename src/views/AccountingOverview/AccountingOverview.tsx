@@ -7,9 +7,6 @@ import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -86,17 +83,9 @@ export const AccountingOverview = ({
     >
       <View
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
-        viewClassName='Layer__AccountingOverview'
+        className='Layer__AccountingOverview'
         showHeader={showTitle}
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
+        header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
@@ -107,8 +96,7 @@ export const AccountingOverview = ({
           variants={profitAndLossSummariesVariants}
         />
         <Container
-          name='accounting-overview-profit-and-loss'
-          className='Layer__AccountingOverview__ProfitAndLossContainer'
+          className='Layer__accounting-overview-profit-and-loss Layer__AccountingOverview__ProfitAndLossContainer'
           asWidget
         >
           <ProfitAndLossHeader
@@ -123,7 +111,7 @@ export const AccountingOverview = ({
           />
         </Container>
         {middleBanner && (
-          <Container name='accounting-overview-middle-banner'>
+          <Container className='Layer__accounting-overview-middle-banner'>
             {middleBanner}
           </Container>
         )}

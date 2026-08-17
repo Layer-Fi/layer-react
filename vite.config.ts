@@ -19,6 +19,13 @@ export default defineConfig(({ mode, command }) => {
   return {
     publicDir: false,
 
+    // Lets any stylesheet reach the shared partials with `@use 'breakpoints'`.
+    css: {
+      preprocessorOptions: {
+        scss: { loadPaths: [path.resolve(__dirname, 'src/styles')] },
+      },
+    },
+
     plugins: [
       react(),
       isESM ? bundleCss() : null,

@@ -1,8 +1,15 @@
+import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react()],
+  // `test.css` compiles stylesheets, so the shared partials have to resolve here too.
+  css: {
+    preprocessorOptions: {
+      scss: { loadPaths: [path.resolve(__dirname, 'src/styles')] },
+    },
+  },
   resolve: {
     extensions: ['.tsx', '.ts'],
     tsconfigPaths: true,

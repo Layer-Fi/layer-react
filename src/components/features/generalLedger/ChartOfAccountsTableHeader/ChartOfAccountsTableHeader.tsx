@@ -6,9 +6,7 @@ import { Button } from '@ui/Button/Button'
 import { SearchField } from '@ui/SearchField/SearchField'
 import { Heading } from '@ui/Typography/Heading'
 import { LedgerDateRangeSelection } from '@blocks/DatePickers/DateSelection/LedgerDateRangeSelection'
-import { Header } from '@blocks/Layout/Header/Header'
-import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
-import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
+import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 import { ExpandableDataTableToggleButton } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableToggleButton'
 import { AccountBalancesDownloadButton } from '@features/generalLedger/AccountBalancesDownloadButton/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@features/generalLedger/ChartOfAccountsTableWithPanel/ChartOfAccountsTableWithPanel'
@@ -41,42 +39,45 @@ export const ChartOfAccountsTableHeader = ({
   const addAccountLabel = stringOverrides?.addAccountButtonText || t('generalLedger:ChartOfAccountsTableHeader.action.add_account', 'Add Account')
 
   return (
-    <Header asHeader sticky rounded>
-      <HeaderRow>
-        <HeaderCol>
+    <ViewHeader
+      surface='panel'
+      asHeader
+      sticky
+      rounded
+      slots={{
+        Title: (
           <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
             {stringOverrides?.headerText || t('generalLedger:ChartOfAccountsTableHeader.label.chart_of_accounts', 'Chart of Accounts')}
           </Heading>
-        </HeaderCol>
-        <HeaderCol>
-          {withExpandAllButton && <ExpandableDataTableToggleButton />}
-          <AccountBalancesDownloadButton
-            filterByDateRange={withDateControl}
-            icon={!isDesktop}
-          />
-          {showAddAccountButton && (
-            <Button
-              onPress={() => onAddAccount()}
+        ),
+        Actions: (
+          <>
+            {withExpandAllButton && <ExpandableDataTableToggleButton />}
+            <AccountBalancesDownloadButton
+              filterByDateRange={withDateControl}
               icon={!isDesktop}
-              aria-label={!isDesktop ? addAccountLabel : undefined}
-            >
-              {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
-            </Button>
-          )}
-        </HeaderCol>
-      </HeaderRow>
-      <HeaderRow scrollable>
-        <HeaderCol>
-          {withDateControl && <LedgerDateRangeSelection />}
-        </HeaderCol>
-        <HeaderCol className='Layer__chart-of-accounts__actions'>
+            />
+            {showAddAccountButton && (
+              <Button
+                onPress={() => onAddAccount()}
+                icon={!isDesktop}
+                aria-label={!isDesktop ? addAccountLabel : undefined}
+              >
+                {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
+              </Button>
+            )}
+          </>
+        ),
+        Filters: withDateControl ? <LedgerDateRangeSelection /> : undefined,
+        FilterActions: (
           <SearchField
+            className='Layer__chart-of-accounts__actions'
             label={t('generalLedger:ChartOfAccountsTableHeader.label.search_accounts', 'Search accounts')}
             value={inputValue}
             onChange={onSearchChange}
           />
-        </HeaderCol>
-      </HeaderRow>
-    </Header>
+        ),
+      }}
+    />
   )
 }

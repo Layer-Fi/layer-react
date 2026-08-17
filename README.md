@@ -479,6 +479,11 @@ body .Layer__bank-transaction-row .Layer__table-cell-content {
 }
 ```
 
+Class names you have already targeted keep working across releases: when a component is
+renamed internally, it keeps emitting the older class on the same element. Write the rule
+with at least the extra specificity shown above (`body .Layer__…`) so it wins regardless
+of stylesheet order.
+
 ## Error callback
 
 Use `onError` property on `<LayerProvider />` to get notified about all exceptions:

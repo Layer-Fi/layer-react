@@ -1,0 +1,25 @@
+// Tokens are declared on these classes rather than `:root`, so the library never leaks
+// variables into a consumer's page. Anything rendered outside one of these subtrees - a
+// portal, a bare primitive in a story - resolves every `var()` to nothing.
+
+@mixin token-roots {
+  .Layer__component,
+  .Layer__Portal,
+  .Layer__view,
+  .Layer__UI__Tooltip,
+  .Layer__toasts-container,
+  .Layer__drawer,
+  .Layer__variables,
+  .Layer__tasks-component {
+    @content;
+  }
+}
+
+// The subset that also carries the non-consumer-facing semantic tokens.
+@mixin internal-token-roots {
+  .Layer__view,
+  .Layer__component,
+  .Layer__Portal {
+    @content;
+  }
+}

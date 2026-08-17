@@ -21,7 +21,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
   const { form, actions, state } = useActiveTimerBannerForm({ activeEntry })
 
   return (
-    <Container name='ActiveTimeTracker' className='Layer__ActiveTimeTracker__Container'>
+    <Container className='Layer__ActiveTimeTracker Layer__ActiveTimeTracker__Container'>
       {state.actionError && (
         <HStack className='Layer__ActiveTimeTracker__ErrorStrip' pb='xs' pi='md' role='alert'>
           <HStack className='Layer__ActiveTimeTracker__ErrorStripRow' gap='sm' align='center'>
