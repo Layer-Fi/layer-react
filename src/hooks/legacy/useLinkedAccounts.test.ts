@@ -1,4 +1,3 @@
-import { act } from '@testing-library/react'
 import type { HttpHandler, PathParams } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -58,9 +57,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-    await act(async () => {
-      await result.current.addConnection('PLAID')
-    })
+    await result.current.addConnection('PLAID')
 
     expect(customerManagedPlaidConfig.createLinkToken).toHaveBeenCalledOnce()
     expect(createPlaidLink).not.toHaveBeenCalled()
@@ -72,9 +69,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-    await act(async () => {
-      await result.current.repairConnection('PLAID', 'plaid-item-id')
-    })
+    await result.current.repairConnection('PLAID', 'plaid-item-id')
 
     expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith('plaid-item-id')
     expect(createPlaidUpdateModeLink).not.toHaveBeenCalled()
@@ -86,9 +81,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-    await act(async () => {
-      await result.current.removeConnection('PLAID', 'plaid-item-id')
-    })
+    await result.current.removeConnection('PLAID', 'plaid-item-id')
 
     expect(unlinkPlaidItem).not.toHaveBeenCalled()
     expect(consoleError).toHaveBeenCalledOnce()
@@ -100,9 +93,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-    await act(async () => {
-      await result.current.breakConnection('PLAID', 'plaid-item-id')
-    })
+    await result.current.breakConnection('PLAID', 'plaid-item-id')
 
     expect(resetPlaidItemLogin).not.toHaveBeenCalled()
     expect(consoleError).toHaveBeenCalledOnce()
@@ -127,9 +118,7 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await act(async () => {
-      await result.current.addConnection('PLAID')
-    })
+    await result.current.addConnection('PLAID')
 
     expect(createPlaidLink).toHaveBeenCalledOnce()
   })
@@ -139,9 +128,7 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await act(async () => {
-      await result.current.repairConnection('PLAID', 'plaid-item-id')
-    })
+    await result.current.repairConnection('PLAID', 'plaid-item-id')
 
     expect(createPlaidUpdateModeLink).toHaveBeenCalledWith(
       expect.objectContaining({ body: { plaid_item_id: 'plaid-item-id' } }),
@@ -153,9 +140,7 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await act(async () => {
-      await result.current.removeConnection('PLAID', 'plaid-item-id')
-    })
+    await result.current.removeConnection('PLAID', 'plaid-item-id')
 
     expect(unlinkPlaidItem).toHaveBeenCalledOnce()
   })
