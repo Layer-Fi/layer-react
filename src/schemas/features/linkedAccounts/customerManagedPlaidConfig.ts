@@ -18,17 +18,14 @@ export type CustomerManagedPlaidConfig = {
 
   /**
    * Mints an update-mode link token for the given connection. The id is the
-   * `connectionExternalId` Layer holds on file: opaque to Layer, meaningful to the customer.
+   * `connectionExternalId` Layer holds on file: the Plaid item id for a Layer-managed item, or
+   * the processor token for a customer-managed one.
    */
   createUpdateModeLinkToken: (connectionExternalId: string) => Awaitable<{ linkToken: string }>
 
   /**
    * Hands off a successful Link result. The customer exchanges the public token, mints a
    * processor token for Layer, and posts it to Layer's API.
-   *
-   * Must not resolve until Layer has persisted the connection: resolution is what triggers the
-   * accounts refetch. Nothing bounds how long this may take, so a callback that never settles
-   * leaves the linking spinner up indefinitely.
    */
   onPublicTokenReceived: (
     handoff: { publicToken: string, metadata: PlaidLinkOnSuccessMetadata },
