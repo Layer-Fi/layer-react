@@ -11,7 +11,7 @@ import path from 'node:path'
  *
  * A seeded map emits nothing until the element passes the new name through the composer, and that
  * edit depends on how the element builds its class names — so it is left to a human. The files
- * needing it are listed on exit, and `css:check-legacy-keys` fails until each one is done.
+ * needing it are listed on exit, and `css:check` fails until each one is done.
  */
 
 const UTIL_IMPORT = "import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'"
@@ -98,4 +98,4 @@ if (needsCallSiteEdit.length > 0) {
 
 console.log(isDryRun
   ? '\nDry run — nothing written.'
-  : '\nNext: npm run lint -- --fix && npm run css:check-legacy-keys')
+  : '\nNext: npm run lint -- --fix && npm run css:check')

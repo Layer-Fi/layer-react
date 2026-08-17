@@ -66,14 +66,14 @@ function removedNames(mergeBase: string) {
   return removed
 }
 
-function main() {
+export function checkRemovedClassNames() {
   let mergeBase: string
   try {
     mergeBase = git(['merge-base', BASE_REF, 'HEAD']).trim()
   }
   catch {
     console.error(`Cannot resolve ${BASE_REF} — fetch it, or set BASE_REF, so the diff has a base.`)
-    process.exit(1)
+    return false
   }
 
   const shipped = shippedNames()
@@ -89,10 +89,9 @@ function main() {
       '\nKeep each one — a createLegacyClassNames map beside the element, or `npm run css:rename`'
       + `\n— or accept the break by adding it to ${ALLOWLIST_PATH} with a reason.\n`,
     )
-    process.exit(1)
+    return false
   }
 
   console.log(`No class name is dropped against ${BASE_REF}.`)
+  return true
 }
-
-main()
