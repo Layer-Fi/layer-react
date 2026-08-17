@@ -10,6 +10,7 @@ node_modules/
 .codex/
 .agents/
 .claude/
+.vercel
 storybook-static
 coverage/
 
@@ -21,6 +22,3 @@ consumer-fixtures/*/*.tgz
 
 # Written by `npm run audit:floors` when handed an output path.
 audit-floors.json
-
-# Written by `vercel link`; holds the project id and a short-lived OIDC token.
-.vercel

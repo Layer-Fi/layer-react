@@ -1,5 +1,3 @@
-// Vercel function. Mints a short-lived token so the Layer app secret never reaches the browser.
-//
 // No imports on purpose: `api/package.json` marks this directory ESM because the root package is
 // commonjs, and under ESM an extensionless relative import into `src/` wouldn't resolve at runtime.
 

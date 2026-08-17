@@ -1,5 +1,4 @@
-// Shared by the manager and the preview, which are same-origin, so the preview's write reaches the
-// manager as a `storage` event.
+// Shared by the manager and the preview: same-origin, so a write raises `storage` in the other.
 export type RememberedBusiness = { id: string, label?: string }
 
 const STORAGE_KEY = 'layer-storybook-businesses'
@@ -18,7 +17,6 @@ export const readHistory = (): RememberedBusiness[] => {
   }
 }
 
-// Keeps a stored label when called without one, so re-entering an id doesn't erase its name.
 export const remember = (id: string, label?: string) => {
   const existing = readHistory()
   const resolvedLabel = label ?? existing.find(entry => entry.id === id)?.label

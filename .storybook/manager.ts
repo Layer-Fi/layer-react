@@ -13,8 +13,7 @@ const INPUT_STYLE = {
   font: '11px/1.4 ui-monospace, monospace',
 }
 
-// No JSX: the manager bundle uses the classic transform, which needs a `React` binding that nothing
-// references, so lint deletes it and the toolbar throws "React is not defined" at runtime.
+// No JSX: the manager bundle's classic transform needs a `React` binding that lint would delete.
 const BusinessInput = () => {
   const globalTypes = useGlobalTypes()
   const [globals, updateGlobals] = useGlobals()
@@ -25,7 +24,6 @@ const BusinessInput = () => {
 
   useEffect(() => setDraft(current), [current])
 
-  // A URL-supplied id wins; otherwise restore the last one, since a bare visit carries no globals.
   useEffect(() => {
     if (current) {
       setHistory(remember(current))
@@ -36,7 +34,6 @@ const BusinessInput = () => {
     if (mostRecent) updateGlobals({ business: mostRecent.id })
   }, [current, updateGlobals])
 
-  // The preview iframe stores resolved legal names, which is how labels reach this list.
   useEffect(() => {
     const onStorage = () => setHistory(readHistory())
 

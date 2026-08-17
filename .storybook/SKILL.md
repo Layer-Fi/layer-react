@@ -109,17 +109,11 @@ re-render as data lands and detach the node you just clicked.
 
 ## `real-backend` — what ships to the Vercel preview
 
-Also opted into per story. Add it when the story renders a state a real backend produces on its
-own. Two disqualifiers, both mechanical:
-
-- **story-level `parameters.msw.handlers`** — the story exists to force a state the backend won't
-  reproduce (`BookkeepingEnabled`, `DisconnectedAccount`, `OnboardingCallCard`). Meta-level
-  handlers are fine; they are the file's baseline and give way to real data.
-- **a `play` function** — it clicks a specific row, and real data may not have one.
-
-Independent of `public-api`, and opt-in for the same fail-closed reason: an unvetted story is
-absent from the real build rather than silently asserting a state it isn't in. `STORYBOOK_SCOPE=real`
-filters to it; see [`README.md`](./README.md) for the mode itself.
+Also opted into per story, and fail-closed for the same reason. Add it when the story renders a
+state a real backend produces on its own. Two disqualifiers: **story-level
+`parameters.msw.handlers`**, which exists to force a state the backend won't reproduce (meta-level
+handlers are fine — they give way to real data), and **a `play` function**, which clicks a row real
+data may not have. `STORYBOOK_SCOPE=real` filters to it.
 
 ## Flakiness
 

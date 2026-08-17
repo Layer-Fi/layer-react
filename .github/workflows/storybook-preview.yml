@@ -1,12 +1,7 @@
 name: Storybook Preview
 
-# Vercel's automatic deployments are off for `layer-react-storybook`, so previews are built on
-# request: most PRs never need one, and each points at a live business. The `storybook-preview` label
-# is sticky state — applying it builds, later pushes rebuild, removing it stops.
-#
-# A label rather than a `/storybook` comment because applying one already requires write access, so
-# authorization comes from GitHub rather than an `author_association` check this has to keep right —
-# which matters with VERCEL_TOKEN in a public repository.
+# A label rather than a `/storybook` comment: applying one already requires write access, so GitHub
+# does the authorizing. This holds VERCEL_TOKEN and the repository is public.
 
 on:
   pull_request:
@@ -15,7 +10,6 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  # For the commit status carrying the preview link, which Vercel's own check used to provide.
   statuses: write
 
 concurrency:
@@ -23,14 +17,13 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Identifies the comment this workflow owns, so it is updated in place rather than repeated.
   MARKER: <!-- storybook-preview -->
   STATUS_CONTEXT: Storybook Preview
 
 jobs:
   instructions:
     name: Offer a preview
-    # Skipped once labelled, so reopening can't overwrite a URL. Forks have no writable token.
+    # Skipped once labelled, so reopening can't overwrite a URL with instructions.
     if: |
       (github.event.action == 'opened' || github.event.action == 'reopened')
       && !contains(github.event.pull_request.labels.*.name, 'storybook-preview')
@@ -48,7 +41,7 @@ jobs:
         **Storybook preview** — add the \`storybook-preview\` label to build one.
 
         It renders stories against a live sandbox business instead of MSW fixtures, and stays up to
-        date on every push while the label is applied. See \`.storybook/README.md\`."
+        date on every push while the label is applied."
         id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
           --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
         if [ -n "$id" ]; then
@@ -72,7 +65,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    # Before checkout, so the checks box shows the build in flight rather than only its outcome.
+    # Before checkout, so the build shows in flight rather than only its outcome.
     - name: Mark the status pending
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,8 +103,7 @@ jobs:
         **Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
 
         Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar
-        field. Rebuilds on every push while the label is applied; remove it to stop. See
-        \`.storybook/README.md\`."
+        field. Rebuilds on every push while the label is applied; remove it to stop."
         id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
           --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
         if [ -n "$id" ]; then
@@ -120,7 +112,6 @@ jobs:
           gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
         fi
 
-    # `always()`, or a failed build leaves the status pending forever.
     - name: Report the status
       if: always()
       env:

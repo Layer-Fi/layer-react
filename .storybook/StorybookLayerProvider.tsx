@@ -27,8 +27,7 @@ const Notice = ({ error = false, children }: PropsWithChildren<{ error?: boolean
   </pre>
 )
 
-// `useAuth` never renews a token it was handed, so the refresh has to happen here. The token is part
-// of its SWR key, so swapping the prop re-keys auth without a remount.
+// `useAuth` never renews a token it was handed. It keys on the token, so swapping re-auths in place.
 const useToken = () => {
   const [token, setToken] = useState<Token | null>(null)
 
