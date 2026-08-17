@@ -4,9 +4,13 @@ node_modules/
 .idea/
 .vscode/
 .DS_Store
+.env
+.env.*
+!.env.example
 .codex/
 .agents/
 .claude/
+.vercel
 storybook-static
 coverage/
 

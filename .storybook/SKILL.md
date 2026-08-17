@@ -107,6 +107,14 @@ overlay-state exception above (`DrawerOpen`, `Creation`, `ConfirmingAccounts`). 
 it with a `play` function, and make the play *assert* the state it set up — the table can
 re-render as data lands and detach the node you just clicked.
 
+## `real-backend` — what ships to the Vercel preview
+
+Also opted into per story, and fail-closed for the same reason. Add it when the story renders a
+state a real backend produces on its own. Two disqualifiers: **story-level
+`parameters.msw.handlers`**, which exists to force a state the backend won't reproduce (meta-level
+handlers are fine — they give way to real data), and **a `play` function**, which clicks a row real
+data may not have. `STORYBOOK_SCOPE=real` filters to it.
+
 ## Flakiness
 
 Two sources: the 250ms `setMinimumResponseDelay` in `preview.tsx` (loading-vs-loaded races)

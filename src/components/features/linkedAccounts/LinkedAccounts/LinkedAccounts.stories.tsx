@@ -107,12 +107,12 @@ export default meta
 type Story = StoryObj<LinkedAccountsStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 // Runs after the meta loader, so it flags the two accounts that survived the trim.
 export const ConfirmingAccounts: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   loaders: [
     () => bankAccountStore.all().forEach(
       account => bankAccountStore.save(markAccountNeedingConfirmation(account)),

@@ -45,11 +45,11 @@ export default meta
 type Story = StoryObj<UnifiedReportsStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 export const MenuNavigation: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   args: { navigationVariant: 'menu' },
 }
 

@@ -88,7 +88,7 @@ export default meta
 type Story = StoryObj<JournalStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 export const DrawerOpen: Story = {

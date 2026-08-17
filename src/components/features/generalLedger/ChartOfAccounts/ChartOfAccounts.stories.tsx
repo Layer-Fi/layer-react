@@ -78,5 +78,5 @@ export default meta
 type Story = StoryObj<ChartOfAccountsStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }

@@ -2,9 +2,9 @@ import { join } from 'node:path'
 import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
-import { PUBLIC_API_TAG } from './tags'
+import { PUBLIC_API_TAG, REAL_BACKEND_TAG } from './tags'
 
-// Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
+// Plaid's hosted iframe can't run against MSW; the mock fakes a successful link.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
 // (calendly.com/calendly-demo), which renders the real widget.
 const PLAID_LINK_ALIAS = {
@@ -27,11 +27,16 @@ const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
 //               story can carry both.
 //   chromatic — the design system plus agent scratch stories. Features and views compose
 //               these primitives, so a regression generally surfaces here first.
+//   real      — stories tagged `real-backend`, the ones that still mean something with MSW off.
+//               What the access-protected Vercel preview ships.
+const USES_REAL_BACKEND = process.env.STORYBOOK_LAYER_BACKEND === 'real'
+
 const SCOPE = process.env.STORYBOOK_SCOPE
 const CHROMATIC_PATHS = /\/src\/components\/(ui|blocks)\/|scratch\.stories\./
 
 const inScope = (fileName: string, tags: string[] | undefined) => {
   if (SCOPE === 'public') return tags?.includes(PUBLIC_API_TAG) ?? false
+  if (SCOPE === 'real') return tags?.includes(REAL_BACKEND_TAG) ?? false
   if (SCOPE === 'chromatic') return CHROMATIC_PATHS.test(fileName)
   return true
 }
@@ -53,7 +58,16 @@ const config: StorybookConfig = {
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
-      alias: withPlaidLinkAlias(viteConfig.resolve?.alias),
+      alias: USES_REAL_BACKEND ? viteConfig.resolve?.alias : withPlaidLinkAlias(viteConfig.resolve?.alias),
+    },
+    // `vercel dev` serves `/api` on its own port (3000 by default); the dev server proxies to it
+    // so the relative STORYBOOK_LAYER_TOKEN_ENDPOINT resolves instead of 404ing against :6006.
+    server: {
+      ...viteConfig.server,
+      proxy: {
+        ...viteConfig.server?.proxy,
+        '/api': { target: process.env.STORYBOOK_VERCEL_DEV_URL ?? 'http://localhost:3000' },
+      },
     },
   }),
 }
