@@ -20,6 +20,7 @@ npm run test:consumers -- --skip-build   # reuse the existing dist/
 | fixture | what it proves |
 |---|---|
 | `vite-esm` | `import` condition resolves, `@layerfi/components/index.css` resolves, the bundle builds, and the provider mounts in a real browser under `StrictMode` with no console errors |
+| `vite-esm-treeshake` | importing a single small component does **not** drag in `recharts`, `react-select`, `motion` and the other heavy dependencies it never uses — catches a regression in `sideEffects` or `preserveModules` through a real consumer bundler, which `size-limit` (esbuild) would not |
 | `cjs-require` | `require('@layerfi/components')` resolves and executes, and `dist/index.d.ts` type-checks under `moduleResolution: node16` |
 | `ssr-node` | the module graph has no top-level `window`/`document` access and renders through `react-dom/server` |
 

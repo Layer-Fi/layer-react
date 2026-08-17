@@ -1,3 +1,7 @@
+// Must stay the first import: global CSS has to precede component CSS in the generated
+// stylesheet so component styles win on equal specificity.
+import './styles/index.scss'
+
 /*
 ==========================================================
 ======================= Components =======================

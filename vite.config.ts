@@ -28,19 +28,19 @@ export default defineConfig(({ mode, command }) => {
     build: {
       minify: false,
       cssMinify: false,
-      cssCodeSplit: true,
+      // Per-module output would otherwise emit a stylesheet per component; the single
+      // `dist/index.css` is the published contract.
+      cssCodeSplit: !isESM,
       lib: isESM
         ? {
-          entry: {
-            /**
-             * Important that the `styles/index.scss` entry is before `src/index.tsx` so that CSS
-             * files imported from the styles index file appear earlier in the generated CSS than
-             * the CSS for the individual components. This means individual component styles will
-             * will be prioritized over global styles.
-             */
-            styles: path.resolve(__dirname, 'src/styles/index.scss'),
-            index: path.resolve(__dirname, 'src/index.tsx'),
-          },
+          /**
+           * `styles/index.scss` used to be a second entry, ordered before this one so that global
+           * CSS was emitted ahead of component CSS. `preserveModules` cannot carry a pure-CSS
+           * entry (vite:css-post crashes resolving its reference id), so `src/index.tsx` now
+           * imports the styles index as its first import instead. Module execution order gives
+           * the same result: global styles first, so component styles win on equal specificity.
+           */
+          entry: path.resolve(__dirname, 'src/index.tsx'),
           formats: ['es'],
         }
         : {
@@ -52,9 +52,10 @@ export default defineConfig(({ mode, command }) => {
         external: externalDeps,
         output: {
           dir: path.resolve(__dirname, `${OUT_DIR}/${mode}`),
-          entryFileNames: isESM
-            ? chunk => (chunk.name === 'styles' ? 'styles.mjs' : 'index.mjs')
-            : 'index.cjs',
+          // One file per source module, so a consumer's bundler has real boundaries to prune
+          // against. `sideEffects` in package.json is what makes those boundaries actionable.
+          ...(isESM && { preserveModules: true, preserveModulesRoot: 'src' }),
+          entryFileNames: isESM ? '[name].mjs' : 'index.cjs',
           chunkFileNames: isESM ? '[name].mjs' : '[name].cjs',
           exports: isCJS ? 'named' : undefined,
         },
