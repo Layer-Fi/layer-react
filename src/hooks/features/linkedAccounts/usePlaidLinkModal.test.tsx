@@ -6,7 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
+import { post as postExchangePlaidPublicToken } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
 import { server } from '@msw/node'
+import { readRequestJson } from '@msw/utils/request'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
@@ -33,6 +35,17 @@ const completePlaidLink = () =>
     return Promise.resolve()
   })
 
+/** Records the body Layer's own exchange endpoint received, so a test can assert it never fired. */
+const spyOnExchangePlaidPublicToken = () => {
+  const onRequest = vi.fn<(body: unknown) => void>()
+
+  server.use(postExchangePlaidPublicToken.mock(undefined, {
+    onRequest: async ({ request }) => onRequest(await readRequestJson(request)),
+  }))
+
+  return onRequest
+}
+
 const makeCustomerManagedPlaidConfig = (
   overrides?: Partial<CustomerManagedPlaidConfig>,
 ): CustomerManagedPlaidConfig => ({
@@ -58,25 +71,15 @@ const renderAddModeModal = (customerManagedPlaidConfig?: CustomerManagedPlaidCon
     sandbox ? { wrapper: sandboxWrapper } : undefined,
   )
 
-let requestedPaths: string[]
-
-const recordPath = ({ request }: { request: Request }) => {
-  requestedPaths.push(new URL(request.url).pathname)
-}
-
 beforeEach(() => {
   plaidLinkOptions.length = 0
-  requestedPaths = []
-  server.events.on('request:start', recordPath)
 })
 
-afterEach(() => {
-  server.events.removeListener('request:start', recordPath)
-  vi.restoreAllMocks()
-})
+afterEach(() => vi.restoreAllMocks())
 
 describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   it('hands the public token to the customer instead of exchanging it with Layer', async () => {
+    const exchangePlaidPublicToken = spyOnExchangePlaidPublicToken()
     const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig()
 
     const { result } = await renderAddModeModal(customerManagedPlaidConfig)
@@ -88,7 +91,7 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
       metadata: METADATA,
     }))
 
-    expect(requestedPaths.filter(path => path.includes('/plaid/link/exchange'))).toHaveLength(0)
+    expect(exchangePlaidPublicToken).not.toHaveBeenCalled()
     await waitFor(() => expect(result.current.isLinking).toBe(false))
   })
 
@@ -99,11 +102,9 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   })
 
   it('stops linking when the customer callback rejects', async () => {
-    const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig({
+    const { result } = await renderAddModeModal(makeCustomerManagedPlaidConfig({
       onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
-    })
-
-    const { result } = await renderAddModeModal(customerManagedPlaidConfig)
+    }))
 
     await completePlaidLink()
 
@@ -111,13 +112,11 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   })
 
   it('stops linking when the customer callback throws synchronously', async () => {
-    const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig({
+    const { result } = await renderAddModeModal(makeCustomerManagedPlaidConfig({
       onPublicTokenReceived: vi.fn(() => {
         throw new Error('customer backend is down')
       }),
-    })
-
-    const { result } = await renderAddModeModal(customerManagedPlaidConfig)
+    }))
 
     await completePlaidLink()
 
@@ -127,13 +126,16 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
 
 describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
   it('exchanges the public token with Layer', async () => {
+    const exchangePlaidPublicToken = spyOnExchangePlaidPublicToken()
+
     await renderAddModeModal()
 
     await completePlaidLink()
 
-    await waitFor(() =>
-      expect(requestedPaths.filter(path => path.includes('/plaid/link/exchange'))).not.toHaveLength(0),
-    )
+    await waitFor(() => expect(exchangePlaidPublicToken).toHaveBeenCalledWith({
+      public_token: 'public-token',
+      institution: METADATA.institution,
+    }))
   })
 
   it('opts into the Plaid sandbox environment', async () => {
