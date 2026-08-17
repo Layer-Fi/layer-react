@@ -1,0 +1,117 @@
+name: Storybook Preview
+
+# Vercel's automatic deployments are off for `layer-react-storybook`
+# (`gitProviderOptions.createDeployments: disabled`), so a real-backend Storybook is built only when
+# someone asks for one — most PRs never need it, and each build points at a live business. Vercel has
+# no label trigger, so this workflow is the bridge: it watches for the label and deploys. The label is
+# sticky state rather than a button — once applied, every subsequent push rebuilds the preview.
+#
+# A label rather than a `/storybook` comment: applying one already requires write access, so
+# authorization comes from GitHub's permission model instead of an `author_association` check this
+# workflow would have to keep correct. That matters because the deploy job holds VERCEL_TOKEN and
+# this repository is public.
+#
+# Both jobs write the same marked comment, so a PR carries one comment that turns from instructions
+# into a preview URL rather than accumulating several.
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  # Identifies the comment this workflow owns, so it is updated in place rather than repeated.
+  MARKER: <!-- storybook-preview -->
+
+jobs:
+  instructions:
+    name: Offer a preview
+    # Skipped once labelled, so reopening a PR can't overwrite a URL with instructions. Forks get
+    # neither secrets nor a writable token, so there is nothing useful to say on one.
+    if: |
+      (github.event.action == 'opened' || github.event.action == 'reopened')
+      && !contains(github.event.pull_request.labels.*.name, 'storybook-preview')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Comment how to request one
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR: ${{ github.event.pull_request.number }}
+      run: |
+        body="$MARKER
+        **Storybook preview** — add the \`storybook-preview\` label to build one.
+
+        It renders stories against a live sandbox business instead of MSW fixtures, and stays up to
+        date on every push while the label is applied. See \`.storybook/README.md\`."
+        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
+          --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body"
+        else
+          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
+        fi
+
+  deploy:
+    name: Build preview
+    if: |
+      (
+        (github.event.action == 'labeled' && github.event.label.name == 'storybook-preview')
+        || (
+          github.event.action == 'synchronize'
+          && contains(github.event.pull_request.labels.*.name, 'storybook-preview')
+        )
+      )
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        persist-credentials: false
+
+    # No `npm ci`: `vercel deploy` uploads the source and installs on Vercel, so the runner only
+    # needs the CLI.
+    - name: Deploy
+      id: deploy
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+      run: |
+        npx --yes vercel@59 deploy --yes --token="$VERCEL_TOKEN" | tee deploy.log
+        url=$(grep -oE 'https://[a-z0-9-]+\.vercel\.app' deploy.log | tail -1)
+        if [ -z "$url" ]; then echo "No deployment URL in output" >&2; exit 1; fi
+        echo "url=$url" >> "$GITHUB_OUTPUT"
+
+    - name: Comment the URL
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR: ${{ github.event.pull_request.number }}
+        URL: ${{ steps.deploy.outputs.url }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        body="$MARKER
+        **Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
+
+        Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar
+        field. Rebuilds on every push while the label is applied; remove it to stop. See
+        \`.storybook/README.md\`."
+        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
+          --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body"
+        else
+          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
+        fi
