@@ -1,9 +1,7 @@
-// Vercel function. Mints a short-lived business access token so the Layer app secret never reaches
-// the browser. Excluded from the npm package by `files: ["/dist"]`.
+// Vercel function. Mints a short-lived token so the Layer app secret never reaches the browser.
 //
-// Self-contained on purpose. The root package.json is `type: commonjs`, so `api/package.json` marks
-// this directory ESM — and under ESM an extensionless relative import into `src/` would not resolve
-// at runtime, so the two values needed from `environmentConfigs` are repeated here instead.
+// No imports on purpose: `api/package.json` marks this directory ESM because the root package is
+// commonjs, and under ESM an extensionless relative import into `src/` wouldn't resolve at runtime.
 
 // `tsconfig.json` restricts `types`, so Node's globals aren't declared here.
 declare const process: { env: Record<string, string | undefined> }
@@ -30,7 +28,7 @@ export async function POST() {
   const environment = readRequiredEnv('LAYER_ENVIRONMENT')
   const scope = SCOPES[environment]
 
-  // Production is absent from SCOPES rather than special-cased, so it can only ever fail closed.
+  // Production is absent from SCOPES rather than special-cased, so it fails closed.
   if (!scope) return fail(`Refusing to mint a token for environment ${environment}`, 403)
 
   const clientId = readRequiredEnv('LAYER_APP_ID')

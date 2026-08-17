@@ -1,6 +1,5 @@
-// Shared by `manager.tsx` and the preview. The manager records ids as they are entered; the preview
-// adds the legal name once it has a token to look it up with. Both run on the same origin, so the
-// preview's write reaches the manager as a `storage` event.
+// Shared by the manager and the preview, which are same-origin, so the preview's write reaches the
+// manager as a `storage` event.
 export type RememberedBusiness = { id: string, label?: string }
 
 const STORAGE_KEY = 'layer-storybook-businesses'
@@ -19,8 +18,7 @@ export const readHistory = (): RememberedBusiness[] => {
   }
 }
 
-// Keeps any label already stored when called without one, so the manager recording a re-entered id
-// doesn't erase the name the preview resolved for it.
+// Keeps a stored label when called without one, so re-entering an id doesn't erase its name.
 export const remember = (id: string, label?: string) => {
   const existing = readHistory()
   const resolvedLabel = label ?? existing.find(entry => entry.id === id)?.label

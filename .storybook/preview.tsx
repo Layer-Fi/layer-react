@@ -40,9 +40,7 @@ if (!usesRealBackend) {
 }
 
 const preview: Preview = {
-  // Declared without a `toolbar`, because the control is a free-text field contributed by
-  // `manager.tsx` rather than a dropdown. Declaring it is also what tells the manager to show that
-  // field, and it makes the id serialize into the URL so a story link carries its business.
+  // No `toolbar`: `manager.ts` contributes a free-text field and keys off this being declared.
   globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
   loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader],
   beforeEach: ({ tags }: { tags?: string[] }) => {

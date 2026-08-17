@@ -13,15 +13,8 @@ const INPUT_STYLE = {
   font: '11px/1.4 ui-monospace, monospace',
 }
 
-/**
- * A free-text field rather than a dropdown: demo businesses are replaced often, so any curated list
- * would go stale and need re-curating. Previously used businesses come back as autocomplete,
- * labelled with the legal name the preview resolved for them.
- *
- * Written with `createElement` rather than JSX because the manager bundle uses the classic
- * transform, which needs a `React` binding that nothing references — so lint deletes it and the
- * toolbar throws "React is not defined" at runtime.
- */
+// No JSX: the manager bundle uses the classic transform, which needs a `React` binding that nothing
+// references, so lint deletes it and the toolbar throws "React is not defined" at runtime.
 const BusinessInput = () => {
   const globalTypes = useGlobalTypes()
   const [globals, updateGlobals] = useGlobals()
@@ -32,8 +25,7 @@ const BusinessInput = () => {
 
   useEffect(() => setDraft(current), [current])
 
-  // Globals live in the URL, which a bare visit doesn't carry — so the last id is restored rather
-  // than retyped. A URL-supplied id always wins.
+  // A URL-supplied id wins; otherwise restore the last one, since a bare visit carries no globals.
   useEffect(() => {
     if (current) {
       setHistory(remember(current))
@@ -44,7 +36,7 @@ const BusinessInput = () => {
     if (mostRecent) updateGlobals({ business: mostRecent.id })
   }, [current, updateGlobals])
 
-  // Fires when the preview iframe stores a resolved legal name, which is how labels appear here.
+  // The preview iframe stores resolved legal names, which is how labels reach this list.
   useEffect(() => {
     const onStorage = () => setHistory(readHistory())
 
@@ -52,8 +44,7 @@ const BusinessInput = () => {
     return () => window.removeEventListener('storage', onStorage)
   }, [])
 
-  // Declared by `preview.tsx` in real mode only, so this is what keeps the field out of the
-  // mock-backed Storybook.
+  // Declared by `preview.tsx` in real mode only, so this keeps the field out of mock Storybook.
   if (!('business' in globalTypes)) return null
 
   const commit = () => updateGlobals({ business: draft.trim() })
