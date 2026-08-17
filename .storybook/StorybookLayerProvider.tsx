@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useEffect, useRef, useState } from 'react'
 
 import { useGetBusiness } from '../src/hooks/api/businesses/[business-id]/get'
 import { type Environment } from '../src/providers/global/Environment/environmentConfigs'
@@ -41,10 +41,15 @@ const fetchToken = async (): Promise<{ token: Token, refreshMs: number }> => {
   return { token: { environment, accessToken }, refreshMs: (expiresIn / 2) * 1000 }
 }
 
+const REFRESH_RETRY_MS = 5_000
+
 // `useAuth` never renews a token it was handed. It keys on the token, so swapping re-auths in place.
 const useToken = () => {
   const [token, setToken] = useState<Token | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // A ref, not `token` in a dependency array: reading it inside `load` must not tear down the
+  // running timer and restart the fetch loop every time a refresh succeeds.
+  const tokenRef = useRef<Token | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -56,6 +61,7 @@ const useToken = () => {
 
         if (cancelled) return
 
+        tokenRef.current = next
         setToken(next)
         setError(null)
         timer = setTimeout(() => void load(), refreshMs)
@@ -63,7 +69,14 @@ const useToken = () => {
       catch (caught) {
         if (cancelled) return
 
-        setError(caught instanceof Error ? caught.message : 'Token request failed')
+        // A failed refresh keeps the still-valid token in place and retries shortly, rather than
+        // tearing down a working session over a transient endpoint hiccup.
+        if (tokenRef.current === null) {
+          setError(caught instanceof Error ? caught.message : 'Token request failed')
+        }
+        else {
+          timer = setTimeout(() => void load(), REFRESH_RETRY_MS)
+        }
       }
     }
 
