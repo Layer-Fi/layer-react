@@ -19,7 +19,7 @@ const IMPLICIT_ARTIFACTS = ['dist/index.d.css.ts']
  * actually resolves", which is the property worth checking.
  */
 function expandWildcard(pattern: string): string[] {
-  return readPublicExports().map(entry => pattern.replace('*', entry.name))
+  return readPublicExports().map(entry => pattern.replaceAll('*', entry.name))
 }
 
 function declaredArtifacts(): string[] {

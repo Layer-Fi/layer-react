@@ -49,6 +49,12 @@ For bundled ESM the two are equivalent — use whichever reads better. The subpa
 library, while `require("@layerfi/components/GlobalMonthPicker")` loads only what that component
 needs. Subpaths cover public export names only; internal module paths are not importable.
 
+In CommonJS, the barrel and subpaths are separate module graphs — `require("@layerfi/components")`
+and `require("@layerfi/components/<Name>")` each load their own copy of shared state such as
+`LayerContext`. Mixing the two styles in one `require`-based app means a provider mounted through
+one graph is invisible to a consumer loaded through the other. Pick one style per app; this does
+not affect ESM, where both resolve to the same module.
+
 ## Usage
 
 Nest the components you want to use under the `LayerProvider` component. You should provide the component with a few props:

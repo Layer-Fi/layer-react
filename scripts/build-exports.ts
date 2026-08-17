@@ -24,15 +24,16 @@ function namedList(names: string[]) {
  * `dist/exports/<Name>.mjs` is the stable public address for a subpath. It re-exports from the
  * per-module tree, so internal paths never become API and stay free to move — the same layering
  * `react-aria-components` uses (`dist/exports/Button.mjs` over `dist/private/Button.mjs`).
+ *
+ * Values only: this file is executed as JavaScript, so `export type` (TypeScript-only syntax)
+ * cannot appear here or Node/bundlers fail to parse it. Type-only names are covered separately by
+ * `typeShim`'s `.d.mts` file.
  */
 function esmShim(entry: PublicExport, target: string) {
   const from = `../esm/${target}`
-  const lines = []
-  if (entry.values.length > 0) lines.push(`export { ${namedList(entry.values)} } from '${from}'`)
-  if (entry.types.length > 0) lines.push(`export type { ${namedList(entry.types)} } from '${from}'`)
   // A type-only module still needs a loadable file, or the subpath 404s at runtime.
-  if (lines.length === 0) lines.push('export {}')
-  return `${lines.join('\n')}\n`
+  const line = entry.values.length > 0 ? `export { ${namedList(entry.values)} } from '${from}'` : 'export {}'
+  return `${line}\n`
 }
 
 /**
