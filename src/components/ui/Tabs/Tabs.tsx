@@ -30,7 +30,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   const [isInitialized, setIsInitialized] = useState(false)
   const thumbRef = useRef<HTMLSpanElement>(null)
 
-  const selectedValue = selected || options[0].value
+  const selectedValue = selected || options[0]?.value
 
   const baseClassName = classNames(
     'Layer__tabs',

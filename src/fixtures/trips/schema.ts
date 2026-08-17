@@ -1,6 +1,7 @@
 import { Arbitrary, Schema } from 'effect'
 
 import { TripSchema } from '@schemas/features/mileage/trip'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { addresses } from '@fixtures/constants/personal/addresses'
@@ -9,6 +10,7 @@ import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import { sortedDatePair } from '@fixtures/utils/sortedDatePair'
 
 const fields = TripSchema.fields
 
@@ -39,11 +41,11 @@ const baseArbitrary = Arbitrary.make(base)
 export const TripArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((trip): typeof base.Type => {
-      const [createdAt, updatedAt] = [trip.createdAt, trip.updatedAt].sort((a, b) => a.getTime() - b.getTime())
+      const [createdAt, updatedAt] = sortedDatePair(trip.createdAt, trip.updatedAt)
 
       const addressPool: readonly string[] = addresses
       const endAddress = trip.startAddress != null && trip.startAddress === trip.endAddress
-        ? addressPool[(addressPool.indexOf(trip.startAddress) + 1) % addressPool.length]
+        ? pickCyclic(addressPool, addressPool.indexOf(trip.startAddress) + 1)
         : trip.endAddress
 
       return { ...trip, createdAt, updatedAt, endAddress }

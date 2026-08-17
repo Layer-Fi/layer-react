@@ -2,6 +2,7 @@ import { Arbitrary, Schema } from 'effect'
 
 import { InvoiceSchema } from '@schemas/features/invoices/invoice'
 import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import {
@@ -61,7 +62,7 @@ const applyInvoiceInvariants = (invoice: typeof base.Type): typeof base.Type => 
   const additionalSalesTaxesTotal = lineItems.reduce((sum, lineItem) => sum + lineItem.salesTaxTotal, 0)
   const totalAmount = lineItems.reduce((sum, lineItem) => sum + lineItem.totalAmount, 0)
 
-  const paidFraction = PARTIAL_PAYMENT_FRACTIONS[Math.floor(subtotal / 100) % PARTIAL_PAYMENT_FRACTIONS.length]
+  const paidFraction = pickCyclic(PARTIAL_PAYMENT_FRACTIONS, Math.floor(subtotal / 100))
 
   const outstandingBalance = (() => {
     switch (invoice.status) {

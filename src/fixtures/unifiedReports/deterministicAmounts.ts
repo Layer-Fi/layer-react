@@ -1,6 +1,8 @@
 import { eachMonthOfInterval, isWithinInterval } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
+
 export type MockReportEntry = {
   date: Date
   amountCents: number
@@ -67,7 +69,7 @@ const ENTRY_NARRATION: Record<EntryFlow | 'neutral', { types: readonly string[],
   },
 }
 
-const pickFrom = (values: readonly string[], key: string) => values[hashString(key) % values.length]
+const pickFrom = (values: readonly string[], key: string) => pickCyclic(values, hashString(key))
 
 export const monthEntries = (
   stableKey: string,
@@ -83,7 +85,7 @@ export const monthEntries = (
 
   return ENTRY_DAYS.map((day, index) => {
     const isLast = index === ENTRY_DAYS.length - 1
-    const rawAmount = isLast ? remaining : Math.round(monthTotal * LEADING_ENTRY_WEIGHTS[index])
+    const rawAmount = isLast ? remaining : Math.round(monthTotal * pickCyclic(LEADING_ENTRY_WEIGHTS, index))
     remaining -= rawAmount
 
     const entryKey = `${stableKey}:${year}-${monthIndex}-${index}`

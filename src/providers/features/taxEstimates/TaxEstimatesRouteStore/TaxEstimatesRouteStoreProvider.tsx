@@ -15,7 +15,7 @@ const DEFAULT_ROUTE = TaxEstimatesRoute.Estimates
 
 type TaxEstimatesRouteStoreShape = {
   routeState: RouteState<TaxEstimatesRoute>
-  navigate: RouteNavigation
+  navigate: RouteNavigation<'toOverview' | 'toEstimates' | 'toPayments' | 'toProfile'>
   year: number
   fullYearProjection: boolean
   actions: {

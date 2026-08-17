@@ -15,5 +15,9 @@ export const createListSorter = <TItem>(keys: SortKeys<TItem>, defaultKey: keyof
     const key = keys[params.get('sort_by') ?? ''] ?? keys[defaultKey]
     const ascending = ASCENDING_SORT_ORDERS.includes(params.get('sort_order') ?? '')
 
+    if (!key) {
+      return [...items]
+    }
+
     return [...items].sort((a, b) => compare(key(a), key(b)) * (ascending ? 1 : -1))
   }

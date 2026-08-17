@@ -75,21 +75,21 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
   const sectionLineItem = (name: keyof typeof sections, displayName: string): ReportLineItem => {
     const forest = sections[name]
     const [root] = forest
-    const isOwnAccount = forest.length === 1 && root.account.stableName === name
+    const ownAccountRoot = forest.length === 1 && root?.account.stableName === name ? root : undefined
 
     return {
       name,
       displayName,
       amounts: periodAmounts(periods, sectionTotal(forest)),
-      ...(isOwnAccount && root.children.length === 0 && {
+      ...(ownAccountRoot && ownAccountRoot.children.length === 0 && {
         reportConfig: linesReportConfig(
           LINES_ROUTE,
-          root.account,
+          ownAccountRoot.account,
           [ReportControl.DateRange],
           reportingBasisBaseParams(params),
         ),
       }),
-      childItems: (isOwnAccount ? root.children : forest).map(node => accountLineItem(node, periods)),
+      childItems: (ownAccountRoot ? ownAccountRoot.children : forest).map(node => accountLineItem(node, periods)),
     }
   }
 

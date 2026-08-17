@@ -7,6 +7,7 @@ import {
   TaskUserResponseType,
 } from '@schemas/features/bookkeeping/businessTask'
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
@@ -67,7 +68,7 @@ const generateTaskSeeds = createGenerator(schema, {
 
 const generatePeriodIds = createGenerator(PeriodIdSchema)
 
-const periodIdFor = (monthIndex: number) => generatePeriodIds({ numRuns: 1, seed: monthIndex })[0]
+const periodIdFor = (monthIndex: number) => pickCyclic(generatePeriodIds({ numRuns: 1, seed: monthIndex }), 0)
 
 const makePeriodTasks = (periodIndex: number, count: number, month: number): BusinessTask[] => {
   if (count === 0) return []

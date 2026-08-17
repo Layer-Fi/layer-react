@@ -6,9 +6,12 @@ import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 import { Row } from '@testUtils/storybook/layout/Row'
 
+const CHECKING_OPTION: ComboBoxOption = { label: 'Checking', value: 'checking' }
+const SAVINGS_OPTION: ComboBoxOption = { label: 'Savings', value: 'savings' }
+
 const OPTIONS: ComboBoxOption[] = [
-  { label: 'Checking', value: 'checking' },
-  { label: 'Savings', value: 'savings' },
+  CHECKING_OPTION,
+  SAVINGS_OPTION,
   { label: 'Credit card', value: 'credit' },
 ]
 
@@ -20,7 +23,7 @@ const meta: Meta<typeof ComboBox<ComboBoxOption>> = {
   args: {
     'aria-label': 'Account',
     'options': OPTIONS,
-    'selectedValue': OPTIONS[0],
+    'selectedValue': CHECKING_OPTION,
     'onSelectedValueChange': noop,
     'placeholder': 'Select an account',
   },
@@ -51,13 +54,13 @@ export const AllVariants: Story = {
         <ComboBox aria-label='Placeholder' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' />
       </Field>
       <Field label='selected'>
-        <ComboBox aria-label='Selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} />
+        <ComboBox aria-label='Selected' options={OPTIONS} selectedValue={CHECKING_OPTION} onSelectedValueChange={noop} />
       </Field>
       <Field label='clearable'>
-        <ComboBox aria-label='Clearable' options={OPTIONS} selectedValue={OPTIONS[1]} onSelectedValueChange={noop} isClearable />
+        <ComboBox aria-label='Clearable' options={OPTIONS} selectedValue={SAVINGS_OPTION} onSelectedValueChange={noop} isClearable />
       </Field>
       <Field label='disabled'>
-        <ComboBox aria-label='Disabled' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} isDisabled />
+        <ComboBox aria-label='Disabled' options={OPTIONS} selectedValue={CHECKING_OPTION} onSelectedValueChange={noop} isDisabled />
       </Field>
       <Field label='error'>
         <ComboBox aria-label='Error' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} isError slots={{ ErrorMessage: 'Required' }} />
@@ -78,7 +81,7 @@ export const MenuOpen: Story = {
         <ComboBox aria-label='Open' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' menuIsOpen menuPortalTarget={null} />
       </div>
       <div style={{ width: 240 }}>
-        <ComboBox aria-label='Open selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} menuIsOpen menuPortalTarget={null} />
+        <ComboBox aria-label='Open selected' options={OPTIONS} selectedValue={CHECKING_OPTION} onSelectedValueChange={noop} menuIsOpen menuPortalTarget={null} />
       </div>
     </Gallery>
   ),

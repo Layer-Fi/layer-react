@@ -39,7 +39,8 @@ const buildAgingReport = (
 
   items.forEach((item) => {
     const entity = byEntity.get(item.entityKey) ?? { entityName: item.entityName, amounts: BUCKETS.map(() => 0) }
-    entity.amounts[bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt))] += item.amountCents
+    const bucketIndex = bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt))
+    entity.amounts[bucketIndex] = (entity.amounts[bucketIndex] ?? 0) + item.amountCents
     byEntity.set(item.entityKey, entity)
   })
 
@@ -54,12 +55,12 @@ const buildAgingReport = (
     rowKey,
     cells: {
       [entityColumn]: textCell(label, { bold }),
-      ...Object.fromEntries(BUCKETS.map((bucket, index) => [bucket.key, currencyCell(amounts[index], { bold })])),
+      ...Object.fromEntries(BUCKETS.map((bucket, index) => [bucket.key, currencyCell(amounts[index] ?? 0, { bold })])),
       total: currencyCell(sum(amounts), { bold }),
     },
   })
 
-  const bucketTotals = BUCKETS.map((_, index) => sum(entities.map(([, entity]) => entity.amounts[index])))
+  const bucketTotals = BUCKETS.map((_, index) => sum(entities.map(([, entity]) => entity.amounts[index] ?? 0)))
 
   return unifiedReport(
     [

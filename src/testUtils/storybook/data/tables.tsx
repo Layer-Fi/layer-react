@@ -1,4 +1,5 @@
 import { Alignment } from '@internal-types/utility/table'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { VStack } from '@ui/Stack/Stack'
@@ -15,7 +16,7 @@ export type CustomerRow = (typeof customers)[number]
  */
 export const buildCustomerRows = (count: number): CustomerRow[] =>
   Array.from({ length: count }, (_unused, index) => {
-    const base = customers[index % customers.length]
+    const base = pickCyclic(customers, index)
 
     return index < customers.length
       ? base

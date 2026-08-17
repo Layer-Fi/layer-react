@@ -5,6 +5,8 @@ import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
+
 vi.mock('@hooks/utils/swr/useGlobalCacheActions', () => ({ useGlobalCacheActions: vi.fn() }))
 
 const mockedUseGlobalCacheActions = vi.mocked(useGlobalCacheActions)
@@ -50,15 +52,15 @@ describe('createResourceGlobalCacheActions', () => {
     void result.current.invalidate({ withPrecedingOptimisticUpdate: true })
 
     expect(invalidate).toHaveBeenCalledTimes(1)
-    expectMatchesTag(invalidate.mock.calls[0][0], 'Widgets')
-    expect(invalidate.mock.calls[0][1]).toEqual({ withPrecedingOptimisticUpdate: true })
+    expectMatchesTag(getCallArgs(invalidate)[0], 'Widgets')
+    expect(getCallArgs(invalidate)[1]).toEqual({ withPrecedingOptimisticUpdate: true })
   })
 
   it('forceReload delegates with a tag predicate', () => {
     const result = renderResourceActions()
     void result.current.forceReload()
 
-    expectMatchesTag(forceReload.mock.calls[0][0], 'Widgets')
+    expectMatchesTag(getCallArgs(forceReload)[0], 'Widgets')
   })
 
   it('overwriteCache patches with a constant transform returning the new data', () => {
@@ -66,7 +68,7 @@ describe('createResourceGlobalCacheActions', () => {
     const next: Widget = { id: 'w1', name: 'New' }
     void result.current.overwriteCache(next, { withRevalidate: false })
 
-    const [predicate, transform, options] = patchCache.mock.calls[0]
+    const [predicate, transform, options] = getCallArgs(patchCache)
     expectMatchesTag(predicate, 'Widgets')
     expect(transform()).toBe(next)
     expect(options).toEqual({ withRevalidate: false })
@@ -77,7 +79,7 @@ describe('createResourceGlobalCacheActions', () => {
     const transform = (w?: Widget) => w
     void result.current.patchCache(transform)
 
-    const [predicate, forwarded] = patchCache.mock.calls[0]
+    const [predicate, forwarded] = getCallArgs(patchCache)
     expectMatchesTag(predicate, 'Widgets')
     expect(forwarded).toBe(transform)
   })

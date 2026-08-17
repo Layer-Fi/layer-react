@@ -26,7 +26,7 @@ export const FullYearProjectionComboBox = () => {
     [t],
   )
 
-  const selectedValue = fullYearProjection ? options[1] : options[0]
+  const selectedValue = (fullYearProjection ? options[1] : options[0]) ?? null
 
   const handleChange = useCallback((option: ProjectionOption | null) => {
     setFullYearProjection(option?.valueBool ?? false)

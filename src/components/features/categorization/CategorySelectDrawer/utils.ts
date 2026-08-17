@@ -17,8 +17,10 @@ export const isGroup = (item: CategoryOption): item is CategoryGroup => {
 
 export const flattenCategories = (categories: NestedCategorization[]): Array<CategoryGroup | CategoryAsOption> =>
   groupCategoriesByParent(categories).map(({ category, label, options }) => {
-    if (options.length === 1) {
-      return options[0]
+    const onlyOption = options.length === 1 ? options[0] : undefined
+
+    if (onlyOption) {
+      return onlyOption
     }
 
     return {

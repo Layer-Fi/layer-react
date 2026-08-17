@@ -139,7 +139,7 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
   }
 
   const sumOf = (items: readonly ReportLineItem[]) =>
-    sumBy(items, item => item.amounts[TOTAL_COLUMN_KEY])
+    sumBy(items, item => item.amounts[TOTAL_COLUMN_KEY] ?? 0)
 
   return lineItemTreeReport([numericColumn(TOTAL_COLUMN_KEY, format(effectiveDate, 'MMMM d, yyyy'))], [
     {
@@ -151,7 +151,7 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
     {
       name: syntheticRowKey('LIABILITIES_AND_EQUITY'),
       displayName: 'Liabilities and Equity',
-      amounts: { [TOTAL_COLUMN_KEY]: sumOf(liabilities) + equities.amounts[TOTAL_COLUMN_KEY] },
+      amounts: { [TOTAL_COLUMN_KEY]: sumOf(liabilities) + (equities.amounts[TOTAL_COLUMN_KEY] ?? 0) },
       childItems: [
         {
           name: syntheticRowKey('LIABILITIES'),

@@ -52,7 +52,7 @@ export const post = createMockEndpoint<undefined, Record<string, never>>({
       reversalId: reversal.id,
       lineItems: original.lineItems.map((lineItem, index) => ({
         ...lineItem,
-        entryReversedBy: reversal.lineItems[index].id,
+        entryReversedBy: reversal.lineItems[index]?.id ?? null,
       })),
     })
 

@@ -63,7 +63,9 @@ export interface ReportsPanelProps {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
-const defaultEnabledReports: ReportType[] = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow']
+const FALLBACK_REPORT: ReportType = 'profitAndLoss'
+
+const defaultEnabledReports: ReportType[] = [FALLBACK_REPORT, 'balanceSheet', 'statementOfCashFlow']
 export const Reports = ({
   title,
   showTitle = true,
@@ -74,7 +76,7 @@ export const Reports = ({
   renderInAppLink,
 }: ReportsProps) => {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
+  const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0] ?? FALLBACK_REPORT)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const isMobileView = view === 'mobile'
 

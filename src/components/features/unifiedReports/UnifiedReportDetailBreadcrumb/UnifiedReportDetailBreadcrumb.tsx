@@ -15,10 +15,11 @@ export const UnifiedReportDetailBreadcrumb = () => {
 
   const handleBreadcrumbClick = useCallback((key: BreadcrumbKey) => {
     const index = breadcrumbItems.findIndex(item => item.key === key)
-    if (index === -1 || !detailReportConfig) return
+    const report = breadcrumbItems[index]
+    if (!report || !detailReportConfig) return
 
     openDetailReport({
-      report: breadcrumbItems[index],
+      report,
       breadcrumb: breadcrumbItems.slice(0, index + 1),
       column: detailReportConfig?.column,
     })

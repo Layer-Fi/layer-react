@@ -1,6 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking/TimeTracking'
 
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
@@ -10,6 +11,7 @@ import { toTimeEntryService } from '@fixtures/timeEntries/toTimeEntryService'
 import { get as getActiveTimeTracker } from '@msw/api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { handlers } from '@msw/handlers'
 import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
+import { firstMatch } from '@testUtils/storybook/interactions/firstMatch'
 
 type TimeTrackingStoryArgs = {
   showTitle: boolean
@@ -94,7 +96,7 @@ const runningTimer = getActiveTimeTracker.mock(
     durationMinutes: 0,
     // Has to be a service the catalog endpoint serves, or the banner's selector can't resolve it
     // and falls back to its placeholder.
-    service: toTimeEntryService(catalogServices[1]),
+    service: toTimeEntryService(pickCyclic(catalogServices, 1)),
     createdAt: new Date(FIXTURE_YEAR, 11, 31, 10, 47, 0),
   }),
 )
@@ -115,7 +117,7 @@ export const EntryDetail: Story = {
     // Drawers and popovers portal to the body, so what they open isn't inside the canvas.
     const overlay = within(canvasElement.ownerDocument.body)
 
-    const [firstEntry] = await canvas.findAllByRole('button', { name: /View Entry/ })
+    const firstEntry = firstMatch(await canvas.findAllByRole('button', { name: /View Entry/ }))
     await userEvent.click(firstEntry)
     await overlay.findByRole('button', { name: /Save Entry/ }, { timeout: 10_000 })
   },

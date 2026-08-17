@@ -2,6 +2,7 @@ import { getLocalTimeZone } from '@internationalized/date'
 
 import { type TimeEntry } from '@schemas/features/timeTracking/timeEntry'
 import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import {
   type FlatGroup,
@@ -39,7 +40,7 @@ const groupsBy = <Key>(
 
 const byCustomer = (entries: readonly TimeEntry[]) =>
   groupsBy(entries, entry => entry.customer?.id ?? null, (groupEntries) => {
-    const { customer } = groupEntries[0]
+    const { customer } = pickCyclic(groupEntries, 0)
 
     return customer
       ? {
@@ -53,7 +54,7 @@ const byCustomer = (entries: readonly TimeEntry[]) =>
 
 const byService = (entries: readonly TimeEntry[]) =>
   groupsBy(entries, entry => entry.service?.id ?? null, (groupEntries) => {
-    const { service } = groupEntries[0]
+    const { service } = pickCyclic(groupEntries, 0)
 
     return service
       ? {

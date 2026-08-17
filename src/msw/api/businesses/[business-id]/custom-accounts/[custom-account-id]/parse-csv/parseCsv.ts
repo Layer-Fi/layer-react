@@ -17,7 +17,7 @@ const REQUIRED_COLUMNS = ['date', 'description', 'amount'] as const
 const CSV_FIELD = /(?:^|,)("(?:[^"]|"")*"|[^,]*)/g
 
 const splitCsvLine = (line: string) =>
-  [...line.matchAll(CSV_FIELD)].map(([, field]) =>
+  [...line.matchAll(CSV_FIELD)].map(([, field = '']) =>
     (field.startsWith('"')
       ? field.slice(1, -1).replaceAll('""', '"')
       : field

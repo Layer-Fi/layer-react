@@ -6,6 +6,8 @@ import type { PaginatedResponse } from '@schemas/common/pagination'
 import { SWRInfiniteResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { useSWRInfiniteResult } from '@hooks/utils/swr/useSWRInfiniteResult'
 
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
+
 type Page = PaginatedResponse<{ id: string }>
 
 const makePage = (ids: string[], cursor: string | null): Page => ({
@@ -46,7 +48,7 @@ describe('useSWRInfiniteResult', () => {
     result.current.fetchMore()
 
     expect(setSize).toHaveBeenCalledTimes(1)
-    const increment = setSize.mock.calls[0][0] as (size: number) => number
+    const increment = getCallArgs(setSize)[0] as (size: number) => number
     expect(increment(1)).toBe(2)
   })
 

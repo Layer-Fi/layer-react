@@ -3,6 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { Row, RowSelectionState } from '@tanstack/react-table'
 import { userEvent, within } from 'storybook/test'
 
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
@@ -16,6 +17,7 @@ import {
   TABLE_STORY_SLOTS,
   TableStoryStyles,
 } from '@testUtils/storybook/data/tables'
+import { firstMatch } from '@testUtils/storybook/interactions/firstMatch'
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
@@ -119,7 +121,7 @@ const ExpandableRowTable = () => {
 }
 
 const ClickableRowTable = () => {
-  const [activeId, setActiveId] = useState(SHORT_LIST[2].id)
+  const [activeId, setActiveId] = useState(pickCyclic(SHORT_LIST, 2).id)
 
   const withClickableRow = useMemo(() => ({
     onRowClick: (row: Row<CustomerRow>) => setActiveId(row.original.id),
@@ -154,7 +156,7 @@ const ClickableRowTable = () => {
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Expand customer' })[0])
+    await userEvent.click(firstMatch(within(canvasElement).getAllByRole('button', { name: 'Expand customer' })))
   },
   render: args => (
     <Gallery gap={32}>

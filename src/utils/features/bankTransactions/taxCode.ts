@@ -44,7 +44,7 @@ export const canCategoryHaveTaxCode = (
   if (isSuggestedMatchAsOption(category)) return false
   if (isSplitAsOption(category)) {
     if (category.isSingleSplit) {
-      const classification = category.original[0].category?.classification
+      const classification = category.original[0]?.category?.classification
       return !!classification && !isClassificationExclusion(classification)
     }
 
