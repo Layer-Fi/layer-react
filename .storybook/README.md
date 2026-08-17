@@ -47,7 +47,7 @@ that function and the browser never sees more than the token, which is why real 
 even locally. The endpoint refuses to mint against a production environment.
 
 It returns the environment alongside the token, so the provider can't drift out of sync with the
-scope the token was minted for. `LAYER_STORYBOOK_ENVIRONMENT` has to match the environment the
+scope the token was minted for. `LAYER_ENVIRONMENT` has to match the environment the
 business actually lives in, or the token won't see it. Production is absent from the function's scope
 map rather than special-cased, so an unexpected value fails closed.
 
@@ -62,10 +62,23 @@ preview; `main` is skipped by an Ignored Build Step, so there is no long-lived d
 a real business. Vercel Authentication is on, which gates `/api/storybook-token` as well as the
 pages, and fork PRs require authorization before building.
 
-Preview-scoped variables: `STORYBOOK_LAYER_BACKEND`, `STORYBOOK_LAYER_TOKEN_ENDPOINT`,
-`LAYER_STORYBOOK_ENVIRONMENT`, plus `LAYER_STORYBOOK_APP_ID` and `LAYER_STORYBOOK_APP_SECRET`. The
-first three are build-time — Vite inlines the `STORYBOOK_`-prefixed ones — and the app credentials
-are read only at request time.
+### The `STORYBOOK_` prefix is a boundary, not a convention
+
+Storybook inlines every `STORYBOOK_`-prefixed variable into the client bundle, so the prefix decides
+whether a value is public:
+
+| Prefix | Read by | Safe for secrets |
+| --- | --- | --- |
+| `STORYBOOK_LAYER_*` | the browser, inlined at build time | **no** |
+| `LAYER_*` | the token function, at request time | yes |
+
+`STORYBOOK_LAYER_BACKEND` and `STORYBOOK_LAYER_TOKEN_ENDPOINT` need the prefix — the preview reads
+them. `LAYER_APP_ID`, `LAYER_APP_SECRET` and `LAYER_ENVIRONMENT` must never gain it: prefixing
+`LAYER_APP_SECRET` would publish the app secret into `assets/iframe-*.js` with no error and no
+warning. Server-side names deliberately contain no `STORYBOOK` token at all, so the two groups can't
+be confused for each other.
+
+All five are scoped to Preview only.
 
 ## Which stories appear
 

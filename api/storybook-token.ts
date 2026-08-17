@@ -27,14 +27,14 @@ const readRequiredEnv = (name: string) => {
 const fail = (message: string, status: number) => Response.json({ message }, { status })
 
 export async function POST() {
-  const environment = readRequiredEnv('LAYER_STORYBOOK_ENVIRONMENT')
+  const environment = readRequiredEnv('LAYER_ENVIRONMENT')
   const scope = SCOPES[environment]
 
   // Production is absent from SCOPES rather than special-cased, so it can only ever fail closed.
   if (!scope) return fail(`Refusing to mint a token for environment ${environment}`, 403)
 
-  const clientId = readRequiredEnv('LAYER_STORYBOOK_APP_ID')
-  const clientSecret = readRequiredEnv('LAYER_STORYBOOK_APP_SECRET')
+  const clientId = readRequiredEnv('LAYER_APP_ID')
+  const clientSecret = readRequiredEnv('LAYER_APP_SECRET')
 
   const response = await fetch(AUTH_URL, {
     method: 'POST',
