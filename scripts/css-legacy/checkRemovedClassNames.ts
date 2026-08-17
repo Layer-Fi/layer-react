@@ -113,11 +113,18 @@ function removedNames(mergeBase: string) {
   let file = ''
 
   for (const line of diff.split('\n')) {
+    // A deleted file's post-image is `/dev/null`, so the pre-image path is the only one it has.
+    // Anchored on the prefix git actually writes, so a removed line starting with `-- ` is content.
+    if (line.startsWith('--- a/')) {
+      file = line.slice('--- a/'.length)
+      continue
+    }
     if (line.startsWith('+++ b/')) {
       file = line.slice('+++ b/'.length)
       continue
     }
-    if (!line.startsWith('-') || line.startsWith('---')) continue
+    if (line === '--- /dev/null' || line === '+++ /dev/null') continue
+    if (!line.startsWith('-')) continue
     if (!isReviewed(file) || isCommentLine(line)) continue
 
     for (const match of line.matchAll(CLASS_NAME)) {
