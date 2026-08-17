@@ -1,4 +1,3 @@
-import type { HttpHandler, PathParams } from 'msw'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -8,42 +7,14 @@ import { post as postSandboxResetPlaidItemLogin } from '@msw/api/businesses/[bus
 import { post as postUnlinkPlaidItem } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
 import { post as postPlaidLink } from '@msw/api/businesses/[business-id]/plaid/link/post'
 import { post as postPlaidUpdateModeLink } from '@msw/api/businesses/[business-id]/plaid/update-mode-link/post'
-import { server } from '@msw/node'
+import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
+import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 // `ready: false` keeps the hook from auto-opening the widget.
 vi.mock('react-plaid-link', () => ({
   usePlaidLink: () => ({ open: vi.fn(), ready: false }),
 }))
-
-type RequestSpy = (record: { params: PathParams, body: unknown }) => void
-
-type MockableEndpoint = {
-  mock: (
-    override: undefined,
-    options: { onRequest: (context: { request: Request, params: PathParams }) => Promise<void> },
-  ) => HttpHandler
-}
-
-// Not `readRequestJson`: some of these endpoints send no body at all.
-const spyOnEndpoint = (endpoint: MockableEndpoint) => {
-  const onRequest = vi.fn<RequestSpy>()
-
-  server.use(endpoint.mock(undefined, {
-    onRequest: async ({ request, params }) => {
-      const body = await request.text()
-      onRequest({ params, body: body ? JSON.parse(body) : undefined })
-    },
-  }))
-
-  return onRequest
-}
-
-const makeCustomerManagedPlaidConfig = (): CustomerManagedPlaidConfig => ({
-  createLinkToken: vi.fn(() => Promise.resolve({ linkToken: 'customer-link-token' })),
-  createUpdateModeLinkToken: vi.fn(() => Promise.resolve({ linkToken: 'customer-update-token' })),
-  onPublicTokenReceived: vi.fn(() => Promise.resolve()),
-})
 
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))

@@ -7,10 +7,10 @@ import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccount
 import { usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
 import { post as postExchangePlaidPublicToken } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
-import { server } from '@msw/node'
-import { readRequestJson } from '@msw/utils/request'
+import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
+import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 // `env` is absent from the link-token variant of PlaidLinkOptions, but the hook still forwards it.
 type CapturedPlaidLinkOptions = PlaidLinkOptions & { env?: string }
@@ -33,25 +33,6 @@ const completePlaidLink = () =>
     latestPlaidLinkOptions().onSuccess('public-token', METADATA)
     return Promise.resolve()
   })
-
-const spyOnExchangePlaidPublicToken = () => {
-  const onRequest = vi.fn<(body: unknown) => void>()
-
-  server.use(postExchangePlaidPublicToken.mock(undefined, {
-    onRequest: async ({ request }) => onRequest(await readRequestJson(request)),
-  }))
-
-  return onRequest
-}
-
-const makeCustomerManagedPlaidConfig = (
-  overrides?: Partial<CustomerManagedPlaidConfig>,
-): CustomerManagedPlaidConfig => ({
-  createLinkToken: vi.fn(() => Promise.resolve({ linkToken: 'customer-link-token' })),
-  createUpdateModeLinkToken: vi.fn(() => Promise.resolve({ linkToken: 'customer-update-token' })),
-  onPublicTokenReceived: vi.fn(() => Promise.resolve()),
-  ...overrides,
-})
 
 const sandboxWrapper = ({ children }: PropsWithChildren) => (
   <LayerTestProvider usePlaidSandbox>{children}</LayerTestProvider>
@@ -77,7 +58,7 @@ afterEach(() => vi.restoreAllMocks())
 
 describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   it('hands the public token to the customer instead of exchanging it with Layer', async () => {
-    const exchangePlaidPublicToken = spyOnExchangePlaidPublicToken()
+    const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
     const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig()
 
     const { result } = await renderAddModeModal(customerManagedPlaidConfig)
@@ -124,16 +105,20 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
 
 describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
   it('exchanges the public token with Layer', async () => {
-    const exchangePlaidPublicToken = spyOnExchangePlaidPublicToken()
+    const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
 
     await renderAddModeModal()
 
     await completePlaidLink()
 
-    await waitFor(() => expect(exchangePlaidPublicToken).toHaveBeenCalledWith({
-      public_token: 'public-token',
-      institution: METADATA.institution,
-    }))
+    await waitFor(() => expect(exchangePlaidPublicToken).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: {
+          public_token: 'public-token',
+          institution: METADATA.institution,
+        },
+      }),
+    ))
   })
 
   it('opts into the Plaid sandbox environment', async () => {
