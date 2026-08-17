@@ -4,9 +4,7 @@ import { type Alias, type AliasOptions } from 'vite'
 
 import { PUBLIC_API_TAG, REAL_BACKEND_TAG } from './tags'
 
-// Plaid's hosted iframe can't run against MSW, so the mock fakes a successful link. Real mode keeps
-// the real hook: the iframe works there, `sandbox` implies `usePlaidSandbox`, and the mock's fake
-// public token would be rejected by a live backend anyway.
+// Plaid's hosted iframe can't run against MSW; the mock fakes a successful link.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
 // (calendly.com/calendly-demo), which renders the real widget.
 const PLAID_LINK_ALIAS = {

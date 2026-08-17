@@ -115,10 +115,6 @@ state a real backend produces on its own. Two disqualifiers: **story-level
 handlers are fine — they give way to real data), and **a `play` function**, which clicks a row real
 data may not have. `STORYBOOK_SCOPE=real` filters to it.
 
-Story-level `loaders` that seed mock stores are not disqualifying, but they do nothing in real mode —
-those stories show the business's actual state, so the name may overclaim. Real mode also keeps the
-real `react-plaid-link`, so the linked-account flows are live against Plaid sandbox.
-
 ## Flakiness
 
 Two sources: the 250ms `setMinimumResponseDelay` in `preview.tsx` (loading-vs-loaded races)

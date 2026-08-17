@@ -92,8 +92,6 @@ jobs:
         alias="layer-react-storybook-pr-$PR.vercel.app"
         api="https://api.vercel.com"
         auth="Authorization: Bearer $VERCEL_TOKEN"
-        # The lookup is assigned inside the `if`, which exempts it from `bash -e`: outside, a failed
-        # lookup would abort the step before `url` reached GITHUB_OUTPUT.
         if dpl=$(curl -fsS "$api/v13/deployments/${url#https://}?teamId=$VERCEL_ORG_ID" \
           -H "$auth" | jq -r '.id // empty') \
           && [ -n "$dpl" ] \
