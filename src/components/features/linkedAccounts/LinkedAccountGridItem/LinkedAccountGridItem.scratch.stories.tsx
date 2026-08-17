@@ -30,9 +30,11 @@ const meta = {
   component: LinkedAccountGridItem,
   decorators: [
     Story => (
-      <GridList aria-label='Linked accounts'>
-        <Story />
-      </GridList>
+      <div className='Layer__component'>
+        <GridList aria-label='Linked accounts'>
+          <Story />
+        </GridList>
+      </div>
     ),
   ],
 } satisfies Meta<typeof LinkedAccountGridItem>
