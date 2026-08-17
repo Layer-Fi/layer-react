@@ -109,6 +109,20 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
 
     await waitFor(() => expect(result.current.isLinking).toBe(false))
   })
+
+  it('stops linking when the customer callback throws synchronously', async () => {
+    const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig({
+      onPublicTokenReceived: vi.fn(() => {
+        throw new Error('customer backend is down')
+      }),
+    })
+
+    const { result } = await renderAddModeModal(customerManagedPlaidConfig)
+
+    await completePlaidLink()
+
+    await waitFor(() => expect(result.current.isLinking).toBe(false))
+  })
 })
 
 describe('usePlaidLinkModal without a customer-managed Plaid config', () => {

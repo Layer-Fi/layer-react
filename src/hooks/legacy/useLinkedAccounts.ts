@@ -210,7 +210,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     () => fetchLinkToken(
       'add',
       customerManagedPlaidConfig
-        ? () => Promise.resolve(customerManagedPlaidConfig.createLinkToken())
+        ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
         : withHostedLinkRedirect(
           () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
           plaidHostedLinkConfig,
@@ -227,7 +227,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     (plaidItemPlaidId: string) => fetchLinkToken(
       'update',
       customerManagedPlaidConfig
-        ? () => Promise.resolve(customerManagedPlaidConfig.createUpdateModeLinkToken(plaidItemPlaidId))
+        ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createUpdateModeLinkToken(plaidItemPlaidId))
         : withHostedLinkRedirect(
           () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
           plaidHostedLinkConfig,

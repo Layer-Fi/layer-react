@@ -65,7 +65,7 @@ export function usePlaidLinkModal({
       preloadAccountConfirmation()
 
       const exchange = customerManagedPlaidConfig
-        ? Promise.resolve(customerManagedPlaidConfig.onPublicTokenReceived({ publicToken, metadata }))
+        ? Promise.resolve().then(() => customerManagedPlaidConfig.onPublicTokenReceived({ publicToken, metadata }))
         : triggerExchangePlaidPublicToken({
           public_token: publicToken,
           institution: metadata.institution,
