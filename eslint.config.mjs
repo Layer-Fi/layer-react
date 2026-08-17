@@ -389,8 +389,11 @@ export default tsEslint.config(
   },
   {
     // The self-reference resolves to `dist/`, which the rule reads as a parent import. Reaching the
-    // built package is the entire point of these tests.
+    // built package is the entire point of these tests. Linting never builds, so every name imported
+    // from it is unresolved here: type-aware rules would judge these files on absent types, and
+    // would report differently depending on whether a stale `dist/` happens to exist.
     files: ['type-tests/**/*.ts'],
+    extends: [tsEslint.configs.disableTypeChecked],
     rules: {
       'import/no-relative-parent-imports': 'off',
     },
