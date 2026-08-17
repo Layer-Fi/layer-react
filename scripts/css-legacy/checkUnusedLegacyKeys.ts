@@ -3,8 +3,7 @@ import path from 'node:path'
 import { Node, Project, SyntaxKind } from 'ts-morph'
 
 /** Fails on a legacy map entry no call site reaches — it emits nothing while looking restored. */
-
-function main() {
+export function checkUnusedLegacyKeys() {
   const project = new Project({ skipFileDependencyResolution: true })
   project.addSourceFilesAtPaths(['src/**/*.ts', 'src/**/*.tsx'])
 
@@ -53,10 +52,9 @@ function main() {
     console.error('\nMap entries no call site reaches — they emit nothing:')
     for (const entry of unused) console.error(`  ${entry.file}  ${entry.key}`)
     console.error(`\n${unused.length} unused`)
-    process.exit(1)
+    return false
   }
 
   console.log('Every legacy class name map entry is reached by a call site.')
+  return true
 }
-
-main()
