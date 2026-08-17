@@ -4,13 +4,15 @@ import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import '../src/styles/index.scss'
 
-import './mocks/systemDate'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { LayerTestProvider } from '../src/testUtils/render/LayerTestProvider'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
+import { installSystemDateMock } from './mocks/systemDate'
 import { DOCS_SCREENSHOT_TAG } from './tags'
+
+installSystemDateMock()
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
 // must resize the capture iframe to exercise each size class. Widths sit just below the

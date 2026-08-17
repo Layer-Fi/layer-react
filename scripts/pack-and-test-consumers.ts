@@ -15,6 +15,7 @@ const READY_SELECTOR = '[data-testid="fixture-ready"]'
 // `dist` is the built output to load in a browser once `verify` passes, relative to the fixture.
 const FIXTURES = [
   { name: 'vite-esm', dist: 'dist' },
+  { name: 'vite-esm-treeshake' },
   { name: 'cjs-require' },
   { name: 'ssr-node' },
 ] as const

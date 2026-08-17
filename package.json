@@ -7,6 +7,10 @@
   "types": "dist/index.d.ts",
   "style": "dist/index.css",
   "type": "commonjs",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "exports": {
     ".": {
       "import": {
