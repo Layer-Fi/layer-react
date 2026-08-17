@@ -12,14 +12,14 @@ import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
 const legacyClassNames = createLegacyClassNames({
   Layer__ComboBoxMultiValue: 'Layer__select__multi-value',
-})
+} satisfies ComboBoxLegacyClassNames)
 
 const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly T[] | null | undefined): number => {
   if (!selectedValues) {

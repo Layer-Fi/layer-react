@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import type { CSSObjectWithLabel, GroupBase, Props as SelectProps, StylesConfig } from 'react-select'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
 import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
@@ -19,7 +19,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxMenuPortal': 'Layer__select__menu-portal',
   'Layer__ComboBoxMultiValueRemove': 'Layer__select__multi-value__remove',
   'Layer__ComboBoxControl--disabled': 'Layer__select__control--is-disabled',
-})
+} satisfies ComboBoxLegacyClassNames)
 
 type UseCommonComboBoxPropsReturn<T extends ComboBoxOption, IsMulti extends boolean> =
   Partial<SelectProps<T, IsMulti, GroupBase<T>>> & AriaLabelProps

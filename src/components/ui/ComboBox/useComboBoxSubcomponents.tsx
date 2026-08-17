@@ -18,7 +18,7 @@ import {
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption, ComboBoxSlots } from '@ui/ComboBox/types'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack } from '@ui/Stack/Stack'
@@ -33,7 +33,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxNoOptionsMessage': 'Layer__select__menu-notice',
   'Layer__ComboBoxClearIndicator': 'Layer__select__indicator',
   'Layer__ComboBoxDropdownIndicator': 'Layer__select__indicator',
-})
+} satisfies ComboBoxLegacyClassNames)
 
 type UseComboBoxSubcomponentsParams<T extends ComboBoxOption> = {
   placeholder?: string

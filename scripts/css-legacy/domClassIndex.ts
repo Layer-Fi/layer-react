@@ -18,7 +18,6 @@ export type DomClassIndex = {
   exact: Map<string, DomClassSite[]>
   patterns: { regexp: RegExp, site: DomClassSite }[]
   prefixes: { prefix: string, site: DomClassSite }[]
-  fillers: Set<string>
 }
 
 const UNRESOLVED = '\u0000'
@@ -137,17 +136,9 @@ function collectPrefixes(sourceFile: SourceFile, file: string, index: DomClassIn
   }
 }
 
-function collectFillers(sourceFile: SourceFile, index: DomClassIndex) {
-  for (const literal of sourceFile.getDescendantsOfKind(SyntaxKind.StringLiteral)) {
-    const value = literal.getLiteralValue()
-    if (value && /^[A-Za-z0-9_-]+$/.test(value)) index.fillers.add(value)
-  }
-}
-
 function collectFromSourceFile(sourceFile: SourceFile, root: string, index: DomClassIndex) {
   const file = path.relative(root, sourceFile.getFilePath())
   collectPrefixes(sourceFile, file, index)
-  collectFillers(sourceFile, index)
 
   const candidates: Node[] = [
     ...sourceFile.getDescendantsOfKind(SyntaxKind.StringLiteral),
@@ -205,7 +196,7 @@ export function buildDomClassIndex(root: string): DomClassIndex {
     collectConstantMembers(sourceFile)
   }
 
-  const index: DomClassIndex = { exact: new Map(), patterns: [], prefixes: [], fillers: new Set() }
+  const index: DomClassIndex = { exact: new Map(), patterns: [], prefixes: [] }
   for (const sourceFile of project.getSourceFiles()) {
     collectFromSourceFile(sourceFile, root, index)
   }
@@ -224,22 +215,4 @@ export function lookup(index: DomClassIndex, name: string) {
 
   const generated = index.prefixes.filter(({ prefix }) => name.startsWith(`${prefix}__`))
   return generated.map(({ site }) => site)
-}
-
-export function lookupWeak(index: DomClassIndex, name: string) {
-  const proven: DomClassSite[] = []
-  const unproven: DomClassSite[] = []
-
-  for (const { regexp, site } of index.patterns) {
-    if (!site.isWeak) continue
-
-    const match = regexp.exec(name)
-    if (!match) continue
-
-    const captures = match.slice(1).filter(Boolean)
-    const isProven = captures.length > 0 && captures.every(capture => index.fillers.has(capture))
-    ;(isProven ? proven : unproven).push(site)
-  }
-
-  return { proven, unproven }
 }
