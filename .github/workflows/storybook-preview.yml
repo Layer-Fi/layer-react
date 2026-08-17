@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  MARKER: <!-- storybook-preview -->
   STATUS_CONTEXT: Storybook Preview
 
 jobs:
@@ -36,19 +35,13 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PR: ${{ github.event.pull_request.number }}
+      # `--edit-last` targets this bot's own comment, so the PR keeps one that evolves. Safe only
+      # while no other workflow comments here.
       run: |
-        body="$MARKER
-        **Storybook preview** — add the \`storybook-preview\` label to build one.
+        gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — add the \`storybook-preview\` label to build one.
 
         It renders stories against a live sandbox business instead of MSW fixtures, and stays up to
         date on every push while the label is applied."
-        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
-          --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
-        if [ -n "$id" ]; then
-          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body"
-        else
-          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
-        fi
 
   deploy:
     name: Build preview
@@ -99,18 +92,10 @@ jobs:
         URL: ${{ steps.deploy.outputs.url }}
         SHA: ${{ github.event.pull_request.head.sha }}
       run: |
-        body="$MARKER
-        **Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
+        gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
 
         Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar
         field. Rebuilds on every push while the label is applied; remove it to stop."
-        id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" \
-          --jq "first(.[] | select(.body | contains(\"$MARKER\")) | .id)")
-        if [ -n "$id" ]; then
-          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body"
-        else
-          gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
-        fi
 
     - name: Report the status
       if: always()

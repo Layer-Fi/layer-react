@@ -1,7 +1,7 @@
-import { createElement as h, useEffect, useState } from 'react'
+import { createElement as h, useCallback, useEffect, useState } from 'react'
 import { addons, types, useGlobals, useGlobalTypes } from 'storybook/manager-api'
 
-import { readHistory, remember } from './businessHistory'
+import { readHistory, remember, type RememberedBusiness } from './businessHistory'
 
 const ADDON_ID = 'layer/real-backend-business'
 const DATALIST_ID = 'layer-business-history'
@@ -13,16 +13,10 @@ const INPUT_STYLE = {
   font: '11px/1.4 ui-monospace, monospace',
 }
 
-// No JSX: the manager bundle's classic transform needs a `React` binding that lint would delete.
-const BusinessInput = () => {
-  const globalTypes = useGlobalTypes()
-  const [globals, updateGlobals] = useGlobals()
-
-  const current = (globals.business as string | undefined) ?? ''
-  const [draft, setDraft] = useState(current)
+// Records whatever is active, restores the most recent when nothing is, and picks up the legal names
+// the preview resolves.
+const useBusinessHistory = (current: string, restore: (id: string) => void) => {
   const [history, setHistory] = useState(readHistory)
-
-  useEffect(() => setDraft(current), [current])
 
   useEffect(() => {
     if (current) {
@@ -31,20 +25,40 @@ const BusinessInput = () => {
     }
 
     const [mostRecent] = readHistory()
-    if (mostRecent) updateGlobals({ business: mostRecent.id })
-  }, [current, updateGlobals])
+    if (mostRecent) restore(mostRecent.id)
+  }, [current, restore])
 
   useEffect(() => {
-    const onStorage = () => setHistory(readHistory())
+    const sync = () => setHistory(readHistory())
 
-    window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+    window.addEventListener('storage', sync)
+    return () => window.removeEventListener('storage', sync)
   }, [])
+
+  return history
+}
+
+const historyOptions = (history: RememberedBusiness[]) =>
+  h('datalist', { id: DATALIST_ID }, history.map(({ id, label }) =>
+    h('option', { key: id, value: id, label: label ? `${label} — ${id}` : undefined }),
+  ))
+
+// No JSX: the manager bundle's classic transform needs a `React` binding that lint would delete.
+const BusinessInput = () => {
+  const globalTypes = useGlobalTypes()
+  const [globals, updateGlobals] = useGlobals()
+
+  const current = (globals.business as string | undefined) ?? ''
+  const [draft, setDraft] = useState(current)
+  const select = useCallback((id: string) => updateGlobals({ business: id }), [updateGlobals])
+  const history = useBusinessHistory(current, select)
+
+  useEffect(() => setDraft(current), [current])
 
   // Declared by `preview.tsx` in real mode only, so this keeps the field out of mock Storybook.
   if (!('business' in globalTypes)) return null
 
-  const commit = () => updateGlobals({ business: draft.trim() })
+  const commit = () => select(draft.trim())
 
   return h(
     'form',
@@ -65,13 +79,7 @@ const BusinessInput = () => {
       'onBlur': commit,
       'style': INPUT_STYLE,
     }),
-    h(
-      'datalist',
-      { id: DATALIST_ID },
-      history.map(({ id, label }) =>
-        h('option', { key: id, value: id, label: label ? `${label} — ${id}` : undefined }),
-      ),
-    ),
+    historyOptions(history),
   )
 }
 

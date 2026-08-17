@@ -22,17 +22,8 @@ const readRequiredEnv = (name: string) => {
 
 const fail = (message: string, status: number) => Response.json({ message }, { status })
 
-export async function POST() {
-  const environment = readRequiredEnv('LAYER_ENVIRONMENT')
-  const scope = SCOPES[environment]
-
-  // Production is absent from SCOPES rather than special-cased, so it fails closed.
-  if (!scope) return fail(`Refusing to mint a token for environment ${environment}`, 403)
-
-  const clientId = readRequiredEnv('LAYER_APP_ID')
-  const clientSecret = readRequiredEnv('LAYER_APP_SECRET')
-
-  const response = await fetch(AUTH_URL, {
+const requestToken = (clientId: string, clientSecret: string, scope: string) =>
+  fetch(AUTH_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -40,6 +31,19 @@ export async function POST() {
     },
     body: new URLSearchParams({ grant_type: 'client_credentials', scope, client_id: clientId }),
   })
+
+export async function POST() {
+  const environment = readRequiredEnv('LAYER_ENVIRONMENT')
+  const scope = SCOPES[environment]
+
+  // Production is absent from SCOPES rather than special-cased, so it fails closed.
+  if (!scope) return fail(`Refusing to mint a token for environment ${environment}`, 403)
+
+  const response = await requestToken(
+    readRequiredEnv('LAYER_APP_ID'),
+    readRequiredEnv('LAYER_APP_SECRET'),
+    scope,
+  )
 
   if (!response.ok) {
     // Not forwarding the upstream body — it can echo request details back.

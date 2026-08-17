@@ -27,6 +27,20 @@ const Notice = ({ error = false, children }: PropsWithChildren<{ error?: boolean
   </pre>
 )
 
+const fetchToken = async (): Promise<{ token: Token, refreshMs: number }> => {
+  const response = await fetch(getTokenEndpoint(), { method: 'POST' })
+  const body = await response.json() as TokenResponse
+
+  if (!response.ok) throw new Error(body.message ?? `Token request failed: ${response.status}`)
+
+  const { environment, accessToken, expiresIn } = body
+  if (!environment || !accessToken || !expiresIn) {
+    throw new Error('Token response was missing fields')
+  }
+
+  return { token: { environment, accessToken }, refreshMs: (expiresIn / 2) * 1000 }
+}
+
 // `useAuth` never renews a token it was handed. It keys on the token, so swapping re-auths in place.
 const useToken = () => {
   const [token, setToken] = useState<Token | null>(null)
@@ -36,20 +50,12 @@ const useToken = () => {
     let timer: ReturnType<typeof setTimeout> | undefined
 
     const load = async () => {
-      const response = await fetch(getTokenEndpoint(), { method: 'POST' })
-      const body = await response.json() as TokenResponse
-
-      if (!response.ok) throw new Error(body.message ?? `Token request failed: ${response.status}`)
-
-      const { environment, accessToken, expiresIn } = body
-      if (!environment || !accessToken || !expiresIn) {
-        throw new Error('Token response was missing fields')
-      }
+      const { token: next, refreshMs } = await fetchToken()
 
       if (cancelled) return
 
-      setToken({ environment, accessToken })
-      timer = setTimeout(() => void load(), (expiresIn / 2) * 1000)
+      setToken(next)
+      timer = setTimeout(() => void load(), refreshMs)
     }
 
     void load()

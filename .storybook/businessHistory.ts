@@ -4,13 +4,14 @@ export type RememberedBusiness = { id: string, label?: string }
 const STORAGE_KEY = 'layer-storybook-businesses'
 const HISTORY_LIMIT = 8
 
+const isRemembered = (value: unknown): value is RememberedBusiness =>
+  typeof value === 'object' && value !== null && typeof (value as RememberedBusiness).id === 'string'
+
 export const readHistory = (): RememberedBusiness[] => {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]')
-    if (!Array.isArray(parsed)) return []
 
-    return parsed.filter((entry): entry is RememberedBusiness =>
-      typeof entry === 'object' && entry !== null && typeof (entry as RememberedBusiness).id === 'string')
+    return Array.isArray(parsed) ? parsed.filter(isRemembered) : []
   }
   catch {
     return []
