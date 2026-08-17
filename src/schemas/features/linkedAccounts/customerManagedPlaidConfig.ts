@@ -6,9 +6,9 @@ import type { Awaitable } from '@internal-types/utility/awaitable'
  * Public configuration for customer-managed Plaid items, accepted as a prop by exported
  * components that allow linking accounts.
  *
- * When supplied, the customer platform owns the Plaid item and mints a processor token scoped
- * to Layer, so every operation requiring the customer's Plaid credentials is delegated to these
- * callbacks. Layer still opens the Plaid Link modal and owns the surrounding UI.
+ * The customer platform owns the Plaid item and mints a processor token scoped to Layer, so
+ * every operation needing the customer's Plaid credentials is delegated to these callbacks.
+ * Layer still opens the Plaid Link modal and owns the surrounding UI.
  *
  * Mutually exclusive with `PlaidHostedLinkConfig`, which mints tokens through Layer's backend.
  */

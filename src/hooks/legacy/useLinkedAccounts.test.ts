@@ -12,7 +12,7 @@ import { post as postPlaidUpdateModeLink } from '@msw/api/businesses/[business-i
 import { server } from '@msw/node'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
-// The widget itself is out of scope here; `ready: false` keeps it from auto-opening.
+// `ready: false` keeps the hook from auto-opening the widget.
 vi.mock('react-plaid-link', () => ({
   usePlaidLink: () => ({ open: vi.fn(), ready: false }),
 }))
@@ -26,12 +26,7 @@ type MockableEndpoint = {
   ) => HttpHandler
 }
 
-/**
- * Swaps in a runtime handler that records each call, so a test can assert an endpoint
- * fired — or, for a customer-managed connection, that Layer never called it at all.
- *
- * Not `readRequestJson`: some of these endpoints send no body at all.
- */
+// Not `readRequestJson`: some of these endpoints send no body at all.
 const spyOnEndpoint = (endpoint: MockableEndpoint) => {
   const onRequest = vi.fn<RequestSpy>()
 

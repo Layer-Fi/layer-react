@@ -176,14 +176,8 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     [addToast],
   )
 
-  /**
-   * Wraps a Layer-minted token request so that, when a hosted-link config is supplied and Plaid
-   * returned a hosted URL, the customer platform navigates there instead of opening the embedded
-   * modal.
-   *
-   * The config is snapshotted with the request so the response is handled with the same config,
-   * even if the prop changes while the request is in flight.
-   */
+  // The config is snapshotted with the request so the response is handled with the same
+  // config, even if the prop changes while the request is in flight.
   const withHostedLinkRedirect = useCallback(
     (
       requestToken: () => Promise<{ linkToken: string, hostedLink?: string | null } | undefined>,

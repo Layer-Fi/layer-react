@@ -28,14 +28,12 @@ const latestPlaidLinkOptions = () => plaidLinkOptions[plaidLinkOptions.length - 
 
 const METADATA = { institution: { name: 'Test Bank', institution_id: 'ins_1' } } as PlaidLinkOnSuccessMetadata
 
-/** Drives Plaid Link's success callback and flushes the resulting state updates. */
 const completePlaidLink = () =>
   act(() => {
     latestPlaidLinkOptions().onSuccess('public-token', METADATA)
     return Promise.resolve()
   })
 
-/** Records the body Layer's own exchange endpoint received, so a test can assert it never fired. */
 const spyOnExchangePlaidPublicToken = () => {
   const onRequest = vi.fn<(body: unknown) => void>()
 
