@@ -28,7 +28,11 @@ describe('subpath exports', () => {
   })
 
   it('resolves enum value exports', () => {
+    // The ESLint job lints without a `dist/` build, so these subpaths don't resolve there and the
+    // enum member access reads as `any`.
+
     assertType<Direction>(Direction.DEBIT)
+
     assertType<SupportedLocale>(SupportedLocale.enUS)
   })
 })
