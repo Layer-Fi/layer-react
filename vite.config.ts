@@ -34,11 +34,10 @@ export default defineConfig(({ mode, command }) => {
       lib: isESM
         ? {
           /**
-           * `styles/index.scss` used to be a second entry, ordered before this one so that global
-           * CSS was emitted ahead of component CSS. `preserveModules` cannot carry a pure-CSS
-           * entry (vite:css-post crashes resolving its reference id), so `src/index.tsx` now
-           * imports the styles index as its first import instead. Module execution order gives
-           * the same result: global styles first, so component styles win on equal specificity.
+           * `preserveModules` cannot carry a pure-CSS entry (vite:css-post crashes resolving its
+           * reference id), so the styles index is imported from `src/index.tsx` instead, as its
+           * first import. Module execution order then puts global styles first in the generated
+           * CSS, so component styles win on equal specificity.
            */
           entry: path.resolve(__dirname, 'src/index.tsx'),
           formats: ['es'],
