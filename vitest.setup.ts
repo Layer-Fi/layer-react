@@ -15,6 +15,8 @@ const stubResizeObserver = () => {
   })
 }
 
+// Without this React never warns about state updates left outside `act`.
+beforeAll(() => vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true))
 beforeAll(() => stubResizeObserver())
 beforeAll(() => server.listen(MSW_CONFIG))
 
