@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 import { act, waitFor } from '@testing-library/react'
-import type { PlaidLinkOnSuccessMetadata, PlaidLinkOptions } from 'react-plaid-link'
+import { type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -12,33 +12,31 @@ import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
+vi.mock('react-plaid-link', () => ({ usePlaidLink: vi.fn() }))
+
+const mockedUsePlaidLink = vi.mocked(usePlaidLink)
+
 // `env` is absent from the link-token variant of PlaidLinkOptions, but the hook still forwards it.
-type CapturedPlaidLinkOptions = PlaidLinkOptions & { env?: string }
-
-const plaidLinkOptions: CapturedPlaidLinkOptions[] = []
-
-vi.mock('react-plaid-link', () => ({
-  usePlaidLink: (options: CapturedPlaidLinkOptions) => {
-    plaidLinkOptions.push(options)
-    return { open: vi.fn(), ready: false }
-  },
-}))
-
-const latestPlaidLinkOptions = () => plaidLinkOptions[plaidLinkOptions.length - 1]
+const lastPlaidLinkOptions = () =>
+  mockedUsePlaidLink.mock.lastCall?.[0] as PlaidLinkOptions & { env?: string }
 
 const METADATA = { institution: { name: 'Test Bank', institution_id: 'ins_1' } } as PlaidLinkOnSuccessMetadata
 
 const completePlaidLink = () =>
   act(() => {
-    latestPlaidLinkOptions().onSuccess('public-token', METADATA)
+    lastPlaidLinkOptions().onSuccess('public-token', METADATA)
     return Promise.resolve()
   })
 
-const sandboxWrapper = ({ children }: PropsWithChildren) => (
-  <LayerTestProvider usePlaidSandbox>{children}</LayerTestProvider>
-)
+type RenderAddModeModalOptions = {
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
+  usePlaidSandbox?: boolean
+}
 
-const renderAddModeModal = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig, sandbox = false) =>
+const renderAddModeModal = ({
+  customerManagedPlaidConfig,
+  usePlaidSandbox = false,
+}: RenderAddModeModalOptions = {}) =>
   renderHookWithAuth(
     () => usePlaidLinkModal({
       linkToken: 'a-link-token',
@@ -47,11 +45,20 @@ const renderAddModeModal = (customerManagedPlaidConfig?: CustomerManagedPlaidCon
       onSuccess: vi.fn(),
       customerManagedPlaidConfig,
     }),
-    sandbox ? { wrapper: sandboxWrapper } : undefined,
+    {
+      wrapper: ({ children }: PropsWithChildren) => (
+        <LayerTestProvider usePlaidSandbox={usePlaidSandbox}>{children}</LayerTestProvider>
+      ),
+    },
   )
 
+// `mockReset` because vitest keeps call history between tests, and `lastCall` is what these
+// assertions read. `ready: false` keeps the hook from auto-opening the widget.
 beforeEach(() => {
-  plaidLinkOptions.length = 0
+  mockedUsePlaidLink.mockReset()
+  mockedUsePlaidLink.mockReturnValue(
+    { open: vi.fn(), ready: false } as unknown as ReturnType<typeof usePlaidLink>,
+  )
 })
 
 afterEach(() => vi.restoreAllMocks())
@@ -61,7 +68,7 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
     const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
     const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig()
 
-    const { result } = await renderAddModeModal(customerManagedPlaidConfig)
+    const { result } = await renderAddModeModal({ customerManagedPlaidConfig })
 
     await completePlaidLink()
 
@@ -75,15 +82,20 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   })
 
   it('leaves the Plaid environment to the customer-minted token', async () => {
-    await renderAddModeModal(makeCustomerManagedPlaidConfig(), true)
+    await renderAddModeModal({
+      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig(),
+      usePlaidSandbox: true,
+    })
 
-    expect(latestPlaidLinkOptions().env).toBeUndefined()
+    expect(lastPlaidLinkOptions().env).toBeUndefined()
   })
 
   it('stops linking when the customer callback rejects', async () => {
-    const { result } = await renderAddModeModal(makeCustomerManagedPlaidConfig({
-      onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
-    }))
+    const { result } = await renderAddModeModal({
+      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+        onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
+      }),
+    })
 
     await completePlaidLink()
 
@@ -91,11 +103,13 @@ describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
   })
 
   it('stops linking when the customer callback throws synchronously', async () => {
-    const { result } = await renderAddModeModal(makeCustomerManagedPlaidConfig({
-      onPublicTokenReceived: vi.fn(() => {
-        throw new Error('customer backend is down')
+    const { result } = await renderAddModeModal({
+      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+        onPublicTokenReceived: vi.fn(() => {
+          throw new Error('customer backend is down')
+        }),
       }),
-    }))
+    })
 
     await completePlaidLink()
 
@@ -122,8 +136,8 @@ describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
   })
 
   it('opts into the Plaid sandbox environment', async () => {
-    await renderAddModeModal(undefined, true)
+    await renderAddModeModal({ usePlaidSandbox: true })
 
-    expect(latestPlaidLinkOptions().env).toBe('sandbox')
+    expect(lastPlaidLinkOptions().env).toBe('sandbox')
   })
 })
