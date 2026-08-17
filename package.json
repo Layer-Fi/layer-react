@@ -155,7 +155,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.2",
     "classnames": "^2.5.1",
-    "date-fns": "^4.1.0",
+    "date-fns": "^4.4.0",
     "effect": "^3.20.0",
     "i18next": "^25.8.17",
     "i18next-pseudo": "^2.2.1",
