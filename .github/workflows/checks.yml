@@ -41,6 +41,9 @@ jobs:
             run: npm run msw:check-coverage
           - name: Translations
             run: npm run i18n:check
+          # Reports rather than gates: dropping a class name is sometimes right, so this one is
+          # deliberately absent from the branch ruleset's required checks. It still fails, red and
+          # legible, so the loss is a decision instead of a surprise.
           - name: CSS
             run: npm run css:check
 

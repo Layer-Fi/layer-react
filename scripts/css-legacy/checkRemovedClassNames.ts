@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import { execFileSync } from 'node:child_process'
-import fs from 'node:fs'
 import { Node, Project, type SourceFile, SyntaxKind } from 'ts-morph'
 
 /**
  * Fails when a branch stops shipping a `Layer__` class name. Consumers style against these, and
- * nothing in their build tells them a name is gone.
+ * nothing in their build tells them a name is gone — this check is that signal. It is deliberately
+ * not a merge gate: dropping a name is sometimes right, and the point is that it be a decision
+ * rather than a surprise.
  *
  * Kept honest by what it refuses to count as still shipped: only string and template literals under
  * `src`, read from the syntax tree. A name surviving in a comment, in this script, in a story, or as
@@ -16,7 +17,6 @@ import { Node, Project, type SourceFile, SyntaxKind } from 'ts-morph'
  */
 
 const BASE_REF = process.env.BASE_REF ?? 'origin/main'
-const ALLOWLIST_PATH = 'scripts/css-legacy/droppedClassNames.txt'
 
 /** Zero-or-more, so the bare head of a template like `Layer__${name}` counts as a name too. */
 const CLASS_NAME = /Layer__[A-Za-z0-9_-]*/g
@@ -30,24 +30,6 @@ const isReviewed = (file: string) => /^src\/.*\.tsx?$/.test(file) && !EXCLUDED.t
 
 function git(args: string[]) {
   return execFileSync('git', args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 })
-}
-
-function readAllowlist() {
-  if (!fs.existsSync(ALLOWLIST_PATH)) return { allowed: new Set<string>(), unexplained: [] as string[] }
-
-  const allowed = new Set<string>()
-  const unexplained: string[] = []
-
-  for (const line of fs.readFileSync(ALLOWLIST_PATH, 'utf8').split('\n')) {
-    if (!line.trim() || line.trim().startsWith('#')) continue
-
-    const [name, ...reason] = line.split('#')
-    // The reason is the entry: it is what a reviewer weighs, so an entry without one is not accepted.
-    if (reason.join('#').trim()) allowed.add(name.trim())
-    else unexplained.push(name.trim())
-  }
-
-  return { allowed, unexplained }
 }
 
 /** A literal in a type position — `satisfies LegacyClassNameMapFor<'Layer__UI__Button'>` — renders nothing. */
@@ -97,7 +79,7 @@ function shippedNames() {
    * A prefix vouches only for itself, never for names starting with it: the bare `Layer__` head in
    * `Container` would otherwise vouch for every name in the package. A whole name removed while a
    * template still builds it therefore reads as dropped — a loud false positive, which is the safe
-   * direction for this check, and one line in the allowlist settles it.
+   * direction for a check that reports rather than blocks.
    */
   return {
     isShipped: (name: string, isPrefix: boolean) => isPrefix ? prefixes.has(name) : names.has(name),
@@ -106,13 +88,25 @@ function shippedNames() {
 
 const isCommentLine = (line: string) => /^(?:\/\/|\/\*|\*)/.test(line.slice(1).trim())
 
+type Removal = { name: string, isPrefix: boolean, file: string, withFile: boolean }
+
 /** Against the working tree, not HEAD, so an uncommitted removal is caught before it is pushed. */
 function removedNames(mergeBase: string) {
   const diff = git(['diff', '--unified=0', mergeBase, '--', 'src'])
-  const removed = new Map<string, string>()
+  const removed = new Map<string, Removal>()
   let file = ''
+  let isDeletedFile = false
 
   for (const line of diff.split('\n')) {
+    if (line.startsWith('diff --git ')) {
+      isDeletedFile = false
+      continue
+    }
+    // Deleting the whole file leaves nothing to keep the name on, so it is reported as one deletion.
+    if (line.startsWith('deleted file mode')) {
+      isDeletedFile = true
+      continue
+    }
     // A deleted file's post-image is `/dev/null`, so the pre-image path is the only one it has.
     // Anchored on the prefix git actually writes, so a removed line starting with `-- ` is content.
     if (line.startsWith('--- a/')) {
@@ -130,12 +124,12 @@ function removedNames(mergeBase: string) {
     for (const match of line.matchAll(CLASS_NAME)) {
       // A name the line interpolates into is a prefix claim, not a whole name.
       const isPrefix = line.slice(match.index + match[0].length).startsWith('${')
-      const key = `${match[0]}\u0000${isPrefix ? 'prefix' : 'name'}`
-      if (!removed.has(key)) removed.set(key, file)
+      const key = `${match[0]}\u0000${isPrefix}`
+      if (!removed.has(key)) removed.set(key, { name: match[0], isPrefix, file, withFile: isDeletedFile })
     }
   }
 
-  return removed
+  return [...removed.values()]
 }
 
 const describe = (name: string, isPrefix: boolean) =>
@@ -151,34 +145,38 @@ export function checkRemovedClassNames() {
     return false
   }
 
-  const { allowed, unexplained } = readAllowlist()
+  const { isShipped } = shippedNames()
+  const dropped = removedNames(mergeBase)
+    .filter(({ name, isPrefix }) => !isShipped(name, isPrefix))
 
-  if (unexplained.length > 0) {
-    console.error(`\n${ALLOWLIST_PATH} entries with no reason after \`#\`:`)
-    for (const name of unexplained) console.error(`  ${name}`)
-    console.error('\nA break with no stated reason is indistinguishable from a mistake.\n')
+  const withDeletedFile = new Map<string, string[]>()
+  const fromSurvivingFile = dropped.filter(({ name, isPrefix, file, withFile }) => {
+    if (!withFile) return true
+
+    withDeletedFile.set(file, [...withDeletedFile.get(file) ?? [], describe(name, isPrefix)])
     return false
+  })
+
+  if (withDeletedFile.size > 0) {
+    console.error('\nFiles deleted, and the names that went with them:')
+    for (const [file, names] of [...withDeletedFile].sort()) {
+      console.error(`  ${file}\n    ${names.sort().join(', ')}`)
+    }
+    console.error('\nNothing is left to carry these — the element is gone, so the names go with it.\n')
   }
 
-  const { isShipped } = shippedNames()
-  const dropped = [...removedNames(mergeBase)]
-    .map(([key, file]) => {
-      const [name, kind] = key.split('\u0000')
-      return { name, isPrefix: kind === 'prefix', file }
-    })
-    .filter(({ name, isPrefix }) => !isShipped(name, isPrefix) && !allowed.has(name))
-
-  if (dropped.length > 0) {
+  if (fromSurvivingFile.length > 0) {
     console.error('\nClass names this branch stops shipping:')
-    for (const { name, isPrefix, file } of dropped.sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const { name, isPrefix, file } of fromSurvivingFile.sort((a, b) => a.name.localeCompare(b.name))) {
       console.error(`  ${describe(name, isPrefix)}  (left ${file})`)
     }
     console.error(
-      '\nKeep each one — a createLegacyClassNames map beside the element, or `npm run css:rename`'
-      + `\n— or accept the break by adding it to ${ALLOWLIST_PATH} with a reason.\n`,
+      '\nKeep each one with a createLegacyClassNames map beside the element, or `npm run css:rename`'
+      + '\n— or drop it knowingly, and say so in the PR.\n',
     )
-    return false
   }
+
+  if (withDeletedFile.size > 0 || fromSurvivingFile.length > 0) return false
 
   console.log(`No class name is dropped against ${BASE_REF}.`)
   return true
