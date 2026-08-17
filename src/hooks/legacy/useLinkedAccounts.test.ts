@@ -16,6 +16,11 @@ vi.mock('react-plaid-link', () => ({
   usePlaidLink: () => ({ open: vi.fn(), ready: false }),
 }))
 
+// `connectionExternalId` is the Plaid item id for a Layer-managed connection and the processor
+// token for a customer-managed one, so each suite passes the id its mode would really carry.
+const PLAID_ITEM_ID = 'plaid-item-id'
+const PROCESSOR_TOKEN = 'processor-sandbox-0a1b2c3d-4e5f'
+
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))
 
@@ -40,9 +45,9 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-    await result.current.repairConnection('PLAID', 'plaid-item-id')
+    await result.current.repairConnection('PLAID', PROCESSOR_TOKEN)
 
-    expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith('plaid-item-id')
+    expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith(PROCESSOR_TOKEN)
     expect(createPlaidUpdateModeLink).not.toHaveBeenCalled()
   })
 
@@ -52,7 +57,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-    await result.current.removeConnection('PLAID', 'plaid-item-id')
+    await result.current.removeConnection('PLAID', PROCESSOR_TOKEN)
 
     expect(unlinkPlaidItem).not.toHaveBeenCalled()
     expect(consoleError).toHaveBeenCalledOnce()
@@ -64,7 +69,7 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-    await result.current.breakConnection('PLAID', 'plaid-item-id')
+    await result.current.breakConnection('PLAID', PROCESSOR_TOKEN)
 
     expect(resetPlaidItemLogin).not.toHaveBeenCalled()
     expect(consoleError).toHaveBeenCalledOnce()
@@ -99,10 +104,10 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await result.current.repairConnection('PLAID', 'plaid-item-id')
+    await result.current.repairConnection('PLAID', PLAID_ITEM_ID)
 
     expect(createPlaidUpdateModeLink).toHaveBeenCalledWith(
-      expect.objectContaining({ body: { plaid_item_id: 'plaid-item-id' } }),
+      expect.objectContaining({ body: { plaid_item_id: PLAID_ITEM_ID } }),
     )
   })
 
@@ -111,7 +116,7 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await result.current.removeConnection('PLAID', 'plaid-item-id')
+    await result.current.removeConnection('PLAID', PLAID_ITEM_ID)
 
     expect(unlinkPlaidItem).toHaveBeenCalledOnce()
   })
