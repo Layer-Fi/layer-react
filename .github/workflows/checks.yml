@@ -41,6 +41,8 @@ jobs:
             run: npm run msw:check-coverage
           - name: Translations
             run: npm run i18n:check
+          - name: CSS
+            run: npm run css:check-legacy-keys
 
     steps:
     - uses: actions/checkout@v7
@@ -99,7 +101,7 @@ jobs:
   # Its own job rather than a matrix entry: it needs no dependencies, and it inspects the PR head
   # rather than the merge commit, so it shares none of the setup above.
   scratch-stories:
-    name: Scratch stories
+    name: Scratch
     runs-on: ubuntu-latest
 
     steps:

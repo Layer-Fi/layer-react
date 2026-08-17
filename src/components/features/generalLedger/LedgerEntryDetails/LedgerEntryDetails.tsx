@@ -26,6 +26,7 @@ export interface LedgerEntryDetailsProps {
   /** When provided, a "Reverse entry" action is rendered for the entry. */
   onReverse?: () => Promise<void>
   stringOverrides?: LedgerEntryDetailStringOverrides
+  legacyClassNames?: { root?: string, header?: string, lineItems?: string, lineItemsTable?: string }
 }
 
 export const LedgerEntryDetails = ({
@@ -35,6 +36,7 @@ export const LedgerEntryDetails = ({
   onClose,
   onReverse,
   stringOverrides,
+  legacyClassNames,
 }: LedgerEntryDetailsProps) => {
   const { t } = useTranslation()
   const { renderInAppLink } = useInAppLinkContext()
@@ -65,8 +67,8 @@ export const LedgerEntryDetails = ({
     : stringOverrides?.title ?? defaultTitle
 
   return (
-    <VStack pbe='lg'>
-      <JournalEntryDetailHeader onClose={onClose} title={headerTitle} />
+    <VStack pbe='lg' className={legacyClassNames?.root}>
+      <JournalEntryDetailHeader onClose={onClose} title={headerTitle} className={legacyClassNames?.header} />
 
       <LedgerEntryDetailSection
         title={stringOverrides?.transactionSource?.header || t('generalLedger:LedgerEntryDetails.label.transaction_source', 'Transaction source')}
@@ -124,6 +126,8 @@ export const LedgerEntryDetails = ({
         title={stringOverrides?.lineItemsTable?.lineItemsColumnHeader || t('generalLedger:LedgerEntryDetails.label.line_items', 'Line items')}
       >
         <LedgerEntryDetailsLineItemsTable
+          className={legacyClassNames?.lineItems}
+          tableClassName={legacyClassNames?.lineItemsTable}
           lineItems={entry?.lineItems}
           isLoading={isLoading}
           isError={isError}

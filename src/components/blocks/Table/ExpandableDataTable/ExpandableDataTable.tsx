@@ -47,6 +47,7 @@ const EMPTY_ARRAY: never[] = []
 
 export function ExpandableDataTable<TData extends object>({
   data,
+  className,
   isLoading,
   isError,
   columnConfig,
@@ -146,6 +147,7 @@ export function ExpandableDataTable<TData extends object>({
   return (
     <DataTable
       ariaLabel={ariaLabel}
+      className={className}
       numColumns={numColumns}
       data={rows}
       isLoading={isLoading}

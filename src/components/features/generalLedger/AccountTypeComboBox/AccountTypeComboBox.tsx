@@ -13,9 +13,10 @@ type AccountTypeComboBoxProps = {
   isDisabled?: boolean
   error?: string
   inline?: boolean
+  className?: string
 }
 
-export const AccountTypeComboBox = ({ label, value, onChange, isDisabled, error, inline }: AccountTypeComboBoxProps) => {
+export const AccountTypeComboBox = ({ label, value, onChange, isDisabled, error, inline, className }: AccountTypeComboBoxProps) => {
   const { t } = useTranslation()
   const options = useMemo<ComboBoxOption[]>(
     () => LEDGER_ACCOUNT_TYPES_CONFIG.map(config => ({ value: config.value, label: t(config.i18nKey, config.defaultValue) })),
@@ -23,7 +24,7 @@ export const AccountTypeComboBox = ({ label, value, onChange, isDisabled, error,
   )
 
   return (
-    <ComboBoxField label={label} inline={inline}>
+    <ComboBoxField label={label} inline={inline} className={className}>
       {controlProps => (
         <ComboBox
           {...controlProps}

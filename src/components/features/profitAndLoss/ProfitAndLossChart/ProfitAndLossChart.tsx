@@ -163,7 +163,7 @@ export const ProfitAndLossChart = ({
           margin={CHART_MARGINS}
           data={dataOrPlaceholderData}
           onClick={onClick}
-          className='Layer__profit-and-loss-chart'
+          className='Layer__profit-and-loss-chart Layer__ProfitAndLossChart__Chart'
         >
           <ProfitAndLossChartPatternDefs />
           <ReferenceLine y={0} stroke={getColor(300)?.hex ?? '#EBEDF0'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />

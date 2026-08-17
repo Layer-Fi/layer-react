@@ -5,12 +5,15 @@ import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { P, Span } from '@ui/Typography/Text'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 import './timeEntryServiceSelector.scss'
+
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__TimeEntryServiceSelector', 'Layer__TimeEntryServiceSelector--inline')
 
 function getServiceLabel(service: CatalogService, t: TFunction): string {
   return service.archivedAt
@@ -161,7 +164,7 @@ export function TimeEntryServiceSelector({
   return (
     <ComboBoxField
       label={t('timeTracking:TimeEntryServiceSelector.label.service', 'Service')}
-      className={className}
+      className={legacyFieldClassNames({ inline, className })}
       inline={inline}
       showLabel={showLabel}
     >

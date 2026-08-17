@@ -216,5 +216,6 @@
 }
 
 .Layer__ComboBoxPlaceholder {
-  color: var(--color-base-500);
+  /* Same value the token defaults to; reading it keeps the legacy knob working here too. */
+  color: var(--input-placeholder-color);
 }

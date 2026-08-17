@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import SortArrows from '@icons/SortArrows'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
@@ -16,6 +17,11 @@ import './detailedTable.scss'
 
 import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
 import { ValueIcon } from './ValueIcon'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__DetailedTable__SortableColumn: 'Layer__sortable-col',
+  Layer__DetailedTable__sortArrows: 'Layer__sort-arrows',
+})
 
 export interface DetailedTableStringOverrides {
   categoryColumnHeader?: string
@@ -98,7 +104,7 @@ export const DetailedTable = <T extends SeriesData>({
                 <th></th>
                 <th
                   className={classNames(
-                    'Layer__DetailedTable__SortableColumn',
+                    legacyClassNames('Layer__DetailedTable__SortableColumn'),
                     sortParams.sortBy === 'category' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
                   )}
                   onClick={() => setAndToggleSortDirection({ field: 'category' })}
@@ -107,13 +113,13 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
                   </HStack>
                 </th>
                 {!isMobile && hasType && (
                   <th
                     className={classNames(
-                      'Layer__DetailedTable__SortableColumn',
+                      legacyClassNames('Layer__DetailedTable__SortableColumn'),
                       sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
                     )}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
@@ -122,13 +128,13 @@ export const DetailedTable = <T extends SeriesData>({
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                      {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
                     </HStack>
                   </th>
                 )}
                 <th
                   className={classNames(
-                    'Layer__DetailedTable__SortableColumn',
+                    legacyClassNames('Layer__DetailedTable__SortableColumn'),
                     'Layer__DetailedTable__SortableColumn--value',
                     sortParams.sortBy === 'value' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
                   )}
@@ -138,7 +144,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
+                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
                   </HStack>
                 </th>
                 <th className='Layer__DetailedTable__Column--percent'></th>

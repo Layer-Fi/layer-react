@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { isCategorized } from '@utils/features/bankTransactions/shared'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsStringOverrides } from '@providers/features/bankTransactions/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { useBankTransactionsCategorizationActions } from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -22,6 +23,10 @@ import { BankTransactionCategoryComboBox } from '@features/bankTransactions/Bank
 import { BankTransactionsProcessingInfo } from '@features/bankTransactions/BankTransactionsProcessingInfo/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsSubmitButton } from '@features/bankTransactions/BankTransactionsSubmitButton/BankTransactionsSubmitButton'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__BankTransactionRow__Category: 'Layer__bank-transaction-row__category',
+})
 
 type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>
@@ -166,7 +171,7 @@ export const BankTransactionCategoryCell = ({
         >
           <BankTransactionsCategorizedSelectedValue
             bankTransaction={bankTransaction}
-            className='Layer__BankTransactionRow__Category'
+            className={legacyClassNames('Layer__BankTransactionRow__Category')}
           />
           {expandButton}
         </BankTransactionCategoryCellContainer>

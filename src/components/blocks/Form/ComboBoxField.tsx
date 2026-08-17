@@ -2,7 +2,7 @@ import { type ReactNode, useId } from 'react'
 
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/Form/FormFieldShell'
+import { formFieldLayoutProps, legacyClassNames } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 type ComboBoxControlProps = {
@@ -24,7 +24,7 @@ export function ComboBoxField({ label, className, inline, showLabel = true, inpu
 
   return (
     <VStack {...formFieldLayoutProps({ className, inline, showLabel })}>
-      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{label}</Label>}
+      {showLabel && <Label slot='label' className={legacyClassNames('field:label')} htmlFor={inputId} size='sm'>{label}</Label>}
       {children({ 'slot': 'input', inputId, 'aria-label': showLabel ? undefined : label })}
     </VStack>
   )

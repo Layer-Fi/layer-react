@@ -6,7 +6,13 @@ import {
 } from 'react'
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+
 import './header.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__HeaderContainer--Sticky': 'Layer__header--sticky',
+})
 
 export interface HeaderProps {
   className?: string
@@ -21,7 +27,7 @@ const Header = forwardRef<HTMLElement | HTMLDivElement, HeaderProps>(
   ({ className, children, style, sticky, asHeader, rounded }, ref) => {
     const baseClassName = classNames(
       'Layer__HeaderContainer',
-      sticky && 'Layer__HeaderContainer--Sticky',
+      sticky && legacyClassNames('Layer__HeaderContainer--Sticky'),
       rounded && 'Layer__HeaderContainer--Rounded',
       className,
     )

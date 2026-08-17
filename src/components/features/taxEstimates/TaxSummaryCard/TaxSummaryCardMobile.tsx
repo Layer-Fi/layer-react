@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary, TaxSummarySection } from '@schemas/features/taxEstimates/summary'
 import { tConditional } from '@utils/shared/i18n/conditional'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -13,6 +14,10 @@ import { Span } from '@ui/Typography/Text'
 import { EquationRow } from '@features/taxEstimates/TaxSummaryCard/TaxSummaryCardEquation'
 
 import './taxSummaryCardMobile.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__TaxSummaryCard__MobileAmountRow: 'Layer__TaxSummaryCard__MobileToggleWrapper',
+})
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
@@ -56,7 +61,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
             {t('taxEstimates:TaxSummaryCard.TaxSummaryCardMobile.label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
           </Span>
         </HStack>
-        <HStack className='Layer__TaxSummaryCard__MobileAmountRow' justify='space-between' align='baseline' gap='md'>
+        <HStack className={legacyClassNames('Layer__TaxSummaryCard__MobileAmountRow')} justify='space-between' align='baseline' gap='md'>
           <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
           <Button
             variant='text'

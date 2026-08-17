@@ -21,6 +21,7 @@ type MobileListItemProps<TData> = PropsWithChildren<{
   }
   isExpanded?: boolean
   isExiting?: boolean
+  className?: string
   onExitComplete?: (item: TData) => void
 }>
 
@@ -34,6 +35,7 @@ export const MobileListItem = <TData extends { id: string }>({
   isExpanded = false,
   isExiting = false,
   onExitComplete,
+  className,
 }: MobileListItemProps<TData>) => {
   const { ActionsMenu: actionsMenu } = slotProps
   const onAction = useCallback(() => {
@@ -60,6 +62,7 @@ export const MobileListItem = <TData extends { id: string }>({
             'Layer__MobileListItem',
             selectionMode !== 'none' && 'Layer__MobileListItem--selectable',
             actionsMenu && 'Layer__MobileListItem--withActions',
+            className,
           )}
           slotProps={{ AnimatePresence: { initial: false, onExitComplete: handleExitComplete } }}
         >

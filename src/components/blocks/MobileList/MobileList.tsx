@@ -21,6 +21,7 @@ interface MobileListBaseProps<TData> {
   ariaLabel: string
   isLoading: boolean
   isError: boolean
+  itemClassName?: string
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -68,6 +69,7 @@ export type MobileListProps<TData> =
 export const MobileList = <TData extends { id: string }>({
   ariaLabel,
   data,
+  itemClassName,
   slots,
   renderItem,
   renderFooter,
@@ -112,11 +114,12 @@ export const MobileList = <TData extends { id: string }>({
         isExpanded={expandedKeys?.has(item.id) ?? false}
         isExiting={exitingKeys?.has(item.id) ?? false}
         onExitComplete={onRemoveItem}
+        className={itemClassName}
       >
         {renderItem(item)}
       </MobileListItem>
     )
-  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem, itemSlotProps])
+  }, [exitingKeys, expandedKeys, itemClassName, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem, itemSlotProps])
 
   const renderEmptyState = useCallback(() => {
     return <EmptyState />

@@ -12,9 +12,10 @@ type AccountNormalityComboBoxProps = {
   onChange: (value: string | null) => void
   error?: string
   inline?: boolean
+  className?: string
 }
 
-export const AccountNormalityComboBox = ({ label, value, onChange, error, inline }: AccountNormalityComboBoxProps) => {
+export const AccountNormalityComboBox = ({ label, value, onChange, error, inline, className }: AccountNormalityComboBoxProps) => {
   const { t } = useTranslation()
   const options = useMemo<ComboBoxOption[]>(
     () => NORMALITY_CONFIG.map(config => ({ value: config.value, label: t(config.i18nKey, config.defaultValue) })),
@@ -22,7 +23,7 @@ export const AccountNormalityComboBox = ({ label, value, onChange, error, inline
   )
 
   return (
-    <ComboBoxField label={label} inline={inline}>
+    <ComboBoxField label={label} inline={inline} className={className}>
       {controlProps => (
         <ComboBox
           {...controlProps}

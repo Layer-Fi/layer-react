@@ -1,13 +1,20 @@
 import { type ReactNode } from 'react'
+import classNames from 'classnames'
 import { CircleAlert, CircleCheckBig, RefreshCcw, Save, UploadCloud } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { ButtonIconBox } from '@ui/Button/ButtonIconBox'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 
+const legacyClassNames = createLegacyClassNames({
+  'state:withPrimaryIcon': 'Layer__btn--with-primary-icon',
+})
+
 export interface SubmitButtonProps {
   children?: ReactNode
+  className?: string
   onPress?: ButtonProps['onPress']
   type?: ButtonProps['type']
   isPending?: boolean
@@ -81,6 +88,7 @@ export const SubmitButton = ({
   isError,
   errorMessage,
   children,
+  className,
   action = SubmitAction.SAVE,
   noIcon,
   iconBox,
@@ -91,11 +99,13 @@ export const SubmitButton = ({
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
   const shouldRenderPendingInIconBox = isPending && iconBox && !noIcon
+  const buttonClassName = classNames(legacyClassNames(!noIcon && 'state:withPrimaryIcon'), className)
 
   if (withRetry && isError) {
     return (
       <Button
         variant='outlined'
+        className={buttonClassName}
         onPress={onPress}
         type={type}
         isDisabled={isPending || isDisabled}
@@ -112,6 +122,7 @@ export const SubmitButton = ({
 
   return (
     <Button
+      className={buttonClassName}
       onPress={onPress}
       type={type}
       isDisabled={isPending || isDisabled}

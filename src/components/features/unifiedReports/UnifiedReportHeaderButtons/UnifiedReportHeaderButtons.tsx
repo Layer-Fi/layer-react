@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import type { DefaultVariant } from '@components/utility/ResponsiveComponent'
 import { HStack } from '@ui/Stack/Stack'
@@ -8,6 +9,10 @@ import { UnifiedReportDownloadButton } from '@features/unifiedReports/UnifiedRep
 import { UnifiedReportsMobileSelectionDrawer } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/UnifiedReportsMobileSelectionDrawer'
 
 import './unifiedReportHeaderButtons.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReports__HeaderButtons: 'Layer__UnifiedReport__HeaderButtons',
+})
 
 type UnifiedReportHeaderButtonsProps = {
   variant?: DefaultVariant
@@ -22,7 +27,7 @@ export const UnifiedReportHeaderButtons = ({ variant }: UnifiedReportHeaderButto
     <HStack
       gap='xs'
       justify={isMobile ? 'space-between' : 'end'}
-      className={classNames('Layer__UnifiedReports__HeaderButtons', {
+      className={classNames(legacyClassNames('Layer__UnifiedReports__HeaderButtons'), {
         'Layer__UnifiedReports__HeaderButtons--mobile': isMobile,
       })}
     >

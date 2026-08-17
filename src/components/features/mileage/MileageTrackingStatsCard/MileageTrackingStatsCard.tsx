@@ -1,11 +1,16 @@
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
 import './mileageTrackingStatsCard.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__MileageTrackingStatsCard: 'Layer__MileageTrackingStats__Card',
+})
 
 interface StatBreakdown {
   business: number
@@ -37,7 +42,7 @@ export const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdo
   const { formatNumber } = useIntlFormatter()
 
   return (
-    <VStack className='Layer__MileageTrackingStatsCard' gap='3xs' pi='xs' pb='xs'>
+    <VStack className={legacyClassNames('Layer__MileageTrackingStatsCard')} gap='3xs' pi='xs' pb='xs'>
       <Span size='md'>{title}</Span>
       {formatAsMoney
         ? <MoneySpan amount={amount} size='lg' weight='bold' />

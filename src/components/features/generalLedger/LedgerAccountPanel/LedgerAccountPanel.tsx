@@ -3,6 +3,7 @@ import {
   useContext,
 } from 'react'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
@@ -12,6 +13,10 @@ import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOver
 import { LedgerAccountPanelHeader } from '@features/generalLedger/LedgerAccountPanelHeader/LedgerAccountPanelHeader'
 
 import './ledgerAccountPanel.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__LedgerAccountPanel: 'Layer__ledger-account__panel',
+})
 
 export interface LedgerAccountStringOverrides {
   ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
@@ -49,7 +54,7 @@ export const LedgerAccountPanel = ({
       )}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
-      className='Layer__LedgerAccountPanel'
+      className={legacyClassNames('Layer__LedgerAccountPanel')}
     >
       <VStack>
         <LedgerAccountPanelHeader onClose={close} />
