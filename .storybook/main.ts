@@ -4,7 +4,9 @@ import { type Alias, type AliasOptions } from 'vite'
 
 import { PUBLIC_API_TAG, REAL_BACKEND_TAG } from './tags'
 
-// Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
+// Plaid's hosted iframe can't run against MSW, so the mock fakes a successful link. Real mode keeps
+// the real hook: the iframe works there, `sandbox` implies `usePlaidSandbox`, and the mock's fake
+// public token would be rejected by a live backend anyway.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
 // (calendly.com/calendly-demo), which renders the real widget.
 const PLAID_LINK_ALIAS = {
@@ -29,6 +31,8 @@ const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
 //               these primitives, so a regression generally surfaces here first.
 //   real      — stories tagged `real-backend`, the ones that still mean something with MSW off.
 //               What the access-protected Vercel preview ships.
+const USES_REAL_BACKEND = process.env.STORYBOOK_LAYER_BACKEND === 'real'
+
 const SCOPE = process.env.STORYBOOK_SCOPE
 const CHROMATIC_PATHS = /\/src\/components\/(ui|blocks)\/|scratch\.stories\./
 
@@ -56,7 +60,7 @@ const config: StorybookConfig = {
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
-      alias: withPlaidLinkAlias(viteConfig.resolve?.alias),
+      alias: USES_REAL_BACKEND ? viteConfig.resolve?.alias : withPlaidLinkAlias(viteConfig.resolve?.alias),
     },
     // `vercel dev` serves `/api` on its own port (3000 by default); the dev server proxies to it
     // so the relative STORYBOOK_LAYER_TOKEN_ENDPOINT resolves instead of 404ing against :6006.

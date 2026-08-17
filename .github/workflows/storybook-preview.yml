@@ -92,10 +92,12 @@ jobs:
         alias="layer-react-storybook-pr-$PR.vercel.app"
         api="https://api.vercel.com"
         auth="Authorization: Bearer $VERCEL_TOKEN"
-        dpl=$(curl -fsS "$api/v13/deployments/${url#https://}?teamId=$VERCEL_ORG_ID" \
-          -H "$auth" | jq -r '.id // empty')
-
-        if [ -n "$dpl" ] && curl -fsS -X POST \
+        # The lookup is assigned inside the `if`, which exempts it from `bash -e`: outside, a failed
+        # lookup would abort the step before `url` reached GITHUB_OUTPUT.
+        if dpl=$(curl -fsS "$api/v13/deployments/${url#https://}?teamId=$VERCEL_ORG_ID" \
+          -H "$auth" | jq -r '.id // empty') \
+          && [ -n "$dpl" ] \
+          && curl -fsS -X POST \
           "$api/v2/deployments/$dpl/aliases?teamId=$VERCEL_ORG_ID" \
           -H "$auth" -H 'Content-Type: application/json' \
           -d "{\"alias\":\"$alias\"}" >/dev/null; then
