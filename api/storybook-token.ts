@@ -1,9 +1,21 @@
 // Vercel function. Mints a short-lived business access token so the Layer app secret never reaches
 // the browser. Excluded from the npm package by `files: ["/dist"]`.
-import { type Environment, EnvironmentConfigs } from '../src/providers/global/Environment/environmentConfigs'
+//
+// Self-contained on purpose. The root package.json is `type: commonjs`, so `api/package.json` marks
+// this directory ESM — and under ESM an extensionless relative import into `src/` would not resolve
+// at runtime, so the two values needed from `environmentConfigs` are repeated here instead.
 
 // `tsconfig.json` restricts `types`, so Node's globals aren't declared here.
 declare const process: { env: Record<string, string | undefined> }
+
+const AUTH_URL = 'https://auth.layerfi.com/oauth2/token'
+
+// Mirrors the non-production entries of `EnvironmentConfigs`.
+const SCOPES: Record<string, string> = {
+  sandbox: 'https://sandbox.layerfi.com/sandbox',
+  staging: 'https://sandbox.layerfi.com/sandbox',
+  internalStaging: 'https://sandbox.layerfi.com/sandbox',
+}
 
 const readRequiredEnv = (name: string) => {
   const value = process.env[name]
@@ -16,19 +28,15 @@ const fail = (message: string, status: number) => Response.json({ message }, { s
 
 export async function POST() {
   const environment = readRequiredEnv('LAYER_STORYBOOK_ENVIRONMENT')
+  const scope = SCOPES[environment]
 
-  // Returned to the client rather than configured there too, so the provider's `environment` can't
-  // drift from the scope this token was minted for.
-  if (!(environment in EnvironmentConfigs)) return fail(`Unknown environment ${environment}`, 409)
-  if (environment === 'production' || environment === 'production-ca') {
-    return fail('Refusing to mint a production token', 403)
-  }
+  // Production is absent from SCOPES rather than special-cased, so it can only ever fail closed.
+  if (!scope) return fail(`Refusing to mint a token for environment ${environment}`, 403)
 
-  const { authUrl, scope } = EnvironmentConfigs[environment as Environment]
   const clientId = readRequiredEnv('LAYER_STORYBOOK_APP_ID')
   const clientSecret = readRequiredEnv('LAYER_STORYBOOK_APP_SECRET')
 
-  const response = await fetch(authUrl, {
+  const response = await fetch(AUTH_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
