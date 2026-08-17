@@ -44,18 +44,27 @@ const fetchToken = async (): Promise<{ token: Token, refreshMs: number }> => {
 // `useAuth` never renews a token it was handed. It keys on the token, so swapping re-auths in place.
 const useToken = () => {
   const [token, setToken] = useState<Token | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
     let timer: ReturnType<typeof setTimeout> | undefined
 
     const load = async () => {
-      const { token: next, refreshMs } = await fetchToken()
+      try {
+        const { token: next, refreshMs } = await fetchToken()
 
-      if (cancelled) return
+        if (cancelled) return
 
-      setToken(next)
-      timer = setTimeout(() => void load(), refreshMs)
+        setToken(next)
+        setError(null)
+        timer = setTimeout(() => void load(), refreshMs)
+      }
+      catch (caught) {
+        if (cancelled) return
+
+        setError(caught instanceof Error ? caught.message : 'Token request failed')
+      }
     }
 
     void load()
@@ -66,7 +75,7 @@ const useToken = () => {
     }
   }, [])
 
-  return token
+  return { token, error }
 }
 
 const RealBackendSurface = ({ businessId, token, children }: PropsWithChildren<{
@@ -74,12 +83,15 @@ const RealBackendSurface = ({ businessId, token, children }: PropsWithChildren<{
   token: Token
 }>) => {
   // Cast because `.storybook` lints under an inferred project that can't resolve this hook's aliases.
-  const { data: business, isLoading, isError } = useGetBusiness({ businessId }) as {
+  const { data: business, isError } = useGetBusiness({ businessId }) as {
     data?: Business
-    isLoading: boolean
     isError: boolean
   }
   const legalName = business?.legalName ?? null
+  // `useAuth`'s own SWR call resolves a tick after mount even in explicit-token mode, so
+  // `useGetBusiness` is briefly paused (key undefined): isLoading reports false with no data or
+  // error. Waiting on `business` rather than just `!isLoading` closes that window.
+  const isReady = !isError && business !== undefined
 
   useEffect(() => {
     if (legalName) remember(businessId, legalName)
@@ -88,14 +100,16 @@ const RealBackendSurface = ({ businessId, token, children }: PropsWithChildren<{
   return (
     <>
       {isError && <Notice error>{`Could not load business ${businessId}.`}</Notice>}
-      {!isError && !isLoading && children}
+      {isReady && children}
       <RealBackendBadge businessId={businessId} name={legalName} environment={token.environment} />
     </>
   )
 }
 
 const RealBackendProvider = ({ businessId, children }: PropsWithChildren<{ businessId: string }>) => {
-  const token = useToken()
+  const { token, error } = useToken()
+
+  if (error) return <Notice error>{`Could not fetch a Storybook token: ${error}`}</Notice>
 
   if (token === null) return null
 
