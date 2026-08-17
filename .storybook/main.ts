@@ -58,6 +58,15 @@ const config: StorybookConfig = {
       tsconfigPaths: true,
       alias: withPlaidLinkAlias(viteConfig.resolve?.alias),
     },
+    // `vercel dev` serves `/api` on its own port (3000 by default); the dev server proxies to it
+    // so the relative STORYBOOK_LAYER_TOKEN_ENDPOINT resolves instead of 404ing against :6006.
+    server: {
+      ...viteConfig.server,
+      proxy: {
+        ...viteConfig.server?.proxy,
+        '/api': { target: process.env.STORYBOOK_VERCEL_DEV_URL ?? 'http://localhost:3000' },
+      },
+    },
   }),
 }
 
