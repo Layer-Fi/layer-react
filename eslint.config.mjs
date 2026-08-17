@@ -318,7 +318,7 @@ export default tsEslint.config(
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
-            '.storybook/manager.tsx',
+            '.storybook/manager.ts',
             '.storybook/StorybookLayerProvider.tsx',
             '.storybook/RealBackendBadge.tsx',
             '.storybook/realBackend.ts',

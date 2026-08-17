@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { createElement as h, useEffect, useState } from 'react'
 import { addons, types, useGlobals, useGlobalTypes } from 'storybook/manager-api'
 
 import { readHistory, remember } from './businessHistory'
@@ -6,10 +6,21 @@ import { readHistory, remember } from './businessHistory'
 const ADDON_ID = 'layer/real-backend-business'
 const DATALIST_ID = 'layer-business-history'
 
+const INPUT_STYLE = {
+  padding: '4px 6px',
+  border: '1px solid rgb(0 0 0 / 0.2)',
+  borderRadius: 4,
+  font: '11px/1.4 ui-monospace, monospace',
+}
+
 /**
  * A free-text field rather than a dropdown: demo businesses are replaced often, so any curated list
  * would go stale and need re-curating. Previously used businesses come back as autocomplete,
  * labelled with the legal name the preview resolved for them.
+ *
+ * Written with `createElement` rather than JSX because the manager bundle uses the classic
+ * transform, which needs a `React` binding that nothing references — so lint deletes it and the
+ * toolbar throws "React is not defined" at runtime.
  */
 const BusinessInput = () => {
   const globalTypes = useGlobalTypes()
@@ -47,35 +58,32 @@ const BusinessInput = () => {
 
   const commit = () => updateGlobals({ business: draft.trim() })
 
-  return (
-    <form
-      style={{ display: 'flex', alignItems: 'center' }}
-      onSubmit={(event) => {
+  return h(
+    'form',
+    {
+      style: { display: 'flex', alignItems: 'center' },
+      onSubmit: (event: { preventDefault: () => void }) => {
         event.preventDefault()
         commit()
-      }}
-    >
-      <input
-        aria-label='Business'
-        placeholder='Business ID'
-        list={DATALIST_ID}
-        value={draft}
-        size={38}
-        onChange={event => setDraft(event.target.value)}
-        onBlur={commit}
-        style={{
-          padding: '4px 6px',
-          border: '1px solid rgb(0 0 0 / 0.2)',
-          borderRadius: 4,
-          font: '11px/1.4 ui-monospace, monospace',
-        }}
-      />
-      <datalist id={DATALIST_ID}>
-        {history.map(({ id, label }) => (
-          <option key={id} value={id} label={label ? `${label} — ${id}` : undefined} />
-        ))}
-      </datalist>
-    </form>
+      },
+    },
+    h('input', {
+      'aria-label': 'Business',
+      'placeholder': 'Business ID',
+      'list': DATALIST_ID,
+      'value': draft,
+      'size': 38,
+      'onChange': (event: { target: { value: string } }) => setDraft(event.target.value),
+      'onBlur': commit,
+      'style': INPUT_STYLE,
+    }),
+    h(
+      'datalist',
+      { id: DATALIST_ID },
+      history.map(({ id, label }) =>
+        h('option', { key: id, value: id, label: label ? `${label} — ${id}` : undefined }),
+      ),
+    ),
   )
 }
 
@@ -83,6 +91,6 @@ addons.register(ADDON_ID, () => {
   addons.add(ADDON_ID, {
     type: types.TOOL,
     title: 'Business',
-    render: () => <BusinessInput />,
+    render: () => h(BusinessInput),
   })
 })
