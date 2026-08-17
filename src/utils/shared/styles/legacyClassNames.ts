@@ -7,6 +7,16 @@ function toArray(value: string | ReadonlyArray<string>) {
 }
 
 /**
+ * Constrains a component's map to its own class names: every key is either one of `TClassName` or a
+ * modifier of one, or a `state:`-style key naming a variant that is a `data-*` attribute today. A
+ * key that is neither — a name the component does not render — fails typecheck instead of quietly
+ * emitting nothing.
+ */
+export type LegacyClassNameMapFor<TClassName extends string> = Partial<
+  Record<TClassName | `${TClassName}--${string}` | `${string}:${string}`, string | ReadonlyArray<string>>
+>
+
+/**
  * Binds a component's current class names to the ones v0.1.122 emitted, and returns a composer that
  * emits both — consumers style against the old names, so the elements that carried them keep
  * carrying them.

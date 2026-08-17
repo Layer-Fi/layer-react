@@ -34,6 +34,7 @@
     "audit:floors": "tsx scripts/audit-declared-floors.ts",
     "chromatic": "chromatic --exit-zero-on-changes --build-script-name=storybook:build",
     "css:check-legacy-keys": "tsx scripts/css-legacy/checkUnusedLegacyKeys.ts",
+    "css:check-removed": "tsx scripts/css-legacy/checkRemovedClassNames.ts",
     "css:rename": "tsx scripts/css-legacy/renameClassName.ts",
     "coverage:floor": "tsx scripts/check-coverage-floor.ts",
     "clear:react": "rm -rf ./node_modules/react && rm -rf ./node_modules/react-dom",

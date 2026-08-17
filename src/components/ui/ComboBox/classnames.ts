@@ -1,3 +1,5 @@
+import { type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+
 /** Every class name the combo box puts in the DOM. */
 export const COMBO_BOX_CLASS_NAMES = {
   CONTAINER: 'Layer__ComboBoxContainer',
@@ -32,10 +34,5 @@ export const COMBO_BOX_CLASS_NAMES = {
 
 type ComboBoxClassName = (typeof COMBO_BOX_CLASS_NAMES)[keyof typeof COMBO_BOX_CLASS_NAMES]
 
-/**
- * Legacy maps key off the names above, spelled out because the checks read literal keys — so a key
- * naming an element the combo box no longer renders fails typecheck rather than emitting nothing.
- */
-export type ComboBoxLegacyClassNames = Partial<
-  Record<ComboBoxClassName | `${ComboBoxClassName}--${string}`, string | ReadonlyArray<string>>
->
+/** Legacy maps key off the names above, so a key naming an element gone from it fails typecheck. */
+export type ComboBoxLegacyClassNames = LegacyClassNameMapFor<ComboBoxClassName>

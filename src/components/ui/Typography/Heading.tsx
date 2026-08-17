@@ -5,7 +5,7 @@ import {
   type HeadingProps as ReactAriaHeadingProps,
 } from 'react-aria-components/Heading'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'
 
@@ -16,7 +16,7 @@ const legacyClassNames = createLegacyClassNames({
   'align:left': 'Layer__heading--left',
   'align:center': 'Layer__heading--center',
   'align:right': 'Layer__heading--right',
-})
+} satisfies LegacyClassNameMapFor<'Layer__UI__Heading'>)
 
 export type HeadingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 

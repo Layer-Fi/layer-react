@@ -1,4 +1,4 @@
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import type { ButtonVariant } from '@ui/Button/Button'
 
 const legacyClassNames = createLegacyClassNames({
@@ -15,7 +15,7 @@ const legacyClassNames = createLegacyClassNames({
   'state:processing': 'Layer__btn--processing',
   'state:asLink': 'Layer__btn--as-link',
   'state:back': 'Layer__back-btn',
-})
+} satisfies LegacyClassNameMapFor<'Layer__UI__Button'>)
 
 /** `BackButton` and `CloseButton` both shipped under this name. */
 export const LEGACY_BACK_BUTTON_CLASS_NAME = legacyClassNames('state:back')

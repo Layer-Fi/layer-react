@@ -1,0 +1,4 @@
+# Class names this package deliberately stopped shipping. One per line, with the reason.
+# `css:check-removed` fails on a dropped name until it is either kept or listed here.
+#
+#   Layer__example  # why the break is acceptable

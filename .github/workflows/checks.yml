@@ -43,9 +43,19 @@ jobs:
             run: npm run i18n:check
           - name: CSS
             run: npm run css:check-legacy-keys
+          - name: CSS names
+            run: npm run css:check-removed
 
     steps:
     - uses: actions/checkout@v7
+
+    # The class-name check diffs against the base branch, which a shallow clone cannot reach.
+    - name: Deepen history
+      if: matrix.name == 'CSS names'
+      run: |
+        if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+          git fetch --no-tags --unshallow origin
+        fi
 
     - uses: actions/setup-node@v7
       with:
@@ -56,6 +66,8 @@ jobs:
       run: npm ci
 
     - name: ${{ matrix.name }}
+      env:
+        BASE_REF: origin/${{ github.event.pull_request.base.ref }}
       run: ${{ matrix.run }}
 
   # Its own job rather than a matrix entry: everything after the build reads `dist/`, so they share

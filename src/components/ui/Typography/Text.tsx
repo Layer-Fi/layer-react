@@ -7,7 +7,7 @@ import { Label as ReactAriaLabel } from 'react-aria-components/Label'
 import { Text as ReactAriaText } from 'react-aria-components/Text'
 import { mergeRefs } from 'react-merge-refs'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useTruncationDetection } from '@hooks/utils/size/useTruncationDetection'
 import type { Spacing } from '@ui/sharedUITypes'
@@ -28,7 +28,7 @@ const legacyClassNames = createLegacyClassNames({
   'weight:normal': 'Layer__text--normal',
   'weight:bold': 'Layer__text--bold',
   'state:noWrap': 'Layer__nowrap',
-})
+} satisfies LegacyClassNameMapFor<'Layer__Header' | 'Layer__P' | 'Layer__Span'>)
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
