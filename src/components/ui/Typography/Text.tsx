@@ -28,7 +28,13 @@ const legacyClassNames = createLegacyClassNames({
   'weight:normal': 'Layer__text--normal',
   'weight:bold': 'Layer__text--bold',
   'state:noWrap': 'Layer__nowrap',
-} satisfies LegacyClassNameMapFor<'Layer__Header' | 'Layer__P' | 'Layer__Span'>)
+} satisfies LegacyClassNameMapFor<
+  'Layer__Header' | 'Layer__P' | 'Layer__Span',
+  `size:${TextSize}` | `weight:${TextWeight}` | `state:${string}`
+>)
+
+type TextSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+type TextWeight = 'normal' | 'bold'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -41,12 +47,12 @@ export type TextStyleProps = {
   pi?: Spacing
   pie?: Spacing
   pis?: Spacing
-  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: TextSize
   status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
   invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
-  weight?: 'normal' | 'bold'
+  weight?: TextWeight
   className?: string
 }
 

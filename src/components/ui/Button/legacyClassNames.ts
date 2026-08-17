@@ -15,7 +15,7 @@ const legacyClassNames = createLegacyClassNames({
   'state:processing': 'Layer__btn--processing',
   'state:asLink': 'Layer__btn--as-link',
   'state:back': 'Layer__back-btn',
-} satisfies LegacyClassNameMapFor<'Layer__UI__Button'>)
+} satisfies LegacyClassNameMapFor<'Layer__UI__Button', `variant:${ButtonVariant}` | `state:${string}`>)
 
 /** `BackButton` and `CloseButton` both shipped under this name. */
 export const LEGACY_BACK_BUTTON_CLASS_NAME = legacyClassNames('state:back')

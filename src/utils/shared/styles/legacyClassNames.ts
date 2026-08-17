@@ -11,9 +11,16 @@ function toArray(value: string | ReadonlyArray<string>) {
  * modifier of one, or a `state:`-style key naming a variant that is a `data-*` attribute today. A
  * key that is neither — a name the component does not render — fails typecheck instead of quietly
  * emitting nothing.
+ *
+ * Pass `TStateKey` wherever the composer is called with an interpolated key: typing it from the
+ * prop's own union means dropping a variant fails typecheck at the stale entry, which a `state:`
+ * wildcard cannot catch.
  */
-export type LegacyClassNameMapFor<TClassName extends string> = Partial<
-  Record<TClassName | `${TClassName}--${string}` | `${string}:${string}`, string | ReadonlyArray<string>>
+export type LegacyClassNameMapFor<
+  TClassName extends string,
+  TStateKey extends string = `${string}:${string}`,
+> = Partial<
+  Record<TClassName | `${TClassName}--${string}` | TStateKey, string | ReadonlyArray<string>>
 >
 
 /**
