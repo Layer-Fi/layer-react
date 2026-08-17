@@ -46,7 +46,7 @@ export const runningBalances = (owed: number[], paid: number[]): QuarterBalance[
   const balances: QuarterBalance[] = []
   let carried = 0
   owed.forEach((owedThisQuarter, index) => {
-    const totalPaid = paid[index]
+    const totalPaid = paid[index] ?? 0
     const remainingBalance = carried + owedThisQuarter - totalPaid
     balances.push({ rolledOverFromPrevious: carried, owedThisQuarter, totalPaid, remainingBalance })
     carried = Math.max(remainingBalance, 0)
@@ -56,15 +56,17 @@ export const runningBalances = (owed: number[], paid: number[]): QuarterBalance[
 
 export const quarterLabel = (quarter: number) => `Q${quarter}`
 
+const FINAL_QUARTER_MONTH_SPAN: [number, number] = [8, 11]
+
 const QUARTER_MONTH_SPANS: Record<number, [number, number]> = {
   1: [0, 2],
   2: [3, 4],
   3: [5, 7],
-  4: [8, 11],
+  4: FINAL_QUARTER_MONTH_SPAN,
 }
 
 export const quarterUncategorizedRange = (year: number, quarter: number): { earliest: Date, latest: Date } => {
-  const [startMonth, endMonth] = QUARTER_MONTH_SPANS[quarter] ?? QUARTER_MONTH_SPANS[4]
+  const [startMonth, endMonth] = QUARTER_MONTH_SPANS[quarter] ?? FINAL_QUARTER_MONTH_SPAN
   return { earliest: new Date(year, startMonth, 3), latest: new Date(year, endMonth, 18) }
 }
 

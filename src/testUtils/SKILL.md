@@ -42,6 +42,7 @@ where they belong instead of at the root:
 render/       LayerTestProvider, renderHookWithAuth
 dates/        fakeSystemTime, fixedDates
 requests/     getRequestOptions
+mocks/        getCallArgs
 forms/        fillForm + the per-kind fillers behind it
 storybook/    layout/ · controls/ · decorators/ · data/ · interactions/
 ```
@@ -251,6 +252,8 @@ payload**. Only a vitest test moves the coverage number.
 
 - `getRequestOptions(mock, index?)` (`@testUtils/requests/getRequestOptions`) — pulls the
   `{ params, body }` options off the nth call of a mocked request function.
+- `getCallArgs(mock, index?)` (`@testUtils/mocks/getCallArgs`) — the nth call's arguments as a
+  typed tuple, ready to destructure; throws when the mock never took that call.
 - `@testUtils/storybook/layout/*` — one module per story-layout component (`Gallery`, `Section`, `Frame`, `Row`, `Col`, `Matrix`, `Label`).
 - `@testUtils/storybook/decorators/PinnedGlobalDateRange` — mounts a global date store fixed to a
   known range; `decorators/profitAndLoss` wraps it with the P&L handlers as a decorator.

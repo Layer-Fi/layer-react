@@ -119,7 +119,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
         <form.AppField name='amount'>
           {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:InvoicePaymentForm.label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
         </form.AppField>
-        <form.Subscribe selector={state => [state.values.amount]}>
+        <form.Subscribe selector={state => [state.values.amount] as const}>
           {([amount]) => (
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
               <Span size='sm'>{t('invoices:InvoicePaymentForm.label.balance_due', 'Balance due')}</Span>

@@ -11,10 +11,12 @@ const isEntryRow = (row: HTMLElement) => !row.querySelector(PLACEHOLDER_CELL_SEL
  * is the first entry. Both the loading skeleton and the empty state render `role="row"` nodes, so
  * a plain row count resolves before the mocked data lands and clicking hits a detached node.
  */
-export function findEntryRows(canvas: RowQueries): Promise<HTMLElement[]> {
+export function findEntryRows(
+  canvas: RowQueries,
+): Promise<[HTMLElement, HTMLElement, ...HTMLElement[]]> {
   return waitFor(async () => {
-    const rows = (await canvas.findAllByRole('row')).filter(isEntryRow)
-    if (rows.length < 2) throw new Error('table has rendered no entries yet')
-    return rows
+    const [header, firstEntry, ...rest] = (await canvas.findAllByRole('row')).filter(isEntryRow)
+    if (!header || !firstEntry) throw new Error('table has rendered no entries yet')
+    return [header, firstEntry, ...rest]
   }, { timeout: 15_000 })
 }

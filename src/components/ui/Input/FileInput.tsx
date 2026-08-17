@@ -6,7 +6,8 @@ import { Button } from '@ui/Button/Button'
 
 export interface FileInputProps {
   text?: string
-  onUpload?: (files: File[]) => void
+  // Non-empty, so consumers that only want the first file don't have to re-check for one.
+  onUpload?: (files: [File, ...File[]]) => void
   isDisabled?: boolean
   secondary?: boolean
   icon?: boolean
@@ -36,9 +37,10 @@ export const FileInput = ({
   }
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0 && onUpload) {
-      const filesUploaded = Array.from(event.target.files)
-      onUpload(filesUploaded)
+    const [firstFile, ...restFiles] = Array.from(event.target.files ?? [])
+
+    if (firstFile && onUpload) {
+      onUpload([firstFile, ...restFiles])
     }
     event.target.value = ''
   }

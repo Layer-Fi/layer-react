@@ -121,7 +121,7 @@ export const ExpandedBankTransactionRow = ({
   }
 
   const changeTags = (index: number, newTags: readonly Tag[]) => {
-    const oldTags = localSplits[index].tags
+    const oldTags = localSplits[index]?.tags ?? []
     updateSplitAtIndex(index, split => ({ ...split, tags: newTags }))
 
     // Auto-save tags only when in unsplit state (single split entry)

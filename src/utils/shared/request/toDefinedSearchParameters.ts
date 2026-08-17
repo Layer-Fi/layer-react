@@ -27,7 +27,7 @@ export function toDefinedSearchParameters(
   input: QueryParams,
 ) {
   const definedParameterPairs = Object.entries(input)
-    .flatMap(([key, value]) => {
+    .flatMap(([key, value]): Array<[string, string]> => {
       if (value === null || value === undefined) {
         return []
       }
@@ -47,7 +47,7 @@ export function toDefinedSearchParameters(
       return [[key, value]]
     })
     .filter(([_, value]) => value !== '')
-    .map(([key, value]) => [toSnakeCase(key), value])
+    .map(([key, value]): [string, string] => [toSnakeCase(key), value])
 
   return new URLSearchParams(definedParameterPairs)
 }

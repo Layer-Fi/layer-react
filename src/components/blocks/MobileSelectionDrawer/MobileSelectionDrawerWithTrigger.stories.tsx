@@ -8,7 +8,7 @@ import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
-const OPTIONS: ComboBoxOption[] = [
+const OPTIONS: [ComboBoxOption, ...ComboBoxOption[]] = [
   { label: 'Profit and Loss', value: 'pnl' },
   { label: 'Balance Sheet', value: 'balance-sheet' },
   { label: 'Cash Flow', value: 'cash-flow' },

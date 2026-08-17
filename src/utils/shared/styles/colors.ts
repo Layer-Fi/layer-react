@@ -215,15 +215,13 @@ const hexToRgb = (hex: string) => {
     .match(/.{2}/g)
     ?.map(x => parseInt(x, 16))
 
-  if (!values) {
+  const [r, g, b] = values ?? []
+
+  if (r === undefined || g === undefined || b === undefined) {
     return
   }
 
-  return {
-    r: values[0],
-    g: values[1],
-    b: values[2],
-  }
+  return { r, g, b }
 }
 
 /**

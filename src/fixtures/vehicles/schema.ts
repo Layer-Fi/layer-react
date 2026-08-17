@@ -6,6 +6,7 @@ import { makeBusiness } from '@fixtures/business/mocks'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import { sortedDatePair } from '@fixtures/utils/sortedDatePair'
 import {
   isEligibleForDeletionArbitrary,
   licensePlateArbitrary,
@@ -41,7 +42,7 @@ const baseArbitrary = Arbitrary.make(base)
 export const VehicleArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((vehicle): typeof base.Type => {
-      const [createdAt, updatedAt] = [vehicle.createdAt, vehicle.updatedAt].sort((a, b) => a.getTime() - b.getTime())
+      const [createdAt, updatedAt] = sortedDatePair(vehicle.createdAt, vehicle.updatedAt)
 
       return { ...vehicle, createdAt, updatedAt }
     }),

@@ -10,12 +10,12 @@
     "moduleDetection": "force",               /* Treat all files as modules, regardless of content. */
     "types": ["@testing-library/jest-dom/vitest"],
     "noUncheckedSideEffectImports": true,
+    "noUncheckedIndexedAccess": true,         /* Add 'undefined' to a type when accessed using an index. */
     "libReplacement": false,
 
     // Uncomment and resolve ASAP
     // "isolatedModules": true,               /* Ensure that each file can be safely transpiled without relying on other imports. */
     // "verbatimModuleSyntax": true,          /* Do not transform or elide any imports or exports not marked as type-only. */
-    // "noUncheckedIndexedAccess": true,      /* Add 'undefined' to a type when accessed using an index. */
 
     /* Type Checking */
     "strict": true,                           /* Enable all strict type-checking options. */

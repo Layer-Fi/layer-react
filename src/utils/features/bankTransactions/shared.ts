@@ -145,8 +145,10 @@ export const getDefaultSelectedCategoryForBankTransaction = (
     return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
   }
 
-  if (hasSuggestions(bankTransaction)) {
-    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorizationFlow!.suggestions[0])
+  const firstSuggestion = bankTransaction.categorizationFlow?.suggestions[0]
+
+  if (firstSuggestion) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(firstSuggestion)
   }
 
   return null
@@ -172,11 +174,13 @@ export type BankTransactionFilters = {
 
 export const isCategorized = (bankTransaction: BankTransaction) => CategorizedCategories.includes(bankTransaction.categorizationStatus)
 export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): CategoryUpdate => {
-  return splits.length === 1 && splits[0].category
+  const onlySplit = splits.length === 1 ? splits[0] : undefined
+
+  return onlySplit?.category
     ? ({
       type: 'Category',
-      category: splits[0].category.classification!,
-      taxCode: splits[0].taxCode ?? null,
+      category: onlySplit.category.classification!,
+      taxCode: onlySplit.taxCode ?? null,
     })
     : ({
       type: 'Split',

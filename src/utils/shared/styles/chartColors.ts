@@ -1,6 +1,7 @@
 export const UNCATEGORIZED_CHART_COLOR = '#EEEEF0'
 
-export const DEFAULT_CHART_COLORS = [
+// Non-empty, so the first entry stays a usable fallback for any palette index.
+export const DEFAULT_CHART_COLORS: [string, ...string[]] = [
   '#008028',
   '#7417B3',
   '#006A80',

@@ -7,7 +7,7 @@ import { Col } from '@testUtils/storybook/layout/Col'
 import { Frame } from '@testUtils/storybook/layout/Frame'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
-const OPTIONS: ComboBoxOption[] = [
+const OPTIONS: [ComboBoxOption, ...ComboBoxOption[]] = [
   { label: 'Profit and Loss', value: 'pnl' },
   { label: 'Balance Sheet', value: 'balance-sheet' },
   { label: 'Cash Flow', value: 'cash-flow' },

@@ -6,6 +6,7 @@ import { BankTransactionDirection } from '@schemas/features/bankTransactions/bas
 import { MatchType } from '@schemas/features/bankTransactions/match'
 import { type MatchDetailsType } from '@schemas/features/bankTransactions/matchDetails'
 import { type AccountCategorizationSchema } from '@schemas/features/categorization/categorization'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import {
   type BankTransactionCategory,
@@ -52,9 +53,9 @@ const deriveTransfer = (
   transaction: BankTransaction,
   { matched, outbound, ref }: { matched: boolean, outbound: boolean, ref: number },
 ): BankTransaction => {
-  const accountName = transaction.accountName ?? bankAccounts[0].accountName
+  const accountName = transaction.accountName ?? pickCyclic(bankAccounts, 0).accountName
   const counterpartyAccounts = bankAccounts.filter(account => account.accountName !== accountName)
-  const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length].accountName
+  const counterpartyAccount = pickCyclic(counterpartyAccounts, ref).accountName
   const fromAccountName = outbound ? accountName : counterpartyAccount
   const toAccountName = outbound ? counterpartyAccount : accountName
 
@@ -81,7 +82,7 @@ const deriveTransfer = (
 
   const suggestedMatches = [{ id: toSuggestedMatchId(transaction.id), details }]
 
-  const alternateCounterparty = counterpartyAccounts[(ref + 1) % counterpartyAccounts.length].accountName
+  const alternateCounterparty = pickCyclic(counterpartyAccounts, ref + 1).accountName
   if (alternateCounterparty !== counterpartyAccount) {
     const alternateFrom = outbound ? accountName : alternateCounterparty
     const alternateTo = outbound ? alternateCounterparty : accountName
@@ -138,7 +139,7 @@ const merchantMatchDetails = (
   merchant: BankTransactionMerchant,
   ref: number,
 ): MatchDetailsType => {
-  const type = merchant.matchTypes[Math.floor(ref / 2) % merchant.matchTypes.length]
+  const type = pickCyclic(merchant.matchTypes, Math.floor(ref / 2))
 
   const base = {
     id: toMatchDetailsId(transaction.id),
@@ -198,7 +199,7 @@ const pickMatchMerchant = (merchantIndex: number, ref: number): BankTransactionM
   const pool = matchable.filter(candidate =>
     candidate.matchTypes.includes('Refund_Payment_Match') === wantRefund)
 
-  return pool[merchantIndex % pool.length]
+  return pickCyclic(pool, merchantIndex)
 }
 
 const deriveMerchantMatch = (
@@ -273,7 +274,7 @@ const deriveSplit = (
       displayName: 'Split',
       entries: [
         { type: 'AccountSplitEntry', amount: primaryAmount, category: toAccountCategorization(merchant.primary), tags: [] },
-        { type: 'AccountSplitEntry', amount: alternateAmount, category: toAccountCategorization(merchant.alternates[0]), tags: [] },
+        { type: 'AccountSplitEntry', amount: alternateAmount, category: toAccountCategorization(pickCyclic(merchant.alternates, 0)), tags: [] },
       ],
     },
   }
@@ -287,7 +288,7 @@ export const deriveBankTransaction = (
 
   // Each transaction belongs to one of the pooled bank accounts, so its
   // account fields agree with what the bank-accounts mock serves.
-  const account = bankAccounts[accountIndex % bankAccounts.length]
+  const account = pickCyclic(bankAccounts, accountIndex)
   const accountTransaction: BankTransaction = {
     ...transaction,
     accountName: account.accountName,
@@ -312,7 +313,7 @@ export const deriveBankTransaction = (
     }
   }
 
-  const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
+  const merchant = pickCyclic(bankTransactionMerchants, merchantIndex)
   const merchantTransaction = toMerchantTransaction(merchant)
 
   // Splits need an alternate category for the second entry; merchants without

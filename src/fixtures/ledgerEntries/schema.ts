@@ -13,6 +13,7 @@ import { makeManualEntrySource } from '@fixtures/ledgerEntries/sources'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import { sortedDatePair } from '@fixtures/utils/sortedDatePair'
 
 const BUSINESS_ID = makeBusiness().id
 const LEDGER_ID = '00000000-0000-4000-8000-0000000000ff'
@@ -46,7 +47,7 @@ const baseArbitrary = Arbitrary.make(base)
 export const LedgerEntryArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((entry): typeof base.Type => {
-      const [date, entryAt] = [entry.date, entry.entryAt].sort((a, b) => a.getTime() - b.getTime())
+      const [date, entryAt] = sortedDatePair(entry.date, entry.entryAt)
       const lineItems = entry.lineItems.map(lineItem => ({
         ...lineItem,
         entryId: entry.id,

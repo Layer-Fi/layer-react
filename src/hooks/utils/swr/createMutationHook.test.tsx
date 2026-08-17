@@ -8,6 +8,7 @@ import { type MutationRequest } from '@utils/shared/api/getAsMutation'
 import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
 import { LayerTestProvider, TEST_LAYER_ACCESS_TOKEN, TEST_LAYER_API_URL, TEST_LAYER_BUSINESS_ID } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 import { getRequestOptions } from '@testUtils/requests/getRequestOptions'
@@ -59,7 +60,7 @@ describe('createMutationHook', () => {
       await result.current.trigger({ name: 'New Widget' })
     })
 
-    const [url, token, options] = request.mock.calls[0]
+    const [url, token, options] = getCallArgs(request)
     expect(url).toBe(TEST_LAYER_API_URL)
     expect(token).toBe(TEST_LAYER_ACCESS_TOKEN)
     expect(options?.body).toEqual({ name: 'New Widget' })
@@ -202,7 +203,7 @@ describe('createMutationHook', () => {
       await result.current.trigger({ name: 'New Widget' })
     })
 
-    expect(onSuccess.mock.calls[0][0]).toEqual(RAW_WIDGET)
+    expect(getCallArgs(onSuccess)[0]).toEqual(RAW_WIDGET)
   })
 
   it('surfaces schema decode failures as an error', async () => {

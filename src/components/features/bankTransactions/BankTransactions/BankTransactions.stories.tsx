@@ -3,6 +3,7 @@ import { screen, userEvent, within } from 'storybook/test'
 
 import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
@@ -245,7 +246,7 @@ export const DocsCategorization: Story = {
 
 // The rule suggestion rides back on the categorize response, so confirming any row raises it.
 const suggestRuleAfterCategorizing = putCategorizeBankTransaction.mock({
-  ...bankTransactions[0],
+  ...pickCyclic(bankTransactions, 0),
   updateCategorizationRulesSuggestion: makeCategorizationRuleSuggestion(),
 })
 

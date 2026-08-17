@@ -17,6 +17,7 @@ import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { server } from '@msw/node'
 import { createFormFiller, type FillFormSpec } from '@testUtils/forms/fillForm'
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
@@ -287,7 +288,7 @@ describe('RecordBankTransactionModal', () => {
 
     await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
 
-    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
+    const { transaction } = getCallArgs(updateRequest)[0] as { transaction: Record<string, unknown> }
     expect(transaction).not.toHaveProperty('categorization')
     expect(transaction.amount).toBe(12550)
   })
@@ -325,7 +326,7 @@ describe('RecordBankTransactionModal', () => {
 
     await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
 
-    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
+    const { transaction } = getCallArgs(updateRequest)[0] as { transaction: Record<string, unknown> }
     expect(transaction).toHaveProperty('categorization')
     expect(transaction.categorization).toEqual(expect.objectContaining({ type: 'Category' }))
   })

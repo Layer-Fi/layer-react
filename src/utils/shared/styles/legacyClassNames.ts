@@ -44,9 +44,8 @@ export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(ma
       .filter((name): name is keyof TMap => Boolean(name))
       .flatMap((name) => {
         const key = String(name)
-        return key.startsWith('Layer__')
-          ? [key, ...toArray(map[name])]
-          : toArray(map[name])
+        const legacyNames = toArray(map[name] ?? [])
+        return key.startsWith('Layer__') ? [key, ...legacyNames] : legacyNames
       })
       .join(' ')
 }

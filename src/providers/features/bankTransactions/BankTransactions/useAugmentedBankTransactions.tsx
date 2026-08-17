@@ -32,7 +32,7 @@ export function bankTransactionFiltersToHookOptions(
         ? filters.categorizationStatus === DisplayState.categorized
         : undefined
       : undefined,
-    direction: filters?.direction?.length === 1
+    direction: filters?.direction?.length === 1 && filters.direction[0]
       ? decodeBankTransactionDirection(filters.direction[0]) === BankTransactionDirection.Credit
         ? 'INFLOW'
         : 'OUTFLOW'
