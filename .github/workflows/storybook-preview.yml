@@ -40,8 +40,7 @@ jobs:
       run: |
         gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — add the \`storybook-preview\` label to build one.
 
-        It renders stories against a live sandbox business instead of MSW fixtures, and stays up to
-        date on every push while the label is applied."
+        It renders stories against a live sandbox business instead of MSW fixtures, and rebuilds on every push while the \`storybook-preview\` label is applied."
 
   deploy:
     name: Build preview
@@ -100,8 +99,7 @@ jobs:
       run: |
         gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
 
-        Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar
-        field. Rebuilds on every push while the label is applied; remove it to stop."
+        Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar field. Rebuilds on every push while the \`storybook-preview\` label is applied; remove the label to stop."
 
     # `always()`, or a failed build leaves the status pending forever. `!cancelled()` excludes a run
     # that `cancel-in-progress` aborted, so it can't overwrite the newer run's status for the same SHA.
