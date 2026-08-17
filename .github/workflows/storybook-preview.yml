@@ -97,8 +97,10 @@ jobs:
         Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar
         field. Rebuilds on every push while the label is applied; remove it to stop."
 
+    # `always()`, or a failed build leaves the status pending forever. `!cancelled()` excludes a run
+    # that `cancel-in-progress` aborted, so it can't overwrite the newer run's status for the same SHA.
     - name: Report the status
-      if: always()
+      if: always() && !cancelled()
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SHA: ${{ github.event.pull_request.head.sha }}
