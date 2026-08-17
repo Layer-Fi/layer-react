@@ -48,7 +48,24 @@ even locally. The endpoint refuses to mint against a production environment.
 
 It returns the environment alongside the token, so the provider can't drift out of sync with the
 scope the token was minted for. `LAYER_STORYBOOK_ENVIRONMENT` has to match the environment the
-business actually lives in, or the token won't see it.
+business actually lives in, or the token won't see it. Production is absent from the function's scope
+map rather than special-cased, so an unexpected value fails closed.
+
+The function is self-contained, and `api/package.json` marks the directory ESM: the root package is
+`type: commonjs`, so a compiled handler with `import` statements will not load, and under ESM an
+extensionless relative import into `src/` will not resolve at runtime either.
+
+## The deployed preview
+
+Vercel project `layer-react-storybook` (LayerFinancial), connected to this repo. Every PR gets a
+preview; `main` is skipped by an Ignored Build Step, so there is no long-lived deployment pointed at
+a real business. Vercel Authentication is on, which gates `/api/storybook-token` as well as the
+pages, and fork PRs require authorization before building.
+
+Preview-scoped variables: `STORYBOOK_LAYER_BACKEND`, `STORYBOOK_LAYER_TOKEN_ENDPOINT`,
+`LAYER_STORYBOOK_ENVIRONMENT`, plus `LAYER_STORYBOOK_APP_ID` and `LAYER_STORYBOOK_APP_SECRET`. The
+first three are build-time — Vite inlines the `STORYBOOK_`-prefixed ones — and the app credentials
+are read only at request time.
 
 ## Which stories appear
 
