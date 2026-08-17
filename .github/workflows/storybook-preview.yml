@@ -78,7 +78,6 @@ jobs:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
-        VERCEL_SCOPE: ${{ vars.VERCEL_SCOPE }}
         PR: ${{ github.event.pull_request.number }}
       # Aliased to a per-PR hostname because each deployment otherwise gets a fresh one, and the
       # toolbar remembers business ids in `localStorage`, which is per-origin.
@@ -87,13 +86,22 @@ jobs:
         url=$(grep -oE 'https://[a-z0-9-]+\.vercel\.app' deploy.log | tail -1)
         if [ -z "$url" ]; then echo "No deployment URL in output" >&2; exit 1; fi
 
-        # Best-effort: a working deployment shouldn't be reported as failed just because aliasing
-        # was. `--scope` is required here — with a token, `alias` can't infer the team the way
-        # `deploy` does from VERCEL_ORG_ID, and falls back to a user lookup.
+        # Via the REST API rather than `vercel alias`, which resolves the token to a user and 404s
+        # for this one. `teamId` here is explicit, so there is no user to look up. Best-effort: a
+        # working deployment shouldn't be reported as failed just because aliasing was.
         alias="layer-react-storybook-pr-$PR.vercel.app"
-        if npx --yes vercel@59 alias set "$url" "$alias" \
-          --scope "$VERCEL_SCOPE" --token="$VERCEL_TOKEN"; then
+        api="https://api.vercel.com"
+        auth="Authorization: Bearer $VERCEL_TOKEN"
+        dpl=$(curl -fsS "$api/v13/deployments/${url#https://}?teamId=$VERCEL_ORG_ID" \
+          -H "$auth" | jq -r '.id // empty')
+
+        if [ -n "$dpl" ] && curl -fsS -X POST \
+          "$api/v2/deployments/$dpl/aliases?teamId=$VERCEL_ORG_ID" \
+          -H "$auth" -H 'Content-Type: application/json' \
+          -d "{\"alias\":\"$alias\"}" >/dev/null; then
           url="https://$alias"
+        else
+          echo "Aliasing failed; reporting the deployment URL instead" >&2
         fi
 
         echo "url=$url" >> "$GITHUB_OUTPUT"
