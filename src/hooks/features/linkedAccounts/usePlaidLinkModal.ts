@@ -119,7 +119,6 @@ export function usePlaidLinkModal({
       }
     },
     onExit: () => setLinkMode('add'),
-    // A customer-minted token already carries its own environment; overriding it would conflict.
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 

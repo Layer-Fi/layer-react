@@ -52,8 +52,6 @@ const renderAddModeModal = ({
     },
   )
 
-// `mockReset` because vitest keeps call history between tests, and `lastCall` is what these
-// assertions read. `ready: false` keeps the hook from auto-opening the widget.
 beforeEach(() => {
   mockedUsePlaidLink.mockReset()
   mockedUsePlaidLink.mockReturnValue(
