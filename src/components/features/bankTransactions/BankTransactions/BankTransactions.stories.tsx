@@ -80,7 +80,6 @@ const bankTransactionsControls = makeBankTransactionsStoryControls()
 
 const meta: Meta<BankTransactionsStoryArgs> = {
   title: 'Components/BankTransactions',
-  tags: ['public-api'],
   component: BankTransactions,
   parameters: {
     controls: {
@@ -204,6 +203,7 @@ type Story = StoryObj<BankTransactionsStoryArgs>
 
 // ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
+  tags: ['public-api'],
   parameters: {
     msw: {
       handlers: [
@@ -221,12 +221,14 @@ const CATEGORIZABLE_DESCRIPTIONS = bankTransactions.flatMap(transaction =>
 )
 
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
-export const BookkeepingDisabled: Story = {}
+export const BookkeepingDisabled: Story = {
+  tags: ['public-api', 'real-backend'],
+}
 
 // Same state, with a row expanded to show the categorize form the collapsed rows can't convey.
 // Split from `BookkeepingDisabled` so the public-api story stays free of interactions.
 export const DocsCategorization: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+  tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const rows = await findEntryRows(canvas)
@@ -261,13 +263,13 @@ async function confirmFirstCategorizableRow(canvasElement: HTMLElement): Promise
 }
 
 export const DocsRuleSuggestionPrompt: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+  tags: ['docs-screenshot'],
   parameters: { msw: { handlers: [suggestRuleAfterCategorizing, ...handlers] } },
   play: ({ canvasElement }) => confirmFirstCategorizableRow(canvasElement),
 }
 
 export const DocsRuleSuggestionPreview: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+  tags: ['docs-screenshot'],
   parameters: { msw: { handlers: [suggestRuleAfterCategorizing, ...handlers] } },
   play: async ({ canvasElement }) => {
     await confirmFirstCategorizableRow(canvasElement)

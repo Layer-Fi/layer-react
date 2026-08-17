@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import type { UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { UnifiedReportStoreProvider } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -12,6 +13,13 @@ import { UnifiedReportTable } from '@features/unifiedReports/UnifiedReportTable/
 import { UnifiedReportTableHeader } from '@features/unifiedReports/UnifiedReportTableHeader/UnifiedReportTableHeader'
 
 import './unifiedReports.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReports: 'Layer__UnifiedReport',
+  Layer__UnifiedReports__Body: 'Layer__UnifiedReport__Body',
+  Layer__UnifiedReports__Sidebar: 'Layer__UnifiedReport__Sidebar',
+  Layer__UnifiedReports__Content: 'Layer__UnifiedReport__Content',
+})
 
 type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
@@ -27,14 +35,14 @@ const UnifiedReportContent = ({
   const { isDesktop } = useSizeClass()
 
   return (
-    <View title={t('views:UnifiedReports.label.reports', 'Reports')} showHeader={showTitle} viewClassName='Layer__UnifiedReports'>
-      <HStack className='Layer__UnifiedReports__Body'>
+    <View title={t('views:UnifiedReports.label.reports', 'Reports')} showHeader={showTitle} viewClassName={legacyClassNames('Layer__UnifiedReports')}>
+      <HStack className={legacyClassNames('Layer__UnifiedReports__Body')}>
         {isDesktop && navigationVariant === 'sidebar' && (
-          <VStack className='Layer__UnifiedReports__Sidebar'>
+          <VStack className={legacyClassNames('Layer__UnifiedReports__Sidebar')}>
             <UnifiedReportsNavigationSidebar />
           </VStack>
         )}
-        <VStack fluid className='Layer__UnifiedReports__Content'>
+        <VStack fluid className={legacyClassNames('Layer__UnifiedReports__Content')}>
           <UnifiedReportTableHeader navigationVariant={navigationVariant} />
           <UnifiedReportTable />
         </VStack>

@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { BackButton } from '@ui/Button/BackButton'
 import { CloseButton } from '@ui/Button/CloseButton'
 import { Heading } from '@ui/Typography/Heading'
@@ -9,23 +10,29 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 
 import './journalEntryDetailHeader.scss'
 
+const legacyClassNames = createLegacyClassNames({
+  'Layer__JournalEntryDetailHeader--HiddenOnLarge': 'Layer__EntryDetailHeader--HiddenOnLarge',
+  'Layer__JournalEntryDetailHeader--VisibleOnLarge': 'Layer__EntryDetailHeader--VisibleOnLarge',
+})
+
 interface JournalEntryDetailHeaderProps {
+  className?: string
   onClose: () => void
   title: ReactNode
 }
 
-export const JournalEntryDetailHeader = ({ onClose, title }: JournalEntryDetailHeaderProps) => {
+export const JournalEntryDetailHeader = ({ onClose, title, className }: JournalEntryDetailHeaderProps) => {
   return (
-    <Header>
+    <Header className={className}>
       <HeaderRow>
-        <HeaderCol className='Layer__JournalEntryDetailHeader--HiddenOnLarge'>
+        <HeaderCol className={legacyClassNames('Layer__JournalEntryDetailHeader--HiddenOnLarge')}>
           <BackButton onPress={onClose} />
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__JournalEntryDetailHeader--VisibleOnLarge'>
+        <HeaderCol className={legacyClassNames('Layer__JournalEntryDetailHeader--VisibleOnLarge')}>
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__JournalEntryDetailHeader--VisibleOnLarge'>
+        <HeaderCol className={legacyClassNames('Layer__JournalEntryDetailHeader--VisibleOnLarge')}>
           <CloseButton onPress={onClose} />
         </HeaderCol>
       </HeaderRow>

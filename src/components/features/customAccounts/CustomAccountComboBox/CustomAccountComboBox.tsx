@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@schemas/features/customAccounts/customAccount'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -12,6 +13,8 @@ import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@featu
 import { CustomAccountForm } from '@features/customAccounts/CustomAccountForm/CustomAccountForm'
 
 import './customAccountComboBox.scss'
+
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__CustomAccountComboBox__Field', 'Layer__CustomAccountComboBox__Field--inline')
 
 type CustomAccountComboBoxProps = {
   label: string
@@ -76,7 +79,13 @@ export function CustomAccountComboBox({
 
   return (
     <VStack gap='xs' className={className}>
-      <ComboBoxField label={label} inline={inline} showLabel={showLabel} inputId={inputId}>
+      <ComboBoxField
+        label={label}
+        className={legacyFieldClassNames({ inline })}
+        inline={inline}
+        showLabel={showLabel}
+        inputId={inputId}
+      >
         {controlProps => (
           <CreatableComboBox<AccountOption>
             {...controlProps}

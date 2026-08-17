@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import type { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -11,8 +12,12 @@ import { type ProfitAndLossSummariesMode } from '@features/profitAndLoss/ProfitA
 
 import './profitAndLossSummariesSummary.scss'
 
+const legacyClassNames = createLegacyClassNames({
+  Layer__ProfitAndLossSummariesSummary__ChartArea: 'Layer__ProfitAndLossSummariesSummaryChartArea',
+})
+
 const BASE_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummary'
-const CHART_AREA_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummary__ChartArea'
+const CHART_AREA_CLASS_NAME = legacyClassNames('Layer__ProfitAndLossSummariesSummary__ChartArea')
 
 type ProfitAndLossSummariesSummaryProps = {
   label: string

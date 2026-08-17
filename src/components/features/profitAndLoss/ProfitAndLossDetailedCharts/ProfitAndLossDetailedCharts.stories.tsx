@@ -12,7 +12,6 @@ type ProfitAndLossDetailedChartsStoryArgs = {
 
 const meta: Meta<ProfitAndLossDetailedChartsStoryArgs> = {
   title: 'Components/ProfitAndLoss/DetailedCharts',
-  tags: ['public-api'],
   component: ProfitAndLossDetailedCharts,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
@@ -53,9 +52,11 @@ export default meta
 
 type Story = StoryObj<ProfitAndLossDetailedChartsStoryArgs>
 
-export const Expenses: Story = {}
+export const Expenses: Story = {
+  tags: ['public-api', 'real-backend'],
+}
 
 export const Revenue: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
   args: { scope: 'revenue' },
 }

@@ -1,9 +1,16 @@
 import { useCallback, useContext, useMemo } from 'react'
 
 import { EntryType } from '@schemas/features/generalLedger/ledgerEntry'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/post'
 import { JournalContext } from '@providers/features/generalLedger/JournalContext/JournalContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
+
+const legacyClassNames = createLegacyClassNames({
+  'details:root': 'Layer__journal__entry-details',
+  'details:lineItems': 'Layer__journal__entry-details__line-items',
+  'details:lineItemsTable': 'Layer__journal__entry-details__table',
+})
 
 export const JournalEntryDetails = () => {
   const {
@@ -30,6 +37,11 @@ export const JournalEntryDetails = () => {
     <LedgerEntryDetails
       entry={entry}
       onClose={closeSelectedEntry}
+      legacyClassNames={{
+        root: legacyClassNames('details:root'),
+        lineItems: legacyClassNames('details:lineItems'),
+        lineItemsTable: legacyClassNames('details:lineItemsTable'),
+      }}
       onReverse={entry?.entryType === EntryType.Manual ? handleReverse : undefined}
     />
   )

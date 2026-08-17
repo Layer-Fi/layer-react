@@ -1,3 +1,4 @@
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack } from '@ui/Stack/Stack'
 import { Swatch } from '@ui/Swatch/Swatch'
@@ -5,6 +6,10 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
 import './profitAndLossSummaryTileFooterRow.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ProfitAndLossSummaryTileFooter__Row: 'Layer__BaseSummariesBreakdownFooter__Row',
+})
 
 export type ProfitAndLossSummaryTileFooterRowConfig = {
   label: string
@@ -20,7 +25,7 @@ export function ProfitAndLossSummaryTileFooterRow({
   isLoading?: boolean
 }) {
   return (
-    <div className='Layer__ProfitAndLossSummaryTileFooter__Row'>
+    <div className={legacyClassNames('Layer__ProfitAndLossSummaryTileFooter__Row')}>
       <HStack gap='xs' align='center'>
         {row.swatchColor && <Swatch color={row.swatchColor} />}
         <Span size='sm'>{row.label}</Span>

@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
@@ -10,6 +11,10 @@ import { Heading } from '@ui/Typography/Heading'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'
+
+const legacyClassNames = createLegacyClassNames({
+  'header:bookkeepingStatus': 'Layer__profit-and-loss-header__bookkeeping-status',
+})
 
 interface ProfitAndLossHeaderStringOverrides {
   title?: string
@@ -58,7 +63,11 @@ export const ProfitAndLossHeader = ({
           {trailingContent}
         </HStack>
         {withStatus && activePeriodStatus && (
-          <BookkeepingStatus status={activePeriodStatus} monthNumber={activePeriod.month} />
+          <BookkeepingStatus
+            status={activePeriodStatus}
+            monthNumber={activePeriod.month}
+            className={legacyClassNames('header:bookkeepingStatus')}
+          />
         )}
       </VStack>
     </DeprecatedHeader>

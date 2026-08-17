@@ -15,7 +15,6 @@ type JournalStoryArgs = {
 
 const meta: Meta<JournalStoryArgs> = {
   title: 'Components/Journal',
-  tags: ['public-api'],
   component: Journal,
   parameters: {
     controls: {
@@ -89,12 +88,12 @@ export default meta
 type Story = StoryObj<JournalStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 export const DrawerOpen: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   parameters: { chromatic: { viewports: [1280] } },
-  tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const [, firstEntry] = await findEntryRows(canvas)
@@ -104,7 +103,7 @@ export const DrawerOpen: Story = {
 }
 
 export const DocsInAppLink: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+  tags: ['docs-screenshot'],
   render: () => (
     <Journal
       renderInAppLink={({ entityName }) => (

@@ -3,7 +3,7 @@ import { type PropsWithChildren } from 'react'
 import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
 import { type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { type EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'
-import { LayerProvider } from '@providers/global/LayerProvider/LayerProvider'
+import { type EventCallbacks, LayerProvider } from '@providers/global/LayerProvider/LayerProvider'
 
 export const TEST_LAYER_API_URL = 'https://api.test.layerfi.com'
 export const TEST_LAYER_BUSINESS_ID = 'test-business-id'
@@ -23,7 +23,7 @@ export const TEST_LAYER_ACCESS_TOKEN = 'test-access-token'
  * Charts and themed surfaces read `--color-dark`/`--color-light` CSS variables
  * that only exist where a theme is set, so tests and stories get a default one.
  */
-const TEST_LAYER_THEME: LayerThemeConfig = {
+export const TEST_LAYER_THEME: LayerThemeConfig = {
   colors: {
     dark: { h: '218', s: '55%', l: '20%' },
     light: { h: '158', s: '35%', l: '75%' },
@@ -33,9 +33,17 @@ const TEST_LAYER_THEME: LayerThemeConfig = {
 type LayerTestProviderProps = PropsWithChildren<{
   locale?: SupportedLocale
   theme?: LayerThemeConfig
+  eventCallbacks?: EventCallbacks
+  usePlaidSandbox?: boolean
 }>
 
-export const LayerTestProvider = ({ children, locale, theme = TEST_LAYER_THEME }: LayerTestProviderProps) => (
+export const LayerTestProvider = ({
+  children,
+  locale,
+  theme = TEST_LAYER_THEME,
+  eventCallbacks,
+  usePlaidSandbox,
+}: LayerTestProviderProps) => (
   <LayerProvider
     businessId={TEST_LAYER_BUSINESS_ID}
     appId={TEST_LAYER_APP_ID}
@@ -43,6 +51,8 @@ export const LayerTestProvider = ({ children, locale, theme = TEST_LAYER_THEME }
     environmentConfigOverride={TEST_LAYER_ENVIRONMENT_CONFIG}
     locale={locale}
     theme={theme}
+    eventCallbacks={eventCallbacks}
+    usePlaidSandbox={usePlaidSandbox}
   >
     {children}
   </LayerProvider>

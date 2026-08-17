@@ -2,6 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
+import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
@@ -53,7 +54,6 @@ const linkedAccountsControls = makeLinkedAccountsStoryControls()
 
 const meta: Meta<LinkedAccountsStoryArgs> = {
   title: 'Components/LinkedAccounts',
-  tags: ['public-api'],
   component: LinkedAccounts,
   loaders: [keepTwoAccounts],
   parameters: {
@@ -107,10 +107,21 @@ export default meta
 type Story = StoryObj<LinkedAccountsStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+}
+
+// Runs after the meta loader, so it flags the two accounts that survived the trim.
+export const ConfirmingAccounts: Story = {
+  tags: ['public-api', 'real-backend'],
+  loaders: [
+    () => bankAccountStore.all().forEach(
+      account => bankAccountStore.save(markAccountNeedingConfirmation(account)),
+    ),
+  ],
 }
 
 export const DisconnectedAccount: Story = {
+  tags: ['public-api'],
   parameters: {
     msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
   },

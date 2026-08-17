@@ -4,12 +4,14 @@ import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import '../src/styles/index.scss'
 
-import './mocks/systemDate'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
-import { LayerTestProvider } from '../src/testUtils/render/LayerTestProvider'
+import { setDateRangePinning } from '../src/testUtils/storybook/decorators/PinnedGlobalDateRange'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
+import { installSystemDateMock } from './mocks/systemDate'
+import { usesRealBackend } from './realBackend'
+import { StorybookLayerProvider } from './StorybookLayerProvider'
 import { DOCS_SCREENSHOT_TAG } from './tags'
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
@@ -17,24 +19,34 @@ import { DOCS_SCREENSHOT_TAG } from './tags'
 // mobile/tablet breakpoints and comfortably above them for desktop.
 const SIZE_CLASS_VIEWPORTS = [BREAKPOINTS.MOBILE - 1, BREAKPOINTS.TABLET - 1, 1280]
 
-initialize({
-  serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
-  onUnhandledRequest: (request, print) => {
-    // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
-    if (new URL(request.url).hostname.endsWith('layerfi.com')) print.error()
-  },
-})
-
 // Mocked responses resolve instantly, so a floor keeps loading states visible instead of flashing.
 // Every story keeps it except the ones backing docs images, which have to settle deterministically
 // — driven by the tag rather than per-story parameters so a `public-api` story can't quietly lose
 // its loading states just because it also feeds a screenshot.
 const DEFAULT_RESPONSE_DELAY = 250
 
-setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+// A shifted `now`, or a range pinned to the fixture year, would query periods the real business has
+// no data for.
+setDateRangePinning(!usesRealBackend)
+
+if (!usesRealBackend) {
+  installSystemDateMock()
+
+  initialize({
+    serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
+    onUnhandledRequest: (request, print) => {
+      // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
+      if (new URL(request.url).hostname.endsWith('layerfi.com')) print.error()
+    },
+  })
+
+  setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+}
 
 const preview: Preview = {
-  loaders: [() => resetMockStores(), mswLoader],
+  // No `toolbar`: `manager.ts` contributes a free-text field and keys off this being declared.
+  globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
+  loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader],
   beforeEach: ({ tags }: { tags?: string[] }) => {
     setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
     return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
@@ -53,7 +65,11 @@ const preview: Preview = {
         ? <div className='Layer__component'><Story /></div>
         : <Story />
 
-      return <LayerTestProvider>{story}</LayerTestProvider>
+      return (
+        <StorybookLayerProvider businessId={context.globals.business as string | undefined}>
+          {story}
+        </StorybookLayerProvider>
+      )
     },
   ],
 }

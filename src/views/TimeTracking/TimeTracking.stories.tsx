@@ -19,7 +19,6 @@ type TimeTrackingStoryArgs = {
 
 const meta: Meta<TimeTrackingStoryArgs> = {
   title: 'Views/TimeTracking',
-  tags: ['public-api'],
   component: TimeTracking,
   parameters: {
     controls: { include: ['showTitle', 'onReportsClick', 'stringOverrides.title'] },
@@ -82,7 +81,7 @@ export default meta
 type Story = StoryObj<TimeTrackingStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 // Stories pin "now" to noon on the last day of the fixture year, so a timer started at 10:47

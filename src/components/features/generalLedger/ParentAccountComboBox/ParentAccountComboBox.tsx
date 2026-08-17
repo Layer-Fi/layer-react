@@ -12,14 +12,15 @@ type ParentAccountComboBoxProps = {
   onChange: (value: string | null) => void
   error?: string
   inline?: boolean
+  className?: string
 }
 
-export const ParentAccountComboBox = ({ label, data, value, onChange, error, inline }: ParentAccountComboBoxProps) => {
+export const ParentAccountComboBox = ({ label, data, value, onChange, error, inline, className }: ParentAccountComboBoxProps) => {
   const { t } = useTranslation()
   const options = useParentAccountOptions(data)
 
   return (
-    <ComboBoxField label={label} inline={inline}>
+    <ComboBoxField label={label} inline={inline} className={className}>
       {controlProps => (
         <ComboBox
           {...controlProps}

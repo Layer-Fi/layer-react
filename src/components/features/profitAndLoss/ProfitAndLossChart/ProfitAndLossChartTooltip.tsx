@@ -21,7 +21,6 @@ const ProfitAndLossTooltipContent = ({
     return null
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const dataRow = payload[0].payload as ChartDataPoint
 
   const netProfit = dataRow.netProfit

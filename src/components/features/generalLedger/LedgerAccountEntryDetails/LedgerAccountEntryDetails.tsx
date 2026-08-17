@@ -2,9 +2,17 @@ import { useCallback, useContext } from 'react'
 
 import { EntryType } from '@schemas/features/generalLedger/ledgerEntry'
 import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/post'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
+
+const legacyClassNames = createLegacyClassNames({
+  'details:root': 'Layer__ledger-account__entry-details',
+  'details:header': 'Layer__ledger-account__entry-details__header',
+  'details:lineItems': 'Layer__ledger-account__entry-details__line-items',
+  'details:lineItemsTable': 'Layer__ledger-account__entry-details__table',
+})
 
 export { LedgerEntrySourceDetailView } from '@blocks/LedgerEntry/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 
@@ -34,6 +42,12 @@ export const LedgerAccountEntryDetails = ({
       onClose={closeSelectedEntry}
       onReverse={entryData?.entryType === EntryType.Manual ? handleReverse : undefined}
       stringOverrides={stringOverrides}
+      legacyClassNames={{
+        root: legacyClassNames('details:root'),
+        header: legacyClassNames('details:header'),
+        lineItems: legacyClassNames('details:lineItems'),
+        lineItemsTable: legacyClassNames('details:lineItemsTable'),
+      }}
     />
   )
 }

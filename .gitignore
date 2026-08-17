@@ -4,10 +4,15 @@ node_modules/
 .idea/
 .vscode/
 .DS_Store
+.env
+.env.*
+!.env.example
 .codex/
 .agents/
 .claude/
+.vercel
 storybook-static
+coverage/
 
 # Consumer fixtures install the packed tarball fresh on every run.
 consumer-fixtures/*/node_modules/

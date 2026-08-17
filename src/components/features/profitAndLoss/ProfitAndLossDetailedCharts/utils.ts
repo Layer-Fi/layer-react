@@ -1,10 +1,8 @@
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
+import { DEFAULT_CHART_COLORS, UNCATEGORIZED_CHART_COLOR } from '@utils/shared/styles/chartColors'
 import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@ui/Chart/seriesTypes'
 
 export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
-
-export const UNCATEGORIZED_CHART_COLOR = '#EEEEF0'
 
 export const isLineItemUncategorized = (item: PnlChartLineItem) => {
   return UNCATEGORIZED_TYPES.includes(item.name)
@@ -13,6 +11,7 @@ export const isLineItemUncategorized = (item: PnlChartLineItem) => {
 export const mapTypesToColors = <T extends PnlChartLineItem>(
   data: T[],
   colorList: string[] = DEFAULT_CHART_COLORS,
+  uncategorizedColor: string = UNCATEGORIZED_CHART_COLOR,
 ): (name: string) => TypeColorMapping => {
   const opacityTiers = [1, 0.82, 0.64, 0.46]
   const palette = colorList.length > 0 ? colorList : DEFAULT_CHART_COLORS
@@ -43,7 +42,7 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
 
     if (isLineItemUncategorized(lineItem)) {
       mapping[key] = {
-        color: UNCATEGORIZED_CHART_COLOR,
+        color: uncategorizedColor,
         opacity: 1,
       }
       return

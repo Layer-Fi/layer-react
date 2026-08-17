@@ -123,7 +123,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/pnl-chart.mdx',
   },
   {
-    storyId: 'components-tasks--docs-default',
+    storyId: 'components-tasks--default',
     out: 'components/tasks.png',
     // The card tops out near 740px, so a desktop capture is mostly empty space beside it.
     viewport: 'tablet',
@@ -163,7 +163,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/mileage-tracking.mdx',
   },
   {
-    storyId: 'views-taxestimates--docs-default',
+    storyId: 'views-taxestimates--default',
     out: 'pages/tax-estimates.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/tax-estimates.mdx',
@@ -189,7 +189,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/link-accounts.mdx',
   },
   {
-    storyId: 'components-linkaccounts--confirming-business-accounts',
+    storyId: 'components-linkaccounts--confirming-accounts',
     out: 'components/link-accounts-confirming.png',
     viewport: 'desktop',
     page: 'embedded-components/components/link-accounts.mdx',
@@ -228,7 +228,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/tax-estimates.mdx',
   },
   {
-    storyId: 'views-taxestimates--docs-payments',
+    storyId: 'views-taxestimates--payments',
     out: 'pages/tax-estimates-payments.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/tax-estimates.mdx',

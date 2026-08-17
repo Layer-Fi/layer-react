@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -48,6 +49,11 @@ export interface AccountingOverviewProps {
   slotProps?: {
     profitAndLoss?: {
       summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
+      }
     }
   }
 }
@@ -94,6 +100,7 @@ export const AccountingOverview = ({
       >
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           reportingVariant={profitAndLossSummariesReportingVariant}
@@ -112,6 +119,7 @@ export const AccountingOverview = ({
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}
             hideLegend
+            chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
           />
         </Container>
         {middleBanner && (
@@ -122,6 +130,10 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
           chartColorsList={chartColorsList}
         />
       </View>

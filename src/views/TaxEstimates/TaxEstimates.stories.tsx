@@ -17,7 +17,6 @@ const enableTaxEstimates = getAccountingConfiguration.mock(
 
 const meta: Meta<typeof TaxEstimates> = {
   title: 'Views/TaxEstimates',
-  tags: ['public-api'],
   component: TaxEstimates,
   parameters: { msw: { handlers: [enableTaxEstimates, ...handlers] } },
 }
@@ -26,24 +25,22 @@ export default meta
 
 type Story = StoryObj<typeof TaxEstimates>
 
-export const Default: Story = {}
-
-// The banner only renders when the year has uncategorized transactions. That's real behavior worth
-// keeping on `Default`, but it's noise in a screenshot of the estimates themselves.
+// The banner only renders when the year has uncategorized transactions. That's real behavior, but
+// it's noise in a screenshot of the estimates themselves.
 const noUncategorizedTransactions = getTaxBanner.mock({
   ...makeTaxBanner(FIXTURE_YEAR),
   totalUncategorizedCount: 0,
 })
 
-export const DocsDefault: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+export const Default: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [enableTaxEstimates, noUncategorizedTransactions, ...handlers] },
   },
 }
 
-export const DocsPayments: Story = {
-  tags: ['!public-api', 'docs-screenshot'],
+export const Payments: Story = {
+  tags: ['public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [enableTaxEstimates, noUncategorizedTransactions, ...handlers] },
   },
@@ -60,23 +57,12 @@ export const DocsPayments: Story = {
 // Keeps the fixture's configuration so the form renders filled out; the empty form reads as a
 // column of blank inputs in the docs image.
 export const Onboarding: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot'],
   parameters: {
     msw: {
       handlers: [
         enableTaxEstimates,
         getTaxProfile.mock(makeTaxProfile({ userHasSavedTaxProfile: false })),
-        ...handlers,
-      ],
-    },
-  },
-}
-
-export const FeatureDisabled: Story = {
-  parameters: {
-    msw: {
-      handlers: [
-        getAccountingConfiguration.mock(makeAccountingConfiguration({ enableTaxEstimates: false })),
         ...handlers,
       ],
     },

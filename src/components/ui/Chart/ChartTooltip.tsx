@@ -62,7 +62,7 @@ export const ChartTooltipCursor = ({ width, points, height }: ChartTooltipCursor
   )
 }
 
-type ChartTooltipProps = Omit<RechartsTooltipProps<number, string>, 'content' | 'cursor'> & {
+type ChartTooltipProps = Omit<RechartsTooltipProps, 'content' | 'cursor'> & {
   content: JSX.Element
   cursorWidth: number
 }

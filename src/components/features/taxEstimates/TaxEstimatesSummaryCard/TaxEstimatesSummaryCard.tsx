@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
@@ -11,6 +12,10 @@ import { TaxEstimatesSummaryCardLoading as Loading } from '@features/taxEstimate
 import { useTaxEstimatesSummaryCard } from '@features/taxEstimates/TaxEstimatesSummaryCard/useTaxEstimatesSummaryCard'
 
 import './taxEstimatesSummaryCard.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'card:body': 'Layer__TaxEstimatesSummaryCard__Body',
+})
 
 export { TaxEstimatesSummaryCardMode }
 
@@ -39,6 +44,7 @@ export const TaxEstimatesSummaryCard = ({
     <SummaryCard
       className={classNames('Layer__TaxEstimatesSummaryCard', isSummaryCardLayout && 'Layer__TaxEstimatesSummaryCard--summaryCard')}
       slots={slots}
+      legacyClassNames={{ body: legacyClassNames('card:body') }}
     >
       <ConditionalBlock
         data={detailData}

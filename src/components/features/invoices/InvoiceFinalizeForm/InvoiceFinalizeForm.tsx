@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import type { Invoice } from '@schemas/features/invoices/invoice'
 import type { InvoicePaymentMethod } from '@schemas/features/invoices/invoicePaymentMethod'
 import { flattenValidationErrors } from '@utils/shared/form/errors'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -17,6 +18,10 @@ import {
 } from '@features/invoices/InvoiceFinalizeForm/useInvoiceFinalizeForm'
 
 import './invoiceFinalizeForm.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__InvoiceFinalizeForm__ErrorBanner: 'Layer__InvoiceFinalizeForm__FormError',
+})
 
 type InvoiceFinalizeFormProps = {
   invoice: Invoice
@@ -46,7 +51,7 @@ export const InvoiceFinalizeForm = ({
 
   return (
     <Form className='Layer__InvoiceFinalizeForm' onSubmit={blockNativeOnSubmit}>
-      {topError ? <FormErrorBanner message={topError} className='Layer__InvoiceFinalizeForm__ErrorBanner' /> : null}
+      {topError ? <FormErrorBanner message={topError} className={legacyClassNames('Layer__InvoiceFinalizeForm__ErrorBanner')} /> : null}
       <VStack className='Layer__InvoiceFinalizeForm__Section' gap='sm'>
         <Heading level={3} size='sm'>{t('invoices:InvoiceFinalizeForm.label.payment_methods', 'Payment methods')}</Heading>
         <form.AppField name='creditCardEnabled'>

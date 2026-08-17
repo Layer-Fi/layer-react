@@ -6,6 +6,16 @@ type PinnedGlobalDateRangeProps = PropsWithChildren<{
   dateRange: DateRange
 }>
 
+let isPinningEnabled = true
+
+/**
+ * Turned off for the real-backend Storybook, where a fixture-year range would query periods a live
+ * business has no data for. Set from `.storybook/preview.tsx`.
+ */
+export const setDateRangePinning = (enabled: boolean) => {
+  isPinningEnabled = enabled
+}
+
 /**
  * Pins the global date store to a fixed range before rendering children, so
  * stories and tests don't depend on the real clock. Children stay unmounted
@@ -16,7 +26,7 @@ export const PinnedGlobalDateRange = ({ dateRange, children }: PinnedGlobalDateR
   const [isPinned, setIsPinned] = useState(false)
 
   useLayoutEffect(() => {
-    setDateRange(dateRange)
+    if (isPinningEnabled) setDateRange(dateRange)
     setIsPinned(true)
   }, [setDateRange, dateRange])
 

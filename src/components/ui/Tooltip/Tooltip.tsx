@@ -11,11 +11,20 @@ import type { Placement } from '@floating-ui/react'
 import { FloatingPortal, useMergeRefs } from '@floating-ui/react'
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
 import { TooltipContext, useTooltip, useTooltipContext } from '@ui/Tooltip/useTooltip'
 
 import './tooltip.scss'
+
+/* Two generations to keep alive: the unprefixed `Layer__tooltip*` set and the kebab set after it. */
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__Tooltip: ['Layer__UI__tooltip', 'Layer__tooltip'],
+  Layer__UI__TooltipContent: ['Layer__UI__tooltip-content', 'Layer__tooltip-content'],
+  Layer__UI__TooltipContent__Text: 'Layer__UI__tooltip-content--text',
+  Layer__UI__TooltipTrigger: ['Layer__UI__tooltip-trigger', 'Layer__tooltip-trigger'],
+})
 
 export type TooltipCapableComponentProps = {
   withTooltip?: boolean
@@ -79,7 +88,7 @@ export const TooltipTrigger = forwardRef<
     <HStack
       ref={ref}
       data-state={context.isOpen ? 'open' : 'closed'}
-      className={classNames('Layer__UI__TooltipTrigger', className)}
+      className={classNames(legacyClassNames('Layer__UI__TooltipTrigger'), className)}
       {...dataProperties}
       {...context.getReferenceProps(props)}
     >
@@ -105,15 +114,15 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className='Layer__UI__Tooltip'
+        className={legacyClassNames('Layer__UI__Tooltip')}
         style={{
           ...context.floatingStyles,
         }}
         {...dataProperties}
         {...context.getFloatingProps(props)}
       >
-        <div className='Layer__UI__TooltipContent' style={{ ...context.styles }}>
-          <span className='Layer__UI__TooltipContent__Text'>{props.children}</span>
+        <div className={legacyClassNames('Layer__UI__TooltipContent')} style={{ ...context.styles }}>
+          <span className={legacyClassNames('Layer__UI__TooltipContent__Text')}>{props.children}</span>
         </div>
       </div>
     </FloatingPortal>

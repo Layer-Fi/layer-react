@@ -149,6 +149,35 @@ Three rules that follow:
   caller's over its own defaults: `slotProps={{ Title: { size: 'md', ...slotProps?.Title } }}`
 - **Memoize a computed `slots`/`slotProps` object**, since it's an object prop.
 
+## Consumer-facing customization
+
+Keep customization explicit at the component boundary. Do not hide or remove a consumer-facing
+prop behind a context merely to avoid forwarding it through a composed view. Choose the mechanism
+that matches what the consumer is configuring:
+
+1. **A CSS custom property**, when CSS can reach the value and the customization is naturally
+   inherited. It costs zero React props and reaches inside SVG charts, where a CSS declaration
+   beats the chart library's presentation attribute — how `--pnl-chart-line-stroke-width` sets the
+   P&L line width.
+2. **`slots` / `slotProps`**, when configuring a named element inside a component or view. A view
+   with several charts nests each config under the slot it targets, so instances that may differ
+   get separate configs.
+3. **A component prop**, when the component renders or owns the configurable element. Prefer one
+   nested config object over one prop per knob.
+4. **Context**, only for a genuinely implicit, subtree-stable dependency. Context must not erase a
+   per-instance consumer API; if two instances on one page may need different values, use props.
+
+P&L chart configuration is the reference: `ProfitAndLoss.Chart`, `.Summaries`, `.DetailedCharts`,
+and `ProfitAndLossSummaryCard` each take a nested `chartConfig` directly; the overviews expose it
+under the `slotProps` of the chart it targets; and the legacy flat `chartColorsList` stays
+supported as a fallback where it was already consumer-facing. `@ui`/`@blocks` stay
+domain-agnostic — a feature component translates its domain config into whatever the child below
+it takes, so `DetailedChart` remains reusable by both P&L and tax estimates.
+
+Two traps: an override must not silently disable a responsive default (`barWidth` needs
+`compactBarWidth`, not one fixed width), and a new config must preserve existing consumer-facing
+props unless a breaking change is intentional.
+
 ## Forms
 
 Forms use TanStack Form through `useAppForm` (`@blocks/Form/useForm`) with the

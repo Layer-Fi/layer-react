@@ -14,9 +14,10 @@ type AccountSubtypeComboBoxProps = {
   onChange: (value: string | null) => void
   error?: string
   inline?: boolean
+  className?: string
 }
 
-export const AccountSubtypeComboBox = ({ label, type, value, onChange, error, inline }: AccountSubtypeComboBoxProps) => {
+export const AccountSubtypeComboBox = ({ label, type, value, onChange, error, inline, className }: AccountSubtypeComboBoxProps) => {
   const { t } = useTranslation()
   const options = useMemo<ComboBoxOption[]>(() => {
     const configs = type
@@ -27,7 +28,7 @@ export const AccountSubtypeComboBox = ({ label, type, value, onChange, error, in
   }, [t, type])
 
   return (
-    <ComboBoxField label={label} inline={inline}>
+    <ComboBoxField label={label} inline={inline} className={className}>
       {controlProps => (
         <ComboBox
           {...controlProps}
