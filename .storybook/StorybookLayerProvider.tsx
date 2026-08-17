@@ -1,8 +1,9 @@
 import { type PropsWithChildren, useEffect, useState } from 'react'
 
 import { useGetBusiness } from '../src/hooks/api/businesses/[business-id]/get'
-import { type Environment, EnvironmentConfigs } from '../src/providers/global/Environment/environmentConfigs'
+import { type Environment } from '../src/providers/global/Environment/environmentConfigs'
 import { LayerProvider } from '../src/providers/global/LayerProvider/LayerProvider'
+import { type Business } from '../src/schemas/features/business/business'
 import { LayerTestProvider, TEST_LAYER_THEME } from '../src/testUtils/render/LayerTestProvider'
 import { remember } from './businessHistory'
 import { getTokenEndpoint, usesRealBackend } from './realBackend'
@@ -60,46 +61,6 @@ const useToken = () => {
   return token
 }
 
-/**
- * `BusinessSchema` drops `legal_name`, so `useGetBusiness` can't supply it — but the endpoint does
- * return it, and a raw read here beats widening a shipped schema to label a Storybook control. A
- * bare id is unrecognisable, so this is what makes the badge and the toolbar history legible.
- */
-const useBusinessName = (businessId: string, token: Token | null) => {
-  const [name, setName] = useState<string | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    setName(null)
-
-    if (token === null) return
-
-    const load = async () => {
-      const response = await fetch(`${EnvironmentConfigs[token.environment].apiUrl}/v1/businesses/${businessId}`, {
-        headers: { Authorization: `Bearer ${token.accessToken}` },
-      })
-
-      if (!response.ok) return
-
-      const body = await response.json() as { data?: { legal_name?: string | null } }
-      const legalName = body.data?.legal_name
-
-      if (cancelled || !legalName) return
-
-      setName(legalName)
-      remember(businessId, legalName)
-    }
-
-    void load()
-
-    return () => {
-      cancelled = true
-    }
-  }, [businessId, token])
-
-  return name
-}
-
 // Reuses the fetch `LayerProvider` already made, so this costs no extra request.
 const DemoBusinessGuard = ({ businessId, children }: PropsWithChildren<{ businessId: string }>) => {
   const { data: business, isLoading, isError } = useGetBusiness({ businessId })
@@ -119,9 +80,30 @@ const DemoBusinessGuard = ({ businessId, children }: PropsWithChildren<{ busines
   return <>{children}</>
 }
 
+// Inside `LayerProvider` so it can read the business, and on the same SWR key as the guard, so the
+// two share one request. `legalName` is what makes the badge and toolbar history legible.
+const BusinessBadge = ({ businessId, token }: { businessId: string, token: Token }) => {
+  // Annotated because `.storybook` is linted under an inferred project that can't resolve the
+  // aliased imports behind this hook, so its return type arrives untyped.
+  const { data: business } = useGetBusiness({ businessId }) as { data?: Business }
+  const legalName = business?.legalName ?? null
+
+  useEffect(() => {
+    if (legalName) remember(businessId, legalName)
+  }, [businessId, legalName])
+
+  return (
+    <RealBackendBadge
+      businessId={businessId}
+      name={legalName}
+      environment={token.environment}
+      refreshAt={token.refreshAt}
+    />
+  )
+}
+
 const RealBackendProvider = ({ businessId, children }: PropsWithChildren<{ businessId: string }>) => {
   const token = useToken()
-  const name = useBusinessName(businessId, token)
 
   if (token === null) return null
 
@@ -135,12 +117,7 @@ const RealBackendProvider = ({ businessId, children }: PropsWithChildren<{ busin
       theme={TEST_LAYER_THEME}
     >
       <DemoBusinessGuard businessId={businessId}>{children}</DemoBusinessGuard>
-      <RealBackendBadge
-        businessId={businessId}
-        name={name}
-        environment={token.environment}
-        refreshAt={token.refreshAt}
-      />
+      <BusinessBadge businessId={businessId} token={token} />
     </LayerProvider>
   )
 }

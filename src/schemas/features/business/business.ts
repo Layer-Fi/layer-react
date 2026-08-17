@@ -3,6 +3,11 @@ import { pipe, Schema } from 'effect'
 export const BusinessSchema = Schema.Struct({
   id: Schema.UUID,
 
+  legalName: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('legal_name'),
+  ),
+
   activationAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('activation_at'),

@@ -31,9 +31,8 @@ the URL always wins over the remembered one.
 
 Autocomplete entries read `Legal Name — <full id>`, and the badge shows the name alongside a
 truncated id — a bare UUID tells you nothing about what you're looking at, and the name alone doesn't
-tell you which of two similarly named businesses you picked. `BusinessSchema` doesn't parse
-`legal_name`, so the preview reads it straight off `GET /v1/businesses/{id}` rather than widening a
-shipped schema to label a dev control, then stores it for the toolbar.
+tell you which of two similarly named businesses you picked. The name is `legalName` off
+`BusinessSchema`, on the same SWR key the `isDemo` guard uses, so it costs no extra request.
 
 Until an ID is set, stories say so rather than rendering. Real mode never falls back to fixtures —
 mock data under a real-backend build would look like the real thing.
