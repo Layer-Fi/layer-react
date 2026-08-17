@@ -46,6 +46,6 @@ export default meta
 type Story = StoryObj<GlobalDateRangeSelectionProps>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
   parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
 }

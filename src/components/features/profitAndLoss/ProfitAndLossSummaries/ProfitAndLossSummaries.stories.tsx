@@ -75,11 +75,11 @@ export default meta
 type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 
 export const ProfitAndLoss: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 export const CashFlow: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   parameters: {
     controls: {
       include: [

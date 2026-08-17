@@ -2,7 +2,7 @@ import { join } from 'node:path'
 import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
-import { PUBLIC_API_TAG } from './tags'
+import { PUBLIC_API_TAG, REAL_BACKEND_TAG } from './tags'
 
 // Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
@@ -27,11 +27,14 @@ const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
 //               story can carry both.
 //   chromatic — the design system plus agent scratch stories. Features and views compose
 //               these primitives, so a regression generally surfaces here first.
+//   real      — stories tagged `real-backend`, the ones that still mean something with MSW off.
+//               What the access-protected Vercel preview ships.
 const SCOPE = process.env.STORYBOOK_SCOPE
 const CHROMATIC_PATHS = /\/src\/components\/(ui|blocks)\/|scratch\.stories\./
 
 const inScope = (fileName: string, tags: string[] | undefined) => {
   if (SCOPE === 'public') return tags?.includes(PUBLIC_API_TAG) ?? false
+  if (SCOPE === 'real') return tags?.includes(REAL_BACKEND_TAG) ?? false
   if (SCOPE === 'chromatic') return CHROMATIC_PATHS.test(fileName)
   return true
 }

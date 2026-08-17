@@ -7,25 +7,16 @@ import '../src/styles/index.scss'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
-import { LayerTestProvider } from '../src/testUtils/render/LayerTestProvider'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 import { installSystemDateMock } from './mocks/systemDate'
+import { usesRealBackend } from './realBackend'
+import { StorybookLayerProvider } from './StorybookLayerProvider'
 import { DOCS_SCREENSHOT_TAG } from './tags'
-
-installSystemDateMock()
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
 // must resize the capture iframe to exercise each size class. Widths sit just below the
 // mobile/tablet breakpoints and comfortably above them for desktop.
 const SIZE_CLASS_VIEWPORTS = [BREAKPOINTS.MOBILE - 1, BREAKPOINTS.TABLET - 1, 1280]
-
-initialize({
-  serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
-  onUnhandledRequest: (request, print) => {
-    // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
-    if (new URL(request.url).hostname.endsWith('layerfi.com')) print.error()
-  },
-})
 
 // Mocked responses resolve instantly, so a floor keeps loading states visible instead of flashing.
 // Every story keeps it except the ones backing docs images, which have to settle deterministically
@@ -33,10 +24,27 @@ initialize({
 // its loading states just because it also feeds a screenshot.
 const DEFAULT_RESPONSE_DELAY = 250
 
-setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+// A shifted `now` would query periods the real business has no data for.
+if (!usesRealBackend) {
+  installSystemDateMock()
+
+  initialize({
+    serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
+    onUnhandledRequest: (request, print) => {
+      // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
+      if (new URL(request.url).hostname.endsWith('layerfi.com')) print.error()
+    },
+  })
+
+  setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+}
 
 const preview: Preview = {
-  loaders: [() => resetMockStores(), mswLoader],
+  // Declared without a `toolbar`, because the control is a free-text field contributed by
+  // `manager.tsx` rather than a dropdown. Declaring it is also what tells the manager to show that
+  // field, and it makes the id serialize into the URL so a story link carries its business.
+  globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
+  loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader],
   beforeEach: ({ tags }: { tags?: string[] }) => {
     setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
     return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
@@ -55,7 +63,11 @@ const preview: Preview = {
         ? <div className='Layer__component'><Story /></div>
         : <Story />
 
-      return <LayerTestProvider>{story}</LayerTestProvider>
+      return (
+        <StorybookLayerProvider businessId={context.globals.business as string | undefined}>
+          {story}
+        </StorybookLayerProvider>
+      )
     },
   ],
 }

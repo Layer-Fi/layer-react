@@ -23,7 +23,7 @@ export const TEST_LAYER_ACCESS_TOKEN = 'test-access-token'
  * Charts and themed surfaces read `--color-dark`/`--color-light` CSS variables
  * that only exist where a theme is set, so tests and stories get a default one.
  */
-const TEST_LAYER_THEME: LayerThemeConfig = {
+export const TEST_LAYER_THEME: LayerThemeConfig = {
   colors: {
     dark: { h: '218', s: '55%', l: '20%' },
     light: { h: '158', s: '35%', l: '75%' },

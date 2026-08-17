@@ -81,7 +81,7 @@ export default meta
 type Story = StoryObj<TimeTrackingStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 // Stories pin "now" to noon on the last day of the fixture year, so a timer started at 10:47

@@ -222,7 +222,7 @@ const CATEGORIZABLE_DESCRIPTIONS = bankTransactions.flatMap(transaction =>
 
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
 }
 
 // Same state, with a row expanded to show the categorize form the collapsed rows can't convey.

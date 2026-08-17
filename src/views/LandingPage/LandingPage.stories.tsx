@@ -32,21 +32,21 @@ export default meta
 type Story = StoryObj<LandingPageStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 export const AccountingOnly: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   args: { availableOffers: ['accounting'] },
 }
 
 export const BookkeepingOnly: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   args: { availableOffers: ['bookkeeping'] },
 }
 
 export const FullyCustomized: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'real-backend'],
   args: {
     heroImageUrl: 'https://images.unsplash.com/photo-1734079692160-fcbe4be6ab96?auto=format&fit=crop&w=1600&q=80',
     heroTitle: 'Bookkeeping built for {{industry}}',

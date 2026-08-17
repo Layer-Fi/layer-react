@@ -28,5 +28,5 @@ export default meta
 type Story = StoryObj<ProfitAndLossChartProps>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }

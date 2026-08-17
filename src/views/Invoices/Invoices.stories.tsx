@@ -28,7 +28,7 @@ export default meta
 type Story = StoryObj<typeof Invoices>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 // Cash sales carry `customer: null`, which leaves the detail view's customer and email blank, and
