@@ -14,7 +14,7 @@ import {
   TableHeader,
 } from '@ui/Table/Table'
 import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/Table/DataTable/DataTableSkeleton'
-import { getLegacyRowClassNames, LEGACY_TABLE_CELL_CLASS_NAME, LEGACY_TABLE_CELL_CONTENT_CLASS_NAME, LEGACY_TABLE_CLASS_NAME, LEGACY_TABLE_HEADER_CLASS_NAME, LEGACY_TABLE_WRAPPER_CLASS_NAME } from '@blocks/Table/DataTable/legacyClassNames'
+import { getLegacyRowClassNames, LEGACY_TABLE_CLASS_NAMES } from '@blocks/Table/DataTable/legacyClassNames'
 import { useColumnPinningStyles } from '@blocks/Table/DataTable/useColumnPinningStyles'
 
 import './dataTable.scss'
@@ -84,7 +84,7 @@ export const DataTable = <TData extends object>({
       key={header.id}
       isRowHeader={header.column.columnDef.meta?.isRowHeader}
       className={classNames(
-        LEGACY_TABLE_HEADER_CLASS_NAME,
+        LEGACY_TABLE_CLASS_NAMES.HEADER,
         `Layer__UI__Table-Column__${componentName}--${header.id}`,
         header.column.columnDef.meta?.legacyClassNames?.column,
       )}
@@ -134,7 +134,7 @@ export const DataTable = <TData extends object>({
     <div
       ref={scrollContainerRef}
       className={classNames(
-        LEGACY_TABLE_WRAPPER_CLASS_NAME,
+        LEGACY_TABLE_CLASS_NAMES.WRAPPER,
         'Layer__UI__Table-ScrollContainer',
         hasHorizontalOverflow && !isShowingFallbackRows && 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
       )}
@@ -143,7 +143,7 @@ export const DataTable = <TData extends object>({
         key={`${componentName}-cols-${numColumns}`}
         aria-label={ariaLabel}
         className={classNames(
-          LEGACY_TABLE_CLASS_NAME,
+          LEGACY_TABLE_CLASS_NAMES.TABLE,
           `Layer__UI__Table__${componentName}`,
           `Layer__UI__Table__${componentName}--${numColumns}Columns`,
           isShowingFallbackRows && `Layer__UI__Table__${componentName}--fallbackRows`,
@@ -186,8 +186,7 @@ export const DataTable = <TData extends object>({
                       <Cell
                         key={`${row.id}-${cell.id}`}
                         className={classNames(
-                          LEGACY_TABLE_CELL_CLASS_NAME,
-                          LEGACY_TABLE_CELL_CONTENT_CLASS_NAME,
+                          LEGACY_TABLE_CLASS_NAMES.CELL,
                           `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,
                           cell.column.columnDef.meta?.legacyClassNames?.cell,
                         )}

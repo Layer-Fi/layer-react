@@ -99,12 +99,13 @@ export const SubmitButton = ({
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
   const shouldRenderPendingInIconBox = isPending && iconBox && !noIcon
+  const buttonClassName = classNames(legacyClassNames(!noIcon && 'state:withPrimaryIcon'), className)
 
   if (withRetry && isError) {
     return (
       <Button
         variant='outlined'
-        className={classNames(legacyClassNames(!noIcon && 'state:withPrimaryIcon'), className)}
+        className={buttonClassName}
         onPress={onPress}
         type={type}
         isDisabled={isPending || isDisabled}
@@ -121,7 +122,7 @@ export const SubmitButton = ({
 
   return (
     <Button
-      className={classNames(legacyClassNames(!noIcon && 'state:withPrimaryIcon'), className)}
+      className={buttonClassName}
       onPress={onPress}
       type={type}
       isDisabled={isPending || isDisabled}

@@ -17,17 +17,13 @@
 }
 
 /*
- * v0.1.122 read this from a bare `::placeholder` rule, which styled placeholders across the whole
- * host page. Scoped here so setting the token still works without the library reaching outside its
- * own tree again.
+ * v0.1.122 applied this from a bare `::placeholder` rule, which reached every input on the host
+ * page. Listed per element instead — every element in the library that renders a native
+ * placeholder. The combo box placeholder is a `div`, styled by class in `comboBox.scss`.
  */
-.Layer__component ::placeholder,
-.Layer__Portal ::placeholder,
-.Layer__view ::placeholder,
-.Layer__UI__Tooltip ::placeholder,
-.Layer__toasts-container ::placeholder,
-.Layer__drawer ::placeholder,
-.Layer__variables ::placeholder,
-.Layer__tasks-component ::placeholder {
+.Layer__UI__Input::placeholder,
+.Layer__UI__TextArea::placeholder,
+.Layer__AmountInput::placeholder,
+.Layer__SearchField__Field > [slot='input']::placeholder {
   color: var(--input-placeholder-color);
 }

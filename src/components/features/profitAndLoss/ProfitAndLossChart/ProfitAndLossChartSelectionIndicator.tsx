@@ -1,12 +1,12 @@
 import { type LabelProps, useChartHeight, usePlotArea } from 'recharts'
 
-type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
-  selected?: boolean
-}
-
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 
 import './profitAndLossChartSelectionIndicator.scss'
+
+type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
+  selected?: boolean
+}
 
 const legacyClassNames = createLegacyClassNames({
   Layer__ProfitAndLossChart__SelectionIndicator: 'Layer__profit-and-loss-chart__selection-indicator',

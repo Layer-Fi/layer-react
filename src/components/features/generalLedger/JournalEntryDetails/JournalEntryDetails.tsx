@@ -6,10 +6,6 @@ import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger
 import { JournalContext } from '@providers/features/generalLedger/JournalContext/JournalContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 
-/*
- * The journal generation of the entry-detail names. See the ledger-account map for why these are
- * passed per caller.
- */
 const legacyClassNames = createLegacyClassNames({
   'details:root': 'Layer__journal__entry-details',
   'details:lineItems': 'Layer__journal__entry-details__line-items',

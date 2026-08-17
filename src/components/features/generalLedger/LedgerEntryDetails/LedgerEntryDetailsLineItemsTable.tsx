@@ -31,7 +31,6 @@ type LineItemRow = {
 
 interface LedgerEntryDetailsLineItemsTableProps {
   className?: string
-  /** The name the calling feature's table shipped under; journal and ledger-account differ. */
   tableClassName?: string
   lineItems: ReadonlyArray<LineItem> | undefined
   isLoading?: boolean

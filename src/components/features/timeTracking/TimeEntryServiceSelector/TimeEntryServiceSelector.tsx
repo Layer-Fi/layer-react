@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from 'react'
-import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { P, Span } from '@ui/Typography/Text'
@@ -14,15 +13,7 @@ import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 import './timeEntryServiceSelector.scss'
 
-/*
- * This field had its own wrapper class until `FormFieldShell` took over the layout. It was dropped
- * rather than renamed, so there is no current name to sit alongside — these keys name the state that
- * produced it and emit only the old name.
- */
-const legacyClassNames = createLegacyClassNames({
-  'field:default': 'Layer__TimeEntryServiceSelector',
-  'field:inline': 'Layer__TimeEntryServiceSelector--inline',
-})
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__TimeEntryServiceSelector', 'Layer__TimeEntryServiceSelector--inline')
 
 function getServiceLabel(service: CatalogService, t: TFunction): string {
   return service.archivedAt
@@ -173,7 +164,7 @@ export function TimeEntryServiceSelector({
   return (
     <ComboBoxField
       label={t('timeTracking:TimeEntryServiceSelector.label.service', 'Service')}
-      className={classNames(legacyClassNames('field:default', inline && 'field:inline'), className)}
+      className={legacyFieldClassNames({ inline, className })}
       inline={inline}
       showLabel={showLabel}
     >

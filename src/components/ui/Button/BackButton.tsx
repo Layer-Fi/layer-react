@@ -1,12 +1,8 @@
 import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Button, type ButtonProps } from '@ui/Button/Button'
-
-const legacyClassNames = createLegacyClassNames({
-  'state:back': 'Layer__back-btn',
-})
+import { LEGACY_BACK_BUTTON_CLASS_NAME } from '@ui/Button/legacyClassNames'
 
 export type BackButtonProps = Pick<ButtonProps, 'onPress'> & {
   slots?: {
@@ -22,7 +18,7 @@ export function BackButton({ onPress, slots }: BackButtonProps) {
     <Button
       variant='outlined'
       icon
-      className={legacyClassNames('state:back')}
+      className={LEGACY_BACK_BUTTON_CLASS_NAME}
       onPress={onPress}
       aria-label={t('common:action.back', 'Back')}
     >

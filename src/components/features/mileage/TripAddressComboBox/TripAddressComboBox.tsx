@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { TripFormAddress } from '@schemas/features/mileage/tripForm'
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetMileageAddressDetails } from '@api/businesses/[business-id]/mileage/address-details/get'
 import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
@@ -11,15 +10,7 @@ import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { P } from '@ui/Typography/Text'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
-/*
- * This field had its own wrapper class until `FormFieldShell` took over the layout. It was dropped
- * rather than renamed, so there is no current name to sit alongside — these keys name the state that
- * produced it and emit only the old name.
- */
-const legacyClassNames = createLegacyClassNames({
-  'field:default': 'Layer__TripAddressComboBox',
-  'field:inline': 'Layer__TripAddressComboBox--inline',
-})
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__TripAddressComboBox', 'Layer__TripAddressComboBox--inline')
 
 type TripAddressComboBoxProps = {
   label: string
@@ -106,7 +97,7 @@ export const TripAddressComboBox = ({
   )
 
   return (
-    <ComboBoxField label={label} className={classNames(legacyClassNames('field:default', inline && 'field:inline'), className)} inline={inline}>
+    <ComboBoxField label={label} className={legacyFieldClassNames({ inline, className })} inline={inline}>
       {controlProps => (
         <SearchComboBox
           {...controlProps}

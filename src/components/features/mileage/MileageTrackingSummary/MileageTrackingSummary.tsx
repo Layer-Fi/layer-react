@@ -16,7 +16,6 @@ import { MileageTrackingStatsCard } from '@features/mileage/MileageTrackingStats
 
 import './mileageTrackingSummary.scss'
 
-/* The title moved into the shared card header, so this card supplies the name it shipped with. */
 const legacyClassNames = createLegacyClassNames({
   'summary:header': 'Layer__MileageTrackingSummary__Header',
 })

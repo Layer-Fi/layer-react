@@ -189,11 +189,13 @@ function buildCustomOption<T extends ComboBoxOption, IsMulti extends boolean>({
       <components.Option
         {...restProps}
         className={classNames(
-          legacyClassNames('Layer__ComboBoxOption'),
-          isFocused ? legacyClassNames('Layer__ComboBoxOption--focused') : undefined,
-          effectiveIsSelected ? legacyClassNames('Layer__ComboBoxOption--selected') : undefined,
-          isDisabled ? `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled` : undefined,
-          restProps.data.isHidden ? `${COMBO_BOX_CLASS_NAMES.OPTION}--hidden` : undefined,
+          legacyClassNames(
+            'Layer__ComboBoxOption',
+            isFocused && 'Layer__ComboBoxOption--focused',
+            effectiveIsSelected && 'Layer__ComboBoxOption--selected',
+          ),
+          isDisabled && `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled`,
+          restProps.data.isHidden && `${COMBO_BOX_CLASS_NAMES.OPTION}--hidden`,
         )}
       >
         {Option

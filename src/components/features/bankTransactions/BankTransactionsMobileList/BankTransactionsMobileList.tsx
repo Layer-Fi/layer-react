@@ -17,11 +17,6 @@ import { BankTransactionsMobileListItemExpandedRow } from '@features/bankTransac
 import { BankTransactionsMobileListItemFooter } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
 import { BankTransactionsPaginatedList } from '@features/bankTransactions/BankTransactionsPaginatedList/BankTransactionsPaginatedList'
 
-/*
- * The list item element is the shared `Layer__MobileListItem` now. This name was specific to bank
- * transactions, so it is passed down per list rather than added to the shared component, which
- * would put it on every mobile list in the package.
- */
 const LEGACY_ITEM_CLASS_NAME = 'Layer__bank-transaction-mobile-list-item Layer__BankTransactionsMobileListItem'
 
 type BankTransactionsMobileListContentProps = {

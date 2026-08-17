@@ -32,7 +32,6 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ChartOfAccountsForm__FormError': 'Layer__chart-of-accounts__form__error-message',
   'Layer__ChartOfAccountsForm': 'Layer__chart-of-accounts__form',
   'Layer__ChartOfAccountsForm__EditEntry': 'Layer__chart-of-accounts__form-edit-entry',
-  /* This form named its combobox fields; the shared field does not, so they arrive from here. */
   'field:comboBox': 'Layer__ChartOfAccountsForm__ComboBoxField',
   'field:comboBoxInline': ['Layer__ChartOfAccountsForm__ComboBoxField', 'Layer__ChartOfAccountsForm__ComboBoxField--inline'],
 })

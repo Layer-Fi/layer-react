@@ -12,6 +12,16 @@ function git(args: string[]) {
   return execFileSync('git', args, { encoding: 'utf8', maxBuffer: 512 * 1024 * 1024 })
 }
 
+/** `git grep` exits non-zero when nothing matches, which is a valid empty result here. */
+function grepClassNames(args: string[]) {
+  try {
+    return git(['grep', '-h', ...args]).split('\n').filter(Boolean)
+  }
+  catch {
+    return []
+  }
+}
+
 function releaseTags() {
   return git(['tag', '--list', 'v0.1.*'])
     .split('\n')
@@ -27,33 +37,12 @@ function releaseTags() {
 const isCompleteName = (name: string) => !/[_-]$/.test(name)
 
 function classNamesAt(revision: string) {
-  try {
-    return new Set(
-      git(['grep', '-h', '-oE', CLASS_PATTERN, revision, '--', ...PATHSPECS])
-        .split('\n')
-        .filter(Boolean)
-        .filter(isCompleteName),
-    )
-  }
-  catch {
-    return new Set<string>()
-  }
+  return new Set(grepClassNames(['-oE', CLASS_PATTERN, revision, '--', ...PATHSPECS]).filter(isCompleteName))
 }
 
 function buildCurrentMatcher() {
   const index = buildDomClassIndex('.')
-  const scss = new Set(
-    (() => {
-      try {
-        return git(['grep', '-h', '--untracked', '-oE', CLASS_PATTERN, '--', '*.scss'])
-          .split('\n')
-          .filter(Boolean)
-      }
-      catch {
-        return []
-      }
-    })(),
-  )
+  const scss = new Set(grepClassNames(['--untracked', '-oE', CLASS_PATTERN, '--', '*.scss']))
 
   return (name: string) => scss.has(name) || lookup(index, name).length > 0
 }

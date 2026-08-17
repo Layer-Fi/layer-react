@@ -6,10 +6,6 @@ import { Heading } from '@ui/Typography/Heading'
 
 import './viewHeader.scss'
 
-/*
- * The header kept its own names through the rename; only the title's was dropped when the `Heading`
- * stopped being given a class.
- */
 const legacyClassNames = createLegacyClassNames({
   Layer__ViewHeader__Title: 'Layer__view-header__title',
 })

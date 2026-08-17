@@ -6,6 +6,7 @@ import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
+import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
 
 const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxContainer': 'Layer__select',
@@ -83,10 +84,12 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   const selectClassNames = useMemo(() => ({
     container: () => legacyClassNames('Layer__ComboBoxContainer'),
     control: ({ isFocused, isDisabled }: { isFocused: boolean, isDisabled: boolean }) => classNames(
-      legacyClassNames('Layer__ComboBoxControl'),
-      isFocused && legacyClassNames('Layer__ComboBoxControl--focused'),
-      isDisabled && legacyClassNames('Layer__ComboBoxControl--disabled'),
-      hasError && legacyClassNames('Layer__ComboBoxControl--error'),
+      legacyClassNames(
+        'Layer__ComboBoxControl',
+        isFocused && 'Layer__ComboBoxControl--focused',
+        isDisabled && 'Layer__ComboBoxControl--disabled',
+        hasError && 'Layer__ComboBoxControl--error',
+      ),
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
     ),
     valueContainer: () => legacyClassNames('Layer__ComboBoxValueContainer'),
@@ -95,7 +98,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
     ),
-    menu: () => classNames(COMBO_BOX_CLASS_NAMES.MENU, legacyClassNames('Layer__ComboBoxMenu')),
+    menu: () => classNames(PORTAL_CLASS_NAME, legacyClassNames('Layer__ComboBoxMenu')),
     menuPortal: () => legacyClassNames('Layer__ComboBoxMenuPortal'),
     multiValueRemove: () => legacyClassNames('Layer__ComboBoxMultiValueRemove'),
     menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,

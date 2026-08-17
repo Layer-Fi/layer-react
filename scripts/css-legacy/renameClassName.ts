@@ -9,14 +9,9 @@ import path from 'node:path'
  *
  *     npx tsx scripts/css-legacy/renameClassName.ts Layer__badge Layer__Badge [--dry]
  *
- * The rename is the easy half. Shipping it without the old name is what broke consumers between
- * v0.1.122 and today, so every rename adds the old name to a `createLegacyClassNames` map beside
- * the element that carries it.
- *
- * The map alone emits nothing: each renamed element still has to pass the new name through the
- * composer, `className={legacyClassNames('Layer__Badge')}`. That edit is left to a human because
- * it depends on how the element builds its class names. The files needing it are listed on exit,
- * and `npm run css:check-legacy-keys` fails until every seeded entry is reached.
+ * A seeded map emits nothing until the element passes the new name through the composer, and that
+ * edit depends on how the element builds its class names — so it is left to a human. The files
+ * needing it are listed on exit, and `css:check-legacy-keys` fails until each one is done.
  */
 
 const UTIL_IMPORT = "import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'"

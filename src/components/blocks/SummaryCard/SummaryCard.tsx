@@ -18,10 +18,6 @@ type SummaryCardSlotProps = {
 export type SummaryCardProps = PropsWithChildren<{
   slots: SummaryCardSlotProps
   className?: string
-  /**
-   * Class names the calling feature shipped under. Several cards render this body now but named
-   * their elements differently before, so each passes its own.
-   */
   legacyClassNames?: { body?: string, header?: string }
 }>
 

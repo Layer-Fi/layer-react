@@ -6,7 +6,6 @@ import { SubmitAction, SubmitButton, type SubmitButtonProps } from '@ui/Button/S
 
 import './bankTransactionsSubmitButton.scss'
 
-/* Feature-specific, so it is passed to the shared `SubmitButton` rather than living on it. */
 const legacyClassNames = createLegacyClassNames({
   'state:submit': 'Layer__bank-transaction__submit-btn',
   'state:retry': 'Layer__bank-transaction__retry-btn',

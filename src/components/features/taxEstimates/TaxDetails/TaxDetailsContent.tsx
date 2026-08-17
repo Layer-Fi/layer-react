@@ -33,6 +33,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__TaxDetails__TaxDetailsRow--total': 'Layer__TaxDetails__TaxDetailsRow--operator',
   'row:operator': 'Layer__TaxDetails__TaxDetailsRow--operator',
 })
+
 const MobileExpandableCardsWrapper = ({ children, className }: { children: ReactNode, className?: string }) => (
   <Card className={`Layer__card--reset ${className ?? ''}`}>{children}</Card>
 )
@@ -63,13 +64,12 @@ const ErrorState = () => {
 
 const TaxDetailsRowLabelCell = (row: Row<TaxDetailsRow>) => {
   const { operator, label } = row.original
-  const isTotal = operator === '='
 
-  if (isTotal) {
+  if (operator === '=') {
     return <Span className={legacyClassNames('Layer__TaxDetails__TaxDetailsRow--total')}>{label}</Span>
   }
 
-  return <Span className={operator == null ? undefined : legacyClassNames('row:operator')}>{label}</Span>
+  return <Span className={legacyClassNames(operator != null && 'row:operator')}>{label}</Span>
 }
 
 type AmountCellRendererDeps = Pick<ReturnType<typeof useIntlFormatter>, 'formatNumber' | 'formatPercent'>

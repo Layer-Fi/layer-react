@@ -7,8 +7,7 @@ import { Span } from '@ui/Typography/Text'
 
 import './profitAndLossSummaryTileFooterRow.scss'
 
-export const legacyClassNames = createLegacyClassNames({
-  Layer__ProfitAndLossSummaryTileFooter: 'Layer__BaseSummariesBreakdownFooter',
+const legacyClassNames = createLegacyClassNames({
   Layer__ProfitAndLossSummaryTileFooter__Row: 'Layer__BaseSummariesBreakdownFooter__Row',
 })
 

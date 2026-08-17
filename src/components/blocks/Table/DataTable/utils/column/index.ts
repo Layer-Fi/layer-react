@@ -1,6 +1,7 @@
 import { type ColumnDef, createColumnHelper, type Row } from '@tanstack/react-table'
 
 import { type Alignment } from '@internal-types/utility/table'
+import { type LegacyColumnClassNames } from '@blocks/Table/DataTable/legacyClassNames'
 import { type ColumnPinningSide } from '@blocks/Table/DataTable/utils/column/pinning'
 
 export type BaseColumn = {
@@ -9,7 +10,7 @@ export type BaseColumn = {
   alignment?: Alignment
   isRowHeader?: boolean
   preventRowClick?: boolean
-  legacyClassNames?: { cell?: string, column?: string }
+  legacyClassNames?: LegacyColumnClassNames
 }
 
 export type CellRenderer<TData> = ((row: Row<TData>) => React.ReactNode)

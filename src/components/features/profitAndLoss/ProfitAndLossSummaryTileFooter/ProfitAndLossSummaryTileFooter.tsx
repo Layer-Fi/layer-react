@@ -1,12 +1,16 @@
 import { type ReactNode } from 'react'
 
-import { legacyClassNames } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooterRow'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import {
   ProfitAndLossSummaryTileFooterRow,
   type ProfitAndLossSummaryTileFooterRowConfig,
 } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooterRow'
 
 import './profitAndLossSummaryTileFooter.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ProfitAndLossSummaryTileFooter: 'Layer__BaseSummariesBreakdownFooter',
+})
 
 type ProfitAndLossSummaryTileFooterProps = {
   rows: ProfitAndLossSummaryTileFooterRowConfig[]

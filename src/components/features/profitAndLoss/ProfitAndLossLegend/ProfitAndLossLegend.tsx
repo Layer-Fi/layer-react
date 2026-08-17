@@ -14,8 +14,16 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ProfitAndLossLegend__Swatch--uncategorized': 'Layer__PnlLegend__Swatch--uncategorized',
 })
 
-const Swatch = ({ className }: { className: string }) => (
-  <span className={`${legacyClassNames('Layer__ProfitAndLossLegend__Swatch')} ${className}`} aria-hidden />
+type SwatchVariant = 'income' | 'expenses' | 'uncategorized'
+
+const Swatch = ({ variant }: { variant: SwatchVariant }) => (
+  <span
+    className={legacyClassNames(
+      'Layer__ProfitAndLossLegend__Swatch',
+      `Layer__ProfitAndLossLegend__Swatch--${variant}`,
+    )}
+    aria-hidden
+  />
 )
 
 export type ProfitAndLossLegendProps = {
@@ -34,15 +42,15 @@ export const ProfitAndLossLegend = ({ direction = 'row' }: ProfitAndLossLegendPr
       pbe={direction === 'column' ? 'md' : undefined}
     >
       <HStack gap='2xs' align='center'>
-        <Swatch className={legacyClassNames('Layer__ProfitAndLossLegend__Swatch--income')} />
+        <Swatch variant='income' />
         <Span size='sm'>{t('common:label.revenue', 'Revenue')}</Span>
       </HStack>
       <HStack gap='2xs' align='center'>
-        <Swatch className={legacyClassNames('Layer__ProfitAndLossLegend__Swatch--expenses')} />
+        <Swatch variant='expenses' />
         <Span size='sm'>{t('common:label.expenses', 'Expenses')}</Span>
       </HStack>
       <HStack gap='2xs' align='center'>
-        <Swatch className={legacyClassNames('Layer__ProfitAndLossLegend__Swatch--uncategorized')} />
+        <Swatch variant='uncategorized' />
         <Span size='sm'>{t('common:label.uncategorized', 'Uncategorized')}</Span>
       </HStack>
     </Stack>

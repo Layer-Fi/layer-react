@@ -11,13 +11,11 @@ import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './inputGroup.scss'
 
-const INPUT_GROUP_BASE_CLASS_NAME = 'Layer__UI__InputGroup'
+const INPUT_GROUP_CLASS_NAME = 'Layer__UI__InputGroup'
 
 const legacyClassNames = createLegacyClassNames({
   Layer__UI__InputGroup: ['Layer__input-group', 'Layer__InputGroup'],
 })
-
-const INPUT_GROUP_CLASS_NAME = legacyClassNames('Layer__UI__InputGroup')
 
 type InputGroupProps = ReactAriaGroupProps & {
   actionCount?: 1 | 2
@@ -27,7 +25,7 @@ type InputGroupProps = ReactAriaGroupProps & {
 
 export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
   function InputGroup({ actionCount, leadingText, className, slots: slots, children, ...restProps }, ref) {
-    const combinedClassName = classNames(INPUT_GROUP_CLASS_NAME, className)
+    const combinedClassName = classNames(legacyClassNames('Layer__UI__InputGroup'), className)
 
     const dataProperties = toDataProperties({
       'action-count': actionCount,
@@ -44,7 +42,7 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         {composeRenderProps(children, node => (
           <>
             {leadingText && (
-              <span className={`${INPUT_GROUP_BASE_CLASS_NAME}__LeadingText`}>
+              <span className={`${INPUT_GROUP_CLASS_NAME}__LeadingText`}>
                 {leadingText}
               </span>
             )}

@@ -27,7 +27,6 @@ const DropdownMenuProvider = DropdownMenuContext.Provider
 
 type DropdownMenuProps = PropsWithChildren<{
   className?: string
-  /** Extra class for the popover, so one usage can keep a name it shipped under. */
   popoverClassName?: string
   ariaLabel?: string
   slots: {

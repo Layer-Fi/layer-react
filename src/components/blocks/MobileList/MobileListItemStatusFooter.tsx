@@ -21,10 +21,6 @@ type MobileListItemStatusFooterProps = {
   slots?: {
     Icon?: LucideIcon
   }
-  /**
-   * Class names the calling feature shipped under. Several mobile lists render this footer now but
-   * named their elements differently before, so each passes its own.
-   */
   legacyClassNames?: { root?: string, icon?: string, dot?: string }
 }
 

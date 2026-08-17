@@ -6,7 +6,6 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { MobileListItemStatusFooter } from '@blocks/MobileList/MobileListItemStatusFooter'
 import { getInvoiceStatusDisplay } from '@features/invoices/utils'
 
-/* Invoice-specific, so the shared footer receives these rather than emitting them for every list. */
 const legacyClassNames = createLegacyClassNames({
   'footer:root': 'Layer__InvoicesMobileListItem__StatusFooter',
   'footer:icon': 'Layer__InvoicesMobileListItem__StatusFooter__Icon',

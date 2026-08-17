@@ -1,10 +1,9 @@
 import { useCallback, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/features/customerVendor/vendor'
 import { getVendorName } from '@utils/features/customerVendor/vendor'
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -12,15 +11,7 @@ import { P } from '@ui/Typography/Text'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { VendorAsOption } from '@features/customerVendor/VendorSelector/VendorAsOption'
 
-/*
- * This field had its own wrapper class until `FormFieldShell` took over the layout. It was dropped
- * rather than renamed, so there is no current name to sit alongside — these keys name the state that
- * produced it and emit only the old name.
- */
-const legacyClassNames = createLegacyClassNames({
-  'field:default': 'Layer__VendorSelector',
-  'field:inline': 'Layer__VendorSelector--inline',
-})
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__VendorSelector', 'Layer__VendorSelector--inline')
 
 type VendorSelectorProps = {
   selectedVendor: Vendor | null
@@ -90,7 +81,7 @@ export function VendorSelector({
   const isLoadingWithoutFallback = isLoading && !flattenedData
 
   return (
-    <ComboBoxField label={resolvedLabel} className={classNames(legacyClassNames('field:default', inline && 'field:inline'), className)} inline={inline} showLabel={showLabel}>
+    <ComboBoxField label={resolvedLabel} className={legacyFieldClassNames({ inline, className })} inline={inline} showLabel={showLabel}>
       {controlProps => (
         <ComboBox
           {...controlProps}

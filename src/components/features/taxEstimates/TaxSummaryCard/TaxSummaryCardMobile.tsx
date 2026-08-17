@@ -15,7 +15,6 @@ import { EquationRow } from '@features/taxEstimates/TaxSummaryCard/TaxSummaryCar
 
 import './taxSummaryCardMobile.scss'
 
-/* The toggle moved into the amount row, which is the element that now holds the toggle button. */
 const legacyClassNames = createLegacyClassNames({
   Layer__TaxSummaryCard__MobileAmountRow: 'Layer__TaxSummaryCard__MobileToggleWrapper',
 })

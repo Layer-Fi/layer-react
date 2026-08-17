@@ -2,8 +2,7 @@ import { type ReactNode, useId } from 'react'
 
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/Form/FormFieldShell'
-import { legacyClassNames } from '@blocks/Form/FormFieldShell'
+import { formFieldLayoutProps, legacyClassNames } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 type ComboBoxControlProps = {

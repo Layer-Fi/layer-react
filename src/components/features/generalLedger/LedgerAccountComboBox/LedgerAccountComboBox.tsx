@@ -11,11 +11,6 @@ import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
-/*
- * The wrapper div became a shared `ComboBoxField`, so neither generation of this name survives.
- * Both are emitted here, at this one usage, rather than on `ComboBoxField` itself — that is shared
- * with every other combo box field in the package.
- */
 const legacyClassNames = createLegacyClassNames({
   'Layer__LedgerAccountComboBox': 'Layer__LedgerAccountCombobox',
   'Layer__LedgerAccountComboBox--inline': 'Layer__LedgerAccountCombobox--inline',

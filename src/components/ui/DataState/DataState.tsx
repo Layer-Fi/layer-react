@@ -10,10 +10,6 @@ import { Span } from '@ui/Typography/Text'
 
 import './dataState.scss'
 
-/*
- * The title and description carried their own names until the switch to `Span`, which takes the
- * styling from props now.
- */
 const legacyClassNames = createLegacyClassNames({
   'state:title': 'Layer__data-state__title',
   'state:description': 'Layer__data-state__description',

@@ -1,10 +1,15 @@
 import type { Row } from '@tanstack/react-table'
+import classNames from 'classnames'
 
-export const LEGACY_TABLE_CLASS_NAME = 'Layer__table'
-export const LEGACY_TABLE_WRAPPER_CLASS_NAME = 'Layer__table-wrapper Layer__table-wrapper--bottom-spacing'
-export const LEGACY_TABLE_CELL_CLASS_NAME = 'Layer__table-cell'
-export const LEGACY_TABLE_CELL_CONTENT_CLASS_NAME = 'Layer__table-cell-content'
-export const LEGACY_TABLE_HEADER_CLASS_NAME = 'Layer__table-header'
+/** Per-column names, for tables whose hand-written cells carried their own. */
+export type LegacyColumnClassNames = { cell?: string, column?: string }
+
+export const LEGACY_TABLE_CLASS_NAMES = {
+  TABLE: 'Layer__table',
+  WRAPPER: 'Layer__table-wrapper Layer__table-wrapper--bottom-spacing',
+  HEADER: 'Layer__table-header',
+  CELL: 'Layer__table-cell Layer__table-cell-content',
+}
 
 const MAXIMUM_LEGACY_DEPTH = 10
 
@@ -15,16 +20,10 @@ export function getLegacyRowClassNames<TData>({
   row: Row<TData>
   isSelected?: boolean
 }) {
-  const depth = Math.min(row.depth, MAXIMUM_LEGACY_DEPTH)
-
-  return [
+  return classNames(
     'Layer__table-row',
-    `Layer__table-row--depth-${depth}`,
-    isSelected ? 'Layer__table-row--selected' : undefined,
-    row.getCanExpand()
-      ? (row.getIsExpanded() ? 'Layer__table-row--expanded' : 'Layer__table-row--collapsed')
-      : undefined,
-  ]
-    .filter(Boolean)
-    .join(' ')
+    `Layer__table-row--depth-${Math.min(row.depth, MAXIMUM_LEGACY_DEPTH)}`,
+    isSelected && 'Layer__table-row--selected',
+    row.getCanExpand() && (row.getIsExpanded() ? 'Layer__table-row--expanded' : 'Layer__table-row--collapsed'),
+  )
 }

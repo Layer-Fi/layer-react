@@ -7,7 +7,7 @@ import {
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { type ButtonStyleProps } from '@ui/Button/Button'
-import { legacyClassNames } from '@ui/Button/Button'
+import { legacyButtonClassNames } from '@ui/Button/legacyClassNames'
 
 import './button.scss'
 
@@ -57,14 +57,13 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
         target={effectiveTarget}
         rel={effectiveRel}
         className={classNames(
-          legacyClassNames(
-            'Layer__UI__Button',
-            'state:asLink',
-            `variant:${variant}`,
-            icon && 'state:icon',
-            fullWidth && 'state:fullWidth',
-            restProps.isDisabled && 'state:disabled',
-          ),
+          legacyButtonClassNames({
+            variant,
+            asLink: true,
+            icon,
+            fullWidth,
+            isDisabled: restProps.isDisabled,
+          }),
           className,
         )}
         ref={ref}

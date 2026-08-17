@@ -18,10 +18,7 @@ import { TooltipContext, useTooltip, useTooltipContext } from '@ui/Tooltip/useTo
 
 import './tooltip.scss'
 
-/*
- * Two generations of names to keep alive: the unprefixed `Layer__tooltip*` set, and the
- * `Layer__UI__tooltip*` kebab set that replaced it before the current PascalCase names.
- */
+/* Two generations to keep alive: the unprefixed `Layer__tooltip*` set and the kebab set after it. */
 const legacyClassNames = createLegacyClassNames({
   Layer__UI__Tooltip: ['Layer__UI__tooltip', 'Layer__tooltip'],
   Layer__UI__TooltipContent: ['Layer__UI__tooltip-content', 'Layer__tooltip-content'],
