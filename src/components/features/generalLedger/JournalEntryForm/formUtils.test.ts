@@ -137,7 +137,7 @@ describe('getJournalEntryFormInitialValues', () => {
       vendor,
       lineItems: [
         {
-          id: '00000000-0000-4000-8000-000000000901',
+          id: '00000000-0000-4000-8000-000000000902',
           externalId: 'ext-1',
           memo: 'line memo',
           lineItemId: '00000000-0000-4000-8000-000000000901',
@@ -230,7 +230,7 @@ describe('validateJournalEntryForm', () => {
     expect(validateJournalEntryForm({ value: form }, t)).toBeNull()
   })
 
-  it('requires an entry date, created by, and memo', () => {
+  it('requires created by and memo', () => {
     const form = buildForm({ createdBy: '', memo: '   ' })
 
     const errors = validateJournalEntryForm({ value: form }, t)
@@ -238,6 +238,16 @@ describe('validateJournalEntryForm', () => {
     expect(errors).toEqual(expect.arrayContaining([
       { createdBy: 'Created by is a required field.' },
       { memo: 'Memo is a required field.' },
+    ]))
+  })
+
+  it('requires an entry date', () => {
+    const form = buildForm({ entryAt: null as unknown as JournalEntryForm['entryAt'] })
+
+    const errors = validateJournalEntryForm({ value: form }, t)
+
+    expect(errors).toEqual(expect.arrayContaining([
+      { entryAt: 'Entry date is a required field.' },
     ]))
   })
 
