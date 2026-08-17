@@ -21,6 +21,9 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  # Disabling Vercel's Git integration removed the check that used to carry the preview link, so
+  # the deploy job posts its own commit status to put it back in the checks box.
+  statuses: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
@@ -29,6 +32,7 @@ concurrency:
 env:
   # Identifies the comment this workflow owns, so it is updated in place rather than repeated.
   MARKER: <!-- storybook-preview -->
+  STATUS_CONTEXT: Storybook Preview
 
 jobs:
   instructions:
@@ -76,6 +80,15 @@ jobs:
     timeout-minutes: 30
 
     steps:
+    # Before checkout so the checks box shows the build in flight, not just its outcome.
+    - name: Mark the status pending
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+          -f state=pending -f context="$STATUS_CONTEXT" -f description='Building preview…'
+
     - uses: actions/checkout@v7
       with:
         ref: ${{ github.event.pull_request.head.sha }}
@@ -114,4 +127,21 @@ jobs:
           gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body"
         else
           gh api -X POST "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body"
+        fi
+
+    # `always()` so a failed build reports failure rather than leaving the status pending forever.
+    - name: Report the status
+      if: always()
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+        URL: ${{ steps.deploy.outputs.url }}
+      run: |
+        if [ -n "$URL" ]; then
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=success -f context="$STATUS_CONTEXT" \
+            -f description='Preview ready' -f target_url="$URL"
+        else
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=failure -f context="$STATUS_CONTEXT" -f description='Build failed'
         fi
