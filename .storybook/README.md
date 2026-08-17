@@ -32,13 +32,18 @@ the URL always wins over the remembered one.
 Autocomplete entries read `Legal Name — <full id>`, and the badge shows the name alongside a
 truncated id — a bare UUID tells you nothing about what you're looking at, and the name alone doesn't
 tell you which of two similarly named businesses you picked. The name is `legalName` off
-`BusinessSchema`, on the same SWR key the `isDemo` guard uses, so it costs no extra request.
+`BusinessSchema`, on the SWR key `LayerProvider` already fetched, so it costs no extra request.
 
 Until an ID is set, stories say so rather than rendering. Real mode never falls back to fixtures —
-mock data under a real-backend build would look like the real thing.
+mock data under a real-backend build would look like the real thing. An ID that fails to load is
+reported too, so a typo doesn't surface as every request failing at once.
 
-Real mode also refuses to render a business whose `isDemo` flag is false, and the badge in the
-bottom-right shows the environment, the active ID, and how long the current token has left.
+The badge in the bottom-right shows the environment, the business name, and a truncated ID that
+copies in full on click.
+
+There is no demo-business check. Sandbox test businesses aren't flagged `is_demo`, so one would
+reject the businesses this exists to show — and the token is scoped to `LAYER_ENVIRONMENT`, so it
+cannot reach production data whatever ID is entered.
 
 ## Credentials
 

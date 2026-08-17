@@ -12,7 +12,6 @@ import { RealBackendBadge } from './RealBackendBadge'
 type Token = {
   environment: Environment
   accessToken: string
-  refreshAt: number
 }
 
 type TokenResponse = {
@@ -46,7 +45,7 @@ const useToken = () => {
 
       const refreshMs = (expiresIn / 2) * 1000
 
-      setToken({ environment, accessToken, refreshAt: Date.now() + refreshMs })
+      setToken({ environment, accessToken })
       timer = setTimeout(() => void load(), refreshMs)
     }
 
@@ -61,18 +60,19 @@ const useToken = () => {
   return token
 }
 
-// Reuses the fetch `LayerProvider` already made, so this costs no extra request.
-const DemoBusinessGuard = ({ businessId, children }: PropsWithChildren<{ businessId: string }>) => {
-  const { data: business, isLoading, isError } = useGetBusiness({ businessId })
+// Only reports a business that failed to load — a mistyped id would otherwise surface as every
+// request failing at once. There is no demo-business check: sandbox businesses aren't flagged
+// `is_demo`, and the token is scoped to `LAYER_ENVIRONMENT` anyway, so it cannot reach production
+// data whatever id is entered.
+const BusinessGate = ({ businessId, children }: PropsWithChildren<{ businessId: string }>) => {
+  const { isLoading, isError } = useGetBusiness({ businessId })
 
-  if (isLoading || (business === undefined && !isError)) return null
+  if (isLoading) return null
 
-  if (isError || !business?.isDemo) {
+  if (isError) {
     return (
       <pre style={{ padding: 16, color: '#b00020', whiteSpace: 'pre-wrap' }}>
-        {isError
-          ? `Could not load business ${businessId}.`
-          : `Business ${businessId} is not a demo business. Real-backend Storybook refuses to render it.`}
+        {`Could not load business ${businessId}.`}
       </pre>
     )
   }
@@ -80,7 +80,7 @@ const DemoBusinessGuard = ({ businessId, children }: PropsWithChildren<{ busines
   return <>{children}</>
 }
 
-// Inside `LayerProvider` so it can read the business, and on the same SWR key as the guard, so the
+// Inside `LayerProvider` so it can read the business, and on the same SWR key as the gate, so the
 // two share one request. `legalName` is what makes the badge and toolbar history legible.
 const BusinessBadge = ({ businessId, token }: { businessId: string, token: Token }) => {
   // Annotated because `.storybook` is linted under an inferred project that can't resolve the
@@ -97,7 +97,6 @@ const BusinessBadge = ({ businessId, token }: { businessId: string, token: Token
       businessId={businessId}
       name={legalName}
       environment={token.environment}
-      refreshAt={token.refreshAt}
     />
   )
 }
@@ -116,7 +115,7 @@ const RealBackendProvider = ({ businessId, children }: PropsWithChildren<{ busin
       businessAccessToken={token.accessToken}
       theme={TEST_LAYER_THEME}
     >
-      <DemoBusinessGuard businessId={businessId}>{children}</DemoBusinessGuard>
+      <BusinessGate businessId={businessId}>{children}</BusinessGate>
       <BusinessBadge businessId={businessId} token={token} />
     </LayerProvider>
   )
