@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
@@ -21,6 +22,8 @@ type UsePlaidLinkModalOptions = {
   onAddConnectionSuccess?: () => Awaitable<void>
   /** Updates the active link mode; reset to 'add' when a flow completes or the modal exits. */
   setLinkMode: (mode: LinkMode) => void
+  /** When set, the customer owns the Plaid item and handles the public token themselves. */
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 /**
@@ -34,6 +37,7 @@ export function usePlaidLinkModal({
   onSuccess,
   onAddConnectionSuccess,
   setLinkMode,
+  customerManagedPlaidConfig,
 }: UsePlaidLinkModalOptions) {
   const { usePlaidSandbox } = useEnvironment()
   const { addToast } = useLayerContext()
@@ -50,19 +54,24 @@ export function usePlaidLinkModal({
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
   /**
-   * When the user has finished entering credentials, send the resulting
-   * token to the backend where it will fetch and save the Plaid access token
-   * and item id.
+   * When the user has finished entering credentials, send the resulting token to the backend
+   * where it will fetch and save the Plaid access token and item id. For a customer-managed
+   * item, hand the token to the customer instead: they exchange it, mint a processor token for
+   * Layer, and post it to Layer's API before resolving.
    */
   const exchangePlaidPublicToken = useCallback(
     async (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
       setIsLinking(true)
       preloadAccountConfirmation()
 
-      await triggerExchangePlaidPublicToken({
-        public_token: publicToken,
-        institution: metadata.institution,
-      })
+      const exchange = customerManagedPlaidConfig
+        ? Promise.resolve(customerManagedPlaidConfig.onPublicTokenReceived({ publicToken, metadata }))
+        : triggerExchangePlaidPublicToken({
+          public_token: publicToken,
+          institution: metadata.institution,
+        })
+
+      await exchange
         .then(
           // Only refresh once the link has actually persisted.
           () => handleAddConnectionSuccess(),
@@ -76,7 +85,15 @@ export function usePlaidLinkModal({
           resetAccountConfirmation()
         })
     },
-    [triggerExchangePlaidPublicToken, handleAddConnectionSuccess, addToast, t, preloadAccountConfirmation, resetAccountConfirmation],
+    [
+      triggerExchangePlaidPublicToken,
+      customerManagedPlaidConfig,
+      handleAddConnectionSuccess,
+      addToast,
+      t,
+      preloadAccountConfirmation,
+      resetAccountConfirmation,
+    ],
   )
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
@@ -102,7 +119,8 @@ export function usePlaidLinkModal({
       }
     },
     onExit: () => setLinkMode('add'),
-    env: usePlaidSandbox ? 'sandbox' : undefined,
+    // A customer-minted token already carries its own environment; overriding it would conflict.
+    env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 
   useEffect(() => {

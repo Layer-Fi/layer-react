@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
 import type { Awaitable } from '@internal-types/utility/awaitable'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
@@ -20,6 +21,7 @@ import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/use
 type UseLinkedAccountsOptions = {
   onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
@@ -57,7 +59,37 @@ const usePlaidOnlyAction = <Args extends unknown[]>(
     [operation, action],
   )
 
-export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess, plaidHostedLinkConfig } = {}) => {
+/**
+ * Returns a memoized action that only runs while Layer owns the Plaid item, logging a consistent
+ * message otherwise. Customer-managed items are minted by the customer's Plaid client, so Layer
+ * has no credentials to act on them.
+ */
+const useLayerOwnedItemAction = <Args extends unknown[]>(
+  operation: string,
+  isCustomerManaged: boolean,
+  action: (...args: Args) => Promise<void>,
+) =>
+  useCallback(
+    async (...args: Args) => {
+      if (isCustomerManaged) {
+        console.error(`${operation} is not supported for customer-managed Plaid items`)
+        return
+      }
+
+      await action(...args)
+    },
+    [operation, isCustomerManaged, action],
+  )
+
+export const useLinkedAccounts: UseLinkedAccounts = ({
+  onPlaidConnectionSuccess,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
+} = {}) => {
+  if (plaidHostedLinkConfig && customerManagedPlaidConfig) {
+    throw new Error('useLinkedAccounts: plaidHostedLinkConfig and customerManagedPlaidConfig are mutually exclusive')
+  }
+
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
@@ -66,10 +98,13 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
 
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
+
   const { trigger: triggerCreatePlaidLink } = usePostPlaidLink()
   const { trigger: triggerCreatePlaidUpdateModeLink } = usePostPlaidUpdateModeLink()
+
   const { trigger: triggerConfirmExternalAccount } = usePostConfirmExternalAccount()
   const { trigger: triggerExcludeExternalAccount } = usePostExcludeExternalAccount()
+
   const { trigger: triggerUnlinkPlaidItem } = usePostUnlinkPlaidItem()
   const { trigger: triggerBreakPlaidItemConnection } = usePostSandboxResetPlaidItemLogin()
 
@@ -93,6 +128,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
     setLinkMode,
     onSuccess: refetchAccountsAndTransactions,
     onAddConnectionSuccess: handlePlaidConnectionSuccess,
+    customerManagedPlaidConfig,
   })
 
   const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
@@ -118,28 +154,19 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   )
 
   /**
-   * Requests a Plaid link token, opening the relevant flow on success and
-   * surfacing an error toast on failure.
+   * Requests a Plaid link token, opening the embedded modal on success and
+   * surfacing an error toast on failure. A request resolving `undefined` is
+   * treated as already handled and opens nothing.
    */
   const fetchLinkToken = useCallback(
     (
       mode: LinkMode,
-      requestToken: () => Promise<{ linkToken: string, hostedLink?: string | null } | undefined>,
+      requestToken: () => Promise<{ linkToken: string } | undefined>,
       errorMessage: string,
-      // Snapshotted with the request so the response is handled with the same
-      // config, even if the prop changes while the request is in flight.
-      hostedLinkConfig?: PlaidHostedLinkConfig,
     ) =>
       requestToken().then(
-        async (result) => {
+        (result) => {
           if (!result) return
-
-          // When a hosted-link config is supplied, hand the Plaid-owned URL to the
-          // customer platform to navigate to rather than opening the embedded modal.
-          if (hostedLinkConfig && result.hostedLink) {
-            await hostedLinkConfig.navigateToHostedLink(result.hostedLink)
-            return
-          }
 
           setLinkMode(mode)
           setLinkToken(result.linkToken)
@@ -150,16 +177,47 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   )
 
   /**
+   * Wraps a Layer-minted token request so that, when a hosted-link config is supplied and Plaid
+   * returned a hosted URL, the customer platform navigates there instead of opening the embedded
+   * modal.
+   *
+   * The config is snapshotted with the request so the response is handled with the same config,
+   * even if the prop changes while the request is in flight.
+   */
+  const withHostedLinkRedirect = useCallback(
+    (
+      requestToken: () => Promise<{ linkToken: string, hostedLink?: string | null } | undefined>,
+      hostedLinkConfig?: PlaidHostedLinkConfig,
+    ) =>
+      async () => {
+        const result = await requestToken()
+        if (!result) return
+
+        if (hostedLinkConfig && result.hostedLink) {
+          await hostedLinkConfig.navigateToHostedLink(result.hostedLink)
+          return
+        }
+
+        return result
+      },
+    [],
+  )
+
+  /**
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = useCallback(
     () => fetchLinkToken(
       'add',
-      () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+      customerManagedPlaidConfig
+        ? () => Promise.resolve(customerManagedPlaidConfig.createLinkToken())
+        : withHostedLinkRedirect(
+          () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+          plaidHostedLinkConfig,
+        ),
       t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
-      plaidHostedLinkConfig,
     ),
-    [fetchLinkToken, triggerCreatePlaidLink, plaidHostedLinkConfig, t],
+    [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
   /**
@@ -168,11 +226,15 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const fetchPlaidUpdateModeLinkToken = useCallback(
     (plaidItemPlaidId: string) => fetchLinkToken(
       'update',
-      () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
+      customerManagedPlaidConfig
+        ? () => Promise.resolve(customerManagedPlaidConfig.createUpdateModeLinkToken(plaidItemPlaidId))
+        : withHostedLinkRedirect(
+          () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
+          plaidHostedLinkConfig,
+        ),
       t('linkedAccounts:useLinkedAccounts.error.repair_connection', 'We couldn’t repair the Plaid connection with your account. Please try again.'),
-      plaidHostedLinkConfig,
     ),
-    [fetchLinkToken, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, t],
+    [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
   const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
@@ -186,7 +248,10 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
     ),
     [mutateAndRefetchWithToast, triggerUnlinkPlaidItem, t],
   )
-  const removeConnection = usePlaidOnlyAction('Removing a connection', handleRemoveConnection)
+  const removeConnection = usePlaidOnlyAction(
+    'Removing a connection',
+    useLayerOwnedItemAction('Removing a connection', customerManagedPlaidConfig != null, handleRemoveConnection),
+  )
 
   const handleConfirmAccount = useCallback(
     (accountId: string) => mutateAndRefetchWithToast(
@@ -217,7 +282,10 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
    * Test utility that puts a connection into a broken state; only works in non-production
    * environments.
    */
-  const breakConnection = usePlaidOnlyAction('Breaking a sandbox connection', handleBreakConnection)
+  const breakConnection = usePlaidOnlyAction(
+    'Breaking a sandbox connection',
+    useLayerOwnedItemAction('Breaking a sandbox connection', customerManagedPlaidConfig != null, handleBreakConnection),
+  )
 
   // Not `mutateAndRefetchWithToast`: this backs a BaseConfirmationModal that
   // needs the promise to reject on failure (the helper swallows rejections).

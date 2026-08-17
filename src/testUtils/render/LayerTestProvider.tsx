@@ -34,9 +34,16 @@ type LayerTestProviderProps = PropsWithChildren<{
   locale?: SupportedLocale
   theme?: LayerThemeConfig
   eventCallbacks?: EventCallbacks
+  usePlaidSandbox?: boolean
 }>
 
-export const LayerTestProvider = ({ children, locale, theme = TEST_LAYER_THEME, eventCallbacks }: LayerTestProviderProps) => (
+export const LayerTestProvider = ({
+  children,
+  locale,
+  theme = TEST_LAYER_THEME,
+  eventCallbacks,
+  usePlaidSandbox,
+}: LayerTestProviderProps) => (
   <LayerProvider
     businessId={TEST_LAYER_BUSINESS_ID}
     appId={TEST_LAYER_APP_ID}
@@ -45,6 +52,7 @@ export const LayerTestProvider = ({ children, locale, theme = TEST_LAYER_THEME, 
     locale={locale}
     theme={theme}
     eventCallbacks={eventCallbacks}
+    usePlaidSandbox={usePlaidSandbox}
   >
     {children}
   </LayerProvider>
