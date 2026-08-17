@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
@@ -71,6 +72,7 @@ export interface SolopreneurOverviewProps {
     }
   }
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 export const SolopreneurOverview = ({
@@ -79,6 +81,7 @@ export const SolopreneurOverview = ({
   stringOverrides,
   slotProps,
   plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
@@ -102,6 +105,7 @@ export const SolopreneurOverview = ({
         <SolopreneurOnboardingBanner
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
           plaidHostedLinkConfig={plaidHostedLinkConfig}
+          customerManagedPlaidConfig={customerManagedPlaidConfig}
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}

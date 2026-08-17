@@ -2,6 +2,7 @@ import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { type MobileComponentType } from '@utils/features/bankTransactions/constants'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
@@ -46,6 +47,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 export const BankTransactionsWithLinkedAccounts = (props: BankTransactionsWithLinkedAccountsProps) => (
@@ -73,6 +75,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   renderInAppLink,
   showCategorizationRules,
   plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BankTransactionsWithLinkedAccountsProps) => {
   const { t } = useTranslation()
 
@@ -94,6 +97,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
         showBreakConnection={showBreakConnection}
         stringOverrides={stringOverrides?.linkedAccounts}
         plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
       />
       <BankTransactions
         asWidget

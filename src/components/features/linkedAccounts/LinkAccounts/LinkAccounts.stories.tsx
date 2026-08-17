@@ -32,6 +32,7 @@ const meta = {
   argTypes: {
     onComplete: { table: { disable: true } },
     plaidHostedLinkConfig: { table: { disable: true } },
+    customerManagedPlaidConfig: { table: { disable: true } },
   },
   // Mirrors how a host app mounts LinkAccounts: a padded page with a max-width card.
   decorators: [
