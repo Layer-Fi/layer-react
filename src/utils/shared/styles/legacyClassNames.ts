@@ -36,8 +36,8 @@ export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(ma
 
 /**
  * For a form field whose only dropped names are its wrapper and that wrapper's inline modifier —
- * every field `FormFieldShell` took the layout over from. Both names are passed in full so a scan
- * of the tree can still see them.
+ * every field `FormFieldShell` took the layout over from. Both are passed in full rather than
+ * derived, so each stays greppable.
  */
 export function createLegacyFieldClassNames(wrapper: string, inlineWrapper: string) {
   const legacyClassNames = createLegacyClassNames({
