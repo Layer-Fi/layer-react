@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "verify": "tsc --noEmit && node smoke.cjs"
+    "verify": "tsc --noEmit && node smoke.cjs && node subpaths.cjs"
   },
   "dependencies": {
     "react": "^18.2.0",

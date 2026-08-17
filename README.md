@@ -27,6 +27,28 @@ or
 yarn install @layerfi/components
 ```
 
+## Importing
+
+Import from the package root. The ESM build ships one module per source file and declares
+`sideEffects`, so a bundler drops everything you do not reference — importing a single component
+does not pull in the rest of the library.
+
+```tsx
+import { GlobalMonthPicker } from "@layerfi/components";
+import "@layerfi/components/index.css";
+```
+
+Every public export also has its own subpath, which resolves to the same module:
+
+```tsx
+import { GlobalMonthPicker } from "@layerfi/components/GlobalMonthPicker";
+```
+
+For bundled ESM the two are equivalent — use whichever reads better. The subpath matters for
+**CommonJS**, where `require` cannot tree-shake: `require("@layerfi/components")` loads the whole
+library, while `require("@layerfi/components/GlobalMonthPicker")` loads only what that component
+needs. Subpaths cover public export names only; internal module paths are not importable.
+
 ## Usage
 
 Nest the components you want to use under the `LayerProvider` component. You should provide the component with a few props:

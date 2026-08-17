@@ -35,6 +35,8 @@ const FORBIDDEN_PATTERNS = [
   /\.test\.[jt]sx?$/,
   /\.scratch\./,
   /^package\/\.storybook\//,
+  // Build scratch: `build:exports` consumes and deletes these, so one here means a partial build.
+  /^package\/dist\/\.manifest-/,
 ]
 
 function run(command: string, args: string[], cwd: string) {
