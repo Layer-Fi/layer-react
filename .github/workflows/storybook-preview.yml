@@ -79,11 +79,17 @@ jobs:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        PR: ${{ github.event.pull_request.number }}
+      # Aliased to a per-PR hostname because each deployment otherwise gets a fresh one, and the
+      # toolbar remembers business ids in `localStorage`, which is per-origin.
       run: |
         npx --yes vercel@59 deploy --yes --token="$VERCEL_TOKEN" | tee deploy.log
         url=$(grep -oE 'https://[a-z0-9-]+\.vercel\.app' deploy.log | tail -1)
         if [ -z "$url" ]; then echo "No deployment URL in output" >&2; exit 1; fi
-        echo "url=$url" >> "$GITHUB_OUTPUT"
+
+        alias="layer-react-storybook-pr-$PR.vercel.app"
+        npx --yes vercel@59 alias set "$url" "$alias" --token="$VERCEL_TOKEN"
+        echo "url=https://$alias" >> "$GITHUB_OUTPUT"
 
     - name: Comment the URL
       env:

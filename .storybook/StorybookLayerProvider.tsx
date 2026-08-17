@@ -96,15 +96,16 @@ const RealBackendSurface = ({ businessId, token, children }: PropsWithChildren<{
   token: Token
 }>) => {
   // Cast because `.storybook` lints under an inferred project that can't resolve this hook's aliases.
-  const { data: business, isError } = useGetBusiness({ businessId }) as {
-    data?: Business
+  // `data` is the `{ data }` envelope, as in `BusinessProvider` — not the business itself.
+  const { data: response, isError } = useGetBusiness({ businessId }) as {
+    data?: { data: Business }
     isError: boolean
   }
-  const legalName = business?.legalName ?? null
+  const legalName = response?.data.legalName ?? null
   // `useAuth`'s own SWR call resolves a tick after mount even in explicit-token mode, so
   // `useGetBusiness` is briefly paused (key undefined): isLoading reports false with no data or
-  // error. Waiting on `business` rather than just `!isLoading` closes that window.
-  const isReady = !isError && business !== undefined
+  // error. Waiting on `response` rather than just `!isLoading` closes that window.
+  const isReady = !isError && response !== undefined
 
   useEffect(() => {
     if (legalName) remember(businessId, legalName)

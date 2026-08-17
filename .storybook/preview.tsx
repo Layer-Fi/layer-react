@@ -7,6 +7,7 @@ import '../src/styles/index.scss'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
+import { setDateRangePinning } from '../src/testUtils/storybook/decorators/PinnedGlobalDateRange'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 import { installSystemDateMock } from './mocks/systemDate'
 import { usesRealBackend } from './realBackend'
@@ -24,7 +25,10 @@ const SIZE_CLASS_VIEWPORTS = [BREAKPOINTS.MOBILE - 1, BREAKPOINTS.TABLET - 1, 12
 // its loading states just because it also feeds a screenshot.
 const DEFAULT_RESPONSE_DELAY = 250
 
-// A shifted `now` would query periods the real business has no data for.
+// A shifted `now`, or a range pinned to the fixture year, would query periods the real business has
+// no data for.
+setDateRangePinning(!usesRealBackend)
+
 if (!usesRealBackend) {
   installSystemDateMock()
 
