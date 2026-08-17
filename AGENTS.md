@@ -240,4 +240,12 @@ growth budget), `fixtures` (staleness check), `storybook`, `chromatic`, and `npm
 
 `@layerfi/components` ships from `src/index.tsx`; `prepack` runs `typecheck` plus a clean build.
 See [`PUBLISHING.md`](PUBLISHING.md) and the `release-*` workflows. **Adding an export to
-`src/index.tsx` is a public API change** — call it out in the PR.
+`src/index.tsx` is a public API change** — call it out in the PR. It also creates a subpath:
+`build:exports` reads that file and generates `dist/exports/<Name>.{mjs,cjs,d.mts,d.cts}` for every
+public name, so `@layerfi/components/<Name>` resolves. Nothing to maintain by hand, but the new
+subpath is part of the same API commitment.
+
+`build:js` produces three outputs — per-module ESM, a bundled `dist/cjs/index.cjs` for the `.`
+require condition, and a per-module `dist/cjs/modules/**` reached only through the subpath shims.
+The CJS barrel stays bundled on purpose: `require` never tree-shakes, so splitting it only made
+`require('@layerfi/components')` slower.

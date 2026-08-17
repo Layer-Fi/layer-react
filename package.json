@@ -24,15 +24,26 @@
     },
     "./index.css": "./dist/index.css",
     "./dist/styles/index.css": "./dist/index.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./*": {
+      "import": {
+        "types": "./dist/exports/*.d.mts",
+        "default": "./dist/exports/*.mjs"
+      },
+      "require": {
+        "types": "./dist/exports/*.d.cts",
+        "default": "./dist/exports/*.cjs"
+      }
+    }
   },
   "files": [
     "/dist"
   ],
   "scripts": {
-    "build": "npm run build:js && npm run build:types",
+    "build": "npm run build:js && npm run build:exports && npm run build:types",
     "build:clean": "rm -rf ./dist && npm run build",
-    "build:js": "vite build --mode esm && vite build --mode cjs",
+    "build:js": "vite build --mode esm && vite build --mode cjs && vite build --mode cjs-modules",
+    "build:exports": "tsx scripts/build-exports.ts",
     "build:types": "tsx scripts/build-types.ts",
     "build:check": "tsx scripts/check-build-artifacts.ts",
     "audit:floors": "tsx scripts/audit-declared-floors.ts",

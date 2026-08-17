@@ -21,6 +21,13 @@
     "ignore": ["react", "react-dom"]
   },
   {
+    "name": "single component via subpath (GlobalMonthPicker)",
+    "path": "dist/exports/GlobalMonthPicker.mjs",
+    "import": "*",
+    "limit": "120 kB",
+    "ignore": ["react", "react-dom"]
+  },
+  {
     "name": "stylesheet",
     "path": "dist/index.css",
     "limit": "30 kB"

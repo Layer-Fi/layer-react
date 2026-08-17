@@ -4,11 +4,28 @@ import { defineConfig } from 'vite'
 
 import { bundleCss } from './vite/plugins/bundleCss'
 import { cleanupBuild } from './vite/plugins/cleanupBuild'
+import { stubStyles } from './vite/plugins/stubStyles'
+import { writeModuleManifest } from './vite/plugins/writeModuleManifest'
 import { buildExternalDeps, OUT_DIR } from './vite/utils'
 
+/**
+ * Three outputs, because the two module systems want opposite things:
+ *
+ * - `esm`         per-module, so a consumer's bundler can tree-shake. `dist/esm/**`
+ * - `cjs`         one bundled file for the `.` entry. `require` never tree-shakes, and splitting
+ *                 the barrel into 1351 files made `require('@layerfi/components')` ~50% slower.
+ *                 `dist/cjs/index.cjs`
+ * - `cjs-modules` per-module, reachable only through the generated `dist/exports/*.cjs` shims, so
+ *                 `require('@layerfi/components/GlobalMonthPicker')` loads 72 files instead of
+ *                 1351. Shared files rather than per-entry bundles, or two subpaths would each get
+ *                 their own copy of every React context. `dist/cjs/modules/**`
+ */
 export default defineConfig(({ mode, command }) => {
   const isESM = mode === 'esm'
-  const isCJS = mode === 'cjs'
+  const isCJSBundle = mode === 'cjs'
+  const isCJSModules = mode === 'cjs-modules'
+  const isCJS = isCJSBundle || isCJSModules
+  const perModule = isESM || isCJSModules
   const isWatch = command === 'build' && process.argv.includes('--watch')
 
   const externalDeps = buildExternalDeps({
@@ -22,6 +39,8 @@ export default defineConfig(({ mode, command }) => {
     plugins: [
       react(),
       isESM ? bundleCss() : null,
+      isCJS ? stubStyles() : null,
+      perModule ? writeModuleManifest(isESM ? 'esm' : 'cjs') : null,
       (isWatch || isCJS) ? cleanupBuild() : null,
     ].filter(Boolean),
 
@@ -29,8 +48,9 @@ export default defineConfig(({ mode, command }) => {
       minify: false,
       cssMinify: false,
       // Per-module output would otherwise emit a stylesheet per component; the single
-      // `dist/index.css` is the published contract.
-      cssCodeSplit: !isESM,
+      // `dist/index.css` is the published contract. Splitting also corrupts the CJS output —
+      // the per-module CSS placeholders leave `const require_X = ;` behind.
+      cssCodeSplit: false,
       lib: isESM
         ? {
           /**
@@ -45,16 +65,16 @@ export default defineConfig(({ mode, command }) => {
         : {
           entry: path.resolve(__dirname, 'src/index.tsx'),
           formats: ['cjs'],
-          fileName: () => 'index.cjs',
+          ...(isCJSBundle && { fileName: () => 'index.cjs' }),
         },
       rolldownOptions: {
         external: externalDeps,
         output: {
-          dir: path.resolve(__dirname, `${OUT_DIR}/${mode}`),
+          dir: path.resolve(__dirname, isCJSModules ? `${OUT_DIR}/cjs/modules` : `${OUT_DIR}/${mode}`),
           // One file per source module, so a consumer's bundler has real boundaries to prune
           // against. `sideEffects` in package.json is what makes those boundaries actionable.
-          ...(isESM && { preserveModules: true, preserveModulesRoot: 'src' }),
-          entryFileNames: isESM ? '[name].mjs' : 'index.cjs',
+          ...(perModule && { preserveModules: true, preserveModulesRoot: 'src' }),
+          entryFileNames: isESM ? '[name].mjs' : isCJSModules ? '[name].cjs' : 'index.cjs',
           chunkFileNames: isESM ? '[name].mjs' : '[name].cjs',
           exports: isCJS ? 'named' : undefined,
         },
