@@ -42,7 +42,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
-    <Card className='Layer__card--reset Layer__TaxSummaryCard--mobile'>
+    <Card reset className='Layer__TaxSummaryCard--mobile'>
       <VStack className='Layer__TaxSummaryCard__MobileCard' gap='md'>
         <HStack justify='space-between' align='center'>
           <Span size='sm'>

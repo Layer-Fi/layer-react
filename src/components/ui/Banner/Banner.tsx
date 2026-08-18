@@ -1,6 +1,7 @@
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -9,12 +10,19 @@ import { Span } from '@ui/Typography/Text'
 
 import './banner.scss'
 
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__Banner__IconContainer: 'Layer__UI__Banner__iconContainer',
+  Layer__UI__Banner__Content: 'Layer__UI__Banner__content',
+  Layer__UI__Banner__Description: 'Layer__UI__Banner__description',
+  Layer__UI__Banner__Actions: 'Layer__UI__Banner__actions',
+})
+
 export const BANNER_CLASS_NAMES = {
   DEFAULT: 'Layer__UI__Banner',
-  ICON_CONTAINER: 'Layer__UI__Banner__iconContainer',
-  CONTENT: 'Layer__UI__Banner__content',
-  DESCRIPTION: 'Layer__UI__Banner__description',
-  ACTIONS: 'Layer__UI__Banner__actions',
+  ICON_CONTAINER: legacyClassNames('Layer__UI__Banner__IconContainer'),
+  CONTENT: legacyClassNames('Layer__UI__Banner__Content'),
+  DESCRIPTION: legacyClassNames('Layer__UI__Banner__Description'),
+  ACTIONS: legacyClassNames('Layer__UI__Banner__Actions'),
 }
 
 export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'

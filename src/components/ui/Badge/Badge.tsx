@@ -1,14 +1,15 @@
 import { type MouseEventHandler, type ReactNode } from 'react'
-import classNames from 'classnames'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './badge.scss'
 
 export enum BadgeSize {
   EXTRA_SMALL = 'xs',
-  SMALL = 'small',
-  MEDIUM = 'medium',
+  SMALL = 'sm',
+  MEDIUM = 'md',
 }
 
 export enum BadgeVariant {
@@ -19,6 +20,24 @@ export enum BadgeVariant {
   ERROR = 'error',
   NEUTRAL = 'neutral',
 }
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__Badge': 'Layer__badge',
+  'size:xs': 'Layer__badge--xs',
+  'size:sm': 'Layer__badge--small',
+  'size:md': 'Layer__badge--medium',
+  'variant:default': 'Layer__badge--default',
+  'variant:info': 'Layer__badge--info',
+  'variant:success': 'Layer__badge--success',
+  'variant:warning': 'Layer__badge--warning',
+  'variant:error': 'Layer__badge--error',
+  'variant:neutral': 'Layer__badge--neutral',
+  'state:clickable': 'Layer__badge--clickable',
+  'state:iconOnly': 'Layer__badge--icon-only',
+} satisfies LegacyClassNameMapFor<
+  'Layer__UI__Badge',
+  `size:${BadgeSize}` | `variant:${BadgeVariant}` | `state:${string}`
+>)
 
 export interface BadgeProps {
   children?: ReactNode
@@ -41,14 +60,17 @@ export const Badge = ({
   iconOnly = false,
   iconPosition = 'left',
 }: BadgeProps) => {
+  const clickable = Boolean(onClick || tooltip)
+
   const baseProps = {
-    className: classNames(
-      'Layer__badge',
-      onClick || tooltip ? 'Layer__badge--clickable' : '',
-      iconOnly ? 'Layer__badge--icon-only' : '',
-      `Layer__badge--${size}`,
-      `Layer__badge--${variant}`,
+    className: legacyClassNames(
+      'Layer__UI__Badge',
+      `size:${size}`,
+      `variant:${variant}`,
+      clickable && 'state:clickable',
+      iconOnly && 'state:iconOnly',
     ),
+    ...toDataProperties({ size, variant, clickable, 'icon-only': iconOnly }),
     onClick,
     children,
   }

@@ -29,7 +29,7 @@ export type LegacyClassNameMapFor<
  * carrying them.
  *
  * A `Layer__…` key is a class name and is emitted alongside its legacy names. Any other key names a
- * state whose variant is a `data-*` attribute today, and emits only its legacy names:
+ * variant that is a `data-*` attribute today, and emits only its legacy names:
  *
  *     const legacyClassNames = createLegacyClassNames({
  *       Layer__UI__Button: 'Layer__btn',

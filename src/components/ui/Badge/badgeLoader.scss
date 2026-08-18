@@ -1,26 +1,26 @@
-.Layer__loader--as-badge {
+.Layer__UI__Loader[data-as-badge] {
   height: 21px;
   width: 21px;
   padding: 0;
   border-radius: 50%;
   background-color: var(--color-base-100);
 
-  &.Layer__loader--info {
+  &[data-variant='info'] {
     background-color: var(--color-info-bg);
     color: var(--color-info-fg);
   }
 
-  &.Layer__loader--success {
+  &[data-variant='success'] {
     background-color: var(--color-info-success-bg);
     color: var(--color-info-success-fg);
   }
 
-  &.Layer__loader--error {
+  &[data-variant='error'] {
     background-color: var(--color-info-error-bg);
     color: var(--color-info-error-fg);
   }
 
-  &.Layer__loader--warning {
+  &[data-variant='warning'] {
     background-color: var(--color-info-warning-bg);
     color: var(--color-info-warning-fg);
   }

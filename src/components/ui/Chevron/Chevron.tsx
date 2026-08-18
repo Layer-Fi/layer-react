@@ -8,8 +8,8 @@ import './chevron.scss'
 
 const legacyClassNames = createLegacyClassNames({
   'Layer__Chevron': 'Layer__chevron',
-  'Layer__Chevron--Down': 'Layer__chevron__down',
-  'Layer__Chevron--Up': 'Layer__chevron__up',
+  'state:closed': ['Layer__chevron__down', 'Layer__Chevron--Down'],
+  'state:open': ['Layer__chevron__up', 'Layer__Chevron--Up'],
 })
 
 type ChevronProps = IconSvgProps & {
@@ -19,11 +19,9 @@ type ChevronProps = IconSvgProps & {
 export const Chevron = ({ open = false, className, ...props }: ChevronProps) => (
   <ChevronDownFill
     {...props}
+    data-open={open || undefined}
     className={classNames(
-      legacyClassNames(
-        'Layer__Chevron',
-        open ? 'Layer__Chevron--Up' : 'Layer__Chevron--Down',
-      ),
+      legacyClassNames('Layer__Chevron', open ? 'state:open' : 'state:closed'),
       className,
     )}
   />

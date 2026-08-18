@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
+import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
@@ -99,7 +100,7 @@ export const LinkedAccountCard = ({
               </Span>
             </VStack>
             <div className='Layer__LinkedAccountCard__SyncingIcon'>
-              <Loader size={11} className='Layer__anim--rotating' />
+              <Loader size={11} className={ROTATING_CLASS_NAME} />
             </div>
           </div>
         )

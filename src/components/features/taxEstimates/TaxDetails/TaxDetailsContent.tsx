@@ -35,7 +35,7 @@ const legacyClassNames = createLegacyClassNames({
 })
 
 const MobileExpandableCardsWrapper = ({ children, className }: { children: ReactNode, className?: string }) => (
-  <Card className={`Layer__card--reset ${className ?? ''}`}>{children}</Card>
+  <Card reset className={className}>{children}</Card>
 )
 
 const EmptyState = () => {

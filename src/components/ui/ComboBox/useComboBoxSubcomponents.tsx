@@ -28,11 +28,13 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxSingleValue': 'Layer__select__single-value',
   'Layer__ComboBoxGroupHeading': 'Layer__select__group-heading',
   'Layer__ComboBoxOption': 'Layer__select__option',
-  'Layer__ComboBoxOption--focused': 'Layer__select__option--is-focused',
-  'Layer__ComboBoxOption--selected': 'Layer__select__option--is-selected',
+  'Layer__ComboBoxOption--Focused': ['Layer__select__option--is-focused', 'Layer__ComboBoxOption--focused'],
+  'Layer__ComboBoxOption--Selected': ['Layer__select__option--is-selected', 'Layer__ComboBoxOption--selected'],
   'Layer__ComboBoxNoOptionsMessage': 'Layer__select__menu-notice',
   'Layer__ComboBoxClearIndicator': 'Layer__select__indicator',
   'Layer__ComboBoxDropdownIndicator': 'Layer__select__indicator',
+  'Layer__ComboBoxOption--Disabled': 'Layer__ComboBoxOption--disabled',
+  'Layer__ComboBoxOption--Hidden': 'Layer__ComboBoxOption--hidden',
 } satisfies ComboBoxLegacyClassNames)
 
 type UseComboBoxSubcomponentsParams<T extends ComboBoxOption> = {
@@ -191,11 +193,11 @@ function buildCustomOption<T extends ComboBoxOption, IsMulti extends boolean>({
         className={classNames(
           legacyClassNames(
             'Layer__ComboBoxOption',
-            isFocused && 'Layer__ComboBoxOption--focused',
-            effectiveIsSelected && 'Layer__ComboBoxOption--selected',
+            isFocused && 'Layer__ComboBoxOption--Focused',
+            effectiveIsSelected && 'Layer__ComboBoxOption--Selected',
           ),
-          isDisabled && `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled`,
-          restProps.data.isHidden && `${COMBO_BOX_CLASS_NAMES.OPTION}--hidden`,
+          isDisabled && legacyClassNames('Layer__ComboBoxOption--Disabled'),
+          restProps.data.isHidden && legacyClassNames('Layer__ComboBoxOption--Hidden'),
         )}
       >
         {Option

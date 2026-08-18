@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { CloudDownload, Eye, Loader, Trash2 } from 'lucide-react'
 
+import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { Span } from '@ui/Typography/Text'
@@ -63,7 +64,7 @@ export const FileThumb = ({
                 <Span size='sm' status='info'>
                   {deletePending ? 'Deleting...' : 'Uploading'}
                 </Span>
-                <Loader className='Layer__anim--rotating' size={11} />
+                <Loader className={ROTATING_CLASS_NAME} size={11} />
               </div>
             )
             : error

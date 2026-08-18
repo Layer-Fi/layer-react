@@ -1,7 +1,15 @@
 import classNames from 'classnames'
 import type { PropsWithChildren } from 'react'
 
+import { SKELETON_LOADING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+
 import './skeletonLoader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__SkeletonLoader': 'Layer__skeleton-loader',
+  'state:circle': 'Layer__skeleton-loader--circle',
+})
 
 export interface SkeletonLoaderProps {
   width?: string
@@ -17,11 +25,11 @@ const BaseSkeletonLoader = ({
   isCircle = false,
 }: SkeletonLoaderProps) => {
   const baseClassName = classNames(
-    'Layer__skeleton-loader Layer__anim--skeleton-loading',
+    legacyClassNames('Layer__UI__SkeletonLoader', isCircle && 'state:circle'),
+    SKELETON_LOADING_CLASS_NAME,
     className,
-    isCircle && 'Layer__skeleton-loader--circle',
   )
-  return <div className={baseClassName} style={{ width, height }} />
+  return <div className={baseClassName} data-circle={isCircle || undefined} style={{ width, height }} />
 }
 
 type FallbackWithSkeletonLoader = PropsWithChildren<SkeletonLoaderProps> & {
@@ -36,7 +44,8 @@ export const FallbackWithSkeletonLoader = ({
   className,
 }: FallbackWithSkeletonLoader) => {
   const baseClassName = classNames(
-    'Layer__skeleton-loader Layer__anim--skeleton-loading',
+    legacyClassNames('Layer__UI__SkeletonLoader'),
+    SKELETON_LOADING_CLASS_NAME,
     className,
   )
 

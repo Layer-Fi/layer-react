@@ -1,11 +1,21 @@
 import { type ChangeEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import classNames from 'classnames'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack } from '@ui/Stack/Stack'
-import { Tab } from '@ui/Tabs/Tab'
+import { Tab, TABS_OPTION_CLASS_NAME } from '@ui/Tabs/Tab'
 
 import './tabs.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__Tabs': 'Layer__tabs',
+  'Layer__UI__Tabs__Container': 'Layer__tabs__container',
+  'Layer__UI__Tabs__Thumb': 'Layer__tabs__thumb',
+  'state:initialized': 'Layer__tabs--initialized',
+} satisfies LegacyClassNameMapFor<
+  'Layer__UI__Tabs' | 'Layer__UI__Tabs__Container' | 'Layer__UI__Tabs__Thumb',
+  `state:${string}`
+>)
 
 const STARTING_PADDING = 12
 const TAB_GAP = 8
@@ -32,9 +42,9 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
   const selectedValue = selected || options[0]?.value
 
-  const baseClassName = classNames(
-    'Layer__tabs',
-    isInitialized && 'Layer__tabs--initialized',
+  const baseClassName = legacyClassNames(
+    'Layer__UI__Tabs',
+    isInitialized && 'state:initialized',
   )
 
   const elementRef = useElementSize<HTMLDivElement>(() => positionThumb())
@@ -47,7 +57,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
     }
 
     const optionsNodes = [...container.children].filter(c =>
-      c.className.includes('Layer__tabs-option'),
+      c.className.includes(TABS_OPTION_CLASS_NAME),
     )
 
     const active = Math.max(0, options.findIndex(option => option.value === selectedValue))
@@ -81,8 +91,8 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   }, [])
 
   return (
-    <div className='Layer__tabs__container'>
-      <HStack className={baseClassName} ref={elementRef}>
+    <div className={legacyClassNames('Layer__UI__Tabs__Container')}>
+      <HStack className={baseClassName} data-initialized={isInitialized || undefined} ref={elementRef}>
         {options.map((option, index) => (
           <Tab
             {...option}
@@ -95,7 +105,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
             index={index}
           />
         ))}
-        <span ref={thumbRef} className='Layer__tabs__thumb' />
+        <span ref={thumbRef} className={legacyClassNames('Layer__UI__Tabs__Thumb')} />
       </HStack>
     </div>
   )

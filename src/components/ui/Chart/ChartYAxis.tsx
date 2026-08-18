@@ -1,9 +1,14 @@
 import { useCallback } from 'react'
 import { YAxis, type YAxisProps, type YAxisTickContentProps } from 'recharts'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 import './ChartYAxis.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ChartYAxis__Tick: 'Layer__ChartYAxis__tick',
+})
 
 type FormatFn = (value?: string | number) => string | number | undefined
 
@@ -22,7 +27,7 @@ const CustomizedYTick = ({
   textAnchor,
 }: CustomizedYTickProps) => {
   return (
-    <text x={x} y={y} fill={fill} stroke={stroke} textAnchor={textAnchor} className='Layer__ChartYAxis__tick'>
+    <text x={x} y={y} fill={fill} stroke={stroke} textAnchor={textAnchor} className={legacyClassNames('Layer__ChartYAxis__Tick')}>
       <tspan dy='0.355em'>{format(payload.value)}</tspan>
     </text>
   )

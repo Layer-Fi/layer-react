@@ -16,21 +16,21 @@
   background-color: var(--color-base-0);
   color: var(--color-base-1000);
 
-  &--focused {
+  &--Focused {
     border-color: var(--outline-active);
   }
 
-  &--disabled {
+  &--Disabled {
     background-color: var(--color-base-100);
     cursor: not-allowed;
     color: var(--color-base-800);
   }
 
-  &--readonly {
+  &--Readonly {
     background-color: var(--bg-muted);
   }
 
-  &--error {
+  &--Error {
     border-color: var(--color-danger);
   }
 }
@@ -44,7 +44,7 @@
   block-size: var(--block-size);
   min-block-size: var(--block-size);
 
-  &--focused {
+  &--Focused {
     /*
      * This seems like the only workaround when the "unstyled" variant
      * includes a (malicious) `outline: 0 !important`.
@@ -53,7 +53,7 @@
      */
     outline: 2px solid var(--outline-default) !important;
 
-    &.Layer__ComboBoxControl--error {
+    &.Layer__ComboBoxControl--Error {
       outline-color: var(--color-info-error-bg) !important;
     }
   }
@@ -67,7 +67,7 @@
   font-size: var(--input-font-size);
   color: var(--color-base-1000);
 
-  .Layer__ComboBoxControl--disabled & {
+  .Layer__ComboBoxControl--Disabled & {
     color: var(--color-base-800);
   }
 }
@@ -85,7 +85,7 @@
 .Layer__ComboBoxIndicatorsContainer {
   padding-inline-end: var(--spacing-3xs);
 
-  &--readonly {
+  &--Readonly {
     visibility: hidden;
   }
 }
@@ -159,11 +159,11 @@
      */
     cursor: pointer;
 
-    &--disabled {
+    &--Disabled {
       cursor: not-allowed;
     }
 
-    &--hidden {
+    &--Hidden {
       display: none;
     }
   }
@@ -190,7 +190,7 @@
   border: 2px solid transparent;
   color: var(--color-base-1000);
 
-  &--focused {
+  &--Focused {
     background-color: var(--color-base-100);
   }
 
@@ -198,7 +198,7 @@
     visibility: hidden;
   }
 
-  &--selected {
+  &--Selected {
     background-color: var(--color-base-300);
 
     .Layer__ComboBoxOptionCheckIcon {
@@ -206,7 +206,7 @@
     }
   }
 
-  &--disabled {
+  &--Disabled {
     color: var(--color-base-500);
   }
 }

@@ -11,14 +11,16 @@ import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
 const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxContainer': 'Layer__select',
   'Layer__ComboBoxControl': 'Layer__select__control',
-  'Layer__ComboBoxControl--focused': 'Layer__select__control--is-focused',
-  'Layer__ComboBoxControl--error': 'Layer__select--error',
+  'Layer__ComboBoxControl--Focused': ['Layer__select__control--is-focused', 'Layer__ComboBoxControl--focused'],
+  'Layer__ComboBoxControl--Error': ['Layer__select--error', 'Layer__ComboBoxControl--error'],
   'Layer__ComboBoxValueContainer': 'Layer__select__value-container',
   'Layer__ComboBoxPlaceholder': 'Layer__select__placeholder',
   'Layer__ComboBoxMenu': 'Layer__select__menu',
   'Layer__ComboBoxMenuPortal': 'Layer__select__menu-portal',
   'Layer__ComboBoxMultiValueRemove': 'Layer__select__multi-value__remove',
-  'Layer__ComboBoxControl--disabled': 'Layer__select__control--is-disabled',
+  'Layer__ComboBoxControl--Disabled': ['Layer__select__control--is-disabled', 'Layer__ComboBoxControl--disabled'],
+  'Layer__ComboBoxControl--Readonly': 'Layer__ComboBoxControl--readonly',
+  'Layer__ComboBoxIndicatorsContainer--Readonly': 'Layer__ComboBoxIndicatorsContainer--readonly',
 } satisfies ComboBoxLegacyClassNames)
 
 type UseCommonComboBoxPropsReturn<T extends ComboBoxOption, IsMulti extends boolean> =
@@ -86,17 +88,17 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     control: ({ isFocused, isDisabled }: { isFocused: boolean, isDisabled: boolean }) => classNames(
       legacyClassNames(
         'Layer__ComboBoxControl',
-        isFocused && 'Layer__ComboBoxControl--focused',
-        isDisabled && 'Layer__ComboBoxControl--disabled',
-        hasError && 'Layer__ComboBoxControl--error',
+        isFocused && 'Layer__ComboBoxControl--Focused',
+        isDisabled && 'Layer__ComboBoxControl--Disabled',
+        hasError && 'Layer__ComboBoxControl--Error',
       ),
-      isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
+      isReadOnly && legacyClassNames('Layer__ComboBoxControl--Readonly'),
     ),
     valueContainer: () => legacyClassNames('Layer__ComboBoxValueContainer'),
     placeholder: () => legacyClassNames('Layer__ComboBoxPlaceholder'),
     indicatorsContainer: () => classNames(
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
-      isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
+      isReadOnly && legacyClassNames('Layer__ComboBoxIndicatorsContainer--Readonly'),
     ),
     menu: () => classNames(PORTAL_CLASS_NAME, legacyClassNames('Layer__ComboBoxMenu')),
     menuPortal: () => legacyClassNames('Layer__ComboBoxMenuPortal'),
