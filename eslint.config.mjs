@@ -16,16 +16,6 @@ const BOUNDARY_SEVERITY = 'error'
 
 const TEST_FILES = ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx']
 
-// eslint-plugin-react-hooks v7 folds the React Compiler rules into `recommended` as errors. They
-// flag ~100 pre-existing violations, so they report as warnings until those are worked through.
-const HOOKS_RULES = ['react-hooks/rules-of-hooks', 'react-hooks/exhaustive-deps']
-
-const compilerRuleWarnings = Object.fromEntries(
-  Object.keys(reactHooksPlugin.configs.recommended.rules)
-    .filter(rule => !HOOKS_RULES.includes(rule))
-    .map(rule => [rule, 'warn']),
-)
-
 // Lowest tier first. Drives the import-sort groups and the
 // `no-relative-parent-imports` ignore list.
 const TIER_ALIASES = [
@@ -309,7 +299,6 @@ export default tsEslint.config(
     plugins: { 'react-hooks': reactHooksPlugin },
     rules: {
       ...reactHooksPlugin.configs.recommended.rules,
-      ...compilerRuleWarnings,
       'react-hooks/exhaustive-deps': 'error',
     },
   },
