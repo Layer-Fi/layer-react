@@ -1,10 +1,11 @@
-import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { Heading } from '@ui/Typography/Heading'
@@ -15,7 +16,6 @@ import {
   type LinkAccountsStringOverrides,
 } from '@features/linkedAccounts/LinkAccounts/LinkAccountsLinkStep'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
-import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 
 import './linkAccounts.scss'
 

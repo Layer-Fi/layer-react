@@ -22,7 +22,7 @@ applies_to: src/**/*.scss, src/styles/**
 
 | File | Role |
 | --- | --- |
-| `variables.scss` | the public design tokens, declared on the `.Layer__ComponentRoot` / `.Layer__Portal` / `.Layer__view` / … root selectors |
+| `variables.scss` | the public design tokens, declared on the `.Layer__ComponentRoot` / `.Layer__Portal` / `.Layer__ViewRoot` / … root selectors |
 | `internal_variables.scss` | tokens not part of the consumer-facing surface |
 | `global.scss`, `component.scss`, `loader.scss`, `charts.scss` | resets and base rules |
 | `index.scss` | the entry point bundled to `dist/index.css` |

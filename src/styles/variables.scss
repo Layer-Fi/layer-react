@@ -1,6 +1,6 @@
 .Layer__ComponentRoot,
 .Layer__Portal,
-.Layer__view,
+.Layer__ViewRoot,
 .Layer__UI__Tooltip,
 .Layer__ToastsContainer,
 .Layer__drawer,
@@ -203,7 +203,7 @@
 @media (width <= 768px) {
   .Layer__ComponentRoot,
   .Layer__Portal,
-  .Layer__view,
+  .Layer__ViewRoot,
   .Layer__UI__Tooltip,
   .Layer__ToastsContainer,
   .Layer__drawer,

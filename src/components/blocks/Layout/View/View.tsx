@@ -2,11 +2,25 @@ import { forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { parseStylesFromThemeConfig } from '@utils/shared/styles/colors'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 
 import './view.scss'
+
+type ViewClassName =
+  | 'Layer__ViewRoot'
+  | 'Layer__ViewMain'
+  | 'Layer__ViewNotifications'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__ViewRoot': 'Layer__view',
+  'Layer__ViewMain': 'Layer__view-main',
+  'Layer__ViewNotifications': 'Layer__view-notifications',
+  'type:panel': 'Layer__view--panel',
+} satisfies LegacyClassNameMapFor<ViewClassName, 'type:panel'>)
 
 export interface ViewProps {
   children: ReactNode
@@ -41,36 +55,30 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
     const styles = parseStylesFromThemeConfig(theme)
 
     const viewClassNames = classNames(
-      'Layer__view',
-      type === 'panel' && 'Layer__view--panel',
+      legacyClassNames('Layer__ViewRoot', type === 'panel' && 'type:panel'),
       viewClassName,
     )
 
     return (
-      <div className={viewClassNames} style={{ ...styles }} ref={ref}>
+      <div className={viewClassNames} {...toDataProperties({ type: type ?? 'default' })} style={{ ...styles }} ref={ref}>
         {notification && (
-          <div className='Layer__view-notifications'>
+          <div className={legacyClassNames('Layer__ViewNotifications')}>
             {notification}
           </div>
         )}
         {showHeader && (
-          <ViewHeader
-            title={title}
-            className={classNames(
-              headerControls ? 'Layer__view-header--paddings' : undefined,
-            )}
-          >
+          <ViewHeader title={title} withPaddings={Boolean(headerControls)}>
             {header ?? headerControls}
           </ViewHeader>
         )}
         {withSidebar
           ? (
             <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
-              <div className='Layer__view-main'>{children}</div>
+              <div className={legacyClassNames('Layer__ViewMain')}>{children}</div>
             </Panel>
           )
           : (
-            <div className='Layer__view-main'>{children}</div>
+            <div className={legacyClassNames('Layer__ViewMain')}>{children}</div>
           )}
       </div>
     )
