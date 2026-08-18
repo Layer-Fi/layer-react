@@ -1,4 +1,4 @@
-.Layer__toast {
+.Layer__UI__Toast {
   max-inline-size: min(24rem, calc(100vi - 40px));
   padding: var(--spacing-xs) var(--spacing-md);
   border-radius: var(--spacing-3xs);
@@ -20,22 +20,22 @@
     color: var(--color-base-0);
   }
 
-  &.Layer__toast--success {
+  &[data-type='success'] {
     box-shadow: 0 0 0 1px var(--color-info-success);
     background: var(--color-info-success);
   }
 
-  &.Layer__toast--error {
+  &[data-type='error'] {
     box-shadow: 0 0 0 1px var(--color-info-error);
     background: var(--color-info-error);
   }
 
-  &.enter {
+  &[data-entering] {
     opacity: 1;
     transform: translateY(0);
   }
 
-  &.exit {
+  &[data-exiting] {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s linear, transform 0.5s linear;
