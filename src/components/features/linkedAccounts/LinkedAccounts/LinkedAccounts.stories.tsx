@@ -1,5 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
 
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
@@ -11,8 +13,6 @@ import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
-
-type BankAccountFixture = (typeof bankAccounts)[number]
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
@@ -31,8 +31,11 @@ const DISCONNECTED_AS_OF = new Date('2024-03-14T12:00:00.000Z')
  * A broken connection is backend state, not a prop: the "Fix account" pill
  * appears when an external account has `connectionNeedsRepairAsOf` set, and the
  * repair action is a no-op without a connection id to repair.
+ *
+ * `reconnectWithNewCredentials: false` keeps the pill on the update-mode repair
+ * path, which is the one whose mock clears the repair flag.
  */
-const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixture => ({
+const withBrokenPlaidConnection = (account: BankAccount): BankAccount => ({
   ...account,
   isDisconnected: true,
   externalAccounts: account.externalAccounts.map(externalAccount =>
@@ -40,6 +43,7 @@ const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixt
       ? {
         ...externalAccount,
         connectionNeedsRepairAsOf: DISCONNECTED_AS_OF,
+        reconnectWithNewCredentials: false,
         connectionExternalId: externalAccount.connectionExternalId ?? 'plaid_item_story_disconnected',
       }
       : externalAccount,
@@ -49,6 +53,13 @@ const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixt
 const disconnectedBankAccounts = bankAccounts
   .slice(0, 2)
   .map((account, index) => index === 0 ? withBrokenPlaidConnection(account) : account)
+
+// Seeds the store rather than overriding the GET, so the repair mutation and the
+// refetch that follows it read back the account this loader broke.
+const breakFirstAccountConnection = () => {
+  const [firstAccount] = bankAccountStore.all()
+  if (firstAccount) bankAccountStore.save(withBrokenPlaidConnection(firstAccount))
+}
 
 const linkedAccountsControls = makeLinkedAccountsStoryControls()
 
@@ -124,5 +135,25 @@ export const DisconnectedAccount: Story = {
   tags: ['public-api'],
   parameters: {
     msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
+  },
+}
+
+// The mocked Plaid Link resolves 800ms after it opens, then the connection-status
+// mock clears the repair flag and the accounts refetch, so the snapshot has to wait
+// for the healthy state.
+export const DisconnectedAccountRepaired: Story = {
+  tags: ['public-api'],
+  parameters: { chromatic: { delay: 2_000 } },
+  loaders: [breakFirstAccountConnection],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await userEvent.click(await canvas.findByRole('button', { name: 'Fix account' }))
+    await userEvent.click(await screen.findByRole('menuitem', { name: 'Repair connection' }))
+
+    await waitFor(
+      () => expect(canvas.queryByRole('button', { name: 'Fix account' })).not.toBeInTheDocument(),
+      { timeout: 10_000 },
+    )
   },
 }
