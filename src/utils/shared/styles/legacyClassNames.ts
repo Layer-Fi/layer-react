@@ -48,8 +48,6 @@ export type LegacyClassNameMapFor<
  *   (`entering`, `exiting`, `inline`, `open`).
  * - `data:` — a boolean attribute this component alone invents: `data:hasHorizontalOverflow` is
  *   `data-has-horizontal-overflow`, styled only by the table that sets it.
- *
- * A one-off starts under `data:`. It graduates to `state:` when a second component styles it.
  */
 export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(map: TMap) {
   return (...names: ReadonlyArray<keyof TMap | false | null | undefined>) =>
