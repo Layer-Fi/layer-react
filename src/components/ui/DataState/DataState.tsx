@@ -16,8 +16,8 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__UI__DataState__Icon': 'Layer__data-state__icon',
   'Layer__UI__DataState__Text': 'Layer__data-state__text',
   'Layer__UI__DataState__Button': 'Layer__data-state__btn',
-  'state:title': 'Layer__data-state__title',
-  'state:description': 'Layer__data-state__description',
+  'Layer__UI__DataState__Title': 'Layer__data-state__title',
+  'Layer__UI__DataState__Description': 'Layer__data-state__description',
   'data:spacing': 'Layer__data-state--spacing',
   'state:inline': 'Layer__data-state--inline',
   'state:reset': 'Layer__data-state--reset',
@@ -25,7 +25,12 @@ const legacyClassNames = createLegacyClassNames({
   'status:success': 'Layer__data-state__icon--success',
   'status:error': 'Layer__data-state__icon--error',
 } satisfies LegacyClassNameMapFor<
-  'Layer__UI__DataState' | 'Layer__UI__DataState__Icon' | 'Layer__UI__DataState__Text' | 'Layer__UI__DataState__Button',
+  | 'Layer__UI__DataState'
+  | 'Layer__UI__DataState__Icon'
+  | 'Layer__UI__DataState__Text'
+  | 'Layer__UI__DataState__Title'
+  | 'Layer__UI__DataState__Description'
+  | 'Layer__UI__DataState__Button',
   `state:${string}` | `status:${string}` | `data:${string}`
 >)
 
@@ -114,7 +119,7 @@ export const DataState = ({
       {getIcon(status, icon)}
       <div className={legacyClassNames('Layer__UI__DataState__Text')}>
         <Span
-          className={legacyClassNames('state:title')}
+          className={legacyClassNames('Layer__UI__DataState__Title')}
           size={titleSize}
           weight='bold'
           variant='placeholder'
@@ -124,7 +129,7 @@ export const DataState = ({
           {title}
         </Span>
         <Span
-          className={legacyClassNames('state:description')}
+          className={legacyClassNames('Layer__UI__DataState__Description')}
           size={inline ? 'sm' : 'md'}
           status='disabled'
           align={inline ? undefined : 'center'}

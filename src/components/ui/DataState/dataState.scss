@@ -61,17 +61,18 @@
   min-inline-size: 0;
 }
 
-.Layer__UI__DataState__Text > .Layer__Span:first-child {
+.Layer__UI__DataState__Title {
   display: block;
   margin-bottom: var(--spacing-2xs);
 }
 
-.Layer__UI__DataState__Text > .Layer__Span:last-child {
+.Layer__UI__DataState__Description {
   display: block;
   margin-bottom: var(--spacing-xl);
 }
 
-.Layer__UI__DataState[data-reset] .Layer__UI__DataState__Text > .Layer__Span:last-child,
-.Layer__UI__DataState[data-inline] .Layer__UI__DataState__Text > .Layer__Span {
+.Layer__UI__DataState[data-reset] .Layer__UI__DataState__Description,
+.Layer__UI__DataState[data-inline] .Layer__UI__DataState__Title,
+.Layer__UI__DataState[data-inline] .Layer__UI__DataState__Description {
   margin-bottom: 0;
 }
