@@ -85,12 +85,10 @@ export const ChartOfAccountsTable = ({
   stringOverrides,
   searchQuery,
   onEditAccount,
-  filterByDateRange,
   templateAccountsEditable = true,
 }: {
   searchQuery: string
   onEditAccount: (accountId: string) => void
-  filterByDateRange?: boolean
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
@@ -98,7 +96,7 @@ export const ChartOfAccountsTable = ({
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { selectAccount } = useChartOfAccountsSelectionActions()
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const { data, isLoading, isValidating, isError, mutate } = useChartOfAccountsBalances({ filterByDateRange })
+  const { data, isLoading, isValidating, isError, mutate } = useChartOfAccountsBalances()
   const { trigger: deleteAccount } = useDeleteLedgerAccount()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()

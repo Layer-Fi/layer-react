@@ -26,14 +26,12 @@ export interface LedgerAccountStringOverrides {
 export interface LedgerAccountProps {
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
-  filterByDateRange?: boolean
   stringOverrides?: LedgerAccountStringOverrides
 }
 
 export const LedgerAccountPanel = ({
   containerRef,
   pageSize = 15,
-  filterByDateRange,
   stringOverrides,
 }: LedgerAccountProps) => {
   const selectedEntryId = useSelectedLedgerEntryId()
@@ -51,10 +49,9 @@ export const LedgerAccountPanel = ({
       className={legacyClassNames('Layer__LedgerAccountPanel')}
     >
       <VStack>
-        <LedgerAccountPanelHeader onClose={clearSelection} filterByDateRange={filterByDateRange} />
+        <LedgerAccountPanelHeader onClose={clearSelection} />
         <LedgerAccountLineItemsTable
           pageSize={pageSize}
-          filterByDateRange={filterByDateRange}
           stringOverrides={stringOverrides?.ledgerEntriesTable}
         />
       </VStack>

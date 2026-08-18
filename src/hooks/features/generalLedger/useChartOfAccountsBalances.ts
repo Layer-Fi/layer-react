@@ -1,19 +1,13 @@
 import { useGetLedgerBalances } from '@api/businesses/[business-id]/ledger/balances/get'
+import { useIsChartOfAccountsDateScoped } from '@providers/features/generalLedger/ChartOfAccountsDateScope/ChartOfAccountsDateScopeProvider'
 import { useLedgerDateRange } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 
-type UseChartOfAccountsBalancesOptions = {
-  filterByDateRange?: boolean
-}
-
-// Every Chart of Accounts consumer has to resolve the same SWR key, so the date
-// scoping decision lives here rather than at each call site.
-export const useChartOfAccountsBalances = (
-  { filterByDateRange = false }: UseChartOfAccountsBalancesOptions = {},
-) => {
+export const useChartOfAccountsBalances = () => {
+  const isDateScoped = useIsChartOfAccountsDateScoped()
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
 
   return useGetLedgerBalances({
-    startDate: filterByDateRange ? startDate : undefined,
-    endDate: filterByDateRange ? endDate : undefined,
+    startDate: isDateScoped ? startDate : undefined,
+    endDate: isDateScoped ? endDate : undefined,
   })
 }

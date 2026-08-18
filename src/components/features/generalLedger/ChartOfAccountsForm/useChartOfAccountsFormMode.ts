@@ -4,8 +4,8 @@ import { findAccountById } from '@utils/features/generalLedger/chartOfAccounts'
 import { useChartOfAccountsBalances } from '@hooks/features/generalLedger/useChartOfAccountsBalances'
 import { type ChartOfAccountsFormMode } from '@features/generalLedger/ChartOfAccountsForm/ChartOfAccountsForm'
 
-export const useChartOfAccountsFormMode = ({ filterByDateRange }: { filterByDateRange?: boolean } = {}) => {
-  const { data } = useChartOfAccountsBalances({ filterByDateRange })
+export const useChartOfAccountsFormMode = () => {
+  const { data } = useChartOfAccountsBalances()
   const [formMode, setFormMode] = useState<ChartOfAccountsFormMode | undefined>()
 
   const addAccount = useCallback(() => setFormMode({ action: 'new' }), [])

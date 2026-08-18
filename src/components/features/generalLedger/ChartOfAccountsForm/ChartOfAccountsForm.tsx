@@ -60,14 +60,13 @@ type ChartOfAccountsFormContentMode =
 
 type ChartOfAccountsFormContentProps = ChartOfAccountsFormContentMode & {
   onCancel: () => void
-  filterByDateRange?: boolean
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }
 
 const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
-  const { onCancel, filterByDateRange, stringOverrides } = props
+  const { onCancel, stringOverrides } = props
   const { t } = useTranslation()
-  const { data } = useChartOfAccountsBalances({ filterByDateRange })
+  const { data } = useChartOfAccountsBalances()
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
   const { isMobile } = useSizeClass()
@@ -248,15 +247,13 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
 export const ChartOfAccountsForm = ({
   formMode,
   onCancel,
-  filterByDateRange,
   stringOverrides,
 }: {
   formMode?: ChartOfAccountsFormMode
   onCancel: () => void
-  filterByDateRange?: boolean
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }) => {
-  const { data, isLoading } = useChartOfAccountsBalances({ filterByDateRange })
+  const { data, isLoading } = useChartOfAccountsBalances()
 
   const contentProps = useMemo((): ChartOfAccountsFormContentMode | undefined => {
     if (!formMode) return undefined
@@ -291,7 +288,6 @@ export const ChartOfAccountsForm = ({
     <ChartOfAccountsFormContent
       key={contentProps.mode === UpsertMode.Update ? contentProps.account.accountId : 'new'}
       {...contentProps}
-      filterByDateRange={filterByDateRange}
       onCancel={onCancel}
       stringOverrides={stringOverrides}
     />

@@ -11,12 +11,11 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 
 export interface LedgerAccountHeaderProps {
   onClose: () => void
-  filterByDateRange?: boolean
 }
 
-export const LedgerAccountPanelHeader = ({ onClose, filterByDateRange }: LedgerAccountHeaderProps) => {
+export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) => {
   const { t } = useTranslation()
-  const selectedAccount = useSelectedLedgerAccount({ filterByDateRange })
+  const selectedAccount = useSelectedLedgerAccount()
 
   return (
     <Header>

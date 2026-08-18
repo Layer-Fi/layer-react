@@ -38,7 +38,7 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
-  const { formMode, addAccount, editAccount, cancelForm } = useChartOfAccountsFormMode({ filterByDateRange: withDateControl })
+  const { formMode, addAccount, editAccount, cancelForm } = useChartOfAccountsFormMode()
   const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
@@ -51,7 +51,6 @@ export const ChartOfAccountsTableWithPanel = ({
           <ChartOfAccountsForm
             formMode={formMode}
             onCancel={cancelForm}
-            filterByDateRange={withDateControl}
             stringOverrides={stringOverrides?.chartOfAccountsForm}
           />
         )}
@@ -71,7 +70,6 @@ export const ChartOfAccountsTableWithPanel = ({
 
         <ChartOfAccountsTable
           searchQuery={searchQuery}
-          filterByDateRange={withDateControl}
           onEditAccount={editAccount}
           stringOverrides={stringOverrides}
           templateAccountsEditable={templateAccountsEditable}

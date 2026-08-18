@@ -4,9 +4,9 @@ import { findAccountById, getLedgerAccountNodeType } from '@utils/features/gener
 import { useSelectedLedgerAccountId } from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
 import { useChartOfAccountsBalances } from '@hooks/features/generalLedger/useChartOfAccountsBalances'
 
-export const useSelectedLedgerAccount = ({ filterByDateRange }: { filterByDateRange?: boolean } = {}) => {
+export const useSelectedLedgerAccount = () => {
   const selectedAccountId = useSelectedLedgerAccountId()
-  const { data } = useChartOfAccountsBalances({ filterByDateRange })
+  const { data } = useChartOfAccountsBalances()
 
   return useMemo(() => {
     const accounts = data?.accounts ?? []

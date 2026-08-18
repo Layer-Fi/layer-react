@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 
 import { InAppLinkProvider, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { ChartOfAccountsDateScopeProvider } from '@providers/features/generalLedger/ChartOfAccountsDateScope/ChartOfAccountsDateScopeProvider'
 import {
   ChartOfAccountsSelectionStoreProvider,
   useSelectedLedgerAccountId,
@@ -42,11 +43,13 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => (
 
 /** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
 export const InternalChartOfAccounts = (props: ChartOfAccountsProps) => (
-  <ChartOfAccountsSelectionStoreProvider>
-    <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
-      <ChartOfAccountsContent {...props} />
-    </InAppLinkProvider>
-  </ChartOfAccountsSelectionStoreProvider>
+  <ChartOfAccountsDateScopeProvider isDateScoped={props.withDateControl ?? false}>
+    <ChartOfAccountsSelectionStoreProvider>
+      <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
+        <ChartOfAccountsContent {...props} />
+      </InAppLinkProvider>
+    </ChartOfAccountsSelectionStoreProvider>
+  </ChartOfAccountsDateScopeProvider>
 )
 
 const ChartOfAccountsContent = ({
@@ -66,7 +69,6 @@ const ChartOfAccountsContent = ({
         ? (
           <LedgerAccountPanel
             containerRef={containerRef}
-            filterByDateRange={withDateControl}
             stringOverrides={stringOverrides?.ledgerAccount}
           />
         )

@@ -111,13 +111,11 @@ const getColumnConfig = (
 
 export interface LedgerAccountLineItemsTableProps {
   pageSize?: number
-  filterByDateRange?: boolean
   stringOverrides?: LedgerAccountLineItemsTableStringOverrides
 }
 
 export const LedgerAccountLineItemsTable = ({
   pageSize = 15,
-  filterByDateRange,
   stringOverrides,
 }: LedgerAccountLineItemsTableProps) => {
   const { t } = useTranslation()
@@ -125,7 +123,7 @@ export const LedgerAccountLineItemsTable = ({
   const selectedAccountId = useSelectedLedgerAccountId()
   const selectedEntryId = useSelectedLedgerEntryId()
   const { selectEntry, closeSelectedEntry } = useChartOfAccountsSelectionActions()
-  const nodeType = useSelectedLedgerAccount({ filterByDateRange })?.nodeType
+  const nodeType = useSelectedLedgerAccount()?.nodeType
 
   const {
     flattenedData: data,
