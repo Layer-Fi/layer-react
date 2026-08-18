@@ -36,6 +36,12 @@ export const reportRangeFromParams = (params: URLSearchParams): ReportDateRange 
 export const monthsInRange = (range: ReportDateRange) =>
   range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })
 
+export const quartersInRange = (range: ReportDateRange) =>
+  range.startDate > range.endDate ? [] : eachQuarterOfInterval({ start: range.startDate, end: range.endDate })
+
+export const yearsInRange = (range: ReportDateRange) =>
+  range.startDate > range.endDate ? [] : eachYearOfInterval({ start: range.startDate, end: range.endDate })
+
 const clippedPeriod = (
   columnKey: string,
   label: string,
@@ -67,14 +73,14 @@ const UNIT_CONFIG_BY_GROUP_BY: Partial<Record<DateGroupBy, UnitConfig>> = {
     endOfUnit: endOfMonth,
   },
   [DateGroupBy.Quarter]: {
-    unitsInRange: range => range.startDate > range.endDate ? [] : eachQuarterOfInterval({ start: range.startDate, end: range.endDate }),
+    unitsInRange: quartersInRange,
     columnKeyFormat: 'yyyy-\'Q\'Q',
     labelFormat: '\'Q\'Q yyyy',
     startOfUnit: startOfQuarter,
     endOfUnit: endOfQuarter,
   },
   [DateGroupBy.Year]: {
-    unitsInRange: range => range.startDate > range.endDate ? [] : eachYearOfInterval({ start: range.startDate, end: range.endDate }),
+    unitsInRange: yearsInRange,
     columnKeyFormat: 'yyyy',
     labelFormat: 'yyyy',
     startOfUnit: startOfYear,
