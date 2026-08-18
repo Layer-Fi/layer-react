@@ -8,6 +8,7 @@ import { ReportsTableProvider } from '@providers/features/reports/ReportsTableCo
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -43,7 +44,7 @@ export type BalanceSheetProps = PropsWithChildren<{
   dateSelectionMode?: DateSelectionMode
 }>
 
-export const BalanceSheet = (props: BalanceSheetProps) => {
+const BalanceSheetComponent = (props: BalanceSheetProps) => {
   return (
     <BalanceSheetView
       stringOverrides={props.stringOverrides}
@@ -134,3 +135,5 @@ const BalanceSheetView = ({
     </ReportsTableProvider>
   )
 }
+
+export const BalanceSheet = withUsageTracking('BalanceSheet', BalanceSheetComponent)

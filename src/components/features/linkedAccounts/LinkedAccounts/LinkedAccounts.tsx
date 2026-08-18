@@ -7,6 +7,7 @@ import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAcc
 import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack } from '@ui/Stack/Stack'
@@ -35,7 +36,7 @@ export interface LinkedAccountsProps {
   }
 }
 
-export const LinkedAccounts = ({
+const LinkedAccountsRoot = ({
   plaidHostedLinkConfig,
   customerManagedPlaidConfig,
   onPlaidConnectionSuccess,
@@ -109,3 +110,5 @@ export const LinkedAccountsComponent = ({
     </Container>
   )
 }
+
+export const LinkedAccounts = withUsageTracking('LinkedAccounts', LinkedAccountsRoot)

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { MonthPicker } from '@ui/DatePickers/MonthPicker/MonthPicker'
 import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
@@ -12,7 +13,7 @@ export type GlobalMonthPickerProps = {
   showLabel?: boolean
 }
 
-export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMonthPickerProps) => {
+const GlobalMonthPickerComponent = ({ truncateMonth, showLabel = false }: GlobalMonthPickerProps) => {
   const { t } = useTranslation()
   const { minDate, maxDate } = useBusinessDatePickerBounds()
   const { setMonth } = useGlobalDateRangeActions()
@@ -38,3 +39,5 @@ export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMo
     />
   )
 }
+
+export const GlobalMonthPicker = withUsageTracking('GlobalMonthPicker', GlobalMonthPickerComponent)

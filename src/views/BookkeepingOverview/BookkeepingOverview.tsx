@@ -7,6 +7,7 @@ import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { VStack } from '@ui/Stack/Stack'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
@@ -97,7 +98,7 @@ export interface BookkeepingOverviewProps {
   title?: string
 }
 
-export const BookkeepingOverview = ({
+const BookkeepingOverviewComponent = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
@@ -244,3 +245,5 @@ export const BookkeepingOverview = ({
     </ProfitAndLoss>
   )
 }
+
+export const BookkeepingOverview = withUsageTracking('BookkeepingOverview', BookkeepingOverviewComponent)

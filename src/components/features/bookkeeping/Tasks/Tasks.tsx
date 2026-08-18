@@ -5,6 +5,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -45,7 +46,7 @@ type TasksProps = {
   onClickReconnectAccounts?: () => void
 }
 
-export function Tasks({
+function TasksComponent({
   mobile = false,
   tasksHeader,
   onClickReconnectAccounts,
@@ -123,3 +124,5 @@ export function Tasks({
     </Container>
   )
 }
+
+export const Tasks = withUsageTracking('Tasks', TasksComponent)

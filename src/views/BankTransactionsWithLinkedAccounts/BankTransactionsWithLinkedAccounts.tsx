@@ -8,6 +8,7 @@ import { type MobileComponentType } from '@utils/features/bankTransactions/const
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/features/bankTransactions/LegacyMode/LegacyModeProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { View } from '@blocks/Layout/View/View'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
 import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
@@ -50,7 +51,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export const BankTransactionsWithLinkedAccounts = (props: BankTransactionsWithLinkedAccountsProps) => (
+const BankTransactionsWithLinkedAccountsComponent = (props: BankTransactionsWithLinkedAccountsProps) => (
   <BankAccountsFilterStoreProvider>
     <BankTransactionsWithLinkedAccountsContent {...props} />
   </BankAccountsFilterStoreProvider>
@@ -115,3 +116,5 @@ const BankTransactionsWithLinkedAccountsContent = ({
     </View>
   )
 }
+
+export const BankTransactionsWithLinkedAccounts = withUsageTracking('BankTransactionsWithLinkedAccounts', BankTransactionsWithLinkedAccountsComponent)

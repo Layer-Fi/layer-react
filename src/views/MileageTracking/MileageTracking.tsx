@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { GlobalYearPicker } from '@blocks/DatePickers/GlobalYearPicker/GlobalYearPicker'
 import { Header } from '@blocks/Layout/Header/Header'
 import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
@@ -8,7 +9,7 @@ import { View } from '@blocks/Layout/View/View'
 import { MileageTrackingStats } from '@features/mileage/MileageTrackingStats/MileageTrackingStats'
 import { TripsRouter } from '@features/mileage/TripsRouter/TripsRouter'
 
-export const MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
+const MileageTrackingComponent = ({ showTitle = true }: { showTitle?: boolean }) => {
   const { t } = useTranslation()
 
   return (
@@ -30,3 +31,5 @@ export const MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) =
     </View>
   )
 }
+
+export const MileageTracking = withUsageTracking('MileageTracking', MileageTrackingComponent)

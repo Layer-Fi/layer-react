@@ -5,6 +5,7 @@ import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { UnifiedReportStoreProvider } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { View } from '@blocks/Layout/View/View'
 import { ExpandableDataTableProvider } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
@@ -51,7 +52,7 @@ const UnifiedReportContent = ({
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true }: UnifiedReportProps) => {
+const UnifiedReportsComponent = ({ dateSelectionMode, navigationVariant, showTitle = true }: UnifiedReportProps) => {
   return (
     <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
       <ExpandableDataTableProvider>
@@ -60,3 +61,5 @@ export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle
     </UnifiedReportStoreProvider>
   )
 }
+
+export const UnifiedReports = withUsageTracking('UnifiedReports', UnifiedReportsComponent)

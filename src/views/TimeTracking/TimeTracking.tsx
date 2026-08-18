@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/features/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { View } from '@blocks/Layout/View/View'
 import { DataTableHeaderMenu } from '@blocks/Table/DataTable/DataTableHeaderMenu'
@@ -28,7 +29,7 @@ enum TimeTrackingHeaderMenuActions {
   Services = 'Services',
 }
 
-export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides }: TimeTrackingProps) => {
+const TimeTrackingComponent = ({ showTitle = true, onReportsClick, stringOverrides }: TimeTrackingProps) => {
   return (
     <TimeTrackingServicesDrawerProvider slots={{ Drawer: TimeTrackingServicesDrawer }}>
       <TimeTrackingContent showTitle={showTitle} onReportsClick={onReportsClick} stringOverrides={stringOverrides} />
@@ -93,3 +94,5 @@ const TimeTrackingContent = ({ showTitle, onReportsClick, stringOverrides }: Tim
     </View>
   )
 }
+
+export const TimeTracking = withUsageTracking('TimeTracking', TimeTrackingComponent)

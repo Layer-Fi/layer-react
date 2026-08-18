@@ -4,6 +4,7 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@blocks/Layout/Header/Header'
 import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
@@ -75,7 +76,7 @@ export interface SolopreneurOverviewProps {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export const SolopreneurOverview = ({
+const SolopreneurOverviewComponent = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
@@ -144,3 +145,5 @@ export const SolopreneurOverview = ({
     </ProfitAndLoss>
   )
 }
+
+export const SolopreneurOverview = withUsageTracking('SolopreneurOverview', SolopreneurOverviewComponent)

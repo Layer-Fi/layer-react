@@ -3,6 +3,7 @@ import { type PropsWithChildren } from 'react'
 import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { useProfitAndLoss } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Container } from '@blocks/Layout/Container/Container'
 import { ProfitAndLossChart } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -23,7 +24,7 @@ type Props = PropsWithChildren<{
   asContainer?: boolean
 }>
 
-const ProfitAndLoss = ({
+const ProfitAndLossComponent = ({
   children,
   tagFilter,
   reportingBasis,
@@ -44,10 +45,13 @@ const ProfitAndLoss = ({
   )
 }
 
-ProfitAndLoss.Chart = ProfitAndLossChart
-ProfitAndLoss.Summaries = ProfitAndLossSummaries
-ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
-
-ProfitAndLoss.Report = ProfitAndLossReport
+// The sub-components are wrapped here rather than in their own modules: internal code imports those
+// modules directly, and these statics are the only public route to them.
+const ProfitAndLoss = Object.assign(withUsageTracking('ProfitAndLoss', ProfitAndLossComponent), {
+  Chart: withUsageTracking('ProfitAndLoss.Chart', ProfitAndLossChart),
+  Summaries: withUsageTracking('ProfitAndLoss.Summaries', ProfitAndLossSummaries),
+  DetailedCharts: withUsageTracking('ProfitAndLoss.DetailedCharts', ProfitAndLossDetailedCharts),
+  Report: withUsageTracking('ProfitAndLoss.Report', ProfitAndLossReport),
+})
 
 export { ProfitAndLoss }

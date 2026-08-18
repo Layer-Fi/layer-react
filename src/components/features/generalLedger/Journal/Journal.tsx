@@ -8,6 +8,7 @@ import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@provi
 import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useJournal } from '@hooks/legacy/useJournal'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Loader } from '@ui/Loader/Loader'
 import { Container } from '@blocks/Layout/Container/Container'
 import { JournalEntryDrawer } from '@features/generalLedger/JournalEntryDrawer/JournalEntryDrawer'
@@ -31,7 +32,7 @@ export interface JournalProps {
  * Views already inside a `LedgerDateStoreProvider` (e.g. `GeneralLedger`) should
  * render {@link InternalJournal} instead to avoid a nested store.
  */
-export const Journal = (props: JournalProps) => (
+const JournalComponent = (props: JournalProps) => (
   <LedgerDateStoreProvider fallback={<Loader />}>
     <InternalJournal {...props} />
   </LedgerDateStoreProvider>
@@ -85,3 +86,5 @@ const JournalTableView = ({
     </Container>
   )
 }
+
+export const Journal = withUsageTracking('Journal', JournalComponent)
