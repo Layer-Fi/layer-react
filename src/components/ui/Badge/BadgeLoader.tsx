@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { Check, CircleAlert, Loader, X } from 'lucide-react'
 
 import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
@@ -35,7 +36,7 @@ const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['
 export const BadgeLoader = ({ showLoading, variant = 'default' }: BadgeLoaderProps) => {
   return (
     <span
-      className={`${LOADER_CLASS_NAME} ${legacyClassNames('state:asBadge', `variant:${variant}`)}`}
+      className={classNames(LOADER_CLASS_NAME, legacyClassNames('state:asBadge', `variant:${variant}`))}
       {...toDataProperties({ variant, 'as-badge': true })}
     >
       <BadgeLoaderIcon variant={variant} showLoading={showLoading} />

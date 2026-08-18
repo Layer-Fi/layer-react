@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { Loader } from 'lucide-react'
 
 import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
@@ -17,7 +18,7 @@ export interface SmallLoaderProps {
 export const SmallLoader = ({ size = 28 }: SmallLoaderProps) => {
   return (
     <span
-      className={`${LOADER_CLASS_NAME} ${legacyClassNames('state:withBg')}`}
+      className={classNames(LOADER_CLASS_NAME, legacyClassNames('state:withBg'))}
       data-with-bg
       style={{ width: size, height: size, minWidth: size, minHeight: size }}
     >
