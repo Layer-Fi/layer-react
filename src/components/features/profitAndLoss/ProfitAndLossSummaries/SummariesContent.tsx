@@ -1,8 +1,10 @@
 import { type ReactNode, useContext, useMemo } from 'react'
+import classNames from 'classnames'
 
 import { type SidebarScope } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
@@ -90,7 +92,7 @@ export function SummariesContent({
   }
 
   return (
-    <section className='Layer__component Layer__ProfitAndLossSummaries'>
+    <section className={classNames(COMPONENT_ROOT_CLASS_NAME, 'Layer__ProfitAndLossSummaries')}>
       <ProfitAndLossSummariesList itemCount={listItemCount}>
         {summaryTiles.map(({
           key,

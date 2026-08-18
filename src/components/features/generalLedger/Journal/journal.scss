@@ -1,4 +1,4 @@
-.Layer__component-container.Layer__journal {
+.Layer__ComponentContainer.Layer__journal {
   position: relative;
   display: flex;
   align-items: stretch;
@@ -14,7 +14,7 @@
 }
 
 @container (max-width: 760px) {
-  .Layer__component-container.Layer__journal {
+  .Layer__ComponentContainer.Layer__journal {
     overflow: auto;
   }
 }

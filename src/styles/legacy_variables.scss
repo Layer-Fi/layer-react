@@ -2,7 +2,7 @@
  * Custom properties that v0.1.122 declared and current styles no longer do. Consumers read these in
  * their own CSS, so the names stay resolvable at the same values.
  */
-.Layer__component,
+.Layer__ComponentRoot,
 .Layer__Portal,
 .Layer__view,
 .Layer__UI__Tooltip,

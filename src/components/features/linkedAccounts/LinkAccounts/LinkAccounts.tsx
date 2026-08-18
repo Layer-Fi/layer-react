@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import classNames from 'classnames'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -14,6 +15,7 @@ import {
   type LinkAccountsStringOverrides,
 } from '@features/linkedAccounts/LinkAccounts/LinkAccountsLinkStep'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 
 import './linkAccounts.scss'
 
@@ -60,7 +62,7 @@ function LinkAccountsContent({
   const hideConfirmationStep = loadingStatus === 'complete' && linkedAccountsNeedingConfirmation.length === 0
 
   return (
-    <section className='Layer__link-accounts Layer__component'>
+    <section className={classNames('Layer__link-accounts', COMPONENT_ROOT_CLASS_NAME)}>
       <Wizard
         Header={(
           <>

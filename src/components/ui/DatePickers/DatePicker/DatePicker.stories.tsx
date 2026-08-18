@@ -6,7 +6,6 @@ import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
 
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
-
 const DATE = parseDate('2026-07-23')
 
 const noop = () => {}
@@ -33,7 +32,7 @@ const meta: Meta<PickerProps> = {
   component: DatePicker,
   decorators: [
     Story => (
-      <div className='Layer__component'>
+      <div className='Layer__ComponentRoot'>
         <Story />
       </div>
     ),

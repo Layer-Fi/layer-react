@@ -1,4 +1,4 @@
-.Layer__component,
+.Layer__ComponentRoot,
 .Layer__Portal,
 .Layer__view,
 .Layer__UI__Tooltip,
@@ -201,7 +201,7 @@
 }
 
 @media (width <= 768px) {
-  .Layer__component,
+  .Layer__ComponentRoot,
   .Layer__Portal,
   .Layer__view,
   .Layer__UI__Tooltip,
