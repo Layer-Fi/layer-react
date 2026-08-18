@@ -16,7 +16,8 @@ import {
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
-} & Pick<LinkedAccountsProps, 'stringOverrides'>
+} & Required<Pick<LinkedAccountsProps, 'showUnlinkItem' | 'showBreakConnection'>>
+& Pick<LinkedAccountsProps, 'stringOverrides'>
 
 // Trim the store rather than overriding the GET handler: the add-account and
 // confirm/exclude mocks mutate the store, so the GET must stay store-driven.
@@ -72,10 +73,14 @@ const meta: Meta<LinkedAccountsStoryArgs> = {
   },
   args: {
     showLedgerBalance: false,
+    showUnlinkItem: false,
+    showBreakConnection: false,
     title: '',
   },
   argTypes: {
     stringOverrides: { table: { disable: true } },
+    showUnlinkItem: { table: { disable: true } },
+    showBreakConnection: { table: { disable: true } },
     ...linkedAccountsControls.argTypes,
     title: {
       name: 'stringOverrides.title',
@@ -105,9 +110,11 @@ const meta: Meta<LinkedAccountsStoryArgs> = {
       </div>
     ),
   ],
-  render: ({ showLedgerBalance, title }) => (
+  render: ({ showLedgerBalance, showUnlinkItem, showBreakConnection, title }) => (
     <LinkedAccounts
       showLedgerBalance={showLedgerBalance}
+      showUnlinkItem={showUnlinkItem}
+      showBreakConnection={showBreakConnection}
       stringOverrides={title ? { title } : undefined}
     />
   ),
@@ -156,4 +163,27 @@ export const DisconnectedAccountRepaired: Story = {
       { timeout: 10_000 },
     )
   },
+}
+
+/**
+ * The disconnect-and-repair round trip against the real Layer backend and the real Plaid Sandbox,
+ * driven by hand. Run it from the real-backend Storybook (`npm run storybook:real`), which drops the
+ * `react-plaid-link` mock, so **Repair connection** opens the actual Plaid Link iframe.
+ *
+ * The break-connection test utility is gated on the `staging` environment, so the token endpoint has
+ * to resolve to `staging` and the business you select in the toolbar has to already have a
+ * Plaid-linked account. On `sandbox`, `internalStaging` or `production` the menu item does not
+ * render and this story shows nothing more than `Default`.
+ *
+ * To demo it:
+ *
+ * 1. Enter a staging business id with a Plaid-linked account in the `business` toolbar control.
+ * 2. Open that account’s options menu and select **Break connection (test utility)**. The Plaid item
+ *    moves to `ITEM_LOGIN_REQUIRED` and the **Fix account** pill appears after the refetch.
+ * 3. Select **Fix account**, then **Repair connection**, and complete the Plaid Sandbox Link flow
+ *    with sandbox credentials. The connection status updates and the pill disappears.
+ */
+export const DisconnectedAccountRealSandbox: Story = {
+  tags: ['public-api', 'real-backend'],
+  args: { showUnlinkItem: true, showBreakConnection: true },
 }
