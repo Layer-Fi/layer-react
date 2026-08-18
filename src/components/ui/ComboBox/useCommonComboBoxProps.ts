@@ -19,10 +19,6 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxMenuPortal': 'Layer__select__menu-portal',
   'Layer__ComboBoxMultiValueRemove': 'Layer__select__multi-value__remove',
   'Layer__ComboBoxControl--Disabled': ['Layer__select__control--is-disabled', 'Layer__ComboBoxControl--disabled'],
-} satisfies ComboBoxLegacyClassNames)
-
-/** The readonly names never had a v0.1.122 counterpart; the map exists to keep their old spelling. */
-const readonlyClassNames = createLegacyClassNames({
   'Layer__ComboBoxControl--Readonly': 'Layer__ComboBoxControl--readonly',
   'Layer__ComboBoxIndicatorsContainer--Readonly': 'Layer__ComboBoxIndicatorsContainer--readonly',
 } satisfies ComboBoxLegacyClassNames)
@@ -96,13 +92,13 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
         isDisabled && 'Layer__ComboBoxControl--Disabled',
         hasError && 'Layer__ComboBoxControl--Error',
       ),
-      isReadOnly && readonlyClassNames('Layer__ComboBoxControl--Readonly'),
+      isReadOnly && legacyClassNames('Layer__ComboBoxControl--Readonly'),
     ),
     valueContainer: () => legacyClassNames('Layer__ComboBoxValueContainer'),
     placeholder: () => legacyClassNames('Layer__ComboBoxPlaceholder'),
     indicatorsContainer: () => classNames(
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
-      isReadOnly && readonlyClassNames('Layer__ComboBoxIndicatorsContainer--Readonly'),
+      isReadOnly && legacyClassNames('Layer__ComboBoxIndicatorsContainer--Readonly'),
     ),
     menu: () => classNames(PORTAL_CLASS_NAME, legacyClassNames('Layer__ComboBoxMenu')),
     menuPortal: () => legacyClassNames('Layer__ComboBoxMenuPortal'),

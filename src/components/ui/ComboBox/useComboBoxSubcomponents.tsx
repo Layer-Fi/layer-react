@@ -33,10 +33,6 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__ComboBoxNoOptionsMessage': 'Layer__select__menu-notice',
   'Layer__ComboBoxClearIndicator': 'Layer__select__indicator',
   'Layer__ComboBoxDropdownIndicator': 'Layer__select__indicator',
-} satisfies ComboBoxLegacyClassNames)
-
-/** These two never had a v0.1.122 counterpart; the map exists to keep their old spelling. */
-const optionStateClassNames = createLegacyClassNames({
   'Layer__ComboBoxOption--Disabled': 'Layer__ComboBoxOption--disabled',
   'Layer__ComboBoxOption--Hidden': 'Layer__ComboBoxOption--hidden',
 } satisfies ComboBoxLegacyClassNames)
@@ -200,8 +196,8 @@ function buildCustomOption<T extends ComboBoxOption, IsMulti extends boolean>({
             isFocused && 'Layer__ComboBoxOption--Focused',
             effectiveIsSelected && 'Layer__ComboBoxOption--Selected',
           ),
-          isDisabled && optionStateClassNames('Layer__ComboBoxOption--Disabled'),
-          restProps.data.isHidden && optionStateClassNames('Layer__ComboBoxOption--Hidden'),
+          isDisabled && legacyClassNames('Layer__ComboBoxOption--Disabled'),
+          restProps.data.isHidden && legacyClassNames('Layer__ComboBoxOption--Hidden'),
         )}
       >
         {Option
