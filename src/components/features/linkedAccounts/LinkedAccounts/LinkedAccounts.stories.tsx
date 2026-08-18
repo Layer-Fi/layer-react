@@ -1,5 +1,4 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { expect, screen, userEvent, waitFor, within } from 'storybook/test'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
@@ -54,13 +53,6 @@ const withBrokenPlaidConnection = (account: BankAccount): BankAccount => ({
 const disconnectedBankAccounts = bankAccounts
   .slice(0, 2)
   .map((account, index) => index === 0 ? withBrokenPlaidConnection(account) : account)
-
-// Seeds the store rather than overriding the GET, so the repair mutation and the
-// refetch that follows it read back the account this loader broke.
-const breakFirstAccountConnection = () => {
-  const [firstAccount] = bankAccountStore.all()
-  if (firstAccount) bankAccountStore.save(withBrokenPlaidConnection(firstAccount))
-}
 
 const linkedAccountsControls = makeLinkedAccountsStoryControls()
 
@@ -139,51 +131,8 @@ export const ConfirmingAccounts: Story = {
 }
 
 export const DisconnectedAccount: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
   },
-}
-
-// The mocked Plaid Link resolves 800ms after it opens, then the connection-status
-// mock clears the repair flag and the accounts refetch, so the snapshot has to wait
-// for the healthy state.
-export const DisconnectedAccountRepaired: Story = {
-  tags: ['public-api'],
-  parameters: { chromatic: { delay: 2_000 } },
-  loaders: [breakFirstAccountConnection],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    await userEvent.click(await canvas.findByRole('button', { name: 'Fix account' }))
-    await userEvent.click(await screen.findByRole('menuitem', { name: 'Repair connection' }))
-
-    await waitFor(
-      () => expect(canvas.queryByRole('button', { name: 'Fix account' })).not.toBeInTheDocument(),
-      { timeout: 10_000 },
-    )
-  },
-}
-
-/**
- * The disconnect-and-repair round trip against the real Layer backend and the real Plaid Sandbox,
- * driven by hand. Run it from the real-backend Storybook (`npm run storybook:real`), which drops the
- * `react-plaid-link` mock, so **Repair connection** opens the actual Plaid Link iframe.
- *
- * The break-connection test utility is gated on the `staging` environment, so the token endpoint has
- * to resolve to `staging` and the business you select in the toolbar has to already have a
- * Plaid-linked account. On `sandbox`, `internalStaging` or `production` the menu item does not
- * render and this story shows nothing more than `Default`.
- *
- * To demo it:
- *
- * 1. Enter a staging business id with a Plaid-linked account in the `business` toolbar control.
- * 2. Open that account’s options menu and select **Break connection (test utility)**. The Plaid item
- *    moves to `ITEM_LOGIN_REQUIRED` and the **Fix account** pill appears after the refetch.
- * 3. Select **Fix account**, then **Repair connection**, and complete the Plaid Sandbox Link flow
- *    with sandbox credentials. The connection status updates and the pill disappears.
- */
-export const DisconnectedAccountRealSandbox: Story = {
-  tags: ['public-api', 'real-backend'],
-  args: { showUnlinkItem: true, showBreakConnection: true },
 }

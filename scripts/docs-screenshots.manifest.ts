@@ -285,4 +285,10 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     maxHeight: 620,
     page: 'embedded-components/pages/unified-reports.mdx',
   },
+  {
+    storyId: 'components-linkedaccounts--disconnected-account',
+    out: 'components/linked-accounts-disconnected.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/linked-accounts.mdx',
+  },
 ]
