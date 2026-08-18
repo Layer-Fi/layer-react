@@ -48,6 +48,28 @@ describe(describeProps, () => {
     ])
   })
 
+  it('does not report a nested key whose value is undefined', () => {
+    const described = describeProps({
+      stringOverrides: { title: undefined, dateColumnHeader: 'Date' },
+    })
+
+    expect(described).toEqual([
+      { name: 'stringOverrides', kind: 'object', keys: ['dateColumnHeader'] },
+    ])
+  })
+
+  it('still reports a nested key set explicitly to null', () => {
+    expect(describeProps({ stringOverrides: { title: null } })).toEqual([
+      { name: 'stringOverrides', kind: 'object', keys: ['title'] },
+    ])
+  })
+
+  it('reports a branch whose every leaf is undefined, but none of its leaves', () => {
+    expect(describeProps({ stringOverrides: { header: { title: undefined } } })).toEqual([
+      { name: 'stringOverrides', kind: 'object', keys: ['header'] },
+    ])
+  })
+
   it('stops flattening at three levels deep', () => {
     const described = describeProps({
       slotProps: { profitAndLoss: { chart: { chartConfig: { barWidth: 4 } } } },

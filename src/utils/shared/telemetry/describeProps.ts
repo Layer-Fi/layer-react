@@ -25,6 +25,10 @@ const flattenKeyPaths = (value: object, prefix = '', depth = 1): string[] =>
   entriesOf(value).flatMap(([key, nested]) => {
     const path = prefix === '' ? key : `${prefix}.${key}`
 
+    // Same rule as a top-level prop: an undefined value is indistinguishable from an absent key, and a
+    // partially built or spread config object would otherwise make its unset leaves look used.
+    if (nested === undefined) return []
+
     if (nested === null || typeof nested !== 'object' || depth >= MAX_KEY_DEPTH) return [path]
     if (!isPlainObject(nested) || isValidElement(nested)) return [path]
 
