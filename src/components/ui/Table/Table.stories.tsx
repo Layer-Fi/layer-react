@@ -148,7 +148,7 @@ export const AllVariants: Story = {
 
       <Section title='Pinned columns with horizontal overflow'>
         <Col label='account pinned left, total pinned right' inlineSize={620}>
-          <div className='Layer__UI__Table-ScrollContainer Layer__UI__Table-ScrollContainer--has-horizontal-overflow'>
+          <div className='Layer__UI__Table-ScrollContainer' data-has-horizontal-overflow>
             <Table aria-label='Monthly profit and loss' className='StoryTable StoryTable--periods'>
               <TableHeader>
                 <Column isRowHeader alignment={Alignment.Left} pinned='left'>Account</Column>

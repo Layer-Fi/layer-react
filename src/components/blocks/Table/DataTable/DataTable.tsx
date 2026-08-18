@@ -2,6 +2,7 @@ import { Fragment, type MouseEvent, type PropsWithChildren, useCallback, useMemo
 import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 import classNames from 'classnames'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { ConditionalList } from '@components/utility/ConditionalList'
@@ -16,6 +17,10 @@ import {
 import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { getLegacyRowClassNames, LEGACY_TABLE_CLASS_NAMES } from '@blocks/Table/DataTable/legacyClassNames'
 import { useColumnPinningStyles } from '@blocks/Table/DataTable/useColumnPinningStyles'
+
+const legacyClassNames = createLegacyClassNames({
+  'state:hasHorizontalOverflow': 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
+})
 
 import './dataTable.scss'
 
@@ -136,8 +141,9 @@ export const DataTable = <TData extends object>({
       className={classNames(
         LEGACY_TABLE_CLASS_NAMES.WRAPPER,
         'Layer__UI__Table-ScrollContainer',
-        hasHorizontalOverflow && !isShowingFallbackRows && 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
+        legacyClassNames(hasHorizontalOverflow && !isShowingFallbackRows && 'state:hasHorizontalOverflow'),
       )}
+      data-has-horizontal-overflow={(hasHorizontalOverflow && !isShowingFallbackRows) || undefined}
     >
       <Table
         key={`${componentName}-cols-${numColumns}`}

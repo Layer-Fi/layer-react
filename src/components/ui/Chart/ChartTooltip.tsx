@@ -7,9 +7,14 @@ import {
   ZIndexLayer,
 } from 'recharts'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Span } from '@ui/Typography/Text'
 
 import './ChartTooltip.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ChartTooltip__List: 'Layer__ChartTooltip__list',
+})
 
 const CURSOR_Y_OFFSET = 28
 
@@ -31,7 +36,7 @@ interface ChartTooltipContentProps {
 
 export const ChartTooltipContent = ({ children }: ChartTooltipContentProps) => (
   <div className='Layer__ChartTooltip'>
-    <ul className='Layer__ChartTooltip__list'>
+    <ul className={legacyClassNames('Layer__ChartTooltip__List')}>
       {children}
     </ul>
   </div>

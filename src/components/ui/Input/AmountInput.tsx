@@ -4,11 +4,16 @@ import CurrencyInput, { type CurrencyInputProps } from 'react-currency-input-fie
 import { type IntlShape, useIntl } from 'react-intl'
 
 import { transformCurrencyValue } from '@utils/shared/i18n/number/currency'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { getCurrencyFormatConfig } from '@ui/Input/amountInputUtils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './amountInput.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'state:error': 'Layer__AmountInput--Error',
+})
 
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'placeholder'> {
   onChange?: (value?: string) => void
@@ -39,7 +44,7 @@ export const AmountInput = ({
 
   const currencyInputClassName = classNames(
     'Layer__AmountInput',
-    isInvalid ? 'Layer__AmountInput--Error' : '',
+    legacyClassNames(isInvalid && 'state:error'),
     className,
   )
 
@@ -56,6 +61,7 @@ export const AmountInput = ({
           allowDecimals
           transformRawValue={transformRawValue}
           onValueChange={onChange}
+          data-error={isInvalid || undefined}
           className={currencyInputClassName}
         />
       </TooltipTrigger>
