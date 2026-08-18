@@ -1,4 +1,4 @@
-.Layer__loader {
+.Layer__UI__Loader {
   box-sizing: border-box;
   display: flex;
   gap: 8px;
@@ -20,6 +20,6 @@
   }
 }
 
-.Layer__anim--rotating {
+.Layer__Animation--rotating {
   animation: rotating 2s linear infinite;
 }

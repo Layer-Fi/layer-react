@@ -1,4 +1,4 @@
-.Layer__skeleton-loader {
+.Layer__UI__SkeletonLoader {
   height: 12px;
   width: 100%;
   border-radius: 4px;
@@ -10,7 +10,7 @@
   }
 }
 
-.Layer__anim--skeleton-loading {
+.Layer__Animation--skeletonLoading {
   border-radius: 4px;
   background: var(--color-base-100);
   background:
@@ -25,7 +25,7 @@
   animation: 1.5s shine linear infinite;
 }
 
-.Layer__skeleton-loader--circle {
+.Layer__UI__SkeletonLoader[data-circle] {
   height: 100%;
   width: 100%;
   border-radius: 50%;

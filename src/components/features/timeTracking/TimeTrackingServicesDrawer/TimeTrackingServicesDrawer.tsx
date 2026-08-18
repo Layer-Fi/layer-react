@@ -3,6 +3,7 @@ import { ArchiveRestore, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
+import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
@@ -73,7 +74,7 @@ const LoadingState = () => {
     <DataState
       status={DataStateStatus.info}
       title={t('common:label.loading', 'Loading...')}
-      icon={<Loader className='Layer__anim--rotating' size={18} />}
+      icon={<Loader className={ROTATING_CLASS_NAME} size={18} />}
       spacing
     />
   )

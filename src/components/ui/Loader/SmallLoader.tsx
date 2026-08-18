@@ -1,6 +1,14 @@
 import { Loader } from 'lucide-react'
 
+import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { LOADER_CLASS_NAME } from '@ui/Loader/Loader'
+
 import './smallLoader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'state:withBg': 'Layer__loader--with-bg',
+})
 
 export interface SmallLoaderProps {
   size?: number
@@ -9,10 +17,11 @@ export interface SmallLoaderProps {
 export const SmallLoader = ({ size = 28 }: SmallLoaderProps) => {
   return (
     <span
-      className='Layer__loader Layer__loader--with-bg'
+      className={`${LOADER_CLASS_NAME} ${legacyClassNames('state:withBg')}`}
+      data-with-bg
       style={{ width: size, height: size, minWidth: size, minHeight: size }}
     >
-      <Loader className='Layer__anim--rotating' size={size - 16} />
+      <Loader className={ROTATING_CLASS_NAME} size={size - 16} />
     </span>
   )
 }
