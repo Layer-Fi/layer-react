@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { describeProps, toUsageSignature } from '@utils/shared/telemetry/describeProps'
+import { describeProps } from '@utils/shared/telemetry/describeProps'
 
 describe(describeProps, () => {
   it('records a boolean prop with its literal value', () => {
@@ -81,28 +81,5 @@ describe(describeProps, () => {
   it('sorts props by name so equal combinations serialize identically', () => {
     expect(describeProps({ showTitle: true, asWidget: true }).map(({ name }) => name))
       .toEqual(['asWidget', 'showTitle'])
-  })
-})
-
-describe(toUsageSignature, () => {
-  it('matches for the same props in a different order', () => {
-    const one = toUsageSignature('BankTransactions', describeProps({ showTitle: true, asWidget: false }))
-    const other = toUsageSignature('BankTransactions', describeProps({ asWidget: false, showTitle: true }))
-
-    expect(one).toBe(other)
-  })
-
-  it('differs when a boolean prop is passed with the other value', () => {
-    const enabled = toUsageSignature('BankTransactions', describeProps({ showTitle: true }))
-    const disabled = toUsageSignature('BankTransactions', describeProps({ showTitle: false }))
-
-    expect(enabled).not.toBe(disabled)
-  })
-
-  it('differs when a config object gains a key', () => {
-    const before = toUsageSignature('Tasks', describeProps({ stringOverrides: { title: 'a' } }))
-    const after = toUsageSignature('Tasks', describeProps({ stringOverrides: { title: 'a', subtitle: 'b' } }))
-
-    expect(before).not.toBe(after)
   })
 })

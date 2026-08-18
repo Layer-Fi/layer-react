@@ -1,6 +1,6 @@
 import { isValidElement } from 'react'
 
-import { type LoggedProp, PropKind } from '@schemas/common/componentUsage'
+import { type LoggedProp, PropKind } from '@internal-types/shared/componentUsage'
 
 const MAX_PROPS = 60
 const MAX_KEY_PATHS = 50
@@ -72,11 +72,4 @@ export function describeProps(props: object): LoggedProp[] {
     .sort(([left], [right]) => left.localeCompare(right))
     .flatMap(([name, value]) => describeProp(name, value) ?? [])
     .slice(0, MAX_PROPS)
-}
-
-/** Stable identity for a component's prop combination, used to log each combination once per page load. */
-export function toUsageSignature(component: string, props: ReadonlyArray<LoggedProp>) {
-  return `${component}|${props.map(({ name, kind, booleanValue, keys }) =>
-    [name, kind, booleanValue ?? '', keys?.join(',') ?? ''].join(':'),
-  ).join(';')}`
 }

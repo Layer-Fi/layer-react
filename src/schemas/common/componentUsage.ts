@@ -1,60 +1,14 @@
 import { pipe, Schema } from 'effect'
 
+import { type LoggedProp, PropKind } from '@internal-types/shared/componentUsage'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 
-/**
- * The public surfaces whose props are logged on mount. Deliberately separate from
- * `LayerEventComponent` — that one is exported to consumers and pinned in `src/index.test.ts`,
- * while this list is internal and tracks the whole export surface of `src/index.tsx`.
- */
-export const PublicComponentName = {
-  AccountingOverview: 'AccountingOverview',
-  BalanceSheet: 'BalanceSheet',
-  BankTransactions: 'BankTransactions',
-  BankTransactionsWithLinkedAccounts: 'BankTransactionsWithLinkedAccounts',
-  BookkeepingOverview: 'BookkeepingOverview',
-  ChartOfAccounts: 'ChartOfAccounts',
-  GeneralLedgerView: 'GeneralLedgerView',
-  GlobalDateRangeSelection: 'GlobalDateRangeSelection',
-  GlobalMonthPicker: 'GlobalMonthPicker',
-  Invoices: 'Invoices',
-  Journal: 'Journal',
-  LandingPage: 'LandingPage',
-  LinkAccounts: 'LinkAccounts',
-  LinkedAccounts: 'LinkedAccounts',
-  MileageSummaryCard: 'MileageSummaryCard',
-  MileageTracking: 'MileageTracking',
-  ProfitAndLoss: 'ProfitAndLoss',
-  ProfitAndLossChart: 'ProfitAndLoss.Chart',
-  ProfitAndLossDetailedCharts: 'ProfitAndLoss.DetailedCharts',
-  ProfitAndLossReport: 'ProfitAndLoss.Report',
-  ProfitAndLossSummaries: 'ProfitAndLoss.Summaries',
-  Reports: 'Reports',
-  SolopreneurOverview: 'SolopreneurOverview',
-  StatementOfCashFlow: 'StatementOfCashFlow',
-  Tasks: 'Tasks',
-  TaxEstimates: 'TaxEstimates',
-  TimeTracking: 'TimeTracking',
-  UnifiedReports: 'UnifiedReports',
-} as const
-
-export type PublicComponentName = (typeof PublicComponentName)[keyof typeof PublicComponentName]
-
-/** Coarse shape of a prop value. Values are never sent, so this is all the type information we get. */
-export const PropKind = {
-  Array: 'array',
-  Boolean: 'boolean',
-  Function: 'function',
-  Node: 'node',
-  Null: 'null',
-  Number: 'number',
-  Object: 'object',
-  String: 'string',
-} as const
-
-export type PropKind = (typeof PropKind)[keyof typeof PropKind]
-
-export const LoggedPropSchema = Schema.Struct({
+export const LoggedPropSchema: Schema.Schema<LoggedProp, {
+  readonly name: string
+  readonly kind: PropKind
+  readonly boolean_value?: boolean | undefined
+  readonly keys?: ReadonlyArray<string> | undefined
+}> = Schema.Struct({
   name: Schema.String,
   kind: Schema.Literal(
     PropKind.Array,
@@ -67,17 +21,13 @@ export const LoggedPropSchema = Schema.Struct({
     PropKind.String,
   ),
 
-  /** Only for `kind: 'boolean'` — the literal, so `showTitle={false}` is distinguishable. */
   booleanValue: pipe(
     Schema.optional(Schema.Boolean),
     Schema.fromKey('boolean_value'),
   ),
 
-  /** Only for `kind: 'object'` — flattened dotted key paths, names only. */
   keys: Schema.optional(Schema.Array(Schema.String)),
 })
-
-export type LoggedProp = typeof LoggedPropSchema.Type
 
 export const ComponentUsageBodySchema = Schema.Struct({
   component: Schema.String,
