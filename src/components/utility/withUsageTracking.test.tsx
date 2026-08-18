@@ -5,6 +5,7 @@ import { withUsageTracking } from '@components/utility/withUsageTracking'
 
 import { post as logComponentUsage } from '@msw/api/businesses/[business-id]/component-usage/post'
 import { server } from '@msw/node'
+import { setMinimumResponseDelay } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 import { LayerTestProvider, TEST_LAYER_BUSINESS_ID } from '@testUtils/render/LayerTestProvider'
 
@@ -108,6 +109,42 @@ describe('withUsageTracking', () => {
     await waitFor(() => expect(onReport).toHaveBeenCalledWith(expect.objectContaining({
       body: expect.objectContaining({ component: 'Tasks', parent_component: 'BookkeepingOverview' }) as object,
     })))
+  })
+
+  it('reports a component that mounts while an earlier report is still in flight', async () => {
+    const onReport = vi.fn()
+    let firstRequestStarted: () => void = () => {}
+    const inFlight = new Promise<void>((resolve) => {
+      firstRequestStarted = resolve
+    })
+
+    // The mock signals `onRequest` before applying the delay, so awaiting `inFlight` lands us inside
+    // the window where the reporter is waiting on a response.
+    setMinimumResponseDelay(100)
+    server.use(logComponentUsage.mock({ sampleRate: 1 }, {
+      onRequest: () => {
+        onReport()
+        firstRequestStarted()
+      },
+    }))
+
+    try {
+      const { rerender } = render(<Tracked showTitle={false} />, { wrapper: LayerTestProvider })
+
+      await inFlight
+
+      rerender(
+        <>
+          <Tracked showTitle={false} />
+          <Tracked stringOverrides={{ header: { title: 'Your tasks' } }} />
+        </>,
+      )
+
+      await waitFor(() => expect(onReport).toHaveBeenCalledTimes(2))
+    }
+    finally {
+      setMinimumResponseDelay(0)
+    }
   })
 
   it('keeps a failed report away from the consumer error handler', async () => {

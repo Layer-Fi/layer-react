@@ -27,28 +27,34 @@ export const ComponentUsageReporter = () => {
   const isDraining = useRef(false)
 
   const drain = useCallback(async () => {
-    // Reports arrive as components mount, so a drain already in flight will pick up the rest.
-    if (isDraining.current) return
+    // Components mount before auth resolves. Their reports stay queued — the effect below drains them
+    // once a token lands — because SWR rejects a trigger whose key is not ready yet.
+    if (!isAuthenticated || isDraining.current) return
     isDraining.current = true
 
     try {
-      for (const report of drainComponentUsage(businessId)) {
-        if (!isWithinSample(businessId)) continue
+      // Re-drained until empty: a component mounting while a request is in flight enqueues after this
+      // drain took its batch, and its wake-up is swallowed by the guard above. Nothing else would come
+      // back for it.
+      for (let batch = drainComponentUsage(businessId); batch.length > 0; batch = drainComponentUsage(businessId)) {
+        for (const report of batch) {
+          if (!isWithinSample(businessId)) continue
 
-        const sampleRate = await trigger({
-          component: report.component,
-          parentComponent: report.parentComponent,
-          environment,
-          props: report.props,
-        })
+          const sampleRate = await trigger({
+            component: report.component,
+            parentComponent: report.parentComponent,
+            environment,
+            props: report.props,
+          })
 
-        if (sampleRate !== undefined) recordSampleRate(businessId, sampleRate)
+          if (sampleRate !== undefined) recordSampleRate(businessId, sampleRate)
+        }
       }
     }
     finally {
       isDraining.current = false
     }
-  }, [businessId, environment, trigger])
+  }, [isAuthenticated, businessId, environment, trigger])
 
   const drainRef = useRef(drain)
   useEffect(() => {
@@ -56,12 +62,13 @@ export const ComponentUsageReporter = () => {
   }, [drain])
 
   const wake = useConstant(() => () => {
-    void drainRef.current()
+    // A token expiring mid-drain makes SWR reject on a missing key. Telemetry must never surface as an
+    // unhandled rejection in a consumer's app.
+    void drainRef.current().catch(() => undefined)
   })
 
   useEffect(() => subscribeToComponentUsage(wake), [wake])
 
-  // Components mount before auth resolves, so their reports wait in the queue until it does.
   useEffect(() => {
     if (isAuthenticated) wake()
   }, [isAuthenticated, wake])
