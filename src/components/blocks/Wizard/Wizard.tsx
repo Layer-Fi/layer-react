@@ -61,10 +61,10 @@ const WizardContext = createContext<{
   previous: () => void
   goToStep: (stepIndex: number) => void
 }>({
-  next: async () => {},
-  previous: () => {},
-  goToStep: () => {},
-})
+      next: async () => {},
+      previous: () => {},
+      goToStep: () => {},
+    })
 
 export function useWizard() {
   return useContext(WizardContext)
