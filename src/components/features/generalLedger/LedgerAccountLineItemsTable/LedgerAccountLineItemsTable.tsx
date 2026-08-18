@@ -137,10 +137,6 @@ export const LedgerAccountLineItemsTable = ({
     fetchMore,
   } = useGetListLedgerAccountLines({
     accountId: selectedAccountId ?? '',
-    include_child_account_lines: true,
-    sort_by: 'entry_at',
-    sort_order: 'DESC',
-    limit: 150,
     isEnabled: Boolean(selectedAccountId),
   })
 

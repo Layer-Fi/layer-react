@@ -36,6 +36,12 @@ export const useGetListLedgerAccountLines = createInfiniteQueryHook({
   tags: [LIST_LEDGER_ACCOUNT_LINES_TAG_KEY],
   request: listLedgerAccountLines,
   schema: ListLedgerAccountLinesResponseSchema,
+  keyDefaults: {
+    include_child_account_lines: true,
+    sort_by: 'entry_at',
+    sort_order: 'DESC',
+    limit: 150,
+  },
 })
 
 export const useLedgerAccountLinesCacheActions = createInfiniteQueryGlobalCacheActions<LedgerAccountLineItem>(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)
