@@ -64,24 +64,24 @@ describe('ActionableList', () => {
   it('applies link styling only to link options', () => {
     renderActionableList({ options: [...OPTIONS, ...LINK_OPTIONS] })
 
-    expect(screen.getByRole('button', { name: 'Manage connections' })).toHaveClass('Layer__ActionableList__Item--asLink')
-    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveClass('Layer__ActionableList__Item--asLink')
+    expect(screen.getByRole('button', { name: 'Manage connections' })).toHaveAttribute('data-as-link')
+    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveAttribute('data-as-link')
   })
 
   it('applies secondary styling only to secondary options', () => {
     renderActionableList({ options: [...OPTIONS, SECONDARY_OPTION] })
 
-    expect(screen.getByRole('button', { name: 'Other account' })).toHaveClass('Layer__ActionableList__Item--secondary')
-    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveClass('Layer__ActionableList__Item--secondary')
+    expect(screen.getByRole('button', { name: 'Other account' })).toHaveAttribute('data-secondary')
+    expect(screen.getByRole('button', { name: 'Business Checking' })).not.toHaveAttribute('data-secondary')
   })
 
   it('marks the item matching selectedId as selected', () => {
     renderActionableList({ selectedId: 'checking' })
 
     const selectedItem = screen.getByRole('button', { name: 'Business Checking' })
-    expect(selectedItem).toHaveClass('Layer__ActionableList__Item--selected')
+    expect(selectedItem).toHaveAttribute('data-selected')
 
     const unselectedItem = screen.getByRole('button', { name: 'Business Savings' })
-    expect(unselectedItem).not.toHaveClass('Layer__ActionableList__Item--selected')
+    expect(unselectedItem).not.toHaveAttribute('data-selected')
   })
 })
