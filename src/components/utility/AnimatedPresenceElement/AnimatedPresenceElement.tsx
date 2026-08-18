@@ -54,5 +54,5 @@ function AnimatedPresenceElementInner<T extends ValidHTMLElement = 'div'>(
 }
 
 export const AnimatedPresenceElement = forwardRef(AnimatedPresenceElementInner) as <T extends ValidHTMLElement = 'div'>(
-  props: AnimatedPresenceElementProps<T> & { ref?: Ref<HTMLElementTagNameMap[T]> }
+  props: AnimatedPresenceElementProps<T> & { ref?: Ref<HTMLElementTagNameMap[T]> },
 ) => ReturnType<typeof AnimatedPresenceElementInner>

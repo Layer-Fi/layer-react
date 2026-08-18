@@ -97,7 +97,7 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-  type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style' | 'className'> & { wordBreak?: 'break-all' }
+type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style' | 'className'> & { wordBreak?: 'break-all' }
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps

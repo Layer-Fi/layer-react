@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { type Preview } from '@storybook/react-vite'
-import { initialize, mswLoader } from 'msw-storybook-addon'
+import { setupWorker } from 'msw/browser'
+import { mswLoader } from 'msw-storybook-addon/csf3'
 
 import '../src/styles/index.scss'
 
@@ -29,10 +30,11 @@ const DEFAULT_RESPONSE_DELAY = 250
 // no data for.
 setDateRangePinning(!usesRealBackend)
 
-if (!usesRealBackend) {
-  installSystemDateMock()
+// The addon calls this once, on the first story it loads.
+const startMockServiceWorker = async () => {
+  const worker = setupWorker()
 
-  initialize({
+  await worker.start({
     serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
     onUnhandledRequest: (request, print) => {
       // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
@@ -40,13 +42,19 @@ if (!usesRealBackend) {
     },
   })
 
+  return worker
+}
+
+if (!usesRealBackend) {
+  installSystemDateMock()
+
   setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
 }
 
 const preview: Preview = {
   // No `toolbar`: `manager.ts` contributes a free-text field and keys off this being declared.
   globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
-  loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader],
+  loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader(startMockServiceWorker)],
   beforeEach: ({ tags }: { tags?: string[] }) => {
     setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
     return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
