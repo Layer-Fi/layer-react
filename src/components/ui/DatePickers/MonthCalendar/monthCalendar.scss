@@ -8,7 +8,7 @@
   gap: var(--spacing-3xs);
   padding: var(--spacing-xs);
 
-  &--mobile {
+  &--Mobile {
     grid-template-columns: repeat(3, 6.5rem);
   }
 }
@@ -48,7 +48,7 @@
     background-color: var(--button-bg-ghost-hovered);
   }
 
-  &--mobile {
+  &--Mobile {
     block-size: 2.75rem;
     inline-size: 6.5rem;
     font-size: var(--text-md);

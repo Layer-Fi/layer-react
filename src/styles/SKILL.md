@@ -40,10 +40,11 @@ intentionally undefined; the library ships no default.
 stylesheet) as a side-effect import: `import './componentName.scss'`. The style import goes
 **last** in the import block — no TS/JS imports may follow a CSS import.
 
-## Selector naming — `Layer__Block__Element--modifier`
+## Selector naming — `Layer__Block__Element--Modifier`
 
 - `Layer__` is the namespace, present on every class.
-- `Block` and `Element` are PascalCase; `modifier` is camelCase.
+- `Block`, `Element` and `Modifier` are all PascalCase — `Layer__FileThumb__Actions--Floating`,
+  never `--floating` or `--is-floating`.
 - Primitives use a `Layer__UI__` prefix (`Layer__UI__Button`, `Layer__UI__Table-Cell`).
 - Blocks are at least two PascalCase words.
 
@@ -80,7 +81,7 @@ Not this:
 ```
 
 Use a descendant combinator only when the element genuinely can't own a class (third-party
-markup). Prefer `data-*` attribute selectors to `--modifier` classes for variants — see
+markup). Prefer `data-*` attribute selectors to `--Modifier` classes for variants — see
 [`../components/ui/SKILL.md`](../components/ui/SKILL.md).
 
 ## Formatting (enforced by stylelint)

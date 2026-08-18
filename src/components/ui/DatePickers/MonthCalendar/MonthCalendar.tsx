@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { View } from '@internal-types/shared/view'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { getMonths } from '@ui/DatePickers/MonthCalendar/utils'
@@ -14,6 +15,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 
 import './monthCalendar.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__MonthCalendar__MonthGrid--Mobile': 'Layer__MonthCalendar__MonthGrid--mobile',
+  'Layer__MonthCalendar__MonthGridItem--Mobile': 'Layer__MonthCalendar__MonthGridItem--mobile',
+})
 
 export function MonthCalendar({
   date,
@@ -116,7 +122,7 @@ export function MonthCalendar({
         }}
         className={classNames(
           'Layer__MonthCalendar__MonthGrid',
-          variant === 'mobile' && 'Layer__MonthCalendar__MonthGrid--mobile',
+          variant === 'mobile' && legacyClassNames('Layer__MonthCalendar__MonthGrid--Mobile'),
         )}
       >
         {months.map(m => (
@@ -126,7 +132,7 @@ export function MonthCalendar({
             textValue={m.abbreviation}
             className={classNames(
               'Layer__MonthCalendar__MonthGridItem',
-              variant === 'mobile' && 'Layer__MonthCalendar__MonthGridItem--mobile',
+              variant === 'mobile' && legacyClassNames('Layer__MonthCalendar__MonthGridItem--Mobile'),
             )}
             isDisabled={isMonthDisabled(m.key)}
           >

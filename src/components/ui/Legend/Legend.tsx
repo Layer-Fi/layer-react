@@ -1,3 +1,6 @@
+import classNames from 'classnames'
+
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   type ColorSelector,
@@ -9,6 +12,11 @@ import { Swatch } from '@ui/Swatch/Swatch'
 import { Span } from '@ui/Typography/Text'
 
 import './legend.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__Legend--Aligned': 'Layer__UI__Legend--aligned',
+  'Layer__UI__Legend--Table': 'Layer__UI__Legend--table',
+})
 
 export enum LegendLayout {
   Table = 'Table',
@@ -34,7 +42,7 @@ export const Legend = <T extends SeriesData>({
 
   if (layout === LegendLayout.Aligned) {
     return (
-      <div className='Layer__UI__Legend Layer__UI__Legend--aligned'>
+      <div className={classNames('Layer__UI__Legend', legacyClassNames('Layer__UI__Legend--Aligned'))}>
         {items.map((item) => {
           const percentage = total > 0 ? item.value / total : 0
           const flexGrow = total > 0 ? item.value / total : 1
@@ -67,7 +75,7 @@ export const Legend = <T extends SeriesData>({
   return (
     <Stack
       direction='row'
-      className='Layer__UI__Legend Layer__UI__Legend--table'
+      className={classNames('Layer__UI__Legend', legacyClassNames('Layer__UI__Legend--Table'))}
       gap='lg'
       align='start'
     >

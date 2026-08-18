@@ -5,9 +5,9 @@ import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
  * than data attributes, and the composer lives here so the legacy names are seeded once.
  */
 const legacyClassNames = createLegacyClassNames({
-  'Layer__Animation--rotating': 'Layer__anim--rotating',
-  'Layer__Animation--skeletonLoading': 'Layer__anim--skeleton-loading',
+  'Layer__Animation--Rotating': 'Layer__anim--rotating',
+  'Layer__Animation--SkeletonLoading': 'Layer__anim--skeleton-loading',
 })
 
-export const ROTATING_CLASS_NAME = legacyClassNames('Layer__Animation--rotating')
-export const SKELETON_LOADING_CLASS_NAME = legacyClassNames('Layer__Animation--skeletonLoading')
+export const ROTATING_CLASS_NAME = legacyClassNames('Layer__Animation--Rotating')
+export const SKELETON_LOADING_CLASS_NAME = legacyClassNames('Layer__Animation--SkeletonLoading')

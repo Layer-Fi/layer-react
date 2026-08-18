@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { Dialog, DialogTrigger } from 'react-aria-components/Dialog'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { MonthCalendar } from '@ui/DatePickers/MonthCalendar/MonthCalendar'
@@ -15,6 +16,10 @@ import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 
 import './monthPicker.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__MonthPicker__InputGroup--Truncated': 'Layer__MonthPicker__InputGroup--truncated',
+})
 
 type MonthPickerProps = {
   label: string
@@ -60,7 +65,7 @@ export const MonthPicker = ({
         <InputGroup
           ref={triggerRef}
           slot='input'
-          className={classNames('Layer__MonthPicker__InputGroup', { 'Layer__MonthPicker__InputGroup--truncated': truncateMonth })}
+          className={classNames('Layer__MonthPicker__InputGroup', truncateMonth && legacyClassNames('Layer__MonthPicker__InputGroup--Truncated'))}
           onClick={() => setPopoverOpen(true)}
         >
           <Input inset {...additionalAriaProps} value={inputValue} readOnly id={inputId} />

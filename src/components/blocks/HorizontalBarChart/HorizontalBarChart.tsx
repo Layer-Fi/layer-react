@@ -1,6 +1,8 @@
 import { type ReactNode, useMemo } from 'react'
+import classNames from 'classnames'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
+import { CHART_FOCUS_RESET_CLASS_NAME } from '@utils/shared/styles/chartClassNames'
 import {
   type ColorSelector,
   DEFAULT_TYPE_COLOR_MAPPING,
@@ -11,7 +13,6 @@ import { Legend, LegendLayout } from '@ui/Legend/Legend'
 import { VStack } from '@ui/Stack/Stack'
 
 import './horizontalBarChart.scss'
-
 const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const CHART_BORDER_RADIUS = 8
@@ -89,7 +90,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
     )
 
   return (
-    <VStack className='Layer__HorizontalBarChart Layer__UI__Chart--focusReset' gap='md' justify='center'>
+    <VStack className={classNames('Layer__HorizontalBarChart', CHART_FOCUS_RESET_CLASS_NAME)} gap='md' justify='center'>
       <div className='Layer__HorizontalBarChart__Bar'>
         <ResponsiveContainer key={chartKey} width='100%' height={CHART_HEIGHT}>
           <BarChart
