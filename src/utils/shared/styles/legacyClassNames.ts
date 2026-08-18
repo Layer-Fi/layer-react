@@ -37,17 +37,6 @@ export type LegacyClassNameMapFor<
  *     })
  *
  *     className={legacyClassNames('Layer__UI__Button', `variant:${variant}`)}
- *
- * The namespace before the colon says which attribute the key stands for, so a reader can go from
- * key to DOM without opening the stylesheet:
- *
- * - `variant:`, `type:`, `status:`, `size:`, `weight:`, `align:` — one namespace per value-carrying
- *   prop, named after the prop. The key is the prop's value: `variant:info` is `data-variant='info'`.
- * - `state:` — a boolean whose attribute belongs to the shared vocabulary, either react-aria's
- *   (`disabled`, `pending`, `selected`, `invalid`, …) or one that more than one component styles
- *   (`entering`, `exiting`, `inline`, `open`).
- * - `data:` — a boolean attribute this component alone invents: `data:hasHorizontalOverflow` is
- *   `data-has-horizontal-overflow`, styled only by the table that sets it.
  */
 export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(map: TMap) {
   return (...names: ReadonlyArray<keyof TMap | false | null | undefined>) =>
