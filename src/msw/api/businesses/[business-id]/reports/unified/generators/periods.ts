@@ -1,4 +1,17 @@
-import { eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, max, min, startOfMonth, startOfYear } from 'date-fns'
+import {
+  eachMonthOfInterval,
+  eachQuarterOfInterval,
+  eachYearOfInterval,
+  endOfMonth,
+  endOfQuarter,
+  endOfYear,
+  format,
+  max,
+  min,
+  startOfMonth,
+  startOfQuarter,
+  startOfYear,
+} from 'date-fns'
 
 import { DateGroupBy, type UnifiedReportColumn } from '@schemas/features/unifiedReports/unifiedReport'
 
@@ -22,6 +35,9 @@ export const reportRangeFromParams = (params: URLSearchParams): ReportDateRange 
 
 export const monthsInRange = (range: ReportDateRange) =>
   range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })
+
+const quartersInRange = (range: ReportDateRange) =>
+  range.startDate > range.endDate ? [] : eachQuarterOfInterval({ start: range.startDate, end: range.endDate })
 
 const clippedPeriod = (
   columnKey: string,
@@ -48,14 +64,21 @@ export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): 
       { startDate: startOfMonth(month), endDate: endOfMonth(month) },
       range,
     ))
-    : groupBy === DateGroupBy.Year
-      ? eachYearOfInterval({ start: range.startDate, end: range.endDate }).map(year => clippedPeriod(
-        format(year, 'yyyy'),
-        format(year, 'yyyy'),
-        { startDate: startOfYear(year), endDate: endOfYear(year) },
+    : groupBy === DateGroupBy.Quarter
+      ? quartersInRange(range).map(quarter => clippedPeriod(
+        format(quarter, 'yyyy-\'Q\'Q'),
+        format(quarter, '\'Q\'Q yyyy'),
+        { startDate: startOfQuarter(quarter), endDate: endOfQuarter(quarter) },
         range,
       ))
-      : []
+      : groupBy === DateGroupBy.Year
+        ? eachYearOfInterval({ start: range.startDate, end: range.endDate }).map(year => clippedPeriod(
+          format(year, 'yyyy'),
+          format(year, 'yyyy'),
+          { startDate: startOfYear(year), endDate: endOfYear(year) },
+          range,
+        ))
+        : []
 
   return units.length > 1 ? [...units, totalPeriod] : [totalPeriod]
 }

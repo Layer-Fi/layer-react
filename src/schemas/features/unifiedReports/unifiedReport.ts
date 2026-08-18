@@ -21,6 +21,7 @@ export enum DateGroupBy {
   AllTime = 'ALL_TIME',
   Month = 'MONTH',
   Year = 'YEAR',
+  Quarter = 'QUARTER',
 }
 
 export type UnifiedReportReportingBasis = ReportingBasis.Cash | ReportingBasis.Accrual
