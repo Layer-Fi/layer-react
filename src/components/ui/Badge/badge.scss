@@ -21,7 +21,7 @@
 
   transition: all var(--transition-speed) ease-in-out;
 
-  &[data-size='small'] {
+  &[data-size='sm'] {
     --size: 21px;
 
     font-size: var(--text-xs);

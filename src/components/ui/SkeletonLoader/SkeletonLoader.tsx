@@ -8,7 +8,7 @@ import './skeletonLoader.scss'
 
 const legacyClassNames = createLegacyClassNames({
   'Layer__UI__SkeletonLoader': 'Layer__skeleton-loader',
-  'state:circle': 'Layer__skeleton-loader--circle',
+  'data:circle': 'Layer__skeleton-loader--circle',
 })
 
 export interface SkeletonLoaderProps {
@@ -25,7 +25,7 @@ const BaseSkeletonLoader = ({
   isCircle = false,
 }: SkeletonLoaderProps) => {
   const baseClassName = classNames(
-    legacyClassNames('Layer__UI__SkeletonLoader', isCircle && 'state:circle'),
+    legacyClassNames('Layer__UI__SkeletonLoader', isCircle && 'data:circle'),
     SKELETON_LOADING_CLASS_NAME,
     className,
   )

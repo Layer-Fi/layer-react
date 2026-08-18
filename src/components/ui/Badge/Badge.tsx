@@ -8,8 +8,8 @@ import './badge.scss'
 
 export enum BadgeSize {
   EXTRA_SMALL = 'xs',
-  SMALL = 'small',
-  MEDIUM = 'medium',
+  SMALL = 'sm',
+  MEDIUM = 'md',
 }
 
 export enum BadgeVariant {
@@ -24,19 +24,19 @@ export enum BadgeVariant {
 const legacyClassNames = createLegacyClassNames({
   'Layer__UI__Badge': 'Layer__badge',
   'size:xs': 'Layer__badge--xs',
-  'size:small': 'Layer__badge--small',
-  'size:medium': 'Layer__badge--medium',
+  'size:sm': 'Layer__badge--small',
+  'size:md': 'Layer__badge--medium',
   'variant:default': 'Layer__badge--default',
   'variant:info': 'Layer__badge--info',
   'variant:success': 'Layer__badge--success',
   'variant:warning': 'Layer__badge--warning',
   'variant:error': 'Layer__badge--error',
   'variant:neutral': 'Layer__badge--neutral',
-  'state:clickable': 'Layer__badge--clickable',
-  'state:iconOnly': 'Layer__badge--icon-only',
+  'data:clickable': 'Layer__badge--clickable',
+  'data:iconOnly': 'Layer__badge--icon-only',
 } satisfies LegacyClassNameMapFor<
   'Layer__UI__Badge',
-  `size:${BadgeSize}` | `variant:${BadgeVariant}` | `state:${string}`
+  `size:${BadgeSize}` | `variant:${BadgeVariant}` | `data:${string}`
 >)
 
 export interface BadgeProps {
@@ -67,8 +67,8 @@ export const Badge = ({
       'Layer__UI__Badge',
       `size:${size}`,
       `variant:${variant}`,
-      clickable && 'state:clickable',
-      iconOnly && 'state:iconOnly',
+      clickable && 'data:clickable',
+      iconOnly && 'data:iconOnly',
     ),
     ...toDataProperties({ size, variant, clickable, 'icon-only': iconOnly }),
     onClick,

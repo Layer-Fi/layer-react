@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import './amountInput.scss'
 
 const legacyClassNames = createLegacyClassNames({
-  'state:error': 'Layer__AmountInput--Error',
+  'state:invalid': 'Layer__AmountInput--Error',
 })
 
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'placeholder'> {
@@ -44,7 +44,7 @@ export const AmountInput = ({
 
   const currencyInputClassName = classNames(
     'Layer__AmountInput',
-    legacyClassNames(isInvalid && 'state:error'),
+    legacyClassNames(isInvalid && 'state:invalid'),
     className,
   )
 
@@ -61,7 +61,7 @@ export const AmountInput = ({
           allowDecimals
           transformRawValue={transformRawValue}
           onValueChange={onChange}
-          data-error={isInvalid || undefined}
+          data-invalid={isInvalid || undefined}
           className={currencyInputClassName}
         />
       </TooltipTrigger>

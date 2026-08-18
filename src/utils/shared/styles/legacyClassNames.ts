@@ -29,7 +29,7 @@ export type LegacyClassNameMapFor<
  * carrying them.
  *
  * A `Layer__…` key is a class name and is emitted alongside its legacy names. Any other key names a
- * state whose variant is a `data-*` attribute today, and emits only its legacy names:
+ * variant that is a `data-*` attribute today, and emits only its legacy names:
  *
  *     const legacyClassNames = createLegacyClassNames({
  *       Layer__UI__Button: 'Layer__btn',
@@ -37,6 +37,19 @@ export type LegacyClassNameMapFor<
  *     })
  *
  *     className={legacyClassNames('Layer__UI__Button', `variant:${variant}`)}
+ *
+ * The namespace before the colon says which attribute the key stands for, so a reader can go from
+ * key to DOM without opening the stylesheet:
+ *
+ * - `variant:`, `type:`, `status:`, `size:`, `weight:`, `align:` — one namespace per value-carrying
+ *   prop, named after the prop. The key is the prop's value: `variant:info` is `data-variant='info'`.
+ * - `state:` — a boolean whose attribute belongs to the shared vocabulary, either react-aria's
+ *   (`disabled`, `pending`, `selected`, `invalid`, …) or one that more than one component styles
+ *   (`entering`, `exiting`, `inline`, `open`).
+ * - `data:` — a boolean attribute this component alone invents: `data:hasHorizontalOverflow` is
+ *   `data-has-horizontal-overflow`, styled only by the table that sets it.
+ *
+ * A one-off starts under `data:`. It graduates to `state:` when a second component styles it.
  */
 export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(map: TMap) {
   return (...names: ReadonlyArray<keyof TMap | false | null | undefined>) =>
