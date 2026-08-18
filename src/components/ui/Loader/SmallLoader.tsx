@@ -8,7 +8,7 @@ import { LOADER_CLASS_NAME } from '@ui/Loader/Loader'
 import './smallLoader.scss'
 
 const legacyClassNames = createLegacyClassNames({
-  'data:withBg': 'Layer__loader--with-bg',
+  'state:withBg': 'Layer__loader--with-bg',
 })
 
 export interface SmallLoaderProps {
@@ -18,7 +18,7 @@ export interface SmallLoaderProps {
 export const SmallLoader = ({ size = 28 }: SmallLoaderProps) => {
   return (
     <span
-      className={classNames(LOADER_CLASS_NAME, legacyClassNames('data:withBg'))}
+      className={classNames(LOADER_CLASS_NAME, legacyClassNames('state:withBg'))}
       data-with-bg
       style={{ width: size, height: size, minWidth: size, minHeight: size }}
     >

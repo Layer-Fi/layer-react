@@ -11,10 +11,10 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__UI__Tabs': 'Layer__tabs',
   'Layer__UI__Tabs__Container': 'Layer__tabs__container',
   'Layer__UI__Tabs__Thumb': 'Layer__tabs__thumb',
-  'data:initialized': 'Layer__tabs--initialized',
+  'state:initialized': 'Layer__tabs--initialized',
 } satisfies LegacyClassNameMapFor<
   'Layer__UI__Tabs' | 'Layer__UI__Tabs__Container' | 'Layer__UI__Tabs__Thumb',
-  `data:${string}`
+  `state:${string}`
 >)
 
 const STARTING_PADDING = 12
@@ -44,7 +44,7 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
 
   const baseClassName = legacyClassNames(
     'Layer__UI__Tabs',
-    isInitialized && 'data:initialized',
+    isInitialized && 'state:initialized',
   )
 
   const elementRef = useElementSize<HTMLDivElement>(() => positionThumb())

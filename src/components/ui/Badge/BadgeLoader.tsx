@@ -17,13 +17,13 @@ export interface BadgeLoaderProps {
 type BadgeLoaderVariant = NonNullable<BadgeLoaderProps['variant']>
 
 const legacyClassNames = createLegacyClassNames({
-  'data:asBadge': 'Layer__loader--as-badge',
+  'state:asBadge': 'Layer__loader--as-badge',
   'variant:default': 'Layer__loader--default',
   'variant:info': 'Layer__loader--info',
   'variant:success': 'Layer__loader--success',
   'variant:error': 'Layer__loader--error',
   'variant:warning': 'Layer__loader--warning',
-} satisfies LegacyClassNameMapFor<never, `variant:${BadgeLoaderVariant}` | `data:${string}`>)
+} satisfies LegacyClassNameMapFor<never, `variant:${BadgeLoaderVariant}` | `state:${string}`>)
 
 const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['variant'], showLoading?: boolean }) => {
   if (showLoading) return <Loader size={12} className={ROTATING_CLASS_NAME} />
@@ -36,7 +36,7 @@ const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['
 export const BadgeLoader = ({ showLoading, variant = 'default' }: BadgeLoaderProps) => {
   return (
     <span
-      className={classNames(LOADER_CLASS_NAME, legacyClassNames('data:asBadge', `variant:${variant}`))}
+      className={classNames(LOADER_CLASS_NAME, legacyClassNames('state:asBadge', `variant:${variant}`))}
       {...toDataProperties({ variant, 'as-badge': true })}
     >
       <BadgeLoaderIcon variant={variant} showLoading={showLoading} />

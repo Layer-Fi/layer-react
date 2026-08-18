@@ -32,11 +32,11 @@ const legacyClassNames = createLegacyClassNames({
   'variant:warning': 'Layer__badge--warning',
   'variant:error': 'Layer__badge--error',
   'variant:neutral': 'Layer__badge--neutral',
-  'data:clickable': 'Layer__badge--clickable',
-  'data:iconOnly': 'Layer__badge--icon-only',
+  'state:clickable': 'Layer__badge--clickable',
+  'state:iconOnly': 'Layer__badge--icon-only',
 } satisfies LegacyClassNameMapFor<
   'Layer__UI__Badge',
-  `size:${BadgeSize}` | `variant:${BadgeVariant}` | `data:${string}`
+  `size:${BadgeSize}` | `variant:${BadgeVariant}` | `state:${string}`
 >)
 
 export interface BadgeProps {
@@ -67,8 +67,8 @@ export const Badge = ({
       'Layer__UI__Badge',
       `size:${size}`,
       `variant:${variant}`,
-      clickable && 'data:clickable',
-      iconOnly && 'data:iconOnly',
+      clickable && 'state:clickable',
+      iconOnly && 'state:iconOnly',
     ),
     ...toDataProperties({ size, variant, clickable, 'icon-only': iconOnly }),
     onClick,

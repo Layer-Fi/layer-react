@@ -19,7 +19,7 @@ import { getLegacyRowClassNames, LEGACY_TABLE_CLASS_NAMES } from '@blocks/Table/
 import { useColumnPinningStyles } from '@blocks/Table/DataTable/useColumnPinningStyles'
 
 const legacyClassNames = createLegacyClassNames({
-  'data:hasHorizontalOverflow': 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
+  'state:hasHorizontalOverflow': 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
 })
 
 import './dataTable.scss'
@@ -141,7 +141,7 @@ export const DataTable = <TData extends object>({
       className={classNames(
         LEGACY_TABLE_CLASS_NAMES.WRAPPER,
         'Layer__UI__Table-ScrollContainer',
-        legacyClassNames(hasHorizontalOverflow && !isShowingFallbackRows && 'data:hasHorizontalOverflow'),
+        legacyClassNames(hasHorizontalOverflow && !isShowingFallbackRows && 'state:hasHorizontalOverflow'),
       )}
       data-has-horizontal-overflow={(hasHorizontalOverflow && !isShowingFallbackRows) || undefined}
     >
