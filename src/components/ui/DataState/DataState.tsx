@@ -3,7 +3,8 @@ import classNames from 'classnames'
 import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
@@ -11,9 +12,33 @@ import { Span } from '@ui/Typography/Text'
 import './dataState.scss'
 
 const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__DataState': 'Layer__data-state',
+  'Layer__UI__DataState__Icon': 'Layer__data-state__icon',
+  'Layer__UI__DataState__Text': 'Layer__data-state__text',
+  'Layer__UI__DataState__Button': 'Layer__data-state__btn',
   'state:title': 'Layer__data-state__title',
   'state:description': 'Layer__data-state__description',
-})
+  'state:spacing': 'Layer__data-state--spacing',
+  'state:inline': 'Layer__data-state--inline',
+  'state:reset': 'Layer__data-state--reset',
+  'status:neutral': 'Layer__data-state__icon--neutral',
+  'status:success': 'Layer__data-state__icon--success',
+  'status:error': 'Layer__data-state__icon--error',
+} satisfies LegacyClassNameMapFor<
+  'Layer__UI__DataState' | 'Layer__UI__DataState__Icon' | 'Layer__UI__DataState__Text' | 'Layer__UI__DataState__Button',
+  `state:${string}` | `status:${string}`
+>)
+
+type IconStatus = 'neutral' | 'success' | 'error'
+
+const DataStateIcon = ({ status, children }: { status: IconStatus, children: ReactNode }) => (
+  <span
+    className={legacyClassNames('Layer__UI__DataState__Icon', `status:${status}`)}
+    {...toDataProperties({ status })}
+  >
+    {children}
+  </span>
+)
 
 export enum DataStateStatus {
   allDone = 'allDone',
@@ -31,6 +56,7 @@ export interface DataStateProps {
   isLoading?: boolean
   spacing?: boolean
   inline?: boolean
+  reset?: boolean
   slotProps?: {
     Title?: {
       size?: 'sm' | 'md' | 'lg'
@@ -43,29 +69,13 @@ export interface DataStateProps {
 const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
   switch (status) {
     case DataStateStatus.failed:
-      return (
-        <span className='Layer__data-state__icon Layer__data-state__icon--error'>
-          {icon ?? <OctagonAlert size={12} />}
-        </span>
-      )
+      return <DataStateIcon status='error'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
     case DataStateStatus.info:
-      return (
-        <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          {icon ?? <OctagonAlert size={12} />}
-        </span>
-      )
+      return <DataStateIcon status='neutral'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
     case DataStateStatus.success:
-      return (
-        <span className='Layer__data-state__icon Layer__data-state__icon--success'>
-          {icon ?? <CircleCheckBig size={12} />}
-        </span>
-      )
+      return <DataStateIcon status='success'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
     case DataStateStatus.allDone:
-      return (
-        <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          {icon ?? <CircleCheckBig size={12} />}
-        </span>
-      )
+      return <DataStateIcon status='neutral'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
     default:
       unsafeAssertUnreachable({
         value: status,
@@ -83,23 +93,26 @@ export const DataState = ({
   icon,
   spacing,
   inline,
+  reset,
   slotProps,
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
   const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis } = slotProps?.Title ?? {}
   const baseClassName = classNames(
-    'Layer__data-state', {
-      'Layer__data-state--spacing': spacing,
-      'Layer__data-state--inline': inline,
-    },
+    legacyClassNames(
+      'Layer__UI__DataState',
+      spacing && 'state:spacing',
+      inline && 'state:inline',
+      reset && 'state:reset',
+    ),
     className,
   )
 
   return (
-    <div className={baseClassName}>
+    <div className={baseClassName} {...toDataProperties({ spacing, inline, reset })}>
       {getIcon(status, icon)}
-      <div className='Layer__data-state__text'>
+      <div className={legacyClassNames('Layer__UI__DataState__Text')}>
         <Span
           className={legacyClassNames('state:title')}
           size={titleSize}
@@ -120,7 +133,7 @@ export const DataState = ({
         </Span>
       </div>
       {onRefresh && (
-        <span className='Layer__data-state__btn'>
+        <span className={legacyClassNames('Layer__UI__DataState__Button')}>
           <Button
             variant='outlined'
             onPress={onRefresh}

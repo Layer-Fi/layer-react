@@ -1,15 +1,25 @@
-.Layer__data-state {
+.Layer__UI__DataState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  &.Layer__data-state--spacing {
+  &[data-spacing] {
     padding: var(--spacing-xl);
+  }
+
+  &[data-reset] {
+    gap: var(--spacing-xs);
+  }
+
+  &[data-inline] {
+    flex-direction: row;
+    gap: var(--spacing-xs);
+    min-inline-size: 0;
   }
 }
 
-.Layer__data-state__icon {
+.Layer__UI__DataState__Icon {
   display: flex;
 
   flex-shrink: 0;
@@ -22,62 +32,46 @@
   margin-bottom: var(--spacing-md);
   background: transparent;
   color: var(--fg-default);
+
+  &[data-status='neutral'] {
+    box-shadow: none;
+    background: var(--bg-muted);
+    color: var(--fg-default);
+  }
+
+  &[data-status='success'] {
+    box-shadow: none;
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+
+  &[data-status='error'] {
+    box-shadow: none;
+    background: var(--color-info-error-bg);
+    color: var(--color-info-error-fg);
+  }
 }
 
-.Layer__data-state__icon--neutral {
-  box-shadow: none;
-  background: var(--bg-muted);
-  color: var(--fg-default);
+.Layer__UI__DataState[data-reset] .Layer__UI__DataState__Icon,
+.Layer__UI__DataState[data-inline] .Layer__UI__DataState__Icon {
+  margin-bottom: 0;
 }
 
-.Layer__data-state__icon--success {
-  box-shadow: none;
-  background: var(--color-info-success-bg);
-  color: var(--color-info-success-fg);
-}
-
-.Layer__data-state__icon--error {
-  box-shadow: none;
-  background: var(--color-info-error-bg);
-  color: var(--color-info-error-fg);
-}
-
-.Layer__data-state__text {
+.Layer__UI__DataState__Text {
   min-inline-size: 0;
 }
 
-.Layer__data-state__text > .Layer__Span:first-child {
+.Layer__UI__DataState__Text > .Layer__Span:first-child {
   display: block;
   margin-bottom: var(--spacing-2xs);
 }
 
-.Layer__data-state__text > .Layer__Span:last-child {
+.Layer__UI__DataState__Text > .Layer__Span:last-child {
   display: block;
   margin-bottom: var(--spacing-xl);
 }
 
-.Layer__data-state--reset {
-  gap: var(--spacing-xs);
-
-  .Layer__data-state__text > .Layer__Span:last-child {
-    margin-bottom: 0;
-  }
-
-  .Layer__data-state__icon {
-    margin-bottom: 0;
-  }
-}
-
-.Layer__data-state--inline {
-  flex-direction: row;
-  gap: var(--spacing-xs);
-  min-inline-size: 0;
-
-  .Layer__data-state__text > .Layer__Span {
-    margin-bottom: 0;
-  }
-
-  .Layer__data-state__icon {
-    margin-bottom: 0;
-  }
+.Layer__UI__DataState[data-reset] .Layer__UI__DataState__Text > .Layer__Span:last-child,
+.Layer__UI__DataState[data-inline] .Layer__UI__DataState__Text > .Layer__Span {
+  margin-bottom: 0;
 }
