@@ -2,11 +2,9 @@ import { type ReactNode } from 'react'
 
 import { InAppLinkProvider, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
 import { JournalContext } from '@providers/features/generalLedger/JournalContext/JournalContext'
 import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/features/generalLedger/JournalStore/JournalStoreProvider'
 import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
-import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useJournal } from '@hooks/legacy/useJournal'
 import { Loader } from '@ui/Loader/Loader'
 import { Container } from '@blocks/Layout/Container/Container'
@@ -40,17 +38,14 @@ export const Journal = (props: JournalProps) => (
 /** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
 export const InternalJournal = (props: JournalProps) => {
   const JournalContextData = useJournal()
-  const AccountsContextData = useChartOfAccounts()
   return (
-    <ChartOfAccountsContext.Provider value={AccountsContextData}>
-      <JournalContext.Provider value={JournalContextData}>
-        <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
-          <JournalStoreProvider>
-            <JournalContent {...props} />
-          </JournalStoreProvider>
-        </InAppLinkProvider>
-      </JournalContext.Provider>
-    </ChartOfAccountsContext.Provider>
+    <JournalContext.Provider value={JournalContextData}>
+      <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
+        <JournalStoreProvider>
+          <JournalContent {...props} />
+        </JournalStoreProvider>
+      </InAppLinkProvider>
+    </JournalContext.Provider>
   )
 }
 

@@ -1,8 +1,6 @@
-import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { useSelectedLedgerAccount } from '@hooks/features/generalLedger/useSelectedLedgerAccount'
 import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -10,23 +8,15 @@ import { Span } from '@ui/Typography/Text'
 import { Header } from '@blocks/Layout/Header/Header'
 import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
 import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
-import { flattenAccounts } from '@features/generalLedger/utils'
 
 export interface LedgerAccountHeaderProps {
   onClose: () => void
+  filterByDateRange?: boolean
 }
 
-export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) => {
+export const LedgerAccountPanelHeader = ({ onClose, filterByDateRange }: LedgerAccountHeaderProps) => {
   const { t } = useTranslation()
-  const { selectedAccount } = useContext(LedgerAccountsContext)
-  const { data } = useContext(ChartOfAccountsContext)
-
-  const currentBalance = useMemo(() => {
-    if (!selectedAccount) return 0
-    return flattenAccounts(data?.accounts ?? [])
-      .find(account => account.accountId === selectedAccount.accountId)?.balance
-      ?? selectedAccount.balance
-  }, [data?.accounts, selectedAccount])
+  const selectedAccount = useSelectedLedgerAccount({ filterByDateRange })
 
   return (
     <Header>
@@ -39,7 +29,7 @@ export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) 
               <Span size='sm' variant='subtle'>
                 {t('generalLedger:LedgerAccountPanelHeader.label.balance', 'Current balance')}
               </Span>
-              <MoneySpan size='sm' amount={currentBalance} />
+              <MoneySpan size='sm' amount={selectedAccount?.balance ?? 0} />
             </HStack>
           </VStack>
         </HeaderCol>

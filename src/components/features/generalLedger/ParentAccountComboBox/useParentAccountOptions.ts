@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
 import { type LedgerBalancesSchemaType } from '@schemas/features/generalLedger/ledgerBalances'
+import { flattenAccounts } from '@utils/features/generalLedger/chartOfAccounts'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { flattenAccounts } from '@features/generalLedger/utils'
 
 const isAlphanumeric = (char: string) => /[\p{L}\p{N}]/u.test(char)
 

@@ -61,7 +61,7 @@ new subdirectory only for a genuinely new domain.
 
 ## `legacy/**` — frozen
 
-Hand-rolled SWR hooks (`useChartOfAccounts`, `useJournal`, `useReceipts`, …) that pre-date
+Hand-rolled SWR hooks (`useJournal`, `useReceipts`, …) that pre-date
 the factories. Do not add hooks here or copy their patterns.
 
 ## Related

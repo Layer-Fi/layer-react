@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { type LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
 import { type LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
+import { flattenAccounts } from '@utils/features/generalLedger/chartOfAccounts'
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
+import { useChartOfAccountsBalances } from '@hooks/features/generalLedger/useChartOfAccountsBalances'
 import { Button } from '@ui/Button/Button'
 import { CloseButton } from '@ui/Button/CloseButton'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -24,7 +25,6 @@ import { AccountSubtypeComboBox } from '@features/generalLedger/AccountSubtypeCo
 import { AccountTypeComboBox } from '@features/generalLedger/AccountTypeComboBox/AccountTypeComboBox'
 import { useChartOfAccountsForm } from '@features/generalLedger/ChartOfAccountsForm/useChartOfAccountsForm'
 import { ParentAccountComboBox } from '@features/generalLedger/ParentAccountComboBox/ParentAccountComboBox'
-import { flattenAccounts } from '@features/generalLedger/utils'
 
 import './chartOfAccountsForm.scss'
 
@@ -60,13 +60,14 @@ type ChartOfAccountsFormContentMode =
 
 type ChartOfAccountsFormContentProps = ChartOfAccountsFormContentMode & {
   onCancel: () => void
+  filterByDateRange?: boolean
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }
 
 const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
-  const { onCancel, stringOverrides } = props
+  const { onCancel, filterByDateRange, stringOverrides } = props
   const { t } = useTranslation()
-  const { data } = useContext(ChartOfAccountsContext)
+  const { data } = useChartOfAccountsBalances({ filterByDateRange })
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
   const { isMobile } = useSizeClass()
@@ -247,13 +248,15 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
 export const ChartOfAccountsForm = ({
   formMode,
   onCancel,
+  filterByDateRange,
   stringOverrides,
 }: {
   formMode?: ChartOfAccountsFormMode
   onCancel: () => void
+  filterByDateRange?: boolean
   stringOverrides?: ChartOfAccountsFormStringOverrides
 }) => {
-  const { data, isLoading } = useContext(ChartOfAccountsContext)
+  const { data, isLoading } = useChartOfAccountsBalances({ filterByDateRange })
 
   const contentProps = useMemo((): ChartOfAccountsFormContentMode | undefined => {
     if (!formMode) return undefined
@@ -288,6 +291,7 @@ export const ChartOfAccountsForm = ({
     <ChartOfAccountsFormContent
       key={contentProps.mode === UpsertMode.Update ? contentProps.account.accountId : 'new'}
       {...contentProps}
+      filterByDateRange={filterByDateRange}
       onCancel={onCancel}
       stringOverrides={stringOverrides}
     />

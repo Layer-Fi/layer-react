@@ -1,10 +1,10 @@
-import {
-  type RefObject,
-  useContext,
-} from 'react'
+import { type RefObject } from 'react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import {
+  useChartOfAccountsSelectionActions,
+  useSelectedLedgerEntryId,
+} from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { LedgerAccountEntryDetails } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
@@ -26,24 +26,18 @@ export interface LedgerAccountStringOverrides {
 export interface LedgerAccountProps {
   containerRef: RefObject<HTMLDivElement>
   pageSize?: number
+  filterByDateRange?: boolean
   stringOverrides?: LedgerAccountStringOverrides
 }
 
 export const LedgerAccountPanel = ({
   containerRef,
   pageSize = 15,
+  filterByDateRange,
   stringOverrides,
 }: LedgerAccountProps) => {
-  const {
-    setSelectedAccount,
-    selectedEntryId,
-    closeSelectedEntry,
-  } = useContext(LedgerAccountsContext)
-
-  const close = () => {
-    setSelectedAccount(undefined)
-    closeSelectedEntry()
-  }
+  const selectedEntryId = useSelectedLedgerEntryId()
+  const { clearSelection } = useChartOfAccountsSelectionActions()
 
   return (
     <Panel
@@ -57,9 +51,10 @@ export const LedgerAccountPanel = ({
       className={legacyClassNames('Layer__LedgerAccountPanel')}
     >
       <VStack>
-        <LedgerAccountPanelHeader onClose={close} />
+        <LedgerAccountPanelHeader onClose={clearSelection} filterByDateRange={filterByDateRange} />
         <LedgerAccountLineItemsTable
           pageSize={pageSize}
+          filterByDateRange={filterByDateRange}
           stringOverrides={stringOverrides?.ledgerEntriesTable}
         />
       </VStack>
