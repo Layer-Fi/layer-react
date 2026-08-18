@@ -36,9 +36,10 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PR: ${{ github.event.pull_request.number }}
       # `--edit-last` targets this bot's own comment, so the PR keeps one that evolves. Safe only
-      # while no other workflow comments here.
+      # while no other workflow comments here. `--repo` because this job has no checkout for `gh` to
+      # read a remote from, the same reason the statuses below go through `$GITHUB_REPOSITORY`.
       run: |
-        gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — add the \`storybook-preview\` label to build one.
+        gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --edit-last --create-if-none --body "**Storybook preview** — add the \`storybook-preview\` label to build one.
 
         It renders stories against a live sandbox business instead of MSW fixtures, and rebuilds on every push while the \`storybook-preview\` label is applied."
 
