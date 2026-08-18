@@ -1,12 +1,13 @@
-import { type ReactNode, useContext } from 'react'
+import { type ReactNode } from 'react'
 
 import { InAppLinkProvider, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { ChartOfAccountsDateScopeProvider } from '@providers/features/generalLedger/ChartOfAccountsDateScope/ChartOfAccountsDateScopeProvider'
+import {
+  ChartOfAccountsSelectionStoreProvider,
+  useSelectedLedgerAccountId,
+} from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
 import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
-import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
-import { useLedgerAccounts } from '@hooks/legacy/useLedgerAccounts'
 import { Loader } from '@ui/Loader/Loader'
 import { Container } from '@blocks/Layout/Container/Container'
 import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@features/generalLedger/ChartOfAccountsTableWithPanel/ChartOfAccountsTableWithPanel'
@@ -41,36 +42,30 @@ export const ChartOfAccounts = (props: ChartOfAccountsProps) => (
 )
 
 /** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
-export const InternalChartOfAccounts = (props: ChartOfAccountsProps) => {
-  const chartOfAccountsContextData = useChartOfAccounts({
-    withDates: props.withDateControl,
-  })
-  const ledgerAccountsContextData = useLedgerAccounts()
-  return (
-    <ChartOfAccountsContext.Provider value={chartOfAccountsContextData}>
-      <LedgerAccountsContext.Provider value={ledgerAccountsContextData}>
-        <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
-          <ChartOfAccountsContent {...props} />
-        </InAppLinkProvider>
-      </LedgerAccountsContext.Provider>
-    </ChartOfAccountsContext.Provider>
-  )
-}
+export const InternalChartOfAccounts = (props: ChartOfAccountsProps) => (
+  <ChartOfAccountsDateScopeProvider isDateScoped={props.withDateControl ?? false}>
+    <ChartOfAccountsSelectionStoreProvider>
+      <InAppLinkProvider renderInAppLink={props.renderInAppLink}>
+        <ChartOfAccountsContent {...props} />
+      </InAppLinkProvider>
+    </ChartOfAccountsSelectionStoreProvider>
+  </ChartOfAccountsDateScopeProvider>
+)
 
 const ChartOfAccountsContent = ({
   asWidget,
-  withDateControl,
+  withDateControl = false,
   withExpandAllButton,
   stringOverrides,
   templateAccountsEditable,
   showAddAccountButton,
 }: ChartOfAccountsProps) => {
-  const { selectedAccount } = useContext(LedgerAccountsContext)
+  const selectedAccountId = useSelectedLedgerAccountId()
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
-      {selectedAccount
+      {selectedAccountId
         ? (
           <LedgerAccountPanel
             containerRef={containerRef}

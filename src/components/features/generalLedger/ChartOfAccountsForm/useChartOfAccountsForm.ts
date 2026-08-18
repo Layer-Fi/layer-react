@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +8,6 @@ import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/le
 import { UpsertLedgerAccountSchema } from '@schemas/features/generalLedger/upsertLedgerAccount'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useAppForm } from '@blocks/Form/useForm'
 import {
   convertLedgerAccountFormToParams,
@@ -26,7 +25,6 @@ type UseChartOfAccountsFormProps = {
 
 export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
   const { t } = useTranslation()
-  const { refetch } = useContext(ChartOfAccountsContext)
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
 
@@ -52,7 +50,6 @@ export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
       const upsertLedgerAccountRequest = Schema.encodeUnknownSync(UpsertLedgerAccountSchema)(upsertLedgerAccountParams)
 
       await upsertLedgerAccount(upsertLedgerAccountRequest)
-      await refetch()
 
       setSubmitError(undefined)
       onSuccess()
@@ -61,7 +58,7 @@ export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
       console.error(e)
       setSubmitError(t('common:error.submit_failed_check_connection', 'Submit failed. Please check your connection and try again.'))
     }
-  }, [onSuccess, upsertLedgerAccount, refetch, stableName, t])
+  }, [onSuccess, upsertLedgerAccount, stableName, t])
 
   const getErrorText = useCallback((reason: LedgerAccountInvalidReason): string => {
     switch (reason) {

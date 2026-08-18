@@ -1,10 +1,10 @@
-import {
-  type RefObject,
-  useContext,
-} from 'react'
+import { type RefObject } from 'react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import {
+  useChartOfAccountsSelectionActions,
+  useSelectedLedgerEntryId,
+} from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { LedgerAccountEntryDetails } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
@@ -34,16 +34,8 @@ export const LedgerAccountPanel = ({
   pageSize = 15,
   stringOverrides,
 }: LedgerAccountProps) => {
-  const {
-    setSelectedAccount,
-    selectedEntryId,
-    closeSelectedEntry,
-  } = useContext(LedgerAccountsContext)
-
-  const close = () => {
-    setSelectedAccount(undefined)
-    closeSelectedEntry()
-  }
+  const selectedEntryId = useSelectedLedgerEntryId()
+  const { clearSelection } = useChartOfAccountsSelectionActions()
 
   return (
     <Panel
@@ -57,7 +49,7 @@ export const LedgerAccountPanel = ({
       className={legacyClassNames('Layer__LedgerAccountPanel')}
     >
       <VStack>
-        <LedgerAccountPanelHeader onClose={close} />
+        <LedgerAccountPanelHeader onClose={clearSelection} />
         <LedgerAccountLineItemsTable
           pageSize={pageSize}
           stringOverrides={stringOverrides?.ledgerEntriesTable}

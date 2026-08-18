@@ -3,18 +3,15 @@ import { type Row } from '@tanstack/react-table'
 import { List, Pen, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  type AugmentedLedgerAccountBalance,
-  LedgerAccountNodeType,
-} from '@internal-types/features/generalLedger/chartOfAccounts'
+import { type AugmentedLedgerAccountBalance } from '@internal-types/features/generalLedger/chartOfAccounts'
 import { Alignment } from '@internal-types/utility/table'
 import { asMutable } from '@utils/shared/array/asMutable'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDeleteLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/delete'
 import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { useChartOfAccountsSelectionActions } from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
+import { useChartOfAccountsBalances } from '@hooks/features/generalLedger/useChartOfAccountsBalances'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack } from '@ui/Stack/Stack'
@@ -84,22 +81,6 @@ const ChartOfAccountsEmptyState = () => {
   )
 }
 
-const ChartOfAccountsErrorState = () => {
-  const { t } = useTranslation()
-  const { refetch, isValidating, isLoading } = useContext(ChartOfAccountsContext)
-
-  return (
-    <DataState
-      status={DataStateStatus.failed}
-      title={t('common:error.something_went_wrong', 'Something went wrong')}
-      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-      onRefresh={() => void refetch()}
-      isLoading={isValidating || isLoading}
-      spacing
-    />
-  )
-}
-
 export const ChartOfAccountsTable = ({
   stringOverrides,
   searchQuery,
@@ -113,9 +94,9 @@ export const ChartOfAccountsTable = ({
 }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { setSelectedAccount } = useContext(LedgerAccountsContext)
+  const { selectAccount } = useChartOfAccountsSelectionActions()
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const { data, isLoading, isError, refetch } = useContext(ChartOfAccountsContext)
+  const { data, isLoading, isValidating, isError, mutate } = useChartOfAccountsBalances()
   const { trigger: deleteAccount } = useDeleteLedgerAccount()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
@@ -125,7 +106,6 @@ export const ChartOfAccountsTable = ({
   const onConfirmDelete = async () => {
     if (!accountToDelete) return
     await deleteAccount({ accountId: accountToDelete.accountId })
-    await refetch()
   }
 
   const getDeleteButtonTooltip = useCallback((account: AugmentedLedgerAccountBalance) => {
@@ -156,16 +136,11 @@ export const ChartOfAccountsTable = ({
     setExpanded(getInitialExpandedState(filteredAccounts))
   }, [filteredAccounts, setExpanded])
 
-  const getNodeType = (row: Row<AugmentedLedgerAccountBalance>): LedgerAccountNodeType => {
-    if (row.depth === 0) return LedgerAccountNodeType.Root
-    return row.getCanExpand() ? LedgerAccountNodeType.Parent : LedgerAccountNodeType.Leaf
-  }
-
   const onClickView = useCallback((row: Row<AugmentedLedgerAccountBalance>, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setSelectedAccount({ ...row.original, nodeType: getNodeType(row) })
-  }, [setSelectedAccount])
+    selectAccount(row.original.accountId)
+  }, [selectAccount])
 
   const onClickEdit = useCallback((account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
     e.preventDefault()
@@ -193,10 +168,22 @@ export const ChartOfAccountsTable = ({
     }
     return renderHighlightedValue(row, text)
   }, [renderHighlightedValue])
+
+  const ErrorState = useCallback(() => (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('common:error.something_went_wrong', 'Something went wrong')}
+      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+      onRefresh={() => { void mutate() }}
+      isLoading={isValidating || isLoading}
+      spacing
+    />
+  ), [mutate, isValidating, isLoading, t])
+
   const slots = useMemo(() => ({
     EmptyState: ChartOfAccountsEmptyState,
-    ErrorState: ChartOfAccountsErrorState,
-  }), [])
+    ErrorState,
+  }), [ErrorState])
 
   const columnConfig = useMemo<ColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
