@@ -41,5 +41,5 @@ function AnimatedElementInner<T extends ValidHTMLElement = 'div'>(
 }
 
 export const AnimatedElement = forwardRef(AnimatedElementInner) as <T extends ValidHTMLElement = 'div'>(
-  props: AnimatedElementProps<T> & { ref?: Ref<HTMLElementTagNameMap[T]> }
+  props: AnimatedElementProps<T> & { ref?: Ref<HTMLElementTagNameMap[T]> },
 ) => ReturnType<typeof AnimatedElementInner>

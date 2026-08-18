@@ -51,9 +51,9 @@
 
   @container (width <= 840px) {
     --pnl-detail-table-cols:
-      minmax(4rem, 25%)     /* date */
-      minmax(8rem, 55%)     /* description */
-      minmax(4rem, 20%);    /* amount */
+      minmax(4rem, 25%) /* date */
+      minmax(8rem, 55%) /* description */
+      minmax(4rem, 20%); /* amount */
 
     .Layer__UI__VirtualizedTable__row,
     .Layer__UI__VirtualizedTable__header > tr {

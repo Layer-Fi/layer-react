@@ -96,7 +96,7 @@ const TableHeaderInner = <T extends object>(
 }
 
 const TableHeader = forwardRef(TableHeaderInner) as (<T>(
-  props: TableHeaderProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
+  props: TableHeaderProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> },
 ) => React.ReactElement) & { displayName?: string }
 
 TableHeader.displayName = TableSubComponent.TableHeader
@@ -123,7 +123,7 @@ const TableBodyInner = <T extends object>(
 }
 
 const TableBody = forwardRef(TableBodyInner) as (<T>(
-  props: TableBodyProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> }
+  props: TableBodyProps<T> & TableRenderingProps & { ref?: React.Ref<HTMLTableSectionElement> },
 ) => React.ReactElement) & { displayName?: string }
 
 TableBody.displayName = TableSubComponent.TableBody
@@ -162,7 +162,7 @@ const RowInner = <T extends object>(
 }
 
 const Row = forwardRef(RowInner) as (<T>(
-  props: RowProps<T> & RowStyleProps & TableRenderingProps & { ref?: React.Ref<HTMLTableRowElement> }
+  props: RowProps<T> & RowStyleProps & TableRenderingProps & { ref?: React.Ref<HTMLTableRowElement> },
 ) => React.ReactElement) & { displayName?: string }
 
 Row.displayName = TableSubComponent.Row

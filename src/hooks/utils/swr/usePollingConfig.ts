@@ -31,9 +31,9 @@ export function usePollingConfig<TData>({
   maxDurationMs = DEFAULT_MAX_POLL_DURATION_MS,
   maxErrorRetries = DEFAULT_MAX_ERROR_RETRIES,
 }: UsePollingConfigOptions<TData>): Pick<
-    SWRConfiguration<TData>,
+  SWRConfiguration<TData>,
   'refreshInterval' | 'onErrorRetry' | 'onSuccess'
-  > {
+> {
   const phaseRef = useRef<PollingPhase>(PollingPhase.Idle)
   const hasCompletedRef = useRef(false)
   const previousDataRef = useRef<TData>()

@@ -43,7 +43,7 @@ export const DateField = forwardRef(
     )
   },
 ) as <T extends DateValue>(
-  props: DateFieldProps<T> & { ref?: React.Ref<HTMLDivElement> }
+  props: DateFieldProps<T> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement
 
 const DATE_INPUT_CLASS_NAME = 'Layer__UI__DateInput'
@@ -107,5 +107,5 @@ export const DatePicker = forwardRef(
     )
   },
 ) as <T extends DateValue>(
-  props: DatePickerProps<T> & { ref?: React.Ref<HTMLDivElement> }
+  props: DatePickerProps<T> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement

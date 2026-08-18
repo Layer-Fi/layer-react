@@ -35,7 +35,7 @@ export function createInfiniteKeyLoader<
 >(
   tags: ReadonlyArray<string>,
   getCursor: (previousPageData: TPage | null) => string | undefined =
-  previousPageData => previousPageData?.meta?.pagination.cursor ?? undefined,
+    previousPageData => previousPageData?.meta?.pagination.cursor ?? undefined,
 ) {
   return (
     previousPageData: TPage | null,

@@ -179,10 +179,10 @@ type AllowedInternalDrawerProps = Pick<
 
 type DrawerSlots = DialogSlots
 
-export type DrawerProps = AllowedModalOverlayProps &
-  AllowedInternalDrawerProps &
-  AllowedDialogProps &
-  AllowedInternalModalProps & {
+export type DrawerProps = AllowedModalOverlayProps
+  & AllowedInternalDrawerProps
+  & AllowedDialogProps
+  & AllowedInternalModalProps & {
     slots?: DrawerSlots
     fixedHeight?: boolean
   }
