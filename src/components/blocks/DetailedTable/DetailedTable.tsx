@@ -3,7 +3,8 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import SortArrows from '@icons/SortArrows'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
@@ -18,9 +19,44 @@ import './detailedTable.scss'
 import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
 import { ValueIcon } from './ValueIcon'
 
+type DetailedTableClassName =
+  | 'Layer__DetailedTable'
+  | 'Layer__DetailedTable__Container'
+  | 'Layer__DetailedTable__Table'
+  | 'Layer__DetailedTable__Row'
+  | 'Layer__DetailedTable__SortableColumn'
+  | 'Layer__DetailedTable__SortArrows'
+
+type SortableColumn = 'category' | 'type' | 'value'
+type DetailedTableColumn = SortableColumn | 'color' | 'percent'
+
 const legacyClassNames = createLegacyClassNames({
-  Layer__DetailedTable__SortableColumn: 'Layer__sortable-col',
-  Layer__DetailedTable__sortArrows: 'Layer__sort-arrows',
+  'Layer__DetailedTable__Container': 'Layer__DetailedTable__container',
+  'Layer__DetailedTable__Table': 'Layer__DetailedTable__table',
+  'Layer__DetailedTable__Row': 'Layer__DetailedTable__row',
+  'Layer__DetailedTable__SortableColumn': 'Layer__sortable-col',
+  'Layer__DetailedTable__SortArrows': ['Layer__DetailedTable__sortArrows', 'Layer__sort-arrows'],
+  'state:sortable': 'Layer__DetailedTable__table--sortable',
+  'state:active': 'active',
+  'column:color': 'Layer__DetailedTable__Column--color',
+  'column:category': 'Layer__DetailedTable__Column--category',
+  'column:type': 'Layer__DetailedTable__Column--type',
+  'column:value': 'Layer__DetailedTable__Column--value',
+  'column:percent': 'Layer__DetailedTable__Column--percent',
+  'sortColumn:value': 'Layer__DetailedTable__SortableColumn--value',
+  'sortOrder:ASC': 'Layer__DetailedTable__SortableColumn--sortasc',
+  'sortOrder:ASCENDING': 'Layer__DetailedTable__SortableColumn--sortascending',
+  'sortOrder:DES': 'Layer__DetailedTable__SortableColumn--sortdes',
+  'sortOrder:DESC': 'Layer__DetailedTable__SortableColumn--sortdesc',
+  'sortOrder:DESCENDING': 'Layer__DetailedTable__SortableColumn--sortdescending',
+} satisfies LegacyClassNameMapFor<
+  DetailedTableClassName,
+  `state:${string}` | `column:${DetailedTableColumn}` | 'sortColumn:value' | `sortOrder:${SortOrder}`
+>)
+
+const cellProperties = (column: DetailedTableColumn) => ({
+  className: classNames('Layer__DetailedTable__Column', legacyClassNames(`column:${column}`)),
+  ...toDataProperties({ column }),
 })
 
 export interface DetailedTableStringOverrides {
@@ -94,60 +130,66 @@ export const DetailedTable = <T extends SeriesData>({
     return sortParams.sortBy === column ? undefined : 'subtle'
   }, [sortParams.sortBy])
 
+  const sortableHeaderProperties = (column: SortableColumn) => {
+    const sortOrder = sortParams.sortBy === column ? sortParams.sortOrder : undefined
+
+    return {
+      className: legacyClassNames(
+        'Layer__DetailedTable__SortableColumn',
+        column === 'value' && 'sortColumn:value',
+        sortOrder && `sortOrder:${sortOrder}`,
+      ),
+      ...toDataProperties({ column, sort: sortOrder ?? false }),
+    }
+  }
+
   return (
     <VStack className='Layer__DetailedTable'>
-      <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe={isDesktop ? 'md' : undefined}>
-        <VStack className={classNames('Layer__DetailedTable__table', isSortable && 'Layer__DetailedTable__table--sortable')}>
+      <VStack className={legacyClassNames('Layer__DetailedTable__Container')} pi='md' pbs='2xs' pbe={isDesktop ? 'md' : undefined}>
+        <VStack
+          className={legacyClassNames('Layer__DetailedTable__Table', isSortable && 'state:sortable')}
+          {...toDataProperties({ sortable: isSortable })}
+        >
           <table>
             <thead>
               <tr>
                 <th></th>
                 <th
-                  className={classNames(
-                    legacyClassNames('Layer__DetailedTable__SortableColumn'),
-                    sortParams.sortBy === 'category' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
-                  )}
+                  {...sortableHeaderProperties('category')}
                   onClick={() => setAndToggleSortDirection({ field: 'category' })}
                 >
                   <HStack align='center' gap='3xs'>
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
+                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__SortArrows')} />}
                   </HStack>
                 </th>
                 {!isMobile && hasType && (
                   <th
-                    className={classNames(
-                      legacyClassNames('Layer__DetailedTable__SortableColumn'),
-                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
-                    )}
+                    {...sortableHeaderProperties('type')}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
                     <HStack align='center' gap='3xs'>
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
+                      {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__SortArrows')} />}
                     </HStack>
                   </th>
                 )}
                 <th
-                  className={classNames(
-                    legacyClassNames('Layer__DetailedTable__SortableColumn'),
-                    'Layer__DetailedTable__SortableColumn--value',
-                    sortParams.sortBy === 'value' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
-                  )}
+                  {...sortableHeaderProperties('value')}
                   onClick={() => setAndToggleSortDirection({ field: 'value', defaultSortOrder: SortOrder.DESC })}
                 >
                   <HStack align='center' gap='3xs' justify='end'>
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__sortArrows')} />}
+                    {isSortable && <SortArrows className={legacyClassNames('Layer__DetailedTable__SortArrows')} />}
                   </HStack>
                 </th>
-                <th className='Layer__DetailedTable__Column--percent'></th>
+                <th {...toDataProperties({ column: 'percent' })} className={legacyClassNames('column:percent')}></th>
               </tr>
             </thead>
             <tbody>
@@ -156,25 +198,23 @@ export const DetailedTable = <T extends SeriesData>({
                 return (
                   <tr
                     key={row.key}
-                    className={classNames(
-                      'Layer__DetailedTable__row',
-                      isRowActive ? 'active' : '',
-                    )}
+                    className={legacyClassNames('Layer__DetailedTable__Row', isRowActive && 'state:active')}
+                    {...toDataProperties({ active: isRowActive })}
                     onMouseEnter={() => interactionProps.setHoveredItem(row.item)}
                     onMouseLeave={() => interactionProps.setHoveredItem(undefined)}
                   >
-                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--color'>
+                    <td {...cellProperties('color')}>
                       <ValueIcon<T> item={row.item} {...stylingProps} />
                     </td>
-                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--category'>
+                    <td {...cellProperties('category')}>
                       <Span size='sm'>{row.item.displayName}</Span>
                     </td>
                     {!isMobile && hasType && (
-                      <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--type'>
+                      <td {...cellProperties('type')}>
                         <Span variant={isRowActive ? undefined : 'subtle'} size='sm'>{row.item.type}</Span>
                       </td>
                     )}
-                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--value'>
+                    <td {...cellProperties('value')}>
                       <Button
                         variant='text'
                         onPress={() => interactionProps.onValueClick?.(row.item)}
@@ -183,7 +223,7 @@ export const DetailedTable = <T extends SeriesData>({
                         <MoneySpan size='sm' align='right' amount={row.item.value} />
                       </Button>
                     </td>
-                    <td className='Layer__DetailedTable__Column Layer__DetailedTable__Column--percent'>
+                    <td {...cellProperties('percent')}>
                       <Span className='share-text' variant={isRowActive ? undefined : 'subtle'} size='sm'>
                         {row.item.value < 0 ? '-' : row.formattedShare}
                       </Span>

@@ -12,12 +12,33 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type ColorSelector, type DetailData, type SeriesData } from '@ui/Chart/seriesTypes'
 import { VStack } from '@ui/Stack/Stack'
 import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
 
 import './detailedChart.scss'
+
+type DetailedChartClassName =
+  | 'Layer__DetailedChart'
+  | 'Layer__DetailedChart__Header'
+  | 'Layer__DetailedChart__Container'
+  | 'Layer__DetailedChart__CenterLabelTitle'
+  | 'Layer__DetailedChart__CenterLabelValue'
+  | 'Layer__DetailedChart__CenterLabelShare'
+  | 'Layer__DetailedChart__CenterLabelLoading'
+  | 'Layer__DetailedChart__Slice'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__DetailedChart__Header': 'Layer__DetailedChart__header',
+  'Layer__DetailedChart__Container': 'Layer__DetailedChart__container',
+  'Layer__DetailedChart__CenterLabelTitle': 'Layer__DetailedChart__centerLabelTitle',
+  'Layer__DetailedChart__CenterLabelValue': 'Layer__DetailedChart__centerLabelValue',
+  'Layer__DetailedChart__CenterLabelShare': 'Layer__DetailedChart__centerLabelShare',
+  'Layer__DetailedChart__CenterLabelLoading': 'Layer__DetailedChart__centerLabelLoading',
+  'Layer__DetailedChart__Slice--Inactive': 'Layer__DetailedChart__Slice--inactive',
+} satisfies LegacyClassNameMapFor<DetailedChartClassName>)
 
 export type DetailedChartProps<T extends SeriesData> = {
   data: DetailData<T>
@@ -107,7 +128,7 @@ export const DetailedChart = <T extends SeriesData>({
           verticalAnchor='middle'
           maxLines={2}
           width={Math.max(width - 40, 0)}
-          className='Layer__DetailedChart__centerLabelTitle'
+          className={legacyClassNames('Layer__DetailedChart__CenterLabelTitle')}
         >
           {text}
         </ChartText>
@@ -116,7 +137,7 @@ export const DetailedChart = <T extends SeriesData>({
           x={x + width / 2}
           textAnchor='middle'
           verticalAnchor='middle'
-          className='Layer__DetailedChart__centerLabelValue'
+          className={legacyClassNames('Layer__DetailedChart__CenterLabelValue')}
         >
           {formatCurrencyFromCents(value)}
         </ChartText>
@@ -126,7 +147,7 @@ export const DetailedChart = <T extends SeriesData>({
             x={x + width / 2}
             textAnchor='middle'
             verticalAnchor='middle'
-            className='Layer__DetailedChart__centerLabelShare'
+            className={legacyClassNames('Layer__DetailedChart__CenterLabelShare')}
           >
             {formattedShare}
           </ChartText>
@@ -138,11 +159,11 @@ export const DetailedChart = <T extends SeriesData>({
   return (
     <VStack className='Layer__DetailedChart'>
       {slots?.Header && (
-        <VStack className='Layer__DetailedChart__header'>
+        <VStack className={legacyClassNames('Layer__DetailedChart__Header')}>
           {slots.Header}
         </VStack>
       )}
-      <VStack className='Layer__DetailedChart__container'>
+      <VStack className={legacyClassNames('Layer__DetailedChart__Container')}>
         <ResponsiveContainer>
           <PieChart>
             <defs>
@@ -185,7 +206,7 @@ export const DetailedChart = <T extends SeriesData>({
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
-                  <Label position='center' value={t('common:label.loading', 'Loading...')} className='Layer__DetailedChart__centerLabelLoading' />
+                  <Label position='center' value={t('common:label.loading', 'Loading...')} className={legacyClassNames('Layer__DetailedChart__CenterLabelLoading')} />
                 </Pie>
               )
               : (
@@ -217,7 +238,7 @@ export const DetailedChart = <T extends SeriesData>({
                         key={`cell-${index}`}
                         className={classNames(
                           'Layer__DetailedChart__Slice',
-                          interactionProps.hoveredItem && !active && 'Layer__DetailedChart__Slice--inactive',
+                          interactionProps.hoveredItem && !active && legacyClassNames('Layer__DetailedChart__Slice--Inactive'),
                         )}
                         fill={isFallbackSlice && fill
                           ? stylingProps.fallbackFillColor ?? 'url(#layer-pie-dots-pattern)'
