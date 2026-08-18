@@ -36,9 +36,6 @@ export const reportRangeFromParams = (params: URLSearchParams): ReportDateRange 
 export const monthsInRange = (range: ReportDateRange) =>
   range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })
 
-const quartersInRange = (range: ReportDateRange) =>
-  range.startDate > range.endDate ? [] : eachQuarterOfInterval({ start: range.startDate, end: range.endDate })
-
 const clippedPeriod = (
   columnKey: string,
   label: string,
@@ -53,32 +50,52 @@ const clippedPeriod = (
   },
 })
 
+type UnitConfig = {
+  unitsInRange: (range: ReportDateRange) => Date[]
+  columnKeyFormat: string
+  labelFormat: string
+  startOfUnit: (date: Date) => Date
+  endOfUnit: (date: Date) => Date
+}
+
+const UNIT_CONFIG_BY_GROUP_BY: Partial<Record<DateGroupBy, UnitConfig>> = {
+  [DateGroupBy.Month]: {
+    unitsInRange: monthsInRange,
+    columnKeyFormat: 'yyyy-MM',
+    labelFormat: 'MMM yyyy',
+    startOfUnit: startOfMonth,
+    endOfUnit: endOfMonth,
+  },
+  [DateGroupBy.Quarter]: {
+    unitsInRange: range => range.startDate > range.endDate ? [] : eachQuarterOfInterval({ start: range.startDate, end: range.endDate }),
+    columnKeyFormat: 'yyyy-\'Q\'Q',
+    labelFormat: '\'Q\'Q yyyy',
+    startOfUnit: startOfQuarter,
+    endOfUnit: endOfQuarter,
+  },
+  [DateGroupBy.Year]: {
+    unitsInRange: range => range.startDate > range.endDate ? [] : eachYearOfInterval({ start: range.startDate, end: range.endDate }),
+    columnKeyFormat: 'yyyy',
+    labelFormat: 'yyyy',
+    startOfUnit: startOfYear,
+    endOfUnit: endOfYear,
+  },
+}
+
 // Matches generateTimePeriods: a range spanning a single unit collapses to `total` alone.
 export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): ReportPeriod[] => {
   const totalPeriod = { columnKey: TOTAL_COLUMN_KEY, label: 'Total', range }
 
-  const units = groupBy === DateGroupBy.Month
-    ? monthsInRange(range).map(month => clippedPeriod(
-      format(month, 'yyyy-MM'),
-      format(month, 'MMM yyyy'),
-      { startDate: startOfMonth(month), endDate: endOfMonth(month) },
+  const config = groupBy !== null ? UNIT_CONFIG_BY_GROUP_BY[groupBy as DateGroupBy] : undefined
+
+  const units = config === undefined
+    ? []
+    : config.unitsInRange(range).map(unit => clippedPeriod(
+      format(unit, config.columnKeyFormat),
+      format(unit, config.labelFormat),
+      { startDate: config.startOfUnit(unit), endDate: config.endOfUnit(unit) },
       range,
     ))
-    : groupBy === DateGroupBy.Quarter
-      ? quartersInRange(range).map(quarter => clippedPeriod(
-        format(quarter, 'yyyy-\'Q\'Q'),
-        format(quarter, '\'Q\'Q yyyy'),
-        { startDate: startOfQuarter(quarter), endDate: endOfQuarter(quarter) },
-        range,
-      ))
-      : groupBy === DateGroupBy.Year
-        ? eachYearOfInterval({ start: range.startDate, end: range.endDate }).map(year => clippedPeriod(
-          format(year, 'yyyy'),
-          format(year, 'yyyy'),
-          { startDate: startOfYear(year), endDate: endOfYear(year) },
-          range,
-        ))
-        : []
 
   return units.length > 1 ? [...units, totalPeriod] : [totalPeriod]
 }
