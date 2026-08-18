@@ -1,4 +1,4 @@
-.Layer__csv-upload {
+.Layer__CsvUpload {
   position: relative;
   height: 6rem;
   padding: var(--spacing-xs);
@@ -7,13 +7,13 @@
   background: var(--color-base-100);
   transition: border-color 0.5s, background-color 0.5s;
 
-  &--drag-active {
+  &[data-drag-active] {
     background: var(--color-base-200);
     border-color: var(--color-base-500);
   }
 }
 
-.Layer__csv-upload__browse-link {
+.Layer__CsvUpload__BrowseLink {
   all: unset;
   cursor: pointer;
   text-decoration: underline;
@@ -29,7 +29,7 @@
   }
 }
 
-.Layer__csv-upload__error-message {
+.Layer__CsvUpload__ErrorMessage {
   position: absolute;
   bottom: var(--spacing-sm);
   left: var(--spacing-sm);

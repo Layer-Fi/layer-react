@@ -2,10 +2,26 @@ import { type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 
 import './actionableRow.scss'
+
+type ActionableRowClassName =
+  | 'Layer__ActionableRow'
+  | 'Layer__ActionableRow__Main'
+  | 'Layer__ActionableRow__Text'
+  | 'Layer__ActionableRow__Icon'
+  | 'Layer__ActionableRow__Action'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ActionableRow: 'Layer__actionable_row',
+  Layer__ActionableRow__Main: 'Layer__actionable_row__main',
+  Layer__ActionableRow__Text: 'Layer__actionable_row__main__text',
+  Layer__ActionableRow__Icon: 'Layer__actionable_row__icon',
+  Layer__ActionableRow__Action: 'Layer__actionable_row__action',
+} satisfies LegacyClassNameMapFor<ActionableRowClassName>)
 
 interface ActionableRowProps {
   icon?: ReactNode
@@ -22,7 +38,7 @@ const renderIcon = (icon?: ReactNode, iconBox?: ReactNode) => {
   }
 
   if (icon) {
-    return <span className='Layer__actionable_row__icon'>{icon}</span>
+    return <span className={legacyClassNames('Layer__ActionableRow__Icon')}>{icon}</span>
   }
 
   return
@@ -63,15 +79,15 @@ export const ActionableRow = ({
   const { t } = useTranslation()
 
   return (
-    <div className='Layer__actionable_row'>
-      <div className='Layer__actionable_row__main'>
+    <div className={legacyClassNames('Layer__ActionableRow')}>
+      <div className={legacyClassNames('Layer__ActionableRow__Main')}>
         {renderIcon(icon, iconBox)}
-        <div className='Layer__actionable_row__main__text'>
+        <div className={legacyClassNames('Layer__ActionableRow__Text')}>
           {renderTitle(title)}
           {renderDescription(description)}
         </div>
       </div>
-      <div className='Layer__actionable_row__action'>
+      <div className={legacyClassNames('Layer__ActionableRow__Action')}>
         {button && button}
         {!button && onClick
           ? (

@@ -1,9 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
-import classNames from 'classnames'
 import { CloudUpload } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
@@ -11,6 +12,18 @@ import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
 import { CsvUploadFileRow } from '@blocks/CsvUpload/CsvUploadFileRow/CsvUploadFileRow'
 
 import './csvUpload.scss'
+
+type CsvUploadClassName =
+  | 'Layer__CsvUpload'
+  | 'Layer__CsvUpload__BrowseLink'
+  | 'Layer__CsvUpload__ErrorMessage'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__CsvUpload': 'Layer__csv-upload',
+  'Layer__CsvUpload__BrowseLink': 'Layer__csv-upload__browse-link',
+  'Layer__CsvUpload__ErrorMessage': 'Layer__csv-upload__error-message',
+  'state:dragActive': 'Layer__csv-upload--drag-active',
+} satisfies LegacyClassNameMapFor<CsvUploadClassName, `state:${string}`>)
 
 type CsvUploadProps = {
   file: File | null
@@ -78,13 +91,11 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
   return (
     <VStack gap='xs'>
       <VStack
-        className={classNames(
-          'Layer__csv-upload',
-          { 'Layer__csv-upload--drag-active': isDragActive },
-        )}
+        className={legacyClassNames('Layer__CsvUpload', isDragActive && 'state:dragActive')}
         align='center'
         justify='center'
         gap='xs'
+        {...toDataProperties({ 'drag-active': isDragActive })}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -95,7 +106,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
               i18nKey='upload:label.drag_drop_file_browse'
               defaults='Drag and drop a file, or <browse>Browse</browse>.'
               components={{
-                browse: <button type='button' className='Layer__csv-upload__browse-link' onClick={handleBrowseClick} />,
+                browse: <button type='button' className={legacyClassNames('Layer__CsvUpload__BrowseLink')} onClick={handleBrowseClick} />,
               }}
             />
           </P>
@@ -104,7 +115,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         <P size='sm' variant='subtle'>{t('upload:validation.file_must_be_csv', 'File must be in CSV format')}</P>
         {errorMessage && (
           <DataState
-            className='Layer__csv-upload__error-message'
+            className={legacyClassNames('Layer__CsvUpload__ErrorMessage')}
             status={DataStateStatus.failed}
             title={t('upload:error.cannot_upload_file', 'Cannot upload file')}
             description={errorMessage}

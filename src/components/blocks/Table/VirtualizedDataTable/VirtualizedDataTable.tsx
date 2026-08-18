@@ -10,6 +10,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
 import { type Alignment } from '@internal-types/utility/table'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { DataTableSkeleton } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { LEGACY_TABLE_CLASS_NAMES, type LegacyColumnClassNames } from '@blocks/Table/DataTable/legacyClassNames'
@@ -34,8 +35,26 @@ const DEFAULT_NUM_ROWS = 15
 const HEADER_HEIGHT = 52
 const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HEIGHT - 1
 
-const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
+
+type VirtualizedTableClassName =
+  | 'Layer__UI__VirtualizedTable'
+  | 'Layer__UI__VirtualizedTable__Container'
+  | 'Layer__UI__VirtualizedTable__Header'
+  | 'Layer__UI__VirtualizedTable__HeaderCell'
+  | 'Layer__UI__VirtualizedTable__Row'
+  | 'Layer__UI__VirtualizedTable__Cell'
+  | 'Layer__UI__VirtualizedTable__FallbackPlaceholderCell'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__VirtualizedTable__Container': 'Layer__UI__VirtualizedTable__container',
+  'Layer__UI__VirtualizedTable__Header': 'Layer__UI__VirtualizedTable__header',
+  'Layer__UI__VirtualizedTable__HeaderCell': 'Layer__UI__VirtualizedTable__header-cell',
+  'Layer__UI__VirtualizedTable__Row': 'Layer__UI__VirtualizedTable__row',
+  'Layer__UI__VirtualizedTable__Row--Static': 'Layer__UI__VirtualizedTable__row--static',
+  'Layer__UI__VirtualizedTable__Cell': 'Layer__UI__VirtualizedTable__cell',
+  'Layer__UI__VirtualizedTable__FallbackPlaceholderCell': 'Layer__UI__VirtualizedTable__fallback-placeholder-cell',
+} satisfies LegacyClassNameMapFor<VirtualizedTableClassName>)
 
 export interface VirtualizedDataTableProps<TData extends { id: string }> {
   columnConfig: ColumnConfig<TData>
@@ -108,10 +127,10 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     overscan,
   })
 
-  const tableClassName = classNames(LEGACY_TABLE_CLASS_NAMES.TABLE, CSS_PREFIX, `Layer__UI__Table__${componentName}`)
+  const tableClassName = classNames(LEGACY_TABLE_CLASS_NAMES.TABLE, 'Layer__UI__VirtualizedTable', `Layer__UI__Table__${componentName}`)
 
   const renderHeader = () => (
-    <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
+    <TableHeader className={legacyClassNames('Layer__UI__VirtualizedTable__Header')} style={{ height: HEADER_HEIGHT }}>
       {table.getFlatHeaders().map(header => (
         <TableColumn
           key={header.id}
@@ -119,7 +138,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
           alignment={header.column.columnDef.meta?.alignment}
           className={classNames(
             LEGACY_TABLE_CLASS_NAMES.HEADER,
-            `${CSS_PREFIX}__header-cell`,
+            legacyClassNames('Layer__UI__VirtualizedTable__HeaderCell'),
             `Layer__UI__Table-Column__${componentName}--${header.id}`,
             header.column.columnDef.meta?.legacyClassNames?.column,
           )}
@@ -134,14 +153,16 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
   // The same full-width fallback row DataTable renders. react-aria requires one cell per column,
   // so the state sits in the first — spanning the row — and the rest are hidden placeholders.
   const renderFallbackRow = (State: React.FC) => (
-    <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, `${CSS_PREFIX}__container`)} style={{ height: renderedTableHeight }}>
+    <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, legacyClassNames('Layer__UI__VirtualizedTable__Container'))} style={{ height: renderedTableHeight }}>
       <Table className={tableClassName} aria-label={ariaLabel}>
         {renderHeader()}
         <TableBody>
           <Row
             className={classNames(
-              `${CSS_PREFIX}__row`,
-              `${CSS_PREFIX}__row--static`,
+              legacyClassNames(
+                'Layer__UI__VirtualizedTable__Row',
+                'Layer__UI__VirtualizedTable__Row--Static',
+              ),
               'Layer__DataTable__EmptyState__Row',
             )}
           >
@@ -150,7 +171,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
                 key={column.id}
                 className={index === 0
                   ? 'Layer__DataTable__EmptyState__Cell'
-                  : `${CSS_PREFIX}__fallback-placeholder-cell`}
+                  : legacyClassNames('Layer__UI__VirtualizedTable__FallbackPlaceholderCell')}
               >
                 {index === 0 ? <State /> : null}
               </Cell>
@@ -165,14 +186,17 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
 
   if (isLoading) {
     return (
-      <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, `${CSS_PREFIX}__container`)} style={{ height: renderedTableHeight }}>
+      <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, legacyClassNames('Layer__UI__VirtualizedTable__Container'))} style={{ height: renderedTableHeight }}>
         <Table className={tableClassName} aria-label={ariaLabel}>
           {renderHeader()}
           <TableBody>
             <DataTableSkeleton
               numColumns={columnConfig.length}
               nonAria={false}
-              rowClassName={classNames(`${CSS_PREFIX}__row`, `${CSS_PREFIX}__row--static`)}
+              rowClassName={legacyClassNames(
+                'Layer__UI__VirtualizedTable__Row',
+                'Layer__UI__VirtualizedTable__Row--Static',
+              )}
             />
           </TableBody>
         </Table>
@@ -186,7 +210,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
   const totalSize = rowVirtualizer.getTotalSize()
 
   return (
-    <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, `${CSS_PREFIX}__container`)} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
+    <div className={classNames(LEGACY_TABLE_CLASS_NAMES.WRAPPER, legacyClassNames('Layer__UI__VirtualizedTable__Container'))} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
       <Table className={tableClassName} aria-label={ariaLabel}>
         {renderHeader()}
         <TableBody style={{ height: totalSize }}>
@@ -198,7 +222,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
             return (
               <Row
                 key={row.id}
-                className={`${CSS_PREFIX}__row`}
+                className={legacyClassNames('Layer__UI__VirtualizedTable__Row')}
                 data-index={virtualRow.index}
                 ref={node => node && rowVirtualizer.measureElement(node)}
                 style={{ transform: `translateY(${virtualRow.start}px)` }}
@@ -209,7 +233,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
                     alignment={cell.column.columnDef.meta?.alignment}
                     className={classNames(
                       LEGACY_TABLE_CLASS_NAMES.CELL,
-                      `${CSS_PREFIX}__cell`,
+                      legacyClassNames('Layer__UI__VirtualizedTable__Cell'),
                       `Layer__UI__Table-Cell__${componentName}--${cell.column.id}`,
                       cell.column.columnDef.meta?.legacyClassNames?.cell,
                     )}
