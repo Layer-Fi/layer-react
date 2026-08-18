@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { usePreloadCustomers } from '@api/businesses/[business-id]/customers/get'
 import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/features/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { View } from '@blocks/Layout/View/View'
 import { InvoiceDetail } from '@features/invoices/InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from '@features/invoices/InvoiceOverview/InvoiceOverview'
@@ -14,7 +15,7 @@ export interface InvoicesProps {
   stringOverrides?: InvoicesStringOverrides
 }
 
-export const Invoices = ({ stringOverrides }: InvoicesProps) => {
+const InvoicesComponent = ({ stringOverrides }: InvoicesProps) => {
   const { t } = useTranslation()
   usePreloadCustomers()
 
@@ -34,3 +35,5 @@ const InvoicesContent = () => {
     ? <InvoiceDetail />
     : <InvoiceOverview />
 }
+
+export const Invoices = withUsageTracking('Invoices', InvoicesComponent)

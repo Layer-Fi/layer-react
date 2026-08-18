@@ -79,7 +79,7 @@ export const getText =
           .catch((error: Error | APIError) => handleException(error))
 
 export const request =
-  (verb: Exclude<HTTPVerb, 'get'>) =>
+  (verb: Exclude<HTTPVerb, 'get'>, { reportErrors = true }: { reportErrors?: boolean } = {}) =>
     <
       Return extends Record<string, unknown> = Record<string, unknown>,
       Body extends Record<string, unknown> = Record<string, unknown>,
@@ -109,12 +109,15 @@ export const request =
           body: JSON.stringify(options?.body),
         })
           .then(res => handleResponse<Return>(res))
-          .catch((error: Error | APIError) => handleException(error))
+          .catch((error: Error | APIError) => handleException(error, { reportErrors }))
 
 export const patch = request('patch')
 export const post = request('post')
 export const put = request('put')
 export const del = request('delete')
+
+// Telemetry must never surface as an API failure in the consumer's `onError`.
+export const postWithoutErrorReporting = request('post', { reportErrors: false })
 
 const requestWithFormData = (method: 'POST' | 'PATCH') =>
   <Return extends Record<string, unknown> = Record<string, unknown>>(
@@ -179,12 +182,14 @@ const handleTextResponse = async (res: Response): Promise<string> => {
   return res.text()
 }
 
-const handleException = (error: Error | APIError) => {
+const handleException = (error: Error | APIError, { reportErrors = true }: { reportErrors?: boolean } = {}) => {
   if (error.name === 'APIError') {
-    reportError({
-      type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
-      payload: error,
-    })
+    if (reportErrors) {
+      reportError({
+        type: (error as APIError).code === 401 ? 'unauthenticated' : 'api',
+        payload: error,
+      })
+    }
 
     throw error
   }
@@ -195,10 +200,12 @@ const handleException = (error: Error | APIError) => {
     [],
   )
 
-  reportError({
-    type: 'api',
-    payload: apiError,
-  })
+  if (reportErrors) {
+    reportError({
+      type: 'api',
+      payload: apiError,
+    })
+  }
 
   throw apiError
 }

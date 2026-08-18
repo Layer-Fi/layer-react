@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useInterpolateTemplate } from '@hooks/utils/i18n/useInterpolateTemplate'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { isCalendlyLink, useCalendly } from '@hooks/features/calendly/useCalendly'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Button } from '@ui/Button/Button'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -38,7 +39,7 @@ export interface LandingPageProps {
   }
 }
 
-export const LandingPage = ({
+const LandingPageComponent = ({
   platform,
   availableOffers,
   heroOverrides,
@@ -243,3 +244,5 @@ export const LandingPage = ({
     </View>
   )
 }
+
+export const LandingPage = withUsageTracking('LandingPage', LandingPageComponent)

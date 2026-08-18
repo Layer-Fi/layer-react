@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Loader } from '@ui/Loader/Loader'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { View } from '@blocks/Layout/View/View'
@@ -35,7 +36,7 @@ export interface GeneralLedgerProps {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
-export const GeneralLedgerView = ({
+const GeneralLedgerViewComponent = ({
   title, // deprecated
   showTitle = true,
   showTags = true,
@@ -99,3 +100,5 @@ export const GeneralLedgerView = ({
     </ProfitAndLoss>
   )
 }
+
+export const GeneralLedgerView = withUsageTracking('GeneralLedgerView', GeneralLedgerViewComponent)

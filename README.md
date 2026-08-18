@@ -527,3 +527,12 @@ Use `onError` property on `<LayerProvider />` to get notified about all exceptio
 ```ts
 <BankTransactions onError={e => console.log('My callback:', e)} />
 ```
+
+## Component usage reporting
+
+On mount, each Layer component reports to the Layer API which of its props it was given, so
+we can tell which parts of the component API are in use before deprecating anything. Only
+prop **names** and coarse shapes are sent (`boolean`, `string`, `object`, and the key paths
+inside config objects such as `stringOverrides`) — never prop values, and never any of your
+users' data. Each prop combination is reported at most once per page load, the request is
+fire-and-forget, and a failure is never surfaced to `onError`.

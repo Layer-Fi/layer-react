@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { TaxEstimatesContextProvider, type TaxEstimatesContextProviderProps } from '@providers/features/taxEstimates/TaxEstimatesContext/TaxEstimatesContextProvider'
 import { TaxEstimatesRouteStoreProvider } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { View } from '@blocks/Layout/View/View'
 import { TaxEstimatesViewContent } from '@views/TaxEstimates/TaxEstimatesViewContent'
 import { TaxEstimatesViewHeader } from '@views/TaxEstimates/TaxEstimatesViewHeader'
 
 export type TaxEstimatesProps = TaxEstimatesContextProviderProps
 
-export const TaxEstimates = ({ onClickReviewTransactions: onReviewClicked }: TaxEstimatesProps) => {
+const TaxEstimatesComponent = ({ onClickReviewTransactions: onReviewClicked }: TaxEstimatesProps) => {
   return (
     <TaxEstimatesContextProvider onClickReviewTransactions={onReviewClicked}>
       <TaxEstimatesRouteStoreProvider>
@@ -35,3 +36,5 @@ const TaxEstimatesView = () => {
     </View>
   )
 }
+
+export const TaxEstimates = withUsageTracking('TaxEstimates', TaxEstimatesComponent)

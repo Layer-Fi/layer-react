@@ -7,6 +7,7 @@ import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerA
 import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useLedgerAccounts } from '@hooks/legacy/useLedgerAccounts'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Loader } from '@ui/Loader/Loader'
 import { Container } from '@blocks/Layout/Container/Container'
 import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@features/generalLedger/ChartOfAccountsTableWithPanel/ChartOfAccountsTableWithPanel'
@@ -34,7 +35,7 @@ export interface ChartOfAccountsProps {
  * Views already inside a `LedgerDateStoreProvider` (e.g. `GeneralLedger`) should
  * render {@link InternalChartOfAccounts} instead to avoid a nested store.
  */
-export const ChartOfAccounts = (props: ChartOfAccountsProps) => (
+const ChartOfAccountsComponent = (props: ChartOfAccountsProps) => (
   <LedgerDateStoreProvider fallback={<Loader />}>
     <InternalChartOfAccounts {...props} />
   </LedgerDateStoreProvider>
@@ -91,3 +92,5 @@ const ChartOfAccountsContent = ({
     </Container>
   )
 }
+
+export const ChartOfAccounts = withUsageTracking('ChartOfAccounts', ChartOfAccountsComponent)

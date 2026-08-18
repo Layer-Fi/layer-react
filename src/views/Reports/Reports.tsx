@@ -7,6 +7,7 @@ import { translationKey } from '@utils/shared/i18n/translationKey'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type ReportOption, ReportsHeaderContextProvider, type ReportType } from '@providers/features/reports/ReportsHeaderContext/ReportsHeaderContext'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Container } from '@blocks/Layout/Container/Container'
 import { View } from '@blocks/Layout/View/View'
 import { BalanceSheet } from '@features/balanceSheet/BalanceSheet/BalanceSheet'
@@ -66,7 +67,7 @@ export interface ReportsPanelProps {
 const FALLBACK_REPORT: ReportType = 'profitAndLoss'
 
 const defaultEnabledReports: ReportType[] = [FALLBACK_REPORT, 'balanceSheet', 'statementOfCashFlow']
-export const Reports = ({
+const ReportsComponent = ({
   title,
   showTitle = true,
   stringOverrides,
@@ -163,3 +164,5 @@ const ReportsPanel = ({
     </>
   )
 }
+
+export const Reports = withUsageTracking('Reports', ReportsComponent)

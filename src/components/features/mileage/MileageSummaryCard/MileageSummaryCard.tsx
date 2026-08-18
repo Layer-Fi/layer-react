@@ -7,6 +7,7 @@ import ArrowRightCircleSubtle from '@icons/ArrowRightCircleSubtle'
 import { useGlobalDate } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGetMileageSummary } from '@api/businesses/[business-id]/mileage/summary/get'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { Card } from '@ui/Card/Card'
@@ -19,7 +20,7 @@ import { TripDrawer } from '@features/mileage/TripDrawer/TripDrawer'
 
 import './mileageSummaryCard.scss'
 
-export const MileageSummaryCard = () => {
+const MileageSummaryCardComponent = () => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents, formatNumber, formatDate } = useIntlFormatter()
   const { data: mileageData, isLoading, isError } = useGetMileageSummary()
@@ -181,3 +182,5 @@ export const MileageSummaryCard = () => {
     </VStack>
   )
 }
+
+export const MileageSummaryCard = withUsageTracking('MileageSummaryCard', MileageSummaryCardComponent)

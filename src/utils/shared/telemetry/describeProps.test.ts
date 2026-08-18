@@ -1,0 +1,108 @@
+import { describe, expect, it } from 'vitest'
+
+import { describeProps, toUsageSignature } from '@utils/shared/telemetry/describeProps'
+
+describe(describeProps, () => {
+  it('records a boolean prop with its literal value', () => {
+    expect(describeProps({ showTitle: false })).toEqual([
+      { name: 'showTitle', kind: 'boolean', booleanValue: false },
+    ])
+  })
+
+  it('treats an explicitly undefined prop as absent', () => {
+    expect(describeProps({ showTitle: undefined })).toEqual([])
+  })
+
+  it('distinguishes an explicit null from an absent prop', () => {
+    expect(describeProps({ middleBanner: null })).toEqual([
+      { name: 'middleBanner', kind: 'null' },
+    ])
+  })
+
+  it('records the kind of each non-object prop', () => {
+    expect(describeProps({
+      count: 3,
+      onError: () => {},
+      view: 'mobile',
+    })).toEqual([
+      { name: 'count', kind: 'number' },
+      { name: 'onError', kind: 'function' },
+      { name: 'view', kind: 'string' },
+    ])
+  })
+
+  it('flattens the key paths of a config object, without its values', () => {
+    const described = describeProps({
+      stringOverrides: {
+        header: { title: 'Transactions' },
+        transactionsTable: { dateColumnHeader: 'Date' },
+      },
+    })
+
+    expect(described).toEqual([
+      {
+        name: 'stringOverrides',
+        kind: 'object',
+        keys: ['header.title', 'transactionsTable.dateColumnHeader'],
+      },
+    ])
+  })
+
+  it('stops flattening at three levels deep', () => {
+    const described = describeProps({
+      slotProps: { profitAndLoss: { chart: { chartConfig: { barWidth: 4 } } } },
+    })
+
+    expect(described).toEqual([
+      { name: 'slotProps', kind: 'object', keys: ['profitAndLoss.chart.chartConfig'] },
+    ])
+  })
+
+  it('caps the number of key paths it reports', () => {
+    const wide = Object.fromEntries(
+      Array.from({ length: 80 }, (_, index) => [`key${String(index).padStart(2, '0')}`, 'value']),
+    )
+
+    expect(describeProps({ stringOverrides: wide })[0]?.keys).toHaveLength(50)
+  })
+
+  it('reports a non-plain object without reading into it', () => {
+    expect(describeProps({ asOf: new Date('2026-01-01') })).toEqual([
+      { name: 'asOf', kind: 'object' },
+    ])
+  })
+
+  it('reports an array of primitives as an array', () => {
+    expect(describeProps({ chartColorsList: ['#000', '#fff'] })).toEqual([
+      { name: 'chartColorsList', kind: 'array' },
+    ])
+  })
+
+  it('sorts props by name so equal combinations serialize identically', () => {
+    expect(describeProps({ showTitle: true, asWidget: true }).map(({ name }) => name))
+      .toEqual(['asWidget', 'showTitle'])
+  })
+})
+
+describe(toUsageSignature, () => {
+  it('matches for the same props in a different order', () => {
+    const one = toUsageSignature('BankTransactions', describeProps({ showTitle: true, asWidget: false }))
+    const other = toUsageSignature('BankTransactions', describeProps({ asWidget: false, showTitle: true }))
+
+    expect(one).toBe(other)
+  })
+
+  it('differs when a boolean prop is passed with the other value', () => {
+    const enabled = toUsageSignature('BankTransactions', describeProps({ showTitle: true }))
+    const disabled = toUsageSignature('BankTransactions', describeProps({ showTitle: false }))
+
+    expect(enabled).not.toBe(disabled)
+  })
+
+  it('differs when a config object gains a key', () => {
+    const before = toUsageSignature('Tasks', describeProps({ stringOverrides: { title: 'a' } }))
+    const after = toUsageSignature('Tasks', describeProps({ stringOverrides: { title: 'a', subtitle: 'b' } }))
+
+    expect(before).not.toBe(after)
+  })
+})

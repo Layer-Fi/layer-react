@@ -21,6 +21,7 @@ import { type BankTransactionsMode, LegacyModeProvider } from '@providers/featur
 import { BankTransactionsCategorizationStoreProvider } from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsIsCategorizationEnabledProvider } from '@providers/features/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CategorizationRulesProvider } from '@providers/features/categorization/CategorizationRulesContext/CategorizationRulesContext'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { ErrorBoundary } from '@ui/ErrorBoundary/ErrorBoundary'
 import { BankTransactionsRouter } from '@features/bankTransactions/BankTransactionsRouter/BankTransactionsRouter'
 
@@ -66,7 +67,7 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
 }
 
-export const BankTransactions = ({
+const BankTransactionsComponent = ({
   onError,
   monthlyView = false,
   applyGlobalDateRange = false,
@@ -131,3 +132,5 @@ export const BankTransactions = ({
     </ErrorBoundary>
   )
 }
+
+export const BankTransactions = withUsageTracking('BankTransactions', BankTransactionsComponent)

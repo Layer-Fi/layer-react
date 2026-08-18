@@ -5,6 +5,7 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -58,7 +59,7 @@ export interface AccountingOverviewProps {
   }
 }
 
-export const AccountingOverview = ({
+const AccountingOverviewComponent = ({
   title,
   showTitle = true,
   onTransactionsToReviewClick,
@@ -140,3 +141,5 @@ export const AccountingOverview = ({
     </ProfitAndLoss>
   )
 }
+
+export const AccountingOverview = withUsageTracking('AccountingOverview', AccountingOverviewComponent)

@@ -6,6 +6,7 @@ import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/pla
 import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { Heading } from '@ui/Typography/Heading'
 import { Wizard } from '@blocks/Wizard/Wizard'
 import { LinkAccountsConfirmationStep } from '@features/linkedAccounts/LinkAccounts/LinkAccountsConfirmationStep'
@@ -28,7 +29,7 @@ type LinkAccountsProps = {
   stringOverrides?: LinkAccountsStringOverrides
 }
 
-export function LinkAccounts({
+function LinkAccountsComponent({
   plaidHostedLinkConfig,
   customerManagedPlaidConfig,
   onPlaidConnectionSuccess,
@@ -81,3 +82,5 @@ function LinkAccountsContent({
     </section>
   )
 }
+
+export const LinkAccounts = withUsageTracking('LinkAccounts', LinkAccountsComponent)

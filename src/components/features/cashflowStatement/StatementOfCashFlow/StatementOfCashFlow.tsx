@@ -9,6 +9,7 @@ import { ReportsTableProvider } from '@providers/features/reports/ReportsTableCo
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -32,7 +33,7 @@ export type StatementOfCashFlowProps = TimeRangePickerConfig & {
   stringOverrides?: StatementOfCashFlowStringOverrides
 }
 
-export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
+const StatementOfCashFlowComponent = (props: StatementOfCashFlowProps) => {
   return (
     <StatementOfCashFlowView {...props} />
   )
@@ -124,3 +125,5 @@ const StatementOfCashFlowView = ({
     </ReportsTableProvider>
   )
 }
+
+export const StatementOfCashFlow = withUsageTracking('StatementOfCashFlow', StatementOfCashFlowComponent)

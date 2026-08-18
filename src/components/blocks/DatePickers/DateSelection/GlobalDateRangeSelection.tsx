@@ -1,4 +1,5 @@
 import { useGlobalDatePreset, useGlobalDatePresetActions, useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { withUsageTracking } from '@components/utility/withUsageTracking'
 import { DateRangeSelection } from '@blocks/DatePickers/DateSelection/DateRangeSelection'
 
 export type GlobalDateRangeSelectionProps = {
@@ -6,7 +7,7 @@ export type GlobalDateRangeSelectionProps = {
   isCompact?: boolean
 }
 
-export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false }: GlobalDateRangeSelectionProps) => {
+const GlobalDateRangeSelectionComponent = ({ showLabels = false, isCompact = false }: GlobalDateRangeSelectionProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const datePreset = useGlobalDatePreset()
   const { setDateRange } = useGlobalDateRangeActions()
@@ -23,3 +24,5 @@ export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false
     />
   )
 }
+
+export const GlobalDateRangeSelection = withUsageTracking('GlobalDateRangeSelection', GlobalDateRangeSelectionComponent)
