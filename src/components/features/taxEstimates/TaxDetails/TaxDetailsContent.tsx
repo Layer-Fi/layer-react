@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type TaxDetailsRow } from '@schemas/features/taxEstimates/details'
 import { isCurrencyCellValue, isDecimalCellValue, isPercentageCellValue } from '@schemas/features/unifiedReports/unifiedReport'
 import { asMutable } from '@utils/shared/array/asMutable'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetTaxDetails } from '@api/businesses/[business-id]/tax-estimates/details/get'
@@ -26,8 +27,15 @@ enum TaxDetailsColumns {
 }
 
 const COMPONENT_NAME = 'TaxDetails'
+
+/* The legacy name covered every operator row, not only the total, so it is keyed separately. */
+const legacyClassNames = createLegacyClassNames({
+  'Layer__TaxDetails__TaxDetailsRow--total': 'Layer__TaxDetails__TaxDetailsRow--operator',
+  'row:operator': 'Layer__TaxDetails__TaxDetailsRow--operator',
+})
+
 const MobileExpandableCardsWrapper = ({ children, className }: { children: ReactNode, className?: string }) => (
-  <Card className={`Layer__card--reset ${className ?? ''}`}>{children}</Card>
+  <Card reset className={className}>{children}</Card>
 )
 
 const EmptyState = () => {
@@ -56,13 +64,12 @@ const ErrorState = () => {
 
 const TaxDetailsRowLabelCell = (row: Row<TaxDetailsRow>) => {
   const { operator, label } = row.original
-  const isTotal = operator === '='
 
-  if (isTotal) {
-    return <Span className='Layer__TaxDetails__TaxDetailsRow--total'>{label}</Span>
+  if (operator === '=') {
+    return <Span className={legacyClassNames('Layer__TaxDetails__TaxDetailsRow--total')}>{label}</Span>
   }
 
-  return <Span>{label}</Span>
+  return <Span className={legacyClassNames(operator != null && 'row:operator')}>{label}</Span>
 }
 
 type AmountCellRendererDeps = Pick<ReturnType<typeof useIntlFormatter>, 'formatNumber' | 'formatPercent'>

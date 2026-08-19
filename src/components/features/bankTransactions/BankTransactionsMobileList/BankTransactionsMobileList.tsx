@@ -17,6 +17,8 @@ import { BankTransactionsMobileListItemExpandedRow } from '@features/bankTransac
 import { BankTransactionsMobileListItemFooter } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
 import { BankTransactionsPaginatedList } from '@features/bankTransactions/BankTransactionsPaginatedList/BankTransactionsPaginatedList'
 
+const LEGACY_ITEM_CLASS_NAME = 'Layer__bank-transaction-mobile-list-item Layer__BankTransactionsMobileListItem'
+
 type BankTransactionsMobileListContentProps = {
   bankTransactions?: BankTransaction[]
 }
@@ -124,6 +126,7 @@ const BankTransactionsMobileListContent = ({
       <VStack pbs='sm'>
         <MobileList
           ariaLabel={t('bankTransactions:BankTransactionsMobileList.label.transactions', 'Transactions')}
+          itemClassName={LEGACY_ITEM_CLASS_NAME}
           data={bankTransactions}
           isLoading={isLoading}
           isError={isError}

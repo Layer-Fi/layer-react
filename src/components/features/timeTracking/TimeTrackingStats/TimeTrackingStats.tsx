@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/features/timeTracking/timeEntrySummary'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type TimeTrackingSummaryFilterParams, useGetTimeTrackingSummary } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'
@@ -44,7 +45,7 @@ function buildServiceBreakdown(
   return [...positive]
     .sort((a, b) => b.totalMinutes - a.totalMinutes)
     .map((entry, index) => ({
-      color: DEFAULT_CHART_COLORS[index % DEFAULT_CHART_COLORS.length],
+      color: pickCyclic(DEFAULT_CHART_COLORS, index),
       key: entry.id ?? `service-${index}`,
       totalMinutes: entry.totalMinutes,
       percentage: totalMinutes > 0 ? entry.totalMinutes / totalMinutes : 0,

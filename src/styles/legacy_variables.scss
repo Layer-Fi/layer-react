@@ -1,0 +1,29 @@
+/*
+ * Custom properties that v0.1.122 declared and current styles no longer do. Consumers read these in
+ * their own CSS, so the names stay resolvable at the same values.
+ */
+.Layer__component,
+.Layer__Portal,
+.Layer__view,
+.Layer__UI__Tooltip,
+.Layer__toasts-container,
+.Layer__drawer,
+.Layer__variables,
+.Layer__tasks-component {
+  --table-bg: var(--color-white);
+  --text-heading-page: var(--text-heading);
+  --text-heading-view: var(--text-heading-secondary);
+  --input-placeholder-color: var(--color-base-500);
+}
+
+/*
+ * v0.1.122 applied this from a bare `::placeholder` rule, which reached every input on the host
+ * page. Listed per element instead — every element in the library that renders a native
+ * placeholder. The combo box placeholder is a `div`, styled by class in `comboBox.scss`.
+ */
+.Layer__UI__Input::placeholder,
+.Layer__UI__TextArea::placeholder,
+.Layer__AmountInput::placeholder,
+.Layer__SearchField__Field > [slot='input']::placeholder {
+  color: var(--input-placeholder-color);
+}

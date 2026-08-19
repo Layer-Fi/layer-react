@@ -5,6 +5,7 @@ import { GridList, type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
@@ -17,6 +18,10 @@ import { LinkedAccountGridItem } from '@features/linkedAccounts/LinkedAccountGri
 import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
 import './linkedAccountsContent.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'newAccount:label': 'Layer__linked-accounts__new-account-label',
+})
 
 interface LinkedAccountsDataProps {
   asWidget?: boolean
@@ -100,7 +105,7 @@ export const LinkedAccountsContent = ({
             onClick={onAddAccountClick}
             className={linkedAccountsNewAccountClassName}
           >
-            <HStack align='center' gap='2xs'>
+            <HStack align='center' gap='2xs' className={legacyClassNames('newAccount:label')}>
               <CirclePlus size={14} />
               <Span variant='placeholder'>
                 {t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.action.add_account', 'Add Account')}

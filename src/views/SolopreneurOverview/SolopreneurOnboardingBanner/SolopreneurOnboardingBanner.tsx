@@ -1,3 +1,4 @@
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { HStack } from '@ui/Stack/Stack'
@@ -11,6 +12,7 @@ import './solopreneurOnboardingBanner.scss'
 export type SolopreneurOnboardingBannerProps = {
   onSetupTaxProfile?: () => void
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
@@ -29,9 +31,16 @@ function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<Solopre
   )
 }
 
-export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLinkConfig }: SolopreneurOnboardingBannerProps) {
+export function SolopreneurOnboardingBanner({
+  onSetupTaxProfile,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
+}: SolopreneurOnboardingBannerProps) {
   return (
-    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
+    <LinkedAccountsProvider
+      plaidHostedLinkConfig={plaidHostedLinkConfig}
+      customerManagedPlaidConfig={customerManagedPlaidConfig}
+    >
       <SolopreneurOnboardingBannerInternal onSetupTaxProfile={onSetupTaxProfile} />
     </LinkedAccountsProvider>
   )

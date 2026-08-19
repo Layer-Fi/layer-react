@@ -1,4 +1,4 @@
-.Layer__pagination-container {
+.Layer__UI__Pagination__Container {
   justify-content: end;
   padding: var(--spacing-md);
 
@@ -7,11 +7,11 @@
   }
 }
 
-.Layer__pagination-nav {
+.Layer__UI__Pagination__Nav {
   display: contents;
 }
 
-.Layer__pagination {
+.Layer__UI__Pagination {
   display: inline-flex;
   gap: var(--spacing-4xs);
   align-items: center;

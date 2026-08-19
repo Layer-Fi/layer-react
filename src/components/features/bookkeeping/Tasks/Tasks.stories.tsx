@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { type DateRange } from '@utils/shared/date/dateRange'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@features/bookkeeping/Tasks/Tasks'
@@ -26,9 +27,11 @@ type TasksStoryArgs = {
 const mockAccounts = [...bankAccounts]
 
 const setSecondAccountDisconnected = (disconnected: boolean) => {
+  const secondAccount = pickCyclic(bankAccounts, 1)
+
   mockAccounts[1] = disconnected
-    ? { ...bankAccounts[1], isDisconnected: true, notifyWhenDisconnected: true }
-    : bankAccounts[1]
+    ? { ...secondAccount, isDisconnected: true, notifyWhenDisconnected: true }
+    : secondAccount
 }
 
 const SyncDisconnectedAccountMock = ({ disconnected }: { disconnected: boolean }) => {
@@ -49,7 +52,6 @@ const SyncDisconnectedAccountMock = ({ disconnected }: { disconnected: boolean }
 
 const meta: Meta<TasksStoryArgs> = {
   title: 'Components/Tasks',
-  tags: ['public-api'],
   component: Tasks,
   parameters: {
     msw: {
@@ -128,8 +130,6 @@ export default meta
 
 type Story = StoryObj<TasksStoryArgs>
 
-export const Default: Story = {}
-
 // November has the most outstanding tasks in the fixture year. Day 30, not 31 — November has no
 // 31st, and JS would roll that over into December.
 const NOVEMBER: DateRange = {
@@ -137,8 +137,7 @@ const NOVEMBER: DateRange = {
   endDate: new Date(FIXTURE_YEAR, 10, 30),
 }
 
-export const DocsDefault: Story = {
-  ...Default,
-  tags: ['!public-api', 'docs-screenshot'],
+export const Default: Story = {
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
   parameters: { pinnedDateRange: NOVEMBER },
 }

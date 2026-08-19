@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMileageTrackingYearlySummary'
@@ -14,6 +15,10 @@ import { MileageDeductionChart } from '@features/mileage/MileageDeductionChart/M
 import { MileageTrackingStatsCard } from '@features/mileage/MileageTrackingStatsCard/MileageTrackingStatsCard'
 
 import './mileageTrackingSummary.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'summary:header': 'Layer__MileageTrackingSummary__Header',
+})
 
 const Content = () => {
   const { t } = useTranslation()
@@ -100,7 +105,11 @@ export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: Mi
   })
 
   return (
-    <SummaryCard className='Layer__MileageTrackingSummary' slots={slots}>
+    <SummaryCard
+      className='Layer__MileageTrackingSummary'
+      slots={slots}
+      legacyClassNames={{ header: legacyClassNames('summary:header') }}
+    >
       <Content />
     </SummaryCard>
   )

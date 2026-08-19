@@ -18,12 +18,14 @@ type SummaryCardSlotProps = {
 export type SummaryCardProps = PropsWithChildren<{
   slots: SummaryCardSlotProps
   className?: string
+  legacyClassNames?: { body?: string, header?: string }
 }>
 
 export const SummaryCard = ({
   slots,
   children,
   className,
+  legacyClassNames: callerLegacyClassNames,
 }: SummaryCardProps) => {
   const { title, subtitle, legend, primaryAction } = slots
 
@@ -37,9 +39,9 @@ export const SummaryCard = ({
 
   return (
     <Card className={classNames('Layer__SummaryCard', className)}>
-      <VStack className='Layer__SummaryCard__Body'>
+      <VStack className={classNames('Layer__SummaryCard__Body', callerLegacyClassNames?.body)}>
         <HStack
-          className='Layer__SummaryCard__Header'
+          className={classNames('Layer__SummaryCard__Header', callerLegacyClassNames?.header)}
           justify='space-between'
           align='center'
           gap='md'
@@ -61,7 +63,11 @@ export const SummaryCard = ({
                   {legend}
                 </div>
               )}
-              {primaryAction}
+              {primaryAction && (
+                <div className='Layer__SummaryCard__HeaderPrimaryAction'>
+                  {primaryAction}
+                </div>
+              )}
             </HStack>
           )}
         </HStack>

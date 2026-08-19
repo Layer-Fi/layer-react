@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
@@ -22,14 +23,21 @@ type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
   onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   isReconnectFlow?: boolean
   stringOverrides?: LinkAccountsStringOverrides
 }
 
-export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, ...props }: LinkAccountsProps) {
+export function LinkAccounts({
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
+  onPlaidConnectionSuccess,
+  ...props
+}: LinkAccountsProps) {
   return (
     <LinkedAccountsProvider
       plaidHostedLinkConfig={plaidHostedLinkConfig}
+      customerManagedPlaidConfig={customerManagedPlaidConfig}
       onPlaidConnectionSuccess={onPlaidConnectionSuccess}
     >
       <LinkAccountsContent {...props} />
@@ -41,7 +49,7 @@ function LinkAccountsContent({
   onComplete,
   isReconnectFlow = false,
   stringOverrides,
-}: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig'>) {
+}: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig' | 'customerManagedPlaidConfig'>) {
   const { t } = useTranslation()
   const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
 

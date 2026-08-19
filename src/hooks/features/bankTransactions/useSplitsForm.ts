@@ -95,7 +95,7 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
 
     setTransactionCategorySelection(bankTransaction.id, new SplitAsOption(splits))
 
-    const nextTaxCode = splits.length === 1 ? splits[0].taxCode : null
+    const nextTaxCode = splits.length === 1 ? splits[0]?.taxCode : null
     setTransactionTaxCodeSelection(bankTransaction.id, nextTaxCode ?? null)
 
     setSplitFormError(undefined)
@@ -143,11 +143,15 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionNonSuggestedMatchOption | null) => {
     if (newCategory === null) return
 
+    const splitAtIndex = localSplits[index]
+
+    if (!splitAtIndex) return
+
     const newLocalSplits = [...localSplits]
     newLocalSplits[index] = {
-      ...newLocalSplits[index],
+      ...splitAtIndex,
       category: newCategory,
-      taxCode: canCategoryHaveTaxCode(newCategory) ? newLocalSplits[index].taxCode : null,
+      taxCode: canCategoryHaveTaxCode(newCategory) ? splitAtIndex.taxCode : null,
     }
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
@@ -156,8 +160,12 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   }, [localSplits, saveLocalSplitsToCategoryStore])
 
   const updateSplitAtIndex = useCallback((index: number, updater: (split: Split) => Split) => {
+    const splitAtIndex = localSplits[index]
+
+    if (!splitAtIndex) return
+
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index] = updater(newLocalSplits[index])
+    newLocalSplits[index] = updater(splitAtIndex)
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

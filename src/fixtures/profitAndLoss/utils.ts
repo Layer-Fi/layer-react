@@ -35,9 +35,10 @@ export const makeLineItem = (
 const splitIntoLineItems = (total: number, split: readonly CategorySplit[]): LineItem[] => {
   const values = split.map(([, , share]) => Math.round(total * share))
   const allocated = values.reduce((sum, value) => sum + value, 0)
-  if (values.length > 0) values[0] += total - allocated
+  const [firstValue] = values
+  if (firstValue !== undefined) values[0] = firstValue + total - allocated
 
-  return split.map(([name, displayName], index) => makeLineItem(name, displayName, values[index]))
+  return split.map(([name, displayName], index) => makeLineItem(name, displayName, values[index] ?? 0))
 }
 
 export const makeSectionLineItem = (

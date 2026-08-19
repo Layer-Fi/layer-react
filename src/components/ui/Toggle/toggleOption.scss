@@ -44,7 +44,7 @@
   }
 }
 
-.Layer__UI__ToggleOption-SelectionIndicator {
+.Layer__UI__ToggleOption__SelectionIndicator {
   position: absolute;
   z-index: -1;
   top: 0;
@@ -63,7 +63,7 @@
   transition-duration: 200ms;
 }
 
-.Layer__UI__Toggle-Option-Content {
+.Layer__UI__ToggleOption__Content {
   display: flex;
   gap: var(--spacing-xs);
   align-items: center;

@@ -2,6 +2,7 @@ import { type PropsWithChildren, type ReactNode, useContext, useId, useMemo } fr
 import classNames from 'classnames'
 import { FieldErrorContext } from 'react-aria-components/FieldError'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { FieldError } from '@ui/Form/Form'
 import { HStack } from '@ui/Stack/Stack'
@@ -11,6 +12,10 @@ import type { CommonFormFieldProps } from '@blocks/Form/types'
 import './formField.scss'
 
 import { useFieldContext } from './formContexts'
+
+export const legacyClassNames = createLegacyClassNames({
+  'field:label': 'Layer__input-label',
+})
 
 const FORM_FIELD_CLASS_NAME = 'Layer__FormField'
 const FIELD_ERROR_CLASS_NAME = 'Layer__UI__FieldError'
@@ -56,7 +61,7 @@ export function FormFieldShell({
   slots,
   children,
 }: PropsWithChildren<FormFieldShellProps>) {
-  const labelNode = <Label slot={slots?.LabelIcon ? undefined : 'label'} size='sm' id={labelId} htmlFor={name}>{label}</Label>
+  const labelNode = <Label slot={slots?.LabelIcon ? undefined : 'label'} className={legacyClassNames('field:label')} size='sm' id={labelId} htmlFor={name}>{label}</Label>
 
   return (
     <>

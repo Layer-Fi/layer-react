@@ -152,7 +152,7 @@ export const InvoiceTable = ({
   const options = useInvoiceStatusOptions()
 
   const selectedStatusOption = useMemo(
-    () => options.find(o => o.value === selectedInvoiceStatusOption?.value) ?? options[0],
+    () => options.find(o => o.value === selectedInvoiceStatusOption?.value) ?? options[0] ?? null,
     [options, selectedInvoiceStatusOption?.value],
   )
 

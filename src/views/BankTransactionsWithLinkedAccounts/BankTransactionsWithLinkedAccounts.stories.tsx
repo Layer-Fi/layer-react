@@ -28,7 +28,6 @@ const linkedAccountsControls = makeLinkedAccountsStoryControls({ category: 'Link
 
 const meta: Meta<BankTransactionsWithLinkedAccountsStoryArgs> = {
   title: 'Views/BankTransactions/WithLinkedAccounts',
-  tags: ['public-api'],
   component: BankTransactionsWithLinkedAccounts,
   parameters: {
     controls: {
@@ -87,6 +86,7 @@ type Story = StoryObj<BankTransactionsWithLinkedAccountsStoryArgs>
 
 // ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
+  tags: ['public-api'],
   parameters: {
     msw: {
       handlers: [
@@ -99,5 +99,5 @@ export const BookkeepingEnabled: Story = {
 
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }

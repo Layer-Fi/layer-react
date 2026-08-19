@@ -16,6 +16,7 @@ import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import { sortedDatePair } from '@fixtures/utils/sortedDatePair'
 
 const BUSINESS_ID = makeBusiness().id
 
@@ -46,7 +47,7 @@ const baseArbitrary = Arbitrary.make(base)
 export const TimeEntryArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((entry): typeof base.Type => {
-      const [createdAt, updatedAt] = [entry.createdAt, entry.updatedAt].sort((a, b) => a.getTime() - b.getTime())
+      const [createdAt, updatedAt] = sortedDatePair(entry.createdAt, entry.updatedAt)
 
       const status = entry.status === 'COMPLETED' ? 'COMPLETED' : 'RECORDED'
 

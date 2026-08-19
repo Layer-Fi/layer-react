@@ -7,12 +7,34 @@ import { Label as ReactAriaLabel } from 'react-aria-components/Label'
 import { Text as ReactAriaText } from 'react-aria-components/Text'
 import { mergeRefs } from 'react-merge-refs'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useTruncationDetection } from '@hooks/utils/size/useTruncationDetection'
 import type { Spacing } from '@ui/sharedUITypes'
 import { Tooltip, type TooltipCapableComponentProps, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './text.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__Header': 'Layer__header',
+  'Layer__P': 'Layer__text',
+  'Layer__Span': 'Layer__text',
+  'size:2xs': 'Layer__text--2xs',
+  'size:xs': 'Layer__text--xs',
+  'size:sm': 'Layer__text--sm',
+  'size:md': 'Layer__text--md',
+  'size:lg': 'Layer__text--lg',
+  'size:xl': 'Layer__text--xl',
+  'weight:normal': 'Layer__text--normal',
+  'weight:bold': 'Layer__text--bold',
+  'state:noWrap': 'Layer__nowrap',
+} satisfies LegacyClassNameMapFor<
+  'Layer__Header' | 'Layer__P' | 'Layer__Span',
+  `size:${TextSize}` | `weight:${TextWeight}` | `state:${string}`
+>)
+
+type TextSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+type TextWeight = 'normal' | 'bold'
 
 export type TextStyleProps = {
   align?: 'center' | 'right'
@@ -25,12 +47,12 @@ export type TextStyleProps = {
   pi?: Spacing
   pie?: Spacing
   pis?: Spacing
-  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  size?: TextSize
   status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
   invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
-  weight?: 'normal' | 'bold'
+  weight?: TextWeight
   className?: string
 }
 
@@ -42,6 +64,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
   const {
     align,
     children,
+    className,
     ellipsis,
     invert,
     nonAria,
@@ -63,6 +86,12 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
 
   return {
     children,
+    className: classNames(
+      className,
+      size ? legacyClassNames(`size:${size}`) : undefined,
+      noWrap ? legacyClassNames('state:noWrap') : undefined,
+      weight ? legacyClassNames(`weight:${weight}`) : undefined,
+    ),
     dataProperties: toDataProperties({
       align,
       ellipsis,
@@ -86,19 +115,19 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
   }
 }
 
-const HEADER_CLASS_NAME = 'Layer__Header'
+const HEADER_CLASS_NAME = legacyClassNames('Layer__Header')
 type HeaderProps = Pick<ComponentPropsWithoutRef<'header'>, 'id' | 'slot'> & TextRenderingProps
 
 export const Header = forwardRef<HTMLElementTagNameMap['header'], PropsWithChildren<HeaderProps & TextStyleProps>>(
   function Header(props, ref) {
-    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { children, className, dataProperties, renderingProps, restProps } = splitTextProps(props)
 
     const HeaderComponent = renderingProps.nonAria
       ? 'header'
       : ReactAriaHeader
 
     return (
-      <HeaderComponent {...restProps} {...dataProperties} className={HEADER_CLASS_NAME} ref={ref}>
+      <HeaderComponent {...restProps} {...dataProperties} className={classNames(HEADER_CLASS_NAME, className)} ref={ref}>
         {children}
       </HeaderComponent>
     )
@@ -110,44 +139,44 @@ type LabelProps = Pick<ComponentPropsWithoutRef<'label'>, 'id' | 'slot' | 'htmlF
 
 export const Label = forwardRef<HTMLLabelElement, PropsWithChildren<LabelProps & TextStyleProps>>(
   function Label(props, ref) {
-    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { children, className, dataProperties, renderingProps, restProps } = splitTextProps(props)
 
     const LabelComponent = renderingProps.nonAria
       ? 'label'
       : ReactAriaLabel
 
     return (
-      <LabelComponent {...restProps} {...dataProperties} className={LABEL_CLASS_NAME} ref={ref}>
+      <LabelComponent {...restProps} {...dataProperties} className={classNames(LABEL_CLASS_NAME, className)} ref={ref}>
         {children}
       </LabelComponent>
     )
   },
 )
 
-const P_CLASS_NAME = 'Layer__P'
+const P_CLASS_NAME = legacyClassNames('Layer__P')
 type ParagraphProps = Pick<ComponentPropsWithoutRef<'p'>, 'id' | 'slot'> & TextRenderingProps
 
 export const P = forwardRef<HTMLParagraphElement, PropsWithChildren<ParagraphProps & TextStyleProps>>(
   function P(props, ref) {
-    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
+    const { children, className, dataProperties, renderingProps, restProps } = splitTextProps(props)
 
     if (renderingProps.nonAria) {
       return (
-        <p {...restProps} {...dataProperties} className={P_CLASS_NAME} ref={ref}>
+        <p {...restProps} {...dataProperties} className={classNames(P_CLASS_NAME, className)} ref={ref}>
           {children}
         </p>
       )
     }
 
     return (
-      <ReactAriaText elementType='p' {...restProps} {...dataProperties} className={P_CLASS_NAME} ref={ref}>
+      <ReactAriaText elementType='p' {...restProps} {...dataProperties} className={classNames(P_CLASS_NAME, className)} ref={ref}>
         {children}
       </ReactAriaText>
     )
   },
 )
 
-const SPAN_CLASS_NAME = 'Layer__Span'
+const SPAN_CLASS_NAME = legacyClassNames('Layer__Span')
 type SpanProps = Pick<ComponentPropsWithoutRef<'span'>, 'id' | 'slot'> & TextRenderingProps
 
 type BaseSpanProps = {
@@ -178,8 +207,7 @@ BaseSpan.displayName = 'BaseSpan'
 
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
-    const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
-    const { className } = props
+    const { children, className, dataProperties, renderingProps, restProps } = splitTextProps(props)
 
     const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })

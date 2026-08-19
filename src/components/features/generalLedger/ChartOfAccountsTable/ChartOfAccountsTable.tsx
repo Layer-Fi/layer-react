@@ -3,18 +3,15 @@ import { type Row } from '@tanstack/react-table'
 import { List, Pen, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import {
-  type AugmentedLedgerAccountBalance,
-  LedgerAccountNodeType,
-} from '@internal-types/features/generalLedger/chartOfAccounts'
+import { type AugmentedLedgerAccountBalance } from '@internal-types/features/generalLedger/chartOfAccounts'
 import { Alignment } from '@internal-types/utility/table'
 import { asMutable } from '@utils/shared/array/asMutable'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDeleteLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/delete'
 import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
-import { ChartOfAccountsContext } from '@providers/features/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { useChartOfAccountsSelectionActions } from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
+import { useChartOfAccountsBalances } from '@hooks/features/generalLedger/useChartOfAccountsBalances'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack } from '@ui/Stack/Stack'
@@ -28,6 +25,15 @@ import { type ChartOfAccountsTableStringOverrides } from '@features/generalLedge
 
 import './chartOfAccountsTable.scss'
 
+const LEGACY_CLASS_NAMES = {
+  AccountNumber: { column: 'Layer__chart-of-accounts--accountnumber' },
+  Name: { column: 'Layer__chart-of-accounts--name' },
+  Type: { column: 'Layer__chart-of-accounts--type' },
+  Subtype: { column: 'Layer__chart-of-accounts--subtype' },
+  Balance: { column: 'Layer__chart-of-accounts--balance' },
+  Actions: { column: 'Layer__chart-of-accounts--actions' },
+} as const
+
 enum ChartOfAccountsColumn {
   AccountNumber = 'AccountNumber',
   Name = 'Name',
@@ -38,6 +44,7 @@ enum ChartOfAccountsColumn {
 }
 
 const COMPONENT_NAME = 'chart-of-accounts'
+const LEGACY_TABLE_CLASS_NAME = 'Layer__chart-of-accounts__table'
 
 const getSubRows = (row: AugmentedLedgerAccountBalance): AugmentedLedgerAccountBalance[] | undefined => {
   return row.subAccounts.length > 0 ? asMutable(row.subAccounts) : undefined
@@ -74,22 +81,6 @@ const ChartOfAccountsEmptyState = () => {
   )
 }
 
-const ChartOfAccountsErrorState = () => {
-  const { t } = useTranslation()
-  const { refetch, isValidating, isLoading } = useContext(ChartOfAccountsContext)
-
-  return (
-    <DataState
-      status={DataStateStatus.failed}
-      title={t('common:error.something_went_wrong', 'Something went wrong')}
-      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-      onRefresh={() => void refetch()}
-      isLoading={isValidating || isLoading}
-      spacing
-    />
-  )
-}
-
 export const ChartOfAccountsTable = ({
   stringOverrides,
   searchQuery,
@@ -103,9 +94,9 @@ export const ChartOfAccountsTable = ({
 }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { setSelectedAccount } = useContext(LedgerAccountsContext)
+  const { selectAccount } = useChartOfAccountsSelectionActions()
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const { data, isLoading, isError, refetch } = useContext(ChartOfAccountsContext)
+  const { data, isLoading, isValidating, isError, mutate } = useChartOfAccountsBalances()
   const { trigger: deleteAccount } = useDeleteLedgerAccount()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
@@ -115,7 +106,6 @@ export const ChartOfAccountsTable = ({
   const onConfirmDelete = async () => {
     if (!accountToDelete) return
     await deleteAccount({ accountId: accountToDelete.accountId })
-    await refetch()
   }
 
   const getDeleteButtonTooltip = useCallback((account: AugmentedLedgerAccountBalance) => {
@@ -146,16 +136,11 @@ export const ChartOfAccountsTable = ({
     setExpanded(getInitialExpandedState(filteredAccounts))
   }, [filteredAccounts, setExpanded])
 
-  const getNodeType = (row: Row<AugmentedLedgerAccountBalance>): LedgerAccountNodeType => {
-    if (row.depth === 0) return LedgerAccountNodeType.Root
-    return row.getCanExpand() ? LedgerAccountNodeType.Parent : LedgerAccountNodeType.Leaf
-  }
-
   const onClickView = useCallback((row: Row<AugmentedLedgerAccountBalance>, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setSelectedAccount({ ...row.original, nodeType: getNodeType(row) })
-  }, [setSelectedAccount])
+    selectAccount(row.original.accountId)
+  }, [selectAccount])
 
   const onClickEdit = useCallback((account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
     e.preventDefault()
@@ -183,14 +168,27 @@ export const ChartOfAccountsTable = ({
     }
     return renderHighlightedValue(row, text)
   }, [renderHighlightedValue])
+
+  const ErrorState = useCallback(() => (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('common:error.something_went_wrong', 'Something went wrong')}
+      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+      onRefresh={() => { void mutate() }}
+      isLoading={isValidating || isLoading}
+      spacing
+    />
+  ), [mutate, isValidating, isLoading, t])
+
   const slots = useMemo(() => ({
     EmptyState: ChartOfAccountsEmptyState,
-    ErrorState: ChartOfAccountsErrorState,
-  }), [])
+    ErrorState,
+  }), [ErrorState])
 
   const columnConfig = useMemo<ColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
       id: ChartOfAccountsColumn.AccountNumber,
+      legacyClassNames: LEGACY_CLASS_NAMES.AccountNumber,
       header: stringOverrides?.numberColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_number', 'Account Number'),
       cell: (row: Row<AugmentedLedgerAccountBalance>) =>
         renderHighlightedValue(row, row.original.accountNumber || ''),
@@ -199,6 +197,7 @@ export const ChartOfAccountsTable = ({
     const columns: ColumnConfig<AugmentedLedgerAccountBalance> = [
       {
         id: ChartOfAccountsColumn.Name,
+        legacyClassNames: LEGACY_CLASS_NAMES.Name,
         header: stringOverrides?.nameColumnHeader || t('generalLedger:ChartOfAccountsTable.label.account_name_title_case', 'Account Name'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           <Button variant='text' ellipsis onClick={e => onClickView(row, e)}>
@@ -209,6 +208,7 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Type,
+        legacyClassNames: LEGACY_CLASS_NAMES.Type,
         header: stringOverrides?.typeColumnHeader || t('common:label.type', 'Type'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           renderHighlightedNonRootValue(row, row.original.accountType?.displayName || '')
@@ -216,6 +216,7 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Subtype,
+        legacyClassNames: LEGACY_CLASS_NAMES.Subtype,
         header: stringOverrides?.subtypeColumnHeader || t('generalLedger:ChartOfAccountsTable.label.sub_type', 'Sub-Type'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
           renderHighlightedNonRootValue(row, row.original.accountSubtype?.displayName || '')
@@ -223,12 +224,14 @@ export const ChartOfAccountsTable = ({
       },
       {
         id: ChartOfAccountsColumn.Balance,
+        legacyClassNames: LEGACY_CLASS_NAMES.Balance,
         header: stringOverrides?.balanceColumnHeader || t('common:label.balance', 'Balance'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) =>
           renderHighlightedValue(row, formatCurrencyFromCents(row.original.balance)),
       },
       {
         id: ChartOfAccountsColumn.Actions,
+        legacyClassNames: LEGACY_CLASS_NAMES.Actions,
         header: null,
         alignment: Alignment.Right,
         cell: (row: Row<AugmentedLedgerAccountBalance>) => {
@@ -299,6 +302,7 @@ export const ChartOfAccountsTable = ({
     <>
       <ExpandableDataTable
         componentName={COMPONENT_NAME}
+        className={LEGACY_TABLE_CLASS_NAME}
         ariaLabel={t('generalLedger:ChartOfAccountsTable.label.chart_of_accounts', 'Chart of Accounts')}
         columnConfig={columnConfig}
         data={filteredAccounts ? asMutable(filteredAccounts) : undefined}

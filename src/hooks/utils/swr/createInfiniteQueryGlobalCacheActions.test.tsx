@@ -5,6 +5,8 @@ import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
+
 vi.mock('@hooks/utils/swr/useGlobalCacheActions', () => ({ useGlobalCacheActions: vi.fn() }))
 
 const mockedUseGlobalCacheActions = vi.mocked(useGlobalCacheActions)
@@ -56,15 +58,15 @@ describe('createInfiniteQueryGlobalCacheActions', () => {
     void result.current.invalidate()
     void result.current.forceReload()
 
-    expectMatchesTag(invalidate.mock.calls[0][0], 'Widgets')
-    expectMatchesTag(forceReload.mock.calls[0][0], 'Widgets')
+    expectMatchesTag(getCallArgs(invalidate)[0], 'Widgets')
+    expectMatchesTag(getCallArgs(forceReload)[0], 'Widgets')
   })
 
   it('patchByTransformation maps every item across array-of-pages', () => {
     const result = renderInfiniteActions()
     void result.current.patchByTransformation(upper)
 
-    const [predicate, transform] = patchCache.mock.calls[0]
+    const [predicate, transform] = getCallArgs(patchCache)
     expectMatchesTag(predicate, 'Widgets')
 
     const pages = [{ data: [{ id: 'w1', name: 'a' }] }, { data: [{ id: 'w2', name: 'b' }] }]
@@ -78,7 +80,7 @@ describe('createInfiniteQueryGlobalCacheActions', () => {
     const result = renderInfiniteActions()
     void result.current.patchByTransformation(upper)
 
-    const [, transform] = patchCache.mock.calls[0]
+    const [, transform] = getCallArgs(patchCache)
     expect(transform({ data: [{ id: 'w1', name: 'a' }] })).toEqual({ data: [{ id: 'w1', name: 'A' }] })
     expect(transform(null)).toBeNull()
     expect(transform(undefined)).toBeUndefined()
@@ -89,7 +91,7 @@ describe('createInfiniteQueryGlobalCacheActions', () => {
     const updated: Widget = { id: 'w2', name: 'Updated' }
     void result.current.patchByKey(updated)
 
-    const [, transform] = patchCache.mock.calls[0]
+    const [, transform] = getCallArgs(patchCache)
     const pages = [{ data: [{ id: 'w1', name: 'a' }, { id: 'w2', name: 'b' }] }]
     expect(transform(pages)).toEqual([
       { data: [{ id: 'w1', name: 'a' }, updated] },
@@ -100,7 +102,7 @@ describe('createInfiniteQueryGlobalCacheActions', () => {
     const result = renderInfiniteActions()
     void result.current.optimisticallyUpdate(upper)
 
-    const [predicate, transform] = optimisticUpdate.mock.calls[0]
+    const [predicate, transform] = getCallArgs(optimisticUpdate)
     expectMatchesTag(predicate, 'Widgets')
     expect(transform([{ data: [{ id: 'w1', name: 'a' }] }])).toEqual([{ data: [{ id: 'w1', name: 'A' }] }])
   })

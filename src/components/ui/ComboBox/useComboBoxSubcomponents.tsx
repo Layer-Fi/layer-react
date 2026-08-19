@@ -16,12 +16,26 @@ import {
   type SingleValueProps,
 } from 'react-select'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption, ComboBoxSlots } from '@ui/ComboBox/types'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack } from '@ui/Stack/Stack'
 import { Header, Span } from '@ui/Typography/Text'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__ComboBoxSingleValue': 'Layer__select__single-value',
+  'Layer__ComboBoxGroupHeading': 'Layer__select__group-heading',
+  'Layer__ComboBoxOption': 'Layer__select__option',
+  'Layer__ComboBoxOption--Focused': ['Layer__select__option--is-focused', 'Layer__ComboBoxOption--focused'],
+  'Layer__ComboBoxOption--Selected': ['Layer__select__option--is-selected', 'Layer__ComboBoxOption--selected'],
+  'Layer__ComboBoxNoOptionsMessage': 'Layer__select__menu-notice',
+  'Layer__ComboBoxClearIndicator': 'Layer__select__indicator',
+  'Layer__ComboBoxDropdownIndicator': 'Layer__select__indicator',
+  'Layer__ComboBoxOption--Disabled': 'Layer__ComboBoxOption--disabled',
+  'Layer__ComboBoxOption--Hidden': 'Layer__ComboBoxOption--hidden',
+} satisfies ComboBoxLegacyClassNames)
 
 type UseComboBoxSubcomponentsParams<T extends ComboBoxOption> = {
   placeholder?: string
@@ -35,7 +49,7 @@ function buildCustomClearIndicator<T extends ComboBoxOption, IsMulti extends boo
     ...restProps
   }: ClearIndicatorProps<T, IsMulti, GroupBase<T>>) {
     return (
-      <components.ClearIndicator {...restProps} className={COMBO_BOX_CLASS_NAMES.CLEAR_INDICATOR}>
+      <components.ClearIndicator {...restProps} className={legacyClassNames('Layer__ComboBoxClearIndicator')}>
         <X size={16} />
       </components.ClearIndicator>
     )
@@ -52,7 +66,7 @@ function buildCustomDropdownIndicator<T extends ComboBoxOption, IsMulti extends 
     return (
       <components.DropdownIndicator
         {...restProps}
-        className={COMBO_BOX_CLASS_NAMES.DROPDOWN_INDICATOR}
+        className={legacyClassNames('Layer__ComboBoxDropdownIndicator')}
       >
         {!isDisabled ? <ChevronDown size={16} /> : <></>}
       </components.DropdownIndicator>
@@ -118,7 +132,7 @@ function buildCustomGroupHeading<T extends ComboBoxOption, IsMulti extends boole
     return (
       <components.GroupHeading
         {...restProps}
-        className={COMBO_BOX_CLASS_NAMES.GROUP_HEADING}
+        className={legacyClassNames('Layer__ComboBoxGroupHeading')}
       >
         {content}
       </components.GroupHeading>
@@ -141,7 +155,7 @@ function buildCustomNoOptionsMessage<T extends ComboBoxOption, IsMulti extends b
     return (
       <components.NoOptionsMessage
         {...restProps}
-        className={COMBO_BOX_CLASS_NAMES.NO_OPTIONS_MESSAGE}
+        className={legacyClassNames('Layer__ComboBoxNoOptionsMessage')}
       >
         {EmptyMessage ?? <Span>{t('ui:ComboBox.useComboBoxSubcomponents.empty.matching_options', 'No matching options')}</Span>}
       </components.NoOptionsMessage>
@@ -177,11 +191,13 @@ function buildCustomOption<T extends ComboBoxOption, IsMulti extends boolean>({
       <components.Option
         {...restProps}
         className={classNames(
-          COMBO_BOX_CLASS_NAMES.OPTION,
-          isFocused ? `${COMBO_BOX_CLASS_NAMES.OPTION}--focused` : undefined,
-          effectiveIsSelected ? `${COMBO_BOX_CLASS_NAMES.OPTION}--selected` : undefined,
-          isDisabled ? `${COMBO_BOX_CLASS_NAMES.OPTION}--disabled` : undefined,
-          restProps.data.isHidden ? `${COMBO_BOX_CLASS_NAMES.OPTION}--hidden` : undefined,
+          legacyClassNames(
+            'Layer__ComboBoxOption',
+            isFocused && 'Layer__ComboBoxOption--Focused',
+            effectiveIsSelected && 'Layer__ComboBoxOption--Selected',
+          ),
+          isDisabled && legacyClassNames('Layer__ComboBoxOption--Disabled'),
+          restProps.data.isHidden && legacyClassNames('Layer__ComboBoxOption--Hidden'),
         )}
       >
         {Option
@@ -227,7 +243,7 @@ function buildCustomSingleValue<T extends ComboBoxOption, IsMulti extends boolea
     const defaultRenderedSingleValue = <Span variant='inherit' ellipsis>{children}</Span>
 
     return (
-      <components.SingleValue {...restProps}>
+      <components.SingleValue {...restProps} className={legacyClassNames('Layer__ComboBoxSingleValue')}>
         {SingleValue
           ? <SingleValue option={restProps.data} fallback={defaultRenderedSingleValue} />
           : defaultRenderedSingleValue}

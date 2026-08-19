@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { Alignment } from '@internal-types/utility/table'
@@ -29,6 +30,8 @@ type LineItemRow = {
 }
 
 interface LedgerEntryDetailsLineItemsTableProps {
+  className?: string
+  tableClassName?: string
   lineItems: ReadonlyArray<LineItem> | undefined
   isLoading?: boolean
   isError?: boolean
@@ -60,6 +63,8 @@ export const LedgerEntryDetailsLineItemsTable = ({
   isLoading,
   isError,
   stringOverrides,
+  className,
+  tableClassName,
 }: LedgerEntryDetailsLineItemsTableProps) => {
   const { t } = useTranslation()
 
@@ -138,9 +143,10 @@ export const LedgerEntryDetailsLineItemsTable = ({
   }), [t])
 
   return (
-    <div className='Layer__LedgerEntryDetails__LineItems'>
+    <div className={classNames('Layer__LedgerEntryDetails__LineItems', className)}>
       <SimpleDataTable<LineItemRow>
         componentName={COMPONENT_NAME}
+        className={tableClassName}
         ariaLabel={t('generalLedger:LedgerEntryDetails.LedgerEntryDetailsLineItemsTable.label.line_items', 'Line items')}
         columnConfig={columnConfig}
         data={rows}

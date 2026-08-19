@@ -3,21 +3,28 @@
     "name": "full import (ESM)",
     "path": "dist/esm/index.mjs",
     "import": "*",
-    "limit": "1300 kB",
+    "limit": "1350 kB",
     "ignore": ["react", "react-dom"]
   },
   {
     "name": "single component, small (GlobalMonthPicker)",
     "path": "dist/esm/index.mjs",
     "import": "{ GlobalMonthPicker }",
-    "limit": "600 kB",
+    "limit": "120 kB",
     "ignore": ["react", "react-dom"]
   },
   {
     "name": "single component, large (BankTransactions)",
     "path": "dist/esm/index.mjs",
     "import": "{ BankTransactions }",
-    "limit": "650 kB",
+    "limit": "500 kB",
+    "ignore": ["react", "react-dom"]
+  },
+  {
+    "name": "single component via subpath (GlobalMonthPicker)",
+    "path": "dist/exports/GlobalMonthPicker.mjs",
+    "import": "*",
+    "limit": "120 kB",
     "ignore": ["react", "react-dom"]
   },
   {

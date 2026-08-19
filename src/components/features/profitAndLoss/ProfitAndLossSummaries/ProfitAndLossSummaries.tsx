@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
-import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import {
   SummariesContent,
   type SummariesTiles,
@@ -13,6 +12,7 @@ import type { Variants } from '@features/profitAndLoss/ProfitAndLossSummaries/ty
 import { ProfitAndLossSummaryTileFooter } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooter'
 import { TransactionsToReview } from '@features/profitAndLoss/TransactionsToReview/TransactionsToReview'
 import { UncategorizedTransactionsBadge } from '@features/profitAndLoss/UncategorizedTransactionsBadge/UncategorizedTransactionsBadge'
+import { resolveProfitAndLossChartPalette } from '@features/profitAndLoss/utils'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -28,6 +28,7 @@ export type ProfitAndLossSummariesReportingVariant =
   | { type: 'cashflow', showProfitAndLossBreakdown?: boolean }
 
 export type ProfitAndLossSummariesSlotProps = {
+  chartConfig?: ProfitAndLossChartConfig
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
    * @deprecated This prop no longer has any effect; the summaries tiles size themselves
@@ -39,6 +40,8 @@ export type ProfitAndLossSummariesSlotProps = {
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
+  chartConfig?: ProfitAndLossChartConfig
+  /** Legacy flat palette. `chartConfig.colors` takes precedence when both are supplied. */
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
@@ -61,6 +64,7 @@ export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
+  chartConfig,
   chartColorsList,
   reportingVariant,
   onTransactionsToReviewClick,
@@ -74,7 +78,12 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
+  const revenuePalette = resolveProfitAndLossChartPalette('revenue', chartConfig, chartColorsList)
+  const expensesPalette = resolveProfitAndLossChartPalette('expenses', chartConfig, chartColorsList)
+
+  const revenueSwatchColor = revenuePalette.palette[0]
+  const expensesSwatchColor = expensesPalette.palette[0]
+  const uncategorizedSwatchColor = revenuePalette.uncategorized
 
   const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <ProfitAndLossSummaryTileFooter
@@ -83,18 +92,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_revenue', 'Categorized revenue'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: revenueSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    revenueSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -105,18 +115,19 @@ export function ProfitAndLossSummaries({
         {
           label: t('profitAndLoss:ProfitAndLossSummaries.label.categorized_expenses', 'Categorized expenses'),
           amount: categorized,
-          swatchColor: categorizedSwatchColor,
+          swatchColor: expensesSwatchColor,
         },
         {
           label: uncategorizedLabel,
           amount: uncategorized,
-          swatchColor: UNCATEGORIZED_CHART_COLOR,
+          swatchColor: uncategorizedSwatchColor,
         },
       ]}
     />
   ), [
     t,
-    categorizedSwatchColor,
+    expensesSwatchColor,
+    uncategorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -201,6 +212,7 @@ export function ProfitAndLossSummaries({
       mode={mode}
       tiles={tiles}
       actionable={actionable}
+      chartConfig={chartConfig}
       chartColorsList={chartColorsList}
       slots={{
         unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick

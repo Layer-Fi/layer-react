@@ -11,21 +11,22 @@ export function bundleCss(): Plugin {
     writeBundle() {
       const distDir = path.resolve(__dirname, `../../${OUT_DIR}`)
       const esmDir = path.join(distDir, 'esm')
-      const stylesCssPath = path.join(esmDir, 'styles.css')
-      const indexCssPath = path.join(esmDir, 'index.css')
       const mergedPath = path.join(distDir, 'index.css')
 
-      // Concat styles.css (global styles) before index.css (component styles)
-      // so that component-level styles win on equal specificity.
-      const parts: string[] = []
-      if (fs.existsSync(stylesCssPath)) {
-        parts.push(fs.readFileSync(stylesCssPath, 'utf8'))
-        fs.unlinkSync(stylesCssPath)
-      }
-      if (fs.existsSync(indexCssPath)) {
-        parts.push(fs.readFileSync(indexCssPath, 'utf8'))
-        fs.unlinkSync(indexCssPath)
-      }
+      // `cssCodeSplit: false` emits a single stylesheet, but its name is derived from the lib
+      // entry rather than fixed. Collect whatever landed and sort for a stable result; ordering
+      // within the file already follows module execution order, global styles first.
+      const cssFiles = fs
+        .readdirSync(esmDir)
+        .filter(file => file.endsWith('.css'))
+        .sort()
+
+      const parts = cssFiles.map((file) => {
+        const filePath = path.join(esmDir, file)
+        const contents = fs.readFileSync(filePath, 'utf8')
+        fs.unlinkSync(filePath)
+        return contents
+      })
 
       if (parts.length > 0) {
         // Concatenating leaves a part's own `@charset` partway down the file, which is invalid and

@@ -1,3 +1,4 @@
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDetailUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { BackButton } from '@ui/Button/BackButton'
@@ -7,6 +8,10 @@ import { UnifiedReportDetailBreadcrumb } from '@features/unifiedReports/UnifiedR
 import { UnifiedReportDownloadButton } from '@features/unifiedReports/UnifiedReportDownloadButton/UnifiedReportDownloadButton'
 
 import './unifiedReportDetailHeader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReports__DetailHeader: 'Layer__UnifiedReport__DetailHeader',
+})
 
 export const UnifiedReportDetailHeader = () => {
   const { detailReportConfig, closeDetailReport } = useDetailUnifiedReport()
@@ -21,7 +26,7 @@ export const UnifiedReportDetailHeader = () => {
       pi='lg'
       align='center'
       justify='space-between'
-      className='Layer__UnifiedReports__DetailHeader'
+      className={legacyClassNames('Layer__UnifiedReports__DetailHeader')}
     >
       <HStack gap='sm' align='center'>
         <BackButton onPress={closeDetailReport} />

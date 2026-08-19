@@ -1,20 +1,20 @@
 import { useMemo } from 'react'
 
 import { type LedgerBalancesSchemaType } from '@schemas/features/generalLedger/ledgerBalances'
+import { flattenAccounts } from '@utils/features/generalLedger/chartOfAccounts'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { flattenAccounts } from '@features/generalLedger/utils'
 
 const isAlphanumeric = (char: string) => /[\p{L}\p{N}]/u.test(char)
 
 const compareSpecialCharsLast = (a: string, b: string): number => {
   const length = Math.min(a.length, b.length)
   for (let i = 0; i < length; i++) {
-    const aSpecial = !isAlphanumeric(a[i])
-    const bSpecial = !isAlphanumeric(b[i])
+    const aSpecial = !isAlphanumeric(a.charAt(i))
+    const bSpecial = !isAlphanumeric(b.charAt(i))
     if (aSpecial !== bSpecial) {
       return aSpecial ? 1 : -1
     }
-    const comparison = a[i].localeCompare(b[i])
+    const comparison = a.charAt(i).localeCompare(b.charAt(i))
     if (comparison !== 0) {
       return comparison
     }

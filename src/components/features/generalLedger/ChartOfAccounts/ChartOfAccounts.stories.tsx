@@ -12,7 +12,6 @@ type ChartOfAccountsStoryArgs = {
 
 const meta: Meta<ChartOfAccountsStoryArgs> = {
   title: 'Components/ChartOfAccounts',
-  tags: ['public-api'],
   component: ChartOfAccounts,
   parameters: {
     controls: {
@@ -79,5 +78,5 @@ export default meta
 type Story = StoryObj<ChartOfAccountsStoryArgs>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }

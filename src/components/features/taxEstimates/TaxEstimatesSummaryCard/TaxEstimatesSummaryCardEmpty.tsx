@@ -6,7 +6,8 @@ export function TaxEstimatesSummaryCardEmpty() {
   const { t } = useTranslation()
   return (
     <DataState
-      className='Layer__TaxEstimatesSummaryCard__DataState Layer__data-state--reset'
+      className='Layer__TaxEstimatesSummaryCard__DataState'
+      reset
       status={DataStateStatus.info}
       title={t('taxEstimates:TaxEstimatesSummaryCard.TaxEstimatesSummaryCardEmpty.empty.no_tax_estimates_summary', 'Get started with your tax estimates')}
       description={t('taxEstimates:TaxEstimatesSummaryCard.TaxEstimatesSummaryCardEmpty.empty.no_tax_estimates_summary_description', 'Start by importing and categorizing your bank transactions.')}

@@ -7,7 +7,3 @@ export enum LedgerAccountNodeType {
   Root = 'Root',
   Parent = 'Parent',
 }
-
-export type LedgerAccountBalanceWithNodeType = NestedLedgerAccountType & {
-  nodeType: LedgerAccountNodeType
-}

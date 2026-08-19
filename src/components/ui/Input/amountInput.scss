@@ -11,7 +11,7 @@
   font-family: var(--font-family);
   color: var(--color-base-1000);
 
-  &.Layer__AmountInput--Error {
+  &[data-invalid] {
     border: 1px solid var(--color-danger);
   }
 

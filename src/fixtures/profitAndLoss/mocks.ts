@@ -1,5 +1,6 @@
 import type { ProfitAndLoss } from '@schemas/features/profitAndLoss/profitAndLoss'
 import type { ProfitAndLossSummary } from '@schemas/features/profitAndLoss/profitAndLossSummaries'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { hasCompletedBooks } from '@fixtures/bookkeeping/mocks'
 import {
@@ -33,7 +34,7 @@ export const makeProfitAndLossSummary = (year: number, month: number): ProfitAnd
   // Same seed per calendar month, so every window and endpoint agrees on that month's numbers.
   // Fast-check biases its first samples toward range edges; the last of a few runs is well spread.
   const summaries = generate({ numRuns: 5, seed: year * 12 + month })
-  const summary = { ...summaries[summaries.length - 1], year, month }
+  const summary = { ...pickCyclic(summaries, summaries.length - 1), year, month }
 
   if (!hasCompletedBooks(year, month)) return summary
 

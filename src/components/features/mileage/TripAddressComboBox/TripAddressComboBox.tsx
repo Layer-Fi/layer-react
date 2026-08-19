@@ -2,12 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TripFormAddress } from '@schemas/features/mileage/tripForm'
+import { createLegacyFieldClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useGetMileageAddressDetails } from '@api/businesses/[business-id]/mileage/address-details/get'
 import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { P } from '@ui/Typography/Text'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
+
+const legacyFieldClassNames = createLegacyFieldClassNames('Layer__TripAddressComboBox', 'Layer__TripAddressComboBox--inline')
 
 type TripAddressComboBoxProps = {
   label: string
@@ -94,7 +97,7 @@ export const TripAddressComboBox = ({
   )
 
   return (
-    <ComboBoxField label={label} className={className} inline={inline}>
+    <ComboBoxField label={label} className={legacyFieldClassNames({ inline, className })} inline={inline}>
       {controlProps => (
         <SearchComboBox
           {...controlProps}

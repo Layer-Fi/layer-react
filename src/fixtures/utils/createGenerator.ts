@@ -45,12 +45,12 @@ export function createGenerator<A, I, R>(
       if (rows.length === config.numRuns) break
 
       const keys = uniqueBy.map(getKey => getKey(candidate))
-      const collides = keys.some((key, index) => key != null && seenByKey[index].has(key))
+      const collides = keys.some((key, index) => key != null && seenByKey[index]?.has(key) === true)
 
       if (collides) continue
 
       keys.forEach((key, index) => {
-        if (key != null) seenByKey[index].add(key)
+        if (key != null) seenByKey[index]?.add(key)
       })
       rows.push(candidate)
     }

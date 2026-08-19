@@ -21,7 +21,7 @@ const COLORS: Record<string, string> = {
 const total = (items: ReadonlyArray<SeriesData>) =>
   items.reduce((sum, item) => sum + item.value, 0)
 
-const colorSelector = (item: SeriesData) => ({ color: COLORS[item.name], opacity: 1 })
+const colorSelector = (item: SeriesData) => ({ color: COLORS[item.name] ?? 'var(--color-base-300)', opacity: 1 })
 const formatValue = (value: number) => `$${value.toLocaleString()}`
 
 const meta: Meta<typeof Legend<SeriesData>> = {

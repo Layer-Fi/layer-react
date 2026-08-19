@@ -32,8 +32,8 @@
     line-height: 1;
   }
 
-  &__Count .Layer__skeleton-loader,
-  &__Total .Layer__skeleton-loader {
+  &__Count .Layer__UI__SkeletonLoader,
+  &__Total .Layer__UI__SkeletonLoader {
     display: inline-block;
     vertical-align: middle;
   }

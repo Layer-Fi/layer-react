@@ -8,6 +8,12 @@ type RollCases<TCase extends string> = ReadonlyArray<readonly [TCase, number]>
  * exceeds it, and `handle` dispatches to that case's handler.
  */
 export const createRollTable = <TCase extends string>(cases: RollCases<TCase>) => {
+  const lastCase = cases.at(-1)
+
+  if (!lastCase) {
+    throw new Error('createRollTable: at least one case is required')
+  }
+
   const outOf = cases.reduce((total, [, weight]) => total + weight, 0)
 
   const resolve = (roll: number): TCase => {
@@ -18,7 +24,7 @@ export const createRollTable = <TCase extends string>(cases: RollCases<TCase>) =
       if (roll < ceiling) return name
     }
 
-    return cases[cases.length - 1][0]
+    return lastCase[0]
   }
 
   const handle = <TResult>(roll: number, handlers: Record<TCase, () => TResult>): TResult =>

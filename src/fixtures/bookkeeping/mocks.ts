@@ -6,6 +6,8 @@ import {
   BusinessTaskStatus,
   TaskUserResponseType,
 } from '@schemas/features/bookkeeping/businessTask'
+import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
@@ -40,13 +42,33 @@ const baseBookkeepingConfiguration: BookkeepingConfiguration = {
 
 export const { make: makeBookkeepingConfiguration } = createFixtureFactory(baseBookkeepingConfiguration)
 
+const baseCallBooking: CallBooking = {
+  id: '00000000-0000-4000-8000-000000000401',
+  businessId: '00000000-0000-4000-8000-000000000201',
+  externalId: 'calendly-event-1',
+  purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+  state: CallBookingState.SCHEDULED,
+  callType: CallBookingType.ZOOM,
+  eventStartAt: new Date('2025-01-20T15:30:00.000Z'),
+  eventEndAt: new Date('2025-01-20T16:00:00.000Z'),
+  callLink: new URL('https://zoom.us/j/123456789'),
+  cancellationReason: null,
+  didAttend: null,
+  bookkeeperName: 'Jamie Bookkeeper',
+  bookkeeperEmail: 'jamie@layerfi.com',
+  createdAt: new Date('2025-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2025-01-01T00:00:00.000Z'),
+}
+
+export const { make: makeCallBooking, makeMany: makeCallBookings } = createFixtureFactory(baseCallBooking)
+
 const generateTaskSeeds = createGenerator(schema, {
   uniqueBy: [seed => seed.id, seed => seed.day],
 })
 
 const generatePeriodIds = createGenerator(PeriodIdSchema)
 
-const periodIdFor = (monthIndex: number) => generatePeriodIds({ numRuns: 1, seed: monthIndex })[0]
+const periodIdFor = (monthIndex: number) => pickCyclic(generatePeriodIds({ numRuns: 1, seed: monthIndex }), 0)
 
 const makePeriodTasks = (periodIndex: number, count: number, month: number): BusinessTask[] => {
   if (count === 0) return []

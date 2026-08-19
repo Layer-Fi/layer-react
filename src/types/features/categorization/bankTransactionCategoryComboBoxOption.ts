@@ -1,11 +1,11 @@
 import { type ApiCategorizationAsOption, CategorizationOption, type CategoryAsOption, type PlaceholderAsOption, type SplitAsOption, type SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 
 export type BankTransactionCategoryComboBoxOption =
-  CategoryAsOption |
-  SuggestedMatchAsOption |
-  SplitAsOption |
-  PlaceholderAsOption |
-  ApiCategorizationAsOption
+  CategoryAsOption
+  | SuggestedMatchAsOption
+  | SplitAsOption
+  | PlaceholderAsOption
+  | ApiCategorizationAsOption
 
 export const isCategoryAsOption = (option: BankTransactionCategoryComboBoxOption): option is CategoryAsOption => {
   return option.type === CategorizationOption.Category

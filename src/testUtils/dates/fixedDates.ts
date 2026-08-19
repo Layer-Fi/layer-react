@@ -1,4 +1,7 @@
 // Fixed dates for tests that pin the clock with setupFakeSystemTime(NOW).
+export const MS_PER_HOUR = 60 * 60 * 1000
+export const MS_PER_DAY = 24 * MS_PER_HOUR
+
 export const NOW = new Date(2026, 5, 15, 12, 0, 0)
 export const END_OF_TODAY = new Date(2026, 5, 15, 23, 59, 59, 999)
 

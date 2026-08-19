@@ -1,9 +1,10 @@
-import {
-  type RefObject,
-  useContext,
-} from 'react'
+import { type RefObject } from 'react'
 
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import {
+  useChartOfAccountsSelectionActions,
+  useSelectedLedgerEntryId,
+} from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { LedgerAccountEntryDetails } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
@@ -12,6 +13,10 @@ import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOver
 import { LedgerAccountPanelHeader } from '@features/generalLedger/LedgerAccountPanelHeader/LedgerAccountPanelHeader'
 
 import './ledgerAccountPanel.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__LedgerAccountPanel: 'Layer__ledger-account__panel',
+})
 
 export interface LedgerAccountStringOverrides {
   ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
@@ -29,16 +34,8 @@ export const LedgerAccountPanel = ({
   pageSize = 15,
   stringOverrides,
 }: LedgerAccountProps) => {
-  const {
-    setSelectedAccount,
-    selectedEntryId,
-    closeSelectedEntry,
-  } = useContext(LedgerAccountsContext)
-
-  const close = () => {
-    setSelectedAccount(undefined)
-    closeSelectedEntry()
-  }
+  const selectedEntryId = useSelectedLedgerEntryId()
+  const { clearSelection } = useChartOfAccountsSelectionActions()
 
   return (
     <Panel
@@ -49,10 +46,10 @@ export const LedgerAccountPanel = ({
       )}
       sidebarIsOpen={Boolean(selectedEntryId)}
       parentRef={containerRef}
-      className='Layer__LedgerAccountPanel'
+      className={legacyClassNames('Layer__LedgerAccountPanel')}
     >
       <VStack>
-        <LedgerAccountPanelHeader onClose={close} />
+        <LedgerAccountPanelHeader onClose={clearSelection} />
         <LedgerAccountLineItemsTable
           pageSize={pageSize}
           stringOverrides={stringOverrides?.ledgerEntriesTable}

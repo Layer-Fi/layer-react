@@ -1,8 +1,13 @@
 import { toDate } from '@utils/shared/i18n/date/input'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
+
+const legacyClassNames = createLegacyClassNames({
+  'datetime:value': 'Layer__datetime',
+})
 
 interface BaseDateTimeProps {
   format?: DateFormat
@@ -47,7 +52,7 @@ export const DateTime = ({
   if (!dateValue) return null
 
   if (format) {
-    return <Span>{formatDate(dateValue, format)}</Span>
+    return <Span className={legacyClassNames('datetime:value')}>{formatDate(dateValue, format)}</Span>
   }
 
   const date = formatDate(dateValue, dateFormat)

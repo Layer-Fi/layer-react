@@ -1,9 +1,9 @@
-.Layer__tabs__container {
+.Layer__UI__Tabs__Container {
   overflow: auto hidden;
   min-height: 50px;
 }
 
-.Layer__tabs {
+.Layer__UI__Tabs {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -19,19 +19,19 @@
   isolation: isolate;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-
-  .Layer__tabs-option-content {
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
-  }
 }
 
-.Layer__tabs-option__icon {
+.Layer__UI__Tabs__OptionContent {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+}
+
+.Layer__UI__Tabs__OptionIcon {
   line-height: 11px;
 }
 
-.Layer__tabs-option {
+.Layer__UI__Tabs__Option {
   position: relative;
   z-index: 2;
   cursor: pointer;
@@ -80,14 +80,7 @@
   }
 }
 
-.Layer__tabs.Layer__tabs--small .Layer__tabs-option {
-  input + span {
-    height: 32px;
-    border-radius: 6px;
-  }
-}
-
-.Layer__tabs__thumb {
+.Layer__UI__Tabs__Thumb {
   box-sizing: border-box;
   position: absolute;
   z-index: 3;
@@ -99,10 +92,8 @@
   background: var(--color-base-900);
 }
 
-.Layer__tabs--initialized {
-  .Layer__tabs__thumb {
-    transition:
-      left 150ms ease,
-      width 150ms ease;
-  }
+.Layer__UI__Tabs[data-initialized] .Layer__UI__Tabs__Thumb {
+  transition:
+    left 150ms ease,
+    width 150ms ease;
 }

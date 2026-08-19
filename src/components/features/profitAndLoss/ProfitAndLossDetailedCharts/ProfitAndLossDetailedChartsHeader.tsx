@@ -1,4 +1,7 @@
+import classNames from 'classnames'
+
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BackButton } from '@ui/Button/BackButton'
@@ -9,6 +12,14 @@ import { Span } from '@ui/Typography/Text'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 import './profitAndLossDetailedChartsHeader.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'header:date': 'Layer__ProfitAndLossDetailedChartsHeader__date',
+  'Layer__ProfitAndLossDetailedChartsHeader': 'Layer__profit-and-loss-detailed-charts__header',
+  /* Size was a `mode` prop shipped as a modifier; it is measured here now, and mobile had no name. */
+  'header:desktop': 'Layer__ProfitAndLossDetailedChartsHeader--desktop',
+  'header:tablet': 'Layer__ProfitAndLossDetailedChartsHeader--tablet',
+})
 
 type HeaderTitleProps = {
   title: string
@@ -24,7 +35,7 @@ const HeaderTitle = ({ isMobile, title, dateLabel, showDatePicker }: HeaderTitle
         {title}
       </Heading>
       {!showDatePicker && (
-        <Span size='sm' variant='subtle'>
+        <Span size='sm' variant='subtle' className={legacyClassNames('header:date')}>
           {dateLabel}
         </Span>
       )}
@@ -66,7 +77,7 @@ export const ProfitAndLossDetailedChartsHeader = ({
   showDatePicker = false,
   onClose,
 }: ProfitAndLossDetailedChartsHeaderProps) => {
-  const { isDesktop, isMobile } = useSizeClass()
+  const { isDesktop, isMobile, isTablet } = useSizeClass()
   const { formatDate } = useIntlFormatter()
 
   const headerProps: HeaderTitleProps = {
@@ -82,7 +93,13 @@ export const ProfitAndLossDetailedChartsHeader = ({
   }
 
   return (
-    <header className='Layer__ProfitAndLossDetailedChartsHeader'>
+    <header
+      className={classNames(
+        legacyClassNames('Layer__ProfitAndLossDetailedChartsHeader'),
+        isDesktop && legacyClassNames('header:desktop'),
+        isTablet && legacyClassNames('header:tablet'),
+      )}
+    >
       {!isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
       <HeaderTitle {...headerProps} />
       {isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}

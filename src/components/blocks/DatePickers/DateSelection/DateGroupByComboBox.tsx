@@ -13,6 +13,7 @@ import './dateGroupByComboBox.scss'
 const DATE_GROUP_BY_CONFIG = [
   { value: DateGroupBy.AllTime, ...translationKey('date:label.all_time', 'All Time') },
   { value: DateGroupBy.Month, ...translationKey('date:label.month', 'Month') },
+  { value: DateGroupBy.Quarter, ...translationKey('date:label.quarter', 'Quarter') },
   { value: DateGroupBy.Year, ...translationKey('date:label.year', 'Year') },
 ]
 

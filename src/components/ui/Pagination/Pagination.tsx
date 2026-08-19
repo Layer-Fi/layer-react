@@ -3,12 +3,19 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { isDots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 
 import './pagination.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__Pagination: 'Layer__pagination',
+  Layer__UI__Pagination__Container: 'Layer__pagination-container',
+  Layer__UI__Pagination__Nav: 'Layer__pagination-nav',
+})
 
 export interface PaginationProps {
   currentPage: number
@@ -60,9 +67,9 @@ export const Pagination = ({
   const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
-    <VStack className={classNames('Layer__pagination-container', className)} fluid>
-      <nav aria-label={t('ui:Pagination.label.pagination', 'Pagination')} className='Layer__pagination-nav'>
-        <ul className='Layer__pagination' role='list'>
+    <VStack className={classNames(legacyClassNames('Layer__UI__Pagination__Container'), className)} fluid>
+      <nav aria-label={t('ui:Pagination.label.pagination', 'Pagination')} className={legacyClassNames('Layer__UI__Pagination__Nav')}>
+        <ul className={legacyClassNames('Layer__UI__Pagination')} role='list'>
           <li key='page-prev'>
             <PaginationButton
               onPress={() => onPageChange(currentPage - 1)}

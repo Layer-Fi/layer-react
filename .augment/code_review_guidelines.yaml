@@ -147,6 +147,10 @@ areas:
       - "src/styles/**"
       - "**/*.scss"
     rules:
+      - id: "explicit_component_config"
+        description: "Flag a consumer-facing component config hidden or removed behind context, a view-level config that ambiguously controls several configurable subcomponents, or one prop added per styling knob. Components take one nested config explicitly; composed views forward targeted configs through slotProps, with separate configs when instances may differ. Use context only for genuinely implicit, subtree-stable dependency injection."
+        severity: "medium"
+
       - id: "build_on_ui_primitives"
         description: "Build on @ui before writing new markup. Reach for HStack/VStack instead of raw div, and Span/P/Label/Header instead of raw text elements. Genuinely new reusable primitives go in src/components/ui, not inside a feature."
         severity: "medium"

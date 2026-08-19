@@ -1,3 +1,5 @@
+import classNames from 'classnames'
+
 import { type BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
@@ -7,13 +9,14 @@ import { useBookkeepingStatusConfig } from '@features/bookkeeping/BookkeepingSta
 import './bookkeepingStatus.scss'
 
 type BookkeepingStatusProps = {
+  className?: string
   monthNumber?: number
   status?: BookkeepingPeriodStatus
   text?: string
   iconOnly?: boolean
 }
 
-export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: BookkeepingStatusProps) => {
+export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly, className }: BookkeepingStatusProps) => {
   const statusConfig = useBookkeepingStatusConfig({ status, monthNumber })
   if (!status || !statusConfig) {
     return
@@ -22,7 +25,7 @@ export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: Bookk
   const dataProperties = toDataProperties({ status: statusConfig.color })
 
   return (
-    <HStack className='Layer__bookkeeping-status' gap='3xs' align='center' {...dataProperties}>
+    <HStack className={classNames('Layer__bookkeeping-status', className)} gap='3xs' align='center' {...dataProperties}>
       <span className='Layer__bookkeeping-status__icon-wrapper' data-status={statusConfig.color}>
         {statusConfig.icon}
       </span>

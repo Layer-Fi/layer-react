@@ -5,6 +5,7 @@ import { type TaxDetails, type TaxDetailsRow } from '@schemas/features/taxEstima
 import { type TaxOverviewApiData, TaxOverviewDeadlineStatus, TaxOverviewMetricType } from '@schemas/features/taxEstimates/overview'
 import { type TaxPaymentRow } from '@schemas/features/taxEstimates/payments'
 import { type TaxSummary } from '@schemas/features/taxEstimates/summary'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { type TaxScenario } from '@fixtures/taxEstimates/scenario/types'
 import {
@@ -140,10 +141,10 @@ export const deriveTaxPayments = (scenario: TaxScenario): { type: 'US_Tax_Paymen
   const data = scenario.quarters.map((quarter, index): TaxPaymentRow => ({
     rowKey: `q${quarter.quarter}`,
     label: quarterLabel(quarter.quarter),
-    ...combined[index],
+    ...pickCyclic(combined, index),
     breakdown: [
-      { rowKey: `q${quarter.quarter}-federal`, label: 'Federal', ...federal[index] },
-      { rowKey: `q${quarter.quarter}-state`, label: scenario.stateLabel, ...state[index] },
+      { rowKey: `q${quarter.quarter}-federal`, label: 'Federal', ...pickCyclic(federal, index) },
+      { rowKey: `q${quarter.quarter}-state`, label: scenario.stateLabel, ...pickCyclic(state, index) },
     ],
   }))
 
@@ -159,13 +160,13 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
   const nextDueIndex = scenario.quarters.findIndex(quarter => quarterDueDate(scenario.year, quarter.quarter).compare(now) >= 0)
   const currentQuarterIndex = nextDueIndex === -1 ? scenario.quarters.length - 1 : nextDueIndex
   const hasUncategorized = scenario.uncategorized.count > 0
-  const currentQuarterRange = quarterUncategorizedRange(scenario.year, scenario.quarters[currentQuarterIndex].quarter)
+  const currentQuarterRange = quarterUncategorizedRange(scenario.year, pickCyclic(scenario.quarters, currentQuarterIndex).quarter)
   const earliestAt = hasUncategorized ? currentQuarterRange.earliest : null
   const latestAt = hasUncategorized ? currentQuarterRange.latest : null
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {
     const dueDate = quarterDueDate(scenario.year, quarter.quarter)
-    const { rolledOverFromPrevious, owedThisQuarter, totalPaid, remainingBalance } = combined[index]
+    const { rolledOverFromPrevious, owedThisQuarter, totalPaid, remainingBalance } = pickCyclic(combined, index)
     const isPastDue = dueDate.compare(now) < 0 && remainingBalance > 0
     const state = remainingBalance <= 0
       ? TaxOverviewDeadlineStatus.Paid

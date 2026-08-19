@@ -6,8 +6,11 @@
  * manifest, so a typo still fails CI.
  */
 
-/** Component is exported from `src/index.tsx`. Set on the meta. What GitHub Pages ships. */
+/** Story ships to GitHub Pages. Opted into per story, never on the meta. */
 export const PUBLIC_API_TAG = 'public-api'
 
 /** Story backs an image in Layer-Fi/api-documentation. Must appear in the docs manifest. */
 export const DOCS_SCREENSHOT_TAG = 'docs-screenshot'
+
+/** Story renders a state a real backend produces on its own. Opted into per story. */
+export const REAL_BACKEND_TAG = 'real-backend'

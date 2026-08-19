@@ -1,9 +1,15 @@
 import { type ReactNode } from 'react'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { SubmitAction, SubmitButton, type SubmitButtonProps } from '@ui/Button/SubmitButton'
 
 import './bankTransactionsSubmitButton.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'state:submit': 'Layer__bank-transaction__submit-btn',
+  'state:retry': 'Layer__bank-transaction__retry-btn',
+})
 
 type BankTransactionsSubmitButtonProps =
   Pick<SubmitButtonProps, 'isPending' | 'isDisabled' | 'isError' | 'errorMessage' | 'action'> & {
@@ -27,6 +33,7 @@ export const BankTransactionsSubmitButton = ({
   return (
     <span className='Layer__BankTransactionsSubmitButton' {...dataProperties}>
       <SubmitButton
+        className={legacyClassNames(isError ? 'state:retry' : 'state:submit')}
         iconBox
         withRetry
         onPress={onPress}

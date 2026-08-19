@@ -1,5 +1,6 @@
 import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { hashString } from '@fixtures/unifiedReports/deterministicAmounts'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
@@ -40,7 +41,7 @@ const counterpartyFor = (candidates: readonly Counterparty[], key: string): Coun
   if (candidates.length === 0) return null
   const hash = hashString(key)
 
-  return hash % 6 === 0 ? null : candidates[hash % candidates.length]
+  return hash % 6 === 0 ? null : pickCyclic(candidates, hash)
 }
 
 type LineItemOptions = {
@@ -91,8 +92,8 @@ const groupsBy = <Key>(
 
 export const byAccount = (items: readonly TransactionLineItem[]) =>
   groupsBy(items, item => item.accountId, groupItems => ({
-    rowKey: `account:${groupItems[0].accountId}`,
-    label: groupItems[0].accountName,
+    rowKey: `account:${pickCyclic(groupItems, 0).accountId}`,
+    label: pickCyclic(groupItems, 0).accountName,
     isUncategorized: false,
     items: groupItems,
   }))
@@ -102,7 +103,7 @@ export const byCounterparty = (
   unnamedLabel: string,
 ) => (items: readonly TransactionLineItem[]) =>
   groupsBy(items, item => item.counterparty?.id ?? null, (groupItems) => {
-    const { counterparty } = groupItems[0]
+    const { counterparty } = pickCyclic(groupItems, 0)
 
     return counterparty
       ? {

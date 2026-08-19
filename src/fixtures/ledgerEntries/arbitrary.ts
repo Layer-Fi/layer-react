@@ -1,6 +1,7 @@
 import { type FastCheck } from 'effect'
 
 import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { ROOT_STABLE_NAMES } from '@fixtures/chartOfAccounts/constants'
 import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
@@ -60,9 +61,9 @@ export const ledgerEntryLineItemsArbitrary = (fc: typeof FastCheck) =>
 
     return [
       ...debitAmounts.map((amount, index) =>
-        toLineItem(ids[index], accounts[index], amount, LedgerEntryDirection.Debit, entryAt)),
+        toLineItem(pickCyclic(ids, index), pickCyclic(accounts, index), amount, LedgerEntryDirection.Debit, entryAt)),
       ...creditAmounts.map((amount, index) =>
-        toLineItem(ids[debits + index], accounts[debits + index], amount, LedgerEntryDirection.Credit, entryAt)),
+        toLineItem(pickCyclic(ids, debits + index), pickCyclic(accounts, debits + index), amount, LedgerEntryDirection.Credit, entryAt)),
     ]
   })
 

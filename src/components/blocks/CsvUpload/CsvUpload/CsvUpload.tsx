@@ -37,7 +37,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
         return
       }
 
-      if (rejections.length > 0) {
+      if (rejections.length > 0 || !firstFile) {
         onFileSelected(null)
         setErrorMessage(t('upload:error.unknown_upload_error', 'Unknown upload error'))
         return

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/features/bankAccounts/bankAccount'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
@@ -15,6 +16,10 @@ import { ErrorText } from '@ui/Typography/ErrorText'
 import { Label, Span } from '@ui/Typography/Text'
 
 import './openingBalanceAccountForm.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__OpeningBalanceAccountForm__InputGroup: 'Layer__caobfb__input-group',
+})
 
 export type OpeningBalanceAccountFormData = {
   bankAccount: BankAccount
@@ -106,7 +111,7 @@ export const OpeningBalanceAccountForm = ({
           </Span>
         </div>
         <div className='Layer__OpeningBalanceAccountForm__Inputs'>
-          <VStack className='Layer__OpeningBalanceAccountForm__InputGroup'>
+          <VStack className={legacyClassNames('Layer__OpeningBalanceAccountForm__InputGroup')}>
             <Label size='sm' pbe='3xs'>
               {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_date', 'Opening date')}
             </Label>
@@ -121,7 +126,7 @@ export const OpeningBalanceAccountForm = ({
               errorText={dateErrorText}
             />
           </VStack>
-          <VStack className='Layer__OpeningBalanceAccountForm__InputGroup'>
+          <VStack className={legacyClassNames('Layer__OpeningBalanceAccountForm__InputGroup')}>
             <Label size='sm' pbe='3xs'>
               {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_balance', 'Opening balance')}
             </Label>

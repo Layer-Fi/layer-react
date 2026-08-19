@@ -7,9 +7,14 @@ import {
   ZIndexLayer,
 } from 'recharts'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Span } from '@ui/Typography/Text'
 
 import './ChartTooltip.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ChartTooltip__List: 'Layer__ChartTooltip__list',
+})
 
 const CURSOR_Y_OFFSET = 28
 
@@ -31,7 +36,7 @@ interface ChartTooltipContentProps {
 
 export const ChartTooltipContent = ({ children }: ChartTooltipContentProps) => (
   <div className='Layer__ChartTooltip'>
-    <ul className='Layer__ChartTooltip__list'>
+    <ul className={legacyClassNames('Layer__ChartTooltip__List')}>
       {children}
     </ul>
   </div>
@@ -44,15 +49,17 @@ interface ChartTooltipCursorProps {
 }
 
 export const ChartTooltipCursor = ({ width, points, height }: ChartTooltipCursorProps) => {
-  if (!points || points.length === 0 || height === undefined) return null
+  const [firstPoint] = points ?? []
+
+  if (!firstPoint || height === undefined) return null
 
   return (
     <ZIndexLayer zIndex={DefaultZIndexes.cursorRectangle}>
       <Rectangle
         fill='#F7F8FA'
         stroke='none'
-        x={points[0].x - width / 2}
-        y={points[0].y}
+        x={firstPoint.x - width / 2}
+        y={firstPoint.y}
         width={width}
         height={height + CURSOR_Y_OFFSET}
         radius={6}

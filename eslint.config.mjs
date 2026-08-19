@@ -318,6 +318,12 @@ export default tsEslint.config(
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
+            '.storybook/manager.ts',
+            '.storybook/StorybookLayerProvider.tsx',
+            '.storybook/RealBackendBadge.tsx',
+            '.storybook/realBackend.ts',
+            '.storybook/businessHistory.ts',
+            'api/storybook-token.ts',
             'eslint.config.mjs',
             'i18next.config.ts',
             'vite.config.ts',
@@ -381,16 +387,20 @@ export default tsEslint.config(
     },
   },
   {
-    // Storybook config lives outside src, so it can only reach it relatively.
-    files: ['.storybook/**/*.{ts,tsx}'],
+    // Storybook config and the Vercel functions live outside src, so they can only reach it
+    // relatively.
+    files: ['.storybook/**/*.{ts,tsx}', 'api/**/*.ts'],
     rules: {
       'import/no-relative-parent-imports': 'off',
     },
   },
   {
     // The self-reference resolves to `dist/`, which the rule reads as a parent import. Reaching the
-    // built package is the entire point of these tests.
+    // built package is the entire point of these tests. Linting never builds, so every name imported
+    // from it is unresolved here: type-aware rules would judge these files on absent types, and
+    // would report differently depending on whether a stale `dist/` happens to exist.
     files: ['type-tests/**/*.ts'],
+    extends: [tsEslint.configs.disableTypeChecked],
     rules: {
       'import/no-relative-parent-imports': 'off',
     },

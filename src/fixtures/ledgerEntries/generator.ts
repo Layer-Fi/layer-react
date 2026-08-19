@@ -1,4 +1,5 @@
 import { ClassifierAgent, EntryType } from '@schemas/features/generalLedger/ledgerEntry'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
@@ -36,7 +37,7 @@ const entryAtNoonUtc = (index: number, total: number) => {
 const assignAccountsAndDates = (lineItems: FixtureEntry['lineItems'], startSlot: number, entryAt: Date) =>
   lineItems.map((lineItem, lineIndex) => ({
     ...lineItem,
-    account: postableAccounts[(startSlot + lineIndex) % postableAccounts.length],
+    account: pickCyclic(postableAccounts, startSlot + lineIndex),
     entryAt,
     createdAt: entryAt,
   }))

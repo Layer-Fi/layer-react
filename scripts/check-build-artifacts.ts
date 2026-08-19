@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import pkg from '../package.json'
+import { readPublicExports } from './publicExports'
 
 // Derived from package.json rather than listed, so adding an export without building it fails
 // here instead of in someone else's install. Values only — `exports` keys are subpath specifiers.
@@ -12,6 +13,15 @@ function exportedPaths(node: unknown): string[] {
 // Resolved implicitly as a sibling of dist/index.css, so it appears in no `exports` entry.
 const IMPLICIT_ARTIFACTS = ['dist/index.d.css.ts']
 
+/**
+ * `./*` cannot be stat'd, so each pattern is expanded over the public export names taken from
+ * `src/index.tsx`. That turns "the wildcard exists" into "every subpath a consumer can write
+ * actually resolves", which is the property worth checking.
+ */
+function expandWildcard(pattern: string): string[] {
+  return readPublicExports().map(entry => pattern.replaceAll('*', entry.name))
+}
+
 function declaredArtifacts(): string[] {
   return [...new Set([
     pkg.main,
@@ -22,7 +32,8 @@ function declaredArtifacts(): string[] {
     ...IMPLICIT_ARTIFACTS,
   ]
     .filter((value): value is string => typeof value === 'string')
-    .map(value => value.replace(/^\.\//, '')))]
+    .map(value => value.replace(/^\.\//, ''))
+    .flatMap(value => (value.includes('*') ? expandWildcard(value) : [value])))]
 }
 
 const missing = declaredArtifacts().filter((artifact) => {

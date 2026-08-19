@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
+import type { Awaitable } from '@internal-types/utility/awaitable'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
@@ -26,15 +28,26 @@ export interface LinkedAccountsProps {
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
+  onPlaidConnectionSuccess?: () => Awaitable<void>
   stringOverrides?: {
     title?: string
   }
 }
 
-export const LinkedAccounts = ({ plaidHostedLinkConfig, ...props }: LinkedAccountsProps) => {
+export const LinkedAccounts = ({
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
+  onPlaidConnectionSuccess,
+  ...props
+}: LinkedAccountsProps) => {
   return (
     <AccountConfirmationStoreProvider>
-      <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
+      <LinkedAccountsProvider
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
+        onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+      >
         <OpeningBalanceModalProvider>
           <LinkedAccountsComponent {...props} />
         </OpeningBalanceModalProvider>

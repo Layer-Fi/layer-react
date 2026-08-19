@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,13 @@ import { decodeLedgerEntrySource } from '@schemas/features/generalLedger/ledgerE
 import { lineEntryNumber } from '@utils/features/generalLedger/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { useGetListLedgerAccountLines } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
+import {
+  useChartOfAccountsSelectionActions,
+  useSelectedLedgerAccountId,
+  useSelectedLedgerEntryId,
+} from '@providers/features/generalLedger/ChartOfAccountsSelectionStore/ChartOfAccountsSelectionStoreProvider'
+import { useSelectedLedgerAccount } from '@hooks/features/generalLedger/useSelectedLedgerAccount'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -114,21 +120,23 @@ export const LedgerAccountLineItemsTable = ({
 }: LedgerAccountLineItemsTableProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+  const selectedAccountId = useSelectedLedgerAccountId()
+  const selectedEntryId = useSelectedLedgerEntryId()
+  const { selectEntry, closeSelectedEntry } = useChartOfAccountsSelectionActions()
+  const nodeType = useSelectedLedgerAccount()?.nodeType
+
   const {
-    data,
+    flattenedData: data,
     isError,
     isLoading,
     isValidating,
-    selectedAccount,
-    selectedEntryId,
-    setSelectedEntryId,
-    closeSelectedEntry,
-    refetch,
+    mutate,
     hasMore,
     fetchMore,
-  } = useContext(LedgerAccountsContext)
-
-  const nodeType = selectedAccount?.nodeType
+  } = useGetListLedgerAccountLines({
+    accountId: selectedAccountId ?? '',
+    isEnabled: Boolean(selectedAccountId),
+  })
 
   const columnConfig = useMemo(
     () => getColumnConfig(nodeType, stringOverrides, formatDate, t),
@@ -136,7 +144,7 @@ export const LedgerAccountLineItemsTable = ({
   )
 
   const paginationProps = useTablePaginationProps({
-    filterParams: selectedAccount?.accountId,
+    filterParams: selectedAccountId,
     data,
     pageSize,
     hasMore,
@@ -150,10 +158,10 @@ export const LedgerAccountLineItemsTable = ({
         closeSelectedEntry()
       }
       else {
-        setSelectedEntryId(row.original.entryId)
+        selectEntry(row.original.entryId)
       }
     },
-  }), [selectedEntryId, setSelectedEntryId, closeSelectedEntry])
+  }), [selectedEntryId, selectEntry, closeSelectedEntry])
 
   const isRowSelected = useCallback(
     (row: LedgerAccountLineItemRow) => row.original.entryId === selectedEntryId,
@@ -174,11 +182,11 @@ export const LedgerAccountLineItemsTable = ({
       status={DataStateStatus.failed}
       title={t('generalLedger:LedgerAccountLineItemsTable.error.couldnt_load_ledger_entries', 'We couldn’t load ledger entries')}
       description={t('generalLedger:LedgerAccountLineItemsTable.error.load_ledger_entries', 'An error occurred while loading this account’s ledger entries. Please check your connection and try again.')}
-      onRefresh={() => { void refetch() }}
+      onRefresh={() => { void mutate() }}
       isLoading={isValidating || isLoading}
       spacing
     />
-  ), [refetch, isValidating, isLoading, t])
+  ), [mutate, isValidating, isLoading, t])
 
   return (
     <PaginatedTable

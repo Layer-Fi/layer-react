@@ -2,6 +2,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Button } from '@ui/Button/Button'
 import type {
   ComboBoxOption,
@@ -17,6 +18,10 @@ import { filterOptionsOrGroups, resolveSelectedOption } from '@blocks/MobileSele
 import { MobileSelectionDrawerList } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerList'
 
 import './mobileSelectionDrawerWithTrigger.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__MobileSelectionDrawerWithTrigger__Drawer: 'Layer__MobileSelectionDrawerWithTrigger',
+})
 
 export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
   Omit<SingleSelectComboBoxProps<T>, 'slots'>
@@ -120,7 +125,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
         isDismissable
       >
         {({ close }) => (
-          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Drawer' pi='sm' pb='xs' gap='md'>
+          <VStack className={legacyClassNames('Layer__MobileSelectionDrawerWithTrigger__Drawer')} pi='sm' pb='xs' gap='md'>
             {isSearchable && (
               <SearchField
                 value={searchQuery}

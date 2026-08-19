@@ -1,9 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { type Cache, useSWRConfig } from 'swr'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
 
 import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
+
+import { getCallArgs } from '@testUtils/mocks/getCallArgs'
 
 // The hook only consumes useSWRConfig from swr, so a minimal mock suffices.
 vi.mock('swr', () => ({ useSWRConfig: vi.fn() }))
@@ -21,7 +23,7 @@ const CACHE = {
       : { _k: { tags: ['Other'] }, data: {} },
 } as unknown as Cache<unknown>
 
-let mutate: ReturnType<typeof vi.fn>
+let mutate: Mock<(key: unknown, data?: unknown, options?: unknown) => Promise<undefined>>
 
 beforeEach(() => {
   mutate = vi.fn(() => Promise.resolve(undefined))
@@ -76,7 +78,7 @@ describe('useGlobalCacheActions', () => {
       displayed => ({ ...displayed, patched: true }),
     )
 
-    const options = mutate.mock.calls[0][2] as {
+    const options = getCallArgs(mutate)[2] as {
       optimisticData: (current: unknown, displayed?: { id: string } | null) => unknown
       populateCache: boolean
       revalidate: boolean

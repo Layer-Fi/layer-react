@@ -17,7 +17,6 @@ const invoicesStoryHandlers = [
 
 const meta: Meta<typeof Invoices> = {
   title: 'Views/Invoices',
-  tags: ['public-api'],
   component: Invoices,
   parameters: {
     msw: { handlers: invoicesStoryHandlers },
@@ -29,7 +28,7 @@ export default meta
 type Story = StoryObj<typeof Invoices>
 
 export const Default: Story = {
-  tags: ['docs-screenshot'],
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
 }
 
 // Cash sales carry `customer: null`, which leaves the detail view's customer and email blank, and

@@ -1,6 +1,7 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { type Match } from '@schemas/features/bankTransactions/match'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { MATCH_TYPE_BY_DETAILS_TYPE, toMatchDetailsId } from '@fixtures/bankTransactions/derive'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
@@ -11,7 +12,7 @@ export const applyConfirmedMatch = (
 ): { transaction: BankTransaction, match: Match } => {
   const suggestedMatch = transaction.suggestedMatches.find(match => match.id === suggestedMatchId)
 
-  const fromAccountName = transaction.accountName ?? bankAccounts[0].accountName
+  const fromAccountName = transaction.accountName ?? pickCyclic(bankAccounts, 0).accountName
 
   const details = suggestedMatch?.details ?? transaction.match?.details ?? {
     type: 'Transfer_Match',

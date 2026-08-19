@@ -1,4 +1,5 @@
 import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { invoicePaymentTermsDays } from '@fixtures/invoices/constants'
@@ -34,7 +35,7 @@ export const generator: typeof generateInvoices = (overrides) => {
         ...invoice,
         invoiceNumber: `INV-${String(1001 + index)}`,
         sentAt: isDraft ? null : issuedAt,
-        dueAt: isDraft ? null : addDays(issuedAt, invoicePaymentTermsDays[index % invoicePaymentTermsDays.length]),
+        dueAt: isDraft ? null : addDays(issuedAt, pickCyclic(invoicePaymentTermsDays, index)),
         paidAt: invoice.paidAt == null ? null : addDays(issuedAt, 7 + (index % 14)),
         voidedAt: invoice.voidedAt == null ? null : addDays(issuedAt, 5),
         importedAt: null,

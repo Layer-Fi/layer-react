@@ -1,7 +1,16 @@
 import { type ChangeEvent, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__Tabs__Option: 'Layer__tabs-option',
+  Layer__UI__Tabs__OptionContent: 'Layer__tabs-option-content',
+  Layer__UI__Tabs__OptionIcon: 'Layer__tabs-option__icon',
+})
+
+export const TABS_OPTION_CLASS_NAME = 'Layer__UI__Tabs__Option'
 
 interface TabProps {
   checked: boolean
@@ -35,7 +44,7 @@ export const Tab = ({
     return (
       <Tooltip>
         <TooltipTrigger>
-          <label className='Layer__tabs-option' data-checked={checked}>
+          <label className={legacyClassNames('Layer__UI__Tabs__Option')} data-checked={checked}>
             <input
               type='radio'
               checked={checked}
@@ -45,9 +54,9 @@ export const Tab = ({
               disabled={disabled ?? false}
               data-idx={index}
             />
-            <span className='Layer__tabs-option-content'>
+            <span className={legacyClassNames('Layer__UI__Tabs__OptionContent')}>
               {leftIcon && (
-                <span className='Layer__tabs-option__icon'>{leftIcon}</span>
+                <span className={legacyClassNames('Layer__UI__Tabs__OptionIcon')}>{leftIcon}</span>
               )}
               <span>{label}</span>
               {badge}
@@ -62,7 +71,7 @@ export const Tab = ({
   }
 
   return (
-    <label className='Layer__tabs-option' data-checked={checked}>
+    <label className={legacyClassNames('Layer__UI__Tabs__Option')} data-checked={checked}>
       <input
         type='radio'
         checked={checked}
@@ -72,9 +81,9 @@ export const Tab = ({
         disabled={disabled ?? false}
         data-idx={index}
       />
-      <span className='Layer__tabs-option-content'>
+      <span className={legacyClassNames('Layer__UI__Tabs__OptionContent')}>
         {leftIcon && (
-          <span className='Layer__tabs-option__icon'>{leftIcon}</span>
+          <span className={legacyClassNames('Layer__UI__Tabs__OptionIcon')}>{leftIcon}</span>
         )}
         <span>{label}</span>
         {badge}

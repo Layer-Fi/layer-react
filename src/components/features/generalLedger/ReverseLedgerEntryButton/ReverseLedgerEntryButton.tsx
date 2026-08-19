@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CircleAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useBookkeepingStatusContext } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 import { Button } from '@ui/Button/Button'
 
 import './reverseLedgerEntryButton.scss'
@@ -14,6 +15,7 @@ interface ReverseLedgerEntryButtonProps {
 
 export const ReverseLedgerEntryButton = ({ onReverse, alreadyReversed }: ReverseLedgerEntryButtonProps) => {
   const { t } = useTranslation()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
   const [isProcessing, setIsProcessing] = useState(false)
   const [isError, setIsError] = useState(false)
 
@@ -31,10 +33,15 @@ export const ReverseLedgerEntryButton = ({ onReverse, alreadyReversed }: Reverse
     }
   }
 
+  if (isActiveBookkeepingStatus) {
+    return null
+  }
+
   return (
     <div className='Layer__LedgerEntryDetails__Reverse'>
       <Button
         variant='outlined'
+        status='danger'
         onPress={() => { void handleClick() }}
         isPending={isProcessing}
         tooltip={

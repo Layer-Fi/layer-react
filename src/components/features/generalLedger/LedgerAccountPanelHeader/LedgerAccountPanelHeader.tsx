@@ -1,7 +1,6 @@
-import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { useSelectedLedgerAccount } from '@hooks/features/generalLedger/useSelectedLedgerAccount'
 import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -16,7 +15,7 @@ export interface LedgerAccountHeaderProps {
 
 export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) => {
   const { t } = useTranslation()
-  const { selectedAccount } = useContext(LedgerAccountsContext)
+  const selectedAccount = useSelectedLedgerAccount()
 
   return (
     <Header>
