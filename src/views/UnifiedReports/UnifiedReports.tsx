@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import type { UnifiedReportsInitialState } from '@internal-types/features/unifiedReports/initialState'
 import type { UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
@@ -25,6 +26,8 @@ type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
   navigationVariant?: UnifiedReportNavigationVariant
   showTitle?: boolean
+  /** Report to land on instead of the server default; applied once, when the report configuration loads. */
+  initialState?: UnifiedReportsInitialState
 }
 
 const UnifiedReportContent = ({
@@ -51,9 +54,9 @@ const UnifiedReportContent = ({
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true }: UnifiedReportProps) => {
+export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true, initialState }: UnifiedReportProps) => {
   return (
-    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
+    <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode} initialState={initialState}>
       <ExpandableDataTableProvider>
         <UnifiedReportContent navigationVariant={navigationVariant} showTitle={showTitle} />
       </ExpandableDataTableProvider>

@@ -2,6 +2,7 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useEffe
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
+import type { UnifiedReportsInitialState } from '@internal-types/features/unifiedReports/initialState'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/features/tags/tagValueDefinition'
 import {
@@ -238,8 +239,11 @@ const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | n
   return firstReport
 }
 
+const findReportByKey = (groups: ReadonlyArray<ReportGroup>, key: string): ReportConfig | null =>
+  groups.flatMap(({ reports }) => reports).find(report => report.key === key) ?? null
+
 const hasReportWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
-  groups.some(group => group.reports.some(report => report.key === key))
+  findReportByKey(groups, key) != null
 
 const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
   createStore<UnifiedReportStoreShape>(set => ({
@@ -266,18 +270,24 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
     },
   }))
 
-function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>) {
+function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>, initialState?: UnifiedReportsInitialState) {
   const { data } = useGetReportConfig()
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)
+  const defaultReportKey = initialState?.reportKey
 
   useEffect(() => {
     if (!data) return
     if (baseReport && hasReportWithKey(data, baseReport.key)) return
 
-    const defaultReport = findDefaultReport(data)
-    if (defaultReport) setBaseReport(defaultReport)
-  }, [data, baseReport, setBaseReport])
+    const requestedReport = defaultReportKey != null ? findReportByKey(data, defaultReportKey) : null
+    if (defaultReportKey != null && requestedReport == null) {
+      console.warn(`UnifiedReports: no report with key "${defaultReportKey}" in this business's report config; falling back to the default report.`)
+    }
+
+    const report = requestedReport ?? findDefaultReport(data)
+    if (report) setBaseReport(report)
+  }, [data, baseReport, setBaseReport, defaultReportKey])
 }
 
 function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShape>, dateSelectionMode: DateSelectionMode) {
@@ -288,11 +298,16 @@ function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShap
 
 type UnifiedReportStoreProviderProps = {
   dateSelectionMode?: DateSelectionMode
+  initialState?: UnifiedReportsInitialState
 }
 
-export function UnifiedReportStoreProvider({ children, dateSelectionMode = 'full' }: PropsWithChildren<UnifiedReportStoreProviderProps>) {
+export function UnifiedReportStoreProvider({
+  children,
+  dateSelectionMode = 'full',
+  initialState,
+}: PropsWithChildren<UnifiedReportStoreProviderProps>) {
   const [store] = useState(() => createUnifiedReportStore(dateSelectionMode))
-  useHydrateUnifiedReportStore(store)
+  useHydrateUnifiedReportStore(store, initialState)
   useSyncExternalDateSelectionMode(store, dateSelectionMode)
 
   return (
