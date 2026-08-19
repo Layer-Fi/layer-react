@@ -12,10 +12,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__LedgerEntryDetailField': ['Layer__EntryDetailField', 'Layer__EntryDetailSection__Field'],
   'Layer__LedgerEntryDetailField__Value': ['Layer__EntryDetailField__Value', 'Layer__EntryDetailSection__Value'],
   'state:fullWidth': ['Layer__EntryDetailField--fullWidth', 'Layer__EntryDetailSection__Field--fullWidth', 'Layer__LedgerEntryDetailField--fullWidth'],
-} satisfies LegacyClassNameMapFor<
-  'Layer__LedgerEntryDetailField' | 'Layer__LedgerEntryDetailField__Value',
-  `state:${string}`
->)
+} satisfies LegacyClassNameMapFor<'Layer__LedgerEntryDetailField' | 'Layer__LedgerEntryDetailField__Value'>)
 
 export interface LedgerEntryDetailFieldProps {
   label: ReactNode

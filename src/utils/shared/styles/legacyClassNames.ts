@@ -18,7 +18,7 @@ function toArray(value: string | ReadonlyArray<string>) {
  */
 export type LegacyClassNameMapFor<
   TClassName extends string,
-  TStateKey extends string = `${string}:${string}`,
+  TStateKey extends string = `state:${string}`,
 > = Partial<
   Record<TClassName | `${TClassName}--${string}` | TStateKey, string | ReadonlyArray<string>>
 >
