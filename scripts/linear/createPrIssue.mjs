@@ -140,6 +140,14 @@ const run = async () => {
   const dryRun = ['1', 'true'].includes((process.env.LINEAR_DRY_RUN ?? '').toLowerCase())
 
   if (!apiKey) throw new Error('LINEAR_API_KEY is required')
+  // Verified: a lin_accesskey_ pipeline key 401s on the GraphQL API, so catch the mix-up with the
+  // release action's LINEAR_ACCESS_KEY here rather than as a bare auth failure.
+  if (apiKey.startsWith('lin_accesskey_')) {
+    throw new Error(
+      'LINEAR_API_KEY looks like a release pipeline access key (lin_accesskey_). Those only work ' +
+        'with linear-release; issue creation needs a Linear API key from Settings → API.',
+    )
+  }
   if (!wantedTeam) throw new Error('LINEAR_TEAM is required (team key or name)')
   if (!eventPath) throw new Error('GITHUB_EVENT_PATH is required')
 
