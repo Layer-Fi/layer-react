@@ -239,16 +239,11 @@ const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | n
   return firstReport
 }
 
-const hasReportWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
-  groups.some(group => group.reports.some(report => report.key === key))
+const findReportByKey = (groups: ReadonlyArray<ReportGroup>, key: string): ReportConfig | null =>
+  groups.flatMap(({ reports }) => reports).find(report => report.key === key) ?? null
 
-const findReportByKey = (groups: ReadonlyArray<ReportGroup>, key: string): ReportConfig | null => {
-  for (const group of groups) {
-    const match = group.reports.find(report => report.key === key)
-    if (match) return match
-  }
-  return null
-}
+const hasReportWithKey = (groups: ReadonlyArray<ReportGroup>, key: string): boolean =>
+  findReportByKey(groups, key) != null
 
 const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
   createStore<UnifiedReportStoreShape>(set => ({

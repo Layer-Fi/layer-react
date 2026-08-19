@@ -41,8 +41,8 @@ const meta: Meta<UnifiedReportsStoryArgs> = {
       description: 'How report controls read from the global date store.',
     },
     defaultState: {
-      control: 'object',
-      description: 'Initial landing state (e.g. `{ reportKey: "BALANCE_SHEET" }`). Read once when the report configuration loads, so changing this control does not switch the report — reload the story to see it apply.',
+      control: false,
+      description: 'Initial landing state (e.g. `{ reportKey: "BALANCE_SHEET" }`), applied when the report configuration first loads. See the `DeepLinkedReport` story.',
     },
   },
 }
@@ -59,13 +59,8 @@ export const MenuNavigation: Story = {
   args: { navigationVariant: 'menu' },
 }
 
-// `defaultState` is read once at hydration, so changing the control on `Default` re-renders
-// without switching the report — only a fresh mount shows the behavior.
 export const DeepLinkedReport: Story = {
   args: { defaultState: { reportKey: 'BALANCE_SHEET' } },
-  // The report heading only renders in the desktop base header, so the play function
-  // needs a desktop width to assert against.
-  parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

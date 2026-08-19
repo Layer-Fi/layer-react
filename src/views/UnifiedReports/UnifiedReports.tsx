@@ -18,12 +18,7 @@ type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
   navigationVariant?: UnifiedReportNavigationVariant
   showTitle?: boolean
-  /**
-   * Initial landing state (e.g. `{ reportKey: 'PROFIT_AND_LOSS' }`) instead of the server default.
-   * Read when the report configuration loads — later changes do not switch the report
-   * (`defaultValue` semantics). Unknown report keys fall back to the default report with a console warning.
-   * Report switches are observable via the `ReportsNavigated` event.
-   */
+  /** Report to land on instead of the server default; applied once, when the report configuration loads. */
   defaultState?: UnifiedReportsDefaultState
 }
 
