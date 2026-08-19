@@ -4,7 +4,7 @@ import { Legend } from 'recharts'
 
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
-import { STRIPE_PATTERN_DARK_FILL } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
+import { type StripePatternVariant } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 
 import './profitAndLossChartLegend.scss'
 
@@ -34,13 +34,18 @@ const LegendIcon = ({ fill }: { fill?: string }) => (
   </svg>
 )
 
-const LEGEND_ICON_FILLS: Record<string, string> = {
+const getLegendIconFills = (
+  stripeFills: Record<StripePatternVariant, string>,
+): Record<string, string> => ({
   IncomeLegend: 'var(--bar-color-income)',
   ExpensesLegend: 'var(--bar-color-expenses)',
-  UncategorizedLegend: STRIPE_PATTERN_DARK_FILL,
-}
+  UncategorizedLegend: stripeFills.expenses,
+})
 
-const renderLegendContent = (payload: { value: string, type: string, id: string }[]) => {
+const renderLegendContent = (
+  payload: { value: string, type: string, id: string }[],
+  iconFills: Record<string, string>,
+) => {
   return (
     <ul className={legacyClassNames('Layer__ProfitAndLossChartLegend')}>
       {payload.map((entry, idx) => (
@@ -48,7 +53,7 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
           key={`legend-item-${idx}`}
           className={`recharts-legend-item legend-item-${idx}`}
         >
-          <LegendIcon fill={LEGEND_ICON_FILLS[entry.id]} />
+          <LegendIcon fill={iconFills[entry.id]} />
           {entry.value}
         </li>
       ))}
@@ -58,7 +63,11 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
 
 const LEGEND_HEIGHT = 44
 
-export const ProfitAndLossChartLegend = () => {
+export const ProfitAndLossChartLegend = ({
+  stripeFills,
+}: {
+  stripeFills: Record<StripePatternVariant, string>
+}) => {
   const { t } = useTranslation()
   const payload = useMemo(() => LEGEND_ENTRY_CONFIG.map(entry => ({
     value: t(entry.i18nKey, entry.defaultValue),
@@ -70,7 +79,7 @@ export const ProfitAndLossChartLegend = () => {
       verticalAlign='top'
       align='right'
       height={LEGEND_HEIGHT}
-      content={renderLegendContent(payload)}
+      content={renderLegendContent(payload, getLegendIconFills(stripeFills))}
     />
   )
 }

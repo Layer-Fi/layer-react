@@ -1,29 +1,58 @@
+import { useId, useMemo } from 'react'
+
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+
 import './profitAndLossChartPatternDefs.scss'
 
-export const STRIPE_PATTERN_ID = 'layer-bar-stripe-pattern'
-export const STRIPE_PATTERN_DARK_ID = 'layer-bar-stripe-pattern-dark'
+export type StripePatternVariant = 'income' | 'expenses'
 
-export const STRIPE_PATTERN_FILL = `url(#${STRIPE_PATTERN_ID})`
-export const STRIPE_PATTERN_DARK_FILL = `url(#${STRIPE_PATTERN_DARK_ID})`
+type StripePatterns = {
+  ids: Record<StripePatternVariant, string>
+  fills: Record<StripePatternVariant, string>
+}
 
-const StripePattern = ({ id }: { id: string }) => (
+export const useStripePatterns = (): StripePatterns => {
+  const instanceId = useId()
+
+  return useMemo(() => {
+    // `useId` emits colons, which are not valid in the fragment of a `url(#…)` reference.
+    const suffix = instanceId.replace(/[^a-zA-Z0-9-]/g, '')
+
+    const ids = {
+      income: `layer-bar-stripe-pattern-income-${suffix}`,
+      expenses: `layer-bar-stripe-pattern-expenses-${suffix}`,
+    }
+
+    return {
+      ids,
+      fills: {
+        income: `url(#${ids.income})`,
+        expenses: `url(#${ids.expenses})`,
+      },
+    }
+  }, [instanceId])
+}
+
+const StripePattern = ({ id, variant }: { id: string, variant: StripePatternVariant }) => (
   <pattern
     id={id}
+    className='Layer__ProfitAndLossChart__StripePattern'
     x='0'
     y='0'
     width='4'
     height='4'
     patternTransform='rotate(45)'
     patternUnits='userSpaceOnUse'
+    {...toDataProperties({ variant })}
   >
     <rect width='4' height='4' opacity={0.16} />
     <line x1='0' y='0' x2='0' y2='4' strokeWidth='2' />
   </pattern>
 )
 
-export const ProfitAndLossChartPatternDefs = () => (
+export const ProfitAndLossChartPatternDefs = ({ ids }: { ids: StripePatterns['ids'] }) => (
   <defs>
-    <StripePattern id={STRIPE_PATTERN_ID} />
-    <StripePattern id={STRIPE_PATTERN_DARK_ID} />
+    <StripePattern id={ids.income} variant='income' />
+    <StripePattern id={ids.expenses} variant='expenses' />
   </defs>
 )
