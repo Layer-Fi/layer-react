@@ -2,26 +2,19 @@ import { type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 
 import './actionableRow.scss'
 
-type ActionableRowClassName =
-  | 'Layer__ActionableRow'
-  | 'Layer__ActionableRow__Main'
-  | 'Layer__ActionableRow__Text'
-  | 'Layer__ActionableRow__Icon'
-  | 'Layer__ActionableRow__Action'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   Layer__ActionableRow: 'Layer__actionable_row',
   Layer__ActionableRow__Main: 'Layer__actionable_row__main',
   Layer__ActionableRow__Text: 'Layer__actionable_row__main__text',
   Layer__ActionableRow__Icon: 'Layer__actionable_row__icon',
   Layer__ActionableRow__Action: 'Layer__actionable_row__action',
-} satisfies LegacyClassNameMapFor<ActionableRowClassName>)
+})
 
 interface ActionableRowProps {
   icon?: ReactNode

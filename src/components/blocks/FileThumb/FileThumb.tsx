@@ -1,7 +1,7 @@
 import { CloudDownload, Eye, Loader, Trash2 } from 'lucide-react'
 
 import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
@@ -9,20 +9,7 @@ import { Span } from '@ui/Typography/Text'
 
 import './fileThumb.scss'
 
-type FileThumbClassName =
-  | 'Layer__FileThumb'
-  | 'Layer__FileThumb__Main'
-  | 'Layer__FileThumb__Image'
-  | 'Layer__FileThumb__Details'
-  | 'Layer__FileThumb__Name'
-  | 'Layer__FileThumb__Date'
-  | 'Layer__FileThumb__Uploading'
-  | 'Layer__FileThumb__Actions'
-  | 'Layer__FileThumb__RemoveIcon'
-  | 'Layer__FileThumb__DownloadIcon'
-  | 'Layer__FileThumb__OpenIcon'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__FileThumb': 'Layer__file-thumb',
   'Layer__FileThumb__Main': 'Layer__file-thumb__main',
   'Layer__FileThumb__Image': 'Layer__file-thumb__img',
@@ -36,7 +23,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__FileThumb__OpenIcon': 'Layer__file-thumb__actions__open',
   'state:floating': 'Layer__file-thumb--floating',
   'state:floatingActions': 'Layer__file-thumb__actions--floating',
-} satisfies LegacyClassNameMapFor<FileThumbClassName, `state:${string}`>)
+})
 
 type FileThumbProps = {
   url?: string

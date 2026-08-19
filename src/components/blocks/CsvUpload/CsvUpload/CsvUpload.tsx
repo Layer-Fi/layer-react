@@ -3,7 +3,7 @@ import { CloudUpload } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -13,17 +13,12 @@ import { CsvUploadFileRow } from '@blocks/CsvUpload/CsvUploadFileRow/CsvUploadFi
 
 import './csvUpload.scss'
 
-type CsvUploadClassName =
-  | 'Layer__CsvUpload'
-  | 'Layer__CsvUpload__BrowseLink'
-  | 'Layer__CsvUpload__ErrorMessage'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__CsvUpload': 'Layer__csv-upload',
   'Layer__CsvUpload__BrowseLink': 'Layer__csv-upload__browse-link',
   'Layer__CsvUpload__ErrorMessage': 'Layer__csv-upload__error-message',
   'state:dragActive': 'Layer__csv-upload--drag-active',
-} satisfies LegacyClassNameMapFor<CsvUploadClassName, `state:${string}`>)
+})
 
 type CsvUploadProps = {
   file: File | null

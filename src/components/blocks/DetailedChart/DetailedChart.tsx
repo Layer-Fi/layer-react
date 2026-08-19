@@ -12,7 +12,7 @@ import {
 } from 'recharts'
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type ColorSelector, type DetailData, type SeriesData } from '@ui/Chart/seriesTypes'
 import { VStack } from '@ui/Stack/Stack'
@@ -20,25 +20,16 @@ import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
 
 import './detailedChart.scss'
 
-type DetailedChartClassName =
-  | 'Layer__DetailedChart'
-  | 'Layer__DetailedChart__Header'
-  | 'Layer__DetailedChart__Container'
-  | 'Layer__DetailedChart__CenterLabelTitle'
-  | 'Layer__DetailedChart__CenterLabelValue'
-  | 'Layer__DetailedChart__CenterLabelShare'
-  | 'Layer__DetailedChart__CenterLabelLoading'
-  | 'Layer__DetailedChart__Slice'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__DetailedChart__Header': 'Layer__DetailedChart__header',
   'Layer__DetailedChart__Container': 'Layer__DetailedChart__container',
   'Layer__DetailedChart__CenterLabelTitle': 'Layer__DetailedChart__centerLabelTitle',
   'Layer__DetailedChart__CenterLabelValue': 'Layer__DetailedChart__centerLabelValue',
   'Layer__DetailedChart__CenterLabelShare': 'Layer__DetailedChart__centerLabelShare',
   'Layer__DetailedChart__CenterLabelLoading': 'Layer__DetailedChart__centerLabelLoading',
+  'Layer__DetailedChart__Slice': [],
   'Layer__DetailedChart__Slice--Inactive': 'Layer__DetailedChart__Slice--inactive',
-} satisfies LegacyClassNameMapFor<DetailedChartClassName>)
+})
 
 export type DetailedChartProps<T extends SeriesData> = {
   data: DetailData<T>

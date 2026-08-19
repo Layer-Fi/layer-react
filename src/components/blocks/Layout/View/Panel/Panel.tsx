@@ -1,18 +1,12 @@
 import { type ReactNode, type RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './panel.scss'
 
-type ViewPanelClassName =
-  | 'Layer__ViewPanel'
-  | 'Layer__ViewPanel__Content'
-  | 'Layer__ViewPanel__Sidebar'
-  | 'Layer__ViewPanel__SidebarContent'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__ViewPanel': 'Layer__panel',
   'Layer__ViewPanel__Content': 'Layer__panel__content',
   'Layer__ViewPanel__Sidebar': 'Layer__panel__sidebar',
@@ -20,7 +14,7 @@ const legacyClassNames = createLegacyClassNames({
   'state:open': 'Layer__panel--open',
   'state:defaultHeight': 'Layer__panel__sidebar--default',
   'state:floating': 'Layer__panel__sidebar--floating',
-} satisfies LegacyClassNameMapFor<ViewPanelClassName, `state:${string}`>)
+})
 
 export interface PanelProps {
   children: ReactNode

@@ -50,6 +50,38 @@ export function createLegacyClassNames<const TMap extends LegacyClassNameMap>(ma
       .join(' ')
 }
 
+type ClassNameKeysOf<TMap> = Extract<keyof TMap, `Layer__${string}`>
+
+type BaseClassNameOf<TMap> = {
+  [K in ClassNameKeysOf<TMap>]: K extends `${string}--${string}` ? never : K
+}[ClassNameKeysOf<TMap>]
+
+type InferredLegacyClassNameMap<TMap, TStateKey extends string> = {
+  [K in keyof TMap]: K extends BaseClassNameOf<TMap> | `${BaseClassNameOf<TMap> & string}--${string}` | TStateKey
+    ? TMap[K]
+    : never
+}
+
+/**
+ * `createLegacyClassNames` without the `type XClassName = 'Layer__Foo' | 'Layer__Foo__Bar' | ...`
+ * declaration and matching `satisfies LegacyClassNameMapFor<XClassName>)` — the class names are
+ * whatever `Layer__…` keys the map itself declares, so there is nothing to restate. Reach for
+ * `LegacyClassNameMapFor` instead when the class-name union is genuinely needed elsewhere (for
+ * example, a type shared across the several files that each declare part of one component's map).
+ *
+ * Curried so a non-default `TStateKey` can be given without also restating the map's own type:
+ *
+ *     const legacyClassNames = createOwnLegacyClassNames<`sortOrder:${SortOrder}`>()({
+ *       'Layer__DetailedTable__SortableColumn': 'Layer__sortable-col',
+ *       'sortOrder:ASC': 'Layer__DetailedTable__SortableColumn--sortasc',
+ *     })
+ */
+export function createOwnLegacyClassNames<TStateKey extends string = `state:${string}`>() {
+  return function<const TMap extends LegacyClassNameMap>(map: TMap & InferredLegacyClassNameMap<TMap, TStateKey>) {
+    return createLegacyClassNames(map)
+  }
+}
+
 /**
  * For a form field whose only dropped names are its wrapper and that wrapper's inline modifier —
  * every field `FormFieldShell` took the layout over from. Both are passed in full rather than

@@ -67,7 +67,7 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
           </div>
         )}
         {showHeader && (
-          <ViewHeader title={title} withPaddings={Boolean(headerControls)}>
+          <ViewHeader title={title} withPadding={Boolean(headerControls)}>
             {header ?? headerControls}
           </ViewHeader>
         )}

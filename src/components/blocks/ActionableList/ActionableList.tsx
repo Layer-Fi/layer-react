@@ -1,21 +1,14 @@
 import classNames from 'classnames'
 import { Check, ChevronRight } from 'lucide-react'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 
 import './actionableList.scss'
 
-type ActionableListClassName =
-  | 'Layer__ActionableList'
-  | 'Layer__ActionableList__Item'
-  | 'Layer__ActionableList__Content'
-  | 'Layer__ActionableList__Description'
-  | 'Layer__ActionableList__Select'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__ActionableList': 'Layer__actionable-list',
   'Layer__ActionableList__Content': 'Layer__actionable-list__content',
   'Layer__ActionableList__Description': ['Layer__actionable-list__content-description', 'Layer__ActionableList__ContentDescription'],
@@ -24,7 +17,7 @@ const legacyClassNames = createLegacyClassNames({
   'state:asLink': ['Layer__actionable-list-item--as-link', 'Layer__ActionableList__Item--asLink'],
   'state:secondary': ['Layer__actionable-list-item--secondary', 'Layer__ActionableList__Item--secondary'],
   'state:selected': ['Layer__actionable-list__item--selected', 'Layer__ActionableList__Item--selected'],
-} satisfies LegacyClassNameMapFor<ActionableListClassName, `state:${string}`>)
+})
 
 export interface ActionableListOption<T> {
   label: string

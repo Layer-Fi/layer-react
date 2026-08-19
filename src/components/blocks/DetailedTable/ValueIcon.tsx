@@ -1,15 +1,13 @@
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { type ColorSelector, type SeriesData, type TypeColorMapping } from '@ui/Chart/seriesTypes'
 import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
 
 import './valueIcon.scss'
 
-type ValueIconClassName = 'Layer__ValueIcon__PatternDot' | 'Layer__ValueIcon__PatternBackground'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   Layer__ValueIcon__PatternDot: 'Layer__charts__dots-pattern-legend__dot',
   Layer__ValueIcon__PatternBackground: 'Layer__charts__dots-pattern-legend__bg',
-} satisfies LegacyClassNameMapFor<ValueIconClassName>)
+})
 
 export const ValueIcon = <T extends SeriesData>({
   item,

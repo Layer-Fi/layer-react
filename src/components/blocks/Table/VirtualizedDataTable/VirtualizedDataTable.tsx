@@ -10,7 +10,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
 import { type Alignment } from '@internal-types/utility/table'
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { DataTableSkeleton } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { LEGACY_TABLE_CLASS_NAMES, type LegacyColumnClassNames } from '@blocks/Table/DataTable/legacyClassNames'
@@ -37,16 +37,7 @@ const DEFAULT_TABLE_HEIGHT = (DEFAULT_ROW_HEIGHT * DEFAULT_NUM_ROWS) + HEADER_HE
 
 const EMPTY_ARRAY: never[] = []
 
-type VirtualizedTableClassName =
-  | 'Layer__UI__VirtualizedTable'
-  | 'Layer__UI__VirtualizedTable__Container'
-  | 'Layer__UI__VirtualizedTable__Header'
-  | 'Layer__UI__VirtualizedTable__HeaderCell'
-  | 'Layer__UI__VirtualizedTable__Row'
-  | 'Layer__UI__VirtualizedTable__Cell'
-  | 'Layer__UI__VirtualizedTable__FallbackPlaceholderCell'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__UI__VirtualizedTable__Container': 'Layer__UI__VirtualizedTable__container',
   'Layer__UI__VirtualizedTable__Header': 'Layer__UI__VirtualizedTable__header',
   'Layer__UI__VirtualizedTable__HeaderCell': 'Layer__UI__VirtualizedTable__header-cell',
@@ -54,7 +45,7 @@ const legacyClassNames = createLegacyClassNames({
   'Layer__UI__VirtualizedTable__Row--Static': 'Layer__UI__VirtualizedTable__row--static',
   'Layer__UI__VirtualizedTable__Cell': 'Layer__UI__VirtualizedTable__cell',
   'Layer__UI__VirtualizedTable__FallbackPlaceholderCell': 'Layer__UI__VirtualizedTable__fallback-placeholder-cell',
-} satisfies LegacyClassNameMapFor<VirtualizedTableClassName>)
+})
 
 export interface VirtualizedDataTableProps<TData extends { id: string }> {
   columnConfig: ColumnConfig<TData>

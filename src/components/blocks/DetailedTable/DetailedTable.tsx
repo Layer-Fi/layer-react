@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import SortArrows from '@icons/SortArrows'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -19,18 +19,12 @@ import './detailedTable.scss'
 import { type DetailedTableRow, useDetailedTableRows } from './useDetailedTableRows'
 import { ValueIcon } from './ValueIcon'
 
-type DetailedTableClassName =
-  | 'Layer__DetailedTable'
-  | 'Layer__DetailedTable__Container'
-  | 'Layer__DetailedTable__Table'
-  | 'Layer__DetailedTable__Row'
-  | 'Layer__DetailedTable__SortableColumn'
-  | 'Layer__DetailedTable__SortArrows'
-
 type SortableColumn = 'category' | 'type' | 'value'
 type DetailedTableColumn = SortableColumn | 'color' | 'percent'
 
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames<
+  `state:${string}` | `column:${DetailedTableColumn}` | 'sortColumn:value' | `sortOrder:${SortOrder}`
+>()({
   'Layer__DetailedTable__Container': 'Layer__DetailedTable__container',
   'Layer__DetailedTable__Table': 'Layer__DetailedTable__table',
   'Layer__DetailedTable__Row': 'Layer__DetailedTable__row',
@@ -49,10 +43,7 @@ const legacyClassNames = createLegacyClassNames({
   'sortOrder:DES': 'Layer__DetailedTable__SortableColumn--sortdes',
   'sortOrder:DESC': 'Layer__DetailedTable__SortableColumn--sortdesc',
   'sortOrder:DESCENDING': 'Layer__DetailedTable__SortableColumn--sortdescending',
-} satisfies LegacyClassNameMapFor<
-  DetailedTableClassName,
-  `state:${string}` | `column:${DetailedTableColumn}` | 'sortColumn:value' | `sortOrder:${SortOrder}`
->)
+})
 
 const cellProperties = (column: DetailedTableColumn) => ({
   className: classNames('Layer__DetailedTable__Column', legacyClassNames(`column:${column}`)),

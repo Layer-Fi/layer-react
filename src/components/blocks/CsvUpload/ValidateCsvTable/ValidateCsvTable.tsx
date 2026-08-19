@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/common/csvUpload'
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
@@ -13,12 +13,7 @@ import './validateCsvTable.scss'
 
 const LEGACY_PREFIX = 'Layer__csv-upload__validate-csv-table'
 
-type ValidateCsvTableClassName =
-  | 'Layer__ValidateCsvTable'
-  | 'Layer__ValidateCsvTable__CellContent'
-  | 'Layer__ValidateCsvTable__HeaderCellContent'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__ValidateCsvTable': [`${LEGACY_PREFIX}__container`, 'Layer__CsvUpload__Table__wrapper'],
   'Layer__ValidateCsvTable__CellContent': [`${LEGACY_PREFIX}__cell-content`, 'Layer__CsvUpload__Table__cell-content'],
   'Layer__ValidateCsvTable__HeaderCellContent': [`${LEGACY_PREFIX}__header-cell-content`, 'Layer__CsvUpload__Table__header-cell-content'],
@@ -26,7 +21,7 @@ const legacyClassNames = createLegacyClassNames({
   'state:rowHeaderCell': [`${LEGACY_PREFIX}__header-cell-content--row`, 'Layer__CsvUpload__Table__header-cell-content--row'],
   'state:invalid': [`${LEGACY_PREFIX}__cell-content--error`, 'Layer__CsvUpload__Table__cell-content--error'],
   'state:rowInvalid': 'Layer__CsvUpload__Table__cell-content--row-error',
-} satisfies LegacyClassNameMapFor<ValidateCsvTableClassName, `state:${string}`>)
+})
 
 const getLegacyClassNames = (columnId: string) => ({
   cell: `${LEGACY_PREFIX}__cell ${LEGACY_PREFIX}__cell--${columnId}`,

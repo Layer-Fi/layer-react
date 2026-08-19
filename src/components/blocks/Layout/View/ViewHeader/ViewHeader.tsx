@@ -1,41 +1,35 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Heading } from '@ui/Typography/Heading'
 
 import './viewHeader.scss'
 
-type ViewHeaderClassName =
-  | 'Layer__ViewHeader'
-  | 'Layer__ViewHeader__Title'
-  | 'Layer__ViewHeader__Content'
-  | 'Layer__ViewHeader__Children'
-
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__ViewHeader': 'Layer__view-header',
   'Layer__ViewHeader__Title': 'Layer__view-header__title',
   'Layer__ViewHeader__Content': 'Layer__view-header__content',
   'Layer__ViewHeader__Children': 'Layer__view-header__children',
   'state:paddings': 'Layer__view-header--paddings',
-} satisfies LegacyClassNameMapFor<ViewHeaderClassName, `state:${string}`>)
+})
 
 export interface ViewHeaderProps {
   title?: string
   className?: string
-  withPaddings?: boolean
+  withPadding?: boolean
   children?: ReactNode
 }
 
-export const ViewHeader = ({ title, className, withPaddings = false, children }: ViewHeaderProps) => {
+export const ViewHeader = ({ title, className, withPadding = false, children }: ViewHeaderProps) => {
   return (
     <div
       className={classNames(
-        legacyClassNames('Layer__ViewHeader', withPaddings && 'state:paddings'),
+        legacyClassNames('Layer__ViewHeader', withPadding && 'state:paddings'),
         className,
       )}
-      {...toDataProperties({ paddings: withPaddings })}
+      {...toDataProperties({ paddings: withPadding })}
     >
       <div className={legacyClassNames('Layer__ViewHeader__Content')}>
         {title && (
