@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useEffe
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
-import type { UnifiedReportsDefaultState } from '@internal-types/features/unifiedReports/defaultState'
+import type { UnifiedReportsInitialState } from '@internal-types/features/unifiedReports/initialState'
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/features/tags/tagValueDefinition'
 import {
@@ -270,11 +270,11 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
     },
   }))
 
-function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>, defaultState?: UnifiedReportsDefaultState) {
+function useHydrateUnifiedReportStore(store: StoreApi<UnifiedReportStoreShape>, initialState?: UnifiedReportsInitialState) {
   const { data } = useGetReportConfig()
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)
-  const defaultReportKey = defaultState?.reportKey
+  const defaultReportKey = initialState?.reportKey
 
   useEffect(() => {
     if (!data) return
@@ -298,16 +298,16 @@ function useSyncExternalDateSelectionMode(store: StoreApi<UnifiedReportStoreShap
 
 type UnifiedReportStoreProviderProps = {
   dateSelectionMode?: DateSelectionMode
-  defaultState?: UnifiedReportsDefaultState
+  initialState?: UnifiedReportsInitialState
 }
 
 export function UnifiedReportStoreProvider({
   children,
   dateSelectionMode = 'full',
-  defaultState,
+  initialState,
 }: PropsWithChildren<UnifiedReportStoreProviderProps>) {
   const [store] = useState(() => createUnifiedReportStore(dateSelectionMode))
-  useHydrateUnifiedReportStore(store, defaultState)
+  useHydrateUnifiedReportStore(store, initialState)
   useSyncExternalDateSelectionMode(store, dateSelectionMode)
 
   return (

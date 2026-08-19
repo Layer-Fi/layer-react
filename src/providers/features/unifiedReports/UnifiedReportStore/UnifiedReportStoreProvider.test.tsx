@@ -39,7 +39,7 @@ describe('UnifiedReportStoreProvider', () => {
   })
 
   it('hydrates to the requested report', async () => {
-    const { result } = await renderUnifiedReportStore({ defaultState: { reportKey: 'BALANCE_SHEET' } })
+    const { result } = await renderUnifiedReportStore({ initialState: { reportKey: 'BALANCE_SHEET' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('BALANCE_SHEET'))
   })
@@ -47,14 +47,14 @@ describe('UnifiedReportStoreProvider', () => {
   it('warns and falls back to the default report when the requested key is unknown', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    const { result } = await renderUnifiedReportStore({ defaultState: { reportKey: 'NOT_A_REPORT' } })
+    const { result } = await renderUnifiedReportStore({ initialState: { reportKey: 'NOT_A_REPORT' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('PROFIT_AND_LOSS'))
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('NOT_A_REPORT'))
   })
 
   it('does not re-assert the requested report over user navigation', async () => {
-    const { result } = await renderUnifiedReportStore({ defaultState: { reportKey: 'BALANCE_SHEET' } })
+    const { result } = await renderUnifiedReportStore({ initialState: { reportKey: 'BALANCE_SHEET' } })
 
     await waitFor(() => expect(result.current.baseReport?.key).toBe('BALANCE_SHEET'))
 

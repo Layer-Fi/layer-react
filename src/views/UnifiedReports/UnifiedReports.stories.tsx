@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { type UnifiedReportsDefaultState } from '@internal-types/features/unifiedReports/defaultState'
+import { type UnifiedReportsInitialState } from '@internal-types/features/unifiedReports/initialState'
 import { type UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { type DateSelectionMode } from '@utils/shared/date/dateRange'
 import { UnifiedReports } from '@views/UnifiedReports/UnifiedReports'
@@ -10,7 +10,7 @@ type UnifiedReportsStoryArgs = {
   navigationVariant: UnifiedReportNavigationVariant
   showTitle: boolean
   dateSelectionMode: DateSelectionMode
-  defaultState?: UnifiedReportsDefaultState
+  initialState?: UnifiedReportsInitialState
 }
 
 const meta: Meta<UnifiedReportsStoryArgs> = {
@@ -18,7 +18,7 @@ const meta: Meta<UnifiedReportsStoryArgs> = {
   tags: ['public-api'],
   component: UnifiedReports,
   parameters: {
-    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode', 'defaultState'] },
+    controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode', 'initialState'] },
   },
   args: {
     navigationVariant: 'sidebar',
@@ -40,7 +40,7 @@ const meta: Meta<UnifiedReportsStoryArgs> = {
       options: ['full', 'month', 'year'] satisfies DateSelectionMode[],
       description: 'How report controls read from the global date store.',
     },
-    defaultState: {
+    initialState: {
       control: false,
       description: 'Initial landing state (e.g. `{ reportKey: "BALANCE_SHEET" }`), applied when the report configuration first loads. See the `DeepLinkedReport` story.',
     },
@@ -60,7 +60,7 @@ export const MenuNavigation: Story = {
 }
 
 export const DeepLinkedReport: Story = {
-  args: { defaultState: { reportKey: 'BALANCE_SHEET' } },
+  args: { initialState: { reportKey: 'BALANCE_SHEET' } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
