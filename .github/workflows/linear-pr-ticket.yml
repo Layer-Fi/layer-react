@@ -1,7 +1,10 @@
 name: Linear — ticket per PR
 
-# Bots write their own PR body, so PULL_REQUEST_TEMPLATE.md never reaches them. Appending FE-NEW
-# lets Linear's integration create and link the issue itself, with no credentials.
+# Appends FE-NEW to a PR description so Linear's GitHub integration creates and links an issue in
+# the FE team. Bots and coding agents supply their own PR body, so the template alone misses them —
+# this covers those. Needs no Linear credentials: the integration does the work.
+#
+# Dependabot is excluded; dependency bumps would be one ticket per bump.
 
 on:
   pull_request:
