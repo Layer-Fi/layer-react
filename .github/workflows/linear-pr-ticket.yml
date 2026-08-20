@@ -1,10 +1,7 @@
 name: Linear — ticket per PR
 
-# Appends FE-NEW to a PR description so Linear's GitHub integration creates and links an issue in
-# the FE team. Bots and coding agents supply their own PR body, so the template alone misses them —
-# this covers those. Needs no Linear credentials: the integration does the work.
-#
-# Dependabot is excluded; dependency bumps would be one ticket per bump.
+# Bots write their own PR body, so PULL_REQUEST_TEMPLATE.md never reaches them. Appending FE-NEW
+# lets Linear's integration create and link the issue itself, with no credentials.
 
 on:
   pull_request:
@@ -17,15 +14,13 @@ permissions:
 jobs:
   tag:
     name: Add FE-NEW
-    # Release-bump PRs are represented by the release itself.
     if: >
       github.event.pull_request.user.login != 'dependabot[bot]' &&
       !startsWith(github.event.pull_request.head.ref, 'release/v')
     runs-on: ubuntu-latest
 
     steps:
-    # PR text goes through env, never straight into run — interpolating it would be a script
-    # injection vector.
+    # PR text goes through env, never into run — interpolating it is a shell injection vector.
     - name: Append FE-NEW to the description
       env:
         GH_TOKEN: ${{ github.token }}
@@ -34,20 +29,12 @@ jobs:
         TITLE: ${{ github.event.pull_request.title }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
-        set -euo pipefail
-
-        # Linear reads the branch name and title too, so an issue referenced anywhere already wins.
-        if printf '%s\n%s\n%s' "$BODY" "$TITLE" "$HEAD_REF" | grep -qiE '\bFE-(NEW|[0-9]+)\b'; then
-          echo "PR #$PR already references a Linear issue — leaving the description alone."
+        # Linear links from the title and branch too, so appending to a PR that already names an
+        # issue would create a spurious second ticket.
+        if grep -qiE '\bFE-(NEW|[0-9]+)\b' <<< "$BODY $TITLE $HEAD_REF"; then
+          echo "PR #$PR already references a Linear issue."
           exit 0
         fi
 
-        if [ -n "$BODY" ]; then
-          UPDATED=$(printf '%s\n\nFE-NEW' "$BODY")
-        else
-          UPDATED='FE-NEW'
-        fi
-
-        jq -n --arg body "$UPDATED" '{ body: $body }' > payload.json
-        gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$PR" --input payload.json --silent
-        echo "Appended FE-NEW to PR #$PR."
+        gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$PR" \
+          -f body="$(printf '%s\n\nFE-NEW' "$BODY")" --silent
