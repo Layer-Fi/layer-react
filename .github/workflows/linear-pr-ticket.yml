@@ -1,7 +1,7 @@
 name: Linear — ticket per PR
 
-# Appends FE-NEW to a PR description so Linear's GitHub integration creates and links an issue in
-# the FE team. Bots and coding agents supply their own PR body, so the template alone misses them —
+# Appends LAY-NEW to a PR description so Linear's GitHub integration creates and links an issue in
+# the LAY team. Bots and coding agents supply their own PR body, so the template alone misses them —
 # this covers those. Needs no Linear credentials: the integration does the work.
 #
 # Dependabot is excluded; dependency bumps would be one ticket per bump.
@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   tag:
-    name: Add FE-NEW
+    name: Add LAY-NEW
     if: >
       github.event.pull_request.user.login != 'dependabot[bot]' &&
       !startsWith(github.event.pull_request.head.ref, 'release/v')
@@ -24,7 +24,7 @@ jobs:
 
     steps:
     # PR text goes through env, never into run — interpolating it is a shell injection vector.
-    - name: Append FE-NEW to the description
+    - name: Append LAY-NEW to the description
       env:
         GH_TOKEN: ${{ github.token }}
         PR: ${{ github.event.pull_request.number }}
@@ -34,10 +34,10 @@ jobs:
       run: |
         # Linear links from the title and branch too, so appending to a PR that already names an
         # issue would create a spurious second ticket.
-        if grep -qiE '\bFE-(NEW|[0-9]+)\b' <<< "$BODY $TITLE $HEAD_REF"; then
+        if grep -qiE '\bLAY-(NEW|[0-9]+)\b' <<< "$BODY $TITLE $HEAD_REF"; then
           echo "PR #$PR already references a Linear issue."
           exit 0
         fi
 
         gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$PR" \
-          -f body="$(printf '%s\n\nFE-NEW' "$BODY")" --silent
+          -f body="$(printf '%s\n\nLAY-NEW' "$BODY")" --silent
