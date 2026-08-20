@@ -151,8 +151,6 @@ export const MatchDetailsSchema = Schema.Union(
   TransferMatchDetailsSchema,
 )
 
-// Catch-all for match detail types the backend adds before this package knows about them.
-// Kept out of `MatchDetailsSchema` so its `type` stays a literal union and still narrows.
 export const UnknownMatchDetailsSchema = Schema.extend(
   BaseMatchDetailsSchema,
   Schema.Struct({
