@@ -100,6 +100,28 @@ export const PayrollPaymentMatchDetailsSchema = Schema.extend(
   }),
 )
 
+export const LoanPaymentMatchDetailsSchema = Schema.extend(
+  BaseMatchDetailsSchema,
+  Schema.Struct({
+    type: Schema.Literal('Loan_Payment_Match'),
+    loanIdentifiers: pipe(
+      Schema.propertySignature(FinancialEventIdentifiersSchema),
+      Schema.fromKey('loan_identifiers'),
+    ),
+  }),
+)
+
+export const LoanProceedMatchDetailsSchema = Schema.extend(
+  BaseMatchDetailsSchema,
+  Schema.Struct({
+    type: Schema.Literal('Loan_Proceed_Match'),
+    loanIdentifiers: pipe(
+      Schema.propertySignature(FinancialEventIdentifiersSchema),
+      Schema.fromKey('loan_identifiers'),
+    ),
+  }),
+)
+
 export const TransferMatchDetailsSchema = Schema.extend(
   BaseMatchDetailsSchema,
   Schema.Struct({
@@ -124,8 +146,28 @@ export const MatchDetailsSchema = Schema.Union(
   VendorPayoutMatchDetailsSchema,
   BillPaymentMatchDetailsSchema,
   PayrollPaymentMatchDetailsSchema,
+  LoanPaymentMatchDetailsSchema,
+  LoanProceedMatchDetailsSchema,
   TransferMatchDetailsSchema,
 )
 
+// Catch-all for match detail types the backend adds before this package knows about them.
+// Kept out of `MatchDetailsSchema` so its `type` stays a literal union and still narrows.
+export const UnknownMatchDetailsSchema = Schema.extend(
+  BaseMatchDetailsSchema,
+  Schema.Struct({
+    type: Schema.String,
+  }),
+)
+
+export const MatchDetailsWithFallbackSchema = Schema.Union(
+  MatchDetailsSchema,
+  UnknownMatchDetailsSchema,
+)
+
+export const isKnownMatchDetails = Schema.is(MatchDetailsSchema)
+
 export type MatchDetailsType = typeof MatchDetailsSchema.Type
+export type UnknownMatchDetailsType = typeof UnknownMatchDetailsSchema.Type
+export type MatchDetailsWithFallbackType = typeof MatchDetailsWithFallbackSchema.Type
 export type MatchAdjustmentType = typeof MatchAdjustmentSchema.Type

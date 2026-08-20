@@ -1,13 +1,17 @@
 import { EntityName, type LinkingMetadata } from '@internal-types/shared/inAppLink'
-import type { MatchDetailsType } from '@schemas/features/bankTransactions/matchDetails'
+import { isKnownMatchDetails, type MatchDetailsWithFallbackType } from '@schemas/features/bankTransactions/matchDetails'
 
-export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {
+export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsWithFallbackType): LinkingMetadata => {
   const baseMetadata: LinkingMetadata = {
     id: matchDetails.id,
     entityName: EntityName.Unknown,
     externalId: matchDetails.externalId || undefined,
     referenceNumber: matchDetails.referenceNumber || undefined,
     metadata: matchDetails.metadata || undefined,
+  }
+
+  if (!isKnownMatchDetails(matchDetails)) {
+    return baseMetadata
   }
 
   switch (matchDetails.type) {
@@ -87,6 +91,9 @@ export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsT
         ...baseMetadata,
         entityName: EntityName.PayrollPayment,
       }
+    case 'Loan_Payment_Match':
+    case 'Loan_Proceed_Match':
+      return baseMetadata
     case 'Transfer_Match':
       return {
         ...baseMetadata,
