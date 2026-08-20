@@ -20,6 +20,8 @@ export enum EntityName {
   CustomJournalEntry = 'Custom Journal Entry',
   Payroll = 'Payroll',
   PayrollPayment = 'Payroll Payment',
+  LoanPayment = 'Loan Payment',
+  LoanProceed = 'Loan Proceed',
   OpeningBalance = 'Opening Balance',
   InvoiceWriteOff = 'Invoice Write-Off',
   VendorCredit = 'Vendor Credit',

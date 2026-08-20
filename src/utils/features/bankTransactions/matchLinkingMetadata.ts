@@ -92,8 +92,15 @@ export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsW
         entityName: EntityName.PayrollPayment,
       }
     case 'Loan_Payment_Match':
+      return {
+        ...baseMetadata,
+        entityName: EntityName.LoanPayment,
+      }
     case 'Loan_Proceed_Match':
-      return baseMetadata
+      return {
+        ...baseMetadata,
+        entityName: EntityName.LoanProceed,
+      }
     case 'Transfer_Match':
       return {
         ...baseMetadata,
