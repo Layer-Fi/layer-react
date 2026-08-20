@@ -1,0 +1,53 @@
+name: Linear — ticket per PR
+
+# Appends FE-NEW to a PR description so Linear's GitHub integration creates and links an issue in
+# the FE team. Bots and coding agents supply their own PR body, so the template alone misses them —
+# this covers those. Needs no Linear credentials: the integration does the work.
+#
+# Dependabot is excluded; dependency bumps would be one ticket per bump.
+
+on:
+  pull_request:
+    types: [ opened ]
+    branches: [ main ]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  tag:
+    name: Add FE-NEW
+    # Release-bump PRs are represented by the release itself.
+    if: >
+      github.event.pull_request.user.login != 'dependabot[bot]' &&
+      !startsWith(github.event.pull_request.head.ref, 'release/v')
+    runs-on: ubuntu-latest
+
+    steps:
+    # PR text goes through env, never straight into run — interpolating it would be a script
+    # injection vector.
+    - name: Append FE-NEW to the description
+      env:
+        GH_TOKEN: ${{ github.token }}
+        PR: ${{ github.event.pull_request.number }}
+        BODY: ${{ github.event.pull_request.body }}
+        TITLE: ${{ github.event.pull_request.title }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      run: |
+        set -euo pipefail
+
+        # Linear reads the branch name and title too, so an issue referenced anywhere already wins.
+        if printf '%s\n%s\n%s' "$BODY" "$TITLE" "$HEAD_REF" | grep -qiE '\bFE-(NEW|[0-9]+)\b'; then
+          echo "PR #$PR already references a Linear issue — leaving the description alone."
+          exit 0
+        fi
+
+        if [ -n "$BODY" ]; then
+          UPDATED=$(printf '%s\n\nFE-NEW' "$BODY")
+        else
+          UPDATED='FE-NEW'
+        fi
+
+        jq -n --arg body "$UPDATED" '{ body: $body }' > payload.json
+        gh api -X PATCH "repos/$GITHUB_REPOSITORY/pulls/$PR" --input payload.json --silent
+        echo "Appended FE-NEW to PR #$PR."
