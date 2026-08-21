@@ -1,7 +1,6 @@
 name: Linear
 
-# Creates a Linear issue per PR and prefixes the PR title with its identifier, which is what Linear
-# links from. Needs the LINEAR_TEAM variable and a LINEAR_API_KEY secret (a personal lin_api_… key).
+# Creates a Linear issue per PR and prefixes the PR title with it — Linear links from the title.
 
 on:
   pull_request:
