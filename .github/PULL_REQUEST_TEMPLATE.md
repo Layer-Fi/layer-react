@@ -12,7 +12,4 @@
 
 ## Linear
 
-LAY-NEW
-<!-- Creates and links a new Linear issue in the LAY team, assigned to you. If this PR already has an
-issue, replace the line above with its identifier (LAY-<number>). Every PR gets a ticket, so removing
-this line only means a workflow adds it back on open. -->
+<!-- A workflow fills this in. Put an existing LAY-<number> here to use that issue instead. -->
