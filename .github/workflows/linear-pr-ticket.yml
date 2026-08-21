@@ -1,8 +1,6 @@
 name: Linear
 
-# Creates a Linear issue per PR and writes its identifier into the description.
-# Needs the LINEAR_TEAM variable and a LINEAR_API_KEY secret: a personal key (lin_api_…), not the
-# LINEAR_ACCESS_KEY pipeline key.
+# Creates a Linear issue per PR and prefixes the PR title with it — Linear links from the title.
 
 on:
   pull_request:
@@ -25,12 +23,10 @@ concurrency:
 jobs:
   ticket:
     name: Create issue
+    # Every other exclusion is in the script, which workflow_dispatch also reaches.
     if: >
-      github.event_name == 'workflow_dispatch' || (
-        github.event.pull_request.user.login != 'dependabot[bot]' &&
-        !startsWith(github.event.pull_request.head.ref, 'release/v') &&
-        github.event.pull_request.head.repo.full_name == github.repository
-      )
+      github.event_name == 'workflow_dispatch'
+      || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     steps:
@@ -42,6 +38,21 @@ jobs:
       with:
         script: |
           const { LINEAR_API_KEY: key, TEAM_KEY: teamKey, PR } = process.env;
+
+          const { data: pr } = await github.rest.pulls.get({
+            ...context.repo, pull_number: Number(PR),
+          });
+
+          // Before the config check: dependabot's runs get no secret, so checking the key first
+          // would fail its every PR rather than skip it.
+          const skip = pr.user.login === 'dependabot[bot]' ? 'opened by dependabot'
+            : pr.head.ref.startsWith('release/v') ? 'a release branch'
+            : (pr.state === 'closed' && !pr.merged) ? 'closed without merging'
+            : null;
+          if (skip) {
+            core.info(`PR #${PR} skipped: ${skip}.`);
+            return;
+          }
 
           const missing = [!key && 'LINEAR_API_KEY secret', !teamKey && 'LINEAR_TEAM variable']
             .filter(Boolean);
@@ -65,25 +76,17 @@ jobs:
             return data;
           };
 
-          const { data: pr } = await github.rest.pulls.get({
-            ...context.repo, pull_number: Number(PR),
-          });
-          const body = pr.body ?? '';
+          // Alone on a line in the body so prose is not a link. Linear's linking is case-sensitive,
+          // so the digits are recombined with the configured key rather than used as matched.
+          const loose = new RegExp(`\\b${teamKey}-(\\d+)\\b`, 'i');
+          const idIn = (text, pattern) => {
+            const match = pattern.exec(text ?? '');
+            return match && `${teamKey}-${match[1]}`;
+          };
 
-          // Body must have it alone on a line so prose is not a link; title and branch are looser.
-          const inTitle = new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title);
-          const existing = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
-            ?? inTitle
-            ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
-
-          // A PR that names its own issue still needs the identifier in the title: that is what
-          // Linear links from.
-          if (existing && inTitle) {
-            core.info(`PR #${PR} already references ${existing[0].trim()}.`);
-            return;
-          }
-
-          let identifier = existing?.[0].trim();
+          let identifier = idIn(pr.body, new RegExp(`^[ \t]*${teamKey}-(\\d+)[ \t]*$`, 'im'))
+            || idIn(pr.title, loose)
+            || idIn(pr.head.ref, loose);
           let issueUrl;
 
           if (!identifier) {
@@ -113,10 +116,16 @@ jobs:
             ({ identifier, url: issueUrl } = issueCreate.issue);
           }
 
-          // GitHub caps titles at 256; trim the original rather than fail after creating the issue.
+          // GitHub caps titles at 256, and any existing prefix goes so corrections do not stack.
+          const bare = pr.title.replace(new RegExp(`^\\s*\\[${teamKey}-\\d+\\]\\s*`, 'i'), '');
           const prefix = `[${identifier}] `;
           const room = 256 - prefix.length;
-          const title = prefix + (pr.title.length <= room ? pr.title : `${pr.title.slice(0, room - 1)}…`);
+          const title = prefix + (bare.length <= room ? bare : `${bare.slice(0, room - 1)}…`);
+
+          if (title === pr.title) {
+            core.info(`PR #${PR} is already titled for ${identifier}.`);
+            return;
+          }
 
           await github.rest.pulls.update({ ...context.repo, pull_number: Number(PR), title });
           core.info(`PR #${PR} → ${identifier}${issueUrl ? ` (${issueUrl})` : ' (already existed)'}`);
