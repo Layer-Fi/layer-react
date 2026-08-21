@@ -102,17 +102,9 @@ jobs:
         INCREMENT: ${{ inputs.next_linear_release }}
       run: |
         set -euo pipefail
-        BASE=${V%%-*}
-        # Plain bash bump of X.Y.Z; no semver dependency.
-        IFS=. read -r MA MI PA <<< "$BASE"
-        case "$INCREMENT" in
-          patch) NEXT="$MA.$MI.$((PA + 1))" ;;
-          minor) NEXT="$MA.$((MI + 1)).0" ;;
-          major) NEXT="$((MA + 1)).0.0" ;;
-        esac
         {
-          echo "base=$BASE"
-          echo "next=$NEXT"
+          echo "base=${V%%-*}"
+          echo "next=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")"
         } >> "$GITHUB_OUTPUT"
 
     - name: Sync release in Linear

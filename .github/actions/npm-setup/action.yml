@@ -1,0 +1,21 @@
+name: npm setup
+description: Node 22 with the npm cache, plus the locked install. Requires the repo already checked out.
+
+inputs:
+  install:
+    description: Run npm ci
+    default: 'true'
+
+runs:
+  using: composite
+
+  steps:
+  # No registry-url: it writes an empty _authToken that makes npm skip OIDC on publish.
+  - uses: actions/setup-node@v7
+    with:
+      node-version: '22'
+      cache: npm
+
+  - if: ${{ inputs.install == 'true' }}
+    shell: bash
+    run: npm ci
