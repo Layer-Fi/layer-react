@@ -12,6 +12,12 @@ name: Release — Publish
 # step, so a 30-minute macOS capture or a Pages deploy cannot fail a run that has
 # already published to npm.
 #
+# Nor is the tarball verified here. The Consumers check packs the tarball and
+# builds the fixture apps on the release PR — which always changes package.json,
+# so it always runs — and that is the same tree this tags and ships. Repeating it
+# here only bought a second opinion at the cost of a Chromium install on the one
+# workflow that must not be slow to finish.
+#
 # Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
 # tag is not required (falls back to main HEAD).
 #
@@ -133,14 +139,6 @@ jobs:
 
         echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
         exit 1
-
-    # Runs in this job, against the exact tree about to be published, rather than as a separate
-    # job against main — the tarball the fixtures install is the one that ships.
-    - name: Install Chromium for the consumer fixtures
-      run: npx playwright install --with-deps chromium
-
-    - name: Verify the packed tarball in consumer fixtures
-      run: npm run test:consumers
 
     - name: Publish to npm
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
