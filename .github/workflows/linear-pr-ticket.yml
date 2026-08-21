@@ -82,19 +82,18 @@ jobs:
           }
 
           // Body must have it alone on a line so prose is not a link; title and branch are looser.
-          const inTitle = new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title);
-          const existing = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
-            ?? inTitle
-            ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
+          // Matching ignores case but the digits are recombined with the configured key: Linear's
+          // linking is case-sensitive, and a lowercase branch would otherwise yield [lay-1234].
+          const loose = new RegExp(`\\b${teamKey}-(\\d+)\\b`, 'i');
+          const idIn = (text, pattern) => {
+            const match = pattern.exec(text ?? '');
+            return match && `${teamKey}-${match[1]}`;
+          };
+          const existing = idIn(body, new RegExp(`^[ \t]*${teamKey}-(\\d+)[ \t]*$`, 'im'))
+            || idIn(pr.title, loose)
+            || idIn(pr.head.ref, loose);
 
-          // A PR that names its own issue still needs the identifier in the title: that is what
-          // Linear links from.
-          if (existing && inTitle) {
-            core.info(`PR #${PR} already references ${existing[0].trim()}.`);
-            return;
-          }
-
-          let identifier = existing?.[0].trim();
+          let identifier = existing;
           let issueUrl;
 
           if (!identifier) {
@@ -124,10 +123,17 @@ jobs:
             ({ identifier, url: issueUrl } = issueCreate.issue);
           }
 
+          // Drop any prefix already there, whatever its casing, so a correction does not stack.
           // GitHub caps titles at 256; trim the original rather than fail after creating the issue.
+          const bare = pr.title.replace(new RegExp(`^\\s*\\[${teamKey}-\\d+\\]\\s*`, 'i'), '');
           const prefix = `[${identifier}] `;
           const room = 256 - prefix.length;
-          const title = prefix + (pr.title.length <= room ? pr.title : `${pr.title.slice(0, room - 1)}…`);
+          const title = prefix + (bare.length <= room ? bare : `${bare.slice(0, room - 1)}…`);
+
+          if (title === pr.title) {
+            core.info(`PR #${PR} is already titled for ${identifier}.`);
+            return;
+          }
 
           await github.rest.pulls.update({ ...context.repo, pull_number: Number(PR), title });
           core.info(`PR #${PR} → ${identifier}${issueUrl ? ` (${issueUrl})` : ' (already existed)'}`);
