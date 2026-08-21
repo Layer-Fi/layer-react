@@ -12,6 +12,4 @@
 
 ## Linear
 
-<!-- Leave this empty: a workflow creates a Linear issue in the LAY team and writes its identifier
-here. If this PR already has an issue, put its identifier (LAY-<number>) below instead and the
-workflow will leave it alone. -->
+<!-- A workflow fills this in. Put an existing LAY-<number> here to use that issue instead. -->

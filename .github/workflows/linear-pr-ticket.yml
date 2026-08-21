@@ -1,11 +1,8 @@
 name: Linear
 
-# Creates a Linear issue per PR and writes its identifier into the description. Replaces the LAY-NEW
-# magic word, which Linear only converts on a PR's first `opened` webhook, leaving no way to ticket a
-# PR that missed it.
-#
-# Needs a LINEAR_API_KEY secret holding a personal API key (lin_api_…). LINEAR_ACCESS_KEY is a
-# pipeline key for linear-release and is rejected by the GraphQL API.
+# Creates a Linear issue per PR and writes its identifier into the description.
+# Needs the LINEAR_TEAM variable and a LINEAR_API_KEY secret: a personal key (lin_api_…), not the
+# LINEAR_ACCESS_KEY pipeline key.
 
 on:
   pull_request:
@@ -40,20 +37,22 @@ jobs:
     - uses: actions/github-script@v9
       env:
         LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-        TEAM_KEY: LAY
+        TEAM_KEY: ${{ vars.LINEAR_TEAM }}
         PR: ${{ github.event.pull_request.number || inputs.pr }}
       with:
         script: |
           const { LINEAR_API_KEY: key, TEAM_KEY: teamKey, PR } = process.env;
 
-          if (!key) {
-            core.setFailed('LINEAR_API_KEY is unset. It must be a personal API key (lin_api_…); '
-              + 'LINEAR_ACCESS_KEY is a pipeline key for linear-release and the GraphQL API rejects it.');
+          const missing = [!key && 'LINEAR_API_KEY secret', !teamKey && 'LINEAR_TEAM variable']
+            .filter(Boolean);
+          if (missing.length) {
+            core.setFailed(`Missing ${missing.join(' and ')}. LINEAR_API_KEY must be a personal key `
+              + '(lin_api_…); the GraphQL API rejects the LINEAR_ACCESS_KEY pipeline key.');
             return;
           }
 
           const linear = async (query, variables) => {
-            // A personal API key goes in bare; `Bearer` is the OAuth form and is rejected.
+            // Bare key, not Bearer: Bearer is the OAuth form.
             const response = await fetch('https://api.linear.app/graphql', {
               method: 'POST',
               headers: { Authorization: key, 'Content-Type': 'application/json' },
@@ -71,9 +70,7 @@ jobs:
           });
           const body = pr.body ?? '';
 
-          // Only an identifier alone on a line counts, so a description that merely mentions a
-          // ticket does not read as one and silently lose its own. Title and branch are looser —
-          // Linear also links from those, and either being wrong risks a duplicate, not a false skip.
+          // Body must have it alone on a line so prose is not a link; title and branch are looser.
           const linked = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
             ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title)
             ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
