@@ -9,7 +9,3 @@
 
 ## How this has been tested?
 <!-- Describe how this PR has been tested. You can provide commands to run, videos, screenshots, etc. -->
-
-## Linear
-
-<!-- A workflow fills this in. Put an existing LAY-<number> here to use that issue instead. -->

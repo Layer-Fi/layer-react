@@ -71,42 +71,52 @@ jobs:
           const body = pr.body ?? '';
 
           // Body must have it alone on a line so prose is not a link; title and branch are looser.
-          const linked = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
-            ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title)
+          const inTitle = new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title);
+          const existing = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
+            ?? inTitle
             ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
-          if (linked) {
-            core.info(`PR #${PR} already references ${linked[0].trim()}.`);
+
+          // A PR that names its own issue still needs the identifier in the title: that is what
+          // Linear links from.
+          if (existing && inTitle) {
+            core.info(`PR #${PR} already references ${existing[0].trim()}.`);
             return;
           }
 
-          const { teams } = await linear('query { teams { nodes { id key } } }');
-          const team = teams.nodes.find(node => node.key === teamKey);
-          if (!team) {
-            core.setFailed(`No Linear team with key ${teamKey}.`);
-            return;
-          }
+          let identifier = existing?.[0].trim();
+          let issueUrl;
 
-          const { issueCreate } = await linear(
-            `mutation ($input: IssueCreateInput!) {
-               issueCreate(input: $input) { success issue { identifier url } }
-             }`,
-            {
-              input: {
-                teamId: team.id,
-                title: pr.title,
-                description: `Opened by @${pr.user.login}.\n\n${pr.html_url}`,
+          if (!identifier) {
+            const { teams } = await linear('query { teams { nodes { id key } } }');
+            const team = teams.nodes.find(node => node.key === teamKey);
+            if (!team) {
+              core.setFailed(`No Linear team with key ${teamKey}.`);
+              return;
+            }
+
+            const { issueCreate } = await linear(
+              `mutation ($input: IssueCreateInput!) {
+                 issueCreate(input: $input) { success issue { identifier url } }
+               }`,
+              {
+                input: {
+                  teamId: team.id,
+                  title: pr.title,
+                  description: `Opened by @${pr.user.login}.\n\n${pr.html_url}`,
+                },
               },
-            },
-          );
-          if (!issueCreate?.success) {
-            core.setFailed('Linear reported the issue was not created.');
-            return;
+            );
+            if (!issueCreate?.success) {
+              core.setFailed('Linear reported the issue was not created.');
+              return;
+            }
+            ({ identifier, url: issueUrl } = issueCreate.issue);
           }
 
-          const { identifier, url } = issueCreate.issue;
-          await github.rest.pulls.update({
-            ...context.repo,
-            pull_number: Number(PR),
-            body: `${body}\n\n## Linear\n\n${identifier}\n`.replace(/^\n+/, ''),
-          });
-          core.info(`PR #${PR} → ${identifier} (${url})`);
+          // GitHub caps titles at 256; trim the original rather than fail after creating the issue.
+          const prefix = `[${identifier}] `;
+          const room = 256 - prefix.length;
+          const title = prefix + (pr.title.length <= room ? pr.title : `${pr.title.slice(0, room - 1)}…`);
+
+          await github.rest.pulls.update({ ...context.repo, pull_number: Number(PR), title });
+          core.info(`PR #${PR} → ${identifier}${issueUrl ? ` (${issueUrl})` : ' (already existed)'}`);
