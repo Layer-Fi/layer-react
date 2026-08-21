@@ -48,7 +48,11 @@ jobs:
         ref: ${{ inputs.ref }}
         persist-credentials: false
 
+    # No npm cache: this builds whatever ref it is handed, and the cache it would write
+    # is read back by workflows running on the default branch.
     - uses: ./.github/actions/npm-setup
+      with:
+        cache: ''
 
     - name: Build Storybook
       run: npm run storybook:build
