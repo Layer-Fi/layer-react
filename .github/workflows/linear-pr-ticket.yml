@@ -1,20 +1,14 @@
 name: Linear
 
-# Creates a Linear issue in the LAY team for every PR and writes its identifier into the
-# description. See .github/scripts/linearPrTicket.mjs for why this no longer uses the LAY-NEW magic
-# word.
+# Creates a Linear issue per PR and writes its identifier into the description. Replaces the LAY-NEW
+# magic word, which Linear only converts on a PR's first `opened` webhook, leaving no way to ticket a
+# PR that missed it.
 #
-# Needs a LINEAR_API_KEY secret holding a personal API key (lin_api_…). The existing
-# LINEAR_ACCESS_KEY is a pipeline key for linear-release and is rejected by the GraphQL API.
-#
-# Dependabot is excluded; dependency bumps would be one ticket per bump. Release bumps are excluded
-# for the same reason. Run the workflow by hand with a PR number to backfill one that predates this.
+# Needs a LINEAR_API_KEY secret holding a personal API key (lin_api_…). LINEAR_ACCESS_KEY is a
+# pipeline key for linear-release and is rejected by the GraphQL API.
 
 on:
   pull_request:
-    # Creation no longer depends on catching `opened`, so a PR that was missed picks up a ticket on
-    # its next push or description edit. Purely metadata events — labeled, assigned, closed, locked
-    # — cannot leave a PR needing one, so they are left out rather than burning a run each.
     types: [ opened, reopened, synchronize, edited, ready_for_review, converted_to_draft ]
     branches: [ main ]
   workflow_dispatch:
@@ -38,21 +32,77 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v7
-      with:
-        sparse-checkout: .github/scripts
-        sparse-checkout-cone-mode: false
-
-    - uses: actions/setup-node@v7
-      with:
-        node-version: '22'
-
-    # PR text is read inside the script rather than interpolated into run — interpolating
-    # attacker-controlled PR text into a shell is an injection vector.
-    - name: Create the Linear issue
+    - uses: actions/github-script@v9
       env:
         LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
-        LINEAR_TEAM_KEY: LAY
-        GH_TOKEN: ${{ github.token }}
+        TEAM_KEY: LAY
         PR: ${{ github.event.pull_request.number || inputs.pr }}
-      run: node .github/scripts/linearPrTicket.mjs
+      with:
+        script: |
+          const { LINEAR_API_KEY: key, TEAM_KEY: teamKey, PR } = process.env;
+
+          if (!key) {
+            core.setFailed('LINEAR_API_KEY is unset. It must be a personal API key (lin_api_…); '
+              + 'LINEAR_ACCESS_KEY is a pipeline key for linear-release and the GraphQL API rejects it.');
+            return;
+          }
+
+          const linear = async (query, variables) => {
+            // A personal API key goes in bare; `Bearer` is the OAuth form and is rejected.
+            const response = await fetch('https://api.linear.app/graphql', {
+              method: 'POST',
+              headers: { Authorization: key, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ query, variables }),
+            });
+            const { data, errors } = await response.json();
+            if (!response.ok || errors?.length) {
+              throw new Error(errors?.map(e => e.message).join('; ') ?? `HTTP ${response.status}`);
+            }
+            return data;
+          };
+
+          const { data: pr } = await github.rest.pulls.get({
+            ...context.repo, pull_number: Number(PR),
+          });
+          const body = pr.body ?? '';
+
+          // Only an identifier alone on a line counts, so a description that merely mentions a
+          // ticket does not read as one and silently lose its own.
+          const linked = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
+            ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
+          if (linked) {
+            core.info(`PR #${PR} already references ${linked[0].trim()}.`);
+            return;
+          }
+
+          const { teams } = await linear('query { teams { nodes { id key } } }');
+          const team = teams.nodes.find(node => node.key === teamKey);
+          if (!team) {
+            core.setFailed(`No Linear team with key ${teamKey}.`);
+            return;
+          }
+
+          const { issueCreate } = await linear(
+            `mutation ($input: IssueCreateInput!) {
+               issueCreate(input: $input) { success issue { identifier url } }
+             }`,
+            {
+              input: {
+                teamId: team.id,
+                title: pr.title,
+                description: `Opened by @${pr.user.login}.\n\n${pr.html_url}`,
+              },
+            },
+          );
+          if (!issueCreate?.success) {
+            core.setFailed('Linear reported the issue was not created.');
+            return;
+          }
+
+          const { identifier, url } = issueCreate.issue;
+          await github.rest.pulls.update({
+            ...context.repo,
+            pull_number: Number(PR),
+            body: `${body}\n\n## Linear\n\n${identifier}\n`.replace(/^\n+/, ''),
+          });
+          core.info(`PR #${PR} → ${identifier} (${url})`);
