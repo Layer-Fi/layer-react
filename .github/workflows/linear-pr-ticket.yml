@@ -95,11 +95,15 @@ jobs:
           if (!identifier) {
             const { attachmentsForURL } = await linear(
               `query ($url: String!) {
-                 attachmentsForURL(url: $url, first: 10) { nodes { issue { identifier url } } }
+                 attachmentsForURL(url: $url, first: 10) {
+                   nodes { issue { identifier url state { type } } }
+                 }
                }`,
               { url: pr.html_url },
             );
-            const linked = attachmentsForURL?.nodes?.find(node => node.issue)?.issue;
+            // A cancelled duplicate keeps its attachment, so it must not win over a live one.
+            const issues = (attachmentsForURL?.nodes ?? []).map(node => node.issue).filter(Boolean);
+            const linked = issues.find(issue => issue.state?.type !== 'canceled') ?? issues[0];
             if (linked) {
               ({ identifier, url: issueUrl } = linked);
             }
