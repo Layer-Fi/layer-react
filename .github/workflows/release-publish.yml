@@ -78,7 +78,16 @@ jobs:
           exit 1
         fi
 
-    - uses: ./.github/actions/npm-setup
+    # No registry-url: it writes an empty _authToken that makes npm skip OIDC.
+    # Inline, not ./.github/actions/npm-setup: this runs on a checked-out tag, and a
+    # local action has to exist in that tree.
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
 
     # Trusted publishing needs npm >= 11.5.1; pin it.
     - name: Upgrade npm for trusted publishing

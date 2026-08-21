@@ -1,23 +1,19 @@
 name: npm setup
-description: Node 22 with the npm cache, plus the locked install. Requires the repo already checked out.
+description: Node 22 with the npm cache, plus the locked install. Only for workflows that run on the checked-out default branch or a PR head — a local action has to exist in the tree that is checked out.
 
 inputs:
   install:
     description: Run npm ci
     default: 'true'
-  cache:
-    description: setup-node cache to use. Empty for a job that builds an untrusted ref, so it cannot write the cache the default branch reads back.
-    default: npm
 
 runs:
   using: composite
 
   steps:
-  # No registry-url: it writes an empty _authToken that makes npm skip OIDC on publish.
   - uses: actions/setup-node@v7
     with:
       node-version: '22'
-      cache: ${{ inputs.cache }}
+      cache: npm
 
   - if: ${{ inputs.install == 'true' }}
     shell: bash

@@ -48,11 +48,15 @@ jobs:
         ref: ${{ inputs.ref }}
         persist-credentials: false
 
-    # No npm cache: this builds whatever ref it is handed, and the cache it would write
-    # is read back by workflows running on the default branch.
-    - uses: ./.github/actions/npm-setup
+    # Inline, not ./.github/actions/npm-setup: this runs on a checked-out ref, and a
+    # local action has to exist in that tree.
+    - uses: actions/setup-node@v7
       with:
-        cache: ''
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
 
     - name: Build Storybook
       run: npm run storybook:build
