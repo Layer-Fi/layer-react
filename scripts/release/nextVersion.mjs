@@ -1,13 +1,7 @@
 import process from 'node:process'
 import { pathToFileURL } from 'node:url'
 
-// The versioning model the release workflows implement: the cycle target is fixed at the
-// first alpha (X.Y.Z-alpha.N) and stable drops the suffix to ship X.Y.Z.
-//
-//   alpha  from a stable      -> pre<increment>, e.g. 0.1.144 -> 0.1.145-alpha.0
-//   alpha  from a prerelease  -> 0.1.145-alpha.0 -> 0.1.145-alpha.1  (increment ignored)
-//   stable from a prerelease  -> 0.1.145-alpha.2 -> 0.1.145         (increment ignored)
-//   stable from a stable      -> bump per increment, 0.1.145 -> 0.1.146 / 0.2.0 / 1.0.0
+// The cycle target is fixed at the first alpha; stable drops the suffix.
 
 const parse = (version) => {
   const match = /^(\d+)\.(\d+)\.(\d+)(?:-alpha\.(\d+))?$/.exec(version ?? '')

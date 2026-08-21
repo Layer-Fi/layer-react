@@ -1,9 +1,9 @@
 name: Release — Post-ship
 
 # Phase 3. Everything that follows the version being on npm: the Linear release, the
-# demo-finguard bump, and — on a stable — docs screenshots and Storybook Pages. Release
-# — Publish dispatches this on a real ship. Every job is idempotent, so re-dispatching
-# is the whole recovery story; that is why none of it lives in the run that publishes.
+# demo-finguard bump, and — on a stable — docs screenshots and Storybook Pages. Publish
+# dispatches it on a real ship. Every job is idempotent, so re-dispatching is the whole
+# recovery story — which is why none of it runs inside the job that publishes.
 
 on:
   workflow_dispatch:
@@ -26,8 +26,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Also the proof that the version shipped at all: Publish refuses to publish without
-  # the tag, so anything on the registry is safe to build the refreshes from.
+  # Also the proof that it shipped: Publish refuses to publish without the tag.
   await-npm:
     name: Wait for npm
     runs-on: ubuntu-latest
@@ -38,12 +37,9 @@ jobs:
       next: ${{ steps.resolve.outputs.next }}
 
     steps:
-    # This repo at the workflow's own ref, not at the release tag: the version script is
-    # tooling, and an older tag predates it.
+    # The workflow's own ref, not the tag: an older tag predates the version script.
     - uses: actions/checkout@v7
 
-    # Tolerate a manual re-dispatch pasting the tag-style value (v0.1.146); every
-    # downstream ref already prefixes v, so a raw leading v would double up.
     - name: Resolve the versions
       id: resolve
       env:
@@ -65,8 +61,7 @@ jobs:
       run: |
         set -euo pipefail
         for _ in $(seq 1 20); do
-          # --prefer-online: npm caches the packument, so a stale first read would
-          # answer the whole loop.
+          # --prefer-online: npm caches the packument, so one stale read would answer the loop.
           if npm view --prefer-online "@layerfi/components@$V" version >/dev/null 2>&1; then
             exit 0
           fi
@@ -85,9 +80,6 @@ jobs:
       dry_run: false
     secrets: inherit
 
-  # Dispatched at the tag rather than called from here: a called workflow runs in this
-  # run's default-branch cache scope, and building a tag there is what CodeQL's
-  # cache-poisoning query flags. The trade is that its result shows on its own run.
   pages:
     name: Storybook Pages
     needs: await-npm
@@ -152,8 +144,8 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    # GITHUB_TOKEN cannot dispatch cross-repo. Soft-failed: a missing install costs the
-    # demo its bump, not the rest of the refresh.
+    # GITHUB_TOKEN cannot dispatch cross-repo; soft-failed so a missing install costs
+    # only the bump.
     - name: Mint a token for demo-finguard
       id: token
       continue-on-error: true

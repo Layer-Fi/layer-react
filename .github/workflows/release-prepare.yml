@@ -4,8 +4,7 @@ name: Release — Prepare
 # package.json bump PR. It does NOT merge, tag, publish, or touch Linear — you
 # review and merge the PR like any other, then run "Release — Publish".
 #
-# The version it computes comes from scripts/release/nextVersion.mjs, which documents
-# the model.
+# The version it computes comes from scripts/release/nextVersion.mjs.
 #
 # Repo setting: Settings -> Actions -> General -> Workflow permissions ->
 #   "Allow GitHub Actions to create and approve pull requests" must be ON.

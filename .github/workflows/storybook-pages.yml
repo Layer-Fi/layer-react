@@ -4,14 +4,9 @@ name: Storybook Pages
 # for components exported from src/index.tsx (tagged `public-api`). Set `public_only` to
 # false to publish the whole library, internals included.
 #
-# Builds the ref it is dispatched at — pick it in "Use workflow from". Release — Post-ship
-# dispatches it at the release tag, so the public Storybook matches the "latest" dist-tag
-# rather than unreleased main.
-#
-# It takes no ref input on purpose: checking out a ref other than the one the run was
-# dispatched at would execute that code in this run's cache scope, which is what CodeQL's
-# cache-poisoning query flags. Deploying from a tag needs the tag in the github-pages
-# environment's deployment branch and tag policies.
+# Builds the ref it is dispatched at; Post-ship dispatches it at the release tag. No ref
+# input on purpose — a checkout of some other ref would run in this run's cache scope
+# (CodeQL cache-poisoning). Deploying from a tag needs v* in the github-pages environment.
 
 on:
   workflow_dispatch:
