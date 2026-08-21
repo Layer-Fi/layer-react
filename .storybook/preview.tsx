@@ -54,7 +54,6 @@ if (!usesRealBackend) {
 const preview: Preview = {
   // No `toolbar`: `manager.ts` contributes a free-text field and keys off this being declared.
   globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- no ./csf3 subpath in its exports map
   loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader(startMockServiceWorker)],
   beforeEach: ({ tags }: { tags?: string[] }) => {
     setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
