@@ -21,7 +21,7 @@ export enum EntityName {
   Payroll = 'Payroll',
   PayrollPayment = 'Payroll Payment',
   LoanPayment = 'Loan Payment',
-  LoanProceed = 'Loan Proceed',
+  LoanProceed = 'Loan Proceeds',
   OpeningBalance = 'Opening Balance',
   InvoiceWriteOff = 'Invoice Write-Off',
   VendorCredit = 'Vendor Credit',
