@@ -76,7 +76,14 @@ jobs:
         # Assumes same-repo PRs; a fork's head.ref would not resolve here.
         ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
-    - uses: ./.github/actions/npm-setup
+    - name: Setup Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
 
     - name: Run Chromatic
       id: chromatic

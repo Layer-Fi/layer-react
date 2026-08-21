@@ -48,8 +48,6 @@ jobs:
         ref: ${{ inputs.ref }}
         persist-credentials: false
 
-    # Inline, not ./.github/actions/npm-setup: this runs on a checked-out ref, and a
-    # local action has to exist in that tree.
     - uses: actions/setup-node@v7
       with:
         node-version: '22'

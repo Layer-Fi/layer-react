@@ -40,16 +40,20 @@ jobs:
         ref: main
         fetch-depth: 0
 
-    # Only a stable release runs the translation gate below, and nothing else here
-    # needs node_modules.
-    - uses: ./.github/actions/npm-setup
+    - uses: actions/setup-node@v7
       with:
-        install: ${{ inputs.release_type == 'stable' }}
+        node-version: '22'
 
     - name: Configure git
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    # Kept out of the check step below: that one is continue-on-error, so an install failure
+    # there would read as a translation failure.
+    - name: Install dependencies
+      if: ${{ inputs.release_type == 'stable' }}
+      run: npm ci
 
     # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
     # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.

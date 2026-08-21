@@ -25,7 +25,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - uses: ./.github/actions/npm-setup
+      - name: Use Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
 
       # The lockfile audit below cannot see this: consumers resolve our declared ranges, so a
       # lockfile-only bump patches CI and leaves the published floor vulnerable. Non-blocking here
