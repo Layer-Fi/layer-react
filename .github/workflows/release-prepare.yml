@@ -5,7 +5,7 @@ name: Release — Prepare
 # review and merge the PR like any other, then run "Release — Publish".
 #
 # The version it computes comes from scripts/release/nextVersion.mjs, which documents
-# the model and is covered by nextVersion.test.mjs.
+# the model.
 #
 # Repo setting: Settings -> Actions -> General -> Workflow permissions ->
 #   "Allow GitHub Actions to create and approve pull requests" must be ON.
