@@ -68,19 +68,25 @@ jobs:
       dry_run: false
     secrets: inherit
 
+  # Dispatched at the tag rather than called from here: a called workflow runs in this
+  # run's default-branch cache scope, and building a tag there is what CodeQL's
+  # cache-poisoning query flags. The trade is that its result shows on its own run.
   pages:
     name: Storybook Pages
     needs: await-npm
     if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
-    # A called workflow's token can only narrow the caller job's.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-    uses: ./.github/workflows/storybook-pages.yml
-    with:
-      ref: v${{ needs.await-npm.outputs.version }}
-      public_only: true
+      actions: write
+
+    steps:
+    - name: Dispatch the Pages build at the tag
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+        V: ${{ needs.await-npm.outputs.version }}
+      run: gh workflow run storybook-pages.yml --ref "v$V" -f public_only=true
 
   linear:
     name: Linear release
