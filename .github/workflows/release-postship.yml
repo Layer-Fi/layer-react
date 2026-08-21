@@ -52,7 +52,6 @@ jobs:
       run: |
         set -euo pipefail
         V=${RAW#v}
-        # Its own line: inside the echo below, the exit status would be echo's.
         NEXT=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")
         {
           echo "version=$V"
@@ -67,7 +66,7 @@ jobs:
         set -euo pipefail
         for _ in $(seq 1 20); do
           # --prefer-online: npm caches the packument, so a stale first read would
-          # otherwise answer every later iteration from cache.
+          # answer the whole loop.
           if npm view --prefer-online "@layerfi/components@$V" version >/dev/null 2>&1; then
             exit 0
           fi
