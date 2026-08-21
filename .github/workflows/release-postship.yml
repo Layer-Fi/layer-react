@@ -32,11 +32,21 @@ jobs:
     name: Wait for npm
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
 
     steps:
-    - name: Wait for the registry to serve the version
+    # Tolerate a manual re-dispatch pasting the tag-style value (v0.1.146); every
+    # downstream ref already prefixes v, so a raw leading v would double up.
+    - name: Resolve the version
+      id: resolve
       env:
         V: ${{ inputs.version }}
+      run: echo "version=${V#v}" >> "$GITHUB_OUTPUT"
+
+    - name: Wait for the registry to serve the version
+      env:
+        V: ${{ steps.resolve.outputs.version }}
       run: |
         set -euo pipefail
         for _ in $(seq 1 20); do
@@ -51,17 +61,17 @@ jobs:
   docs:
     name: Docs screenshots
     needs: await-npm
-    if: ${{ !contains(inputs.version, '-') }}
+    if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
     uses: ./.github/workflows/docs-screenshots.yml
     with:
-      ref: v${{ inputs.version }}
+      ref: v${{ needs.await-npm.outputs.version }}
       dry_run: false
     secrets: inherit
 
   pages:
     name: Storybook Pages
     needs: await-npm
-    if: ${{ !contains(inputs.version, '-') }}
+    if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
     # A called workflow's token can only narrow the caller job's.
     permissions:
       contents: read
@@ -69,7 +79,7 @@ jobs:
       id-token: write
     uses: ./.github/workflows/storybook-pages.yml
     with:
-      ref: v${{ inputs.version }}
+      ref: v${{ needs.await-npm.outputs.version }}
       public_only: true
 
   linear:
@@ -82,13 +92,13 @@ jobs:
     # `sync` scans commits, so it needs the history behind the tag.
     - uses: actions/checkout@v7
       with:
-        ref: v${{ inputs.version }}
+        ref: v${{ needs.await-npm.outputs.version }}
         fetch-depth: 0
 
     - name: Resolve the Linear versions
       id: v
       env:
-        V: ${{ inputs.version }}
+        V: ${{ needs.await-npm.outputs.version }}
         INCREMENT: ${{ inputs.next_linear_release }}
       run: |
         set -euo pipefail
@@ -114,7 +124,7 @@ jobs:
         name: ${{ steps.v.outputs.base }}
 
     - name: Complete release in Linear
-      if: ${{ !contains(inputs.version, '-') }}
+      if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
       uses: linear/linear-release-action@v0
       with:
         access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
@@ -124,7 +134,7 @@ jobs:
     # Seed the next release so it exists in Linear right after this one ships.
     # (CLI can only create it In Progress, not Planned.)
     - name: Queue the next release in Linear
-      if: ${{ !contains(inputs.version, '-') }}
+      if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
       uses: linear/linear-release-action@v0
       with:
         access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
@@ -155,7 +165,7 @@ jobs:
     - name: Dispatch the bump
       env:
         GH_TOKEN: ${{ steps.token.outputs.token }}
-        V: ${{ inputs.version }}
+        V: ${{ needs.await-npm.outputs.version }}
       run: |
         set -euo pipefail
         if [ -z "${GH_TOKEN:-}" ]; then
