@@ -70,6 +70,17 @@ jobs:
           });
           const body = pr.body ?? '';
 
+          // Authoritative: the job-level `if` cannot see these on workflow_dispatch, which has no
+          // pull_request payload, so a manual run would otherwise bypass every exclusion.
+          const skip = pr.user.login === 'dependabot[bot]' ? 'opened by dependabot'
+            : pr.head.ref.startsWith('release/v') ? 'a release branch'
+            : (pr.state === 'closed' && !pr.merged_at) ? 'closed without merging'
+            : null;
+          if (skip) {
+            core.info(`PR #${PR} skipped: ${skip}.`);
+            return;
+          }
+
           // Body must have it alone on a line so prose is not a link; title and branch are looser.
           const inTitle = new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title);
           const existing = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
