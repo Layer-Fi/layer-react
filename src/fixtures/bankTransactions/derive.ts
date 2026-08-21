@@ -131,6 +131,8 @@ export const MATCH_TYPE_BY_DETAILS_TYPE: Record<MatchDetailsType['type'], MatchT
   Vendor_Refund_Payment_Match: MatchType.VENDOR_REFUND_PAYMENT,
   Journal_Entry_Match: MatchType.MANUAL_JOURNAL_ENTRY,
   Payroll_Match: MatchType.PAYROLL_PAYMENT,
+  Loan_Payment_Match: MatchType.LOAN_PAYMENT,
+  Loan_Proceed_Match: MatchType.LOAN_PROCEED,
 }
 
 // ref/2 keeps the flavor pick decorrelated from the direction pick at ref % 2.

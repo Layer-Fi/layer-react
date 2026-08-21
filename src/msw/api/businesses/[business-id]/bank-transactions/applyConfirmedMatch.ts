@@ -1,6 +1,7 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
-import { type Match } from '@schemas/features/bankTransactions/match'
+import { type Match, MatchType } from '@schemas/features/bankTransactions/match'
+import { isKnownMatchDetails } from '@schemas/features/bankTransactions/matchDetails'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { MATCH_TYPE_BY_DETAILS_TYPE, toMatchDetailsId } from '@fixtures/bankTransactions/derive'
@@ -28,7 +29,7 @@ export const applyConfirmedMatch = (
 
   const match: Match = {
     id: `match-${transaction.id}`,
-    matchType: MATCH_TYPE_BY_DETAILS_TYPE[details.type],
+    matchType: isKnownMatchDetails(details) ? MATCH_TYPE_BY_DETAILS_TYPE[details.type] : MatchType.Unknown,
     bankTransaction: {
       id: transaction.id,
       date: transaction.date,
