@@ -89,9 +89,8 @@ jobs:
             || idIn(pr.head.ref, loose);
           let issueUrl;
 
-          // Those three all live on the PR, so an edit that rewrites the title and body loses
-          // them and this would open a second ticket. The attachment is on the Linear side,
-          // where a PR edit cannot reach it.
+          // All three live on the PR, so an edit that rewrites the title and body loses them.
+          // The attachment is on the Linear side, where a PR edit cannot reach it.
           if (!identifier) {
             const { attachmentsForURL } = await linear(
               `query ($url: String!) {
@@ -135,8 +134,8 @@ jobs:
             }
             ({ identifier, url: issueUrl } = issueCreate.issue);
 
-            // The anchor the lookup above reads on a later run. Not worth failing a run that
-            // already created the issue — a failure here would only re-create it.
+            // The anchor the lookup above reads next time. Best-effort: failing here, after
+            // the issue exists, would only re-create it.
             try {
               await linear(
                 `mutation ($issueId: String!, $url: String!, $title: String!) {
