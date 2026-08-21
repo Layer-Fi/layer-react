@@ -1,16 +1,22 @@
 name: Release — Post-ship
 
-# Phase 3. Refreshes what depends on the version being on npm: the demo-finguard bump,
-# plus docs screenshots and Storybook Pages on a stable. Release — Publish dispatches
-# this on a real ship. Every job is idempotent — re-dispatch it to recover from a flake.
+# Phase 3. Everything that follows the version being on npm: the Linear release, the
+# demo-finguard bump, and — on a stable — docs screenshots and Storybook Pages. Release
+# — Publish dispatches this on a real ship. Every job is idempotent, so re-dispatching
+# is the whole recovery story; that is why none of it lives in the run that publishes.
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version that shipped, without the leading v (default: package.json on main)'
-        required: false
-        default: ''
+        description: 'Version that shipped, without the leading v (e.g. 0.1.146)'
+        required: true
+        type: string
+      next_linear_release:
+        description: 'Linear release increment to queue (stable only)'
+        type: choice
+        options: [ patch, minor, major ]
+        default: patch
 
 permissions:
   contents: read
@@ -20,74 +26,42 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  resolve:
-    name: Resolve the shipped release
+  # Also the proof that the version shipped at all: Publish refuses to publish without
+  # the tag, so anything on the registry is safe to build the refreshes from.
+  await-npm:
+    name: Wait for npm
     runs-on: ubuntu-latest
-
-    outputs:
-      version: ${{ steps.r.outputs.version }}
-      tag: ${{ steps.r.outputs.tag }}
-      stable: ${{ steps.r.outputs.stable }}
+    timeout-minutes: 10
 
     steps:
-    - uses: actions/checkout@v7
-      with:
-        ref: main
-        fetch-depth: 0
-
-    - name: Resolve the version
-      id: r
+    - name: Wait for the registry to serve the version
       env:
-        INPUT_VERSION: ${{ inputs.version }}
-      run: |
-        set -euo pipefail
-        V="${INPUT_VERSION:-}"
-        if [ -z "$V" ]; then
-          V=$(node -p "require('./package.json').version")   # relative file require; no node_modules needed
-        fi
-        V=${V#v}
-        case "$V" in *-*) STABLE=false ;; *) STABLE=true ;; esac
-        if ! git rev-parse "v$V" >/dev/null 2>&1; then
-          echo "::error::Tag v$V does not exist. Cut the release first — Release — Prepare, merge the PR, then Release — Publish."
-          exit 1
-        fi
-        {
-          echo "version=$V"
-          echo "tag=v$V"
-          echo "stable=$STABLE"
-        } >> "$GITHUB_OUTPUT"
-        echo "Post-ship refresh for v$V (stable=$STABLE)"
-
-    # The finguard bump resolves through `npm view`, so it fails while the registry lags.
-    - name: Wait for npm to serve the version
-      env:
-        V: ${{ steps.r.outputs.version }}
+        V: ${{ inputs.version }}
       run: |
         set -euo pipefail
         for _ in $(seq 1 20); do
           if npm view "@layerfi/components@$V" version >/dev/null 2>&1; then
-            echo "@layerfi/components@$V is on the registry."
             exit 0
           fi
           sleep 15
         done
-        echo "::error::@layerfi/components@$V is not on npm after 5 minutes. Check that Release — Publish actually shipped."
+        echo "::error::@layerfi/components@$V is not on npm after 5 minutes. Check that Release — Publish shipped."
         exit 1
 
   docs:
     name: Docs screenshots
-    needs: resolve
-    if: ${{ needs.resolve.outputs.stable == 'true' }}
+    needs: await-npm
+    if: ${{ !contains(inputs.version, '-') }}
     uses: ./.github/workflows/docs-screenshots.yml
     with:
-      ref: ${{ needs.resolve.outputs.tag }}
+      ref: v${{ inputs.version }}
       dry_run: false
     secrets: inherit
 
   pages:
     name: Storybook Pages
-    needs: resolve
-    if: ${{ needs.resolve.outputs.stable == 'true' }}
+    needs: await-npm
+    if: ${{ !contains(inputs.version, '-') }}
     # A called workflow's token can only narrow the caller job's.
     permissions:
       contents: read
@@ -95,12 +69,72 @@ jobs:
       id-token: write
     uses: ./.github/workflows/storybook-pages.yml
     with:
-      ref: ${{ needs.resolve.outputs.tag }}
+      ref: v${{ inputs.version }}
       public_only: true
+
+  linear:
+    name: Linear release
+    needs: await-npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    # `sync` scans commits, so it needs the history behind the tag.
+    - uses: actions/checkout@v7
+      with:
+        ref: v${{ inputs.version }}
+        fetch-depth: 0
+
+    - name: Resolve the Linear versions
+      id: v
+      env:
+        V: ${{ inputs.version }}
+        INCREMENT: ${{ inputs.next_linear_release }}
+      run: |
+        set -euo pipefail
+        BASE=${V%%-*}
+        # Plain bash bump of X.Y.Z; no semver dependency.
+        IFS=. read -r MA MI PA <<< "$BASE"
+        case "$INCREMENT" in
+          patch) NEXT="$MA.$MI.$((PA + 1))" ;;
+          minor) NEXT="$MA.$((MI + 1)).0" ;;
+          major) NEXT="$((MA + 1)).0.0" ;;
+        esac
+        {
+          echo "base=$BASE"
+          echo "next=$NEXT"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Sync release in Linear
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ steps.v.outputs.base }}
+        name: ${{ steps.v.outputs.base }}
+
+    - name: Complete release in Linear
+      if: ${{ !contains(inputs.version, '-') }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: complete
+        version: ${{ steps.v.outputs.base }}
+
+    # Seed the next release so it exists in Linear right after this one ships.
+    # (CLI can only create it In Progress, not Planned.)
+    - name: Queue the next release in Linear
+      if: ${{ !contains(inputs.version, '-') }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ steps.v.outputs.next }}
+        name: ${{ steps.v.outputs.next }}
 
   finguard:
     name: Bump demo-finguard
-    needs: resolve
+    needs: await-npm
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -121,28 +155,13 @@ jobs:
     - name: Dispatch the bump
       env:
         GH_TOKEN: ${{ steps.token.outputs.token }}
-        V: ${{ needs.resolve.outputs.version }}
+        V: ${{ inputs.version }}
       run: |
         set -euo pipefail
         if [ -z "${GH_TOKEN:-}" ]; then
-          echo "::warning::No token for Layer-Fi/demo-finguard — skipping the bump."
-          {
-            echo "### demo-finguard bump skipped"
-            echo
-            echo "The DOCS_BOT app cannot reach \`Layer-Fi/demo-finguard\`. Install it there with"
-            echo "\`actions: write\`, or run **Bump — @layerfi/components** by hand with"
-            echo "\`channel=custom\`, \`custom_version=$V\`."
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::warning::DOCS_BOT cannot reach Layer-Fi/demo-finguard. Run Bump — @layerfi/components there with channel=custom, custom_version=$V."
           exit 0
         fi
         gh workflow run bump-layerfi-components.yml \
           --repo Layer-Fi/demo-finguard --ref dev \
           -f channel=custom -f "custom_version=$V"
-        sleep 10
-        URL=$(gh run list --repo Layer-Fi/demo-finguard \
-          --workflow bump-layerfi-components.yml --limit 1 --json url --jq '.[0].url // empty')
-        if [ -n "$URL" ]; then
-          echo "[demo-finguard bump run]($URL)" >> "$GITHUB_STEP_SUMMARY"
-        else
-          echo "Dispatched the demo-finguard bump for \`$V\`." >> "$GITHUB_STEP_SUMMARY"
-        fi
