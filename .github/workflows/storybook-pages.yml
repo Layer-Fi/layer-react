@@ -4,10 +4,20 @@ name: Storybook Pages
 # for components exported from src/index.tsx (tagged `public-api`). Set `public_only` to
 # false to publish the whole library, internals included.
 #
-# Dispatched against the release tag after a stable npm publish, so the public
-# Storybook matches the version on the "latest" dist-tag rather than unreleased main.
+# Called by Release — Post-ship against the release tag after a stable npm publish, so
+# the public Storybook matches the version on the "latest" dist-tag rather than
+# unreleased main. Still dispatchable by hand to publish any ref.
 
 on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Branch, tag, or SHA to build
+        required: true
+        type: string
+      public_only:
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       ref:

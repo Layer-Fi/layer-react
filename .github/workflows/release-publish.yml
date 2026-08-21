@@ -8,9 +8,9 @@ name: Release — Publish
 #     the Linear release, then queue the next one (next_linear_release).
 #
 # Tagging is NOT done here — the Release — Tag hook owns that. Neither are the
-# post-ship refreshes: Docs — Screenshots and Storybook Pages are dispatched
-# against the tag after this workflow succeeds, so a slow macOS capture or a
-# Pages deploy cannot fail a run that already published to npm.
+# post-ship refreshes: a real ship dispatches Release — Post-ship as its last
+# step, so a 30-minute macOS capture or a Pages deploy cannot fail a run that has
+# already published to npm.
 #
 # Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
 # tag is not required (falls back to main HEAD).
@@ -36,6 +36,7 @@ on:
 permissions:
   contents: read
   id-token: write   # OIDC for npm trusted publishing
+  actions: write    # dispatch Release — Post-ship
 
 jobs:
   publish:
@@ -173,3 +174,13 @@ jobs:
         version: ${{ steps.r.outputs.next }}
         name: ${{ steps.r.outputs.next }}
         dry_run: ${{ inputs.dry_run }}
+
+    # Fire-and-forget, and soft-failed: the package is already on npm by now, so a
+    # refused dispatch is a button to press (Release — Post-ship), not a red release.
+    - name: Dispatch the post-ship refreshes
+      if: ${{ !inputs.dry_run }}
+      continue-on-error: true
+      env:
+        GH_TOKEN: ${{ github.token }}
+        V: ${{ steps.r.outputs.version }}
+      run: gh workflow run release-postship.yml --ref main -f "version=$V"

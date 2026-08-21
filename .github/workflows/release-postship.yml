@@ -1,0 +1,160 @@
+name: Release — Post-ship
+
+# Phase 3 (automatic, with a button for retries). Everything that has to be refreshed
+# once a version is on npm, in one run:
+#   every channel -> bump @layerfi/components in Layer-Fi/demo-finguard (PR against dev)
+#   stable only   -> Docs — Screenshots (PR in Layer-Fi/api-documentation)
+#                    Storybook Pages (public GitHub Pages, built from the release tag)
+#
+# Release — Publish dispatches this as its last step on a real ship. It is deliberately
+# not a set of jobs inside Publish: a 30-minute macOS capture or a Pages deploy must not
+# be able to turn red a run that has already published to npm. Every job is idempotent,
+# so re-dispatching this by hand is the whole recovery story for a flake.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version that shipped, without the leading v (default: package.json on main)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-postship
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Resolve the shipped release
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.r.outputs.version }}
+      tag: ${{ steps.r.outputs.tag }}
+      stable: ${{ steps.r.outputs.stable }}
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - name: Resolve the version
+      id: r
+      env:
+        INPUT_VERSION: ${{ inputs.version }}
+      run: |
+        set -euo pipefail
+        V="${INPUT_VERSION:-}"
+        if [ -z "$V" ]; then
+          V=$(node -p "require('./package.json').version")   # relative file require; no node_modules needed
+        fi
+        V=${V#v}
+        case "$V" in *-*) STABLE=false ;; *) STABLE=true ;; esac
+        # Everything below builds from the tag, so a missing one is a wrong dispatch, not a flake.
+        if ! git rev-parse "v$V" >/dev/null 2>&1; then
+          echo "::error::Tag v$V does not exist. Cut the release first — Release — Prepare, merge the PR, then Release — Publish."
+          exit 1
+        fi
+        {
+          echo "version=$V"
+          echo "tag=v$V"
+          echo "stable=$STABLE"
+        } >> "$GITHUB_OUTPUT"
+        echo "Post-ship refresh for v$V (stable=$STABLE)"
+
+    # The demo-finguard bump resolves its target through `npm view`, so it fails outright
+    # while the registry lags behind the publish that dispatched this.
+    - name: Wait for npm to serve the version
+      env:
+        V: ${{ steps.r.outputs.version }}
+      run: |
+        set -euo pipefail
+        for _ in $(seq 1 20); do
+          if npm view "@layerfi/components@$V" version >/dev/null 2>&1; then
+            echo "@layerfi/components@$V is on the registry."
+            exit 0
+          fi
+          sleep 15
+        done
+        echo "::error::@layerfi/components@$V is not on npm after 5 minutes. Check that Release — Publish actually shipped."
+        exit 1
+
+  docs:
+    name: Docs screenshots
+    needs: resolve
+    if: ${{ needs.resolve.outputs.stable == 'true' }}
+    uses: ./.github/workflows/docs-screenshots.yml
+    with:
+      ref: ${{ needs.resolve.outputs.tag }}
+      dry_run: false
+    secrets: inherit
+
+  pages:
+    name: Storybook Pages
+    needs: resolve
+    if: ${{ needs.resolve.outputs.stable == 'true' }}
+    # A called workflow's token can only be narrower than the caller job's, so the Pages
+    # deploy permissions have to be granted here too.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/storybook-pages.yml
+    with:
+      ref: ${{ needs.resolve.outputs.tag }}
+      public_only: true
+
+  finguard:
+    name: Bump demo-finguard
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    # Cross-repo: GITHUB_TOKEN cannot dispatch in another repository. Soft-failed so a
+    # missing installation costs the demo a bump, not the docs and Pages refresh.
+    - name: Mint a token for demo-finguard
+      id: token
+      continue-on-error: true
+      uses: actions/create-github-app-token@v3
+      with:
+        app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+        private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+        owner: Layer-Fi
+        repositories: demo-finguard
+
+    # channel=custom, not the alpha/latest dist-tag: tag resolution races anything else
+    # being published, and the exact version reads back in the bump PR's title.
+    - name: Dispatch the bump
+      env:
+        GH_TOKEN: ${{ steps.token.outputs.token }}
+        V: ${{ needs.resolve.outputs.version }}
+      run: |
+        set -euo pipefail
+        if [ -z "${GH_TOKEN:-}" ]; then
+          echo "::warning::No token for Layer-Fi/demo-finguard — skipping the bump."
+          {
+            echo "### demo-finguard bump skipped"
+            echo
+            echo "The DOCS_BOT app cannot reach \`Layer-Fi/demo-finguard\`. Install it there with"
+            echo "\`actions: write\`, or run **Bump — @layerfi/components** by hand with"
+            echo "\`channel=custom\`, \`custom_version=$V\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
+        gh workflow run bump-layerfi-components.yml \
+          --repo Layer-Fi/demo-finguard --ref dev \
+          -f channel=custom -f "custom_version=$V"
+        # The dispatch is fire-and-forget; this only surfaces where it went.
+        sleep 10
+        URL=$(gh run list --repo Layer-Fi/demo-finguard \
+          --workflow bump-layerfi-components.yml --limit 1 --json url --jq '.[0].url // empty')
+        if [ -n "$URL" ]; then
+          echo "[demo-finguard bump run]($URL)" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "Dispatched the demo-finguard bump for \`$V\`." >> "$GITHUB_STEP_SUMMARY"
+        fi
