@@ -5,9 +5,11 @@ name: Docs — Screenshots
 # PNGs. Never edits .mdx — a page picks up a new image once, by hand, and refreshes
 # from then on.
 #
-# Runs automatically after a stable npm publish, so the published docs images track
-# the shipped UI. Also dispatchable by hand: point `ref` at main to preview what the
-# next release will look like, or re-run after a capture flake.
+# Dispatched against the release tag after a stable npm publish, so the published docs
+# images track the shipped UI. It is deliberately not chained off Release — Publish: a
+# 30-minute macOS capture must not be able to fail a run that already shipped to npm.
+# Also dispatchable by hand: point `ref` at main to preview what the next release will
+# look like, or re-run after a capture flake.
 #
 # Unchanged bytes open no PR, so a release that moved no pixels is silent.
 #
@@ -16,15 +18,6 @@ name: Docs — Screenshots
 # DOCS_BOT_PRIVATE_KEY. The installation token is minted per run and expires with it.
 
 on:
-  workflow_call:
-    inputs:
-      ref:
-        description: 'Ref to capture from (a release tag)'
-        type: string
-        required: true
-      dry_run:
-        type: boolean
-        default: false
   workflow_dispatch:
     inputs:
       ref:

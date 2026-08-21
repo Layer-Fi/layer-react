@@ -3,6 +3,9 @@ name: Storybook Pages
 # Publishes Storybook to GitHub Pages. This is public, so by default it ships only stories
 # for components exported from src/index.tsx (tagged `public-api`). Set `public_only` to
 # false to publish the whole library, internals included.
+#
+# Dispatched against the release tag after a stable npm publish, so the public
+# Storybook matches the version on the "latest" dist-tag rather than unreleased main.
 
 on:
   workflow_dispatch:
