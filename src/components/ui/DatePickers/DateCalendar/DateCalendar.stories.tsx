@@ -7,7 +7,6 @@ import { DateCalendar } from '@ui/DatePickers/DateCalendar/DateCalendar'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
-
 // DateCalendar takes no value, so it always opens on the mocked clock's month: December
 // of the fixture year. Anchor the range and the hover query to that month.
 const VISIBLE_MONTH = `${FIXTURE_YEAR}-12`
@@ -27,7 +26,7 @@ const meta: Meta<CalendarProps> = {
   component: DateCalendar,
   decorators: [
     Story => (
-      <div className='Layer__component'>
+      <div className='Layer__ComponentRoot'>
         <Story />
       </div>
     ),

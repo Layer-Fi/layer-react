@@ -1,21 +1,22 @@
 import classNames from 'classnames'
 import { Check, ChevronRight } from 'lucide-react'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 
 import './actionableList.scss'
 
-const legacyClassNames = createLegacyClassNames({
+const legacyClassNames = createOwnLegacyClassNames()({
   'Layer__ActionableList': 'Layer__actionable-list',
   'Layer__ActionableList__Content': 'Layer__actionable-list__content',
   'Layer__ActionableList__Description': ['Layer__actionable-list__content-description', 'Layer__ActionableList__ContentDescription'],
   'Layer__ActionableList__Select': 'Layer__actionable-list__select',
-  'Layer__ActionableList__Select--selected': 'Layer__actionable-list__select--selected',
-  'Layer__ActionableList__Item--asLink': 'Layer__actionable-list-item--as-link',
-  'Layer__ActionableList__Item--secondary': 'Layer__actionable-list-item--secondary',
-  'Layer__ActionableList__Item--selected': 'Layer__actionable-list__item--selected',
+  'state:selectedSelect': ['Layer__actionable-list__select--selected', 'Layer__ActionableList__Select--selected'],
+  'state:asLink': ['Layer__actionable-list-item--as-link', 'Layer__ActionableList__Item--asLink'],
+  'state:secondary': ['Layer__actionable-list-item--secondary', 'Layer__ActionableList__Item--secondary'],
+  'state:selected': ['Layer__actionable-list__item--selected', 'Layer__ActionableList__Item--selected'],
 })
 
 export interface ActionableListOption<T> {
@@ -52,11 +53,16 @@ export const ActionableList = <T,>({
           className={classNames(
             'Layer__ActionableList__Item',
             legacyClassNames(
-              x.secondary && 'Layer__ActionableList__Item--secondary',
-              x.asLink && 'Layer__ActionableList__Item--asLink',
-              selectedId === x.id && 'Layer__ActionableList__Item--selected',
+              x.secondary && 'state:secondary',
+              x.asLink && 'state:asLink',
+              selectedId === x.id && 'state:selected',
             ),
           )}
+          {...toDataProperties({
+            'secondary': Boolean(x.secondary),
+            'as-link': Boolean(x.asLink),
+            'selected': selectedId === x.id,
+          })}
         >
           <VStack gap='2xs' align='start' className={legacyClassNames('Layer__ActionableList__Content')}>
             <P size='sm' variant='inherit'>{x.label}</P>
@@ -72,7 +78,7 @@ export const ActionableList = <T,>({
           </VStack>
           {!x.asLink && selectedId && selectedId === x.id
             ? (
-              <Span className={legacyClassNames('Layer__ActionableList__Select', 'Layer__ActionableList__Select--selected')}>
+              <Span className={legacyClassNames('Layer__ActionableList__Select', 'state:selectedSelect')} {...toDataProperties({ selected: true })}>
                 <Check
                   size={14}
                 />

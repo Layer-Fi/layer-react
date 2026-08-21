@@ -1,9 +1,11 @@
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { Heading } from '@ui/Typography/Heading'
@@ -60,7 +62,7 @@ function LinkAccountsContent({
   const hideConfirmationStep = loadingStatus === 'complete' && linkedAccountsNeedingConfirmation.length === 0
 
   return (
-    <section className='Layer__link-accounts Layer__component'>
+    <section className={classNames('Layer__link-accounts', COMPONENT_ROOT_CLASS_NAME)}>
       <Wizard
         Header={(
           <>

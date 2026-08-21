@@ -1,7 +1,20 @@
 import { type ReactNode, type RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+
 import './panel.scss'
+
+const legacyClassNames = createOwnLegacyClassNames()({
+  'Layer__ViewPanel': 'Layer__panel',
+  'Layer__ViewPanel__Content': 'Layer__panel__content',
+  'Layer__ViewPanel__Sidebar': 'Layer__panel__sidebar',
+  'Layer__ViewPanel__SidebarContent': 'Layer__panel__sidebar-content',
+  'state:open': 'Layer__panel--open',
+  'state:defaultHeight': 'Layer__panel__sidebar--default',
+  'state:floating': 'Layer__panel__sidebar--floating',
+})
 
 export interface PanelProps {
   children: ReactNode
@@ -32,27 +45,26 @@ export const Panel = ({
     }
   }, [parentRef, parentRef?.current?.offsetHeight, sidebarIsOpen])
 
-  const sidebarClass = classNames(
-    'Layer__panel__sidebar',
-    defaultSidebarHeight && 'Layer__panel__sidebar--default',
-    floating && 'Layer__panel__sidebar--floating',
-  )
-
   return (
     <div
       className={classNames(
-        'Layer__panel',
+        legacyClassNames('Layer__ViewPanel', sidebarIsOpen && 'state:open'),
         className,
-        sidebarIsOpen && 'Layer__panel--open',
       )}
+      {...toDataProperties({ open: Boolean(sidebarIsOpen) })}
     >
-      <div className='Layer__panel__content'>
+      <div className={legacyClassNames('Layer__ViewPanel__Content')}>
         {header}
         {children}
       </div>
       {sidebar && (
         <div
-          className={sidebarClass}
+          className={legacyClassNames(
+            'Layer__ViewPanel__Sidebar',
+            defaultSidebarHeight && 'state:defaultHeight',
+            floating && 'state:floating',
+          )}
+          {...toDataProperties({ 'default-height': defaultSidebarHeight, floating })}
           style={
             !defaultSidebarHeight
               ? {
@@ -62,7 +74,7 @@ export const Panel = ({
               : {}
           }
         >
-          <div className='Layer__panel__sidebar-content'>{sidebar}</div>
+          <div className={legacyClassNames('Layer__ViewPanel__SidebarContent')}>{sidebar}</div>
         </div>
       )}
     </div>

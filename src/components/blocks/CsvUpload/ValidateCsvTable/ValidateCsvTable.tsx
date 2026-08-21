@@ -4,7 +4,8 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/common/csvUpload'
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createOwnLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 
@@ -12,13 +13,14 @@ import './validateCsvTable.scss'
 
 const LEGACY_PREFIX = 'Layer__csv-upload__validate-csv-table'
 
-const legacyClassNames = createLegacyClassNames({
-  'Layer__CsvUpload__Table__wrapper': `${LEGACY_PREFIX}__container`,
-  'Layer__CsvUpload__Table__cell-content': `${LEGACY_PREFIX}__cell-content`,
-  'Layer__CsvUpload__Table__cell-content--row': `${LEGACY_PREFIX}__cell-content--row`,
-  'Layer__CsvUpload__Table__cell-content--error': `${LEGACY_PREFIX}__cell-content--error`,
-  'Layer__CsvUpload__Table__header-cell-content': `${LEGACY_PREFIX}__header-cell-content`,
-  'Layer__CsvUpload__Table__header-cell-content--row': `${LEGACY_PREFIX}__header-cell-content--row`,
+const legacyClassNames = createOwnLegacyClassNames()({
+  'Layer__ValidateCsvTable': [`${LEGACY_PREFIX}__container`, 'Layer__CsvUpload__Table__wrapper'],
+  'Layer__ValidateCsvTable__CellContent': [`${LEGACY_PREFIX}__cell-content`, 'Layer__CsvUpload__Table__cell-content'],
+  'Layer__ValidateCsvTable__HeaderCellContent': [`${LEGACY_PREFIX}__header-cell-content`, 'Layer__CsvUpload__Table__header-cell-content'],
+  'state:rowCell': [`${LEGACY_PREFIX}__cell-content--row`, 'Layer__CsvUpload__Table__cell-content--row'],
+  'state:rowHeaderCell': [`${LEGACY_PREFIX}__header-cell-content--row`, 'Layer__CsvUpload__Table__header-cell-content--row'],
+  'state:invalid': [`${LEGACY_PREFIX}__cell-content--error`, 'Layer__CsvUpload__Table__cell-content--error'],
+  'state:rowInvalid': 'Layer__CsvUpload__Table__cell-content--row-error',
 })
 
 const getLegacyClassNames = (columnId: string) => ({
@@ -64,15 +66,22 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
     () => [
       {
         id: 'row',
-        header: <span className={legacyClassNames('Layer__CsvUpload__Table__header-cell-content', 'Layer__CsvUpload__Table__header-cell-content--row')}>{t('common:label.row', 'Row')}</span>,
+        header: (
+          <span
+            className={legacyClassNames('Layer__ValidateCsvTable__HeaderCellContent', 'state:rowHeaderCell')}
+            {...toDataProperties({ column: 'row' })}
+          >
+            {t('common:label.row', 'Row')}
+          </span>
+        ),
         cell: (row: Row<DataRow<T>>) => (
-          <span className={classNames(
-            legacyClassNames(
-              'Layer__CsvUpload__Table__cell-content',
-              'Layer__CsvUpload__Table__cell-content--row',
-            ),
-            !row.original.isValid && 'Layer__CsvUpload__Table__cell-content--row-error',
-          )}
+          <span
+            className={legacyClassNames(
+              'Layer__ValidateCsvTable__CellContent',
+              'state:rowCell',
+              !row.original.isValid && 'state:rowInvalid',
+            )}
+            {...toDataProperties({ 'column': 'row', 'row-invalid': !row.original.isValid })}
           >
             {row.original.row}
           </span>
@@ -82,7 +91,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
       },
       ...(Object.keys(headers) as (keyof T & string)[]).map(key => ({
         id: key,
-        header: <span className={legacyClassNames('Layer__CsvUpload__Table__header-cell-content')}>{headers[key]}</span>,
+        header: <span className={legacyClassNames('Layer__ValidateCsvTable__HeaderCellContent')}>{headers[key]}</span>,
         cell: (row: Row<DataRow<T>>) => {
           const field = row.original[key] as PreviewCell<T[typeof key]>
 
@@ -93,13 +102,13 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
             value = formatter ? formatter(field.parsed) : field.parsed
           }
           return (
-            <span className={classNames(
-              legacyClassNames(
-                'Layer__CsvUpload__Table__cell-content',
-                !isValid && 'Layer__CsvUpload__Table__cell-content--error',
-              ),
-              !row.original.isValid && 'Layer__CsvUpload__Table__cell-content--row-error',
-            )}
+            <span
+              className={legacyClassNames(
+                'Layer__ValidateCsvTable__CellContent',
+                !isValid && 'state:invalid',
+                !row.original.isValid && 'state:rowInvalid',
+              )}
+              {...toDataProperties({ 'invalid': !isValid, 'row-invalid': !row.original.isValid })}
             >
               {value}
             </span>
@@ -112,7 +121,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
   )
 
   return (
-    <div className={classNames(legacyClassNames('Layer__CsvUpload__Table__wrapper'), className)}>
+    <div className={classNames(legacyClassNames('Layer__ValidateCsvTable'), className)}>
       <VirtualizedDataTable<DataRow<T>>
         componentName='ValidateCsvTable'
         ariaLabel={t('upload:label.csv_validation_preview', 'CSV validation preview')}

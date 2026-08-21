@@ -1,11 +1,11 @@
-.Layer__panel {
+.Layer__ViewPanel {
   display: flex;
   flex: 1;
   align-items: flex-start;
   height: 100%;
 }
 
-.Layer__panel__content {
+.Layer__ViewPanel__Content {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -13,14 +13,12 @@
   padding-bottom: var(--spacing-lg);
 }
 
-.Layer__panel.Layer__panel--open {
-  .Layer__panel__content {
-    width: calc(100% - 480px);
-    border-right: 1px solid var(--color-base-300);
-  }
+.Layer__ViewPanel[data-open] .Layer__ViewPanel__Content {
+  width: calc(100% - 480px);
+  border-right: 1px solid var(--color-base-300);
 }
 
-.Layer__panel .Layer__panel__content .Layer__component-header {
+.Layer__ViewPanel .Layer__ViewPanel__Content .Layer__ComponentHeader {
   z-index: auto;
   top: 0;
   border-top-left-radius: var(--border-radius-sm);
@@ -29,7 +27,7 @@
   backdrop-filter: blur(6px);
 }
 
-.Layer__panel__sidebar {
+.Layer__ViewPanel__Sidebar {
   position: sticky;
   z-index: 10;
 
@@ -43,38 +41,38 @@
   border-left: 1px solid var(--color-base-300);
   background: var(--color-base-0);
 
-  .Layer__panel__sidebar-content {
-    height: 100%;
-    width: 480px;
-    min-width: 240px;
-    opacity: 0.2;
-    transition: opacity 180ms ease-in-out;
-  }
-}
-
-.Layer__panel__sidebar--default {
-  flex: 1;
-  width: 100%;
-  max-width: none;
-
-  .Layer__panel__sidebar-content {
+  &[data-default-height] {
+    flex: 1;
     width: 100%;
+    max-width: none;
   }
 }
 
-.Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+.Layer__ViewPanel__SidebarContent {
+  height: 100%;
+  width: 480px;
+  min-width: 240px;
+  opacity: 0.2;
+  transition: opacity 180ms ease-in-out;
+}
+
+.Layer__ViewPanel__Sidebar[data-default-height] .Layer__ViewPanel__SidebarContent {
+  width: 100%;
+}
+
+.Layer__ViewPanel[data-open] .Layer__ViewPanel__Sidebar {
   overflow-y: auto;
   max-height: none;
   max-width: 480px;
   margin-left: -1px;
+}
 
-  .Layer__panel__sidebar-content {
-    opacity: 1;
-  }
+.Layer__ViewPanel[data-open] .Layer__ViewPanel__SidebarContent {
+  opacity: 1;
 }
 
 @container (min-width: 1025px) {
-  .Layer__panel__sidebar.Layer__panel__sidebar--floating {
+  .Layer__ViewPanel__Sidebar[data-floating] {
     position: absolute;
     top: 0;
     right: 0;
@@ -82,7 +80,7 @@
 }
 
 @container (max-width: 1024px) {
-  .Layer__panel__sidebar {
+  .Layer__ViewPanel__Sidebar {
     position: absolute;
     width: 100%;
     max-width: 100%;
@@ -93,15 +91,15 @@
     transition:
       transform 120ms ease-in-out,
       opacity 120ms ease-in-out;
-
-    .Layer__panel__sidebar-content {
-      position: sticky;
-      top: 0;
-      height: min-content;
-    }
   }
 
-  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+  .Layer__ViewPanel__Sidebar .Layer__ViewPanel__SidebarContent {
+    position: sticky;
+    top: 0;
+    height: min-content;
+  }
+
+  .Layer__ViewPanel[data-open] .Layer__ViewPanel__Sidebar {
     top: 0;
     left: 0;
     display: flex;
@@ -114,10 +112,8 @@
     transform: translateY(0) scale(1);
   }
 
-  .Layer__panel.Layer__panel--open {
-    .Layer__panel__content {
-      width: 100%;
-      border-right: none;
-    }
+  .Layer__ViewPanel[data-open] .Layer__ViewPanel__Content {
+    width: 100%;
+    border-right: none;
   }
 }

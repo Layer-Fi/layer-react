@@ -56,7 +56,7 @@
     border-block-end: 0;
   }
 
-  .Layer__profit-and-loss-detailed-charts .Layer__DetailedChart__container {
+  .Layer__profit-and-loss-detailed-charts .Layer__DetailedChart__Container {
     transition: padding 0.2s ease-in-out;
     padding-inline: var(--spacing-md);
 
@@ -69,7 +69,7 @@
     min-inline-size: 10rem;
   }
 
-  .Layer__DetailedTable__container {
+  .Layer__DetailedTable__Container {
     padding-inline: 0;
   }
 }
