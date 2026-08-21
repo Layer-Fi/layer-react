@@ -4,20 +4,7 @@ name: Release — Prepare
 # package.json bump PR. It does NOT merge, tag, publish, or touch Linear — you
 # review and merge the PR like any other, then run "Release — Publish".
 #
-# Versioning model A: the cycle target is fixed at the first alpha
-# (X.Y.Z-alpha.N); stable drops the suffix to ship X.Y.Z.
-#
-#   release_type = alpha
-#     - no cycle in progress (package.json is a plain stable) -> start a cycle:
-#       pre<bump> preid alpha, e.g. 0.1.136 -> 0.1.137-alpha.0 (patch),
-#       0.2.0-alpha.0 (minor), 1.0.0-alpha.0 (major).
-#     - cycle in progress (package.json is a prerelease) -> increment:
-#       0.1.137-alpha.0 -> 0.1.137-alpha.1. `bump` is ignored.
-#   release_type = stable
-#     - finalizing an in-progress alpha -> drop the suffix:
-#       0.1.137-alpha.2 -> 0.1.137. `bump` is ignored.
-#     - shipping straight from stable -> bump per `bump`:
-#       0.1.137 -> 0.1.138 (patch) / 0.2.0 / 1.0.0.
+# The version it computes comes from scripts/release/nextVersion.mjs.
 #
 # Repo setting: Settings -> Actions -> General -> Workflow permissions ->
 #   "Allow GitHub Actions to create and approve pull requests" must be ON.
@@ -115,23 +102,19 @@ jobs:
 
     - name: Compute next version
       id: ver
+      env:
+        RELEASE_TYPE: ${{ inputs.release_type }}
+        INCREMENT: ${{ inputs.increment }}
       run: |
+        set -euo pipefail
         CUR=$(node -p "require('./package.json').version")
-        if [ "${{ inputs.release_type }}" = "alpha" ]; then
-          case "$CUR" in
-            *-*) NEWV=$(npm version prerelease --preid=alpha --no-git-tag-version) ;;
-            *)   NEWV=$(npm version "pre${{ inputs.increment }}" --preid=alpha --no-git-tag-version) ;;
-          esac
-        else
-          case "$CUR" in
-            *-*) NEWV=$(npm version patch --no-git-tag-version) ;;          # finalize: drop -alpha.N
-            *)   NEWV=$(npm version "${{ inputs.increment }}" --no-git-tag-version) ;;
-          esac
-        fi
-        NEWV=${NEWV#v}
-        echo "version=$NEWV" >> "$GITHUB_OUTPUT"
-        echo "branch=release/v$NEWV" >> "$GITHUB_OUTPUT"
-        echo "Prepared ${{ inputs.release_type }} version: $NEWV (from $CUR)"
+        NEWV=$(node scripts/release/nextVersion.mjs release "$CUR" "$RELEASE_TYPE" "$INCREMENT")
+        npm version "$NEWV" --no-git-tag-version >/dev/null
+        {
+          echo "version=$NEWV"
+          echo "branch=release/v$NEWV"
+        } >> "$GITHUB_OUTPUT"
+        echo "Prepared $RELEASE_TYPE version: $NEWV (from $CUR)"
 
     - name: Open the version bump PR
       env:

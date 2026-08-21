@@ -8,9 +8,9 @@ name: Linear Release — sync on merge
 # a fresh alpha cut creates. It scans the full range since the last completed
 # release, so issues are attached cumulatively.
 #
-# Release — Publish also syncs (and, for stable, completes) at ship time. That
-# is deliberate: this hook runs asynchronously after a merge, so Publish
-# guarantees attachment/completion at the moment that matters without racing it.
+# Release — Post-ship also syncs (and, for stable, completes) once the version is
+# on npm. That is deliberate: this hook runs asynchronously after a merge, so the
+# ship-time run guarantees attachment/completion without racing it.
 #
 # Requires the `LINEAR_ACCESS_KEY` secret (this pipeline's access key).
 

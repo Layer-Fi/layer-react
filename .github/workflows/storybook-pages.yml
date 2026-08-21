@@ -3,15 +3,14 @@ name: Storybook Pages
 # Publishes Storybook to GitHub Pages. This is public, so by default it ships only stories
 # for components exported from src/index.tsx (tagged `public-api`). Set `public_only` to
 # false to publish the whole library, internals included.
+#
+# Builds the ref it is dispatched at; Post-ship dispatches it at the release tag. No ref
+# input on purpose — a checkout of some other ref would run in this run's cache scope
+# (CodeQL cache-poisoning). Deploying from a tag needs v* in the github-pages environment.
 
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: Branch, tag, or SHA to build
-        required: true
-        type: string
-        default: main
       public_only:
         description: 'Publish only stories for components exported from src/index.tsx'
         type: boolean
@@ -33,11 +32,9 @@ jobs:
     steps:
     - uses: actions/checkout@v7
       with:
-        ref: ${{ inputs.ref }}
         persist-credentials: false
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v7
+    - uses: actions/setup-node@v7
       with:
         node-version: '22'
         cache: 'npm'

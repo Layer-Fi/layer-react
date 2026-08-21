@@ -89,6 +89,25 @@ jobs:
             || idIn(pr.head.ref, loose);
           let issueUrl;
 
+          // All three live on the PR, so an edit that rewrites the title and body loses them.
+          // The attachment is on the Linear side, where a PR edit cannot reach it.
+          if (!identifier) {
+            const { attachmentsForURL } = await linear(
+              `query ($url: String!) {
+                 attachmentsForURL(url: $url, first: 10) {
+                   nodes { issue { identifier url state { type } } }
+                 }
+               }`,
+              { url: pr.html_url },
+            );
+            // A cancelled duplicate keeps its attachment, so it must not win over a live one.
+            const issues = (attachmentsForURL?.nodes ?? []).map(node => node.issue).filter(Boolean);
+            const linked = issues.find(issue => issue.state?.type !== 'canceled') ?? issues[0];
+            if (linked) {
+              ({ identifier, url: issueUrl } = linked);
+            }
+          }
+
           if (!identifier) {
             const { teams } = await linear('query { teams { nodes { id key } } }');
             const team = teams.nodes.find(node => node.key === teamKey);
@@ -114,6 +133,19 @@ jobs:
               return;
             }
             ({ identifier, url: issueUrl } = issueCreate.issue);
+
+            // The anchor the lookup above reads next time. Best-effort: failing here, after
+            // the issue exists, would only re-create it.
+            try {
+              await linear(
+                `mutation ($issueId: String!, $url: String!, $title: String!) {
+                   attachmentLinkURL(issueId: $issueId, url: $url, title: $title) { success }
+                 }`,
+                { issueId: identifier, url: pr.html_url, title: `PR #${PR}` },
+              );
+            } catch (error) {
+              core.warning(`Could not attach the PR to ${identifier}: ${error.message}`);
+            }
           }
 
           // GitHub caps titles at 256, and any existing prefix goes so corrections do not stack.

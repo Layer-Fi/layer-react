@@ -1,28 +1,25 @@
 name: Release — Publish
 
-# Phase 2b (manual button). Ships the release that Prepare + Tag produced.
-# Reads the version from package.json on main, checks out its tag (created by
-# the Release — Tag hook on PR merge), publishes to npm, and updates Linear:
-#   - alpha  (package.json is a prerelease) -> publish --tag alpha; sync Linear.
-#   - stable (plain version)                -> publish (latest); sync + complete
-#     the Linear release, then queue the next one (next_linear_release), and
-#     refresh the api-documentation screenshots (Docs — Screenshots).
+# Phase 2b (manual button). Ships the release that Prepare + Tag produced: reads
+# the version from package.json on main, checks out its tag (created by the
+# Release — Tag hook on PR merge), and publishes it to npm — `alpha` dist-tag for
+# a prerelease, `latest` for a stable.
 #
-# Tagging is NOT done here — the Release — Tag hook owns that.
+# Publishing is all it does, so nothing slow or flaky can fail a run that already
+# shipped: tagging belongs to Release — Tag, the tarball check to Consumers on the
+# release PR, and everything after the publish to Release — Post-ship.
 #
-# Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
-# tag is not required (falls back to main HEAD).
+# Set `dry_run` to rehearse: npm publish --dry-run, no Post-ship dispatch, and
+# the tag is not required (falls back to main HEAD).
 #
 # npm auth: OIDC trusted publishing (no token). Configure the trusted publisher
 # for @layerfi/components on npmjs.com.
-#
-# Secret: LINEAR_ACCESS_KEY.
 
 on:
   workflow_dispatch:
     inputs:
       next_linear_release:
-        description: 'Linear release increment (stable only)'
+        description: 'Linear release increment to queue, passed to Post-ship (stable only)'
         type: choice
         options: [ patch, minor, major ]
         default: patch
@@ -34,15 +31,12 @@ on:
 permissions:
   contents: read
   id-token: write   # OIDC for npm trusted publishing
+  actions: write    # dispatch Release — Post-ship
 
 jobs:
   publish:
     name: Publish
     runs-on: ubuntu-latest
-
-    outputs:
-      version: ${{ steps.r.outputs.version }}
-      type: ${{ steps.r.outputs.type }}
 
     steps:
     - uses: actions/checkout@v7
@@ -55,20 +49,10 @@ jobs:
       run: |
         git fetch --tags origin >/dev/null 2>&1 || true
         V=$(node -p "require('./package.json').version")   # relative file require; no node_modules needed
-        BASE=${V%%-*}
         case "$V" in *-*) TYPE=alpha ;; *) TYPE=stable ;; esac
-        # Next version: plain bash bump of BASE (X.Y.Z), no semver dependency.
-        IFS=. read -r MA MI PA <<< "$BASE"
-        case "${{ inputs.next_linear_release }}" in
-          patch) NEXT="$MA.$MI.$((PA + 1))" ;;
-          minor) NEXT="$MA.$((MI + 1)).0" ;;
-          major) NEXT="$((MA + 1)).0.0" ;;
-        esac
         {
           echo "version=$V"
-          echo "base=$BASE"
           echo "type=$TYPE"
-          echo "next=$NEXT"
         } >> "$GITHUB_OUTPUT"
         {
           echo "### Publishing"
@@ -77,7 +61,6 @@ jobs:
           echo "| --- | --- |"
           echo "| version | \`$V\` |"
           echo "| channel | $TYPE ($([ "$TYPE" = alpha ] && echo 'npm tag: alpha' || echo 'npm tag: latest')) |"
-          [ "$TYPE" = stable ] && echo "| next queued in Linear | \`$NEXT\` (${{ inputs.next_linear_release }}) |"
           [ "${{ inputs.dry_run }}" = "true" ] && echo "| mode | DRY RUN |"
         } >> "$GITHUB_STEP_SUMMARY"
         echo "Publishing $V ($TYPE)"
@@ -135,55 +118,25 @@ jobs:
         echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
         exit 1
 
-    # Runs in this job, against the exact tree about to be published, rather than as a separate
-    # job against main — the tarball the fixtures install is the one that ships.
-    - name: Install Chromium for the consumer fixtures
-      run: npx playwright install --with-deps chromium
-
-    - name: Verify the packed tarball in consumer fixtures
-      run: npm run test:consumers
-
     - name: Publish to npm
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
 
-    - name: Sync release in Linear
-      uses: linear/linear-release-action@v0
-      with:
-        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
-        command: sync
-        version: ${{ steps.r.outputs.base }}
-        name: ${{ steps.r.outputs.base }}
-        dry_run: ${{ inputs.dry_run }}
-
-    - name: Complete release in Linear
-      if: ${{ steps.r.outputs.type == 'stable' }}
-      uses: linear/linear-release-action@v0
-      with:
-        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
-        command: complete
-        version: ${{ steps.r.outputs.base }}
-        dry_run: ${{ inputs.dry_run }}
-
-    # Seed the next release so it exists in Linear right after this one ships.
-    # (CLI can only create it In Progress, not Planned.)
-    - name: Queue the next release in Linear
-      if: ${{ steps.r.outputs.type == 'stable' }}
-      uses: linear/linear-release-action@v0
-      with:
-        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
-        command: sync
-        version: ${{ steps.r.outputs.next }}
-        name: ${{ steps.r.outputs.next }}
-        dry_run: ${{ inputs.dry_run }}
-
-  # Refresh the api-documentation screenshots against what just shipped. Opens a PR
-  # there; no PR if nothing moved.
-  docs-screenshots:
-    name: Refresh docs screenshots
-    needs: publish
-    if: ${{ needs.publish.outputs.type == 'stable' && !inputs.dry_run }}
-    uses: ./.github/workflows/docs-screenshots.yml
-    with:
-      ref: v${{ needs.publish.outputs.version }}
-      dry_run: false
-    secrets: inherit
+    # The package is on npm by now, so a refusal is a button to press, not a red release.
+    - name: Dispatch the post-ship refreshes
+      if: ${{ !inputs.dry_run }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+        V: ${{ steps.r.outputs.version }}
+        NEXT: ${{ inputs.next_linear_release }}
+      run: |
+        if gh workflow run release-postship.yml --ref main \
+             -f "version=$V" -f "next_linear_release=$NEXT"; then
+          exit 0
+        fi
+        echo "::warning::Could not dispatch Release — Post-ship. Nothing after the publish has run."
+        {
+          echo "### Post-ship was not dispatched"
+          echo
+          echo "\`v$V\` is on npm, but Linear, the demo-finguard bump and the docs and Pages"
+          echo "refresh have not run. Run **Release — Post-ship** with \`version=$V\`."
+        } >> "$GITHUB_STEP_SUMMARY"

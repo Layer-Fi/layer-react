@@ -5,9 +5,8 @@ name: Docs — Screenshots
 # PNGs. Never edits .mdx — a page picks up a new image once, by hand, and refreshes
 # from then on.
 #
-# Runs automatically after a stable npm publish, so the published docs images track
-# the shipped UI. Also dispatchable by hand: point `ref` at main to preview what the
-# next release will look like, or re-run after a capture flake.
+# Called by Release — Post-ship against the release tag, so the published docs images
+# track the shipped UI. Point `ref` at main to preview the next release.
 #
 # Unchanged bytes open no PR, so a release that moved no pixels is silent.
 #
