@@ -21,13 +21,18 @@ on:
 permissions:
   pull-requests: write
 
+concurrency:
+  group: linear-pr-ticket-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: false
+
 jobs:
   ticket:
     name: Create issue
     if: >
       github.event_name == 'workflow_dispatch' || (
         github.event.pull_request.user.login != 'dependabot[bot]' &&
-        !startsWith(github.event.pull_request.head.ref, 'release/v')
+        !startsWith(github.event.pull_request.head.ref, 'release/v') &&
+        github.event.pull_request.head.repo.full_name == github.repository
       )
     runs-on: ubuntu-latest
 
@@ -67,8 +72,10 @@ jobs:
           const body = pr.body ?? '';
 
           // Only an identifier alone on a line counts, so a description that merely mentions a
-          // ticket does not read as one and silently lose its own.
+          // ticket does not read as one and silently lose its own. Title and branch are looser —
+          // Linear also links from those, and either being wrong risks a duplicate, not a false skip.
           const linked = new RegExp(`^[ \t]*${teamKey}-\\d+[ \t]*$`, 'im').exec(body)
+            ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.title)
             ?? new RegExp(`\\b${teamKey}-\\d+\\b`, 'i').exec(pr.head.ref);
           if (linked) {
             core.info(`PR #${PR} already references ${linked[0].trim()}.`);
