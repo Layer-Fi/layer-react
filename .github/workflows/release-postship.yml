@@ -34,15 +34,29 @@ jobs:
     timeout-minutes: 10
     outputs:
       version: ${{ steps.resolve.outputs.version }}
+      base: ${{ steps.resolve.outputs.base }}
+      next: ${{ steps.resolve.outputs.next }}
 
     steps:
+    # This repo at the workflow's own ref, not at the release tag: the version script is
+    # tooling, and an older tag predates it.
+    - uses: actions/checkout@v7
+
     # Tolerate a manual re-dispatch pasting the tag-style value (v0.1.146); every
     # downstream ref already prefixes v, so a raw leading v would double up.
-    - name: Resolve the version
+    - name: Resolve the versions
       id: resolve
       env:
-        V: ${{ inputs.version }}
-      run: echo "version=${V#v}" >> "$GITHUB_OUTPUT"
+        RAW: ${{ inputs.version }}
+        INCREMENT: ${{ inputs.next_linear_release }}
+      run: |
+        set -euo pipefail
+        V=${RAW#v}
+        {
+          echo "version=$V"
+          echo "base=${V%%-*}"
+          echo "next=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")"
+        } >> "$GITHUB_OUTPUT"
 
     - name: Wait for the registry to serve the version
       env:
@@ -101,25 +115,13 @@ jobs:
         ref: v${{ needs.await-npm.outputs.version }}
         fetch-depth: 0
 
-    - name: Resolve the Linear versions
-      id: v
-      env:
-        V: ${{ needs.await-npm.outputs.version }}
-        INCREMENT: ${{ inputs.next_linear_release }}
-      run: |
-        set -euo pipefail
-        {
-          echo "base=${V%%-*}"
-          echo "next=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")"
-        } >> "$GITHUB_OUTPUT"
-
     - name: Sync release in Linear
       uses: linear/linear-release-action@v0
       with:
         access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
         command: sync
-        version: ${{ steps.v.outputs.base }}
-        name: ${{ steps.v.outputs.base }}
+        version: ${{ needs.await-npm.outputs.base }}
+        name: ${{ needs.await-npm.outputs.base }}
 
     - name: Complete release in Linear
       if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
@@ -127,7 +129,7 @@ jobs:
       with:
         access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
         command: complete
-        version: ${{ steps.v.outputs.base }}
+        version: ${{ needs.await-npm.outputs.base }}
 
     # Seed the next release so it exists in Linear right after this one ships.
     # (CLI can only create it In Progress, not Planned.)
@@ -137,8 +139,8 @@ jobs:
       with:
         access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
         command: sync
-        version: ${{ steps.v.outputs.next }}
-        name: ${{ steps.v.outputs.next }}
+        version: ${{ needs.await-npm.outputs.next }}
+        name: ${{ needs.await-npm.outputs.next }}
 
   finguard:
     name: Bump demo-finguard
