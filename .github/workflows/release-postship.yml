@@ -1,15 +1,8 @@
 name: Release — Post-ship
 
-# Phase 3 (automatic, with a button for retries). Everything that has to be refreshed
-# once a version is on npm, in one run:
-#   every channel -> bump @layerfi/components in Layer-Fi/demo-finguard (PR against dev)
-#   stable only   -> Docs — Screenshots (PR in Layer-Fi/api-documentation)
-#                    Storybook Pages (public GitHub Pages, built from the release tag)
-#
-# Release — Publish dispatches this as its last step on a real ship. It is deliberately
-# not a set of jobs inside Publish: a 30-minute macOS capture or a Pages deploy must not
-# be able to turn red a run that has already published to npm. Every job is idempotent,
-# so re-dispatching this by hand is the whole recovery story for a flake.
+# Phase 3. Refreshes what depends on the version being on npm: the demo-finguard bump,
+# plus docs screenshots and Storybook Pages on a stable. Release — Publish dispatches
+# this on a real ship. Every job is idempotent — re-dispatch it to recover from a flake.
 
 on:
   workflow_dispatch:
@@ -54,7 +47,6 @@ jobs:
         fi
         V=${V#v}
         case "$V" in *-*) STABLE=false ;; *) STABLE=true ;; esac
-        # Everything below builds from the tag, so a missing one is a wrong dispatch, not a flake.
         if ! git rev-parse "v$V" >/dev/null 2>&1; then
           echo "::error::Tag v$V does not exist. Cut the release first — Release — Prepare, merge the PR, then Release — Publish."
           exit 1
@@ -66,8 +58,7 @@ jobs:
         } >> "$GITHUB_OUTPUT"
         echo "Post-ship refresh for v$V (stable=$STABLE)"
 
-    # The demo-finguard bump resolves its target through `npm view`, so it fails outright
-    # while the registry lags behind the publish that dispatched this.
+    # The finguard bump resolves through `npm view`, so it fails while the registry lags.
     - name: Wait for npm to serve the version
       env:
         V: ${{ steps.r.outputs.version }}
@@ -97,8 +88,7 @@ jobs:
     name: Storybook Pages
     needs: resolve
     if: ${{ needs.resolve.outputs.stable == 'true' }}
-    # A called workflow's token can only be narrower than the caller job's, so the Pages
-    # deploy permissions have to be granted here too.
+    # A called workflow's token can only narrow the caller job's.
     permissions:
       contents: read
       pages: write
@@ -115,8 +105,8 @@ jobs:
     timeout-minutes: 10
 
     steps:
-    # Cross-repo: GITHUB_TOKEN cannot dispatch in another repository. Soft-failed so a
-    # missing installation costs the demo a bump, not the docs and Pages refresh.
+    # GITHUB_TOKEN cannot dispatch cross-repo. Soft-failed: a missing install costs the
+    # demo its bump, not the rest of the refresh.
     - name: Mint a token for demo-finguard
       id: token
       continue-on-error: true
@@ -127,8 +117,7 @@ jobs:
         owner: Layer-Fi
         repositories: demo-finguard
 
-    # channel=custom, not the alpha/latest dist-tag: tag resolution races anything else
-    # being published, and the exact version reads back in the bump PR's title.
+    # custom, not a dist-tag: tag resolution races anything else being published.
     - name: Dispatch the bump
       env:
         GH_TOKEN: ${{ steps.token.outputs.token }}
@@ -149,7 +138,6 @@ jobs:
         gh workflow run bump-layerfi-components.yml \
           --repo Layer-Fi/demo-finguard --ref dev \
           -f channel=custom -f "custom_version=$V"
-        # The dispatch is fire-and-forget; this only surfaces where it went.
         sleep 10
         URL=$(gh run list --repo Layer-Fi/demo-finguard \
           --workflow bump-layerfi-components.yml --limit 1 --json url --jq '.[0].url // empty')

@@ -3,9 +3,8 @@ name: Consumers
 # Installs the packed tarball into throwaway consumer apps and builds them — the only PR check that
 # reads the published artifact rather than the repo.
 #
-# This is also the release gate for the tarball: a `release/v*` PR always changes package.json, so
-# this always runs on it, against the tree that Release — Tag then tags. Release — Publish does not
-# repeat it — do not let this check go unwatched on a release PR.
+# Also the release gate: a `release/v*` PR always changes package.json, so this runs on the tree
+# that gets tagged, and Release — Publish does not repeat it.
 
 on:
   pull_request:

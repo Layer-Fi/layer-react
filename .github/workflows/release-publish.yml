@@ -7,16 +7,10 @@ name: Release — Publish
 #   - stable (plain version)                -> publish (latest); sync + complete
 #     the Linear release, then queue the next one (next_linear_release).
 #
-# Tagging is NOT done here — the Release — Tag hook owns that. Neither are the
-# post-ship refreshes: a real ship dispatches Release — Post-ship as its last
-# step, so a 30-minute macOS capture or a Pages deploy cannot fail a run that has
-# already published to npm.
-#
-# Nor is the tarball verified here. The Consumers check packs the tarball and
-# builds the fixture apps on the release PR — which always changes package.json,
-# so it always runs — and that is the same tree this tags and ships. Repeating it
-# here only bought a second opinion at the cost of a Chromium install on the one
-# workflow that must not be slow to finish.
+# Three things this deliberately does not do, so that nothing slow or flaky can
+# fail a run that has already published: tag (the Release — Tag hook owns it),
+# verify the tarball (the Consumers check does, on the release PR), and refresh
+# docs/Pages/demo-finguard (Release — Post-ship, dispatched at the end).
 #
 # Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
 # tag is not required (falls back to main HEAD).
@@ -173,8 +167,8 @@ jobs:
         name: ${{ steps.r.outputs.next }}
         dry_run: ${{ inputs.dry_run }}
 
-    # Fire-and-forget, and soft-failed: the package is already on npm by now, so a
-    # refused dispatch is a button to press (Release — Post-ship), not a red release.
+    # Soft-failed: the package is on npm by now, so a refused dispatch is a button to
+    # press, not a red release.
     - name: Dispatch the post-ship refreshes
       if: ${{ !inputs.dry_run }}
       continue-on-error: true

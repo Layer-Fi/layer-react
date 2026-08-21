@@ -6,10 +6,7 @@ name: Docs — Screenshots
 # from then on.
 #
 # Called by Release — Post-ship against the release tag, so the published docs images
-# track the shipped UI. Post-ship runs after Release — Publish rather than inside it: a
-# 30-minute macOS capture must not be able to fail a run that already shipped to npm.
-# Also dispatchable by hand: point `ref` at main to preview what the next release will
-# look like, or re-run after a capture flake.
+# track the shipped UI. Point `ref` at main to preview the next release.
 #
 # Unchanged bytes open no PR, so a release that moved no pixels is silent.
 #
