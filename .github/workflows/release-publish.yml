@@ -122,15 +122,23 @@ jobs:
     - name: Publish to npm
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
 
-    # Soft-failed: the package is on npm by now, so a refused dispatch is a button to
-    # press, not a red release.
+    # Warns rather than fails: the package is on npm by now, so a refused dispatch is a
+    # button to press, not a red release.
     - name: Dispatch the post-ship refreshes
       if: ${{ !inputs.dry_run }}
-      continue-on-error: true
       env:
         GH_TOKEN: ${{ github.token }}
         V: ${{ steps.r.outputs.version }}
         NEXT: ${{ inputs.next_linear_release }}
       run: |
-        gh workflow run release-postship.yml --ref main \
-          -f "version=$V" -f "next_linear_release=$NEXT"
+        if gh workflow run release-postship.yml --ref main \
+             -f "version=$V" -f "next_linear_release=$NEXT"; then
+          exit 0
+        fi
+        echo "::warning::Could not dispatch Release — Post-ship. Nothing after the publish has run."
+        {
+          echo "### Post-ship was not dispatched"
+          echo
+          echo "\`v$V\` is on npm, but Linear, the demo-finguard bump and the docs and Pages"
+          echo "refresh have not run. Run **Release — Post-ship** with \`version=$V\`."
+        } >> "$GITHUB_STEP_SUMMARY"

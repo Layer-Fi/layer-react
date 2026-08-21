@@ -52,10 +52,12 @@ jobs:
       run: |
         set -euo pipefail
         V=${RAW#v}
+        # Its own line: inside the echo below, the exit status would be echo's.
+        NEXT=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")
         {
           echo "version=$V"
           echo "base=${V%%-*}"
-          echo "next=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")"
+          echo "next=$NEXT"
         } >> "$GITHUB_OUTPUT"
 
     - name: Wait for the registry to serve the version
@@ -64,7 +66,9 @@ jobs:
       run: |
         set -euo pipefail
         for _ in $(seq 1 20); do
-          if npm view "@layerfi/components@$V" version >/dev/null 2>&1; then
+          # --prefer-online: npm caches the packument, so a stale first read would
+          # otherwise answer every later iteration from cache.
+          if npm view --prefer-online "@layerfi/components@$V" version >/dev/null 2>&1; then
             exit 0
           fi
           sleep 15
@@ -168,10 +172,10 @@ jobs:
         V: ${{ needs.await-npm.outputs.version }}
       run: |
         set -euo pipefail
-        if [ -z "${GH_TOKEN:-}" ]; then
-          echo "::warning::DOCS_BOT cannot reach Layer-Fi/demo-finguard. Run Bump — @layerfi/components there with channel=custom, custom_version=$V."
+        if [ -n "${GH_TOKEN:-}" ] && gh workflow run bump-layerfi-components.yml \
+             --repo Layer-Fi/demo-finguard --ref dev \
+             -f channel=custom -f "custom_version=$V"; then
           exit 0
         fi
-        gh workflow run bump-layerfi-components.yml \
-          --repo Layer-Fi/demo-finguard --ref dev \
-          -f channel=custom -f "custom_version=$V"
+        # Minting succeeds on any installation, so a read-only one first fails here.
+        echo "::warning::Could not dispatch the demo-finguard bump — DOCS_BOT needs to be installed on Layer-Fi/demo-finguard with actions: write. Run Bump — @layerfi/components there with channel=custom, custom_version=$V."
