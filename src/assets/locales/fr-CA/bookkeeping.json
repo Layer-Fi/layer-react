@@ -70,8 +70,8 @@
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_many": "",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
+        "completed_over_total_done_many": ""
       }
     }
   },
