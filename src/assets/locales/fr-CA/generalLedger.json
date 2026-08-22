@@ -155,8 +155,8 @@
         "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
         "entry_date_required": "La date d’écriture est un champ obligatoire.",
         "least_one_required": "Au moins une ligne de crédit est obligatoire.",
-        "least_one_required_line": "Au moins une ligne est obligatoire.",
         "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
+        "least_one_required_line": "Au moins une ligne est obligatoire.",
         "memo_required": "Le mémo est un champ obligatoire."
       }
     },
