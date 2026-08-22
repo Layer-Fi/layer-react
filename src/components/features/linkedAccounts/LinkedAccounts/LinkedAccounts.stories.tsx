@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
@@ -12,11 +13,10 @@ import {
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
 
-type BankAccountFixture = (typeof bankAccounts)[number]
-
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
-} & Pick<LinkedAccountsProps, 'stringOverrides'>
+} & Required<Pick<LinkedAccountsProps, 'showUnlinkItem' | 'showBreakConnection'>>
+& Pick<LinkedAccountsProps, 'stringOverrides'>
 
 // Trim the store rather than overriding the GET handler: the add-account and
 // confirm/exclude mocks mutate the store, so the GET must stay store-driven.
@@ -31,8 +31,11 @@ const DISCONNECTED_AS_OF = new Date('2024-03-14T12:00:00.000Z')
  * A broken connection is backend state, not a prop: the "Fix account" pill
  * appears when an external account has `connectionNeedsRepairAsOf` set, and the
  * repair action is a no-op without a connection id to repair.
+ *
+ * `reconnectWithNewCredentials: false` keeps the pill on the update-mode repair
+ * path, which is the one whose mock clears the repair flag.
  */
-const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixture => ({
+const withBrokenPlaidConnection = (account: BankAccount): BankAccount => ({
   ...account,
   isDisconnected: true,
   externalAccounts: account.externalAccounts.map(externalAccount =>
@@ -40,6 +43,7 @@ const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixt
       ? {
         ...externalAccount,
         connectionNeedsRepairAsOf: DISCONNECTED_AS_OF,
+        reconnectWithNewCredentials: false,
         connectionExternalId: externalAccount.connectionExternalId ?? 'plaid_item_story_disconnected',
       }
       : externalAccount,
@@ -61,10 +65,14 @@ const meta: Meta<LinkedAccountsStoryArgs> = {
   },
   args: {
     showLedgerBalance: false,
+    showUnlinkItem: false,
+    showBreakConnection: false,
     title: '',
   },
   argTypes: {
     stringOverrides: { table: { disable: true } },
+    showUnlinkItem: { table: { disable: true } },
+    showBreakConnection: { table: { disable: true } },
     ...linkedAccountsControls.argTypes,
     title: {
       name: 'stringOverrides.title',
@@ -94,9 +102,11 @@ const meta: Meta<LinkedAccountsStoryArgs> = {
       </div>
     ),
   ],
-  render: ({ showLedgerBalance, title }) => (
+  render: ({ showLedgerBalance, showUnlinkItem, showBreakConnection, title }) => (
     <LinkedAccounts
       showLedgerBalance={showLedgerBalance}
+      showUnlinkItem={showUnlinkItem}
+      showBreakConnection={showBreakConnection}
       stringOverrides={title ? { title } : undefined}
     />
   ),
@@ -121,7 +131,7 @@ export const ConfirmingAccounts: Story = {
 }
 
 export const DisconnectedAccount: Story = {
-  tags: ['public-api'],
+  tags: ['public-api', 'docs-screenshot'],
   parameters: {
     msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
   },
