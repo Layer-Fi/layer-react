@@ -155,8 +155,8 @@
         "debit_credit_must": "Debit and credit amounts must be equal",
         "entry_date_required": "Entry date is a required field.",
         "least_one_required": "At least one credit line item is required.",
-        "least_one_required_line": "At least one line item is required.",
         "least_one_required_one": "At least one debit line item is required.",
+        "least_one_required_line": "At least one line item is required.",
         "memo_required": "Memo is a required field."
       }
     },
