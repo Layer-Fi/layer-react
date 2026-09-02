@@ -1,10 +1,13 @@
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
-import { useTranslation } from 'react-i18next'
+import { CloudUpload } from 'lucide-react'
+import { useDropzone } from 'react-dropzone'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useDeleteTaskUploads } from '@api/businesses/[business-id]/tasks/[task-id]/upload/delete/post'
@@ -12,10 +15,12 @@ import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]
 import { usePostTaskUploadDescription } from '@api/businesses/[business-id]/tasks/[task-id]/upload/update-description/post'
 import { usePostTaskUserResponse } from '@api/businesses/[business-id]/tasks/[task-id]/user-response/post'
 import { Button } from '@ui/Button/Button'
-import { FileInput } from '@ui/Input/FileInput'
 import { TextArea } from '@ui/Input/TextArea'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
+
+import './tasksListItem.scss'
 
 type TasksListItemProps = {
   task: UserVisibleTask
@@ -32,6 +37,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.userResponse ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
+
+  const isUploadDocumentTask = task.userResponseType === TaskUserResponseType.UploadDocument
 
   const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = usePostTaskUserResponse()
   const { trigger: handleUploadDocumentsForTask, isMutating: isUploadingDocuments } = usePostTaskUpload()
@@ -75,6 +82,18 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
     setSelectedFiles(undefined)
   }
 
+  const onDropFiles = useCallback((files: File[]) => {
+    if (files.length > 0) {
+      setSelectedFiles(files)
+    }
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+    onDrop: onDropFiles,
+    noClick: true,
+    noKeyboard: true,
+  })
+
   const onClickTaskItemHead = useCallback(() => {
     emitLayerEvent({
       type: LayerEventType.TaskClicked,
@@ -86,17 +105,33 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   }, [isOpen, onExpandTask, emitLayerEvent, task.id])
 
   const uploadDocumentAction = useMemo(() => {
-    if (task.userResponseType === TaskUserResponseType.UploadDocument) {
+    if (isUploadDocumentTask) {
       if (task.status === BusinessTaskStatus.Todo) {
         if (!selectedFiles) {
           return (
-            <FileInput
-              onUpload={(files: File[]) => {
-                setSelectedFiles(files)
-              }}
-              text={t('bookkeeping:TasksListItem.action.select_files', 'Select files')}
-              allowMultipleUploads
-            />
+            <VStack
+              className='Layer__TasksListItem__Dropzone'
+              align='center'
+              justify='center'
+              gap='xs'
+              fluid
+              {...getRootProps()}
+              {...toDataProperties({ 'drag-active': isDragActive })}
+            >
+              <input {...getInputProps()} />
+              <HStack align='center' gap='xs'>
+                <CloudUpload size={16} />
+                <P size='sm'>
+                  <Trans
+                    i18nKey='upload:label.drag_drop_files_browse'
+                    defaults='Drag and drop files, or <browse>Browse</browse>.'
+                    components={{
+                      browse: <Button variant='text' underline onPress={open} />,
+                    }}
+                  />
+                </P>
+              </HStack>
+            </VStack>
           )
         }
         else {
@@ -152,7 +187,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
       else { return null }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, task, selectedFiles, userResponse, isUploadingDocuments])
+  }, [t, task, selectedFiles, userResponse, isUploadingDocuments, isUploadDocumentTask, getRootProps, getInputProps, isDragActive, open])
 
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
@@ -176,15 +211,15 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
           />
         </div>
         <div className={taskBodyClassName}>
-          <div className='Layer__tasks-list-item__body-info'>
+          <div className='Layer__tasks-list-item__body-info' {...toDataProperties({ 'upload-document': isUploadDocumentTask })}>
             <P size='sm' variant='inherit'>{task.question}</P>
             <TextArea
               value={userResponse}
-              placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:TasksListItem.label.optional_description', 'Optional description') : ''}
+              placeholder={isUploadDocumentTask ? t('bookkeeping:TasksListItem.label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)}
             />
-            {task.userResponseType === TaskUserResponseType.UploadDocument
+            {isUploadDocumentTask
               ? (
                 <div className='Layer__tasks-list__link-list'>
                   {selectedFiles
@@ -208,7 +243,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               )
               : null}
             <div className='Layer__tasks-list-item__actions'>
-              {task.userResponseType === TaskUserResponseType.UploadDocument
+              {isUploadDocumentTask
                 ? uploadDocumentAction
                 : (
                   <Button
