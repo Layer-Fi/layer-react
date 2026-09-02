@@ -1,4 +1,6 @@
 .Layer__tasks-list-item__body-info[data-upload-document] .Layer__UI__TextArea {
+  overflow: hidden;
+  block-size: 1lh;
   min-block-size: 1lh;
 }
 
@@ -14,4 +16,8 @@
     border-color: var(--color-base-500);
     background: var(--color-base-200);
   }
+}
+
+.Layer__TasksListItem__Dropzone .Layer__UI__Button {
+  font-size: inherit;
 }
