@@ -29,8 +29,6 @@ const imageReceipt: DocumentWithStatus = {
   date: 'Jul 24, 2026',
 }
 
-// The floating pill is hover-only in production CSS, which a static Chromatic
-// snapshot can never trigger, so the story forces it visible.
 const FLOATING_ACTIONS_STYLES = `
   .StoryFloatingActions {
     padding-block-start: 28px;
