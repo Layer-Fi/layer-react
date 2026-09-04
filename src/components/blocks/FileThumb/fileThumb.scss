@@ -62,6 +62,10 @@
       0 0 0 1px var(--color-base-300);
     background-color: var(--color-base-0);
     transform: scale(0.8);
+
+    // Anchor the scale to the positioned corner so the pill lands in the same
+    // place whatever its button count.
+    transform-origin: top right;
   }
 }
 

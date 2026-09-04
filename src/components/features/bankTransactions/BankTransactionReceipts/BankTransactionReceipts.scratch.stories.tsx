@@ -29,6 +29,19 @@ const imageReceipt: DocumentWithStatus = {
   date: 'Jul 24, 2026',
 }
 
+// The floating pill is hover-only in production CSS, which a static Chromatic
+// snapshot can never trigger, so the story forces it visible.
+const FLOATING_ACTIONS_STYLES = `
+  .StoryFloatingActions {
+    padding-block-start: 28px;
+    padding-inline-end: 16px;
+  }
+
+  .StoryFloatingActions .Layer__file-thumb__actions--floating {
+    display: flex;
+  }
+`
+
 const makeContextValue = (receiptUrls: Array<DocumentWithStatus>) => ({
   receiptUrls,
   uploadReceipt: () => Promise.resolve(),
@@ -64,6 +77,28 @@ export const PdfVersusImageReceipt: Story = {
         <ReceiptsContext.Provider value={makeContextValue([imageReceipt])}>
           <BankTransactionReceipts hideUploadButtons />
         </ReceiptsContext.Provider>
+      </Col>
+    </Gallery>
+  ),
+}
+
+export const FloatingActionsPdfVersusImageReceipt: Story = {
+  render: () => (
+    <Gallery direction='row' wrap gap={24}>
+      <style>{FLOATING_ACTIONS_STYLES}</style>
+      <Col inlineSize={280} label='PDF receipt, floating actions — delete and download only'>
+        <div className='StoryFloatingActions'>
+          <ReceiptsContext.Provider value={makeContextValue([pdfReceipt])}>
+            <BankTransactionReceipts hideUploadButtons floatingActions />
+          </ReceiptsContext.Provider>
+        </div>
+      </Col>
+      <Col inlineSize={280} label='Image receipt, floating actions — delete, download and preview'>
+        <div className='StoryFloatingActions'>
+          <ReceiptsContext.Provider value={makeContextValue([imageReceipt])}>
+            <BankTransactionReceipts hideUploadButtons floatingActions />
+          </ReceiptsContext.Provider>
+        </div>
       </Col>
     </Gallery>
   ),
