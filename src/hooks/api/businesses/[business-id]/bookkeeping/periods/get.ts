@@ -8,7 +8,7 @@ import {
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
-import { get } from '@utils/shared/api/authenticatedHttp'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 import {
@@ -34,12 +34,18 @@ function constrainToKnownBookkeepingPeriodStatus(status: RawBookkeepingPeriodSta
 
 const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(BookkeepingPeriodsSchema)
 
-const getBookkeepingPeriods = get<
+type GetBookkeepingPeriodsParams = {
+  businessId: string
+  legacyTasksOnly?: boolean
+}
+
+const getBookkeepingPeriods = getWithQuery<
   typeof BookkeepingPeriodsResponseSchema.Encoded,
-  { businessId: string }
->(({ businessId }) => {
-  return `/v1/businesses/${businessId}/bookkeeping/periods`
-})
+  GetBookkeepingPeriodsParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/bookkeeping/periods`,
+)
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 
@@ -50,6 +56,7 @@ const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
   request: getBookkeepingPeriods,
   schema: BookkeepingPeriodsResponseSchema,
+  keyDefaults: { legacyTasksOnly: false },
   select: ({ periods }) =>
     periods
       .map(period => ({
