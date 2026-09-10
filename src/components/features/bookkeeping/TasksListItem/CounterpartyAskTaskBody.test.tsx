@@ -3,18 +3,20 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 
+import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { post as postCounterpartyAskResponse } from '@msw/api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const OFFICE_EXPENSES_ACCOUNT_ID = '00000000-0000-4000-8000-000000000801'
-const MEALS_STABLE_NAME = 'MEALS'
+const OFFICE_EXPENSES_ACCOUNT_ID = bankTransactionCategories.officeExpenses.id
+const MEALS_STABLE_NAME = bankTransactionCategories.meals.stableName
 
 const TWO_TRANSACTIONS = [
   {
@@ -300,6 +302,7 @@ describe('CounterpartyAskTaskBody', () => {
   it('renders as answered once a link row carries an answer', () => {
     renderBody({
       ...makeMultiTransactionTask(),
+      status: BusinessTaskStatus.UserMarkedCompleted,
       transactionResponses: [
         { transactionId: 'txn-1', userResponse: 'Gift for a client', responseAccount: null },
         { transactionId: 'txn-2', userResponse: null, responseAccount: null },
@@ -311,7 +314,10 @@ describe('CounterpartyAskTaskBody', () => {
   })
 
   it('renders an ask resolved by another period as already answered', () => {
-    renderBody({ resolvedByTaskId: '00000000-0000-4000-8000-000000000999' })
+    renderBody({
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      resolvedByTaskId: '00000000-0000-4000-8000-000000000999',
+    })
 
     expect(screen.getByText('Already answered')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Continue' })).not.toBeInTheDocument()

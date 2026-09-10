@@ -39,7 +39,7 @@ export function ChipGroup<T extends string>({
       {...restProps}
       {...dataProperties}
       aria-label={ariaLabel}
-      value={value ?? null}
+      value={value}
       onChange={onChange as ((value: string) => void) | undefined}
       className={CHIP_GROUP_CLASS_NAME}
     >

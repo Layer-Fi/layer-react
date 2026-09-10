@@ -48,12 +48,7 @@ export const usePostCounterpartyAskResponse = createMutationHook({
     return (task) => {
       void invalidateBookkeepingPeriods()
 
-      const categorized = Boolean(task.responseAccount)
-        || task.transactionResponses.some(response => response.responseAccount)
-
-      if (categorized) {
-        onBankTransactionChange()
-      }
+      onBankTransactionChange()
 
       if (task.alwaysThis && task.responseAccount) {
         void forceReloadCategorizationRules()

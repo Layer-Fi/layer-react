@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
@@ -121,7 +122,7 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
       return
     }
 
-    const wasCategorized = answeredRows.some(row => row.answer.kind === 'account')
+    const wasCategorized = answeredRows.every(row => row.answer.kind === 'account')
 
     void submit(buildItemisedCounterpartyAskResponse(answeredRows), wasCategorized, () => {
       setSentDistinctCount(countDistinctCounterpartyAskAnswers(answeredRows.map(row => row.answer)))
@@ -173,7 +174,9 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
     )
   }
 
-  if (task.resolvedByTaskId) {
+  const isAnswered = task.status !== BusinessTaskStatus.Todo
+
+  if (isAnswered && task.resolvedByTaskId) {
     return (
       <CounterpartyAskTaskSummary
         title={t(
@@ -192,7 +195,7 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
     ? { kind: 'account', account: task.responseAccount }
     : (task.userResponse ? { kind: 'text', text: task.userResponse } : null)
 
-  if (storedAnswer) {
+  if (isAnswered && storedAnswer) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
@@ -215,7 +218,7 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
     response => Boolean(response.userResponse) || Boolean(response.responseAccount),
   )
 
-  if (answeredTransactions.length > 0) {
+  if (isAnswered && answeredTransactions.length > 0) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}

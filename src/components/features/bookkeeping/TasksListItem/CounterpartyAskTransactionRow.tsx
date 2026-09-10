@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
+import { BankTransactionDirection, type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
 import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -38,7 +38,12 @@ export const CounterpartyAskTransactionRow = ({
   return (
     <VStack className='Layer__CounterpartyAskTask__Row' gap='2xs' pb='2xs' pi='2xs'>
       <HStack align='baseline' gap='xs'>
-        <MoneySpan size='sm' weight='bold' amount={transaction.amount} />
+        <MoneySpan
+          size='sm'
+          weight='bold'
+          amount={transaction.amount}
+          displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
+        />
         <Span size='xs' variant='subtle' ellipsis noWrap>
           {`${formatDate(transaction.date, DateFormat.MonthDayShort)} · ${transaction.description ?? ''}`}
         </Span>

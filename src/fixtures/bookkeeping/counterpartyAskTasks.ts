@@ -9,17 +9,30 @@ import {
   type CounterpartyAskTask,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
+import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const RETAIL_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
-  { accountIdentifier: makeAccountId('00000000-0000-4000-8000-000000000801'), name: 'Office Expenses' },
-  { accountIdentifier: makeAccountId('00000000-0000-4000-8000-000000000802'), name: 'Other Business Expenses' },
-  { accountIdentifier: makeStableName('MEALS'), name: 'Business Meals' },
+  {
+    accountIdentifier: makeAccountId(bankTransactionCategories.officeExpenses.id),
+    name: bankTransactionCategories.officeExpenses.displayName,
+  },
+  {
+    accountIdentifier: makeAccountId(bankTransactionCategories.otherBusinessExpenses.id),
+    name: bankTransactionCategories.otherBusinessExpenses.displayName,
+  },
+  {
+    accountIdentifier: makeStableName(bankTransactionCategories.meals.stableName),
+    name: bankTransactionCategories.meals.displayName,
+  },
 ]
 
 const RENT_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
-  { accountIdentifier: makeStableName('RENT'), name: 'Rent' },
+  {
+    accountIdentifier: makeStableName(bankTransactionCategories.rent.stableName),
+    name: bankTransactionCategories.rent.displayName,
+  },
 ]
 
 type AskTransactionSeed = {
