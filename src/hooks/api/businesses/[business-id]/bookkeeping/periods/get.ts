@@ -5,7 +5,6 @@ import {
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
 } from '@schemas/features/bookkeeping/bookkeepingPeriods'
-import { isRenderableBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
@@ -66,7 +65,7 @@ const useBookkeepingPeriodsQuery = createQueryHook({
       .map(period => ({
         ...period,
         status: constrainToKnownBookkeepingPeriodStatus(period.status),
-        tasks: getUserVisibleTasks(period.tasks.filter(isRenderableBusinessTask)),
+        tasks: getUserVisibleTasks(period.tasks),
       }))
       .filter(period => isActiveBookkeepingPeriod(period)),
 })
