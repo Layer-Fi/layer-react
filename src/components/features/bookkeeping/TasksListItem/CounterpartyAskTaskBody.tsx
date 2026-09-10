@@ -37,7 +37,7 @@ type CounterpartyAskTaskBodyProps = {
 
 export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
-  const { addToast } = useLayerContext()
+  const { addToast, eventCallbacks } = useLayerContext()
   const { trigger: submitCounterpartyAskResponse, isMutating } = usePostCounterpartyAskResponse()
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
@@ -90,11 +90,16 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
   const canContinue = isItemising ? isEveryRowAnswered : singleAnswer !== null
 
   const submit = useCallback(
-    async (response: CounterpartyAskResponse | null, onSuccess: () => void) => {
+    async (response: CounterpartyAskResponse | null, wasCategorized: boolean, onSuccess: () => void) => {
       if (!response) return
 
       try {
         await submitCounterpartyAskResponse({ taskId: task.id, response })
+
+        if (wasCategorized) {
+          eventCallbacks?.onTransactionCategorized?.()
+        }
+
         onSuccess()
       }
       catch {
@@ -107,7 +112,7 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
         })
       }
     },
-    [addToast, submitCounterpartyAskResponse, t, task.id],
+    [addToast, eventCallbacks, submitCounterpartyAskResponse, t, task.id],
   )
 
   const onContinue = useCallback(() => {
@@ -116,7 +121,9 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
       return
     }
 
-    void submit(buildItemisedCounterpartyAskResponse(answeredRows), () => {
+    const wasCategorized = answeredRows.some(row => row.answer.kind === 'account')
+
+    void submit(buildItemisedCounterpartyAskResponse(answeredRows), wasCategorized, () => {
       setSentDistinctCount(countDistinctCounterpartyAskAnswers(answeredRows.map(row => row.answer)))
     })
   }, [answeredRows, singleAnswer, submit])
@@ -125,7 +132,7 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
     (alwaysThis: boolean) => {
       if (!singleAnswer) return
 
-      void submit(buildAllSameCounterpartyAskResponse(singleAnswer, alwaysThis), () => {
+      void submit(buildAllSameCounterpartyAskResponse(singleAnswer, alwaysThis), singleAnswer.kind === 'account', () => {
         setSentAnswer(singleAnswer)
       })
     },

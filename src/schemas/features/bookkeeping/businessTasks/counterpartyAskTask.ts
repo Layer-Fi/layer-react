@@ -47,13 +47,16 @@ export const CounterpartyAskTaskSchema = Schema.extend(
     counterparty: Schema.NullishOr(BankTransactionCounterpartySchema),
     suggestions: Schema.optionalWith(Schema.Array(CounterpartyAskAccountSchema), {
       default: () => [],
+      nullable: true,
     }),
     transactions: Schema.optionalWith(Schema.Array(MinimalBankTransactionSchema), {
       default: () => [],
+      nullable: true,
     }),
     transactionResponses: pipe(
       Schema.optionalWith(Schema.Array(CounterpartyAskTransactionResponseSchema), {
         default: () => [],
+        nullable: true,
       }),
       Schema.fromKey('transaction_responses'),
     ),
@@ -66,15 +69,15 @@ export const CounterpartyAskTaskSchema = Schema.extend(
       Schema.fromKey('response_account'),
     ),
     totalCount: pipe(
-      Schema.optionalWith(Schema.Number, { default: () => 0 }),
+      Schema.optionalWith(Schema.Number, { default: () => 0, nullable: true }),
       Schema.fromKey('total_count'),
     ),
     totalAmount: pipe(
-      Schema.optionalWith(Schema.Number, { default: () => 0 }),
+      Schema.optionalWith(Schema.Number, { default: () => 0, nullable: true }),
       Schema.fromKey('total_amount'),
     ),
     alwaysThis: pipe(
-      Schema.optionalWith(Schema.Boolean, { default: () => false }),
+      Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true }),
       Schema.fromKey('always_this'),
     ),
     resolvedByTaskId: pipe(

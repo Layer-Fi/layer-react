@@ -1,3 +1,4 @@
+import { type PropsWithChildren } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -30,12 +31,18 @@ const TWO_TRANSACTIONS = [
   },
 ]
 
-const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
+const renderBody = (overrides: Partial<CounterpartyAskTask> = {}, onTransactionCategorized?: () => void) => {
   const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
+
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <LayerTestProvider eventCallbacks={onTransactionCategorized ? { onTransactionCategorized } : undefined}>
+      {children}
+    </LayerTestProvider>
+  )
 
   return {
     user: userEvent.setup(),
-    ...render(<CounterpartyAskTaskBody task={task} />, { wrapper: LayerTestProvider }),
+    ...render(<CounterpartyAskTaskBody task={task} />, { wrapper }),
   }
 }
 
@@ -118,6 +125,32 @@ describe('CounterpartyAskTaskBody', () => {
       account_identifier: { type: 'StableName', stable_name: MEALS_STABLE_NAME },
       always_this: true,
     })
+  })
+
+  it('notifies the host app when a chip answer categorizes a transaction', async () => {
+    spyOnAskResponse()
+    const onTransactionCategorized = vi.fn()
+    const { user } = renderBody({}, onTransactionCategorized)
+
+    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
+
+    await waitFor(() => expect(onTransactionCategorized).toHaveBeenCalledTimes(1))
+  })
+
+  it('does not notify the host app for a free-text answer', async () => {
+    const onRequest = spyOnAskResponse()
+    const onTransactionCategorized = vi.fn()
+    const { user } = renderBody({}, onTransactionCategorized)
+
+    await user.click(screen.getByRole('radio', { name: 'Something else' }))
+    await user.type(screen.getByRole('textbox'), 'Gift for a client')
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
+
+    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
+    expect(onTransactionCategorized).not.toHaveBeenCalled()
   })
 
   it('submits always_this false when the owner declines the rule', async () => {
@@ -210,6 +243,21 @@ describe('CounterpartyAskTaskBody', () => {
         { transaction_id: 'txn-2', account_identifier: { type: 'AccountId', id: OFFICE_EXPENSES_ACCOUNT_ID } },
       ],
     })
+  })
+
+  it('notifies the host app when an itemised mix categorizes a transaction', async () => {
+    spyOnAskResponse()
+    const onTransactionCategorized = vi.fn()
+    const { user } = renderBody(makeMultiTransactionTask(), onTransactionCategorized)
+
+    await user.click(screen.getByRole('radio', { name: 'A mix of the above' }))
+
+    const rowGroups = screen.getAllByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(rowGroups[0]!).getByRole('radio', { name: 'Business Meals' }))
+    await user.click(within(rowGroups[1]!).getByRole('radio', { name: 'Office Expenses' }))
+    await user.click(screen.getByRole('button', { name: 'Continue' }))
+
+    await waitFor(() => expect(onTransactionCategorized).toHaveBeenCalledTimes(1))
   })
 
   it('collapses a uniform mix into an all-same answer so it can still create a rule', async () => {
