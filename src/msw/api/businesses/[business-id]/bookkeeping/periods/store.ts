@@ -1,5 +1,6 @@
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
 import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
@@ -48,8 +49,8 @@ export const patchTaskInStore = (
 }
 
 export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
-  patchTaskInStore(taskId, task => ({
-    ...task,
-    status: BusinessTaskStatus.UserMarkedCompleted,
-    userResponse,
-  }))
+  patchTaskInStore(taskId, task => (
+    isLegacyBusinessTask(task)
+      ? { ...task, status: BusinessTaskStatus.UserMarkedCompleted, userResponse }
+      : task
+  ))

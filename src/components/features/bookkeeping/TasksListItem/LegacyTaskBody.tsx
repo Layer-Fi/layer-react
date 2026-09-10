@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useDeleteTaskUploads } from '@api/businesses/[business-id]/tasks/[task-id]/upload/delete/post'
 import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
@@ -13,7 +14,7 @@ import { TextArea } from '@ui/Input/TextArea'
 import { P } from '@ui/Typography/Text'
 
 type LegacyTaskBodyProps = {
-  task: UserVisibleTask
+  task: UserVisibleTask & LegacyBusinessTask
   onAnswered: () => void
 }
 

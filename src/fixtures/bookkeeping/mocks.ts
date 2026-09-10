@@ -1,11 +1,8 @@
 import { type BookkeepingConfiguration, BookkeepingStatus as ConfigurationBookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingConfiguration'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import {
-  type BusinessTask,
-  BusinessTaskStatus,
-  TaskUserResponseType,
-} from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
@@ -70,7 +67,7 @@ const generatePeriodIds = createGenerator(PeriodIdSchema)
 
 const periodIdFor = (monthIndex: number) => pickCyclic(generatePeriodIds({ numRuns: 1, seed: monthIndex }), 0)
 
-const makePeriodTasks = (periodIndex: number, count: number, month: number): BusinessTask[] => {
+const makePeriodTasks = (periodIndex: number, count: number, month: number): LegacyBusinessTask[] => {
   if (count === 0) return []
 
   return generateTaskSeeds({ numRuns: count, seed: periodIndex }).map(({ id, day, amountCents, merchant }) => {
@@ -79,6 +76,7 @@ const makePeriodTasks = (periodIndex: number, count: number, month: number): Bus
     return {
       id,
       status: BusinessTaskStatus.Todo,
+      taskType: null,
       title: `Transaction on ${date}`,
       question: `On ${date}, you spent ${formatDollars(amountCents)} at ${merchant}. `
         + 'Can you tell us a bit more about what this transaction was for?',
