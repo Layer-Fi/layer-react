@@ -32,6 +32,7 @@ export const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema
 )
 
 export const COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD'
+export const LEGACY_BUSINESS_TASK_TYPE = 'HUMAN'
 
 export const BaseBusinessTaskSchema = Schema.Struct({
   id: Schema.UUID,

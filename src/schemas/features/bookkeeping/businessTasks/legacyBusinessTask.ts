@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
 import {
   BaseBusinessTaskSchema,
-  COUNTERPARTY_ASK_TASK_TYPE,
+  LEGACY_BUSINESS_TASK_TYPE,
   TransformedTaskUserResponseTypeSchema,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
@@ -18,15 +18,18 @@ const TaskDocumentSchema = Schema.Struct({
   ),
 })
 
-const NonCounterpartyAskTaskTypeSchema = Schema.NullishOr(
-  Schema.String.pipe(Schema.filter(taskType => taskType !== COUNTERPARTY_ASK_TASK_TYPE)),
-)
+// Restricted to the one task_type this arm actually models (or absent, for
+// payloads that predate task_type) rather than "anything but a counterparty
+// ask" - otherwise a future agent-created type reusing this shape would
+// silently render as a free-response task instead of falling through to
+// UnknownBusinessTaskSchema.
+const LegacyTaskTypeSchema = Schema.NullishOr(Schema.Literal(LEGACY_BUSINESS_TASK_TYPE))
 
 export const LegacyBusinessTaskSchema = Schema.extend(
   BaseBusinessTaskSchema,
   Schema.Struct({
     taskType: pipe(
-      Schema.optionalWith(NonCounterpartyAskTaskTypeSchema, { default: () => null }),
+      Schema.optionalWith(LegacyTaskTypeSchema, { default: () => null }),
       Schema.fromKey('task_type'),
     ),
     userResponse: pipe(

@@ -91,4 +91,11 @@ describe('BusinessTaskSchema', () => {
     expect(isCounterpartyAskTask(malformedAsk)).toBe(false)
     expect(isRenderableBusinessTask(malformedAsk)).toBe(false)
   })
+
+  it('falls through to unrenderable for a legacy-shaped task whose task_type is not HUMAN', () => {
+    const task = decode({ ...encodedHumanTask, task_type: 'SOME_FUTURE_TYPE' })
+
+    expect(isLegacyBusinessTask(task)).toBe(false)
+    expect(isRenderableBusinessTask(task)).toBe(false)
+  })
 })
