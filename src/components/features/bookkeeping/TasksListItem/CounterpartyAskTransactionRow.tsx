@@ -45,7 +45,14 @@ export const CounterpartyAskTransactionRow = ({
           displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
         />
         <Span size='xs' variant='subtle' ellipsis noWrap>
-          {`${formatDate(transaction.date, DateFormat.MonthDayShort)} · ${transaction.description ?? ''}`}
+          {t(
+            'bookkeeping:TasksListItem.CounterpartyAskTransactionRow.label.date_and_description',
+            '{{date}} · {{description}}',
+            {
+              date: formatDate(transaction.date, DateFormat.MonthDayShort),
+              description: transaction.description ?? '',
+            },
+          )}
         </Span>
       </HStack>
       <ChipGroup
