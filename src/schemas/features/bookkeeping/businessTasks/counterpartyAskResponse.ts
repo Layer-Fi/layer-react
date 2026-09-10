@@ -1,23 +1,28 @@
 import { pipe, Schema } from 'effect'
 
+import { type OneOf } from '@internal-types/utility/oneOf'
 import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 
-const CounterpartyAskAnswerSchema = Schema.Union(
-  Schema.Struct({
-    accountIdentifier: pipe(
-      Schema.propertySignature(AccountIdentifierSchema),
-      Schema.fromKey('account_identifier'),
-    ),
-  }),
-  Schema.Struct({
-    userResponse: pipe(
-      Schema.propertySignature(Schema.NonEmptyTrimmedString),
-      Schema.fromKey('user_response'),
-    ),
-  }),
-)
+const AccountAnswerSchema = Schema.Struct({
+  accountIdentifier: pipe(
+    Schema.propertySignature(AccountIdentifierSchema),
+    Schema.fromKey('account_identifier'),
+  ),
+})
 
-export type CounterpartyAskAnswer = typeof CounterpartyAskAnswerSchema.Type
+const FreeTextAnswerSchema = Schema.Struct({
+  userResponse: pipe(
+    Schema.propertySignature(Schema.NonEmptyTrimmedString),
+    Schema.fromKey('user_response'),
+  ),
+})
+
+const CounterpartyAskAnswerSchema = Schema.Union(AccountAnswerSchema, FreeTextAnswerSchema)
+
+export type CounterpartyAskAnswer = OneOf<[
+  typeof AccountAnswerSchema.Type,
+  typeof FreeTextAnswerSchema.Type,
+]>
 
 const CounterpartyAskTransactionAnswerSchema = Schema.extend(
   Schema.Struct({
@@ -53,5 +58,8 @@ export const CounterpartyAskResponseSchema = Schema.Union(
   ItemisedCounterpartyAskResponseSchema,
 )
 
-export type CounterpartyAskResponse = typeof CounterpartyAskResponseSchema.Type
+export type CounterpartyAskResponse = OneOf<[
+  { alwaysThis: boolean } & CounterpartyAskAnswer,
+  typeof ItemisedCounterpartyAskResponseSchema.Type,
+]>
 export type CounterpartyAskResponseEncoded = typeof CounterpartyAskResponseSchema.Encoded
