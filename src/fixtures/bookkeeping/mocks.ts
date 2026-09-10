@@ -6,6 +6,7 @@ import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessT
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
+import { makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
@@ -117,14 +118,16 @@ export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriod[] =
 
   for (let cursor = start; cursor <= end; cursor++) {
     const { year, month } = fromMonthIndex(cursor)
-    const openTaskCount = openTaskCountFor(end - cursor)
+    const monthsAgo = end - cursor
+    const legacyTasks = makePeriodTasks(cursor, openTaskCountFor(monthsAgo), month)
+    const counterpartyAsks = makeCounterpartyAskTasks(year, month)
 
     periods.push({
       id: periodIdFor(cursor),
       month,
       year,
-      status: periodStatusFor(end - cursor, openTaskCount),
-      tasks: makePeriodTasks(cursor, openTaskCount, month),
+      status: periodStatusFor(monthsAgo, legacyTasks.length + counterpartyAsks.length),
+      tasks: [...legacyTasks, ...counterpartyAsks],
     })
   }
 
