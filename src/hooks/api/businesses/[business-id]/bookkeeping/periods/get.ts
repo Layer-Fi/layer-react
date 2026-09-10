@@ -5,6 +5,7 @@ import {
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
 } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { isRenderableBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
@@ -56,13 +57,16 @@ const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
   request: getBookkeepingPeriods,
   schema: BookkeepingPeriodsResponseSchema,
+  // legacyTasksOnly: false removes the backend filter entirely ("include every
+  // fromLlmTransactionCategorizer type"), not "include counterparty asks" specifically.
+  // Today that set is exactly one type; a future agent-created task type lands here too.
   keyDefaults: { legacyTasksOnly: false },
   select: ({ periods }) =>
     periods
       .map(period => ({
         ...period,
         status: constrainToKnownBookkeepingPeriodStatus(period.status),
-        tasks: getUserVisibleTasks(period.tasks),
+        tasks: getUserVisibleTasks(period.tasks.filter(isRenderableBusinessTask)),
       }))
       .filter(period => isActiveBookkeepingPeriod(period)),
 })

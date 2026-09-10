@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
-import { isCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
@@ -82,7 +82,9 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         <div className={taskBodyClassName}>
           {isCounterpartyAskTask(task)
             ? <CounterpartyAskTaskBody task={task} />
-            : <LegacyTaskBody task={task} onAnswered={onAnswered} />}
+            : isLegacyBusinessTask(task)
+              ? <LegacyTaskBody task={task} onAnswered={onAnswered} />
+              : null}
         </div>
       </div>
     </div>
