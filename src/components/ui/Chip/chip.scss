@@ -1,0 +1,59 @@
+.Layer__UI__ChipGroup {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-2xs);
+
+  &[data-wrap] {
+    flex-wrap: wrap;
+  }
+}
+
+.Layer__UI__Chip {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2.25rem;
+  padding-inline: var(--spacing-sm);
+
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+
+  background-color: var(--color-base-0);
+
+  cursor: pointer;
+  user-select: none;
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  text-align: center;
+  color: var(--text-color-primary);
+
+  &[data-size='sm'] {
+    min-block-size: 1.875rem;
+    padding-inline: var(--spacing-xs);
+
+    border-radius: var(--border-radius-5xl);
+
+    font-size: var(--text-xs);
+  }
+
+  &[data-selected] {
+    border-color: var(--color-base-1000);
+
+    background-color: var(--color-base-1000);
+
+    font-weight: var(--font-weight-bold);
+    color: var(--color-base-0);
+  }
+
+  &[data-hovered]:not([data-selected]) {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-focus-visible] {
+    outline: 1px solid var(--color-base-1000);
+    outline-offset: 1px;
+  }
+}
