@@ -168,6 +168,9 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
   }),
 }
 
+export const counterpartyAskCountFor = (year: number, month: number) =>
+  year === FIXTURE_YEAR && month in COUNTERPARTY_ASK_SEEDS_BY_MONTH ? 1 : 0
+
 export const makeCounterpartyAskTasks = (year: number, month: number): CounterpartyAskTask[] => {
   const seed = COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
 

@@ -10,7 +10,7 @@ import {
   CounterpartyAskTaskSchema,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
-import { patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
+import { bookkeepingPeriodStore, patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackCounterpartyAskTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackCounterpartyAskTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -58,6 +58,32 @@ const applyResponse = (
   }
 }
 
+const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
+  const counterpartyId = answeringTask.counterparty?.id
+
+  if (!counterpartyId) return
+
+  bookkeepingPeriodStore.all().forEach((period) => {
+    period.tasks.forEach((task) => {
+      if (task.id === answeringTask.id) return
+      if (!isCounterpartyAskTask(task)) return
+      if (task.counterparty?.id !== counterpartyId) return
+      if (task.status !== BusinessTaskStatus.Todo) return
+
+      patchTaskInStore(task.id, existing => (
+        isCounterpartyAskTask(existing)
+          ? {
+            ...existing,
+            status: BusinessTaskStatus.UserMarkedCompleted,
+            resolvedByTaskId: answeringTask.id,
+            responseAccount: answeringTask.responseAccount,
+          }
+          : existing
+      ))
+    })
+  })
+}
+
 export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof toResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/tasks/:taskId/counterparty-ask-response',
@@ -75,6 +101,10 @@ export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof to
       answered = applyResponse(task, response)
       return answered
     })
+
+    if (answered?.alwaysThis && answered.responseAccount) {
+      resolveSiblingCounterpartyAsks(answered)
+    }
 
     return toResponse(answered ?? applyResponse(makeFallbackCounterpartyAskTask(taskId), response))
   },
