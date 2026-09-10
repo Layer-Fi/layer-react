@@ -1,4 +1,4 @@
-import classNames from 'classnames'
+import { type ForwardedRef, forwardRef } from 'react'
 import {
   Radio as ReactAriaRadio,
   RadioGroup as ReactAriaRadioGroup,
@@ -21,17 +21,14 @@ type ChipGroupProps<T extends string> = Omit<
   ariaLabel: string
   wrap?: boolean
   value?: T | null
+  defaultValue?: T
   onChange?: (value: T) => void
 }
 
-export function ChipGroup<T extends string>({
-  ariaLabel,
-  children,
-  onChange,
-  value,
-  wrap,
-  ...restProps
-}: ChipGroupProps<T>) {
+function ChipGroupWithRef<T extends string>(
+  { ariaLabel, children, onChange, wrap, ...restProps }: ChipGroupProps<T>,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   const dataProperties = toDataProperties({ wrap })
 
   return (
@@ -39,14 +36,19 @@ export function ChipGroup<T extends string>({
       {...restProps}
       {...dataProperties}
       aria-label={ariaLabel}
-      value={value}
+      orientation='horizontal'
       onChange={onChange as ((value: string) => void) | undefined}
       className={CHIP_GROUP_CLASS_NAME}
+      ref={ref}
     >
       {children}
     </ReactAriaRadioGroup>
   )
 }
+
+export const ChipGroup = forwardRef(ChipGroupWithRef) as <T extends string>(
+  props: ChipGroupProps<T> & { ref?: ForwardedRef<HTMLDivElement> },
+) => React.ReactElement
 
 export type ChipSize = 'sm' | 'md'
 
@@ -55,16 +57,24 @@ type ChipProps<T extends string> = Omit<ReactAriaRadioProps, 'className' | 'valu
   value: T
 }
 
-export function Chip<T extends string>({ children, size = 'md', ...restProps }: ChipProps<T>) {
+function ChipWithRef<T extends string>(
+  { children, size = 'md', ...restProps }: ChipProps<T>,
+  ref: ForwardedRef<HTMLLabelElement>,
+) {
   const dataProperties = toDataProperties({ size })
 
   return (
     <ReactAriaRadio
       {...restProps}
       {...dataProperties}
-      className={classNames(CHIP_CLASS_NAME)}
+      className={CHIP_CLASS_NAME}
+      ref={ref}
     >
       {withRenderProp(children, node => node)}
     </ReactAriaRadio>
   )
 }
+
+export const Chip = forwardRef(ChipWithRef) as <T extends string>(
+  props: ChipProps<T> & { ref?: ForwardedRef<HTMLLabelElement> },
+) => React.ReactElement

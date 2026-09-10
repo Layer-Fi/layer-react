@@ -56,4 +56,22 @@
     outline: 1px solid var(--color-base-1000);
     outline-offset: 1px;
   }
+
+  &[data-disabled] {
+    border-color: var(--border-color);
+
+    background-color: var(--color-base-50);
+
+    cursor: not-allowed;
+
+    color: var(--color-base-500);
+  }
+
+  &[data-disabled][data-selected] {
+    border-color: var(--color-base-300);
+
+    background-color: var(--color-base-300);
+
+    color: var(--color-base-0);
+  }
 }
