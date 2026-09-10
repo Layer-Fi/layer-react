@@ -1,0 +1,40 @@
+.Layer__CounterpartyAskTask__FreeText .Layer__UI__TextArea {
+  min-block-size: 3lh;
+}
+
+.Layer__CounterpartyAskTask__MixRow {
+  flex-basis: 100%;
+}
+
+.Layer__CounterpartyAskTask__Rows {
+  overflow: hidden;
+
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--border-color);
+}
+
+.Layer__CounterpartyAskTask__Row {
+  padding-block-start: var(--spacing-2xs);
+
+  border-block-start: 1px solid var(--border-color);
+
+  &:first-child {
+    border-block-start: none;
+  }
+}
+
+.Layer__CounterpartyAskTask__SummaryIcon {
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  block-size: 1.625rem;
+  inline-size: 1.625rem;
+
+  border-radius: var(--border-radius-5xl);
+
+  background-color: var(--color-info-success-bg);
+
+  color: var(--color-info-success-fg);
+}
