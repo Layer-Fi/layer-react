@@ -141,3 +141,12 @@ export const Default: Story = {
   tags: ['public-api', 'docs-screenshot', 'real-backend'],
   parameters: { pinnedDateRange: NOVEMBER },
 }
+
+const JULY: DateRange = {
+  startDate: new Date(FIXTURE_YEAR, 6, 1),
+  endDate: new Date(FIXTURE_YEAR, 6, 31),
+}
+
+export const CounterpartyAskWithoutSuggestions: Story = {
+  parameters: { pinnedDateRange: JULY },
+}
