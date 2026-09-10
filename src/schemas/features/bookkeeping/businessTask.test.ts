@@ -79,4 +79,16 @@ describe('BusinessTaskSchema', () => {
     expect(isLegacyBusinessTask(task)).toBe(false)
     expect(isRenderableBusinessTask(task)).toBe(false)
   })
+
+  it('does not treat a malformed ask as renderable', () => {
+    const malformedAsk = Schema.decodeUnknownSync(BusinessTaskSchema)({
+      id: '00000000-0000-4000-8000-0000000009f1',
+      status: 'TODO',
+      title: 'Costco purchases',
+      task_type: 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD',
+    })
+
+    expect(isCounterpartyAskTask(malformedAsk)).toBe(false)
+    expect(isRenderableBusinessTask(malformedAsk)).toBe(false)
+  })
 })

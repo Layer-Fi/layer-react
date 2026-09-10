@@ -22,7 +22,8 @@ export type BusinessTaskEncoded = typeof BusinessTaskSchema.Encoded
 
 export const isCounterpartyAskTask = <T extends Pick<BusinessTask, 'taskType'>>(
   task: T,
-): task is T & CounterpartyAskTask => task.taskType === COUNTERPARTY_ASK_TASK_TYPE
+): task is T & CounterpartyAskTask =>
+  task.taskType === COUNTERPARTY_ASK_TASK_TYPE && 'transactionResponses' in task
 
 // LegacyBusinessTask always carries user_response_type; UnknownBusinessTask (an
 // unrecognised task_type this union can't fully model) never does.
