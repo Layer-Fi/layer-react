@@ -16,7 +16,7 @@ const CHIP_CLASS_NAME = 'Layer__UI__Chip'
 
 type ChipGroupProps<T extends string> = Omit<
   ReactAriaRadioGroupProps,
-  'className' | 'value' | 'defaultValue' | 'onChange'
+  'className' | 'value' | 'defaultValue' | 'onChange' | 'isReadOnly' | 'isInvalid'
 > & {
   ariaLabel: string
   wrap?: boolean
@@ -26,7 +26,7 @@ type ChipGroupProps<T extends string> = Omit<
 }
 
 function ChipGroupWithRef<T extends string>(
-  { ariaLabel, children, onChange, wrap, ...restProps }: ChipGroupProps<T>,
+  { ariaLabel, children, onChange, wrap = true, ...restProps }: ChipGroupProps<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const dataProperties = toDataProperties({ wrap })
