@@ -6,7 +6,7 @@
 }
 
 // Inset the 6px scrollbar 4px from the right, top, and bottom container edges.
-.Layer__component.Layer__tasks {
+.Layer__ComponentRoot.Layer__tasks {
   &::-webkit-scrollbar {
     width: 10px;
   }

@@ -1,4 +1,4 @@
-.Layer__file-thumb {
+.Layer__FileThumb {
   box-sizing: border-box;
   position: relative;
   display: flex;
@@ -8,17 +8,17 @@
   min-height: 38px;
   container-type: normal;
 
-  &:not(.Layer__file-thumb--floating) {
+  &:not([data-floating]) {
     width: 100%;
     max-width: 680px;
   }
 
   @container (max-width: 300px) {
-    &:not(.Layer__file-thumb--floating) {
+    &:not([data-floating]) {
       flex-direction: column;
       border-bottom: 1px solid var(--color-base-300);
 
-      .Layer__file-thumb__actions:not(.Layer__file-thumb__actions--floating) {
+      .Layer__FileThumb__Actions:not([data-floating]) {
         padding-right: 0;
         padding-left: 0;
         margin-left: -6px;
@@ -36,22 +36,18 @@
   }
 }
 
-.Layer__file-thumb__main {
+.Layer__FileThumb__Main {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--spacing-2xs);
 }
 
-.Layer__file-thumb__actions {
+.Layer__FileThumb__Actions {
   display: flex;
   gap: var(--spacing-4xs);
   padding: var(--spacing-4xs);
 
-  .Layer__file-thumb__actions__remove {
-    color: var(--color-danger);
-  }
-
-  &.Layer__file-thumb__actions--floating {
+  &[data-floating] {
     position: absolute;
     top: -20px;
     right: -10px;
@@ -65,11 +61,15 @@
   }
 }
 
-.Layer__file-thumb:hover .Layer__file-thumb__actions--floating {
+.Layer__FileThumb:hover .Layer__FileThumb__Actions[data-floating] {
   display: flex;
 }
 
-.Layer__file-thumb__img {
+.Layer__FileThumb__RemoveIcon {
+  color: var(--color-danger);
+}
+
+.Layer__FileThumb__Image {
   height: 100%;
   height: 38px;
   width: 100%;
@@ -87,7 +87,7 @@
   }
 }
 
-.Layer__file-thumb__details {
+.Layer__FileThumb__Details {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4xs);
@@ -97,17 +97,17 @@
   font-size: var(--text-sm);
 }
 
-.Layer__file-thumb__details__date {
+.Layer__FileThumb__Date {
   color: var(--color-base-600);
 }
 
-.Layer__file-thumb__details__uploading {
+.Layer__FileThumb__Uploading {
   display: flex;
   gap: var(--spacing-3xs);
   align-items: center;
   color: var(--color-info-fg);
 }
 
-.Layer__file-thumb__details__name {
+.Layer__FileThumb__Name {
   overflow-wrap: break-word;
 }

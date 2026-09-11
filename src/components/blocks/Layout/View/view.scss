@@ -1,23 +1,21 @@
-.Layer__view {
+.Layer__ViewRoot {
   position: relative;
-
-  .Layer__view-main {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    padding: var(--spacing-lg);
-    container-type: inline-size;
-  }
-
-  &.Layer__view--panel {
-    .Layer__view-main {
-      padding: 0;
-    }
-  }
 }
 
-.Layer__view-notifications {
+.Layer__ViewMain {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  container-type: inline-size;
+}
+
+.Layer__ViewRoot[data-type='panel'] .Layer__ViewMain {
+  padding: 0;
+}
+
+.Layer__ViewNotifications {
   :first-child {
     border-top-left-radius: var(--border-radius-2xs);
     border-top-right-radius: var(--border-radius-2xs);

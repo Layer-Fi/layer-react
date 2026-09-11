@@ -1,15 +1,15 @@
-.Layer__view.Layer__UnifiedReports {
+.Layer__ViewRoot.Layer__UnifiedReports {
   container: unified-reports / inline-size;
 
   overflow: hidden;
   max-height: 100vh;
   min-width: clamp(23rem, 100%, 1406px);
 
-  .Layer__view-main.Layer__view-main {
+  .Layer__ViewMain.Layer__ViewMain {
     padding: 0;
   }
 
-  .Layer__view-header__children.Layer__view-header__children {
+  .Layer__ViewHeader__Children.Layer__ViewHeader__Children {
     width: max-content;
   }
 }

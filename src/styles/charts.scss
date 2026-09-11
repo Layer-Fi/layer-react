@@ -1,4 +1,4 @@
-.Layer__component .recharts-responsive-container {
+.Layer__ComponentRoot .recharts-responsive-container {
   box-sizing: border-box;
   padding: 4px;
   border-radius: var(--border-radius-xs);
@@ -12,7 +12,7 @@
   }
 }
 
-.Layer__component .recharts-wrapper {
+.Layer__ComponentRoot .recharts-wrapper {
   svg:focus,
   path:focus,
   g:focus {

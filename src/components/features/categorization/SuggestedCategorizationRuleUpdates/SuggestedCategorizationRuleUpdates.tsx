@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/features/categorization/createCategorizationRule'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
 import { Wizard } from '@blocks/Wizard/Wizard'
 import { RuleUpdatesPromptStep } from '@features/categorization/SuggestedCategorizationRuleUpdates/RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from '@features/categorization/SuggestedCategorizationRuleUpdates/RuleUpdatesReviewStep'
-
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void
   ruleSuggestion: UpdateCategorizationRulesSuggestion
@@ -36,7 +36,7 @@ export function SuggestedCategorizationRuleUpdates({ close, ruleSuggestion, isDr
   const hasTransactions = ruleSuggestion.transactionsThatWillBeAffected.length > 0
 
   return (
-    <section className='Layer__component'>
+    <section className={COMPONENT_ROOT_CLASS_NAME}>
       <Wizard
         Header={undefined}
         Footer={undefined}

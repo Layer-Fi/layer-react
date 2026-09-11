@@ -13,7 +13,7 @@
   border: 1px solid var(--border-color);
   background-color: var(--color-base-0);
 
-  &--selectable {
+  &[data-selectable] {
     grid-template-areas:
       'selection content'
       'expanded expanded'
@@ -21,7 +21,7 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  &--withActions .Layer__MobileListItemContent__TitleRow {
+  &[data-with-actions] .Layer__MobileListItemContent__TitleRow {
     padding-inline-end: var(--spacing-2xl);
   }
 

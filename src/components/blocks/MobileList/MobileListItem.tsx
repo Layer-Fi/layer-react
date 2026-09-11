@@ -3,6 +3,8 @@ import classNames from 'classnames'
 import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
@@ -10,6 +12,11 @@ import { HStack } from '@ui/Stack/Stack'
 import { MobileListItemActionsMenu, type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileListItemActionsMenu'
 
 import './mobileListItem.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'state:selectable': 'Layer__MobileListItem--selectable',
+  'state:withActions': 'Layer__MobileListItem--withActions',
+} satisfies LegacyClassNameMapFor<'Layer__MobileListItem', `state:${string}`>)
 
 type MobileListItemProps<TData> = PropsWithChildren<{
   item: TData
@@ -60,10 +67,16 @@ export const MobileListItem = <TData extends { id: string }>({
           motionKey={item.id}
           className={classNames(
             'Layer__MobileListItem',
-            selectionMode !== 'none' && 'Layer__MobileListItem--selectable',
-            actionsMenu && 'Layer__MobileListItem--withActions',
+            legacyClassNames(
+              selectionMode !== 'none' && 'state:selectable',
+              actionsMenu && 'state:withActions',
+            ),
             className,
           )}
+          {...toDataProperties({
+            'selectable': selectionMode !== 'none',
+            'with-actions': Boolean(actionsMenu),
+          })}
           slotProps={{ AnimatePresence: { initial: false, onExitComplete: handleExitComplete } }}
         >
           {selectionMode !== 'none' && selectionBehavior === 'toggle' && (

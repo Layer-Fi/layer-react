@@ -2,6 +2,12 @@ import { type CSSProperties, forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { parseStylesFromThemeConfig } from '@utils/shared/styles/colors'
+import {
+  COMPONENT_CONTAINER_CLASS_NAME,
+  COMPONENT_ROOT_CLASS_NAME,
+  legacyContainerClassNames,
+} from '@utils/shared/styles/componentClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 
 export interface ContainerProps {
@@ -28,11 +34,10 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
     ref,
   ) => {
     const baseClassName = classNames(
-      'Layer__component Layer__component-container',
+      COMPONENT_ROOT_CLASS_NAME,
+      COMPONENT_CONTAINER_CLASS_NAME,
       `Layer__${name}`,
-      elevated && 'Layer__component--elevated',
-      transparentBg && 'Layer__component--no-bg',
-      asWidget && 'Layer__component--as-widget',
+      legacyContainerClassNames({ elevated, transparentBg, asWidget }),
       className,
     )
 
@@ -44,6 +49,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
       <div
         ref={ref}
         className={baseClassName}
+        {...toDataProperties({ elevated, 'no-bg': transparentBg, 'as-widget': asWidget })}
         style={{ ...themeStyles, ...style }}
       >
         {children}

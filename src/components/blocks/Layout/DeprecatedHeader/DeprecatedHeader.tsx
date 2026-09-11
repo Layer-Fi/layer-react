@@ -1,6 +1,7 @@
 import { type CSSProperties, forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { COMPONENT_HEADER_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 export interface DeprecatedHeaderProps {
   className?: string
   style?: CSSProperties
@@ -9,12 +10,12 @@ export interface DeprecatedHeaderProps {
 
 /**
  * @deprecated Use `Header` from `@blocks/Layout/Header/Header` instead. Kept because it
- * emits `Layer__component-header`, which consumers may style against.
+ * emits `Layer__ComponentHeader`, which consumers may style against.
  */
 const DeprecatedHeader = forwardRef<HTMLElement, DeprecatedHeaderProps>(
   ({ className, children, style }, ref) => {
     const baseClassName = classNames(
-      'Layer__component-header',
+      COMPONENT_HEADER_CLASS_NAME,
       className,
     )
 
