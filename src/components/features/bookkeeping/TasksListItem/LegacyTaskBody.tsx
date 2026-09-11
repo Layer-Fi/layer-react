@@ -1,0 +1,172 @@
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTask'
+import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { useDeleteTaskUploads } from '@api/businesses/[business-id]/tasks/[task-id]/upload/delete/post'
+import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
+import { usePostTaskUploadDescription } from '@api/businesses/[business-id]/tasks/[task-id]/upload/update-description/post'
+import { usePostTaskUserResponse } from '@api/businesses/[business-id]/tasks/[task-id]/user-response/post'
+import { Button } from '@ui/Button/Button'
+import { FileInput } from '@ui/Input/FileInput'
+import { TextArea } from '@ui/Input/TextArea'
+import { P } from '@ui/Typography/Text'
+
+type LegacyTaskBodyProps = {
+  task: UserVisibleTask
+  onAnswered: () => void
+}
+
+export const LegacyTaskBody = ({ task, onAnswered }: LegacyTaskBodyProps) => {
+  const { t } = useTranslation()
+  const [userResponse, setUserResponse] = useState(task.userResponse ?? '')
+  const [selectedFiles, setSelectedFiles] = useState<File[]>()
+
+  const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = usePostTaskUserResponse()
+  const { trigger: handleUploadDocumentsForTask, isMutating: isUploadingDocuments } = usePostTaskUpload()
+  const { trigger: handleDeleteUploadsOnTask } = useDeleteTaskUploads()
+  const { trigger: handleUpdateTaskUploadDescription } = usePostTaskUploadDescription()
+
+  const submit = async () => {
+    if (!selectedFiles) {
+      return
+    }
+
+    await handleUploadDocumentsForTask({
+      taskId: task.id,
+      files: selectedFiles,
+      description: userResponse,
+    })
+
+    onAnswered()
+    setSelectedFiles(undefined)
+  }
+
+  const uploadDocumentAction = useMemo(() => {
+    if (task.userResponseType === TaskUserResponseType.UploadDocument) {
+      if (task.status === BusinessTaskStatus.Todo) {
+        if (!selectedFiles) {
+          return (
+            <FileInput
+              onUpload={(files: File[]) => {
+                setSelectedFiles(files)
+              }}
+              text={t('bookkeeping:TasksListItem.LegacyTaskBody.action.select_files', 'Select files')}
+              allowMultipleUploads
+            />
+          )
+        }
+        else {
+          return (
+            <>
+              <Button
+                variant='outlined'
+                onPress={() => setSelectedFiles(undefined)}
+              >
+                {t('common:action.cancel_label', 'Cancel')}
+              </Button>
+              <Button
+                onPress={() => void submit()}
+                isDisabled={isUploadingDocuments}
+              >
+                {t('common:action.submit_label', 'Submit')}
+              </Button>
+            </>
+          )
+        }
+      }
+      else if (task.status === BusinessTaskStatus.UserMarkedCompleted) {
+        if (task.userResponse && task.userResponse != userResponse) {
+          return (
+            <Button
+              variant='outlined'
+              onPress={() => {
+                void handleUpdateTaskUploadDescription({
+                  taskId: task.id,
+                  description: userResponse,
+                })
+              }}
+            >
+              {t('common:action.update_label', 'Update')}
+            </Button>
+          )
+        }
+        else {
+          return (
+            <Button
+              variant='outlined'
+              onPress={() => {
+                void handleDeleteUploadsOnTask({
+                  taskId: task.id,
+                })
+              }}
+            >
+              {t('bookkeeping:TasksListItem.LegacyTaskBody.action.delete_uploads', 'Delete Uploads')}
+            </Button>
+          )
+        }
+      }
+      else { return null }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t, task, selectedFiles, userResponse, isUploadingDocuments])
+
+  return (
+    <div className='Layer__tasks-list-item__body-info'>
+      <P size='sm' variant='inherit'>{task.question}</P>
+      <TextArea
+        value={userResponse}
+        placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:TasksListItem.LegacyTaskBody.label.optional_description', 'Optional description') : ''}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          setUserResponse(e.target.value)}
+      />
+      {task.userResponseType === TaskUserResponseType.UploadDocument
+        ? (
+          <div className='Layer__tasks-list__link-list'>
+            {selectedFiles
+              ? (
+                <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:TasksListItem.LegacyTaskBody.label.selected_files', 'Selected Files:')}</div>
+              )
+              : task.documents
+                ? (
+                  <div className='Layer__tasks-list__link-list-header'>{t('bookkeeping:TasksListItem.LegacyTaskBody.label.uploaded_files', 'Uploaded Files:')}</div>
+                )
+                : null}
+            <ul className='Layer__tasks-list__links-list'>
+              {task.documents?.map((document, idx) => (
+                <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presignedUrl.presignedUrl}>{document.fileName}</a></li>
+              ))}
+              {selectedFiles?.map((file, idx) => (
+                <li key={`selected-file-name-${idx}`}><a className='Layer__tasks-list-item__link'>{file.name}</a></li>
+              ))}
+            </ul>
+          </div>
+        )
+        : null}
+      <div className='Layer__tasks-list-item__actions'>
+        {task.userResponseType === TaskUserResponseType.UploadDocument
+          ? uploadDocumentAction
+          : (
+            <Button
+              isDisabled={
+                isSubmittingResponse
+                || userResponse.length === 0
+                || userResponse === task.userResponse
+              }
+              variant='outlined'
+              onPress={() => {
+                void handleSubmitUserResponseForTask({ taskId: task.id, userResponse })
+                  .then(() => {
+                    onAnswered()
+                  })
+              }}
+            >
+              {task.userResponse && task.userResponse !== userResponse
+                ? t('common:action.update_label', 'Update')
+                : t('common:action.save_label', 'Save')}
+            </Button>
+          )}
+      </div>
+    </div>
+  )
+}
