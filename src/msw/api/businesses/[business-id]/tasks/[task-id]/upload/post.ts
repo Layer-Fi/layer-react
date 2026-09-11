@@ -1,5 +1,6 @@
 import { type FileMetadata } from '@internal-types/shared/fileUpload'
-import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTask'
+import { isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 import { patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { apiData } from '@msw/utils/apiResponse'
@@ -35,12 +36,16 @@ export const post = createMockEndpoint({
     const description = formData.get('description')
 
     if (files.length > 0) {
-      patchTaskInStore(String(params.taskId), task => ({
-        ...task,
-        status: BusinessTaskStatus.UserMarkedCompleted,
-        userResponse: typeof description === 'string' ? description : task.userResponse,
-        documents: [...(task.documents ?? []), ...files.map(toTaskDocument)],
-      }))
+      patchTaskInStore(String(params.taskId), task => (
+        isLegacyBusinessTask(task)
+          ? {
+            ...task,
+            status: BusinessTaskStatus.UserMarkedCompleted,
+            userResponse: typeof description === 'string' ? description : task.userResponse,
+            documents: [...(task.documents ?? []), ...files.map(toTaskDocument)],
+          }
+          : task
+      ))
     }
 
     const [firstFile] = files

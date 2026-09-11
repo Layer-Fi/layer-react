@@ -1,65 +1,41 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
-import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
-import { createTransformedEnumSchema } from '@schemas/common/utils'
+import { COUNTERPARTY_ASK_TASK_TYPE } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import {
+  type CounterpartyAskTask,
+  CounterpartyAskTaskSchema,
+} from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import {
+  type LegacyBusinessTask,
+  LegacyBusinessTaskSchema,
+} from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
+import { UnknownBusinessTaskSchema } from '@schemas/features/bookkeeping/businessTasks/unknownBusinessTask'
 
-export enum BusinessTaskStatus {
-  Todo = 'TODO',
-  UserMarkedCompleted = 'USER_MARKED_COMPLETED',
-  Completed = 'COMPLETED',
-  Archived = 'ARCHIVED',
-}
-
-export const BusinessTaskStatusSchema = Schema.Enums(BusinessTaskStatus)
-
-const TransformedBusinessTaskStatusSchema = createTransformedEnumSchema(
-  BusinessTaskStatusSchema,
-  BusinessTaskStatus,
-  BusinessTaskStatus.Todo,
+export const BusinessTaskSchema = Schema.Union(
+  CounterpartyAskTaskSchema,
+  LegacyBusinessTaskSchema,
+  UnknownBusinessTaskSchema,
 )
-
-export enum TaskUserResponseType {
-  FreeResponse = 'FREE_RESPONSE',
-  UploadDocument = 'UPLOAD_DOCUMENT',
-  Unknown = 'UNKNOWN',
-}
-
-export const TaskUserResponseTypeSchema = Schema.Enums(TaskUserResponseType)
-
-const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema(
-  TaskUserResponseTypeSchema,
-  TaskUserResponseType,
-  TaskUserResponseType.Unknown,
-)
-
-const TaskDocumentSchema = Schema.Struct({
-  fileName: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('file_name'),
-  ),
-  presignedUrl: pipe(
-    Schema.propertySignature(S3PresignedUrlSchema),
-    Schema.fromKey('presigned_url'),
-  ),
-})
-
-// Every business task is treated as a human task; the automated variants are not
-// yet surfaced in the UI.
-export const BusinessTaskSchema = Schema.Struct({
-  id: Schema.UUID,
-  status: TransformedBusinessTaskStatusSchema,
-  title: Schema.String,
-  question: Schema.String,
-  userResponse: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('user_response'),
-  ),
-  userResponseType: pipe(
-    Schema.propertySignature(TransformedTaskUserResponseTypeSchema),
-    Schema.fromKey('user_response_type'),
-  ),
-  documents: Schema.NullishOr(Schema.Array(TaskDocumentSchema)),
-})
 
 export type BusinessTask = typeof BusinessTaskSchema.Type
 export type BusinessTaskEncoded = typeof BusinessTaskSchema.Encoded
+
+export const isCounterpartyAskTask = <T extends BusinessTask>(
+  task: T,
+): task is T & CounterpartyAskTask =>
+  task.taskType === COUNTERPARTY_ASK_TASK_TYPE && 'transactionResponses' in task
+
+// LegacyBusinessTask always carries user_response_type; UnknownBusinessTask (an
+// unrecognised task_type this union can't fully model) never does.
+export const isLegacyBusinessTask = <T extends BusinessTask>(
+  task: T,
+): task is T & LegacyBusinessTask =>
+  !isCounterpartyAskTask(task) && 'userResponseType' in task
+
+// CounterpartyAskTask has no renderable body yet (the Chip primitive lands in #1803, the
+// ask UI in #1805) — excluded here so it doesn't surface as a dead-end TODO row. Fold it
+// back in once that body ships.
+export const isRenderableBusinessTask = <T extends BusinessTask>(
+  task: T,
+): task is T & LegacyBusinessTask =>
+  isLegacyBusinessTask(task)

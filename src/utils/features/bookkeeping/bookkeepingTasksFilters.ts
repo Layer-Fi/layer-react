@@ -1,4 +1,6 @@
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask, isRenderableBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 
 export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
   task: T,
@@ -15,17 +17,20 @@ export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
 }
 
 type UserVisibleTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Completed | BusinessTaskStatus.Archived>
-export type UserVisibleTask = BusinessTask & { status: UserVisibleTaskStatus }
+type RenderableBusinessTask = LegacyBusinessTask
+export type UserVisibleTask = RenderableBusinessTask & { status: UserVisibleTaskStatus }
 
-function isUserVisibleTask<T extends Pick<BusinessTask, 'status'>>(
+function isUserVisibleTask<T extends BusinessTask>(
   task: T,
-): task is T & { status: UserVisibleTaskStatus } {
+): task is T & RenderableBusinessTask & { status: UserVisibleTaskStatus } {
   const { status } = task
+
+  if (!isRenderableBusinessTask(task)) return false
 
   return status !== BusinessTaskStatus.Completed && status !== BusinessTaskStatus.Archived
 }
 
-export function getUserVisibleTasks<T extends Pick<BusinessTask, 'status'>>(
+export function getUserVisibleTasks<T extends BusinessTask>(
   tasks: ReadonlyArray<T>,
 ) {
   return tasks.filter(task => isUserVisibleTask(task))
