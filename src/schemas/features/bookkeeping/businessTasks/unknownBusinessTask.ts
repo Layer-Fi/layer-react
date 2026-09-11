@@ -5,9 +5,9 @@ import { TransformedBusinessTaskStatusSchema } from '@schemas/features/bookkeepi
 export const UnknownBusinessTaskSchema = Schema.Struct({
   id: Schema.UUID,
   status: TransformedBusinessTaskStatusSchema,
-  title: Schema.String,
+  title: Schema.optionalWith(Schema.String, { default: () => '', nullable: true }),
   taskType: pipe(
-    Schema.propertySignature(Schema.String),
+    Schema.optionalWith(Schema.NullishOr(Schema.String), { default: () => null }),
     Schema.fromKey('task_type'),
   ),
 })

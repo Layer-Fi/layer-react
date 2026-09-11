@@ -61,7 +61,12 @@ describe('BusinessTaskSchema', () => {
     const task = decode(encodedCounterpartyAskTask)
 
     expect(isCounterpartyAskTask(task)).toBe(true)
-    expect(isRenderableBusinessTask(task)).toBe(true)
+  })
+
+  it('does not treat a counterparty ask task as renderable yet', () => {
+    const task = decode(encodedCounterpartyAskTask)
+
+    expect(isRenderableBusinessTask(task)).toBe(false)
   })
 
   it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
