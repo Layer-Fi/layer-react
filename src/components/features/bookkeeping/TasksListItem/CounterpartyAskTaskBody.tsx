@@ -275,7 +275,6 @@ export const CounterpartyAskTaskBody = ({ task }: CounterpartyAskTaskBodyProps) 
         )}
         value={selectedKey}
         onChange={setSelectedKey}
-        wrap
       >
         {suggestions.map((suggestion, index) => (
           <Chip key={toSuggestionAnswerKey(index)} value={toSuggestionAnswerKey(index)}>
