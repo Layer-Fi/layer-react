@@ -8,6 +8,7 @@ import {
 import {
   BaseBusinessTaskSchema,
   COUNTERPARTY_ASK_TASK_TYPE,
+  UserResponseFromKey,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 export const CounterpartyAskAccountSchema = Schema.Struct({
@@ -20,19 +21,18 @@ export const CounterpartyAskAccountSchema = Schema.Struct({
 
 export type CounterpartyAskAccount = typeof CounterpartyAskAccountSchema.Type
 
+const ResponseAccountFromKey = pipe(
+  Schema.propertySignature(Schema.NullishOr(CounterpartyAskAccountSchema)),
+  Schema.fromKey('response_account'),
+)
+
 const CounterpartyAskTransactionResponseSchema = Schema.Struct({
   transactionId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('transaction_id'),
   ),
-  userResponse: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('user_response'),
-  ),
-  responseAccount: pipe(
-    Schema.propertySignature(Schema.NullishOr(CounterpartyAskAccountSchema)),
-    Schema.fromKey('response_account'),
-  ),
+  userResponse: UserResponseFromKey,
+  responseAccount: ResponseAccountFromKey,
 })
 
 export type CounterpartyAskTransactionResponse = typeof CounterpartyAskTransactionResponseSchema.Type
@@ -60,14 +60,8 @@ export const CounterpartyAskTaskSchema = Schema.extend(
       }),
       Schema.fromKey('transaction_responses'),
     ),
-    userResponse: pipe(
-      Schema.propertySignature(Schema.NullishOr(Schema.String)),
-      Schema.fromKey('user_response'),
-    ),
-    responseAccount: pipe(
-      Schema.propertySignature(Schema.NullishOr(CounterpartyAskAccountSchema)),
-      Schema.fromKey('response_account'),
-    ),
+    userResponse: UserResponseFromKey,
+    responseAccount: ResponseAccountFromKey,
     totalCount: pipe(
       Schema.optionalWith(Schema.Number, { default: () => 0, nullable: true }),
       Schema.fromKey('total_count'),

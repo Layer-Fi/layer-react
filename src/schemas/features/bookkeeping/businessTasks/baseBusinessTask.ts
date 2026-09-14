@@ -1,4 +1,4 @@
-import { Schema } from 'effect'
+import { pipe, Schema } from 'effect'
 
 import { createTransformedEnumSchema } from '@schemas/common/utils'
 
@@ -33,9 +33,22 @@ export const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema
 
 export const COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD'
 
-export const BaseBusinessTaskSchema = Schema.Struct({
+// Only id and status are guaranteed across every arm: the unknown arm models task
+// types this union can't yet describe, and those may omit title and question.
+export const TaskIdentitySchema = Schema.Struct({
   id: Schema.UUID,
   status: TransformedBusinessTaskStatusSchema,
-  title: Schema.String,
-  question: Schema.String,
 })
+
+export const BaseBusinessTaskSchema = Schema.extend(
+  TaskIdentitySchema,
+  Schema.Struct({
+    title: Schema.String,
+    question: Schema.String,
+  }),
+)
+
+export const UserResponseFromKey = pipe(
+  Schema.propertySignature(Schema.NullishOr(Schema.String)),
+  Schema.fromKey('user_response'),
+)

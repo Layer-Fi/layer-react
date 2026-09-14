@@ -17,17 +17,16 @@ export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
 }
 
 type UserVisibleTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Completed | BusinessTaskStatus.Archived>
-type RenderableBusinessTask = LegacyBusinessTask
-export type UserVisibleTask = RenderableBusinessTask & { status: UserVisibleTaskStatus }
+export type UserVisibleTask = LegacyBusinessTask & { status: UserVisibleTaskStatus }
 
 function isUserVisibleTask<T extends BusinessTask>(
   task: T,
-): task is T & RenderableBusinessTask & { status: UserVisibleTaskStatus } {
+): task is T & LegacyBusinessTask & { status: UserVisibleTaskStatus } {
   const { status } = task
 
-  if (!isRenderableBusinessTask(task)) return false
-
-  return status !== BusinessTaskStatus.Completed && status !== BusinessTaskStatus.Archived
+  return isRenderableBusinessTask(task)
+    && status !== BusinessTaskStatus.Completed
+    && status !== BusinessTaskStatus.Archived
 }
 
 export function getUserVisibleTasks<T extends BusinessTask>(

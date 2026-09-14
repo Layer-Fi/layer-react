@@ -5,6 +5,7 @@ import {
   BaseBusinessTaskSchema,
   COUNTERPARTY_ASK_TASK_TYPE,
   TransformedTaskUserResponseTypeSchema,
+  UserResponseFromKey,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 const TaskDocumentSchema = Schema.Struct({
@@ -29,10 +30,7 @@ export const LegacyBusinessTaskSchema = Schema.extend(
       Schema.optionalWith(NonCounterpartyAskTaskTypeSchema, { default: () => null }),
       Schema.fromKey('task_type'),
     ),
-    userResponse: pipe(
-      Schema.propertySignature(Schema.NullishOr(Schema.String)),
-      Schema.fromKey('user_response'),
-    ),
+    userResponse: UserResponseFromKey,
     userResponseType: pipe(
       Schema.propertySignature(TransformedTaskUserResponseTypeSchema),
       Schema.fromKey('user_response_type'),
