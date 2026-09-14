@@ -62,7 +62,6 @@ export const CounterpartyAskTransactionRow = ({
         )}
         value={selectedKey}
         onChange={onSelect}
-        wrap
       >
         {suggestions.map((suggestion, index) => (
           <Chip key={toSuggestionAnswerKey(index)} size='sm' value={toSuggestionAnswerKey(index)}>
