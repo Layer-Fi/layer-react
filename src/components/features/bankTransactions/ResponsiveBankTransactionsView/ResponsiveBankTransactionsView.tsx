@@ -14,6 +14,7 @@ import { type BankTransactionsProps } from '@features/bankTransactions/BankTrans
 import { BankTransactionsHeader } from '@features/bankTransactions/BankTransactionsHeader/BankTransactionsHeader'
 import { BankTransactionsList } from '@features/bankTransactions/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileList'
+import { BankTransactionsRefreshAlert } from '@features/bankTransactions/BankTransactionsRefreshAlert/BankTransactionsRefreshAlert'
 import { BankTransactionsTable } from '@features/bankTransactions/BankTransactionsTable/BankTransactionsTable'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@features/categorization/SuggestedCategorizationRuleUpdatesDialog/SuggestedCategorizationRuleUpdatesDialog'
 
@@ -102,6 +103,7 @@ export const ResponsiveBankTransactionsView = ({
       asWidget={asWidget}
       ref={containerRef}
     >
+      <BankTransactionsRefreshAlert />
       {!hideHeader && (
         <BankTransactionsHeader
           asWidget={asWidget}

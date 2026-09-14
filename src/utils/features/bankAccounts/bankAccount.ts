@@ -25,6 +25,40 @@ export function isBankAccountSyncing(bankAccount: BankAccount): boolean {
   return bankAccount.externalAccounts.some(ea => ea.isSyncing)
 }
 
+export function isBankAccountReadyForRefresh(bankAccount: BankAccount): boolean {
+  return bankAccount.externalAccounts.some(
+    externalAccount => externalAccount.notifications.some(({ type }) => type === 'READY_FOR_REFRESH'),
+  )
+}
+
+export function getBankAccountsReadyForRefresh(
+  bankAccounts: ReadonlyArray<BankAccount> | undefined,
+): BankAccount[] {
+  return (bankAccounts ?? []).filter(isBankAccountReadyForRefresh)
+}
+
+export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount) {
+  if (!isBankAccountReadyForRefresh(bankAccount)) return null
+
+  const refreshAccount = bankAccount.externalAccounts.find(
+    externalAccount => externalAccount.notifications.some(({ type }) => type === 'READY_FOR_REFRESH'),
+  )
+  if (!refreshAccount) return null
+
+  return {
+    connectionExternalId: refreshAccount.connectionExternalId,
+    source: refreshAccount.externalAccountSource,
+    reconnectWithNewCredentials: refreshAccount.reconnectWithNewCredentials,
+  }
+}
+
+export function formatBankAccountWithMask(bankAccount: BankAccount): string {
+  const accountName = getBankAccountDisplayName(bankAccount)
+  const mask = bankAccount.mask ?? bankAccount.externalAccounts[0]?.mask
+
+  return mask ? `${accountName} (${mask})` : accountName
+}
+
 export function isAnyBankAccountSyncing(bankAccounts: ReadonlyArray<BankAccount>): boolean {
   return bankAccounts.some(isBankAccountSyncing)
 }

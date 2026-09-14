@@ -8,6 +8,7 @@ import { type MobileComponentType } from '@utils/features/bankTransactions/const
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/features/bankTransactions/LegacyMode/LegacyModeProvider'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { View } from '@blocks/Layout/View/View'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
 import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
@@ -90,28 +91,32 @@ const BankTransactionsWithLinkedAccountsContent = ({
       title={stringOverrides?.title || title || t('views:BankTransactionsWithLinkedAccounts.label.bank_transactions', 'Bank transactions')}
       showHeader={showTitle}
     >
-      <LinkedAccounts
-        elevated={elevatedLinkedAccounts}
-        showLedgerBalance={showLedgerBalance}
-        showUnlinkItem={showUnlinkItem}
-        showBreakConnection={showBreakConnection}
-        stringOverrides={stringOverrides?.linkedAccounts}
+      <LinkedAccountsProvider
         plaidHostedLinkConfig={plaidHostedLinkConfig}
         customerManagedPlaidConfig={customerManagedPlaidConfig}
-      />
-      <BankTransactions
-        asWidget
-        filters={filters}
-        showCustomerVendor={showCustomerVendor}
-        showTags={showTags}
-        showTooltips={showTooltips}
-        showUploadOptions={showUploadOptions}
-        mobileComponent={mobileComponent}
-        mode={mode}
-        stringOverrides={stringOverrides?.bankTransactions}
-        renderInAppLink={renderInAppLink}
-        showCategorizationRules={showCategorizationRules}
-      />
+      >
+        <LinkedAccounts
+          withProvider={false}
+          elevated={elevatedLinkedAccounts}
+          showLedgerBalance={showLedgerBalance}
+          showUnlinkItem={showUnlinkItem}
+          showBreakConnection={showBreakConnection}
+          stringOverrides={stringOverrides?.linkedAccounts}
+        />
+        <BankTransactions
+          asWidget
+          filters={filters}
+          showCustomerVendor={showCustomerVendor}
+          showTags={showTags}
+          showTooltips={showTooltips}
+          showUploadOptions={showUploadOptions}
+          mobileComponent={mobileComponent}
+          mode={mode}
+          stringOverrides={stringOverrides?.bankTransactions}
+          renderInAppLink={renderInAppLink}
+          showCategorizationRules={showCategorizationRules}
+        />
+      </LinkedAccountsProvider>
     </View>
   )
 }

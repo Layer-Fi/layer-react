@@ -21,6 +21,7 @@ import {
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { AccountReconnectionBanner } from '@views/AccountingOverview/AccountReconnectionBanner/AccountReconnectionBanner'
 
 import './accountingOverview.scss'
 
@@ -42,6 +43,7 @@ export interface AccountingOverviewProps {
   /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
+  onAccountUpdateClick?: () => void
   middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
@@ -62,6 +64,7 @@ export const AccountingOverview = ({
   title,
   showTitle = true,
   onTransactionsToReviewClick,
+  onAccountUpdateClick,
   middleBanner,
   chartColorsList,
   stringOverrides,
@@ -98,6 +101,7 @@ export const AccountingOverview = ({
           </Header>
         )}
       >
+        <AccountReconnectionBanner onClick={onAccountUpdateClick} />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
