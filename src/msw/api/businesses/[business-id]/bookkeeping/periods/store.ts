@@ -49,12 +49,23 @@ export const patchTaskInStore = (
   return patched
 }
 
-/** Task types other than the legacy one have no mutable response state, so they patch to themselves. */
+// Returns undefined for a non-legacy task so callers fall back rather than
+// reporting success for a patch that never applied.
 export const patchLegacyTaskInStore = (
   taskId: string,
   applyPatch: (task: LegacyBusinessTask) => LegacyBusinessTask,
-): BusinessTask | undefined =>
-  patchTaskInStore(taskId, task => (isLegacyBusinessTask(task) ? applyPatch(task) : task))
+): LegacyBusinessTask | undefined => {
+  let patched: LegacyBusinessTask | undefined
+
+  patchTaskInStore(taskId, (task) => {
+    if (!isLegacyBusinessTask(task)) return task
+
+    patched = applyPatch(task)
+    return patched
+  })
+
+  return patched
+}
 
 export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
   patchLegacyTaskInStore(taskId, task => ({

@@ -7,6 +7,7 @@ import {
   isLegacyBusinessTask,
   isRenderableBusinessTask,
 } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 const decode = Schema.decodeUnknownSync(BusinessTaskSchema)
 
@@ -83,6 +84,13 @@ describe('BusinessTaskSchema', () => {
     expect(isCounterpartyAskTask(task)).toBe(false)
     expect(isLegacyBusinessTask(task)).toBe(false)
     expect(isRenderableBusinessTask(task)).toBe(false)
+  })
+
+  it('decodes a task whose id and status are missing or unrecognized', () => {
+    const task = decode({ id: 'not-a-uuid', task_type: 'SOME_FUTURE_TASK' })
+
+    expect(isRenderableBusinessTask(task)).toBe(false)
+    expect(task.status).toBe(BusinessTaskStatus.Todo)
   })
 
   it('does not treat a malformed ask as renderable', () => {
