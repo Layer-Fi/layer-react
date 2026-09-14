@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { LEGACY_BACK_BUTTON_CLASS_NAME } from '@ui/Button/legacyClassNames'
 
-export type BackButtonProps = Pick<ButtonProps, 'onPress'> & {
+export type BackButtonProps = Pick<ButtonProps, 'onPress' | 'isDisabled'> & {
   slots?: {
     Icon?: LucideIcon
   }
 }
 
-export function BackButton({ onPress, slots }: BackButtonProps) {
+export function BackButton({ onPress, isDisabled, slots }: BackButtonProps) {
   const { t } = useTranslation()
   const { Icon = ChevronLeft } = slots ?? {}
 
@@ -20,6 +20,7 @@ export function BackButton({ onPress, slots }: BackButtonProps) {
       icon
       className={LEGACY_BACK_BUTTON_CLASS_NAME}
       onPress={onPress}
+      isDisabled={isDisabled}
       aria-label={t('common:action.back', 'Back')}
     >
       <Icon size={16} />
