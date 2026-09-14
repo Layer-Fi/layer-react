@@ -20,7 +20,6 @@ type ChipGroupProps<T extends string> = Pick<
 > & {
   ariaLabel: string
   value?: T | null
-  defaultValue?: T
   onChange?: (value: T) => void
 }
 
@@ -48,10 +47,7 @@ export const ChipGroup = forwardRef(ChipGroupWithRef) as <T extends string>(
 
 export type ChipSize = 'sm' | 'md'
 
-type ChipProps<T extends string> = Pick<
-  ReactAriaRadioProps,
-  'children' | 'isDisabled'
-> & {
+type ChipProps<T extends string> = Pick<ReactAriaRadioProps, 'children'> & {
   size?: ChipSize
   value: T
 }
