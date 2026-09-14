@@ -1,17 +1,12 @@
 .Layer__UI__ChipGroup {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   gap: var(--spacing-2xs);
-
-  &[data-wrap] {
-    flex-wrap: wrap;
-  }
 }
 
 .Layer__UI__Chip {
   box-sizing: border-box;
   display: inline-flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   min-block-size: 2.25rem;

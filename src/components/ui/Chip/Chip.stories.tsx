@@ -43,7 +43,7 @@ export const AllVariants: Story = {
         </ChipGroup>
       </Col>
       <Col label='wrapping'>
-        <ChipGroup ariaLabel='wrapping' wrap>
+        <ChipGroup ariaLabel='wrapping'>
           <Chip value='meals'>Business Meals</Chip>
           <Chip value='office'>Office Expenses</Chip>
           <Chip value='other-business'>Other Business Expenses</Chip>

@@ -14,27 +14,23 @@ import './chip.scss'
 const CHIP_GROUP_CLASS_NAME = 'Layer__UI__ChipGroup'
 const CHIP_CLASS_NAME = 'Layer__UI__Chip'
 
-type ChipGroupProps<T extends string> = Omit<
+type ChipGroupProps<T extends string> = Pick<
   ReactAriaRadioGroupProps,
-  'className' | 'value' | 'defaultValue' | 'onChange' | 'isReadOnly' | 'isInvalid'
+  'children' | 'isDisabled'
 > & {
   ariaLabel: string
-  wrap?: boolean
   value?: T | null
   defaultValue?: T
   onChange?: (value: T) => void
 }
 
 function ChipGroupWithRef<T extends string>(
-  { ariaLabel, children, onChange, wrap = true, ...restProps }: ChipGroupProps<T>,
+  { ariaLabel, children, onChange, ...restProps }: ChipGroupProps<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const dataProperties = toDataProperties({ wrap })
-
   return (
     <ReactAriaRadioGroup
       {...restProps}
-      {...dataProperties}
       aria-label={ariaLabel}
       orientation='horizontal'
       onChange={onChange as ((value: string) => void) | undefined}
@@ -52,7 +48,10 @@ export const ChipGroup = forwardRef(ChipGroupWithRef) as <T extends string>(
 
 export type ChipSize = 'sm' | 'md'
 
-type ChipProps<T extends string> = Omit<ReactAriaRadioProps, 'className' | 'value'> & {
+type ChipProps<T extends string> = Pick<
+  ReactAriaRadioProps,
+  'children' | 'isDisabled'
+> & {
   size?: ChipSize
   value: T
 }
