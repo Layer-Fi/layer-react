@@ -93,6 +93,21 @@ describe('BusinessTaskSchema', () => {
     expect(task.status).toBe(BusinessTaskStatus.Todo)
   })
 
+  // A well-formed ask matches the ask arm first, so this is the only shape that
+  // reaches the legacy arm's task_type exclusion.
+  it('does not fall back to the legacy arm when an ask payload is malformed', () => {
+    const task = decode({
+      ...encodedCounterpartyAskTask,
+      id: '00000000-0000-4000-8000-000000000902',
+      counterparty: { unexpected: true },
+      user_response_type: 'FREE_RESPONSE',
+      documents: null,
+    })
+
+    expect(isCounterpartyAskTask(task)).toBe(false)
+    expect(isLegacyBusinessTask(task)).toBe(false)
+  })
+
   it('does not treat a malformed ask as renderable', () => {
     const malformedAsk = Schema.decodeUnknownSync(BusinessTaskSchema)({
       id: '00000000-0000-4000-8000-0000000009f1',

@@ -19,8 +19,15 @@ const TaskDocumentSchema = Schema.Struct({
   ),
 })
 
+// Only fires for an ask whose ask-specific payload is malformed: a well-formed one
+// matches the ask arm first. Without it such a task decodes as a legacy task and
+// would post a free-response answer to an ask.
 const NonCounterpartyAskTaskTypeSchema = Schema.NullishOr(
-  Schema.String.pipe(Schema.filter(taskType => taskType !== COUNTERPARTY_ASK_TASK_TYPE)),
+  Schema.String.pipe(
+    Schema.filter(taskType => taskType !== COUNTERPARTY_ASK_TASK_TYPE, {
+      identifier: 'NonCounterpartyAskTaskType',
+    }),
+  ),
 )
 
 export const LegacyBusinessTaskSchema = Schema.extend(
