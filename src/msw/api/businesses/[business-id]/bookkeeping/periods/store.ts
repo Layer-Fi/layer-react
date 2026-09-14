@@ -1,5 +1,7 @@
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
 import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
@@ -47,8 +49,26 @@ export const patchTaskInStore = (
   return patched
 }
 
+// Returns undefined for a non-legacy task so callers fall back rather than
+// reporting success for a patch that never applied.
+export const patchLegacyTaskInStore = (
+  taskId: string,
+  applyPatch: (task: LegacyBusinessTask) => LegacyBusinessTask,
+): LegacyBusinessTask | undefined => {
+  let patched: LegacyBusinessTask | undefined
+
+  patchTaskInStore(taskId, (task) => {
+    if (!isLegacyBusinessTask(task)) return task
+
+    patched = applyPatch(task)
+    return patched
+  })
+
+  return patched
+}
+
 export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
-  patchTaskInStore(taskId, task => ({
+  patchLegacyTaskInStore(taskId, task => ({
     ...task,
     status: BusinessTaskStatus.UserMarkedCompleted,
     userResponse,

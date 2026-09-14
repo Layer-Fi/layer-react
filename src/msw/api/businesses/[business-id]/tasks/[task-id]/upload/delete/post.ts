@@ -1,12 +1,9 @@
 import { Schema } from 'effect'
 
-import {
-  type BusinessTask,
-  BusinessTaskSchema,
-  BusinessTaskStatus,
-} from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask, BusinessTaskSchema } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
-import { patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
+import { patchLegacyTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -23,7 +20,7 @@ export const post = createMockEndpoint<BusinessTask, ReturnType<typeof toRespons
 
     const taskId = String(params.taskId)
 
-    const cleared = patchTaskInStore(taskId, task => ({
+    const cleared = patchLegacyTaskInStore(taskId, task => ({
       ...task,
       status: BusinessTaskStatus.Todo,
       userResponse: null,

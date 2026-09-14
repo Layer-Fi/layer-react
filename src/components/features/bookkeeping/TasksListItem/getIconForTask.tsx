@@ -1,6 +1,7 @@
 import { Check, CircleAlert } from 'lucide-react'
 
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 const STATUS_TO_ICON_MAP = {
   [BusinessTaskStatus.Todo]: {
