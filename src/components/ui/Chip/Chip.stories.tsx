@@ -42,7 +42,7 @@ export const AllVariants: Story = {
           <Chip size='sm' value='other'>Something else</Chip>
         </ChipGroup>
       </Col>
-      <Col label='wrapping'>
+      <Col label='wrapping' inlineSize={240}>
         <ChipGroup ariaLabel='wrapping'>
           <Chip value='meals'>Business Meals</Chip>
           <Chip value='office'>Office Expenses</Chip>
@@ -52,7 +52,7 @@ export const AllVariants: Story = {
         </ChipGroup>
       </Col>
       <Col label='disabled'>
-        <ChipGroup ariaLabel='disabled' isDisabled>
+        <ChipGroup ariaLabel='disabled' value='meals' isDisabled>
           <Chip value='meals'>Business Meals</Chip>
           <Chip value='other'>Something else</Chip>
         </ChipGroup>
