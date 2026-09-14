@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { CircleAlert } from 'lucide-react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
@@ -22,15 +22,22 @@ type LinkedAccountPillProps = {
     action: () => void
     name: string
   }>
+  status?: 'error' | 'success'
+  icon?: ReactNode
 }
 
-export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
+export function LinkedAccountPill({
+  label,
+  items,
+  status = 'error',
+  icon,
+}: LinkedAccountPillProps) {
   const Trigger = useCallback(() => (
-    <Pill status='error'>
-      <CircleAlert size={14} />
+    <Pill status={status}>
+      {icon ?? <CircleAlert size={14} />}
       {label}
     </Pill>
-  ), [label])
+  ), [icon, label, status])
 
   return (
     <DropdownMenu ariaLabel={label} slots={{ Trigger }} variant='compact' popoverClassName={legacyClassNames('menu:popover')}>

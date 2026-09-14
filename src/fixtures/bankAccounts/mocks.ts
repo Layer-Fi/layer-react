@@ -108,3 +108,16 @@ export function markAccountNeedingConfirmation(account: BankAccount): BankAccoun
     })),
   }
 }
+
+export function markAccountReadyForRefresh(account: BankAccount): BankAccount {
+  return {
+    ...account,
+    externalAccounts: account.externalAccounts.map(externalAccount => ({
+      ...externalAccount,
+      notifications: [
+        ...externalAccount.notifications.filter(({ type }) => type !== 'READY_FOR_REFRESH'),
+        { type: 'READY_FOR_REFRESH' },
+      ],
+    })),
+  }
+}

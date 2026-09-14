@@ -3,7 +3,12 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BankTransactionsWithLinkedAccounts } from '@views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 
+import {
+  makeBankAccountWithMirroredExternalAccount,
+  markAccountReadyForRefresh,
+} from '@fixtures/bankAccounts/mocks'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import {
@@ -84,6 +89,28 @@ export default meta
 
 type Story = StoryObj<BankTransactionsWithLinkedAccountsStoryArgs>
 
+const reconnectionWorkflowBankAccounts = [
+  markAccountReadyForRefresh(makeBankAccountWithMirroredExternalAccount({
+    id: '00000001-b730-442c-8d79-cb0f139d1301',
+    externalAccountId: '469aa9b2-35e4-509f-8c7d-061a6fa33d01',
+    name: 'RBC Checking',
+    institution: 'RBC',
+    mask: '4048',
+    balance: 2_500_000,
+    externalAccountOverrides: {
+      connectionExternalId: 'plaid_rbc_4048',
+    },
+  })),
+  makeBankAccountWithMirroredExternalAccount({
+    id: '00000001-9a55-48cb-8f2a-738709fe0dd2',
+    externalAccountId: '00000007-0009-1000-8000-001b8d4052eb',
+    name: 'Wealthsimple',
+    institution: 'Wealthsimple',
+    mask: '7890',
+    balance: 1_500_000,
+  }),
+]
+
 // ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
   tags: ['public-api'],
@@ -100,4 +127,12 @@ export const BookkeepingEnabled: Story = {
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
   tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  parameters: {
+    msw: {
+      handlers: [
+        getBankAccounts.mock(reconnectionWorkflowBankAccounts),
+        ...handlers,
+      ],
+    },
+  },
 }
