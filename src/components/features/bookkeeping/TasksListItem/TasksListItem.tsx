@@ -23,6 +23,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 ) => {
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [answeredLabel, setAnsweredLabel] = useState<string | null>(null)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -70,6 +71,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               {getIconForTask(task)}
             </div>
             <P variant='inherit'>{task.title}</P>
+            {answeredLabel ? <P size='sm' variant='subtle'>{answeredLabel}</P> : null}
           </div>
           <ChevronDownFill
             size={16}
@@ -81,7 +83,13 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         </div>
         <div className={taskBodyClassName}>
           {isCounterpartyAskTask(task)
-            ? <CounterpartyAskTaskBody task={task} />
+            ? (
+              <CounterpartyAskTaskBody
+                task={task}
+                counterpartyName={task.counterparty?.name ?? task.title}
+                onAnsweredLabelChange={setAnsweredLabel}
+              />
+            )
             : isLegacyBusinessTask(task)
               ? <LegacyTaskBody task={task} onAnswered={onAnswered} />
               : null}

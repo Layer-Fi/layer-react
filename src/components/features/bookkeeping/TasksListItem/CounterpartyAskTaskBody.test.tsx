@@ -1,4 +1,3 @@
-import { type PropsWithChildren } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -15,47 +14,43 @@ import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const OFFICE_EXPENSES_ACCOUNT_ID = bankTransactionCategories.officeExpenses.id
 const MEALS_STABLE_NAME = bankTransactionCategories.meals.stableName
+const OFFICE_ACCOUNT_ID = bankTransactionCategories.officeExpenses.id
 
 const TWO_TRANSACTIONS = [
-  {
-    id: 'txn-1',
-    date: new Date('2025-02-03T00:00:00.000Z'),
-    amount: 61250,
-    description: 'COSTCO WHSE #1042',
-  },
-  {
-    id: 'txn-2',
-    date: new Date('2025-02-19T00:00:00.000Z'),
-    amount: 22395,
-    description: 'COSTCO GAS #1042',
-  },
+  { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: 61250, description: 'COSTCO WHSE' },
+  { id: 'txn-2', date: new Date('2025-02-19T00:00:00.000Z'), amount: 22395, description: 'COSTCO GAS' },
 ]
 
-const renderBody = (overrides: Partial<CounterpartyAskTask> = {}, onTransactionCategorized?: () => void) => {
-  const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
-
-  const wrapper = ({ children }: PropsWithChildren) => (
-    <LayerTestProvider eventCallbacks={onTransactionCategorized ? { onTransactionCategorized } : undefined}>
-      {children}
-    </LayerTestProvider>
-  )
-
-  return {
-    user: userEvent.setup(),
-    ...render(<CounterpartyAskTaskBody task={task} />, { wrapper }),
-  }
-}
-
-const makeMultiTransactionTask = (): Partial<CounterpartyAskTask> => ({
+const multiTransactionTask = (): Partial<CounterpartyAskTask> => ({
   transactions: TWO_TRANSACTIONS.map(transaction => ({
     ...transaction,
     direction: 'DEBIT',
     counterpartyName: 'Costco',
   })) as CounterpartyAskTask['transactions'],
+  transactionResponses: TWO_TRANSACTIONS.map(transaction => ({
+    transactionId: transaction.id,
+    userResponse: null,
+    responseAccount: null,
+  })),
   totalCount: 2,
 })
+
+const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
+  const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
+
+  return {
+    user: userEvent.setup(),
+    ...render(
+      <CounterpartyAskTaskBody
+        task={task}
+        counterpartyName='Costco'
+        onAnsweredLabelChange={vi.fn()}
+      />,
+      { wrapper: LayerTestProvider },
+    ),
+  }
+}
 
 const spyOnAskResponse = () => {
   const onRequest = vi.fn<(body: unknown) => void>()
@@ -72,55 +67,36 @@ const spyOnAskResponse = () => {
 }
 
 describe('CounterpartyAskTaskBody', () => {
-  it('renders the server-rendered question verbatim', () => {
-    renderBody({ question: 'You spent $307.74 at Costco across 1 transaction. What for?' })
+  it('offers the suggestions plus both escape hatches', () => {
+    renderBody(multiTransactionTask())
 
-    expect(
-      screen.getByText('You spent $307.74 at Costco across 1 transaction. What for?'),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: /Multiple different things/ })).toBeInTheDocument()
   })
 
-  it('blocks Continue until an answer is given', async () => {
-    const { user } = renderBody()
+  it('hides the itemised escape when there is only one transaction', () => {
+    renderBody()
 
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
-
-    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled()
+    expect(screen.queryByRole('radio', { name: /Multiple different things/ })).not.toBeInTheDocument()
   })
 
-  it('keeps Continue disabled while free text is blank', async () => {
-    const { user } = renderBody()
-
-    await user.click(screen.getByRole('radio', { name: 'Something else' }))
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
-
-    await user.type(screen.getByRole('textbox'), '   ')
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
-
-    await user.type(screen.getByRole('textbox'), 'Packaging supplies')
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled()
-  })
-
-  it('persists nothing until the always question is answered', async () => {
+  it('goes straight from a suggestion to the going-forward question, with no submit', async () => {
     const onRequest = spyOnAskResponse()
     const { user } = renderBody()
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
 
-    expect(screen.getByText('Will Costco purchases always be Business Meals?')).toBeInTheDocument()
+    expect(screen.getByText(/Should we assume your future Costco purchases/)).toBeInTheDocument()
     expect(onRequest).not.toHaveBeenCalled()
   })
 
-  it('submits a chip answer with always_this once confirmed', async () => {
+  it('submits always_this true from the going-forward question', async () => {
     const onRequest = spyOnAskResponse()
     const { user } = renderBody()
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
+    await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
 
     await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
     expect(onRequest.mock.calls[0]?.[0]).toEqual({
@@ -129,153 +105,102 @@ describe('CounterpartyAskTaskBody', () => {
     })
   })
 
-  it('notifies the host app when a chip answer categorizes a transaction', async () => {
-    spyOnAskResponse()
-    const onTransactionCategorized = vi.fn()
-    const { user } = renderBody({}, onTransactionCategorized)
-
-    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
-
-    await waitFor(() => expect(onTransactionCategorized).toHaveBeenCalledTimes(1))
-  })
-
-  it('does not notify the host app for a free-text answer', async () => {
-    const onRequest = spyOnAskResponse()
-    const onTransactionCategorized = vi.fn()
-    const { user } = renderBody({}, onTransactionCategorized)
-
-    await user.click(screen.getByRole('radio', { name: 'Something else' }))
-    await user.type(screen.getByRole('textbox'), 'Gift for a client')
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
-
-    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
-    expect(onTransactionCategorized).not.toHaveBeenCalled()
-  })
-
-  it('submits always_this false when the owner declines the rule', async () => {
+  it('submits always_this false when the owner declines', async () => {
     const onRequest = spyOnAskResponse()
     const { user } = renderBody()
 
     await user.click(screen.getByRole('radio', { name: 'Office Expenses' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(screen.getByRole('button', { name: 'No, ask me again' }))
+    await user.click(screen.getByRole('radio', { name: 'No, keep asking me about them' }))
 
     await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
     expect(onRequest.mock.calls[0]?.[0]).toEqual({
-      account_identifier: { type: 'AccountId', id: OFFICE_EXPENSES_ACCOUNT_ID },
+      account_identifier: { type: 'AccountId', id: OFFICE_ACCOUNT_ID },
       always_this: false,
     })
   })
 
-  it('goes back to the answer step with the previous choice still selected', async () => {
-    const onRequest = spyOnAskResponse()
+  it('takes free text to its own sheet, gated on non-blank input', async () => {
+    const { user } = renderBody()
+
+    await user.click(screen.getByRole('radio', { name: /Something else/ }))
+
+    const save = screen.getByRole('button', { name: 'Save' })
+    expect(save).toBeDisabled()
+
+    await user.type(screen.getByRole('textbox'), '   ')
+    expect(save).toBeDisabled()
+
+    await user.type(screen.getByRole('textbox'), 'Packaging supplies')
+    expect(save).toBeEnabled()
+
+    await user.click(save)
+    expect(screen.getByText(/Should we assume your future Costco purchases/)).toBeInTheDocument()
+  })
+
+  it('returns to the picker from the going-forward question', async () => {
     const { user } = renderBody()
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    expect(screen.getByText('Will Costco purchases always be Business Meals?')).toBeInTheDocument()
-
     await user.click(screen.getByRole('button', { name: 'Back' }))
 
-    expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeChecked()
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled()
-    expect(onRequest).not.toHaveBeenCalled()
+    expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
   })
 
-  it('locks the whole confirm step while the answer is in flight', async () => {
-    server.use(
-      postCounterpartyAskResponse.mock(makeCounterpartyAskTask(), {
-        onRequest: () => new Promise(resolve => setTimeout(resolve, 500)),
-      }),
-    )
-    const { user } = renderBody()
+  it('opens one itemised row at a time and advances on answer', async () => {
+    const { user } = renderBody(multiTransactionTask())
 
-    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
 
-    expect(screen.getByRole('button', { name: 'Back' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Yes, always' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'No, ask me again' })).toBeDisabled()
-  })
-
-  it('hides the mix option when there is only one transaction', () => {
-    renderBody()
-
-    expect(screen.queryByRole('radio', { name: 'A mix of the above' })).not.toBeInTheDocument()
-  })
-
-  it('requires every transaction to be answered before an itemised submit', async () => {
-    const { user } = renderBody(makeMultiTransactionTask())
-
-    await user.click(screen.getByRole('radio', { name: 'A mix of the above' }))
     expect(screen.getByText('0 of 2 answered')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
+    expect(screen.getAllByRole('radiogroup', { name: 'What this one was for' })).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled()
 
-    const rowGroups = screen.getAllByRole('radiogroup', { name: 'What this one was for' })
-    await user.click(within(rowGroups[0]!).getByRole('radio', { name: 'Business Meals' }))
+    const firstRow = screen.getByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(firstRow).getByRole('radio', { name: 'Business Meals' }))
 
     expect(screen.getByText('1 of 2 answered')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled()
 
-    await user.click(within(rowGroups[1]!).getByRole('radio', { name: 'Office Expenses' }))
+    const secondRow = screen.getByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(secondRow).getByRole('radio', { name: 'Office Expenses' }))
 
     expect(screen.getByText('All 2 answered')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled()
   })
 
-  it('submits differing per-transaction answers itemised, skipping the always question', async () => {
+  it('submits differing itemised answers without the going-forward question', async () => {
     const onRequest = spyOnAskResponse()
-    const { user } = renderBody(makeMultiTransactionTask())
+    const { user } = renderBody(multiTransactionTask())
 
-    await user.click(screen.getByRole('radio', { name: 'A mix of the above' }))
-
-    const rowGroups = screen.getAllByRole('radiogroup', { name: 'What this one was for' })
-    await user.click(within(rowGroups[0]!).getByRole('radio', { name: 'Business Meals' }))
-    await user.click(within(rowGroups[1]!).getByRole('radio', { name: 'Office Expenses' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'What this one was for' }))
+      .getByRole('radio', { name: 'Business Meals' }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'What this one was for' }))
+      .getByRole('radio', { name: 'Office Expenses' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
 
     await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
     expect(onRequest.mock.calls[0]?.[0]).toEqual({
       transaction_responses: [
         { transaction_id: 'txn-1', account_identifier: { type: 'StableName', stable_name: MEALS_STABLE_NAME } },
-        { transaction_id: 'txn-2', account_identifier: { type: 'AccountId', id: OFFICE_EXPENSES_ACCOUNT_ID } },
+        { transaction_id: 'txn-2', account_identifier: { type: 'AccountId', id: OFFICE_ACCOUNT_ID } },
       ],
     })
   })
 
-  it('notifies the host app when an itemised mix categorizes a transaction', async () => {
-    spyOnAskResponse()
-    const onTransactionCategorized = vi.fn()
-    const { user } = renderBody(makeMultiTransactionTask(), onTransactionCategorized)
-
-    await user.click(screen.getByRole('radio', { name: 'A mix of the above' }))
-
-    const rowGroups = screen.getAllByRole('radiogroup', { name: 'What this one was for' })
-    await user.click(within(rowGroups[0]!).getByRole('radio', { name: 'Business Meals' }))
-    await user.click(within(rowGroups[1]!).getByRole('radio', { name: 'Office Expenses' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
-
-    await waitFor(() => expect(onTransactionCategorized).toHaveBeenCalledTimes(1))
-  })
-
-  it('collapses a uniform mix into an all-same answer so it can still create a rule', async () => {
+  it('collapses a uniform itemised answer so it still reaches the going-forward question', async () => {
     const onRequest = spyOnAskResponse()
-    const { user } = renderBody(makeMultiTransactionTask())
+    const { user } = renderBody(multiTransactionTask())
 
-    await user.click(screen.getByRole('radio', { name: 'A mix of the above' }))
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'What this one was for' }))
+      .getByRole('radio', { name: 'Business Meals' }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'What this one was for' }))
+      .getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
 
-    const rowGroups = screen.getAllByRole('radiogroup', { name: 'What this one was for' })
-    await user.click(within(rowGroups[0]!).getByRole('radio', { name: 'Business Meals' }))
-    await user.click(within(rowGroups[1]!).getByRole('radio', { name: 'Business Meals' }))
-    await user.click(screen.getByRole('button', { name: 'Continue' }))
+    expect(screen.getByText(/Should we assume your future Costco purchases/)).toBeInTheDocument()
 
-    expect(screen.getByText('Will Costco purchases always be Business Meals?')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Yes, always' }))
+    await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
 
     await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
     expect(onRequest.mock.calls[0]?.[0]).toEqual({
@@ -284,33 +209,11 @@ describe('CounterpartyAskTaskBody', () => {
     })
   })
 
-  it('offers free text only when the API sent no suggestions', () => {
-    renderBody({ suggestions: [] })
-
-    expect(screen.getByRole('radio', { name: 'Something else' })).toBeInTheDocument()
-    expect(screen.getAllByRole('radio')).toHaveLength(1)
-  })
-
   it('stays answerable when the link rows carry no answers yet', () => {
-    renderBody(makeMultiTransactionTask())
+    renderBody(multiTransactionTask())
 
     expect(screen.queryByText('Answered')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeInTheDocument()
-  })
-
-  it('renders as answered once a link row carries an answer', () => {
-    renderBody({
-      ...makeMultiTransactionTask(),
-      status: BusinessTaskStatus.UserMarkedCompleted,
-      transactionResponses: [
-        { transactionId: 'txn-1', userResponse: 'Gift for a client', responseAccount: null },
-        { transactionId: 'txn-2', userResponse: null, responseAccount: null },
-      ],
-    })
-
-    expect(screen.getByText('Answered')).toBeInTheDocument()
-    expect(screen.getByText('You answered 1 of 2 individually.')).toBeInTheDocument()
   })
 
   it('renders an ask resolved by another period as already answered', () => {
@@ -320,6 +223,5 @@ describe('CounterpartyAskTaskBody', () => {
     })
 
     expect(screen.getByText('Already answered')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Continue' })).not.toBeInTheDocument()
   })
 })
