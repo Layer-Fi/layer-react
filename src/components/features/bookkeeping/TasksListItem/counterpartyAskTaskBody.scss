@@ -20,9 +20,11 @@
 }
 
 .Layer__CounterpartyAskTask__RowSummary {
-  justify-content: flex-start;
   padding-block: var(--spacing-2xs);
-  padding-inline: var(--spacing-2xs);
+}
+
+.Layer__CounterpartyAskTask__RowSummaryDetail {
+  flex: 1;
 }
 
 .Layer__CounterpartyAskTask__Footer {
