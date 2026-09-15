@@ -30,6 +30,14 @@
   text-align: center;
   color: var(--text-color-primary);
 
+  &[data-size='lg'] {
+    gap: var(--spacing-3xs);
+    min-block-size: 2.75rem;
+    padding-inline: var(--spacing-md);
+
+    border-radius: var(--border-radius-5xl);
+  }
+
   &[data-size='sm'] {
     min-block-size: 1.875rem;
     padding-inline: var(--spacing-xs);
