@@ -2,11 +2,12 @@ import { forwardRef, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
-import { isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { P } from '@ui/Typography/Text'
+import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
 import { LegacyTaskBody } from '@features/bookkeeping/TasksListItem/LegacyTaskBody'
 
@@ -22,6 +23,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 ) => {
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
+  const [answeredLabel, setAnsweredLabel] = useState<string | null>(null)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
@@ -69,6 +71,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               {getIconForTask(task)}
             </div>
             <P variant='inherit'>{task.title}</P>
+            {answeredLabel ? <P size='sm' variant='subtle'>{answeredLabel}</P> : null}
           </div>
           <ChevronDownFill
             size={16}
@@ -79,9 +82,17 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
           />
         </div>
         <div className={taskBodyClassName}>
-          {isLegacyBusinessTask(task)
-            ? <LegacyTaskBody task={task} onAnswered={onAnswered} />
-            : null}
+          {isCounterpartyAskTask(task)
+            ? (
+              <CounterpartyAskTaskBody
+                task={task}
+                counterpartyName={task.counterparty?.name ?? task.title}
+                onAnsweredLabelChange={setAnsweredLabel}
+              />
+            )
+            : isLegacyBusinessTask(task)
+              ? <LegacyTaskBody task={task} onAnswered={onAnswered} />
+              : null}
         </div>
       </div>
     </div>
