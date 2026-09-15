@@ -45,14 +45,14 @@ export const CounterpartyAskTransactionRow = ({
   const { formatDate } = useIntlFormatter()
 
   return (
-    <VStack className='Layer__CounterpartyAskTask__Row'>
+    <VStack className='Layer__CounterpartyAskTask__Row' pi='2xs'>
       <Button
         className='Layer__CounterpartyAskTask__RowSummary'
         variant='text'
         fullWidth
         onPress={onOpen}
       >
-        <HStack align='center' gap='xs' fluid>
+        <HStack align='center' gap='xs' overflow='hidden' fluid>
           <MoneySpan
             size='sm'
             weight='bold'
@@ -62,14 +62,21 @@ export const CounterpartyAskTransactionRow = ({
           <Span size='2xs' variant='subtle' noWrap>
             {formatDate(transaction.date, DateFormat.MonthDayShort)}
           </Span>
-          <Span size='xs' variant={answerLabel ? 'inherit' : 'subtle'} align='right' ellipsis noWrap>
+          <Span
+            className='Layer__CounterpartyAskTask__RowSummaryDetail'
+            size='xs'
+            variant={answerLabel ? 'inherit' : 'subtle'}
+            align='right'
+            ellipsis
+            noWrap
+          >
             {answerLabel ?? transaction.description ?? ''}
           </Span>
         </HStack>
       </Button>
       {isOpen
         ? (
-          <VStack gap='2xs' pb='2xs' pi='2xs'>
+          <VStack gap='2xs' pb='2xs'>
             <Span size='xs'>
               {t(
                 'bookkeeping:TasksListItem.CounterpartyAskTransactionRow.label.select_category',
