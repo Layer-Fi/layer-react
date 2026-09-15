@@ -132,8 +132,8 @@ const STORY_STYLES = `
     --table-story-columns: 3rem minmax(12rem, 1fr) 14rem 16rem 12rem 7rem;
   }
 
-  .Layer__UI__Table__TableStory .Layer__UI__VirtualizedTable__row,
-  .Layer__UI__Table__TableStory .Layer__UI__VirtualizedTable__header > tr {
+  .Layer__UI__Table__TableStory .Layer__UI__VirtualizedTable__Row,
+  .Layer__UI__Table__TableStory .Layer__UI__VirtualizedTable__Header > tr {
     display: grid;
     grid-template-columns: var(--table-story-columns);
   }

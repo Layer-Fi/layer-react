@@ -1,9 +1,9 @@
-.Layer__component {
+.Layer__ComponentRoot {
   max-width: 1406px;
   font-family: var(--font-family);
 }
 
-.Layer__component-container {
+.Layer__ComponentContainer {
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--border-color);
   background-color: var(--bg-color);
@@ -29,7 +29,7 @@
   }
 }
 
-.Layer__component.Layer__component--elevated {
+.Layer__ComponentRoot[data-elevated] {
   border-width: 0;
   box-shadow:
     0 4px 12px 0 var(--base-transparent-8),
@@ -37,13 +37,13 @@
     0 0 0 1px var(--base-transparent-4);
 }
 
-.Layer__component--no-bg {
+.Layer__ComponentRoot[data-no-bg] {
   border-width: 0;
   box-shadow: none;
   background: transparent;
 }
 
-.Layer__component-header {
+.Layer__ComponentHeader {
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
@@ -51,11 +51,4 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-lg);
-}
-
-.Layer__component-header__title-wrapper {
-  position: relative;
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
 }

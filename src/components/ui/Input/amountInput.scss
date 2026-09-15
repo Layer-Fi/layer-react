@@ -36,8 +36,8 @@
 }
 
 @media screen and (resolution >= 2dppx) {
-  .Layer__view,
-  .Layer__component,
+  .Layer__ViewRoot,
+  .Layer__ComponentRoot,
   .Layer__Portal {
     .Layer__AmountInput {
       height: 36px;

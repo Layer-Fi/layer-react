@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react'
+import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransactionDataOnly } from '@schemas/features/bankTransactions/bankTransactionDataOnly'
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { type CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
@@ -13,7 +15,6 @@ import { BankTransactionsValidateCsvStep } from '@features/bankTransactions/Bank
 import { BankTransactionsUploadStep } from '@features/bankTransactions/BankTransactionsUploadModal/types'
 
 import './bankTransactionsUploadWizard.scss'
-
 type UploadTransactionsHeaderProps = {
   currentStep: BankTransactionsUploadStep
   isValid: boolean | undefined
@@ -105,7 +106,7 @@ export function BankTransactionsUploadWizard({ onComplete }: BankTransactionsUpl
   }, [])
 
   return (
-    <section className='Layer__component Layer__upload-transactions'>
+    <section className={classNames(COMPONENT_ROOT_CLASS_NAME, 'Layer__upload-transactions')}>
       <Wizard
         Header={<UploadTransactionsHeader currentStep={currentStep} isValid={isValid} onClose={onComplete} />}
         Footer={null}

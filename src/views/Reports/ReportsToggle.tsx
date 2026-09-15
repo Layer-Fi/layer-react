@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
+import { COMPONENT_ROOT_CLASS_NAME } from '@utils/shared/styles/componentClassNames'
 import { type ReportType, useReportsHeaderContext } from '@providers/features/reports/ReportsHeaderContext/ReportsHeaderContext'
 import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-
 export const ReportsToggle = () => {
   const { t } = useTranslation()
   const context = useReportsHeaderContext()
@@ -20,7 +20,7 @@ export const ReportsToggle = () => {
   if (enabledReports.length <= 1) return null
 
   return (
-    <HStack className='Layer__component' gap='sm' align='center' justify='space-between'>
+    <HStack className={COMPONENT_ROOT_CLASS_NAME} gap='sm' align='center' justify='space-between'>
       <Toggle
         ariaLabel={t('views:Reports.ReportsToggle.label.report_type', 'Report type')}
         options={options}
