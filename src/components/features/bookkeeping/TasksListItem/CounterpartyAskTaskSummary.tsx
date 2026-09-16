@@ -18,7 +18,7 @@ export const CounterpartyAskTaskSummary = ({
   const { t } = useTranslation()
 
   return (
-    <HStack gap='sm' pb='sm'>
+    <HStack gap='sm' pb='sm' pi='md'>
       <Span
         className='Layer__CounterpartyAskTask__SummaryIcon'
         aria-label={t(

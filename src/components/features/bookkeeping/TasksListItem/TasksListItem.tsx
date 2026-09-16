@@ -1,13 +1,19 @@
 import { forwardRef, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
+import { ChevronLeft } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
-import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
+import {
+  type CounterpartyAskBackAction,
+  CounterpartyAskTaskBody,
+} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
 import { LegacyTaskBody } from '@features/bookkeeping/TasksListItem/LegacyTaskBody'
 
@@ -21,13 +27,16 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   { task, defaultOpen, onExpandTask },
   ref,
 ) => {
+  const { t } = useTranslation()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [answeredLabel, setAnsweredLabel] = useState<string | null>(null)
+  const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',
     isOpen && 'Layer__tasks-list-item__body--expanded',
+    isCounterpartyAskTask(task) && 'Layer__tasks-list-item__body--flush',
     isCompletedTask(task) && 'Layer__tasks-list-item--completed',
   )
 
@@ -67,9 +76,24 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
           onClick={onClickTaskItemHead}
         >
           <div className={taskHeadClassName}>
-            <div className='Layer__tasks-list-item__head-info__status'>
-              {getIconForTask(task)}
-            </div>
+            {isOpen && backAction
+              ? (
+                <Button
+                  className='Layer__tasks-list-item__head-info__back'
+                  variant='outlined'
+                  icon
+                  isDisabled={backAction.isDisabled}
+                  onPress={backAction.onBack}
+                  aria-label={t('common:action.back', 'Back')}
+                >
+                  <ChevronLeft size={14} />
+                </Button>
+              )
+              : (
+                <div className='Layer__tasks-list-item__head-info__status'>
+                  {getIconForTask(task)}
+                </div>
+              )}
             <P variant='inherit'>{task.title}</P>
             {answeredLabel ? <P size='sm' variant='subtle'>{answeredLabel}</P> : null}
           </div>
@@ -88,6 +112,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 task={task}
                 counterpartyName={task.counterparty?.name ?? task.title}
                 onAnsweredLabelChange={setAnsweredLabel}
+                onBackActionChange={setBackAction}
               />
             )
             : isLegacyBusinessTask(task)

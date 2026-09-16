@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -20,7 +20,6 @@ import { Chip, ChipGroup } from '@ui/Chip/Chip'
 import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
-import { CounterpartyAskSheetHeader } from '@features/bookkeeping/TasksListItem/CounterpartyAskSheetHeader'
 import { CounterpartyAskTaskSummary } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskSummary'
 import {
   CounterpartyAskTransactionRow,
@@ -34,16 +33,23 @@ const MIX_ANSWER_KEY = 'mix'
 
 type AskView = 'picker' | 'freeText' | 'itemised' | 'remember'
 
+export type CounterpartyAskBackAction = {
+  isDisabled: boolean
+  onBack: () => void
+}
+
 type CounterpartyAskTaskBodyProps = {
   task: UserVisibleTask & CounterpartyAskTask
   counterpartyName: string
   onAnsweredLabelChange: (label: string | null) => void
+  onBackActionChange: (backAction: CounterpartyAskBackAction | null) => void
 }
 
 export const CounterpartyAskTaskBody = ({
   task,
   counterpartyName,
   onAnsweredLabelChange,
+  onBackActionChange,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
   const { addToast, eventCallbacks } = useLayerContext()
@@ -58,6 +64,7 @@ export const CounterpartyAskTaskBody = ({
 
   const { suggestions, transactions } = task
   const totalTransactions = transactions.length
+  const isAnswered = task.status !== BusinessTaskStatus.Todo
 
   const resolveAnswer = useCallback(
     (answerKey: string | undefined, text: string): CounterpartyAskAnswerValue | null => {
@@ -168,7 +175,23 @@ export const CounterpartyAskTaskBody = ({
     )
   }, [pickerAnswer, submit])
 
-  const isAnswered = task.status !== BusinessTaskStatus.Todo
+  const goBack = useCallback(() => {
+    if (view === 'remember' && selectedKey === MIX_ANSWER_KEY) {
+      setView('itemised')
+      return
+    }
+
+    setSelectedKey(null)
+    setView('picker')
+  }, [selectedKey, view])
+
+  useEffect(() => {
+    onBackActionChange(
+      isAnswered || view === 'picker' ? null : { isDisabled: isMutating, onBack: goBack },
+    )
+
+    return () => onBackActionChange(null)
+  }, [goBack, isAnswered, isMutating, onBackActionChange, view])
 
   const storedAnswer: CounterpartyAskAnswerValue | null = task.responseAccount
     ? { kind: 'account', account: task.responseAccount }
@@ -220,12 +243,7 @@ export const CounterpartyAskTaskBody = ({
 
   if (view === 'remember' && pickerAnswer) {
     return (
-      <VStack gap='md' pb='md'>
-        <CounterpartyAskSheetHeader
-          title={task.title}
-          isBackDisabled={isMutating}
-          onBack={() => setView(selectedKey === MIX_ANSWER_KEY ? 'itemised' : 'picker')}
-        />
+      <VStack gap='md' pb='md' pi='md'>
         <P size='sm'>
           {t(
             'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.assume_going_forward',
@@ -264,8 +282,7 @@ export const CounterpartyAskTaskBody = ({
 
   if (view === 'freeText') {
     return (
-      <VStack gap='md' pb='md'>
-        <CounterpartyAskSheetHeader title={task.title} onBack={() => setView('picker')} />
+      <VStack gap='md' pb='md' pi='md'>
         <P size='sm'>
           {t(
             'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.what_were_these_for',
@@ -294,8 +311,7 @@ export const CounterpartyAskTaskBody = ({
   if (view === 'itemised') {
     return (
       <VStack gap='sm'>
-        <CounterpartyAskSheetHeader title={task.title} onBack={() => setView('picker')} />
-        <P size='sm'>
+        <P size='sm' pi='md'>
           {t(
             'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.answer_each_transaction',
             'Can you share more about what each transaction was for below?',
@@ -327,7 +343,13 @@ export const CounterpartyAskTaskBody = ({
             )
           })}
         </VStack>
-        <HStack className='Layer__CounterpartyAskTask__Footer' align='center' justify='space-between' gap='sm'>
+        <HStack
+          className='Layer__CounterpartyAskTask__Footer'
+          align='center'
+          justify='space-between'
+          gap='sm'
+          pi='md'
+        >
           <Span size='xs' variant='subtle'>
             {isEveryRowAnswered
               ? t(
@@ -350,7 +372,7 @@ export const CounterpartyAskTaskBody = ({
   }
 
   return (
-    <VStack gap='sm' pb='md'>
+    <VStack gap='sm' pb='md' pi='md'>
       <P size='sm'>{task.question}</P>
       <ChipGroup
         ariaLabel={t(

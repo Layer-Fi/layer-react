@@ -40,6 +40,10 @@
             border-radius: 100%;
           }
 
+          .Layer__tasks-list-item__head-info__back {
+            --size: 1.25rem;
+          }
+
           &.Layer__tasks-list-item--completed {
             color: var(--color-base-500);
             text-decoration: line-through;
@@ -104,6 +108,12 @@
         &.Layer__tasks-list-item__body--expanded {
           height: auto;
           opacity: 1;
+        }
+
+        &.Layer__tasks-list-item__body--flush {
+          padding-right: 0;
+          padding-left: 0;
+          margin-left: 0;
         }
       }
     }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -5,7 +6,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
+import {
+  type CounterpartyAskBackAction,
+  CounterpartyAskTaskBody,
+} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
@@ -36,19 +40,34 @@ const multiTransactionTask = (): Partial<CounterpartyAskTask> => ({
   totalCount: 2,
 })
 
+const AskHost = ({ task }: { task: UserVisibleTask & CounterpartyAskTask }) => {
+  const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
+
+  return (
+    <>
+      {backAction
+        ? (
+          <button type='button' disabled={backAction.isDisabled} onClick={backAction.onBack}>
+            Back
+          </button>
+        )
+        : null}
+      <CounterpartyAskTaskBody
+        task={task}
+        counterpartyName='Costco'
+        onAnsweredLabelChange={vi.fn()}
+        onBackActionChange={setBackAction}
+      />
+    </>
+  )
+}
+
 const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
   const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
 
   return {
     user: userEvent.setup(),
-    ...render(
-      <CounterpartyAskTaskBody
-        task={task}
-        counterpartyName='Costco'
-        onAnsweredLabelChange={vi.fn()}
-      />,
-      { wrapper: LayerTestProvider },
-    ),
+    ...render(<AskHost task={task} />, { wrapper: LayerTestProvider }),
   }
 }
 
@@ -144,6 +163,44 @@ describe('CounterpartyAskTaskBody', () => {
     await user.click(screen.getByRole('button', { name: 'Back' }))
 
     expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
+  })
+
+  it('clears the selection on the way back so the same answer can be picked again', async () => {
+    const { user } = renderBody()
+
+    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+
+    const meals = screen.getByRole('radio', { name: 'Business Meals' })
+    expect(meals).not.toBeChecked()
+
+    await user.click(meals)
+
+    expect(screen.getByText(/Should we assume your future Costco purchases/)).toBeInTheDocument()
+  })
+
+  it('offers no back action on the picker', () => {
+    renderBody()
+
+    expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument()
+  })
+
+  it('steps back from the going-forward question to the itemised sheet, not the picker', async () => {
+    const { user } = renderBody(multiTransactionTask())
+
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+
+    const firstRow = screen.getByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(firstRow).getByRole('radio', { name: 'Business Meals' }))
+    const secondRow = screen.getByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(secondRow).getByRole('radio', { name: 'Business Meals' }))
+
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+    expect(screen.getByText(/Should we assume your future Costco purchases/)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+
+    expect(screen.getByText('All 2 answered')).toBeInTheDocument()
   })
 
   it('opens one itemised row at a time and advances on answer', async () => {
