@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -61,6 +61,25 @@ export const CounterpartyAskTaskBody = ({
   const [rowKeys, setRowKeys] = useState<Record<string, string>>({})
   const [rowTexts, setRowTexts] = useState<Record<string, string>>({})
   const [openRowId, setOpenRowId] = useState<string | null>(null)
+  const [direction, setDirection] = useState<'forward' | 'back'>('forward')
+  const [paneHeight, setPaneHeight] = useState<number | null>(null)
+
+  const paneObserver = useRef<ResizeObserver | null>(null)
+
+  const measurePane = useCallback((pane: HTMLDivElement | null) => {
+    paneObserver.current?.disconnect()
+
+    if (!pane) return
+
+    const observer = new ResizeObserver(() => setPaneHeight(pane.offsetHeight))
+    observer.observe(pane)
+    paneObserver.current = observer
+  }, [])
+
+  const goForward = useCallback((nextView: AskView) => {
+    setDirection('forward')
+    setView(nextView)
+  }, [])
 
   const { suggestions, transactions } = task
   const totalTransactions = transactions.length
@@ -140,18 +159,18 @@ export const CounterpartyAskTaskBody = ({
   const onPick = useCallback((key: string) => {
     if (key === MIX_ANSWER_KEY) {
       setSelectedKey(key)
-      setView('itemised')
+      goForward('itemised')
       openNextUnanswered(rowKeys, rowTexts)
       return
     }
 
     setSelectedKey(key)
-    setView(key === OTHER_ANSWER_KEY ? 'freeText' : 'remember')
-  }, [openNextUnanswered, rowKeys, rowTexts])
+    goForward(key === OTHER_ANSWER_KEY ? 'freeText' : 'remember')
+  }, [goForward, openNextUnanswered, rowKeys, rowTexts])
 
   const onSaveItemised = useCallback(() => {
     if (pickerAnswer) {
-      setView('remember')
+      goForward('remember')
       return
     }
 
@@ -163,7 +182,7 @@ export const CounterpartyAskTaskBody = ({
         'Answered individually',
       ),
     )
-  }, [answeredRows, pickerAnswer, submit, t])
+  }, [answeredRows, goForward, pickerAnswer, submit, t])
 
   const onAnswerRemember = useCallback((alwaysThis: boolean) => {
     if (!pickerAnswer) return
@@ -176,6 +195,8 @@ export const CounterpartyAskTaskBody = ({
   }, [pickerAnswer, submit])
 
   const goBack = useCallback(() => {
+    setDirection('back')
+
     if (view === 'remember' && selectedKey === MIX_ANSWER_KEY) {
       setView('itemised')
       return
@@ -241,169 +262,187 @@ export const CounterpartyAskTaskBody = ({
     )
   }
 
-  if (view === 'remember' && pickerAnswer) {
+  const renderPane = () => {
+    if (view === 'remember' && pickerAnswer) {
+      return (
+        <VStack gap='md' pb='md' pi='md'>
+          <P size='sm'>
+            {t(
+              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.assume_going_forward',
+              'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
+              {
+                counterparty: counterpartyName,
+                answer: getCounterpartyAskAnswerLabel(pickerAnswer),
+              },
+            )}
+          </P>
+          <ChipGroup
+            ariaLabel={t(
+              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.assume_going_forward',
+              'Whether to assume this going forward',
+            )}
+            value={null}
+            onChange={key => onAnswerRemember(key === 'always')}
+            wrap
+          >
+            <Chip size='lg' value='always'>
+              {t(
+                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.yes_categorize_automatically',
+                'Yes, automatically categorize them',
+              )}
+            </Chip>
+            <Chip size='lg' value='ask'>
+              {t(
+                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.no_keep_asking',
+                'No, keep asking me about them',
+              )}
+            </Chip>
+          </ChipGroup>
+        </VStack>
+      )
+    }
+
+    if (view === 'freeText') {
+      return (
+        <VStack gap='md' pb='md' pi='md'>
+          <P size='sm'>
+            {t(
+              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.what_were_these_for',
+              'What were these purchases for?',
+            )}
+          </P>
+          <VStack className='Layer__CounterpartyAskTask__FreeText'>
+            <TextArea
+              value={freeText}
+              placeholder={t(
+                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.placeholder.own_words',
+                'Tell us in your own words',
+              )}
+              onChange={event => setFreeText(event.target.value)}
+            />
+          </VStack>
+          <HStack justify='end'>
+            <Button isDisabled={!freeText.trim()} onPress={() => goForward('remember')}>
+              {t('common:action.save_label', 'Save')}
+            </Button>
+          </HStack>
+        </VStack>
+      )
+    }
+
+    if (view === 'itemised') {
+      return (
+        <VStack gap='sm'>
+          <P size='sm' pi='md'>
+            {t(
+              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.answer_each_transaction',
+              'Can you share more about what each transaction was for below?',
+            )}
+          </P>
+          <VStack className='Layer__CounterpartyAskTask__Rows'>
+            {transactions.map((transaction) => {
+              const answer = resolveAnswer(rowKeys[transaction.id], rowTexts[transaction.id] ?? '')
+
+              return (
+                <CounterpartyAskTransactionRow
+                  key={transaction.id}
+                  transaction={transaction}
+                  suggestions={suggestions}
+                  selectedKey={rowKeys[transaction.id] ?? null}
+                  text={rowTexts[transaction.id] ?? ''}
+                  answerLabel={answer ? getCounterpartyAskAnswerLabel(answer) : null}
+                  isOpen={openRowId === transaction.id}
+                  onOpen={() => setOpenRowId(transaction.id)}
+                  onSelect={(answerKey) => {
+                    const nextRowKeys = { ...rowKeys, [transaction.id]: answerKey }
+                    setRowKeys(nextRowKeys)
+
+                    if (answerKey !== OTHER_ANSWER_KEY) openNextUnanswered(nextRowKeys, rowTexts)
+                  }}
+                  onChangeText={text => setRowTexts(current => ({ ...current, [transaction.id]: text }))}
+                  onCommitText={() => openNextUnanswered(rowKeys, rowTexts)}
+                />
+              )
+            })}
+          </VStack>
+          <HStack
+            className='Layer__CounterpartyAskTask__Footer'
+            align='center'
+            justify='space-between'
+            gap='sm'
+            pi='md'
+          >
+            <Span size='xs' variant='subtle'>
+              {isEveryRowAnswered
+                ? t(
+                  'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.all_rows_answered',
+                  'All {{total}} answered',
+                  { total: totalTransactions },
+                )
+                : t(
+                  'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.rows_answered',
+                  '{{answered}} of {{total}} answered',
+                  { answered: answeredRows.length, total: totalTransactions },
+                )}
+            </Span>
+            <Button isDisabled={!isEveryRowAnswered || isMutating} onPress={onSaveItemised}>
+              {t('common:action.save_label', 'Save')}
+            </Button>
+          </HStack>
+        </VStack>
+      )
+    }
+
     return (
-      <VStack gap='md' pb='md' pi='md'>
-        <P size='sm'>
-          {t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.assume_going_forward',
-            'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
-            {
-              counterparty: counterpartyName,
-              answer: getCounterpartyAskAnswerLabel(pickerAnswer),
-            },
-          )}
-        </P>
+      <VStack gap='sm' pb='md' pi='md'>
+        <P size='sm'>{task.question}</P>
         <ChipGroup
           ariaLabel={t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.assume_going_forward',
-            'Whether to assume this going forward',
+            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answer',
+            'What these were for',
           )}
-          value={null}
-          onChange={key => onAnswerRemember(key === 'always')}
+          value={selectedKey}
+          onChange={onPick}
           wrap
         >
-          <Chip size='lg' value='always'>
-            {t(
-              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.yes_categorize_automatically',
-              'Yes, automatically categorize them',
-            )}
+          {suggestions.map((suggestion, index) => (
+            <Chip key={toSuggestionAnswerKey(index)} size='lg' value={toSuggestionAnswerKey(index)}>
+              {suggestion.name}
+            </Chip>
+          ))}
+          <Chip size='lg' value={OTHER_ANSWER_KEY}>
+            {t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.something_else', 'Something else')}
+            <ChevronRight size={15} />
           </Chip>
-          <Chip size='lg' value='ask'>
-            {t(
-              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.no_keep_asking',
-              'No, keep asking me about them',
-            )}
-          </Chip>
+          {totalTransactions > 1
+            ? (
+              <Chip size='lg' value={MIX_ANSWER_KEY}>
+                {t(
+                  'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.multiple_different_things',
+                  'Multiple different things',
+                )}
+                <ChevronRight size={15} />
+              </Chip>
+            )
+            : null}
         </ChipGroup>
       </VStack>
     )
   }
 
-  if (view === 'freeText') {
-    return (
-      <VStack gap='md' pb='md' pi='md'>
-        <P size='sm'>
-          {t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.what_were_these_for',
-            'What were these purchases for?',
-          )}
-        </P>
-        <VStack className='Layer__CounterpartyAskTask__FreeText'>
-          <TextArea
-            value={freeText}
-            placeholder={t(
-              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.placeholder.own_words',
-              'Tell us in your own words',
-            )}
-            onChange={event => setFreeText(event.target.value)}
-          />
-        </VStack>
-        <HStack justify='end'>
-          <Button isDisabled={!freeText.trim()} onPress={() => setView('remember')}>
-            {t('common:action.save_label', 'Save')}
-          </Button>
-        </HStack>
-      </VStack>
-    )
-  }
-
-  if (view === 'itemised') {
-    return (
-      <VStack gap='sm'>
-        <P size='sm' pi='md'>
-          {t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.answer_each_transaction',
-            'Can you share more about what each transaction was for below?',
-          )}
-        </P>
-        <VStack className='Layer__CounterpartyAskTask__Rows'>
-          {transactions.map((transaction) => {
-            const answer = resolveAnswer(rowKeys[transaction.id], rowTexts[transaction.id] ?? '')
-
-            return (
-              <CounterpartyAskTransactionRow
-                key={transaction.id}
-                transaction={transaction}
-                suggestions={suggestions}
-                selectedKey={rowKeys[transaction.id] ?? null}
-                text={rowTexts[transaction.id] ?? ''}
-                answerLabel={answer ? getCounterpartyAskAnswerLabel(answer) : null}
-                isOpen={openRowId === transaction.id}
-                onOpen={() => setOpenRowId(transaction.id)}
-                onSelect={(answerKey) => {
-                  const nextRowKeys = { ...rowKeys, [transaction.id]: answerKey }
-                  setRowKeys(nextRowKeys)
-
-                  if (answerKey !== OTHER_ANSWER_KEY) openNextUnanswered(nextRowKeys, rowTexts)
-                }}
-                onChangeText={text => setRowTexts(current => ({ ...current, [transaction.id]: text }))}
-                onCommitText={() => openNextUnanswered(rowKeys, rowTexts)}
-              />
-            )
-          })}
-        </VStack>
-        <HStack
-          className='Layer__CounterpartyAskTask__Footer'
-          align='center'
-          justify='space-between'
-          gap='sm'
-          pi='md'
-        >
-          <Span size='xs' variant='subtle'>
-            {isEveryRowAnswered
-              ? t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.all_rows_answered',
-                'All {{total}} answered',
-                { total: totalTransactions },
-              )
-              : t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.rows_answered',
-                '{{answered}} of {{total}} answered',
-                { answered: answeredRows.length, total: totalTransactions },
-              )}
-          </Span>
-          <Button isDisabled={!isEveryRowAnswered || isMutating} onPress={onSaveItemised}>
-            {t('common:action.save_label', 'Save')}
-          </Button>
-        </HStack>
-      </VStack>
-    )
-  }
-
   return (
-    <VStack gap='sm' pb='md' pi='md'>
-      <P size='sm'>{task.question}</P>
-      <ChipGroup
-        ariaLabel={t(
-          'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answer',
-          'What these were for',
-        )}
-        value={selectedKey}
-        onChange={onPick}
-        wrap
+    <div
+      className='Layer__CounterpartyAskTask'
+      style={paneHeight === null ? undefined : { blockSize: paneHeight }}
+    >
+      <div
+        key={view}
+        ref={measurePane}
+        className='Layer__CounterpartyAskTask__Pane'
+        data-direction={direction}
       >
-        {suggestions.map((suggestion, index) => (
-          <Chip key={toSuggestionAnswerKey(index)} size='lg' value={toSuggestionAnswerKey(index)}>
-            {suggestion.name}
-          </Chip>
-        ))}
-        <Chip size='lg' value={OTHER_ANSWER_KEY}>
-          {t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.something_else', 'Something else')}
-          <ChevronRight size={15} />
-        </Chip>
-        {totalTransactions > 1
-          ? (
-            <Chip size='lg' value={MIX_ANSWER_KEY}>
-              {t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.multiple_different_things',
-                'Multiple different things',
-              )}
-              <ChevronRight size={15} />
-            </Chip>
-          )
-          : null}
-      </ChipGroup>
-    </VStack>
+        {renderPane()}
+      </div>
+    </div>
   )
 }
