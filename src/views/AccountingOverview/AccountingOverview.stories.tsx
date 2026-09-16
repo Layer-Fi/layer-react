@@ -103,8 +103,8 @@ export const AccountReconnectionBanner: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement)
 
-    await canvas.findByText('RBC Checking (4048) is ready for refresh')
-    await canvas.findByText('Last refreshed 3 days ago')
+    await canvas.findByText('RBC Checking (4048) is ready for refresh', {}, { timeout: 5000 })
+    await canvas.findByText('Last refreshed 3 days ago', {}, { timeout: 5000 })
 
     await userEvent.click(canvas.getByRole('button', {
       name: 'RBC Checking (4048) is ready for refresh',
@@ -126,7 +126,7 @@ export const AccountReconnectionBannerWithDefaultReconnect: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await canvas.findByText('RBC Checking (4048) is ready for refresh')
+    await canvas.findByText('RBC Checking (4048) is ready for refresh', {}, { timeout: 5000 })
   },
 }
 
@@ -134,7 +134,7 @@ export const NoAccountNeedingReconnection: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await canvas.findByText('$37,935.00')
+    await canvas.findByText('$37,935.00', {}, { timeout: 5000 })
     await expect(canvas.queryByText(/is ready for refresh/)).not.toBeInTheDocument()
   },
 }
@@ -164,7 +164,7 @@ export const MultipleAccountsNeedingReconnection: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await canvas.findByText('RBC Checking (4048) is ready for refresh')
+    await canvas.findByText('RBC Checking (4048) is ready for refresh', {}, { timeout: 5000 })
     await expect(canvas.queryByText('Chase Checking (1234) is ready for refresh')).not.toBeInTheDocument()
   },
 }

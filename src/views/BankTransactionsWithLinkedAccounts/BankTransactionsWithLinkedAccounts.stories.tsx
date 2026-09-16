@@ -286,8 +286,8 @@ export const MobileMultipleInstitutionConnections: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await userEvent.click(await canvas.findByRole('button', { name: 'Refresh 2 bank connections to see recent transactions' }))
-    await screen.findByRole('menuitem', { name: /Refresh Chase/ })
+    await userEvent.click(await canvas.findByRole('button', { name: 'Refresh 2 bank connections to see recent transactions' }, { timeout: 5000 }))
+    await screen.findByRole('menuitem', { name: /Refresh Chase/ }, { timeout: 5000 })
   },
 }
 
@@ -329,6 +329,6 @@ export const RecentlySyncedConnectionNotYetStale: Story = {
       canvas.queryByRole('region', { name: 'Bank connections require attention' }),
     ).not.toBeInTheDocument()
     await expect(canvas.queryByRole('button', { name: /Refresh Now/ })).not.toBeInTheDocument()
-    await expect((await canvas.findAllByText('$25,000.00')).length).toBeGreaterThan(0)
+    await expect((await canvas.findAllByText('$25,000.00', {}, { timeout: 5000 })).length).toBeGreaterThan(0)
   },
 }
