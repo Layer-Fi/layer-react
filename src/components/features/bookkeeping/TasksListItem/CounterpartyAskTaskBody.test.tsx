@@ -386,4 +386,20 @@ describe('CounterpartyAskTaskBody', () => {
 
     await waitFor(() => expect(screen.queryByText('Saving...')).not.toBeInTheDocument())
   })
+
+  it('shows the saved answer instead of the picker while the task refetches', async () => {
+    const onRequest = spyOnAskResponse()
+    const { user } = renderBody()
+
+    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
+
+    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
+
+    await waitFor(() =>
+      expect(screen.queryByRole('radio', { name: /Something else/ })).not.toBeInTheDocument(),
+    )
+    expect(screen.getByText('Business Meals')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
+  })
 })

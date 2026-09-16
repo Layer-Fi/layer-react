@@ -66,6 +66,7 @@ export const CounterpartyAskTaskBody = ({
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
   const [isEditing, setIsEditing] = useState(false)
+  const [submitted, setSubmitted] = useState<{ label: string | null } | null>(null)
 
   const paneObserver = useRef<ResizeObserver | null>(null)
 
@@ -145,9 +146,8 @@ export const CounterpartyAskTaskBody = ({
         }
 
         onAnsweredLabelChange(answerLabel)
+        setSubmitted({ label: answerLabel })
         setIsEditing(false)
-        setView('picker')
-        setSelectedKey(null)
       }
       catch {
         addToast({
@@ -174,6 +174,9 @@ export const CounterpartyAskTaskBody = ({
     goForward(key === OTHER_ANSWER_KEY ? 'freeText' : 'remember')
   }, [goForward, openNextUnanswered, rowKeys, rowTexts])
 
+  const hadAccountAnswer = Boolean(task.responseAccount)
+    || task.transactionResponses.some(response => Boolean(response.responseAccount))
+
   const onSaveItemised = useCallback(() => {
     if (pickerAnswer) {
       goForward('remember')
@@ -182,23 +185,23 @@ export const CounterpartyAskTaskBody = ({
 
     void submit(
       buildItemisedCounterpartyAskResponse(answeredRows),
-      answeredRows.every(row => row.answer.kind === 'account'),
+      answeredRows.every(row => row.answer.kind === 'account') || hadAccountAnswer,
       t(
         'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually',
         'Answered individually',
       ),
     )
-  }, [answeredRows, goForward, pickerAnswer, submit, t])
+  }, [answeredRows, goForward, hadAccountAnswer, pickerAnswer, submit, t])
 
   const onAnswerRemember = useCallback((alwaysThis: boolean) => {
     if (!pickerAnswer) return
 
     void submit(
       buildAllSameCounterpartyAskResponse(pickerAnswer, alwaysThis),
-      pickerAnswer.kind === 'account',
+      pickerAnswer.kind === 'account' || hadAccountAnswer,
       getCounterpartyAskAnswerLabel(pickerAnswer),
     )
-  }, [pickerAnswer, submit])
+  }, [hadAccountAnswer, pickerAnswer, submit])
 
   const goBack = useCallback(() => {
     setDirection('back')
@@ -217,7 +220,7 @@ export const CounterpartyAskTaskBody = ({
     setView('picker')
   }, [selectedKey, view])
 
-  const hasBackAction = isEditing || (!isAnswered && view !== 'picker')
+  const hasBackAction = isEditing || (!isAnswered && submitted === null && view !== 'picker')
 
   useEffect(() => {
     onBackActionChange(hasBackAction ? { isDisabled: isMutating, onBack: goBack } : null)
@@ -251,6 +254,7 @@ export const CounterpartyAskTaskBody = ({
     setSelectedKey(null)
     setDirection('forward')
     setView('picker')
+    setSubmitted(null)
     setIsEditing(true)
   }, [suggestions, task.transactionResponses, task.userResponse])
 
@@ -261,6 +265,16 @@ export const CounterpartyAskTaskBody = ({
   const answeredTransactions = task.transactionResponses.filter(
     response => Boolean(response.userResponse) || Boolean(response.responseAccount),
   )
+
+  if (submitted && !isEditing) {
+    return (
+      <CounterpartyAskTaskSummary
+        title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
+        detail={submitted.label ?? getCounterpartyAskAnswerLabel(pickerAnswer ?? { kind: 'text', text: '' })}
+        onEdit={startEditing}
+      />
+    )
+  }
 
   if (isAnswered && !isEditing && task.resolvedByTaskId) {
     return (
