@@ -1,80 +1,134 @@
 import { useCallback, useContext, useMemo } from 'react'
-import { CircleArrowRight, RefreshCcw } from 'lucide-react'
+import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
-  formatBankAccountWithMask,
-  getBankAccountRefreshConnectionInfo,
-  getBankAccountsReadyForRefresh,
+  type BankAccountRefreshConnection,
+  getBankAccountRefreshConnections,
 } from '@utils/features/bankAccounts/bankAccount'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { Button } from '@ui/Button/Button'
+import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
 import './bankTransactionsRefreshAlert.scss'
 
 export const BankTransactionsRefreshAlert = () => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  const { isMobile } = useSizeClass()
   const { data, isLoading } = useBankAccountsContext()
   const { addConnection, repairConnection } = useContext(LinkedAccountsContext)
 
-  const accountsReadyForRefresh = useMemo(
-    () => getBankAccountsReadyForRefresh(data),
+  const refreshConnections = useMemo(
+    () => getBankAccountRefreshConnections(data),
     [data],
   )
 
-  const accountReadyForRefresh = accountsReadyForRefresh[0]
-  const refreshInfo = accountReadyForRefresh
-    ? getBankAccountRefreshConnectionInfo(accountReadyForRefresh)
-    : null
-
-  const handleRefresh = useCallback(() => {
-    if (!refreshInfo?.connectionExternalId) return
-
-    if (refreshInfo.reconnectWithNewCredentials) {
-      void addConnection(refreshInfo.source)
+  const handleRefresh = useCallback((connection: BankAccountRefreshConnection) => {
+    if (connection.reconnectWithNewCredentials) {
+      void addConnection(connection.source)
       return
     }
 
-    void repairConnection(refreshInfo.source, refreshInfo.connectionExternalId)
-  }, [addConnection, refreshInfo, repairConnection])
+    void repairConnection(connection.source, connection.connectionExternalId)
+  }, [addConnection, repairConnection])
 
-  if (isLoading || !accountReadyForRefresh) {
+  const summaryLabel = tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
+    count: refreshConnections.length,
+    displayCount: formatNumber(refreshConnections.length),
+    one: 'Refresh {{displayCount}} bank connection to see recent transactions',
+    other: 'Refresh {{displayCount}} bank connections to see recent transactions',
+  })
+
+  const Trigger = useCallback(() => (
+    <Button className='Layer__BankTransactionsRefreshAlert__action' variant='text'>
+      <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
+        <RefreshCcw size={14} />
+        <P size='sm' weight='normal' variant='inherit'>{summaryLabel}</P>
+        <ChevronDown size={14} />
+      </HStack>
+    </Button>
+  ), [summaryLabel])
+
+  if (isLoading || refreshConnections.length === 0) {
     return null
   }
 
-  const accountName = formatBankAccountWithMask(accountReadyForRefresh)
-  const message = t(
-    'bankTransactions:BankTransactionsRefreshAlert.label.refresh_account_for_up_to_date_transactions',
-    'Refresh {{accountName}} for up-to-date transactions',
-    { accountName },
-  )
+  const connectionLabel = (connection: BankAccountRefreshConnection) => {
+    if (connection.accountNames.length === 1) {
+      return t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect_account', 'Refresh {{accountName}}', {
+        accountName: connection.accountNames[0],
+      })
+    }
 
-  const content = (
-    <>
-      <P variant='inherit'><RefreshCcw size={11} /></P>
-      <P size='sm' weight='normal' variant='inherit'>{message}</P>
-      {refreshInfo?.connectionExternalId && <CircleArrowRight size={14} />}
-    </>
-  )
+    return connection.institutionName
+      ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_institution_accounts', {
+        count: connection.accountNames.length,
+        displayCount: formatNumber(connection.accountNames.length),
+        institutionName: connection.institutionName,
+        one: 'Refresh {{institutionName}} ({{displayCount}} account)',
+        other: 'Refresh {{institutionName}} ({{displayCount}} accounts)',
+      })
+      : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_linked_accounts', {
+        count: connection.accountNames.length,
+        displayCount: formatNumber(connection.accountNames.length),
+        one: 'Refresh {{displayCount}} linked account',
+        other: 'Refresh {{displayCount}} linked accounts',
+      })
+  }
+
+  const multipleConnections = refreshConnections.length > 1
 
   return (
-    <div className='Layer__BankTransactionsRefreshAlert' data-status='warning' role='status'>
-      {refreshInfo?.connectionExternalId
+    <VStack
+      className='Layer__BankTransactionsRefreshAlert'
+      data-status='success'
+      role='region'
+      aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
+      gap='2xs'
+    >
+      {multipleConnections
         ? (
-          <button
-            type='button'
-            className='Layer__BankTransactionsRefreshAlert__action'
-            onClick={handleRefresh}
+          <DropdownMenu
+            ariaLabel={summaryLabel}
+            slots={{ Trigger }}
+            slotProps={{ Dialog: { width: isMobile ? 'var(--trigger-width)' : 320 } }}
+            popoverClassName='Layer__BankTransactionsRefreshAlert__popover'
           >
-            {content}
-          </button>
+            <MenuList>
+              {refreshConnections.map(connection => (
+                <MenuItem
+                  key={`${connection.source}:${connection.connectionExternalId}`}
+                  onClick={() => handleRefresh(connection)}
+                >
+                  <P size='sm' weight='normal'>{connectionLabel(connection)}</P>
+                  <Spacer />
+                  <CircleArrowRight size={14} />
+                </MenuItem>
+              ))}
+            </MenuList>
+          </DropdownMenu>
         )
-        : (
-          <div className='Layer__BankTransactionsRefreshAlert__text'>
-            {content}
-          </div>
-        )}
-    </div>
+        : refreshConnections.map(connection => (
+          <Button
+            key={`${connection.source}:${connection.connectionExternalId}`}
+            className='Layer__BankTransactionsRefreshAlert__action'
+            variant='text'
+            onPress={() => handleRefresh(connection)}
+          >
+            <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
+              <RefreshCcw size={14} />
+              <P size='sm' weight='normal' variant='inherit' ellipsis>{summaryLabel}</P>
+              <CircleArrowRight size={14} />
+            </HStack>
+          </Button>
+        ))}
+    </VStack>
   )
 }

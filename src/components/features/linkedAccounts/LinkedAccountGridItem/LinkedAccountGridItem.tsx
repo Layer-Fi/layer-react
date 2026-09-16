@@ -124,7 +124,7 @@ export const LinkedAccountGridItem = ({
   }
   else if (refreshInfo) {
     pillConfig = {
-      text: t('linkedAccounts:LinkedAccountGridItem.action.ready_for_refresh', 'Ready for Refresh'),
+      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
       status: 'success' as const,
       icon: <RefreshCcw size={14} />,
       config: [

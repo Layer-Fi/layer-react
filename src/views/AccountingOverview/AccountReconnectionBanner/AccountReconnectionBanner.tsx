@@ -1,6 +1,8 @@
 import { ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/shared/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -8,22 +10,39 @@ import { Span } from '@ui/Typography/Text'
 
 import './accountReconnectionBanner.scss'
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
 export type AccountReconnectionBannerProps = {
+  accountLabel: string
+  lastSyncedAt: Date | null
   onClick?: () => void
 }
 
-export const AccountReconnectionBanner = ({ onClick }: AccountReconnectionBannerProps) => {
+export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick }: AccountReconnectionBannerProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
   const { isMobile } = useSizeClass()
 
   const label = t(
     'views:AccountingOverview.AccountReconnectionBanner.label.account_ready_for_refresh',
-    'RBC Business Checking (4048) is ready for refresh',
+    '{{accountLabel}} is ready for refresh',
+    { accountLabel },
   )
-  const lastRefreshedLabel = t(
-    'views:AccountingOverview.AccountReconnectionBanner.label.last_refreshed_two_weeks_ago',
-    'Last refreshed two weeks ago',
-  )
+
+  const daysSinceLastSynced = lastSyncedAt
+    ? Math.max(1, Math.floor((Date.now() - lastSyncedAt.getTime()) / MS_PER_DAY))
+    : null
+
+  const lastRefreshedLabel = daysSinceLastSynced === null
+    ? t('views:AccountingOverview.AccountReconnectionBanner.label.never_refreshed', 'Never refreshed')
+    : tPlural(t, 'views:AccountingOverview.AccountReconnectionBanner.label.last_refreshed_days_ago', {
+      count: daysSinceLastSynced,
+      displayCount: formatNumber(daysSinceLastSynced),
+      one: 'Last refreshed {{displayCount}} day ago',
+      other: 'Last refreshed {{displayCount}} days ago',
+    })
+
+  const refreshNowLabel = t('views:AccountingOverview.AccountReconnectionBanner.action.refresh_now', 'Refresh Now')
 
   return (
     <HStack className='Layer__AccountingOverview__AccountReconnectionBanner' fluid>
@@ -33,16 +52,22 @@ export const AccountReconnectionBanner = ({ onClick }: AccountReconnectionBanner
         ariaLabel={`${label}. ${lastRefreshedLabel}`}
         slots={{
           Icon: isMobile ? null : <RefreshCcw size={16} />,
-          Button: (
-            <BannerButton
-              variant='outlined'
-              icon
-              onPress={onClick}
-              aria-label={label}
-            >
-              <ChevronRight size={18} />
-            </BannerButton>
-          ),
+          Button: isMobile
+            ? (
+              <BannerButton variant='outlined' onPress={onClick}>
+                {refreshNowLabel}
+              </BannerButton>
+            )
+            : (
+              <BannerButton
+                variant='outlined'
+                icon
+                onPress={onClick}
+                aria-label={label}
+              >
+                <ChevronRight size={18} />
+              </BannerButton>
+            ),
         }}
       >
         <VStack gap='3xs' align='start'>

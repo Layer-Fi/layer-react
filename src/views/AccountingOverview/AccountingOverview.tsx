@@ -1,10 +1,14 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
+import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/bankAccount'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -60,7 +64,13 @@ export interface AccountingOverviewProps {
   }
 }
 
-export const AccountingOverview = ({
+export const AccountingOverview = (props: AccountingOverviewProps) => (
+  <LinkedAccountsProvider>
+    <AccountingOverviewContent {...props} />
+  </LinkedAccountsProvider>
+)
+
+const AccountingOverviewContent = ({
   title,
   showTitle = true,
   onTransactionsToReviewClick,
@@ -73,6 +83,25 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
+  const { data: bankAccounts } = useBankAccountsContext()
+  const { addConnection, repairConnection } = useContext(LinkedAccountsContext)
+  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts)
+
+  const handleAccountUpdateClick = useCallback(() => {
+    if (onAccountUpdateClick) {
+      onAccountUpdateClick()
+      return
+    }
+
+    if (!accountNeedingReconnection) return
+
+    if (accountNeedingReconnection.reconnectWithNewCredentials) {
+      void addConnection(accountNeedingReconnection.source)
+    }
+    else if (accountNeedingReconnection.connectionExternalId) {
+      void repairConnection(accountNeedingReconnection.source, accountNeedingReconnection.connectionExternalId)
+    }
+  }, [onAccountUpdateClick, accountNeedingReconnection, addConnection, repairConnection])
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -101,7 +130,13 @@ export const AccountingOverview = ({
           </Header>
         )}
       >
-        <AccountReconnectionBanner onClick={onAccountUpdateClick} />
+        {accountNeedingReconnection && (
+          <AccountReconnectionBanner
+            accountLabel={accountNeedingReconnection.accountLabel}
+            lastSyncedAt={accountNeedingReconnection.lastSyncedAt}
+            onClick={handleAccountUpdateClick}
+          />
+        )}
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}

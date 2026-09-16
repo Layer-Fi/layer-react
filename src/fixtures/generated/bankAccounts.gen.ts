@@ -26,7 +26,9 @@ export const bankAccounts = [
         "reconnectWithNewCredentials": false,
         "connectionExternalId": null,
         "userCreated": false,
-        "isSyncing": false
+        "isSyncing": false,
+        "lastSyncedAt": null,
+        "updateType": null
       }
     ],
     "latestBalanceTimestamp": {
@@ -60,7 +62,9 @@ export const bankAccounts = [
         "reconnectWithNewCredentials": false,
         "connectionExternalId": null,
         "userCreated": false,
-        "isSyncing": false
+        "isSyncing": false,
+        "lastSyncedAt": null,
+        "updateType": null
       }
     ],
     "latestBalanceTimestamp": {
@@ -94,7 +98,9 @@ export const bankAccounts = [
         "reconnectWithNewCredentials": false,
         "connectionExternalId": null,
         "userCreated": false,
-        "isSyncing": false
+        "isSyncing": false,
+        "lastSyncedAt": null,
+        "updateType": null
       }
     ],
     "latestBalanceTimestamp": {
@@ -128,7 +134,9 @@ export const bankAccounts = [
         "reconnectWithNewCredentials": false,
         "connectionExternalId": null,
         "userCreated": false,
-        "isSyncing": false
+        "isSyncing": false,
+        "lastSyncedAt": null,
+        "updateType": null
       }
     ],
     "latestBalanceTimestamp": {
@@ -162,7 +170,9 @@ export const bankAccounts = [
         "reconnectWithNewCredentials": false,
         "connectionExternalId": null,
         "userCreated": false,
-        "isSyncing": false
+        "isSyncing": false,
+        "lastSyncedAt": null,
+        "updateType": null
       }
     ],
     "latestBalanceTimestamp": {

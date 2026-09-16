@@ -28,6 +28,8 @@ const baseBankAccount: BankAccount = {
       connectionExternalId: 'plaid_connection_4821',
       userCreated: false,
       isSyncing: false,
+      lastSyncedAt: null,
+      updateType: null,
     },
   ],
   latestBalanceTimestamp: {
@@ -83,6 +85,8 @@ export function makeBankAccountWithMirroredExternalAccount({
         connectionExternalId: null,
         userCreated: false,
         isSyncing: false,
+        lastSyncedAt: null,
+        updateType: null,
         ...externalAccountOverrides,
       },
     ],
@@ -114,10 +118,7 @@ export function markAccountReadyForRefresh(account: BankAccount): BankAccount {
     ...account,
     externalAccounts: account.externalAccounts.map(externalAccount => ({
       ...externalAccount,
-      notifications: [
-        ...externalAccount.notifications.filter(({ type }) => type !== 'READY_FOR_REFRESH'),
-        { type: 'READY_FOR_REFRESH' },
-      ],
+      updateType: 'USER_PRESENT_REQUIRED',
     })),
   }
 }

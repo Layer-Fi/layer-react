@@ -39,6 +39,16 @@ export function LinkedAccountPill({
     </Pill>
   ), [icon, label, status])
 
+  const [soleItem] = items
+  if (soleItem && items.length === 1) {
+    return (
+      <Pill status={status} onPress={soleItem.action}>
+        {icon ?? <CircleAlert size={14} />}
+        {label}
+      </Pill>
+    )
+  }
+
   return (
     <DropdownMenu ariaLabel={label} slots={{ Trigger }} variant='compact' popoverClassName={legacyClassNames('menu:popover')}>
       <MenuList className={legacyClassNames('Layer__UI__DropdownMenu__Menu')}>
