@@ -62,6 +62,11 @@ describe('buildAllSameCounterpartyAskResponse', () => {
       alwaysThis: false,
     })
   })
+
+  it('trims free text, which the wire schema rejects untrimmed', () => {
+    expect(buildAllSameCounterpartyAskResponse({ kind: 'text', text: '  Business Meals ' }, false))
+      .toEqual({ userResponse: 'Business Meals', alwaysThis: false })
+  })
 })
 
 describe('buildItemisedCounterpartyAskResponse', () => {
