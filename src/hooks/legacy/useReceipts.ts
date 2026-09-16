@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { DocumentS3Urls } from '@internal-types/bankTransactions'
-import { type BankTransaction } from '@internal-types/bankTransactions'
-import type { FileMetadata } from '@internal-types/fileUpload'
-import { type Awaitable } from '@internal-types/utility/promises'
-import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
-import { hasReceipts } from '@utils/bankTransactions/shared'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import type { DocumentS3Urls } from '@internal-types/features/bankTransactions/bankTransaction'
+import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { FileMetadata } from '@internal-types/shared/fileUpload'
+import { type DocumentWithStatus } from '@internal-types/shared/fileUpload'
+import { type Awaitable } from '@internal-types/utility/awaitable'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { hasReceipts } from '@utils/features/bankTransactions/shared'
+import { get, post, postWithFormData } from '@utils/shared/api/authenticatedHttp'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls
@@ -113,10 +113,9 @@ export const useReceipts: UseReceipts = ({
 }: UseReceiptsProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, auth } = useBuildKeyInputs()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
   const pendingUploadNamesRef = useRef<Set<string>>(new Set())
@@ -130,9 +129,11 @@ export const useReceipts: UseReceipts = ({
   }, [isActive])
 
   const fetchDocuments = async () => {
+    if (!auth) return
+
     const listBankTransactionDocumentsCall = listBankTransactionDocuments(
-      apiUrl,
-      auth?.access_token,
+      auth.apiUrl,
+      auth.access_token,
       {
         params: {
           businessId: businessId,
@@ -154,6 +155,14 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    if (!auth) return
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionReceiptUploadClicked,
+      version: 1,
+      payload: { transactionId: bankTransaction.id },
+    })
+
     if (!isValidReceiptFile(file)) {
       const id = new Date().valueOf().toString()
       setReceiptUrls(prev => [
@@ -165,7 +174,7 @@ export const useReceipts: UseReceipts = ({
           status: 'failed' as const,
           name: file.name,
           date: formatDate(new Date()),
-          error: t('bankTransactions:error.upload_file_type', 'Invalid file type. Please upload an image or PDF.'),
+          error: t('bankTransactions:useReceipts.error.upload_file_type', 'Invalid file type. Please upload an image or PDF.'),
         },
       ])
       return
@@ -195,8 +204,8 @@ export const useReceipts: UseReceipts = ({
     try {
       setReceiptUrls(prev => [...prev, newReceipt])
       const uploadDocument = uploadBankTransactionDocument(
-        apiUrl,
-        auth?.access_token,
+        auth.apiUrl,
+        auth.access_token,
       )
       const result = await uploadDocument({
         businessId: businessId,
@@ -209,12 +218,12 @@ export const useReceipts: UseReceipts = ({
       // Update the bank transaction with the new document id
       if (
         result?.data?.id
-        && bankTransaction?.document_ids
-        && bankTransaction.document_ids.length === 0
+        && bankTransaction?.documentIds
+        && bankTransaction.documentIds.length === 0
       ) {
         updateLocalBankTransactions([{
           ...bankTransaction,
-          document_ids: [result.data.id],
+          documentIds: [result.data.id],
         }])
       }
     }
@@ -225,7 +234,7 @@ export const useReceipts: UseReceipts = ({
           if (url.id === id) {
             return {
               ...url,
-              error: t('bankTransactions:error.upload', 'Failed to upload'),
+              error: t('bankTransactions:useReceipts.error.upload', 'Failed to upload'),
               status: 'failed' as const,
             }
           }
@@ -237,7 +246,7 @@ export const useReceipts: UseReceipts = ({
   }
 
   const archiveDocument = async (document: DocumentWithStatus) => {
-    if (!document.id) return
+    if (!document.id || !auth) return
 
     try {
       if (document.error) {
@@ -256,7 +265,7 @@ export const useReceipts: UseReceipts = ({
             return url
           }),
         )
-        await archiveBankTransactionDocument(apiUrl, auth?.access_token, {
+        await archiveBankTransactionDocument(auth.apiUrl, auth.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,
@@ -273,7 +282,7 @@ export const useReceipts: UseReceipts = ({
             return {
               ...url,
               status: 'failed',
-              error: t('bankTransactions:error.delete', 'Failed to delete'),
+              error: t('bankTransactions:useReceipts.error.delete', 'Failed to delete'),
             }
           }
 

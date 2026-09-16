@@ -1,7 +1,45 @@
+.Layer__bookkeeping-overview--view {
+  .Layer__panel .Layer__panel__content .Layer__component-header {
+    z-index: 1;
+  }
+
+  .Layer__panel.Layer__panel--open .Layer__panel__content {
+    border-right: none;
+  }
+
+  .Layer__panel__sidebar {
+    padding: var(--spacing-lg);
+    border-left: none;
+    background: none;
+  }
+
+  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+    max-width: 560px;
+  }
+}
+
+@media screen and (width >= 1100px) {
+  .Layer__bookkeeping-overview--view {
+    .Layer__panel__content {
+      max-width: 1406px;
+    }
+
+    .Layer__view-main.Layer__view-main {
+      padding-right: 0;
+    }
+  }
+}
+
 .Layer__BookkeepingOverview {
   &__ProfitAndLossContainer {
     display: flex;
     flex-direction: column;
+  }
+
+  &__ProfitAndLossHeader {
+    padding-block-start: var(--spacing-lg);
+    padding-block-end: 0;
+    padding-inline: var(--spacing-lg);
   }
 
   &__ProfitAndLossCharts {

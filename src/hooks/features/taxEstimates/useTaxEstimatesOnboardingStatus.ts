@@ -1,7 +1,7 @@
-import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
-import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type AccountingConfigurationSchemaType } from '@schemas/features/business/accountingConfiguration'
+import { type TaxProfile } from '@schemas/features/taxEstimates/profile'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 
 export enum OnboardingStatus {
   Loading = 'Loading',
@@ -46,7 +46,7 @@ export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboarding
 
 export function useTaxEstimatesOnboardingStatus() {
   const { accountingConfiguration } = useLayerContext()
-  const { data: taxProfile, isLoading, isError } = useTaxProfile()
+  const { data: taxProfile, isLoading, isError } = useGetTaxProfile()
 
   return getTaxEstimatesOnboardingStatus({
     isLoading,

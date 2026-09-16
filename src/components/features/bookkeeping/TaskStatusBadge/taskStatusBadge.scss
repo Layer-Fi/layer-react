@@ -1,0 +1,49 @@
+.Layer__TasksBadge {
+  display: flex;
+  gap: var(--spacing-3xs);
+  align-items: center;
+  padding: var(--spacing-3xs) var(--border-radius-2xs);
+  border-radius: var(--border-radius-3xs);
+  background: var(--color-info-warning);
+  font-size: var(--text-xs);
+  color: var(--color-info-warning-bg);
+  white-space: nowrap;
+
+  &[data-icononly] {
+    gap: 0;
+    height: 16px;
+    width: 16px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .Layer__P {
+    line-height: 10px;
+  }
+
+  .Layer__TasksBadge__Icon {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+  }
+
+  &[data-status='info'] {
+    background: var(--color-info-bg);
+    color: var(--color-info-fg);
+  }
+
+  &[data-status='warning'] {
+    background: var(--color-info-warning);
+    color: var(--color-info-warning-bg);
+  }
+
+  &[data-status='success'] {
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+
+  &[data-status='error'] {
+    background: var(--color-info-error-bg);
+    color: var(--color-info-error);
+  }
+}

@@ -1,13 +1,34 @@
 import { useId, useMemo } from 'react'
 import classNames from 'classnames'
-import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
+import type { CSSObjectWithLabel, GroupBase, Props as SelectProps, StylesConfig } from 'react-select'
 
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
+import { PORTAL_CLASS_NAME } from '@ui/Portal/Portal'
+
+const legacyClassNames = createLegacyClassNames({
+  'Layer__ComboBoxContainer': 'Layer__select',
+  'Layer__ComboBoxControl': 'Layer__select__control',
+  'Layer__ComboBoxControl--Focused': ['Layer__select__control--is-focused', 'Layer__ComboBoxControl--focused'],
+  'Layer__ComboBoxControl--Error': ['Layer__select--error', 'Layer__ComboBoxControl--error'],
+  'Layer__ComboBoxValueContainer': 'Layer__select__value-container',
+  'Layer__ComboBoxPlaceholder': 'Layer__select__placeholder',
+  'Layer__ComboBoxMenu': 'Layer__select__menu',
+  'Layer__ComboBoxMenuPortal': 'Layer__select__menu-portal',
+  'Layer__ComboBoxMultiValueRemove': 'Layer__select__multi-value__remove',
+  'Layer__ComboBoxControl--Disabled': ['Layer__select__control--is-disabled', 'Layer__ComboBoxControl--disabled'],
+  'Layer__ComboBoxControl--Readonly': 'Layer__ComboBoxControl--readonly',
+  'Layer__ComboBoxIndicatorsContainer--Readonly': 'Layer__ComboBoxIndicatorsContainer--readonly',
+} satisfies ComboBoxLegacyClassNames)
+
+type UseCommonComboBoxPropsReturn<T extends ComboBoxOption, IsMulti extends boolean> =
+  Partial<SelectProps<T, IsMulti, GroupBase<T>>> & AriaLabelProps
 
 export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends boolean>({
   className,
+  name,
   options,
   groups,
   onInputValueChange,
@@ -17,17 +38,22 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   displayDisabledAsSelected,
   isDisabled,
   isError,
+  isInvalid,
   isReadOnly = false,
   isClearable = true,
   isSearchable = true,
   isLoading,
   isMutating,
+  menuIsOpen,
+  menuPortalTarget = document.body,
+  filterOption,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
 }: Pick<
   BaseComboBoxProps<T>,
   | 'className'
+  | 'name'
   | 'options'
   | 'groups'
   | 'onInputValueChange'
@@ -37,12 +63,16 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'displayDisabledAsSelected'
   | 'isDisabled'
   | 'isError'
+  | 'isInvalid'
   | 'isReadOnly'
   | 'isClearable'
   | 'isSearchable'
   | 'isLoading'
   | 'isMutating'
-> & AriaLabelProps) {
+  | 'menuIsOpen'
+  | 'menuPortalTarget'
+  | 'filterOption'
+> & AriaLabelProps): UseCommonComboBoxPropsReturn<T, IsMulti> {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
 
@@ -52,28 +82,30 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     displayDisabledAsSelected,
   })
 
+  const hasError = isError || isInvalid
   const selectClassNames = useMemo(() => ({
-    container: () => COMBO_BOX_CLASS_NAMES.CONTAINER,
+    container: () => legacyClassNames('Layer__ComboBoxContainer'),
     control: ({ isFocused, isDisabled }: { isFocused: boolean, isDisabled: boolean }) => classNames(
-      COMBO_BOX_CLASS_NAMES.CONTROL,
-      isFocused && `${COMBO_BOX_CLASS_NAMES.CONTROL}--focused`,
-      isDisabled && `${COMBO_BOX_CLASS_NAMES.CONTROL}--disabled`,
-      isError && `${COMBO_BOX_CLASS_NAMES.CONTROL}--error`,
-      isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
+      legacyClassNames(
+        'Layer__ComboBoxControl',
+        isFocused && 'Layer__ComboBoxControl--Focused',
+        isDisabled && 'Layer__ComboBoxControl--Disabled',
+        hasError && 'Layer__ComboBoxControl--Error',
+      ),
+      isReadOnly && legacyClassNames('Layer__ComboBoxControl--Readonly'),
     ),
-    valueContainer: () => COMBO_BOX_CLASS_NAMES.VALUE_CONTAINER,
-    placeholder: () => classNames(
-      COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
-      isError && `${COMBO_BOX_CLASS_NAMES.PLACEHOLDER}--error`,
-    ),
+    valueContainer: () => legacyClassNames('Layer__ComboBoxValueContainer'),
+    placeholder: () => legacyClassNames('Layer__ComboBoxPlaceholder'),
     indicatorsContainer: () => classNames(
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
-      isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
+      isReadOnly && legacyClassNames('Layer__ComboBoxIndicatorsContainer--Readonly'),
     ),
-    menu: () => COMBO_BOX_CLASS_NAMES.MENU,
+    menu: () => classNames(PORTAL_CLASS_NAME, legacyClassNames('Layer__ComboBoxMenu')),
+    menuPortal: () => legacyClassNames('Layer__ComboBoxMenuPortal'),
+    multiValueRemove: () => legacyClassNames('Layer__ComboBoxMultiValueRemove'),
     menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
     group: () => COMBO_BOX_CLASS_NAMES.GROUP,
-  }), [isError, isReadOnly])
+  }), [hasError, isReadOnly])
 
   const styles: StylesConfig<T, IsMulti, GroupBase<T>> = useMemo(() => ({
     menuPortal: (base: CSSObjectWithLabel) => ({ ...base, zIndex: 101 }),
@@ -82,12 +114,13 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   const selectProps = useMemo(() => ({
     inputId: effectiveInputId,
     className,
+    name,
     options: options ?? groups,
     onInputChange: onInputValueChange,
     placeholder,
     unstyled: true,
     escapeClearsValue: true,
-    menuPortalTarget: document.body,
+    menuPortalTarget,
     classNames: selectClassNames,
     styles,
     components,
@@ -96,8 +129,10 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isSearchable: isSearchable && !isReadOnly,
     isLoading: isLoading || isMutating,
     openMenuOnClick: !isReadOnly,
+    menuIsOpen,
     menuPlacement: 'auto' as const,
     menuShouldScrollIntoView: false,
+    filterOption,
     ['aria-label']: ariaLabel,
     ['aria-labelledby']: ariaLabelledby,
     ['aria-describedby']: ariaDescribedby,
@@ -108,6 +143,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     className,
     components,
     effectiveInputId,
+    filterOption,
     groups,
     isClearable,
     isDisabled,
@@ -115,6 +151,9 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isMutating,
     isReadOnly,
     isSearchable,
+    menuIsOpen,
+    menuPortalTarget,
+    name,
     onInputValueChange,
     options,
     placeholder,

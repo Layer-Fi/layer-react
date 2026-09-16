@@ -1,0 +1,134 @@
+name: Checks
+
+# The single-command PR checks, which differed only in the command they ran. A matrix
+# keeps them as separate, independently reportable jobs while the setup lives in one place.
+#
+# Anything with its own shape stays in its own file: Bundle Size (two builds against different
+# refs), Storybook, and Chromatic.
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # One failing check must not cancel the others — a PR should see every failure at once.
+      fail-fast: false
+      matrix:
+        include:
+          - name: ESLint
+            run: npm run lint:eslint
+          - name: StyleLint
+            run: npm run lint:stylelint
+          - name: TypeScript
+            run: npm run typecheck
+          - name: Vitest
+            run: npm run test:coverage
+          - name: Fixtures
+            run: npm run fixtures:check
+          - name: API mocks
+            run: npm run msw:check-coverage
+          - name: Translations
+            run: npm run i18n:check
+          # Reports rather than gates: dropping a class name is sometimes right, so this one is
+          # deliberately absent from the branch ruleset's required checks. It still fails, red and
+          # legible, so the loss is a decision instead of a surprise.
+          - name: CSS
+            run: npm run css:check
+
+    steps:
+    - uses: actions/checkout@v7
+
+    # The class-name check diffs against the base branch, which a shallow clone cannot reach.
+    - name: Deepen history
+      if: matrix.name == 'CSS'
+      run: |
+        if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+          git fetch --no-tags --unshallow origin
+        fi
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: ${{ matrix.name }}
+      env:
+        BASE_REF: origin/${{ github.event.pull_request.base.ref }}
+      run: ${{ matrix.run }}
+
+  # Its own job rather than a matrix entry: everything after the build reads `dist/`, so they share
+  # one build, and as separate steps a red run reports every failure instead of only the first.
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      id: build
+      run: npm run build
+
+    # `!cancelled()` so one failing check does not skip the rest — without a status function the
+    # `if` gets an implicit `success()`. Still gated on the build: without `dist/` these would only
+    # report a missing file.
+    - name: Entrypoints
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run build:check
+
+    - name: Package exports
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run lint:package
+
+    - name: Published types
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run test:types
+
+    - name: Size budgets
+      if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+      run: npm run size
+
+  # Its own job rather than a matrix entry: it needs no dependencies, and it inspects the PR head
+  # rather than the merge commit, so it shares none of the setup above.
+  scratch-stories:
+    name: Scratch
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check for scratch stories
+      run: |
+        FILES=$(git ls-files '*scratch.stories.tsx')
+        if [ -z "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        while IFS= read -r file; do echo "  - $file"; done <<< "$FILES"
+        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
+        exit 1

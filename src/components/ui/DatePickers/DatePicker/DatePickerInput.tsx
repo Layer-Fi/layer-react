@@ -1,0 +1,56 @@
+import { useMemo } from 'react'
+import { TriangleAlert } from 'lucide-react'
+
+import type { View } from '@internal-types/shared/view'
+import { DateInput, DateSegment } from '@ui/Date/Date'
+import { FieldError } from '@ui/Form/Form'
+import { InputGroup } from '@ui/Input/InputGroup'
+import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
+import { HStack } from '@ui/Stack/Stack'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+
+type DatePickerInputProps = {
+  errorText?: string | null
+  onClick?: () => void
+  variant: View
+  isReadOnly?: boolean
+}
+
+export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: DatePickerInputProps) => {
+  const errorTriangle = useMemo(() => {
+    if (variant === 'mobile' || !errorText) return null
+
+    return (
+      <Tooltip offset={12}>
+        <TooltipTrigger>
+          <FieldError><TriangleAlert size={18} /></FieldError>
+        </TooltipTrigger>
+        <TooltipContent>
+          {errorText}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }, [errorText, variant])
+
+  if (variant === 'mobile') {
+    return (
+      <InputGroup slot='input' onClick={isReadOnly ? undefined : onClick}>
+        <DateInput inset pointerEvents='none'>
+          {segment => <DateSegment isReadOnly segment={segment} />}
+        </DateInput>
+      </InputGroup>
+    )
+  }
+
+  return (
+    <InputGroup slot='input'>
+      <DateInput inset>
+        {segment => <DateSegment segment={segment} isReadOnly={isReadOnly} />}
+      </DateInput>
+      <HStack gap='3xs' align='center' pie='4xs'>
+        {errorTriangle}
+        {!isReadOnly && <PickerDropdownIndicator onClick={onClick} />}
+      </HStack>
+    </InputGroup>
+  )
+}

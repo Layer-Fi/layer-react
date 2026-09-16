@@ -1,11 +1,17 @@
 .Layer__Popover {
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
   inline-size: min(90svi, 60ch);
 
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--outline-default);
 
   background: var(--color-base-0);
+
+  [role='dialog'] {
+    outline: none;
+  }
 
   &[data-flex-inline] {
     inline-size: auto;

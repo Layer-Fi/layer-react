@@ -1,0 +1,46 @@
+import { type DateValue } from '@internationalized/date'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
+import type { View } from '@internal-types/shared/view'
+import { Button } from '@ui/Button/Button'
+import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHeader, CalendarHeaderCell } from '@ui/Calendar/Calendar'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+
+import './dateCalendar.scss'
+
+type DateCalendarProps = {
+  minDate?: DateValue | null
+  maxDate?: DateValue | null
+  variant?: View
+}
+
+export const DateCalendar = ({ minDate, maxDate, variant }: DateCalendarProps) => {
+  return (
+    <Calendar minValue={minDate} maxValue={maxDate}>
+      <HStack align='center' justify='space-between' pb='xs' pi='xs' className='Layer__DateCalendar__Header'>
+        <Button icon inset variant='ghost' slot='previous'>
+          <ChevronLeft size={20} />
+        </Button>
+        <Heading weight='normal' size='sm' />
+        <Button icon inset variant='ghost' slot='next'>
+          <ChevronRight size={20} />
+        </Button>
+      </HStack>
+      <HStack pb='xs' pi='xs'>
+        <CalendarGrid>
+          <CalendarGridHeader>
+            {day => (
+              <CalendarHeaderCell size={variant === 'mobile' ? 'md' : 'sm'}>
+                {day}
+              </CalendarHeaderCell>
+            )}
+          </CalendarGridHeader>
+          <CalendarGridBody>
+            {date => <CalendarCell date={date} size={variant === 'mobile' ? 'md' : 'sm'} />}
+          </CalendarGridBody>
+        </CalendarGrid>
+      </HStack>
+    </Calendar>
+  )
+}

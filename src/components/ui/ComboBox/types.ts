@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { GroupBase } from 'react-select'
+import type { FilterOptionOption, GroupBase } from 'react-select'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 
@@ -22,7 +22,7 @@ export type AriaLabelProps = Pick<
 
 export type ComboBoxSlots<T extends ComboBoxOption> = {
   EmptyMessage?: ReactNode
-  ErrorMessage?: ReactNode
+  ErrorMessage?: string
   GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
   Option?: React.FC<{ option: T, fallback: ReactNode }>
   SingleValue?: React.FC<{ option: T, fallback: ReactNode }>
@@ -30,6 +30,8 @@ export type ComboBoxSlots<T extends ComboBoxOption> = {
 
 export type BaseComboBoxProps<T extends ComboBoxOption> = {
   className?: string
+  name?: string
+  slot?: string
 
   onInputValueChange?: (value: string) => void
 
@@ -40,12 +42,18 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
 
   isDisabled?: boolean
   isError?: boolean
+  isInvalid?: boolean
   isLoading?: boolean
   isMutating?: boolean
 
   isSearchable?: boolean
   isClearable?: boolean
   isReadOnly?: boolean
+
+  menuIsOpen?: boolean
+  menuPortalTarget?: HTMLElement | null
+
+  filterOption?: ((option: FilterOptionOption<T>, inputValue: string) => boolean) | null
 
   displayDisabledAsSelected?: boolean
 } & OptionsOrGroups<T> & AriaLabelProps

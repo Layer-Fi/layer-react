@@ -1,9 +1,11 @@
 import { useCallback } from 'react'
 
-import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
-import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
+import { type CallBookingStringOverrides } from '@internal-types/features/bookkeeping/callBooking'
+import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { useGetBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
+import { useBookkeepingStatusGlobalCacheActions, useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { usePostCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 
 const getUuidFromCalendlyUri = (uri: string) => {
@@ -18,14 +20,21 @@ const getUuidFromCalendlyUri = (uri: string) => {
 }
 
 export const useBookkeepingOnboardingCallBooking = () => {
-  const { data: bookkeepingStatus } = useBookkeepingStatus()
-  const { forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
-  const { trigger: createCallBooking } = useCreateCallBooking()
-  const { data: callBookings, isError, isLoading } = useCallBookings({ limit: 1 })
+  const { data: bookkeepingStatus } = useGetBookkeepingStatus()
+  const { data: bookkeepingConfiguration } = useGetBookkeepingConfiguration()
+  const { forceReload: forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
+  const { trigger: createCallBooking } = usePostCallBooking()
+  const { data: callBookings, isError, isLoading } = useGetListCallBookings({ limit: 1 })
 
   const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
     ? bookkeepingStatus.onboardingCallUrl
     : undefined
+
+  const callBookingStringOverrides: CallBookingStringOverrides = {
+    title: bookkeepingConfiguration?.onboardingCallCardTitleText ?? undefined,
+    description: bookkeepingConfiguration?.onboardingCallCardDescriptionText ?? undefined,
+    coverage: bookkeepingConfiguration?.onboardingCallCardCoverageText ?? undefined,
+  }
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
     const externalId = getUuidFromCalendlyUri(payload.event.uri)
@@ -77,6 +86,7 @@ export const useBookkeepingOnboardingCallBooking = () => {
     callBooking: callBooking ?? undefined,
     showCallBookingCard: showScheduledCallBooking || showEmptyCallBooking,
     handleBookCall,
+    callBookingStringOverrides,
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,

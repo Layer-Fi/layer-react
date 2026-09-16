@@ -1,0 +1,134 @@
+import classNames from 'classnames'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import type { ComponentProps } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { isDots, usePaginationRange } from '@hooks/utils/pagination/usePaginationRange'
+import { Button } from '@ui/Button/Button'
+import { VStack } from '@ui/Stack/Stack'
+
+import './pagination.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__Pagination: 'Layer__pagination',
+  Layer__UI__Pagination__Container: 'Layer__pagination-container',
+  Layer__UI__Pagination__Nav: 'Layer__pagination-nav',
+})
+
+export interface PaginationProps {
+  currentPage: number
+  pageSize: number
+  onPageChange: (page: number) => void
+  totalCount: number
+  siblingCount?: number
+  hasMore?: boolean
+  fetchMore?: () => void
+  className?: string
+}
+
+type PaginationButtonProps = ComponentProps<typeof Button> & { isSelected?: boolean }
+const PaginationButton = ({ children, isSelected, ...buttonProps }: PaginationButtonProps) => {
+  return (
+    <Button
+      inset
+      icon
+      variant={isSelected ? 'branded' : 'ghost'}
+      {...buttonProps}
+    >
+      {children}
+    </Button>
+  )
+}
+
+export const Pagination = ({
+  onPageChange,
+  totalCount,
+  siblingCount = 1,
+  currentPage,
+  pageSize,
+  hasMore,
+  fetchMore,
+  className,
+}: PaginationProps) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  const paginationRange = usePaginationRange({
+    currentPage,
+    totalCount,
+    siblingCount,
+    pageSize,
+  })
+
+  if (!paginationRange || currentPage === 0 || paginationRange.length < 2) {
+    return null
+  }
+  const lastPage = paginationRange[paginationRange.length - 1]
+
+  return (
+    <VStack className={classNames(legacyClassNames('Layer__UI__Pagination__Container'), className)} fluid>
+      <nav aria-label={t('ui:Pagination.label.pagination', 'Pagination')} className={legacyClassNames('Layer__UI__Pagination__Nav')}>
+        <ul className={legacyClassNames('Layer__UI__Pagination')} role='list'>
+          <li key='page-prev'>
+            <PaginationButton
+              onPress={() => onPageChange(currentPage - 1)}
+              isDisabled={currentPage === 1}
+              aria-label={t('ui:Pagination.label.go_previous_page', 'Go to previous page')}
+            >
+              <ChevronLeft size={12} />
+            </PaginationButton>
+          </li>
+          {paginationRange.map((pageNumber) => {
+            if (isDots(pageNumber)) {
+              return (
+                <li key={`page-${pageNumber}`}>
+                  <PaginationButton
+                    isDisabled
+                    aria-hidden='true'
+                  >
+                    &hellip;
+                  </PaginationButton>
+                </li>
+              )
+            }
+
+            const displayPageNumber = formatNumber(pageNumber, { useGrouping: false, maximumFractionDigits: 0 })
+            return (
+              <li key={`page-${pageNumber}`}>
+                <PaginationButton
+                  isSelected={pageNumber === currentPage}
+                  onPress={() => onPageChange(pageNumber)}
+                  aria-label={t('ui:Pagination.label.go_page_number', 'Go to page {{pageNumber}}', { pageNumber: displayPageNumber })}
+                >
+                  {displayPageNumber}
+                </PaginationButton>
+              </li>
+            )
+          })}
+          {hasMore && fetchMore
+            ? (
+              <li key='page-has-more'>
+                <PaginationButton
+                  onPress={fetchMore}
+                  aria-label={t('ui:Pagination.action.get_more_results', 'Get more results')}
+                >
+                  &hellip;
+                </PaginationButton>
+              </li>
+            )
+            : null}
+          <li key='page-next'>
+            <PaginationButton
+              onPress={() => onPageChange(currentPage + 1)}
+              isDisabled={currentPage === lastPage}
+              aria-label={t('ui:Pagination.label.go_next_page', 'Go to next page')}
+            >
+              <ChevronRight size={12} />
+            </PaginationButton>
+          </li>
+        </ul>
+      </nav>
+    </VStack>
+  )
+}

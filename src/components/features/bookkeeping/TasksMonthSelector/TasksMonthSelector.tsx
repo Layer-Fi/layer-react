@@ -1,0 +1,105 @@
+import { useCallback, useMemo } from 'react'
+import { getMonth, getYear, set } from 'date-fns'
+
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { getCompletedTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { TaskMonthTile } from '@features/bookkeeping/TasksMonthSelector/TaskMonthTile'
+import { type MonthData } from '@features/bookkeeping/TasksMonthSelector/types'
+
+import './tasksMonthSelector.scss'
+
+function useActiveYearBookkeepingPeriods() {
+  const { date } = useGlobalDate()
+  const { data } = useGetBookkeepingPeriods()
+
+  const activeYear = getYear(date)
+
+  const periodsInActiveYear = useMemo(() => {
+    return data?.filter(period => period.year === activeYear)
+  }, [data, activeYear])
+
+  return { periodsInActiveYear }
+}
+
+type TasksMonthSelectorProps = {
+  isMobile: boolean
+}
+
+function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
+  const { date } = useGlobalDate()
+  const { formatDate } = useIntlFormatter()
+  const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
+
+  const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
+
+  const activeMonthNumber = getMonth(date) + 1
+  const activeYear = getYear(date)
+
+  const handleMonthClick = useCallback((year: number, month: number) => {
+    emitLayerEvent({
+      type: LayerEventType.TaskMonthSelected,
+      version: 1,
+      payload: { year, month },
+    })
+    setMonthByPeriod({ yearNumber: year, monthNumber: month })
+  }, [emitLayerEvent, setMonthByPeriod])
+
+  const monthsData = useMemo(() => {
+    return Array.from({ length: 12 }, (_, index) => {
+      const date = set(
+        new Date(),
+        { year: activeYear, month: index, date: 1, hours: 0, minutes: 0, seconds: 0, milliseconds: 0 },
+      )
+
+      const existingTaskData = periodsInActiveYear?.find(({ month }) => month === index + 1)
+      const taskData = existingTaskData
+        ? {
+          ...existingTaskData,
+          disabled: false,
+        }
+        : {
+          year: activeYear,
+          month: index + 1,
+          tasks: [],
+          status: BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE,
+          disabled: true,
+        }
+
+      const total = taskData.tasks?.length ?? 0
+
+      return {
+        monthStr: formatDate(date, DateFormat.MonthShort),
+        date,
+        completed: getCompletedTasks(taskData.tasks).length,
+        total,
+        ...taskData,
+      } satisfies MonthData
+    })
+  }, [activeYear, formatDate, periodsInActiveYear])
+
+  return (
+    <div className='Layer__tasks-month-selector'>
+      {monthsData?.map((monthData, idx) => {
+        return (
+          <TaskMonthTile
+            key={idx}
+            onClick={() => handleMonthClick(monthData.year, monthData.month)}
+            data={monthData}
+            active={monthData.month === activeMonthNumber}
+            disabled={monthData.disabled}
+            isMobile={isMobile}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
+export { TasksMonthSelector }

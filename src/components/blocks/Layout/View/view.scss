@@ -1,0 +1,25 @@
+.Layer__view {
+  position: relative;
+
+  .Layer__view-main {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    container-type: inline-size;
+  }
+
+  &.Layer__view--panel {
+    .Layer__view-main {
+      padding: 0;
+    }
+  }
+}
+
+.Layer__view-notifications {
+  :first-child {
+    border-top-left-radius: var(--border-radius-2xs);
+    border-top-right-radius: var(--border-radius-2xs);
+  }
+}

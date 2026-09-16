@@ -1,10 +1,9 @@
 import useSWRMutation from 'swr/mutation'
 
-import type { Awaitable } from '@internal-types/utility/promises'
-import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import type { Awaitable } from '@internal-types/utility/awaitable'
+import { post } from '@utils/shared/api/authenticatedHttp'
+import { createBuildKey } from '@utils/shared/swr/createBuildKey'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type UpdateBankAccountOpeningBalanceBody = {
   effective_at: string
@@ -49,31 +48,11 @@ type OpeningBalanceAPIResponseError = {
 }
 
 export type OpeningBalanceAPIResponseResult =
-  | { bankAccountId: string, status: 'fulfilled', value: { data: { type: string } } }
+  | { bankAccountId: string, status: 'fulfilled', value: { data: unknown } }
   | OpeningBalanceAPIResponseValidationError
   | OpeningBalanceAPIResponseError
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  data,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  data: OpeningBalanceData[]
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      data,
-      tags: ['#update-opening-balance'],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, data: OpeningBalanceData[] }>(['#update-opening-balance'])
 
 function setOpeningBalanceOnBankAccount({
   apiUrl,
@@ -110,9 +89,7 @@ export function useBulkSetOpeningBalanceAndDate(
   data: OpeningBalanceData[],
   { onSuccess }: { onSuccess: (results: OpeningBalanceAPIResponseResult[]) => Awaitable<void> },
 ) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const validate = ({ openingBalance, openingDate, isDateInvalid }: OpeningBalanceData) => {
     const errors: string[] = []
@@ -171,10 +148,11 @@ export function useBulkSetOpeningBalanceAndDate(
       )
     )
       .then((results) => {
-        const resultsWithIds: OpeningBalanceAPIResponseResult[] = results.map((r, i) => ({
-          ...r,
-          bankAccountId: data[i].bankAccountId,
-        }))
+        const resultsWithIds: OpeningBalanceAPIResponseResult[] = results.flatMap((r, i) => {
+          const bankAccountId = data[i]?.bankAccountId
+
+          return bankAccountId === undefined ? [] : [{ ...r, bankAccountId }]
+        })
         return onSuccess?.(resultsWithIds)
       })
       .then(() => true as const),

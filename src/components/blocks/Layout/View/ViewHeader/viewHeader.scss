@@ -1,0 +1,63 @@
+.Layer__view-header {
+  box-sizing: border-box;
+  position: relative;
+
+  display: flex;
+  overflow: auto;
+  width: 100%;
+  max-width: 100%;
+
+  padding: 0 var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  container-type: inline-size;
+
+  .Layer__HeaderRow:last-child {
+    border-width: 0;
+  }
+}
+
+.Layer__UI__Heading + .Layer__view-header__children {
+  width: min-content;
+}
+
+.Layer__view-header__content > .Layer__UI__Heading {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--spacing-md) 0;
+}
+
+.Layer__view-header__content {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1406px;
+}
+
+.Layer__view-header--paddings {
+  .Layer__view-header__content {
+    padding: var(--spacing-md);
+
+    .Layer__view-header__children {
+      gap: var(--spacing-md);
+    }
+  }
+}
+
+.Layer__view-header__children {
+  display: flex;
+  width: 100%;
+}
+
+.Layer__view--panel {
+  .Layer__view-header {
+    position: relative;
+    padding: 0;
+  }
+
+  .Layer__view-header__content {
+    max-width: 1406px;
+  }
+}

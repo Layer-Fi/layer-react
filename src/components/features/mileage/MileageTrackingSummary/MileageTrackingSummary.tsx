@@ -1,0 +1,116 @@
+import { useTranslation } from 'react-i18next'
+
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMileageTrackingYearlySummary'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Loader } from '@ui/Loader/Loader'
+import { HStack, Stack, VStack } from '@ui/Stack/Stack'
+import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
+import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
+import { MileageDeductionChart } from '@features/mileage/MileageDeductionChart/MileageDeductionChart'
+import { MileageTrackingStatsCard } from '@features/mileage/MileageTrackingStatsCard/MileageTrackingStatsCard'
+
+import './mileageTrackingSummary.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'summary:header': 'Layer__MileageTrackingSummary__Header',
+})
+
+const Content = () => {
+  const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+  const { data, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTrackingYearlySummary()
+  const { isDesktop, isMobile } = useSizeClass()
+  const inYearLabel = t('mileage:MileageTrackingSummary.label.in_year', 'In {{year}}', {
+    year: formatDate(new Date(selectedYear, 0, 1), DateFormat.Year),
+  })
+
+  const statsProps = isDesktop
+    ? { direction: 'column' as const }
+    : isMobile ? { direction: 'column' as const } : { direction: 'row' as const }
+
+  return (
+    <ConditionalBlock
+      data={data}
+      isLoading={isLoading}
+      isError={isError}
+      Loading={(
+        <HStack className='Layer__MileageTrackingSummary__Content' gap='lg' justify='center' align='center'>
+          <Loader />
+        </HStack>
+      )}
+      Error={(
+        <DataState
+          status={DataStateStatus.failed}
+          title={t('mileage:MileageTrackingSummary.error.load_mileage_summary_data', 'Failed to load mileage summary data')}
+          spacing
+        />
+      )}
+    >
+      {() => (
+        <Stack
+          className='Layer__MileageTrackingSummary__Content'
+          direction={isDesktop ? 'row' : 'column'}
+          gap='lg'
+        >
+          <Stack {...statsProps} className='Layer__MileageTrackingSummary__Cards' gap='md'>
+            <div className='Layer__MileageTrackingSummary__StatCardSlot'>
+              <MileageTrackingStatsCard
+                title={t('mileage:MileageTrackingSummary.label.total_deduction', 'Total Deduction')}
+                amount={selectedYearData?.estimatedDeduction ?? 0}
+                formatAsMoney
+                description={inYearLabel}
+              />
+            </div>
+            <div className='Layer__MileageTrackingSummary__StatCardSlot'>
+              <MileageTrackingStatsCard
+                title={t('mileage:MileageTrackingSummary.label.total_miles', 'Total Miles')}
+                amount={selectedYearData?.miles ?? 0}
+                description={inYearLabel}
+              />
+            </div>
+            <div className='Layer__MileageTrackingSummary__StatCardSlot'>
+              <MileageTrackingStatsCard
+                title={t('mileage:MileageTrackingSummary.label.trips', 'Trips')}
+                amount={selectedYearData?.trips ?? 0}
+                description={inYearLabel}
+              />
+            </div>
+          </Stack>
+          <VStack className='Layer__MileageTrackingSummary__Chart' fluid justify='end'>
+            <MileageDeductionChart data={chartData} selectedYear={selectedYear} chartHeight={isDesktop ? 250 : 200} />
+          </VStack>
+        </Stack>
+      )}
+    </ConditionalBlock>
+  )
+}
+
+export type MileageTrackingSummaryProps = {
+  stringOverrides?: SummaryCardStringOverrides
+  interactionProps?: SummaryCardInteractionProps
+}
+
+export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: MileageTrackingSummaryProps = {}) => {
+  const { t } = useTranslation()
+  const slots = useSummaryCardSlots({
+    defaultTitle: t('mileage:MileageTrackingSummary.label.mileage_tracking', 'Mileage Tracking'),
+    interactionProps,
+    stringOverrides,
+    subtitleDateFormat: DateFormat.Year,
+  })
+
+  return (
+    <SummaryCard
+      className='Layer__MileageTrackingSummary'
+      slots={slots}
+      legacyClassNames={{ header: legacyClassNames('summary:header') }}
+    >
+      <Content />
+    </SummaryCard>
+  )
+}

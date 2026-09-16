@@ -1,0 +1,25 @@
+.Layer__UI__Pagination__Container {
+  justify-content: end;
+  padding: var(--spacing-md);
+
+  @container (min-width: 1400px) {
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+}
+
+.Layer__UI__Pagination__Nav {
+  display: contents;
+}
+
+.Layer__UI__Pagination {
+  display: inline-flex;
+  gap: var(--spacing-4xs);
+  align-items: center;
+  align-self: flex-end;
+  height: 2.25rem;
+  padding-inline: var(--spacing-4xs);
+  border-radius: var(--border-radius-2xs);
+  border: 1px solid var(--color-base-300);
+  background: var(--color-base-50);
+  list-style-type: none;
+}

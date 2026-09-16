@@ -1,0 +1,66 @@
+.Layer__linked-accounts__options {
+  position: relative;
+  display: flex;
+
+  &.--hide-ledger-balance {
+    display: block;
+  }
+
+  &:hover .Layer__linked-accounts__options-overlay,
+  &:focus-within .Layer__linked-accounts__options-overlay,
+  &:has([aria-expanded='true']) .Layer__linked-accounts__options-overlay {
+    opacity: 1;
+    touch-action: auto;
+
+    .Layer__linked-accounts__options-overlay-button {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .Layer__linked-accounts__options-overlay {
+    position: absolute;
+    z-index: 99;
+    top: var(--spacing-2xs);
+    right: var(--spacing-2xs);
+    display: flex;
+    justify-content: flex-end;
+    height: 54px;
+    width: 74px;
+    border-top-right-radius: var(--border-radius-sm);
+    background:
+      linear-gradient(
+        270deg,
+        var(--color-base-50) 1.52%,
+        color-mix(in srgb, var(--color-base-50) 0%, transparent) 99.75%
+      );
+    opacity: 0;
+    touch-action: none;
+    transition: opacity 0.15s ease-out;
+
+    .Layer__linked-accounts__options-overlay-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      width: 24px;
+      padding: 0;
+      border-radius: var(--spacing-2xs);
+      border: none;
+
+      &:focus-visible {
+        outline: 1px auto -webkit-focus-ring-color;
+        outline-offset: 2px;
+      }
+
+      box-shadow:
+        0 0 8px 0
+        var(--base-transparent-12);
+      margin: var(--spacing-xs);
+      background: var(--color-base-0);
+      cursor: pointer;
+      color: var(--color-base-1000);
+      transform: translate3d(5px, -5px, 0);
+      transition: transform 0.15s ease-out;
+    }
+  }
+}

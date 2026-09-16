@@ -1,6 +1,7 @@
 dist/
 bin/
 build/
+storybook-static/
 node_modules/
 !*.css
 !*.scss

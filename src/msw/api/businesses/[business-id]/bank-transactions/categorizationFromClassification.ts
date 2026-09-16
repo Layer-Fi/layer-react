@@ -1,0 +1,54 @@
+import { type AccountCategorizationSchema, type ExclusionCategorizationSchema } from '@schemas/features/categorization/categorization'
+import { type Classification } from '@schemas/features/categorization/classification'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { humanizeEnum } from '@utils/shared/string/format'
+
+import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
+import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
+
+type AccountCategorization = typeof AccountCategorizationSchema.Type
+type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
+
+const toAccountCategorization = (account: SingleChartAccountType): AccountCategorization => ({
+  type: 'Account',
+  ...accountCategorizationFields(account),
+})
+
+export const categorizationFromClassification = (
+  classification: Classification,
+): AccountCategorization | ExclusionCategorization => {
+  if (classification.type === 'Exclusion') {
+    return {
+      type: 'Exclusion',
+      id: `exclusion-${classification.exclusionType.toLowerCase()}`,
+      category: classification.exclusionType,
+      displayName: humanizeEnum(classification.exclusionType),
+    }
+  }
+
+  const accounts = ledgerAccountStore.all()
+
+  if (classification.type === 'StableName') {
+    const known = accounts.find(account => account.stableName === classification.stableName)
+    if (known) return toAccountCategorization(known)
+
+    return {
+      type: 'Account',
+      id: `category-${classification.stableName.toLowerCase().replaceAll('_', '-')}`,
+      stableName: classification.stableName,
+      category: classification.stableName,
+      displayName: humanizeEnum(classification.stableName),
+    }
+  }
+
+  const known = accounts.find(account => account.accountId === classification.id)
+  if (known) return toAccountCategorization(known)
+
+  return {
+    type: 'Account',
+    id: classification.id,
+    stableName: null,
+    category: classification.id,
+    displayName: classification.id,
+  }
+}

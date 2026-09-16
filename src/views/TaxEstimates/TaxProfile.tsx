@@ -1,19 +1,19 @@
 import { useCallback } from 'react'
+import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import {
   useTaxEstimatesNavigation,
-} from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import BackArrow from '@icons/BackArrow'
+} from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Heading } from '@ui/Typography/Heading'
-import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
+import { BaseDetailView } from '@blocks/Layout/BaseDetailView/BaseDetailView'
+import { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {
   const { t } = useTranslation()
   const navigate = useTaxEstimatesNavigation()
-  const { data: taxProfile } = useTaxProfile()
+  const { data: taxProfile } = useGetTaxProfile()
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
   const handleGoBack = useCallback(() => {
@@ -23,12 +23,12 @@ export const TaxProfile = () => {
   }, [navigate, hasSavedTaxProfile])
 
   const TaxProfileHeader = useCallback(() => {
-    return <Heading size='md'>{t('taxEstimates:label.tax_profile', 'Tax Profile')}</Heading>
+    return <Heading size='md'>{t('views:TaxEstimates.TaxProfile.label.tax_profile', 'Tax Profile')}</Heading>
   }, [t])
 
   return (
     <BaseDetailView
-      slots={{ Header: TaxProfileHeader, BackIcon: BackArrow }}
+      slots={{ Header: TaxProfileHeader, BackIcon: ChevronLeft }}
       name='TaxProfile'
       onGoBack={hasSavedTaxProfile ? handleGoBack : undefined}
     >

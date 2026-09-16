@@ -1,0 +1,9 @@
+.Layer__DataStateContainer {
+  box-sizing: border-box;
+  height: calc(100vh - 200px);
+  width: 100%;
+}
+
+.Layer__component--as-widget .Layer__DataStateContainer {
+  height: calc(100% - 160px);
+}

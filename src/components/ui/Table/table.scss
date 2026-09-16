@@ -5,7 +5,6 @@
 
 .Layer__UI__Table-TableHeader {
   height: 3.25rem;
-  background-color: var(--color-base-0);
 
   &:not(:last-child) .Layer__UI__Table-Column {
     border-bottom: 1px solid var(--color-base-300);
@@ -15,21 +14,21 @@
     height: inherit;
   }
 
-  .Layer__UI__Table-Row {
-    background-color: var(--color-base-0);
-  }
-
   @media (width <= 500px) {
     height: auto;
   }
 }
 
 .Layer__UI__Table-Row {
-  height: 3.25rem;
-  background-color: var(--color-base-200);
+  height: var(--data-table-row-height, 3.25rem);
 
   @media (width <= 500px) {
     height: auto;
+  }
+
+  &:focus-visible,
+  &[data-focus-visible] {
+    outline: none;
   }
 
   &:not(:last-child) .Layer__UI__Table-Cell {
@@ -67,6 +66,8 @@
   height: inherit;
 
   padding: var(--spacing-xs) var(--spacing-sm);
+
+  background-color: var(--color-base-0);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-normal);
   color: var(--color-base-600);
@@ -110,6 +111,14 @@
       text-align: $alignment;
     }
   }
+
+  &[data-align='center'] {
+    justify-content: center;
+  }
+
+  &[data-align='end'] {
+    justify-content: flex-end;
+  }
 }
 
 .Layer__UI__Table-ScrollContainer {
@@ -122,7 +131,7 @@
   z-index: 1;
 }
 
-.Layer__UI__Table-ScrollContainer.Layer__UI__Table-ScrollContainer--has-horizontal-overflow {
+.Layer__UI__Table-ScrollContainer[data-has-horizontal-overflow] {
   .Layer__UI__Table-Column[data-pinned='left'],
   .Layer__UI__Table-Cell[data-pinned='left'] {
     border-right: 1px solid var(--color-base-300);
@@ -135,6 +144,6 @@
 }
 
 .Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
-  z-index: 2;
+  z-index: 3;
   background-color: var(--color-base-0);
 }

@@ -1,0 +1,93 @@
+.Layer__bank-transaction-list-item:hover {
+  background-color: var(--bg-element-focus);
+  transition: background-color var(--transition-speed) ease-in-out;
+}
+
+.Layer__bank-transaction-list-item {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border-color);
+
+  .Layer__bank-transaction-list-item__expanded-row {
+    overflow: hidden;
+  }
+}
+
+.Layer__bank-transaction-list-item.Layer__bank-transaction-list-item--expanded {
+  background: var(--bg-element-focus);
+
+  .Layer__bank-transaction-list-item__expanded-row {
+    max-height: unset;
+  }
+}
+
+.Layer__bank-transaction-list-item__heading {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  font-size: var(--text-sm);
+  color: var(--color-base-700);
+
+  .Layer__bank-transaction-list-item__heading-separator {
+    display: block;
+    height: 9px;
+    width: 1px;
+    background: var(--color-base-200);
+  }
+
+  .Layer__bank-transaction-list-item__heading__main {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+}
+
+.Layer__bank-transaction-list-item__body {
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--text-color-primary);
+}
+
+.Layer__bank-transaction-list-item__body__name {
+  max-width: 70%;
+}
+
+.Layer__bank-transaction-list-item__processing-info {
+  box-sizing: border-box;
+  display: flex;
+  gap: var(--spacing-3xs);
+  width: 100%;
+  padding: var(--spacing-xs) var(--spacing-md);
+  color: var(--text-color-primary);
+}
+
+.Layer__bank-transaction-row__expand-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.Layer__bank-transaction-row__expand-button--mobile {
+  width: fit-content;
+  vertical-align: middle;
+  min-width: unset;
+}
+
+@container (max-width: 500px) {
+  .Layer__bank-transaction-list-item__expanded-row {
+    input,
+    .Layer__category-menu {
+      font-size: var(--text-xs);
+    }
+  }
+}

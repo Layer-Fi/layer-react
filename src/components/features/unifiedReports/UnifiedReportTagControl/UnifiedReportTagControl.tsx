@@ -1,0 +1,67 @@
+import { useId, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/features/tags/tagValueDefinition'
+import type { TagControl } from '@schemas/features/unifiedReports/reportConfig'
+import { capitalizeFirstLetter } from '@utils/shared/string/format'
+import { useUnifiedReportTagSelection } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+
+import './unifiedReportTagControl.scss'
+
+type UnifiedReportTagControlProps = {
+  tagControl: TagControl
+}
+
+type UnifiedReportTagValueOption = {
+  label: string
+  value: string
+  tagValueDefinition: TagValueDefinition
+}
+
+const toOption = (tagValueDefinition: TagValueDefinition): UnifiedReportTagValueOption => ({
+  label: tagValueDefinition.displayName ?? tagValueDefinition.value,
+  value: tagValueDefinition.value,
+  tagValueDefinition,
+})
+
+export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlProps) {
+  const inputId = useId()
+  const { t } = useTranslation()
+  const { selectedTagValues, setSelectedTagValues } = useUnifiedReportTagSelection()
+  const dimensionName = tagControl.tagDimension.displayName ?? capitalizeFirstLetter(tagControl.tagDimension.key)
+  const options = useMemo(
+    () => tagControl.tagDimension.definedValues.filter(isActiveTagValueDefinition).map(toOption),
+    [tagControl.tagDimension.definedValues],
+  )
+  const selectedValues = useMemo(() => {
+    const optionsByTagValueId = new Map(options.map(option => [option.tagValueDefinition.id, option]))
+
+    return selectedTagValues.flatMap((tagValue) => {
+      const option = optionsByTagValueId.get(tagValue.id)
+      return option ? [option] : []
+    })
+  }, [options, selectedTagValues])
+
+  const handleSelectedValuesChange = (values: ReadonlyArray<UnifiedReportTagValueOption>) => {
+    setSelectedTagValues(values.map(({ tagValueDefinition }) => tagValueDefinition))
+  }
+
+  return (
+    <VStack gap='3xs' className='Layer__UnifiedReports__TagControl__Container'>
+      <Label size='sm' htmlFor={inputId}>
+        {dimensionName}
+      </Label>
+      <MultiSelectComboBox<UnifiedReportTagValueOption>
+        inputId={inputId}
+        options={options}
+        selectedValues={selectedValues}
+        onSelectedValuesChange={handleSelectedValuesChange}
+        placeholder={t('unifiedReports:UnifiedReportTagControl.action.select_dimension_name', 'Select {{dimensionName}}', { dimensionName })}
+        isSearchable={selectedValues.length === 0}
+      />
+    </VStack>
+  )
+}

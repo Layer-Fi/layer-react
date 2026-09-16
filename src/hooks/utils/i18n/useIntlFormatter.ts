@@ -8,15 +8,17 @@ import {
   formatDateRange as formatDateRangeFn,
   formatMonthName as formatMonthNameFn,
   type MonthNameFormatFn,
-} from '@utils/i18n/date/formatters'
-import type { DateInput } from '@utils/i18n/date/input'
-import { type DateFormat } from '@utils/i18n/date/patterns'
+} from '@utils/shared/i18n/date/formatters'
+import type { DateInput } from '@utils/shared/i18n/date/input'
+import { type DateFormat } from '@utils/shared/i18n/date/patterns'
 import {
   type DurationFormatFn,
   formatMinutesAsDuration as formatMinutesAsDurationFn,
   formatSecondsAsDuration as formatSecondsAsDurationFn,
   type SecondsDurationFormatFn,
-} from '@utils/i18n/duration/formatters'
+} from '@utils/shared/i18n/duration/formatters'
+import type { IntlFormatter } from '@utils/shared/i18n/intlFormatter'
+import { formatList as formatListFn, type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import {
   type CurrencyFormatFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
@@ -24,18 +26,9 @@ import {
   formatPercent as formatPercentFn,
   type NumberFormatFn,
   type PercentFormatFn,
-} from '@utils/i18n/number/formatters'
+} from '@utils/shared/i18n/number/formatters'
 
-export type IntlFormatter = {
-  formatCurrencyFromCents: CurrencyFormatFn
-  formatNumber: NumberFormatFn
-  formatPercent: PercentFormatFn
-  formatDate: DateFormatFn
-  formatDateRange: DateRangeFormatFn
-  formatMonthName: MonthNameFormatFn
-  formatMinutesAsDuration: DurationFormatFn
-  formatSecondsAsDuration: SecondsDurationFormatFn
-}
+export type { IntlFormatter }
 
 export function useIntlFormatter(): IntlFormatter {
   const intl = useIntl()
@@ -72,6 +65,10 @@ export function useIntlFormatter(): IntlFormatter {
     return formatSecondsAsDurationFn(intl, totalSeconds)
   }, [intl])
 
+  const formatList: ListFormatFn = useCallback((labels, options) => {
+    return formatListFn(intl, labels, options)
+  }, [intl])
+
   return useMemo(
     () => ({
       formatCurrencyFromCents,
@@ -82,6 +79,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMonthName,
       formatMinutesAsDuration,
       formatSecondsAsDuration,
+      formatList,
     }),
     [
       formatCurrencyFromCents,
@@ -92,6 +90,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMonthName,
       formatMinutesAsDuration,
       formatSecondsAsDuration,
+      formatList,
     ],
   )
 }

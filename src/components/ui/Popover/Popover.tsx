@@ -1,14 +1,14 @@
 import { forwardRef } from 'react'
 import { Popover as ReactAriaPopover, type PopoverProps as ReactAriaPopoverProps } from 'react-aria-components/Popover'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './popover.scss'
 
 const POPOVER_CLASS_NAME = 'Layer__Popover'
 const POPOVER_CLASS_NAMES = `Layer__Portal ${POPOVER_CLASS_NAME}`
 
-type PopoverProps = Omit<ReactAriaPopoverProps, 'className'> & {
+export type PopoverProps = Omit<ReactAriaPopoverProps, 'className'> & {
   flexInline?: boolean
 }
 

@@ -4,10 +4,10 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
+import { Separator } from '@ui/Separator/Separator'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import { Separator } from '@components/Separator/Separator'
 
 import './modalSlots.scss'
 
@@ -34,7 +34,7 @@ export const ModalCloseButton = ({ onClose, positionAbsolute = false }: ModalClo
         variant='ghost'
         slot='close'
         onPress={onClose}
-        aria-label={t('ui:action.close_modal', 'Close Modal')}
+        aria-label={t('ui:Modal.ModalSlots.action.close_modal', 'Close Modal')}
       >
         <X size={24} />
       </Button>
@@ -71,7 +71,7 @@ export const ModalTitleWithClose = forwardRef<
             variant='outlined'
             slot='close'
             onPress={onClose}
-            aria-label={t('ui:action.close_modal', 'Close Modal')}
+            aria-label={t('ui:Modal.ModalSlots.action.close_modal', 'Close Modal')}
           >
             <X size={16} />
           </Button>

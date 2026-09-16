@@ -10,7 +10,7 @@ import {
   type ModalOverlayProps,
 } from 'react-aria-components/Modal'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHeight'
 
 import './modal.scss'
@@ -156,9 +156,17 @@ export function Modal({
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
+        {({ isEntering, isExiting }) => (
+          <Dialog
+            role={role ?? 'dialog'}
+            aria-label={ariaLabel}
+            variant={variant}
+            isEntering={isEntering}
+            isExiting={isExiting}
+          >
+            {children}
+          </Dialog>
+        )}
       </InternalModal>
     </ModalOverlay>
   )
@@ -171,10 +179,10 @@ type AllowedInternalDrawerProps = Pick<
 
 type DrawerSlots = DialogSlots
 
-export type DrawerProps = AllowedModalOverlayProps &
-  AllowedInternalDrawerProps &
-  AllowedDialogProps &
-  AllowedInternalModalProps & {
+export type DrawerProps = AllowedModalOverlayProps
+  & AllowedInternalDrawerProps
+  & AllowedDialogProps
+  & AllowedInternalModalProps & {
     slots?: DrawerSlots
     fixedHeight?: boolean
   }

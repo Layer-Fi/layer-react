@@ -1,0 +1,216 @@
+import { Check, Clock3, Video } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { translationKey } from '@utils/shared/i18n/translationKey'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
+import { LinkButton } from '@ui/Button/LinkButton'
+import { DateTile } from '@ui/DateTile/DateTile'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
+import { Container } from '@blocks/Layout/Container/Container'
+
+import './callBooking.scss'
+
+import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
+
+const ONBOARDING_CALL_COVERAGE_ITEMS = [
+  {
+    key: 'introduce_bookkeeper',
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_introduce_bookkeeper', 'Introduce your bookkeeper'),
+  },
+  {
+    key: 'bookkeeping_process',
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_bookkeeping_process', 'Walk through our bookkeeping process'),
+  },
+  {
+    key: 'connect_bank_and_cards',
+    ...translationKey('bookkeeping:CallBooking.label.onboarding_cover_connect_bank_and_cards', 'Connect your business bank accounts and credit cards'),
+  },
+] as const
+
+import type { CallBookingStringOverrides } from '@internal-types/features/bookkeeping/callBooking'
+
+export type { CallBookingStringOverrides }
+
+export interface CallBookingProps {
+  callBooking?: CallBookingData
+  onBookCall?: () => void
+  stringOverrides?: CallBookingStringOverrides
+}
+
+const EmptyState = ({
+  onBookCall,
+  stringOverrides,
+}: {
+  onBookCall?: () => void
+  stringOverrides?: CallBookingStringOverrides
+}) => {
+  const { t } = useTranslation()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BookkeepingOverview)
+
+  const handleBookCall = () => {
+    emitLayerEvent({ type: LayerEventType.BookkeepingScheduleCallClicked, version: 1, payload: {} })
+    onBookCall?.()
+  }
+
+  return (
+    <VStack gap='md' align='center' pi='lg' pb='lg'>
+      <Heading size='sm' align='center'>
+        {stringOverrides?.title || t('bookkeeping:CallBooking.prompt.ready_to_get_started', 'Ready to get started?')}
+      </Heading>
+      <Span variant='subtle' align='center'>
+        {stringOverrides?.description || t('bookkeeping:CallBooking.label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
+      </Span>
+      <Button variant='solid' onClick={handleBookCall}>
+        {t('bookkeeping:CallBooking.action.schedule_call', 'Schedule a call')}
+      </Button>
+    </VStack>
+  )
+}
+
+const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <Span className='Layer__CallBooking__Divider' />
+
+      <VStack pbe='md'>
+        {coverage
+          ? <Span size='sm'>{coverage}</Span>
+          : (
+            <>
+              <Span
+                size='2xs'
+                variant='subtle'
+                weight='bold'
+                pbe='sm'
+                className='Layer__CallBooking__CoverageHeading'
+              >
+                {t('bookkeeping:CallBooking.label.on_this_call_well', 'On this call, we’ll')}
+              </Span>
+              <VStack role='list' gap='xs'>
+                {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
+                  <HStack
+                    key={key}
+                    className='Layer__CallBooking__CoverageItem'
+                    align='start'
+                    gap='sm'
+                    role='listitem'
+                  >
+                    <HStack
+                      className='Layer__CallBooking__CoverageBadge'
+                      align='center'
+                      justify='center'
+                    >
+                      <Check size={12} strokeWidth={2.5} />
+                    </HStack>
+                    <Span size='sm'>
+                      {t(i18nKey, defaultValue)}
+                    </Span>
+                  </HStack>
+                ))}
+              </VStack>
+            </>
+          )}
+      </VStack>
+    </>
+  )
+}
+
+export const CallBooking = ({
+  callBooking,
+  onBookCall,
+  stringOverrides,
+}: CallBookingProps) => {
+  const { t } = useTranslation()
+  const { formatDate } = useIntlFormatter()
+  const countdownLabel = useCallBookingCountdownLabel(callBooking?.eventStartAt)
+
+  if (callBooking == null) {
+    return (
+      <Container name='CallBooking'>
+        <EmptyState
+          onBookCall={onBookCall}
+          stringOverrides={stringOverrides}
+        />
+      </Container>
+    )
+  }
+
+  const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
+  const purpose = isOnboardingCall
+    ? (stringOverrides?.title || t('bookkeeping:CallBooking.label.onboarding_call', 'Onboarding call'))
+    : t('bookkeeping:CallBooking.label.ad_hoc_call', 'Ad hoc call')
+  const subtitle = isOnboardingCall
+    ? (stringOverrides?.description || t('bookkeeping:CallBooking.label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
+    : t('bookkeeping:CallBooking.label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
+  const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
+  const callLink = callBooking.callLink.toString()
+  const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
+
+  return (
+    <Container name='CallBooking'>
+      <VStack pi='lg' pb='lg'>
+        <HStack className='Layer__CallBooking__HeaderRow' align='start' gap='xl'>
+          <DateTile date={callBooking.eventStartAt} />
+          <VStack className='Layer__CallBooking__HeaderDetails' fluid pbs='3xs'>
+            <HStack className='Layer__CallBooking__TitleRow' align='baseline' gap='xs'>
+              <Heading size='sm'>
+                {purpose}
+              </Heading>
+              {countdownLabel && (
+                <Span size='xs' variant='subtle'>
+                  ·
+                  {' '}
+                  {countdownLabel}
+                </Span>
+              )}
+            </HStack>
+            <Span size='sm' variant='subtle' pbs='3xs'>
+              {subtitle}
+            </Span>
+            <VStack gap='xs' align='start' pbs='sm'>
+              <HStack
+                className='Layer__CallBooking__LocationRow'
+                align='center'
+                gap='sm'
+                pb='xs'
+                pi='sm'
+              >
+                <Video size={14} />
+                <Span size='sm' weight='bold' variant='placeholder'>
+                  {callPlatform}
+                </Span>
+              </HStack>
+            </VStack>
+          </VStack>
+        </HStack>
+
+        <HStack className='Layer__CallBooking__DateTimeRow' align='center' gap='sm' pbs='md'>
+          <Clock3 size={16} strokeWidth={2} />
+          <Span noWrap size='lg' weight='bold'>
+            {timeLabel}
+          </Span>
+        </HStack>
+
+        {isOnboardingCall && <OnboardingCallCoverage coverage={stringOverrides?.coverage} />}
+
+        <HStack align='center' gap='xs'>
+          <HStack className='Layer__CallBooking__JoinAction'>
+            <LinkButton href={callLink} external variant='solid' fullWidth>
+              <Video size={15} />
+              {t('bookkeeping:CallBooking.action.join_call', 'Join call')}
+            </LinkButton>
+          </HStack>
+        </HStack>
+      </VStack>
+    </Container>
+  )
+}

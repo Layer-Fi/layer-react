@@ -1,0 +1,136 @@
+name: Release — Prepare
+
+# Phase 1 of 2 (manual button). Computes the next version and opens a
+# package.json bump PR. It does NOT merge, tag, publish, or touch Linear — you
+# review and merge the PR like any other, then run "Release — Publish".
+#
+# The version it computes comes from scripts/release/nextVersion.mjs.
+#
+# Repo setting: Settings -> Actions -> General -> Workflow permissions ->
+#   "Allow GitHub Actions to create and approve pull requests" must be ON.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release channel'
+        type: choice
+        options: [ alpha, stable ]
+        default: alpha
+      increment:
+        description: 'Increment (used for first version in release cycle)'
+        type: choice
+        options: [ patch, minor, major ]
+        default: patch
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  prepare:
+    name: Prepare release
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '22'
+
+    - name: Configure git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    # Kept out of the check step below: that one is continue-on-error, so an install failure
+    # there would read as a translation failure.
+    - name: Install dependencies
+      if: ${{ inputs.release_type == 'stable' }}
+      run: npm ci
+
+    # A stable release must not ship untranslated copy. Runs before the version bump so a blocked
+    # release leaves no branch behind. Alpha is exempt — untranslated strings belong there.
+    - name: Check translations are ready
+      if: ${{ inputs.release_type == 'stable' }}
+      id: i18n
+      continue-on-error: true
+      run: npm run i18n:check-release
+
+    # Start the pipeline that fixes it and stop: cutting a release PR now would only produce a
+    # tag that Release — Publish refuses.
+    - name: Start the translation pipeline and stop
+      if: ${{ inputs.release_type == 'stable' && steps.i18n.outcome == 'failure' }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # No remedy means the check itself died rather than reporting untranslated keys.
+        if [ -z "${{ steps.i18n.outputs.remedy }}" ]; then
+          echo "::error::npm run i18n:check-release failed to produce a result; see the previous step."
+          exit 1
+        fi
+
+        if [ "${{ steps.i18n.outputs.remedy }}" = "crowdin" ]; then
+          WORKFLOW=crowdin-sync.yml
+          BRANCH=i18n/crowdin-fr-ca
+          # A bare dispatch is download-only, which cannot fill values Crowdin has not translated
+          # yet; the upload and pre-translate steps are gated on this input.
+          gh workflow run "$WORKFLOW" --ref main -f pretranslate=true
+        else
+          WORKFLOW=i18n-extract-keys.yml
+          BRANCH=i18n/extract-keys
+          gh workflow run "$WORKFLOW" --ref main
+        fi
+
+        {
+          echo "### Stable release blocked — translations are not ready"
+          echo
+          echo "Dispatched \`$WORKFLOW\`, which opens or updates the \`$BRANCH\` PR."
+          echo "Merge it — an extract PR landing on \`main\` triggers the Crowdin sync"
+          echo "automatically — then re-run this workflow once the translations are on \`main\`."
+          echo
+          echo "See the previous step for the exact keys."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::Translations are not ready for a stable release. Dispatched $WORKFLOW; merge the $BRANCH PR, then re-run."
+        exit 1
+
+    - name: Compute next version
+      id: ver
+      env:
+        RELEASE_TYPE: ${{ inputs.release_type }}
+        INCREMENT: ${{ inputs.increment }}
+      run: |
+        set -euo pipefail
+        CUR=$(node -p "require('./package.json').version")
+        NEWV=$(node scripts/release/nextVersion.mjs release "$CUR" "$RELEASE_TYPE" "$INCREMENT")
+        npm version "$NEWV" --no-git-tag-version >/dev/null
+        {
+          echo "version=$NEWV"
+          echo "branch=release/v$NEWV"
+        } >> "$GITHUB_OUTPUT"
+        echo "Prepared $RELEASE_TYPE version: $NEWV (from $CUR)"
+
+    - name: Open the version bump PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+        V: ${{ steps.ver.outputs.version }}
+        BR: ${{ steps.ver.outputs.branch }}
+      run: |
+        if git ls-remote --exit-code --heads origin "$BR" >/dev/null 2>&1; then
+          echo "::error::Branch $BR already exists on origin. A release PR for v$V is likely still open — merge or close it (and delete the branch) before re-running." >&2
+          exit 1
+        fi
+        git checkout -b "$BR"
+        git commit -am "chore(release): v$V"
+        git push origin "$BR"
+        URL=$(gh pr create --base main --head "$BR" \
+          --title "chore(release): v$V" \
+          --body "Automated ${{ inputs.release_type }} bump to \`$V\`. Merging triggers Release — Tag (creates tag v$V + GitHub Release); then run Release — Publish to ship to npm and update Linear.")
+        echo "Opened $URL"
+        echo "[Release PR for v$V]($URL)" >> "$GITHUB_STEP_SUMMARY"

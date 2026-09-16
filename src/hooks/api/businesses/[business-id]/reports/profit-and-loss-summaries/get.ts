@@ -1,0 +1,26 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { type ProfitAndLossSummariesRequestParams } from '@schemas/features/profitAndLoss/profitAndLossRequestParams'
+import { type ProfitAndLossSummaries, ProfitAndLossSummariesSchema } from '@schemas/features/profitAndLoss/profitAndLossSummaries'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
+
+export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
+
+const ProfitAndLossSummariesResponseSchema = UnwrappedDataResponseSchema(ProfitAndLossSummariesSchema)
+
+const getProfitAndLossSummaries = getWithQuery<
+  typeof ProfitAndLossSummariesResponseSchema.Encoded,
+  ProfitAndLossSummariesRequestParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss-summaries`,
+)
+
+export const useGetProfitAndLossSummaries = createQueryHook({
+  tags: [PNL_SUMMARIES_TAG_KEY],
+  request: getProfitAndLossSummaries,
+  schema: ProfitAndLossSummariesResponseSchema,
+})
+
+export const useProfitAndLossSummariesCacheActions = createResourceGlobalCacheActions<ProfitAndLossSummaries>(PNL_SUMMARIES_TAG_KEY)

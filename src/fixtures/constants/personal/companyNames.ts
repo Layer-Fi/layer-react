@@ -1,0 +1,17 @@
+export const companyNames = [
+  'Acme Corp',
+  'Globex LLC',
+  'Initech',
+  'Umbrella Holdings',
+  'Stark Industries',
+  'Wayne Enterprises',
+  'Hooli',
+  'Pied Piper',
+  'Cyberdyne Systems',
+  'Aperture Science',
+  'Vandelay Industries',
+  'Massive Dynamic',
+  'Soylent Corp',
+  'Oscorp Industries',
+  'Prestige Worldwide',
+] as const

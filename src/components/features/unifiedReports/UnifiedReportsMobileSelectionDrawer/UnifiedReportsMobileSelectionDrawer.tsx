@@ -1,0 +1,61 @@
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
+import { useBaseUnifiedReport } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+import { HStack } from '@ui/Stack/Stack'
+import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
+import { UnifiedReportComboBoxOption } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/unifiedReportComboBoxOption'
+
+import './unifiedReportsMobileSelectionDrawer.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UnifiedReportsMobileSelectionDrawer: 'Layer__ReportsMobileSelectionDrawer',
+})
+
+export function UnifiedReportsMobileSelectionDrawer() {
+  const { t } = useTranslation()
+  const { data, isLoading, isError } = useGetReportConfig()
+  const { baseReport, setBaseReport } = useBaseUnifiedReport()
+
+  const groups = useMemo(() => {
+    if (!data) return []
+
+    return data.map(group => ({
+      label: group.displayName,
+      options: group.reports.map(report => new UnifiedReportComboBoxOption(report)),
+    }))
+  }, [data])
+
+  const selectedValue = useMemo(() => {
+    if (!baseReport) return null
+
+    for (const group of groups) {
+      const match = group.options.find(option => option.value === baseReport.key)
+      if (match) return match
+    }
+
+    return null
+  }, [baseReport, groups])
+
+  const onSelectedValueChange = useCallback((value: UnifiedReportComboBoxOption | null) => {
+    if (value) setBaseReport(value.original)
+  }, [setBaseReport])
+
+  return (
+    <HStack className={legacyClassNames('Layer__UnifiedReportsMobileSelectionDrawer')}>
+      <MobileSelectionDrawerWithTrigger<UnifiedReportComboBoxOption>
+        ariaLabel={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.reports_navigation', 'Reports navigation')}
+        heading={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.label.select_report', 'Select report')}
+        groups={groups}
+        selectedValue={selectedValue}
+        onSelectedValueChange={onSelectedValueChange}
+        isLoading={isLoading}
+        isError={isError}
+        isSearchable
+        searchPlaceholder={t('unifiedReports:UnifiedReportsMobileSelectionDrawer.action.search_reports', 'Search reports')}
+      />
+    </HStack>
+  )
+}

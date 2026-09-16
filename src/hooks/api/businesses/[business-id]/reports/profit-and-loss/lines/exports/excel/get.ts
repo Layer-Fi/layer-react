@@ -1,0 +1,38 @@
+import type { S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
+import { getAsMutation } from '@utils/shared/api/getAsMutation'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/get'
+
+type PnlDetailLinesExportParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams
+
+const getProfitAndLossDetailLinesExcel = getWithQuery<
+  {
+    data?: S3PresignedUrl
+    error?: unknown
+  },
+  PnlDetailLinesExportParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss/lines/exports/excel`,
+  ({ startDate, endDate, pnlStructureLineItemName, tagFilter, reportingBasis, pnlStructure }) => ({
+    startDate,
+    endDate,
+    lineItemName: pnlStructureLineItemName,
+    reportingBasis,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
+    pnlStructure,
+  }),
+)
+
+const requestProfitAndLossDetailLinesExcel = getAsMutation(getProfitAndLossDetailLinesExcel)
+
+export const useGetProfitAndLossDetailLinesExport = createMutationHook({
+  tags: ['#pnl-detail-lines', '#exports', '#excel'],
+  request: requestProfitAndLossDetailLinesExcel,
+  keyParams: ['startDate', 'endDate', 'pnlStructureLineItemName', 'tagFilter', 'reportingBasis', 'pnlStructure'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

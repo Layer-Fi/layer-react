@@ -1,37 +1,51 @@
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
-import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
-import { useCategorizeBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/useCategorizeBankTransaction'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { CategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { usePutCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
-  const { t } = useTranslation()
-  const { addToast, eventCallbacks } = useLayerContext()
-  const { updateLocalBankTransactions } = useBankTransactionsContext()
+  const { eventCallbacks } = useLayerContext()
+  const { updateLocalBankTransactions, useBankTransactionsOptions } = useBankTransactionsContext()
+  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
+  const { trigger: categorizeBankTransaction, isMutating, isError } = usePutCategorizeBankTransaction()
 
   const categorize = useCallback(
-    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, notify?: boolean) => {
+    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, options?: { onSuccess?: () => void }): Promise<void> => {
       return categorizeBankTransaction({ bankTransactionId, ...newCategory })
-        .then((updatedTransaction) => {
-          updateLocalBankTransactions([{
-            ...updatedTransaction,
-            recently_categorized: true,
-          }])
+        .then(
+          (updatedTransaction) => {
+            updateLocalBankTransactions([{
+              ...updatedTransaction,
+              recentlyCategorized: true,
+            }])
 
-          if (notify) {
-            addToast({ content: t('bankTransactions:label.transaction_confirmed', 'Transaction confirmed') })
-          }
-        })
-        .finally(() => {
-          eventCallbacks?.onTransactionCategorized?.()
-        })
+            void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
+            void debouncedInvalidateProfitAndLoss()
+
+            eventCallbacks?.onTransactionCategorized?.()
+
+            options?.onSuccess?.()
+          },
+          () => {
+            // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.
+          },
+        )
     },
-    [updateLocalBankTransactions, categorizeBankTransaction, addToast, eventCallbacks, t],
+    [
+      updateLocalBankTransactions,
+      categorizeBankTransaction,
+      eventCallbacks,
+      forceReloadBackgroundBankTransactions,
+      useBankTransactionsOptions,
+      debouncedInvalidateProfitAndLoss,
+    ],
   )
 
   return useMemo(

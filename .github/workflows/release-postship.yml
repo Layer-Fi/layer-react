@@ -1,0 +1,172 @@
+name: Release — Post-ship
+
+# Phase 3. Everything that follows the version being on npm: the Linear release, the
+# demo-finguard bump, and — on a stable — docs screenshots and Storybook Pages. Publish
+# dispatches it on a real ship. Every job is idempotent, so re-dispatching is the whole
+# recovery story — which is why none of it runs inside the job that publishes.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version that shipped, without the leading v (e.g. 0.1.146)'
+        required: true
+        type: string
+      next_linear_release:
+        description: 'Linear release increment to queue (stable only)'
+        type: choice
+        options: [ patch, minor, major ]
+        default: patch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-postship
+  cancel-in-progress: false
+
+jobs:
+  # Also the proof that it shipped: Publish refuses to publish without the tag.
+  await-npm:
+    name: Wait for npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      base: ${{ steps.resolve.outputs.base }}
+      next: ${{ steps.resolve.outputs.next }}
+
+    steps:
+    # The workflow's own ref, not the tag: an older tag predates the version script.
+    - uses: actions/checkout@v7
+
+    - name: Resolve the versions
+      id: resolve
+      env:
+        RAW: ${{ inputs.version }}
+        INCREMENT: ${{ inputs.next_linear_release }}
+      run: |
+        set -euo pipefail
+        V=${RAW#v}
+        NEXT=$(node scripts/release/nextVersion.mjs bump "$V" "$INCREMENT")
+        {
+          echo "version=$V"
+          echo "base=${V%%-*}"
+          echo "next=$NEXT"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Wait for the registry to serve the version
+      env:
+        V: ${{ steps.resolve.outputs.version }}
+      run: |
+        set -euo pipefail
+        for _ in $(seq 1 20); do
+          # --prefer-online: npm caches the packument, so one stale read would answer the loop.
+          if npm view --prefer-online "@layerfi/components@$V" version >/dev/null 2>&1; then
+            exit 0
+          fi
+          sleep 15
+        done
+        echo "::error::@layerfi/components@$V is not on npm after 5 minutes. Check that Release — Publish shipped."
+        exit 1
+
+  docs:
+    name: Docs screenshots
+    needs: await-npm
+    if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
+    uses: ./.github/workflows/docs-screenshots.yml
+    with:
+      ref: v${{ needs.await-npm.outputs.version }}
+      dry_run: false
+    secrets: inherit
+
+  pages:
+    name: Storybook Pages
+    needs: await-npm
+    if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+
+    steps:
+    - name: Dispatch the Pages build at the tag
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+        V: ${{ needs.await-npm.outputs.version }}
+      run: gh workflow run storybook-pages.yml --ref "v$V" -f public_only=true
+
+  linear:
+    name: Linear release
+    needs: await-npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    # `sync` scans commits, so it needs the history behind the tag.
+    - uses: actions/checkout@v7
+      with:
+        ref: v${{ needs.await-npm.outputs.version }}
+        fetch-depth: 0
+
+    - name: Sync release in Linear
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ needs.await-npm.outputs.base }}
+        name: ${{ needs.await-npm.outputs.base }}
+
+    - name: Complete release in Linear
+      if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: complete
+        version: ${{ needs.await-npm.outputs.base }}
+
+    # Seed the next release so it exists in Linear right after this one ships.
+    # (CLI can only create it In Progress, not Planned.)
+    - name: Queue the next release in Linear
+      if: ${{ !contains(needs.await-npm.outputs.version, '-') }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ needs.await-npm.outputs.next }}
+        name: ${{ needs.await-npm.outputs.next }}
+
+  finguard:
+    name: Bump demo-finguard
+    needs: await-npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    # GITHUB_TOKEN cannot dispatch cross-repo; soft-failed so a missing install costs
+    # only the bump.
+    - name: Mint a token for demo-finguard
+      id: token
+      continue-on-error: true
+      uses: actions/create-github-app-token@v3
+      with:
+        app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+        private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+        owner: Layer-Fi
+        repositories: demo-finguard
+
+    # custom, not a dist-tag: tag resolution races anything else being published.
+    - name: Dispatch the bump
+      env:
+        GH_TOKEN: ${{ steps.token.outputs.token }}
+        V: ${{ needs.await-npm.outputs.version }}
+      run: |
+        set -euo pipefail
+        if [ -n "${GH_TOKEN:-}" ] && gh workflow run bump-layerfi-components.yml \
+             --repo Layer-Fi/demo-finguard --ref dev \
+             -f channel=custom -f "custom_version=$V"; then
+          exit 0
+        fi
+        # Minting succeeds on any installation, so a read-only one first fails here.
+        echo "::warning::Could not dispatch the demo-finguard bump — DOCS_BOT needs to be installed on Layer-Fi/demo-finguard with actions: write. Run Bump — @layerfi/components there with channel=custom, custom_version=$V."

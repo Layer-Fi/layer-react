@@ -1,0 +1,17 @@
+.Layer__InvoiceSummaryStats__Meter {
+  &__track {
+    fill: var(--color-info-bg);
+  }
+
+  &__fill {
+    fill: var(--color-info-warning-bg);
+  }
+}
+
+.Layer__InvoiceOwedSummary {
+  &__StatCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xs);
+  }
+}

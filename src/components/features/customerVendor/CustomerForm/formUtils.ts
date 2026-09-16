@@ -1,0 +1,53 @@
+import type { TFunction } from 'i18next'
+
+import { type Customer } from '@schemas/features/customerVendor/customer'
+import { type CustomerForm } from '@schemas/features/customerVendor/customerForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+
+export type CustomerFormState =
+  | { mode: UpsertMode.Update, customer: Customer }
+  | { mode: UpsertMode.Create, initialName?: string }
+
+export const getCustomerFormDefaultValues = (state: CustomerFormState): CustomerForm => {
+  if (state.mode === UpsertMode.Update) {
+    const { customer } = state
+    return {
+      individualName: customer.individualName || '',
+      companyName: customer.companyName || '',
+      email: customer.email || '',
+      addressString: customer.addressString || '',
+    }
+  }
+
+  return {
+    individualName: state.initialName || '',
+    companyName: '',
+    email: '',
+    addressString: '',
+  }
+}
+
+export const validateCustomerForm = ({ customer }: { customer: CustomerForm }, t: TFunction) => {
+  const { individualName, companyName, email } = customer
+
+  const errors = []
+
+  if (!individualName.trim() && !companyName.trim()) {
+    errors.push({ individualName: t('customerVendor:CustomerForm.formUtils.validation.either_individual_required', 'Either individual name or company name is required.') })
+  }
+
+  if (!email.trim()) {
+    errors.push({ email: t('customerVendor:CustomerForm.formUtils.validation.email_required', 'Email is a required field.') })
+  }
+
+  return errors.length > 0 ? errors : null
+}
+
+export const convertCustomerFormToUpsertCustomer = (form: CustomerForm): unknown => {
+  return {
+    individualName: form.individualName.trim() || null,
+    companyName: form.companyName.trim() || null,
+    email: form.email.trim() || null,
+    addressString: form.addressString.trim() || null,
+  }
+}

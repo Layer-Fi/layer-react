@@ -1,0 +1,15 @@
+.Layer__ProfitAndLossChart__StripePattern[data-variant='income'] rect {
+  fill: var(--bar-color-income);
+}
+
+.Layer__ProfitAndLossChart__StripePattern[data-variant='income'] line {
+  stroke: var(--bar-color-income);
+}
+
+.Layer__ProfitAndLossChart__StripePattern[data-variant='expenses'] rect {
+  fill: var(--bar-color-expenses);
+}
+
+.Layer__ProfitAndLossChart__StripePattern[data-variant='expenses'] line {
+  stroke: var(--bar-color-expenses);
+}

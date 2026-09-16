@@ -1,0 +1,16 @@
+export const tripDescriptions = [
+  'Client meeting',
+  'Site visit',
+  'Airport pickup',
+  'Supply run',
+  'Materials pickup',
+  'Equipment drop-off',
+  'Job site inspection',
+  'Vendor meeting',
+  'Bank deposit',
+  'Delivery to customer',
+  'Estimate walkthrough',
+  'Trade show',
+  'Training seminar',
+  'Storage unit run',
+]

@@ -2,24 +2,29 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
-import { type CallBooking as CallBookingData } from '@schemas/callBooking'
-import { type Variants } from '@utils/styleUtils/sizeVariants'
-import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { type TagOption } from '@internal-types/features/tags/tag'
+import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { VStack } from '@ui/Stack/Stack'
-import { CallBooking } from '@components/CallBooking/CallBooking'
-import { Container } from '@components/Container/Container'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
-import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
-import { View } from '@components/View/View'
+import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
+import { Container } from '@blocks/Layout/Container/Container'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
+import { View } from '@blocks/Layout/View/View'
+import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
+import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
+import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
+import {
+  type ProfitAndLossSummariesSlotProps,
+  type ProfitAndLossSummariesStringOverrides,
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 import './bookkeepingOverview.scss'
@@ -29,6 +34,7 @@ type BookkeepingOverviewTasksContentProps = {
   showCallBookingCard: boolean
   tasksMobile: boolean
   tasksStringOverrides?: TasksStringOverrides
+  callBookingStringOverrides?: CallBookingStringOverrides
   onBookCall: () => void
   onClickReconnectAccounts?: () => void
 }
@@ -38,6 +44,7 @@ const BookkeepingOverviewTasksContent = ({
   showCallBookingCard,
   tasksMobile,
   tasksStringOverrides,
+  callBookingStringOverrides,
   onBookCall,
   onClickReconnectAccounts,
 }: BookkeepingOverviewTasksContentProps) => {
@@ -47,6 +54,7 @@ const BookkeepingOverviewTasksContent = ({
         <CallBooking
           callBooking={callBooking}
           onBookCall={onBookCall}
+          stringOverrides={callBookingStringOverrides}
         />
       )}
       <Tasks
@@ -71,13 +79,18 @@ export interface BookkeepingOverviewProps {
   }
   slotProps?: {
     profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
+      summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
       }
     }
   }
 
+  chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
+  tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead
    */
@@ -88,8 +101,10 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  chartColorsList,
   stringOverrides,
   slotProps,
+  tagFilter = undefined,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
   const [width] = useWindowSize()
@@ -97,6 +112,11 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossSummariesReportingVariant =
+    slotProps?.profitAndLoss?.summaries?.reportingVariant
+  const profitAndLossTagFilter = tagFilter?.tagValues.length
+    ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+    : undefined
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -105,6 +125,7 @@ export const BookkeepingOverview = ({
     callBooking,
     showCallBookingCard,
     handleBookCall,
+    callBookingStringOverrides,
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,
@@ -112,10 +133,13 @@ export const BookkeepingOverview = ({
   } = useBookkeepingOnboardingCallBooking()
 
   return (
-    <ProfitAndLoss asContainer={false}>
+    <ProfitAndLoss
+      asContainer={false}
+      tagFilter={profitAndLossTagFilter}
+    >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
-        title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
+        title={stringOverrides?.title || title || t('views:BookkeepingOverview.label.bookkeeping_overview', 'Bookkeeping overview')}
         header={(
           <Header>
             <HeaderRow>
@@ -133,6 +157,7 @@ export const BookkeepingOverview = ({
               showCallBookingCard={showCallBookingCard}
               tasksMobile={false}
               tasksStringOverrides={stringOverrides?.tasks}
+              callBookingStringOverrides={callBookingStringOverrides}
               onBookCall={handleBookCall}
               onClickReconnectAccounts={onClickReconnectAccounts}
             />
@@ -151,6 +176,7 @@ export const BookkeepingOverview = ({
                 showCallBookingCard={showCallBookingCard}
                 tasksMobile
                 tasksStringOverrides={stringOverrides?.tasks}
+                callBookingStringOverrides={callBookingStringOverrides}
                 onBookCall={handleBookCall}
                 onClickReconnectAccounts={onClickReconnectAccounts}
               />
@@ -170,23 +196,36 @@ export const BookkeepingOverview = ({
               zIndex: 2,
             }}
           >
-            <ProfitAndLoss.Header
-              text={stringOverrides?.profitAndLoss?.header || t('common:label.profit_loss', 'Profit & Loss')}
+            <ProfitAndLossHeader
+              stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}
               withStatus
-              trailingContent={<PnlLegend direction='row' />}
+              trailingContent={<ProfitAndLossLegend direction='row' />}
+              className='Layer__BookkeepingOverview__ProfitAndLossHeader'
             />
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
+                chartColorsList={chartColorsList}
+                reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
               />
             </VStack>
-            <ProfitAndLoss.Chart hideLegend />
+            <ProfitAndLoss.Chart
+              hideLegend
+              tagFilter={profitAndLossTagFilter}
+              chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
+            />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
+          chartColorsList={chartColorsList}
         />
       </View>
       {isCalendlyVisible && (

@@ -1,0 +1,70 @@
+import { useMemo, useState } from 'react'
+import { CloudDownload, CloudUpload, PencilRuler } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { useBankTransactionsNavigation } from '@providers/features/bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
+import InvisibleDownload from '@components/utility/InvisibleDownload'
+import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { DataTableHeaderMenu } from '@blocks/Table/DataTable/DataTableHeaderMenu'
+import { BankTransactionsUploadModal } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
+
+interface BankTransactionsHeaderMenuProps {
+  actions: BankTransactionsHeaderMenuActions[]
+  isDisabled?: boolean
+  isListView?: boolean
+}
+
+export enum BankTransactionsHeaderMenuActions {
+  BankTransactionsUploadWizard = 'BankTransactionsUploadWizard',
+  ManageCategorizationRules = 'ManageCategorizationRules',
+}
+
+export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = false }: BankTransactionsHeaderMenuProps) => {
+  const { t } = useTranslation()
+  const { toCategorizationRulesTable } = useBankTransactionsNavigation()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { handleDownloadTransactions, invisibleDownloadRef, isMutating } = useHandleDownloadTransactions({ isListView })
+
+  const menuItems = useMemo<DropdownMenuItem[]>(() => {
+    const items: DropdownMenuItem[] = [{
+      key: 'DownloadTransactions',
+      onClick: handleDownloadTransactions,
+      slots: { Icon: CloudDownload },
+      label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.download_transactions', 'Download transactions'),
+    }]
+
+    if (actions.includes(BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard)) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard,
+        onClick: () => setIsModalOpen(true),
+        slots: { Icon: CloudUpload },
+        label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.upload_transactions_manually', 'Upload transactions manually'),
+      })
+    }
+
+    if (actions.includes(BankTransactionsHeaderMenuActions.ManageCategorizationRules)) {
+      items.push({
+        key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
+        onClick: toCategorizationRulesTable,
+        slots: { Icon: PencilRuler },
+        label: t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.action.manage_categorization_rules', 'Manage categorization rules'),
+      })
+    }
+
+    return items
+  }, [t, actions, toCategorizationRulesTable, handleDownloadTransactions])
+
+  return (
+    <>
+      <DataTableHeaderMenu
+        ariaLabel={t('bankTransactions:BankTransactionsHeader.BankTransactionsHeaderMenu.label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
+        items={menuItems}
+        isDisabled={isDisabled}
+        isPending={isMutating}
+      />
+      <InvisibleDownload ref={invisibleDownloadRef} />
+      {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
+    </>
+  )
+}

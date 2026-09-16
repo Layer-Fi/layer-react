@@ -1,0 +1,165 @@
+import { useEffect, useMemo } from 'react'
+import { endOfDay } from 'date-fns'
+import { CircleCheckBig, Landmark } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
+import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/features/bankAccounts/bankAccount'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
+import { useDatePickerState } from '@ui/DatePickers/DatePicker/useDatePickerState'
+import { AmountInput } from '@ui/Input/AmountInput'
+import { VStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
+import { Label, Span } from '@ui/Typography/Text'
+
+import './openingBalanceAccountForm.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__OpeningBalanceAccountForm__InputGroup: 'Layer__caobfb__input-group',
+})
+
+export type OpeningBalanceAccountFormData = {
+  bankAccount: BankAccount
+  isConfirmed: boolean
+  openingDate: Date
+  openingBalance?: string
+  saved?: boolean
+  isDateInvalid?: boolean
+}
+
+type OpeningBalanceAccountFormProps = {
+  bankAccount: BankAccount
+  value: OpeningBalanceAccountFormData
+  isSaved?: boolean
+  disableConfirmExclude?: boolean
+  errors?: string[]
+  onChange: (value: OpeningBalanceAccountFormData) => void
+}
+
+export const OpeningBalanceAccountForm = ({
+  bankAccount,
+  value,
+  isSaved = false,
+  disableConfirmExclude = false,
+  onChange,
+  errors = [],
+}: OpeningBalanceAccountFormProps) => {
+  const { t } = useTranslation()
+  const displayName = getBankAccountDisplayName(bankAccount)
+  const institution = getBankAccountInstitution(bankAccount)
+  const institutionName = institution?.name
+  const institutionLogo = institution?.logo
+
+  const dataProps = useMemo(() => (
+    toDataProperties({
+      saved: isSaved,
+      confirmed: value.isConfirmed,
+    })
+  ), [isSaved, value.isConfirmed])
+
+  const maxDate = useMemo(() => endOfDay(new Date()), [])
+  const passedDate = useMemo(() => value.openingDate, [value.openingDate])
+
+  const {
+    localDate: date,
+    onChange: onChangeDate,
+    maxDateZdt,
+    isInvalid: isDateInvalid,
+    errorText: dateErrorText,
+    onBlur: onBlurDate,
+  } = useDatePickerState({
+    date: passedDate,
+    maxDate,
+    setDate: date => onChange({ ...value, openingDate: date, isDateInvalid: false }),
+  })
+
+  // Update parent with isDateInvalid state whenever it changes
+  useEffect(() => {
+    if (value.isDateInvalid !== isDateInvalid) {
+      onChange({ ...value, isDateInvalid })
+    }
+  }, [isDateInvalid, onChange, value])
+
+  return (
+    <div {...dataProps} className='Layer__OpeningBalanceAccountForm'>
+      <div className='Layer__OpeningBalanceAccountForm__Logo'>
+        {institutionLogo != undefined
+          ? (
+            <img
+              width={32}
+              height={32}
+              src={`data:image/png;base64,${institutionLogo}`}
+              alt={institutionName || displayName}
+            />
+          )
+          : (
+            <Landmark size={18} />
+          )}
+      </div>
+      <div className='Layer__OpeningBalanceAccountForm__Details'>
+        <div className='Layer__OpeningBalanceAccountForm__Account'>
+          <div className='Layer__OpeningBalanceAccountForm__AccountName'>
+            <Span size='sm' variant='subtle'>{institutionName}</Span>
+            <Span size='sm'>{displayName}</Span>
+          </div>
+          <Span size='sm' variant='placeholder'>
+            •••
+            {bankAccount.mask}
+          </Span>
+        </div>
+        <div className='Layer__OpeningBalanceAccountForm__Inputs'>
+          <VStack className={legacyClassNames('Layer__OpeningBalanceAccountForm__InputGroup')}>
+            <Label size='sm' pbe='3xs'>
+              {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_date', 'Opening date')}
+            </Label>
+            <DatePicker
+              label={t('linkedAccounts:OpeningBalanceAccountForm.label.opening_date', 'Opening date')}
+              date={date}
+              onChange={onChangeDate}
+              onBlur={onBlurDate}
+              maxDate={maxDateZdt}
+              isDisabled={!disableConfirmExclude && !value.isConfirmed}
+              isInvalid={isDateInvalid}
+              errorText={dateErrorText}
+            />
+          </VStack>
+          <VStack className={legacyClassNames('Layer__OpeningBalanceAccountForm__InputGroup')}>
+            <Label size='sm' pbe='3xs'>
+              {t('linkedAccounts:OpeningBalanceAccountForm.label.opening_balance', 'Opening balance')}
+            </Label>
+            <AmountInput
+              name='openingBalance'
+              defaultValue={value.openingBalance}
+              onChange={newValue =>
+                onChange({ ...value, openingBalance: newValue })}
+              disabled={!disableConfirmExclude && !value.isConfirmed}
+              isInvalid={errors.includes('MISSING_BALANCE')}
+              errorMessage={t('common:validation.value_required', 'Field is required')}
+            />
+          </VStack>
+        </div>
+        {errors.includes('API_ERROR') && (
+          <ErrorText>
+            {t('linkedAccounts:OpeningBalanceAccountForm.error.save_data_try_again_later', 'An error occurred while saving data. You will have an opportunity to try again later.')}
+          </ErrorText>
+        )}
+      </div>
+      {!disableConfirmExclude && (
+        <div className='Layer__OpeningBalanceAccountForm__Confirm'>
+          <Checkbox
+            size='lg'
+            isSelected={value.isConfirmed}
+            onChange={v => onChange({ ...value, isConfirmed: v })}
+            aria-label={t('linkedAccounts:OpeningBalanceAccountForm.label.confirm_account_inclusion', 'Confirm Account Inclusion')}
+          />
+        </div>
+      )}
+      <div className='Layer__OpeningBalanceAccountForm__SuccessBanner'>
+        <CircleCheckBig size={36} />
+      </div>
+    </div>
+  )
+}

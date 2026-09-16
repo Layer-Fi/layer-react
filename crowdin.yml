@@ -1,5 +1,7 @@
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+preserve_hierarchy: true
+
 files:
-  - source: /src/assets/locales/en-US/*
-    ignore:
-      - /src/assets/locales/en-US/index.ts
-    translation: /src/assets/locales/%locale%/%file_name%.%file_extension%
+  - source: /src/assets/locales/en-US/*.json
+    translation: /src/assets/locales/%locale%/%original_file_name%

@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
-import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { type TaxEstimatesBannerQuarter } from '@schemas/features/taxEstimates/banner'
+import { TaxOverviewDeadlineStatus } from '@schemas/features/taxEstimates/overview'
+import { useGetTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
 export type TaxEstimatesDeadlineRow = {
   type: 'quarter' | 'annual'
@@ -16,23 +16,23 @@ function mapQuarterToSection(t: TFunction, quarter: TaxEstimatesBannerQuarter): 
   let quarterLabel
   switch (quarter.quarter) {
     case 1:
-      quarterLabel = t('taxEstimates:label.q1', 'Q1')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q1', 'Q1')
       break
     case 2:
-      quarterLabel = t('taxEstimates:label.q2', 'Q2')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q2', 'Q2')
       break
     case 3:
-      quarterLabel = t('taxEstimates:label.q3', 'Q3')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q3', 'Q3')
       break
     case 4:
-      quarterLabel = t('taxEstimates:label.q4', 'Q4')
+      quarterLabel = t('taxEstimates:useTaxEstimatesDeadlines.label.q4', 'Q4')
       break
   }
 
   return {
     ...quarter,
     type: 'quarter',
-    title: t('taxEstimates:label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
+    title: t('taxEstimates:useTaxEstimatesDeadlines.label.quarter_taxes', '{{quarterLabel}} taxes', { quarterLabel }),
   }
 }
 
@@ -46,7 +46,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useTaxEstimatesBanner({
+  const { data, isLoading, isError } = useGetTaxEstimatesBanner({
     year,
     fullYearProjection,
   })
@@ -58,7 +58,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
 
     const annual: TaxEstimatesDeadlineRow = {
       type: 'annual',
-      title: t('taxEstimates:label.annual_taxes', 'Annual taxes'),
+      title: t('taxEstimates:useTaxEstimatesDeadlines.label.annual_taxes', 'Annual taxes'),
       dueDate: data.taxesDueAt,
       amountOwed: data.totalTaxesOwed,
       state: TaxOverviewDeadlineStatus.Neutral,

@@ -1,0 +1,71 @@
+import { toDate } from '@utils/shared/i18n/date/input'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { HStack } from '@ui/Stack/Stack'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
+
+const legacyClassNames = createLegacyClassNames({
+  'datetime:value': 'Layer__datetime',
+})
+
+interface BaseDateTimeProps {
+  format?: DateFormat
+  dateFormat?: DateFormat
+  timeFormat?: DateFormat
+  onlyDate?: boolean
+  onlyTime?: boolean
+  slotProps?: {
+    Date?: TextStyleProps
+    Time?: TextStyleProps
+  }
+}
+
+interface DateTimeViaStringProps extends BaseDateTimeProps {
+  value: string
+  valueAsDate?: never
+}
+
+interface DateTimeViaDateProps extends BaseDateTimeProps {
+  value?: never
+  valueAsDate: Date
+}
+
+type DateTimeProps = DateTimeViaStringProps | DateTimeViaDateProps
+
+export const DateTime = ({
+  value,
+  valueAsDate,
+  format,
+  dateFormat = DateFormat.DateShort,
+  timeFormat = DateFormat.Time,
+  onlyDate,
+  onlyTime,
+  slotProps = {
+    Date: { size: 'sm' },
+    Time: { size: 'sm', variant: 'subtle' },
+  },
+}: DateTimeProps) => {
+  const { formatDate } = useIntlFormatter()
+
+  const dateValue = valueAsDate ?? toDate(value)
+  if (!dateValue) return null
+
+  if (format) {
+    return <Span className={legacyClassNames('datetime:value')}>{formatDate(dateValue, format)}</Span>
+  }
+
+  const date = formatDate(dateValue, dateFormat)
+  const time = formatDate(dateValue, timeFormat)
+
+  return (
+    <HStack gap='md' align='center'>
+      {!onlyTime && (
+        <Span {...slotProps.Date}>{date}</Span>
+      )}
+      {!onlyDate && (
+        <Span {...slotProps.Time}>{time}</Span>
+      )}
+    </HStack>
+  )
+}

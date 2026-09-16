@@ -1,19 +1,17 @@
+import './styles/index.scss'
+
 /*
 ==========================================================
 ======================= Components =======================
 ==========================================================
 */
 
-/* ------------------ Onboarding ------------------ */
-export { Onboarding } from './components/Onboarding/Onboarding'
-
 /* ------------------ Bank Accounts & Transactions ------------------ */
-export { BankTransactions } from './components/BankTransactions/BankTransactions'
-export { Integrations } from './components/Integrations/Integrations'
-export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
+export { BankTransactions } from './components/features/bankTransactions/BankTransactions/BankTransactions'
+export { LinkedAccounts } from './components/features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */
-export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
+export { ProfitAndLoss } from './components/features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 /* Profit and loss contains 5 sub-components:
  * - Chart
  * - Summaries
@@ -21,53 +19,49 @@ export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
  * - Header
  * - Report
  */
-export { BalanceSheet } from './components/BalanceSheet/BalanceSheet'
-export { StatementOfCashFlow } from './components/StatementOfCashFlow/StatementOfCashFlow'
+export { BalanceSheet } from './components/features/balanceSheet/BalanceSheet/BalanceSheet'
+export { StatementOfCashFlow } from './components/features/cashflowStatement/StatementOfCashFlow/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
-export { ChartOfAccounts } from './components/ChartOfAccounts/ChartOfAccounts'
-export { Journal } from './components/Journal/Journal'
+export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+export { Journal } from './components/features/generalLedger/Journal/Journal'
 
 /* ------------------ Account Operations ------------------ */
-export { Tasks } from './components/Tasks/Tasks'
+export { Tasks } from './components/features/bookkeeping/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
-export { LandingPage } from './components/LandingPage/LandingPage'
-export { LinkAccounts } from './components/LinkAccounts/LinkAccounts'
-
-/* --------------------- Banners -------------------------- */
-export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/BookkeepingUpsellBar'
+export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/LinkAccounts'
+export { LandingPage } from './views/LandingPage/LandingPage'
 
 /* --------------------- Date Pickers -------------------------- */
-export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateRangeSelection'
-export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
+export { GlobalDateRangeSelection } from './components/blocks/DatePickers/DateSelection/GlobalDateRangeSelection'
+export { GlobalMonthPicker } from './components/blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 /* --------------------- Cards -------------------------- */
-export { MileageSummaryCard as unstable_MileageSummaryCard } from './components/MileageSummaryCard/MileageSummaryCard'
+export { MileageSummaryCard } from './components/features/mileage/MileageSummaryCard/MileageSummaryCard'
 
 /*
 ======================= Composite Views =======================
 */
-export { Invoices } from './components/Invoices/Invoices'
-export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
-export { UnifiedReports } from './components/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
-export { unstable_MileageTracking } from './views/MileageTracking'
-export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
+export { Invoices } from './views/Invoices/Invoices'
+export { MileageTracking } from './views/MileageTracking/MileageTracking'
 export { Reports } from './views/Reports/Reports'
 export { SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
-export { TimeTracking } from './views/TimeTracking'
+export { TimeTracking } from './views/TimeTracking/TimeTracking'
+export { UnifiedReports } from './views/UnifiedReports/UnifiedReports'
 
 /*
 ======================= Layer Provider & Context =======================
 */
-export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
-export { useLayerContext } from './contexts/LayerContext/LayerContext'
-export { LayerProvider } from './providers/LayerProvider/LayerProvider'
-export { DisplayState } from './types/bankTransactions'
-export { Direction } from './types/general'
-export { SupportedLocale } from './utils/i18n/supportedLocale'
+export { EntityName, type LinkingMetadata } from './providers/common/InAppLink/InAppLinkContext'
+export { useLayerContext } from './providers/global/LayerContext/LayerContext'
+export { type EventCallbacks, LayerProvider } from './providers/global/LayerProvider/LayerProvider'
+export { type LayerEvent, LayerEventComponent, LayerEventType } from './schemas/common/layerEvents'
+export { DisplayState } from './types/features/bankTransactions/bankTransaction'
+export { Direction } from './types/shared/money'
+export { SupportedLocale } from './utils/shared/i18n/supportedLocale'

@@ -1,0 +1,11 @@
+.Layer__MonthPicker__Popover {
+  inline-size: auto;
+}
+
+.Layer__MonthPicker__InputGroup {
+  inline-size: 12rem;
+
+  &--Truncated {
+    inline-size: 12ch;
+  }
+}

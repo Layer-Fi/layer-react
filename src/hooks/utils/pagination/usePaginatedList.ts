@@ -1,36 +1,40 @@
-import { useCallback, useMemo, useState } from 'react'
+import { type MutableRefObject, useMemo } from 'react'
+
+import type { PaginationChangeSource } from '@hooks/utils/pagination/types'
+import { usePaginationState } from '@hooks/utils/pagination/usePaginationState'
+import { getPageCount, getPageItems } from '@hooks/utils/pagination/utils'
 
 type UsePaginatedListProps<T> = {
   data: ReadonlyArray<T>
   pageSize: number
-  initialPage?: number
-  onSetPage?: (page: number) => void
+  pageIndex?: number
+  onPageIndexChange?: (pageIndex: number, source: PaginationChangeSource) => void
+  autoResetPageIndexRef?: MutableRefObject<boolean>
 }
 
-export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage }: UsePaginatedListProps<T>) {
-  const [internalPageIndex, setInternalPageIndex] = useState(initialPage)
-
-  const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
-  const effectivePageIndex = Math.max(0, Math.min(internalPageIndex, pageCount - 1))
+export function usePaginatedList<T>({
+  autoResetPageIndexRef,
+  data,
+  pageSize,
+  pageIndex,
+  onPageIndexChange,
+}: UsePaginatedListProps<T>) {
+  const pageCount = getPageCount({ itemCount: data.length, pageSize })
+  const paginationState = usePaginationState({
+    autoResetPageIndexRef,
+    data,
+    pageCount,
+    pageIndex,
+    onPageIndexChange,
+  })
 
   const pageItems = useMemo(() => {
-    return data.slice(
-      effectivePageIndex * pageSize,
-      (effectivePageIndex + 1) * pageSize,
-    ) as ReadonlyArray<T>
-  }, [data, effectivePageIndex, pageSize])
-
-  const setPage = useCallback((pageIndex: number) => {
-    const clampedPageIndex = Math.max(0, Math.min(pageIndex, pageCount - 1))
-
-    setInternalPageIndex(clampedPageIndex)
-    onSetPage?.(clampedPageIndex)
-  }, [onSetPage, pageCount])
+    return getPageItems({ data, pageIndex: paginationState.pageIndex, pageSize })
+  }, [data, pageSize, paginationState.pageIndex])
 
   return {
+    ...paginationState,
     pageCount,
-    pageIndex: effectivePageIndex,
     pageItems,
-    setPage,
   }
 }

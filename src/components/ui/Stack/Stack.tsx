@@ -1,7 +1,7 @@
 import { type AriaRole, forwardRef, type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'
 
 import './stack.scss'

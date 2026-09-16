@@ -14,22 +14,23 @@
   border: 1px solid var(--border-color);
 
   background-color: var(--color-base-0);
+  color: var(--color-base-1000);
 
-  &--focused {
+  &--Focused {
     border-color: var(--outline-active);
   }
 
-  &--disabled {
+  &--Disabled {
     background-color: var(--color-base-100);
     cursor: not-allowed;
     color: var(--color-base-800);
   }
 
-  &--readonly {
+  &--Readonly {
     background-color: var(--bg-muted);
   }
 
-  &--error {
+  &--Error {
     border-color: var(--color-danger);
   }
 }
@@ -43,7 +44,7 @@
   block-size: var(--block-size);
   min-block-size: var(--block-size);
 
-  &--focused {
+  &--Focused {
     /*
      * This seems like the only workaround when the "unstyled" variant
      * includes a (malicious) `outline: 0 !important`.
@@ -52,7 +53,7 @@
      */
     outline: 2px solid var(--outline-default) !important;
 
-    &.Layer__ComboBoxControl--error {
+    &.Layer__ComboBoxControl--Error {
       outline-color: var(--color-info-error-bg) !important;
     }
   }
@@ -64,6 +65,11 @@
   cursor: text;
 
   font-size: var(--input-font-size);
+  color: var(--color-base-1000);
+
+  .Layer__ComboBoxControl--Disabled & {
+    color: var(--color-base-800);
+  }
 }
 
 .Layer__ComboBoxMultiValue {
@@ -79,7 +85,7 @@
 .Layer__ComboBoxIndicatorsContainer {
   padding-inline-end: var(--spacing-3xs);
 
-  &--readonly {
+  &--Readonly {
     visibility: hidden;
   }
 }
@@ -132,6 +138,7 @@
   margin-block-start: var(--spacing-2xs);
 
   background-color: var(--color-base-0);
+  color: var(--color-base-1000);
 }
 
 .Layer__ComboBoxMenuList {
@@ -152,11 +159,11 @@
      */
     cursor: pointer;
 
-    &--disabled {
+    &--Disabled {
       cursor: not-allowed;
     }
 
-    &--hidden {
+    &--Hidden {
       display: none;
     }
   }
@@ -181,8 +188,9 @@
   padding-inline: var(--spacing-3xs);
 
   border: 2px solid transparent;
+  color: var(--color-base-1000);
 
-  &--focused {
+  &--Focused {
     background-color: var(--color-base-100);
   }
 
@@ -190,15 +198,15 @@
     visibility: hidden;
   }
 
-  &--selected {
-    background-color: var(--color-base-100);
+  &--Selected {
+    background-color: var(--color-base-300);
 
     .Layer__ComboBoxOptionCheckIcon {
       visibility: visible;
     }
   }
 
-  &--disabled {
+  &--Disabled {
     color: var(--color-base-500);
   }
 }
@@ -208,9 +216,6 @@
 }
 
 .Layer__ComboBoxPlaceholder {
-  color: var(--color-base-600);
-
-  &--error {
-    color: var(--color-danger);
-  }
+  /* Same value the token defaults to; reading it keeps the legacy knob working here too. */
+  color: var(--input-placeholder-color);
 }

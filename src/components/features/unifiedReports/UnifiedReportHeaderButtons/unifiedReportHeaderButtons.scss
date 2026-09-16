@@ -1,0 +1,18 @@
+.Layer__UnifiedReports__HeaderButtons {
+  min-width: 15rem;
+  max-width: 24rem;
+}
+
+.Layer__UnifiedReports__HeaderButtons--mobile {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
+@container unified-reports (max-width: 500px) {
+  .Layer__UnifiedReports__HeaderButtons {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+}

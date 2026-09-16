@@ -1,0 +1,120 @@
+import type { ExpandedState } from '@tanstack/react-table'
+
+import type { AugmentedLedgerAccountBalance } from '@internal-types/features/generalLedger/chartOfAccounts'
+import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
+import type { CurrencyFormatFn } from '@utils/shared/i18n/number/formatters'
+
+const accountMatchesQuery = (
+  account: NestedLedgerAccountType,
+  query: string,
+  formatCurrencyFromCents: CurrencyFormatFn,
+) => {
+  const matchOptions = [
+    account.name,
+    account.accountType.displayName,
+    account.accountNumber || '',
+    account.accountSubtype?.displayName || '',
+    formatCurrencyFromCents(account.balance, { useGrouping: false }),
+    formatCurrencyFromCents(account.balance),
+  ]
+
+  return matchOptions.some(field => field.toLowerCase().includes(query))
+}
+
+export const filterAccounts = (
+  accounts: NestedLedgerAccountType[],
+  query: string,
+  formatCurrencyFromCents: CurrencyFormatFn,
+): AugmentedLedgerAccountBalance[] => {
+  return accounts.flatMap((account) => {
+    const isMatching = accountMatchesQuery(account, query, formatCurrencyFromCents)
+
+    const matchingChildren = filterAccounts(
+      Array.from(account.subAccounts),
+      query,
+      formatCurrencyFromCents,
+    )
+
+    if (matchingChildren.length > 0) {
+      return [{ ...account, subAccounts: matchingChildren, isMatching: true }]
+    }
+
+    if (isMatching) {
+      return [{ ...account, isMatching: true }]
+    }
+
+    return []
+  })
+}
+
+export const getRowId = (row: AugmentedLedgerAccountBalance): string => row.accountId
+
+export const getInitialExpandedState = (
+  accounts: readonly AugmentedLedgerAccountBalance[] | undefined,
+): ExpandedState => {
+  const expandedState: Record<string, true> = {}
+  if (!accounts) return expandedState
+
+  const collectExpanded = (nestedAccounts: readonly AugmentedLedgerAccountBalance[], depth: number) => {
+    for (const account of nestedAccounts) {
+      const hasSubAccounts = account.subAccounts.length > 0
+      if (!hasSubAccounts) continue
+
+      if (depth === 0 || account.isMatching) {
+        expandedState[getRowId(account)] = true
+      }
+      collectExpanded(account.subAccounts, depth + 1)
+    }
+  }
+
+  collectExpanded(accounts, 0)
+  return expandedState
+}
+
+// TODO (@sraines) - i18nize this function
+const skippedChars = ['$', ',']
+export const getMatchedTextIndices = (
+  {
+    text,
+    query,
+    isMatching,
+  }: {
+    text: string
+    query: string
+    isMatching?: boolean
+  },
+): { startIdx: number, endIdx: number } | null => {
+  if (!query || !isMatching) return null
+
+  const normalize = (s: string) => s.replace(/[$,]/g, '').toLowerCase()
+  const normalizedText = normalize(text)
+  const normalizedQuery = normalize(query)
+  const normalizedMatchStartIdx = normalizedText.indexOf(normalizedQuery)
+  if (normalizedMatchStartIdx === -1) return null
+
+  // Locate the starting index in the original text that corresponds to the beginning of the normalized match
+  let positionInNormalizedText = 0, matchStartIdx = 0
+  while (positionInNormalizedText < normalizedMatchStartIdx && matchStartIdx < text.length) {
+    if (!skippedChars.includes(text.charAt(matchStartIdx))) positionInNormalizedText++
+    matchStartIdx++
+  }
+
+  // Adjust forward to skip a leading '$' or ',' if it wasn't part of the original query
+  if (skippedChars.includes(text.charAt(matchStartIdx)) && query.charAt(0) !== text.charAt(matchStartIdx)) {
+    matchStartIdx++
+  }
+
+  // Advance through the original text to cover all characters that map to the original query
+  let charsMatched = 0, matchEndIdx = matchStartIdx
+  while (charsMatched < normalizedQuery.length && matchEndIdx < text.length) {
+    if (!skippedChars.includes(text.charAt(matchEndIdx))) charsMatched++
+    matchEndIdx++
+  }
+
+  // Optionally include a trailing '$' or ',' if it was explicitly included in the query
+  if (skippedChars.includes(text.charAt(matchEndIdx)) && query.charAt(query.length - 1) === text.charAt(matchEndIdx)) {
+    matchEndIdx++
+  }
+
+  return { startIdx: matchStartIdx, endIdx: matchEndIdx }
+}

@@ -1,0 +1,56 @@
+import { fromDate, toCalendarDate } from '@internationalized/date'
+
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/common/nonRecursiveBigDecimal'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { isClassificationExclusion } from '@schemas/features/categorization/classification'
+import type { RecordCustomTransaction } from '@schemas/features/customAccounts/recordCustomTransaction'
+import { getDefaultSelectedCategoryForBankTransaction } from '@utils/features/bankTransactions/shared'
+import { getDefaultTaxCodeForBankTransaction } from '@utils/features/bankTransactions/taxCode'
+import type { RecordBankTransactionFormValues, RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
+import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
+
+type RecordCustomAccountTransactionParams = {
+  customAccountId: string
+  transaction: RecordCustomTransaction
+}
+
+export function convertRecordBankTransactionFormToParams(
+  { account, description, amount, date, category, taxCode, memo }: RecordBankTransactionFormValues,
+  variant: RecordBankTransactionVariant,
+): RecordCustomAccountTransactionParams | null {
+  if (account === null || isNewAccountOption(account) || amount === null || date === null) return null
+
+  const isExpense = variant === 'expense'
+
+  return {
+    customAccountId: account.value,
+    transaction: {
+      amount: convertNonRecursiveBigDecimalToCents(amount),
+      direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
+      date: date.toString(),
+      description: description.trim(),
+      memo: memo.trim(),
+      ...(category !== null && { categorization: { type: 'Category' as const, category, taxCode: isClassificationExclusion(category) ? null : taxCode } }),
+    },
+  }
+}
+
+export const getRecordBankTransactionVariant = ({ direction }: BankTransaction): RecordBankTransactionVariant =>
+  direction === BankTransactionDirection.Debit ? 'expense' : 'income'
+
+export const getRecordBankTransactionFormValues = (
+  transaction: BankTransaction,
+): RecordBankTransactionFormValues => ({
+  account: {
+    value: transaction.externalAccountId ?? '',
+    label: transaction.accountName ?? '',
+    account: { accountName: transaction.accountName ?? '' },
+  },
+  description: transaction.description ?? '',
+  amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
+  date: toCalendarDate(fromDate(transaction.date, 'UTC')),
+  category: getDefaultSelectedCategoryForBankTransaction(transaction)?.classification ?? null,
+  taxCode: getDefaultTaxCodeForBankTransaction(transaction),
+  memo: transaction.memo ?? '',
+})

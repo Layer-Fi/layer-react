@@ -1,0 +1,29 @@
+.Layer__TripForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  max-width: 44rem;
+  padding-inline: var(--spacing-lg);
+
+  .Layer__TripForm__FormError {
+    padding-block-end: var(--spacing-xs);
+  }
+
+  .Layer__TripForm__Field {
+    width: 100%;
+  }
+
+  &--inline {
+    --form-field-label-inline-size: 10rem;
+  }
+
+  .Layer__TripForm__FieldError {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .Layer__TripForm__Submit {
+    align-items: flex-end;
+    padding-block-start: 1rem;
+  }
+}

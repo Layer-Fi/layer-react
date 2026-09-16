@@ -1,26 +1,36 @@
-.Layer__UI__tooltip {
-  z-index: 50;
+.Layer__UI__Tooltip {
+  z-index: 100;
 }
 
-.Layer__UI__tooltip-content {
+.Layer__UI__TooltipContent {
   box-sizing: border-box;
-  display: block;
-  max-width: 20rem;
+  width: max-content;
+  max-width: min(20rem, 90vw);
   padding: var(--spacing-2xs) var(--spacing-sm);
   border-radius: var(--border-radius-2xs);
   background: var(--color-base-1000);
 }
 
-.Layer__UI__tooltip-content > .Layer__UI__tooltip-content--text {
+.Layer__UI__TooltipContent__Text {
   display: block;
   font-size: var(--text-sm);
-  text-align: justify;
   color: var(--color-base-300);
   overflow-wrap: break-word;
-  white-space: normal;
 }
 
-.Layer__UI__tooltip-trigger {
+/*
+ * For triggers wrapping text that should truncate (e.g. Span withTooltip).
+ * This allows the trigger to shrink smaller than its content.
+ */
+.Layer__UI__TooltipTrigger[data-variant='truncate'] {
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+/*
+ * For triggers wrapping intrinsically-sized content (checkbox, icon, badge):
+ * shrink-wrap the child so the tooltip anchors to it.
+ */
+.Layer__UI__TooltipTrigger[data-variant='fit-content'] {
+  width: fit-content;
+  max-width: 100%;
 }

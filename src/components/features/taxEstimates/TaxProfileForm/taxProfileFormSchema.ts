@@ -1,0 +1,46 @@
+import { Schema } from 'effect'
+
+import type { USStateCode } from '@internal-types/features/taxEstimates/location'
+import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
+import type { FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
+
+const WithholdingFormSchema = Schema.Struct({
+  useCustomWithholding: Schema.NullishOr(Schema.Boolean),
+  amount: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+})
+const HomeOfficeDeductionFormSchema = Schema.Struct({
+  useHomeOfficeDeduction: Schema.NullishOr(Schema.Boolean),
+  homeOfficeArea: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+})
+const VehicleDeductionFormSchema = Schema.Struct({
+  useMileageDeduction: Schema.NullishOr(Schema.Boolean),
+})
+const DeductionsFormSchema = Schema.Struct({
+  homeOffice: Schema.NullishOr(HomeOfficeDeductionFormSchema),
+  vehicle: Schema.NullishOr(VehicleDeductionFormSchema),
+})
+const FederalConfigurationFormSchema = Schema.Struct({
+  filingStatus: Schema.NullishOr(Schema.String) as Schema.Schema<FilingStatus | null | undefined>,
+  annualW2Income: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+  tipIncome: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+  overtimeIncome: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+  withholding: Schema.NullishOr(WithholdingFormSchema),
+})
+const StateConfigurationFormSchema = Schema.Struct({
+  taxState: Schema.NullishOr(Schema.String) as Schema.Schema<USStateCode | null | undefined>,
+  filingStatus: Schema.NullishOr(Schema.String) as Schema.Schema<FilingStatus | null | undefined>,
+  withholding: Schema.NullishOr(WithholdingFormSchema),
+})
+const UsConfigurationFormSchema = Schema.Struct({
+  federal: Schema.NullishOr(FederalConfigurationFormSchema),
+  state: Schema.NullishOr(StateConfigurationFormSchema),
+  deductions: Schema.NullishOr(DeductionsFormSchema),
+})
+
+export const TaxProfileFormSchema = Schema.Struct({
+  taxCountryCode: Schema.NullishOr(Schema.String),
+  usConfiguration: Schema.NullishOr(UsConfigurationFormSchema),
+  acknowledgedDisclaimer: Schema.NullishOr(Schema.Boolean),
+})
+
+export type TaxProfileForm = typeof TaxProfileFormSchema.Type

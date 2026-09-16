@@ -1,12 +1,16 @@
-import { forwardRef, type PropsWithChildren } from 'react'
+import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
+import classNames from 'classnames'
 import {
   Button as ReactAriaButton,
   type ButtonProps as ReactAriaButtonProps,
 } from 'react-aria-components/Button'
+import { useTranslation } from 'react-i18next'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
+import { legacyButtonClassNames } from '@ui/Button/legacyClassNames'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './button.scss'
 
@@ -34,8 +38,9 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'outlined-light' | 'text' | 'branded'
+export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
 export type ButtonSize = 'md'
+export type ButtonStatus = 'danger'
 
 export type ButtonStyleProps = {
   ellipsis?: true
@@ -43,11 +48,16 @@ export type ButtonStyleProps = {
   inset?: true
   size?: ButtonSize
   variant?: ButtonVariant
+  status?: ButtonStatus
   fullWidth?: boolean
   flex?: boolean
+  tooltip?: ReactNode
+  underline?: true
 }
 
-export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps
+export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps & {
+  className?: string
+}
 
 const Button = forwardRef<
   HTMLButtonElement,
@@ -55,17 +65,22 @@ const Button = forwardRef<
 >((
   {
     children,
+    className,
     ellipsis,
     icon,
     inset,
     size = 'md',
     variant = 'solid',
+    status,
     fullWidth = false,
     flex = false,
+    tooltip,
+    underline,
     ...restProps
   },
   ref,
 ) => {
+  const { t } = useTranslation()
   const { isPending = false } = restProps
   const dataProperties = toDataProperties({
     ellipsis,
@@ -73,19 +88,35 @@ const Button = forwardRef<
     inset,
     size,
     variant,
+    status,
     'full-width': fullWidth,
     flex,
+    underline,
   })
 
-  return (
+  const button = (
     <ReactAriaButton
       {...restProps}
       {...dataProperties}
-      className={BUTTON_CLASS_NAMES.DEFAULT}
+      className={classNames(
+        legacyButtonClassNames({
+          variant,
+          icon,
+          fullWidth,
+          hasTooltip: tooltip != null,
+          isDisabled: restProps.isDisabled,
+          isPending,
+        }),
+        className,
+      )}
       ref={ref}
     >
       {withRenderProp(children, (node) => {
         if (isPending) {
+          if (variant === 'text') {
+            return t('common:state.loading', 'Loading…')
+          }
+
           return (
             <>
               <ButtonTransparentContent>
@@ -99,6 +130,19 @@ const Button = forwardRef<
         return node
       })}
     </ReactAriaButton>
+  )
+
+  if (tooltip == null) {
+    return button
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        {button}
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
   )
 })
 Button.displayName = 'Button'

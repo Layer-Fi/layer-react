@@ -1,0 +1,41 @@
+import { Clock } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { HStack } from '@ui/Stack/Stack'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
+
+import './bankTransactionsProcessingInfo.scss'
+interface BankTransactionsProcessingInfoProps {
+  showAsBadge?: boolean
+}
+
+export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTransactionsProcessingInfoProps) => {
+  const { t } = useTranslation()
+  const tooltipContent = t('bankTransactions:BankTransactionsProcessingInfo.label.team_review_and_categorize_transaction', 'Our team will review and categorize this transaction. We’ll reach out if we have any questions about it.')
+
+  if (showAsBadge) {
+    return (
+      <HStack gap='xs' align='center' fluid className='Layer__BankTransactionsProcessingInfo'>
+        <Badge
+          size={BadgeSize.SMALL}
+          icon={<Clock size={11} />}
+          variant={BadgeVariant.INFO}
+        >
+          {t('common:state.processing', 'Processing')}
+        </Badge>
+      </HStack>
+    )
+  }
+
+  return (
+    <Tooltip offset={12}>
+      <TooltipTrigger variant='fit-content'><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text={t('common:state.processing', 'Processing')} /></TooltipTrigger>
+      <TooltipContent>
+        {tooltipContent}
+      </TooltipContent>
+    </Tooltip>
+  )
+}

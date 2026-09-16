@@ -1,15 +1,16 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
-import { type LinkingMetadata } from '@contexts/InAppLinkContext'
-import {
-  BankTransactions,
-  type BankTransactionsStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
-import { LinkedAccounts } from '@components/LinkedAccounts/LinkedAccounts'
-import { View } from '@components/View/View'
+import { type BankTransactionsStringOverrides } from '@internal-types/features/bankTransactions/bankTransactionsStringOverrides'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
+import { type MobileComponentType } from '@utils/features/bankTransactions/constants'
+import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
+import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { type BankTransactionsMode } from '@providers/features/bankTransactions/LegacyMode/LegacyModeProvider'
+import { View } from '@blocks/Layout/View/View'
+import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
+import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
@@ -24,8 +25,14 @@ export interface BankTransactionsWithLinkedAccountsProps {
 
   showBreakConnection?: boolean
   showCustomerVendor?: boolean
+  /**
+   * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
+   */
   showDescriptions?: boolean
   showLedgerBalance?: boolean
+  /**
+   * @deprecated This prop is no longer honored; receipt uploads are always enabled.
+   */
   showReceiptUploads?: boolean
   showTags?: boolean
   showTooltips?: boolean
@@ -39,9 +46,17 @@ export interface BankTransactionsWithLinkedAccountsProps {
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export const BankTransactionsWithLinkedAccounts = ({
+export const BankTransactionsWithLinkedAccounts = (props: BankTransactionsWithLinkedAccountsProps) => (
+  <BankAccountsFilterStoreProvider>
+    <BankTransactionsWithLinkedAccountsContent {...props} />
+  </BankAccountsFilterStoreProvider>
+)
+
+const BankTransactionsWithLinkedAccountsContent = ({
   title, // deprecated
   showTitle = true,
   elevatedLinkedAccounts = false,
@@ -49,9 +64,7 @@ export const BankTransactionsWithLinkedAccounts = ({
 
   showBreakConnection = false,
   showCustomerVendor = false,
-  showDescriptions = true,
   showLedgerBalance = true,
-  showReceiptUploads = true,
   showTags = false,
   showTooltips = false,
   showUnlinkItem = false,
@@ -61,11 +74,20 @@ export const BankTransactionsWithLinkedAccounts = ({
   stringOverrides,
   renderInAppLink,
   showCategorizationRules,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BankTransactionsWithLinkedAccountsProps) => {
   const { t } = useTranslation()
+
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const filters = useMemo(
+    () => (selectedBankAccountIds.length ? { bankAccountIds: selectedBankAccountIds } : undefined),
+    [selectedBankAccountIds],
+  )
+
   return (
     <View
-      title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
+      title={stringOverrides?.title || title || t('views:BankTransactionsWithLinkedAccounts.label.bank_transactions', 'Bank transactions')}
       showHeader={showTitle}
     >
       <LinkedAccounts
@@ -74,12 +96,13 @@ export const BankTransactionsWithLinkedAccounts = ({
         showUnlinkItem={showUnlinkItem}
         showBreakConnection={showBreakConnection}
         stringOverrides={stringOverrides?.linkedAccounts}
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
       />
       <BankTransactions
         asWidget
+        filters={filters}
         showCustomerVendor={showCustomerVendor}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
         showTags={showTags}
         showTooltips={showTooltips}
         showUploadOptions={showUploadOptions}

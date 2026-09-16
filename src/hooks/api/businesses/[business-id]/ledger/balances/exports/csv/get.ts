@@ -1,0 +1,29 @@
+import type { S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
+import { getAsMutation } from '@utils/shared/api/getAsMutation'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+
+type GetAccountBalancesCSVParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+}
+
+const getLedgerAccountBalancesCSV = getWithQuery<
+  { data: S3PresignedUrl },
+  GetAccountBalancesCSVParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
+)
+
+const requestLedgerAccountBalancesCSV = getAsMutation(getLedgerAccountBalancesCSV)
+
+export const useGetAccountBalancesDownload = createMutationHook({
+  tags: ['#account-balances', '#exports', '#csv'],
+  request: requestLedgerAccountBalancesCSV,
+  keyParams: ['startDate', 'endDate'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

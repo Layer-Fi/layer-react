@@ -2,10 +2,16 @@ import { SelectionIndicator } from 'react-aria-components/SelectionIndicator'
 import { ToggleButton } from 'react-aria-components/ToggleButton'
 import { useTranslation } from 'react-i18next'
 
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
 
 import './toggleOption.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__UI__ToggleOption__SelectionIndicator: 'Layer__UI__ToggleOption-SelectionIndicator',
+  Layer__UI__ToggleOption__Content: 'Layer__UI__Toggle-Option-Content',
+})
 
 export interface ToggleOptionProps {
   label: string
@@ -25,8 +31,8 @@ export const ToggleOption = ({
 
   const button = (
     <ToggleButton id={value} className='Layer__UI__ToggleOption' isDisabled={disabled}>
-      <SelectionIndicator className='Layer__UI__ToggleOption-SelectionIndicator' />
-      <Span className='Layer__UI__Toggle-Option-Content'>
+      <SelectionIndicator className={legacyClassNames('Layer__UI__ToggleOption__SelectionIndicator')} />
+      <Span className={legacyClassNames('Layer__UI__ToggleOption__Content')}>
         <Span noWrap>{label}</Span>
       </Span>
     </ToggleButton>
@@ -39,7 +45,7 @@ export const ToggleOption = ({
           {button}
         </TooltipTrigger>
         <TooltipContent>
-          <span className='Layer__UI__tooltip-content--text'>{disabledMessageText}</span>
+          {disabledMessageText}
         </TooltipContent>
       </Tooltip>
     )

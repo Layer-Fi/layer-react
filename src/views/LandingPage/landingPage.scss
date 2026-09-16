@@ -1,0 +1,187 @@
+body .calendly-overlay .calendly-popup {
+  max-height: 1024px;
+}
+
+.Layer__LandingPage {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  justify-content: flex-start;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  border: none;
+  background: var(--color-white);
+}
+
+.Layer__LandingPage__calendly-container {
+  overflow: hidden;
+  max-height: 0;
+  margin: 0;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    max-height: 800px;
+    margin: var(--spacing-lg) 0;
+  }
+
+  // Ensure the inner calendly widget has proper height
+  .Layer__calendly-inline-widget {
+    min-height: 630px;
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+    transition: opacity 0.3s ease-in-out 0.8s;
+  }
+}
+
+.Layer__LandingPage-options__grid {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-2xl);
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: var(--spacing-lg);
+  margin: 0 auto;
+
+  &:has(> .Layer__LandingPage__offers:only-child) {
+    grid-template-columns: minmax(0, 480px);
+  }
+
+  @media (width <= 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.Layer__LandingPage-options__card {
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  height: 100%;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--color-base-100);
+  margin: 0;
+  background: var(--color-base-0);
+  overflow-wrap: break-word;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-base-300);
+    box-shadow: 0 12px 24px rgb(0 0 0 / 8%);
+    transform: translateY(-2px);
+  }
+}
+
+.Layer__LandingPage-options__feature-check {
+  color: var(--fg-subtle);
+}
+
+.Layer__LandingPage-options__footer {
+  margin-block-start: auto;
+}
+
+.Layer__LandingPage__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  padding-block: var(--spacing-lg) var(--spacing-2xl);
+}
+
+.Layer__LandingPage__offers {
+  width: 100%;
+  background-color: transparent;
+}
+
+.Layer__LandingPage__section-divider {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: var(--spacing-lg);
+  margin: 0 auto;
+}
+
+.Layer__LandingPage__offers-title-row {
+  justify-content: center;
+
+  .Layer__UI__Heading {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.Layer__LandingPage__layout {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-2xl);
+  align-items: stretch;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (width <= 1024px) {
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+  }
+}
+
+.Layer__LandingPage__responsive-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+
+  @media (width > 1024px) {
+    flex: 1 1 0;
+    justify-content: center;
+    max-width: 620px;
+  }
+}
+
+.Layer__LandingPage__media-container {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  transition: margin-top 0.3s ease-in-out, opacity 0.3s ease-in-out;
+
+  @media (width > 1024px) {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline-end: var(--spacing-lg);
+  }
+
+  @media (width <= 1024px) {
+    padding-inline: var(--spacing-md);
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+    border-radius: var(--border-radius);
+    object-fit: cover;
+    opacity: 0;
+    animation: fade-in-image 0.4s ease-in forwards;
+    animation-delay: 0.1s;
+
+    @media (width > 1024px) {
+      max-height: 560px;
+    }
+
+    @media (width <= 1024px) {
+      max-height: 360px;
+    }
+  }
+}
+
+@keyframes fade-in-image {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

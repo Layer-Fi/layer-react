@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 const DELAY_MS = 300
 
@@ -15,7 +15,7 @@ export function useDelayedRemoveBankTransaction({
   onRemove,
 }: UseDelayedRemoveBankTransactionParams) {
   const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
-  const isBeingRemoved = bankTransaction.recently_categorized && shouldHideAfterCategorize
+  const isBeingRemoved = bankTransaction.recentlyCategorized && shouldHideAfterCategorize
 
   useEffect(() => {
     if (isBeingRemoved) {
@@ -27,7 +27,7 @@ export function useDelayedRemoveBankTransaction({
       return () => clearTimeout(timeout)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankTransaction.recently_categorized])
+  }, [bankTransaction.recentlyCategorized])
 
   return useMemo(() => ({ isBeingRemoved }), [isBeingRemoved])
 }

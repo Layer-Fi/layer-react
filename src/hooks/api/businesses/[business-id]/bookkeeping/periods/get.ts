@@ -1,0 +1,79 @@
+import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import {
+  type BookkeepingPeriod,
+  BookkeepingPeriodsSchema,
+  BookkeepingPeriodStatus,
+} from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
+import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
+import { get } from '@utils/shared/api/authenticatedHttp'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
+import {
+  BOOKKEEPING_TAG_KEY,
+  useGetBookkeepingStatus,
+} from '@api/businesses/[business-id]/bookkeeping/status/get'
+
+const BOOKKEEPING_PERIOD_STATUSES: string[] = Object.values(BookkeepingPeriodStatus)
+
+type RawBookkeepingPeriodStatus = EnumWithUnknownValues<BookkeepingPeriodStatus>
+
+function isBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): status is BookkeepingPeriodStatus {
+  return BOOKKEEPING_PERIOD_STATUSES.includes(status)
+}
+
+function constrainToKnownBookkeepingPeriodStatus(status: RawBookkeepingPeriodStatus): BookkeepingPeriodStatus {
+  if (isBookkeepingPeriodStatus(status)) {
+    return status
+  }
+
+  return BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
+}
+
+const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(BookkeepingPeriodsSchema)
+
+const getBookkeepingPeriods = get<
+  typeof BookkeepingPeriodsResponseSchema.Encoded,
+  { businessId: string }
+>(({ businessId }) => {
+  return `/v1/businesses/${businessId}/bookkeeping/periods`
+})
+
+export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
+
+export const useBookkeepingPeriodsGlobalCacheActions =
+  createResourceGlobalCacheActions<ReadonlyArray<BookkeepingPeriod>>(BOOKKEEPING_PERIODS_TAG_KEY)
+
+const useBookkeepingPeriodsQuery = createQueryHook({
+  tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
+  request: getBookkeepingPeriods,
+  schema: BookkeepingPeriodsResponseSchema,
+  select: ({ periods }) =>
+    periods
+      .map(period => ({
+        ...period,
+        status: constrainToKnownBookkeepingPeriodStatus(period.status),
+        tasks: getUserVisibleTasks(period.tasks),
+      }))
+      .filter(period => isActiveBookkeepingPeriod(period)),
+})
+
+export function useGetBookkeepingPeriods() {
+  const { data, isLoading: isLoadingBookkeepingStatus } = useGetBookkeepingStatus()
+  const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
+
+  const queryResult = useBookkeepingPeriodsQuery({ isEnabled: isActiveOrPaused })
+
+  return new Proxy(queryResult, {
+    get(target, prop) {
+      if (prop === 'isLoading') {
+        return isLoadingBookkeepingStatus || target.isLoading
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
+}

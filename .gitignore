@@ -4,5 +4,24 @@ node_modules/
 .idea/
 .vscode/
 .DS_Store
+.env
+.env.*
+!.env.example
 .codex/
 .agents/
+.claude/
+.vercel
+storybook-static
+coverage/
+
+# Consumer fixtures install the packed tarball fresh on every run.
+consumer-fixtures/*/node_modules/
+consumer-fixtures/*/dist/
+consumer-fixtures/*/package-lock.json
+consumer-fixtures/*/*.tgz
+
+# Written by `npm run audit:floors` when handed an output path.
+audit-floors.json
+
+# Written by `npm run build-storybook`.
+build-storybook.log

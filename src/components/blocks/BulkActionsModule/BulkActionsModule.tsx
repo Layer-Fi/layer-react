@@ -1,0 +1,52 @@
+import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { tPlural } from '@utils/shared/i18n/plural'
+import { useBulkSelectionActions, useCountSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+
+import './bulkActionsModule.scss'
+
+export interface BulkActionsModuleProps {
+  showSelectedLabel?: boolean
+  fullWidth?: boolean
+  slots: {
+    BulkActions: React.FC
+  }
+}
+
+export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false, slots }: BulkActionsModuleProps) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  const { count } = useCountSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
+  return (
+    <HStack slot='toggle' justify='space-between' align='center' gap='xs' fluid={fullWidth}>
+      <HStack justify='space-between' align='center' pis='sm' pie='3xs' gap='3xs' className='Layer__BulkActionsModule__SelectedItemsContainer'>
+        <Span noWrap>
+          {showSelectedLabel
+            ? tPlural(t, 'common:label.count_selected', {
+              count,
+              displayCount: formatNumber(count),
+              one: '{{displayCount}} selected',
+              other: '{{displayCount}} selected',
+            })
+            : formatNumber(count)}
+        </Span>
+        <Button
+          variant='ghost'
+          icon
+          inset
+          onClick={clearSelection}
+          aria-label={t('common:action.clear_selected_items', 'Clear selected items')}
+        >
+          <X size={18} />
+        </Button>
+      </HStack>
+      <slots.BulkActions />
+    </HStack>
+  )
+}

@@ -5,15 +5,26 @@ import {
   type HeadingProps as ReactAriaHeadingProps,
 } from 'react-aria-components/Heading'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'
 
 import './heading.scss'
 
+const legacyClassNames = createLegacyClassNames({
+  'Layer__UI__Heading': 'Layer__heading',
+  'align:left': 'Layer__heading--left',
+  'align:center': 'Layer__heading--center',
+  'align:right': 'Layer__heading--right',
+} satisfies LegacyClassNameMapFor<'Layer__UI__Heading', `align:${HeadingAlign}`>)
+
 export type HeadingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 
+/** The alignments with a legacy modifier; `justify` never had one. */
+type HeadingAlign = 'left' | 'center' | 'right'
+
 type HeadingDataProps = {
-  align?: 'center'
+  align?: HeadingAlign | 'justify'
   pbe?: Spacing
   pie?: Spacing
   size?: HeadingSize
@@ -22,18 +33,22 @@ type HeadingDataProps = {
   ellipsis?: true
 }
 
-const HEADING_CLASS_NAME = 'Layer__UI__Heading'
+const HEADING_CLASS_NAME = legacyClassNames('Layer__UI__Heading')
 const Heading = forwardRef<
   HTMLHeadingElement,
-  ReactAriaHeadingProps & HeadingDataProps
->(({ align, pie, pbe, size, variant, weight, ellipsis, className, ...restProps }, ref) => {
+  Omit<ReactAriaHeadingProps, 'className'> & HeadingDataProps & { className?: string }
+>(({ align, className, pie, pbe, size, variant, weight, ellipsis, ...restProps }, ref) => {
   const dataProperties = toDataProperties({ pbe, pie, size, align, variant, weight, ellipsis })
 
   return (
     <ReactAriaHeading
       {...restProps}
       {...dataProperties}
-      className={classNames(HEADING_CLASS_NAME, className)}
+      className={classNames(
+        HEADING_CLASS_NAME,
+        align !== 'justify' && legacyClassNames(`align:${align ?? 'center'}`),
+        className,
+      )}
       ref={ref}
     />
   )

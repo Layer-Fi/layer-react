@@ -1,0 +1,120 @@
+import { useContext } from 'react'
+import classNames from 'classnames'
+import { CirclePlus } from 'lucide-react'
+import { GridList, type Selection } from 'react-aria-components/GridList'
+import { useTranslation } from 'react-i18next'
+
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { HStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { LinkAccountDemoTooltip } from '@features/linkedAccounts/LinkAccountDemoTooltip/LinkAccountDemoTooltip'
+import { LinkedAccountGridItem } from '@features/linkedAccounts/LinkedAccountGridItem/LinkedAccountGridItem'
+import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
+
+import './linkedAccountsContent.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'newAccount:label': 'Layer__linked-accounts__new-account-label',
+})
+
+interface LinkedAccountsDataProps {
+  asWidget?: boolean
+  showLedgerBalance?: boolean
+  showUnlinkItem?: boolean
+  showBreakConnection?: boolean
+}
+
+export const LinkedAccountsContent = ({
+  asWidget,
+  showLedgerBalance,
+  showUnlinkItem,
+  showBreakConnection,
+}: LinkedAccountsDataProps) => {
+  const { t } = useTranslation()
+  const { data } = useBankAccountsContext()
+  const { addConnection } = useContext(LinkedAccountsContext)
+  const { business } = useLayerContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
+  const isDemoBusiness = business?.isDemo ?? false
+
+  const isFilterEnabled = useIsBankAccountFilterEnabled()
+  const isFilterLocked = useIsBankAccountFilterLocked()
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const { setSelectedBankAccountIds } = useBankAccountFilterActions()
+
+  const onSelectionChange = (keys: Selection) => {
+    if (isFilterLocked) return
+
+    const accountIds = (data ?? []).map(account => account.id)
+    setSelectedBankAccountIds(
+      keys === 'all' ? accountIds : accountIds.filter(id => keys.has(id)),
+    )
+  }
+
+  const onAddAccountClick = () => {
+    if (isDemoBusiness) return
+
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsAddAccountClicked,
+      version: 1,
+      payload: {},
+    })
+    void addConnection('PLAID')
+  }
+
+  const linkedAccountsNewAccountClassName = classNames(
+    'Layer__linked-accounts__new-account',
+    asWidget && '--as-widget',
+    showLedgerBalance && '--show-ledger-balance',
+    showUnlinkItem && '--show-unlink-item',
+    showBreakConnection && '--show-break-connection',
+    isDemoBusiness && '--disabled',
+  )
+
+  return (
+    <>
+      <div className='Layer__linked-accounts__list'>
+        <GridList
+          aria-label={t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.label.linked_accounts_list', 'Linked accounts')}
+          selectionMode={isFilterEnabled ? 'multiple' : 'none'}
+          selectedKeys={selectedBankAccountIds}
+          onSelectionChange={onSelectionChange}
+          className={classNames('Layer__linked-accounts__grid', isFilterLocked && '--locked')}
+        >
+          {data?.map(account => (
+            <LinkedAccountGridItem
+              key={account.id}
+              account={account}
+              showLedgerBalance={showLedgerBalance}
+              showUnlinkItem={showUnlinkItem}
+              showBreakConnection={showBreakConnection}
+              asWidget={asWidget}
+            />
+          ))}
+        </GridList>
+        <LinkAccountDemoTooltip active={isDemoBusiness} asChild>
+          <button
+            type='button'
+            aria-disabled={isDemoBusiness}
+            onClick={onAddAccountClick}
+            className={linkedAccountsNewAccountClassName}
+          >
+            <HStack align='center' gap='2xs' className={legacyClassNames('newAccount:label')}>
+              <CirclePlus size={14} />
+              <Span variant='placeholder'>
+                {t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.action.add_account', 'Add Account')}
+              </Span>
+            </HStack>
+          </button>
+        </LinkAccountDemoTooltip>
+      </div>
+      <LinkedAccountsConfirmationModal />
+    </>
+  )
+}

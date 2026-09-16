@@ -1,25 +1,26 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type OnboardingStep } from '@internal-types/layerContext'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { type TagOption } from '@internal-types/features/tags/tag'
+import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { Container } from '@components/Container/Container'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { Onboarding } from '@components/Onboarding/Onboarding'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
+import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
+import { Container } from '@blocks/Layout/Container/Container'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
+import { View } from '@blocks/Layout/View/View'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
+import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
+  type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { View } from '@components/View/View'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
 import './accountingOverview.scss'
 
@@ -33,12 +34,12 @@ interface AccountingOverviewStringOverrides {
 }
 
 export interface AccountingOverviewProps {
-  /**
-   * @deprecated Use `stringOverrides.title` instead
-   */
+  /** @deprecated Use `stringOverrides.title` instead */
   title?: string
   showTitle?: boolean
+  /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   enableOnboarding?: boolean
+  /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
@@ -47,8 +48,11 @@ export interface AccountingOverviewProps {
   tagFilter?: TagOption
   slotProps?: {
     profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
+      summaries?: ProfitAndLossSummariesSlotProps
+      chart?: { chartConfig?: ProfitAndLossChartConfig }
+      detailedCharts?: {
+        revenue?: { chartConfig?: ProfitAndLossChartConfig }
+        expenses?: { chartConfig?: ProfitAndLossChartConfig }
       }
     }
   }
@@ -57,8 +61,6 @@ export interface AccountingOverviewProps {
 export const AccountingOverview = ({
   title,
   showTitle = true,
-  enableOnboarding = false,
-  onboardingStepOverride = undefined,
   onTransactionsToReviewClick,
   middleBanner,
   chartColorsList,
@@ -71,18 +73,19 @@ export const AccountingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossSummariesReportingVariant =
+    slotProps?.profitAndLoss?.summaries?.reportingVariant
+  const profitAndLossTagFilter = tagFilter?.tagValues.length
+    ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+    : undefined
 
   return (
     <ProfitAndLoss
       asContainer={false}
-      tagFilter={
-        tagFilter
-          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-          : undefined
-      }
+      tagFilter={profitAndLossTagFilter}
     >
       <View
-        title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
+        title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
         viewClassName='Layer__AccountingOverview'
         showHeader={showTitle}
         header={(
@@ -95,16 +98,12 @@ export const AccountingOverview = ({
           </Header>
         )}
       >
-        {enableOnboarding && (
-          <Onboarding
-            onTransactionsToReviewClick={onTransactionsToReviewClick}
-            onboardingStepOverride={onboardingStepOverride}
-          />
-        )}
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
+          reportingVariant={profitAndLossSummariesReportingVariant}
           variants={profitAndLossSummariesVariants}
         />
         <Container
@@ -112,18 +111,15 @@ export const AccountingOverview = ({
           className='Layer__AccountingOverview__ProfitAndLossContainer'
           asWidget
         >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
+          <ProfitAndLossHeader
+            stringOverrides={{ title: stringOverrides?.header }}
             className='Layer__AccountingOverview__ProfitAndLossHeader'
-            trailingContent={<PnlLegend direction='row' />}
+            trailingContent={<ProfitAndLossLegend direction='row' />}
           />
           <ProfitAndLoss.Chart
-            tagFilter={
-              tagFilter
-                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                : undefined
-            }
+            tagFilter={profitAndLossTagFilter}
             hideLegend
+            chartConfig={slotProps?.profitAndLoss?.chart?.chartConfig}
           />
         </Container>
         {middleBanner && (
@@ -134,6 +130,10 @@ export const AccountingOverview = ({
         <ProfitAndLossOverviewDetailedCharts
           variant='accounting'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartConfigByScope={{
+            revenue: slotProps?.profitAndLoss?.detailedCharts?.revenue?.chartConfig,
+            expenses: slotProps?.profitAndLoss?.detailedCharts?.expenses?.chartConfig,
+          }}
           chartColorsList={chartColorsList}
         />
       </View>

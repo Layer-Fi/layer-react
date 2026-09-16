@@ -1,0 +1,12 @@
+.Layer__tasks-month-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  padding-top: 10px;
+  container-type: inline-size;
+
+  @container (min-width: 680px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

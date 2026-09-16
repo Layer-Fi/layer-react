@@ -1,0 +1,10 @@
+.Layer__Chevron {
+  stroke: var(--color-base-900);
+  transition: transform 0.33s;
+
+  transform: rotate(0deg);
+
+  &[data-open] {
+    transform: rotate(180deg);
+  }
+}

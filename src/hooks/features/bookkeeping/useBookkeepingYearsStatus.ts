@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
 
-import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { getActivationDate } from '@utils/business'
-import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { isIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { getActivationDate } from '@utils/features/business/business'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
   const activationDate = getActivationDate(business)
 
-  const { data, isLoading } = useBookkeepingPeriods()
+  const { data, isLoading } = useGetBookkeepingPeriods()
 
   const yearStatuses = useMemo(() => {
     const startYear = getYear(activationDate ?? new Date())
@@ -39,15 +39,18 @@ export const useBookkeepingYearsStatus = () => {
   const earliestIncompletePeriod = useMemo(() => [...(data ?? [])]
     .sort((a, b) => {
       if (a.year === b.year) {
-        return b.month - a.month
+        return a.month - b.month
       }
 
-      return b.year - a.year
+      return a.year - b.year
     })
     .find(period => period.tasks.some(task => isIncompleteTask(task))),
   [data])
 
-  const anyPreviousYearIncomplete = yearStatuses?.find(year => !year.completed && year.year < new Date().getFullYear())
+  // yearStatuses is sorted newest-first; the banner and its navigation target both use the oldest backlog year.
+  const anyPreviousYearIncomplete = yearStatuses
+    ?.filter(year => !year.completed && year.year < new Date().getFullYear())
+    .at(-1)
 
   return {
     yearStatuses,

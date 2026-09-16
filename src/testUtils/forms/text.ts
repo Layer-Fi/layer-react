@@ -1,0 +1,8 @@
+import { setTextBoxValue } from '@testUtils/forms/textBox'
+import { type FormFillerContext, type TextFillArgs } from '@testUtils/forms/types'
+
+export function createTextFiller(context: FormFillerContext) {
+  return (args: TextFillArgs) => {
+    return setTextBoxValue(context, args)
+  }
+}

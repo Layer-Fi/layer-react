@@ -1,0 +1,50 @@
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { type TaxSummary, type TaxSummarySectionType, TaxSummaryState } from '@schemas/features/taxEstimates/summary'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
+import { useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+
+const prepareTaxSummaryData = (taxSummaryData: TaxSummary, shortenedDisplayName: (type: TaxSummarySectionType) => string, isMobile: boolean) => {
+  return taxSummaryData.sections.map(section => ({
+    value: Math.max(section.taxesOwed, 0),
+    name: section.type,
+    displayName: isMobile ? shortenedDisplayName(section.type) : section.label,
+  }))
+}
+
+export const useTaxEstimatesSummaryCard = () => {
+  const { year } = useTaxEstimatesYear()
+  const { fullYearProjection } = useFullYearProjection()
+  const { t } = useTranslation()
+  const { isDesktop, isMobile } = useSizeClass()
+  const { data: taxSummaryData, isLoading, isError } = useGetTaxSummary({ year, fullYearProjection })
+
+  const shortenedDisplayName = useCallback((type: TaxSummarySectionType) => {
+    if (type === 'federal') return t('taxEstimates:TaxEstimatesSummaryCard.useTaxEstimatesSummaryCard.label.federal', 'Federal')
+    if (type === 'state') return t('taxEstimates:TaxEstimatesSummaryCard.useTaxEstimatesSummaryCard.label.state', 'State')
+    return type
+  }, [t])
+
+  const detailData = useMemo(() => {
+    if (!taxSummaryData) return undefined
+
+    const data = prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile)
+
+    return {
+      data,
+      total: data.reduce((sum, section) => sum + section.value, 0),
+    }
+  }, [taxSummaryData, isMobile, shortenedDisplayName])
+
+  return {
+    detailData,
+    isLoading,
+    isError,
+    state: taxSummaryData?.state ?? TaxSummaryState.TAXES_OWED,
+    layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
+    title: t('taxEstimates:TaxEstimatesSummaryCard.useTaxEstimatesSummaryCard.label.tax_summary', 'Tax Summary'),
+  }
+}

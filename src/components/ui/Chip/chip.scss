@@ -1,0 +1,69 @@
+.Layer__UI__ChipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2xs);
+}
+
+.Layer__UI__Chip {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 2rem;
+  padding-inline: var(--spacing-xs);
+
+  border-radius: var(--btn-border-radius);
+  border: 1px solid var(--border-color);
+
+  background-color: var(--color-base-0);
+
+  cursor: pointer;
+  user-select: none;
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  text-align: center;
+  color: var(--text-color-primary);
+
+  &[data-size='sm'] {
+    min-block-size: 1.75rem;
+    padding-inline: var(--spacing-2xs);
+
+    font-size: var(--text-xs);
+  }
+
+  &[data-selected] {
+    border-color: var(--color-base-1000);
+
+    background-color: var(--color-base-1000);
+
+    color: var(--color-base-0);
+  }
+
+  &[data-hovered]:not([data-selected]) {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-focus-visible] {
+    outline: 1px solid var(--color-base-1000);
+    outline-offset: 1px;
+  }
+
+  &[data-disabled] {
+    border-color: var(--border-color);
+
+    background-color: var(--color-base-50);
+
+    cursor: not-allowed;
+
+    color: var(--color-base-500);
+  }
+
+  &[data-disabled][data-selected] {
+    border-color: var(--color-base-300);
+
+    background-color: var(--color-base-300);
+
+    color: var(--color-base-0);
+  }
+}

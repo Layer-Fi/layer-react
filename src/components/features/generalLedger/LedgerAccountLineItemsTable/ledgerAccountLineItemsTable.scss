@@ -1,0 +1,43 @@
+.Layer__UI__Table__LedgerAccountLineItemsTable {
+  table-layout: fixed;
+  width: 100%;
+
+  .Layer__UI__Table-Row:last-child .Layer__UI__Table-Cell {
+    border-bottom: 1px solid var(--color-base-300);
+  }
+
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(8rem, 13%)
+      minmax(7rem, 12%)
+      minmax(12rem, 33%)
+      minmax(7rem, 13%)
+      minmax(7rem, 13%)
+      minmax(8rem, 16%);
+  }
+
+  &:has(.Layer__UI__Table-Column__LedgerAccountLineItemsTable--Account) {
+    .Layer__UI__Table-Row,
+    .Layer__UI__Table-TableHeader > tr {
+      grid-template-columns:
+        minmax(8rem, 12%)
+        minmax(7rem, 10%)
+        minmax(11rem, 26%)
+        minmax(9rem, 18%)
+        minmax(7rem, 11%)
+        minmax(7rem, 11%)
+        minmax(8rem, 12%);
+    }
+  }
+
+  .Layer__UI__Table-Column__LedgerAccountLineItemsTable,
+  .Layer__UI__Table-Cell__LedgerAccountLineItemsTable {
+    &--Debit,
+    &--Credit,
+    &--RunningBalance {
+      justify-content: flex-end;
+    }
+  }
+}

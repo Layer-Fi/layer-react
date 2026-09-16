@@ -1,0 +1,62 @@
+import { useContext, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import type { BankAccount } from '@schemas/features/bankAccounts/bankAccount'
+import { isAllExternalAccountsUserCreatedCustom } from '@utils/features/bankAccounts/bankAccount'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { type ModalProps } from '@ui/Modal/Modal'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
+
+type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
+  bankAccount: BankAccount
+}
+export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccount }: UnlinkAccountConfirmationModalProps) {
+  const { t } = useTranslation()
+  const { unlinkBankAccount } = useContext(LinkedAccountsContext)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
+  const variant = isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'DELETE' : 'UNLINK'
+
+  // Fires when the user confirms in the modal, not on API success.
+  const onConfirm = () => {
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsUnlinkAccountClicked,
+      version: 1,
+      payload: { accountId: bankAccount.id },
+    })
+    return unlinkBankAccount(bankAccount.id)
+  }
+
+  const modalContent = useMemo(() => {
+    switch (variant) {
+      case 'DELETE':
+        return {
+          title: t('linkedAccounts:UnlinkAccountConfirmationModal.action.delete_account', 'Delete account'),
+          description: t('linkedAccounts:UnlinkAccountConfirmationModal.label.account_and_unmatched_transactions_deleted', 'This account and any unmatched transactions will be deleted.'),
+          confirmLabel: t('linkedAccounts:UnlinkAccountConfirmationModal.action.delete_account_label', 'Delete Account'),
+          errorText: t('linkedAccounts:UnlinkAccountConfirmationModal.error.delete_account_check_connection', 'Deletion failed. Please check your connection and try again in a few seconds.'),
+        }
+      case 'UNLINK':
+        return {
+          title: t('linkedAccounts:UnlinkAccountConfirmationModal.action.unlink_account', 'Unlink account'),
+          description:
+            t('linkedAccounts:UnlinkAccountConfirmationModal.label.account_stops_syncing_new_data', 'This account will stop syncing new data, and any unmatched transactions will be deleted.'),
+          confirmLabel: t('linkedAccounts:UnlinkAccountConfirmationModal.action.unlink_account_label', 'Unlink Account'),
+          errorText: t('linkedAccounts:UnlinkAccountConfirmationModal.error.unlink_failed', 'Unlink failed. Please check your connection and try again in a few seconds.'),
+        }
+    }
+  }, [variant, t])
+
+  return (
+    <BaseConfirmationModal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      title={modalContent.title}
+      description={modalContent.description}
+      onConfirm={onConfirm}
+      confirmLabel={modalContent.confirmLabel}
+      errorText={modalContent.errorText}
+    />
+  )
+}

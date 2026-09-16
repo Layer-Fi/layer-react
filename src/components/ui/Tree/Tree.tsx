@@ -27,7 +27,7 @@ const TreeInner = <T extends object>(
 )
 
 export const Tree = forwardRef(TreeInner) as (<T>(
-  props: TreeProps<T> & { ref?: React.Ref<HTMLDivElement> }
+  props: TreeProps<T> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement) & { displayName?: string }
 
 Tree.displayName = 'Tree'
@@ -44,7 +44,7 @@ const TreeItemInner = <T extends object>(
 )
 
 export const TreeItem = forwardRef(TreeItemInner) as (<T>(
-  props: TreeItemProps<T> & { ref?: React.Ref<HTMLDivElement> }
+  props: TreeItemProps<T> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement) & { displayName?: string }
 
 TreeItem.displayName = 'TreeItem'

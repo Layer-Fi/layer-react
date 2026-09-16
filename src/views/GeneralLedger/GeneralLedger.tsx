@@ -1,14 +1,16 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
+import { LedgerDateStoreProvider } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
+import { Loader } from '@ui/Loader/Loader'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { ChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { Journal } from '@components/Journal/Journal'
-import { type JournalStringOverrides } from '@components/Journal/Journal'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { View } from '@components/View/View'
+import { View } from '@blocks/Layout/View/View'
+import { InternalChartOfAccounts } from '@features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+import { type ChartOfAccountsStringOverrides } from '@features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+import { InternalJournal } from '@features/generalLedger/Journal/Journal'
+import { type JournalStringOverrides } from '@features/generalLedger/Journal/Journal'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 
 export interface GeneralLedgerStringOverrides {
   title?: string
@@ -22,6 +24,7 @@ export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
   showAddAccountButton?: boolean
 }
+
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean
@@ -47,48 +50,51 @@ export const GeneralLedgerView = ({
   const toggleOptions = useMemo(() => [
     {
       value: 'chartOfAccounts',
-      label: stringOverrides?.chartOfAccountsToggleOption || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts'),
+      label: stringOverrides?.chartOfAccountsToggleOption || t('views:GeneralLedger.label.chart_of_accounts', 'Chart of Accounts'),
     },
     {
       value: 'journal',
-      label: stringOverrides?.journalToggleOption || t('generalLedger:label.journal', 'Journal'),
+      label: stringOverrides?.journalToggleOption || t('views:GeneralLedger.label.journal', 'Journal'),
     },
   ], [t, stringOverrides?.chartOfAccountsToggleOption, stringOverrides?.journalToggleOption])
 
   return (
     <ProfitAndLoss asContainer={false}>
       <View
-        title={stringOverrides?.title || title || t('generalLedger:label.general_ledger', 'General Ledger')}
+        title={stringOverrides?.title || title || t('views:GeneralLedger.label.general_ledger', 'General Ledger')}
         showHeader={showTitle}
       >
         <Toggle
-          ariaLabel={t('generalLedger:label.ledger_view', 'Ledger view')}
+          ariaLabel={t('views:GeneralLedger.label.ledger_view', 'Ledger view')}
           options={toggleOptions}
           selectedKey={activeTab}
           onSelectionChange={key => setActiveTab(key as string)}
         />
 
-        {activeTab === 'chartOfAccounts'
-          ? (
-            <ChartOfAccounts
-              asWidget
-              withExpandAllButton
-              showAddAccountButton={chartOfAccountsOptions?.showAddAccountButton}
-              stringOverrides={stringOverrides?.chartOfAccounts}
-              templateAccountsEditable={
-                chartOfAccountsOptions?.templateAccountsEditable
-              }
-              renderInAppLink={renderInAppLink}
-            />
-          )
-          : (
-            <Journal
-              showTags={showTags}
-              showCustomerVendor={showCustomerVendor}
-              stringOverrides={stringOverrides?.journal}
-              renderInAppLink={renderInAppLink}
-            />
-          )}
+        <LedgerDateStoreProvider fallback={<Loader />}>
+          {activeTab === 'chartOfAccounts'
+            ? (
+              <InternalChartOfAccounts
+                asWidget
+                withDateControl
+                withExpandAllButton
+                showAddAccountButton={chartOfAccountsOptions?.showAddAccountButton}
+                stringOverrides={stringOverrides?.chartOfAccounts}
+                templateAccountsEditable={
+                  chartOfAccountsOptions?.templateAccountsEditable
+                }
+                renderInAppLink={renderInAppLink}
+              />
+            )
+            : (
+              <InternalJournal
+                showTags={showTags}
+                showCustomerVendor={showCustomerVendor}
+                stringOverrides={stringOverrides?.journal}
+                renderInAppLink={renderInAppLink}
+              />
+            )}
+        </LedgerDateStoreProvider>
       </View>
     </ProfitAndLoss>
   )

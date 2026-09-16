@@ -1,27 +1,36 @@
 import { useTranslation } from 'react-i18next'
 
+import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
-import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
+import { View } from '@blocks/Layout/View/View'
+import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
+import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+import { ExpensesSummaryCard } from '@features/profitAndLoss/ExpensesSummaryCard/ExpensesSummaryCard'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
+  type ProfitAndLossSummariesReportingVariant,
+  type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
-import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { ProfitAndLossSummaryCard } from '@features/profitAndLoss/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
-} from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { View } from '@components/View/View'
+} from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { SolopreneurOnboardingBanner } from '@views/SolopreneurOverview/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 
 import './solopreneurOverview.scss'
+
+const SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT = {
+  type: 'cashflow',
+} satisfies ProfitAndLossSummariesReportingVariant
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
@@ -38,7 +47,7 @@ interface SolopreneurOverviewInteractionProps {
   banner?: {
     onSetupTaxProfile?: () => void
   }
-  profitAndLossSummaries?: {
+  cashflowSummaries?: {
     onTransactionsToReviewClick?: () => void
   }
   summaryCards?: {
@@ -53,12 +62,26 @@ export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
+  slotProps?: {
+    profitAndLoss?: {
+      summaries?: ProfitAndLossSummariesSlotProps
+    }
+    summaryCards?: {
+      profitAndLoss?: { chartConfig?: ProfitAndLossChartConfig }
+      expenses?: { chartConfig?: ProfitAndLossChartConfig }
+    }
+  }
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 export const SolopreneurOverview = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
+  slotProps,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
@@ -81,19 +104,29 @@ export const SolopreneurOverview = ({
       >
         <SolopreneurOnboardingBanner
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
+          plaidHostedLinkConfig={plaidHostedLinkConfig}
+          customerManagedPlaidConfig={customerManagedPlaidConfig}
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
+          chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}
           chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={interactionProps?.profitAndLossSummaries?.onTransactionsToReviewClick}
+          reportingVariant={
+            slotProps?.profitAndLoss?.summaries?.reportingVariant
+            ?? SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT
+          }
+          variants={slotProps?.profitAndLoss?.summaries?.variants}
+          onTransactionsToReviewClick={interactionProps?.cashflowSummaries?.onTransactionsToReviewClick}
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
+            chartConfig={slotProps?.summaryCards?.profitAndLoss?.chartConfig}
             stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
             interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
-            stylingProps={{ chartColorsList }}
+            chartConfig={slotProps?.summaryCards?.expenses?.chartConfig}
+            chartColorsList={chartColorsList}
             stringOverrides={stringOverrides?.summaryCards?.expenses}
             interactionProps={interactionProps?.summaryCards?.expenses}
           />

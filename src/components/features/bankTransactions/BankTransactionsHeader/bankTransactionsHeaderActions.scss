@@ -1,0 +1,31 @@
+.Layer__BankTransactionsActions {
+  display: grid;
+  grid-template-areas:
+    'toggle . selected-accounts download-upload'
+    'search search search search';
+
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: var(--spacing-xs);
+  align-items: center;
+
+  @container (min-width: 840px) {
+    grid-template-areas: 'toggle . selected-accounts search download-upload';
+    grid-template-columns: auto minmax(0, 2fr) auto 15rem auto;
+  }
+
+  > [slot='toggle'] {
+    grid-area: toggle;
+  }
+
+  > [slot='selected-accounts'] {
+    grid-area: selected-accounts;
+  }
+
+  > [slot='search'] {
+    grid-area: search;
+  }
+
+  > [slot='download-upload'] {
+    grid-area: download-upload;
+  }
+}

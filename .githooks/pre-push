@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# git execs this directly, so -e is not inherited from anywhere; without it the
+# hook would exit with only the last command's status and mask earlier failures.
+set -e
+
+export PATH="node_modules/.bin:$PATH"
+
+# core.hooksPath is relative, so a worktree resolves its own tracked copy of this
+# directory. A fresh worktree has no node_modules; install rather than skip.
+if [ ! -d node_modules ]; then
+  echo "git hooks - no node_modules in $(pwd), running npm ci"
+  npm ci
+fi
+
+npm run lint
+npm run typecheck

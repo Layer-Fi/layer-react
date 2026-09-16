@@ -1,0 +1,38 @@
+import { useCallback } from 'react'
+import { Schema } from 'effect/index'
+import { useTranslation } from 'react-i18next'
+
+import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/features/categorization/createCategorizationRule'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
+import { Button, type ButtonProps } from '@ui/Button/Button'
+import { useWizard } from '@blocks/Wizard/Wizard'
+
+interface CreateRuleButtonProps {
+  newRule: CreateCategorizationRule
+  slotProps?: ButtonProps
+}
+
+export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateRuleButtonProps) => {
+  const { t } = useTranslation()
+  const { next } = useWizard()
+  const { trigger: createCategorizationRule, isMutating } = usePostCategorizationRule()
+  const { addToast } = useLayerContext()
+  const handlePress = useCallback(() => {
+    void (async () => {
+      const encodedRule = Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(ruleSuggestion)
+      await createCategorizationRule(encodedRule).then(() => {
+        void next()
+      }).catch(() => {
+        addToast({ content: t('categorization:SuggestedCategorizationRuleUpdates.CreateRuleButton.error.create_categorization_rule', 'Failed to create categorization rule'), type: 'error' })
+      })
+    })()
+  }, [addToast, createCategorizationRule, next, ruleSuggestion, t])
+  return (
+    <Button
+      onPress={handlePress}
+      isPending={isMutating}
+      {...slotProps}
+    />
+  )
+}

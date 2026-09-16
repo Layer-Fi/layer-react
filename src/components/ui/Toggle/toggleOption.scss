@@ -36,11 +36,15 @@
 
   &[data-disabled] {
     cursor: not-allowed;
-    opacity: 0.5;
+    color: var(--button-fg-disabled);
+
+    &::before {
+      background-color: var(--button-bg-disabled);
+    }
   }
 }
 
-.Layer__UI__ToggleOption-SelectionIndicator {
+.Layer__UI__ToggleOption__SelectionIndicator {
   position: absolute;
   z-index: -1;
   top: 0;
@@ -59,7 +63,7 @@
   transition-duration: 200ms;
 }
 
-.Layer__UI__Toggle-Option-Content {
+.Layer__UI__ToggleOption__Content {
   display: flex;
   gap: var(--spacing-xs);
   align-items: center;

@@ -1,0 +1,52 @@
+{
+  "UnifiedReportReportingBasisControl": {
+    "label": {
+      "accrual": "Accrual",
+      "cash": "Cash",
+      "reporting_basis": "Reporting basis"
+    }
+  },
+  "UnifiedReportsMegaMenu": {
+    "label": {
+      "switch_report": "Switch report"
+    }
+  },
+  "UnifiedReportsMobileSelectionDrawer": {
+    "action": {
+      "search_reports": "Search reports"
+    },
+    "label": {
+      "reports_navigation": "Reports navigation",
+      "select_report": "Select report"
+    }
+  },
+  "UnifiedReportsNavigationSidebar": {
+    "label": {
+      "reports_navigation": "Reports navigation"
+    },
+    "UnifiedReportsNavigationSidebarError": {
+      "error": {
+        "couldnt_load_reports": "Failed to load reports",
+        "load_reports_navigation": "Something went wrong while loading this navigation. Please try again."
+      }
+    }
+  },
+  "UnifiedReportTable": {
+    "empty": {
+      "no_rows_found": "No line items found",
+      "report_has_no_rows": "This report has no line items."
+    },
+    "error": {
+      "couldnt_load_report": "We couldn’t load your report",
+      "load_report": "An error occurred while loading your report. Please check your connection and try again."
+    },
+    "label": {
+      "reports": "Reports"
+    }
+  },
+  "UnifiedReportTagControl": {
+    "action": {
+      "select_dimension_name": "Select {{dimensionName}}"
+    }
+  }
+}

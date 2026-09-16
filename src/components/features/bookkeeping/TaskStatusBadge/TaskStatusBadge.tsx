@@ -1,0 +1,139 @@
+import type { TFunction } from 'i18next'
+import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { type BookkeepingPeriod } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { HStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
+
+import './taskStatusBadge.scss'
+
+const legacyClassNames = createLegacyClassNames({
+  'badge:label': 'Layer__TasksBadge__Label',
+  'Layer__TasksBadge': 'Layer__tasks__badge',
+})
+
+type TaskStatusBadgeProps = {
+  status: BookkeepingPeriod['status']
+  tasksCount?: number
+  isMobile: boolean
+}
+
+type BadgeColor = 'info' | 'warning' | 'success'
+
+type BadgeConfig = {
+  color: BadgeColor
+  icon: ReactNode
+  label?: string
+  labelShort?: string
+}
+
+const buildLongLabel = (
+  t: TFunction,
+  formatNumber: (n: number) => string,
+  tasksCount: number,
+) =>
+  tPlural(t, 'bookkeeping:TaskStatusBadge.label.count_tasks', {
+    count: tasksCount,
+    displayCount: formatNumber(tasksCount),
+    one: '{{displayCount}} task',
+    other: '{{displayCount}} tasks',
+  })
+
+const getBadgeConfig = (
+  status: TaskStatusBadgeProps['status'],
+  tasksCount: TaskStatusBadgeProps['tasksCount'],
+  t: TFunction,
+  formatNumber: (n: number) => string,
+): BadgeConfig | undefined => {
+  switch (status) {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
+    case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
+    case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
+      return {
+        color: 'info',
+        icon: <Clock size={12} />,
+        label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
+      }
+    }
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+      return {
+        color: 'warning',
+        icon: <CircleAlert size={12} />,
+        label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
+      }
+    }
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
+      return {
+        color: 'success',
+        icon: <CircleCheckBig size={12} />,
+      }
+    }
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {
+      return
+    }
+    default: {
+      return safeAssertUnreachable({
+        value: status,
+        message: 'Unexpected bookkeeping status in `TaskStatusBadge`',
+        fallbackValue: undefined,
+      })
+    }
+  }
+}
+
+type BadgeContentProps = {
+  color: BadgeColor
+  icon: ReactNode
+  display?: string
+}
+
+const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
+  const dataProperties = toDataProperties({ status: color, icononly: !display })
+
+  return (
+    <HStack className={legacyClassNames('Layer__TasksBadge')} {...dataProperties}>
+      <HStack align='center' justify='center' className='Layer__TasksBadge__Icon' data-status={color}>
+        {icon}
+      </HStack>
+      {display
+        ? (
+          <P
+            className={legacyClassNames('badge:label')}
+            size='sm'
+            status={color}
+            invert={color === 'warning' ? true : undefined}
+            weight='bold'
+          >
+            {display}
+          </P>
+        )
+        : null}
+    </HStack>
+  )
+}
+
+export const TaskStatusBadge = ({ status, tasksCount, isMobile }: TaskStatusBadgeProps) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+
+  const badgeConfig = getBadgeConfig(status, tasksCount, t, formatNumber)
+  if (!badgeConfig) {
+    return
+  }
+
+  const display = isMobile ? badgeConfig.labelShort : badgeConfig.label
+
+  return <BadgeContent color={badgeConfig.color} icon={badgeConfig.icon} display={display} />
+}

@@ -1,0 +1,119 @@
+import { useMemo } from 'react'
+import { getMonth, getYear } from 'date-fns'
+import { Bell, Check, ChevronRight, RefreshCcw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
+import { Badge } from '@ui/Badge/Badge'
+import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { BadgeLoader } from '@ui/Badge/BadgeLoader'
+import { Button } from '@ui/Button/Button'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+
+import './transactionsToReview.scss'
+
+const CLASS_NAME = 'Layer__TransactionsToReview'
+
+type TransactionsToReviewProps = {
+  onClick?: () => void
+  tagFilter?: {
+    key: string
+    values: string[]
+  }
+}
+
+export function TransactionsToReview({
+  onClick,
+  tagFilter = undefined,
+}: TransactionsToReviewProps) {
+  const { t } = useTranslation()
+
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
+
+  const { data, isLoading, isError, mutate } = useGetProfitAndLossSummaries({
+    startYear: dateRange.startDate.getFullYear(),
+    startMonth: dateRange.startDate.getMonth() + 1,
+    endYear: dateRange.endDate.getFullYear(),
+    endMonth: dateRange.endDate.getMonth() + 1,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
+  })
+
+  const activeMonth = useMemo(() => {
+    if (!data || !dateRange) return undefined
+    const { startDate } = dateRange
+
+    return data.months.find(
+      summary =>
+        summary.month - 1 === getMonth(startDate)
+        && summary.year === getYear(startDate),
+    )
+  }, [data, dateRange])
+
+  const hasLoadedData = !isLoading && activeMonth
+  const numTransactionsToReview = activeMonth?.uncategorizedTransactions ?? 0
+
+  const transactionsToReviewBadge = useMemo(() => {
+    if (!hasLoadedData) {
+      return <BadgeLoader />
+    }
+
+    if (isError) {
+      return (
+        <Badge
+          variant={BadgeVariant.ERROR}
+          size={BadgeSize.SMALL}
+          icon={<RefreshCcw size={12} />}
+          onClick={() => void mutate()}
+        >
+          {t('common:action.refresh_label', 'Refresh')}
+        </Badge>
+      )
+    }
+
+    if (numTransactionsToReview > 0) {
+      return (
+        <Badge
+          variant={BadgeVariant.WARNING}
+          size={BadgeSize.SMALL}
+          icon={<Bell size={12} />}
+        >
+          {numTransactionsToReview}
+          {' '}
+          {t('profitAndLoss:TransactionsToReview.label.pending', 'pending')}
+        </Badge>
+      )
+    }
+
+    return (
+      <Badge
+        variant={BadgeVariant.SUCCESS}
+        size={BadgeSize.SMALL}
+        icon={<Check size={12} />}
+      >
+        {t('profitAndLoss:TransactionsToReview.label.all_done', 'All done')}
+      </Badge>
+    )
+  }, [t, hasLoadedData, isError, mutate, numTransactionsToReview])
+
+  return (
+    <div className={CLASS_NAME}>
+      <VStack gap='3xs' align='start'>
+        <Span size='sm' weight='bold'>
+          {t('profitAndLoss:TransactionsToReview.label.transactions_to_review', 'Transactions to review')}
+        </Span>
+        {transactionsToReviewBadge}
+      </VStack>
+      <Button
+        variant='outlined'
+        icon
+        onPress={onClick}
+        aria-label={t('profitAndLoss:TransactionsToReview.label.transactions_to_review', 'Transactions to review')}
+      >
+        <ChevronRight size={18} />
+      </Button>
+    </div>
+  )
+}

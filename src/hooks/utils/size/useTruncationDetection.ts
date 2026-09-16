@@ -27,7 +27,7 @@ export function useTruncationDetection(
     }
 
     const element = checkFirstChild
-      ? (elementRef.current.children[0] as HTMLElement)
+      ? (elementRef.current.children[0] as HTMLElement | undefined) ?? elementRef.current
       : elementRef.current
 
     if (!element) {

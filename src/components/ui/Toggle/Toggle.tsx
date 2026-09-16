@@ -1,7 +1,7 @@
 import { type Selection } from 'react-aria-components/GridList'
 import { type Key, ToggleButtonGroup } from 'react-aria-components/ToggleButtonGroup'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './toggle.scss'
 
@@ -47,9 +47,9 @@ export const Toggle = ({
       selectionMode='single'
       selectedKeys={selectedKeys}
       onSelectionChange={(keys) => {
-        const selectedKeysArray = Array.from(keys)
-        if (selectedKeysArray.length > 0 && onSelectionChange) {
-          onSelectionChange(selectedKeysArray[0])
+        const [firstKey] = Array.from(keys)
+        if (firstKey !== undefined && onSelectionChange) {
+          onSelectionChange(firstKey)
         }
       }}
     >

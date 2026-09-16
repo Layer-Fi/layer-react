@@ -1,0 +1,23 @@
+.Layer__TaxProfileForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__Content {
+    .Layer__Checkbox > .Layer__Span {
+      margin-inline-start: var(--spacing-xs);
+    }
+  }
+
+  .Layer__TaxProfileForm__Section {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    background: var(--color-base-50);
+  }
+
+  .Layer__TaxProfileForm__Field--desktop {
+    --form-field-label-inline-size: 16rem;
+    --form-field-control-inline-size: minmax(auto, 24rem);
+  }
+}

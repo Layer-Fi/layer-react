@@ -27,6 +27,34 @@ or
 yarn install @layerfi/components
 ```
 
+## Importing
+
+Import from the package root. The ESM build ships one module per source file and declares
+`sideEffects`, so a bundler drops everything you do not reference — importing a single component
+does not pull in the rest of the library.
+
+```tsx
+import { GlobalMonthPicker } from "@layerfi/components";
+import "@layerfi/components/index.css";
+```
+
+Every public export also has its own subpath, which resolves to the same module:
+
+```tsx
+import { GlobalMonthPicker } from "@layerfi/components/GlobalMonthPicker";
+```
+
+For bundled ESM the two are equivalent — use whichever reads better. The subpath matters for
+**CommonJS**, where `require` cannot tree-shake: `require("@layerfi/components")` loads the whole
+library, while `require("@layerfi/components/GlobalMonthPicker")` loads only what that component
+needs. Subpaths cover public export names only; internal module paths are not importable.
+
+In CommonJS, the barrel and subpaths are separate module graphs — `require("@layerfi/components")`
+and `require("@layerfi/components/<Name>")` each load their own copy of shared state such as
+`LayerContext`. Mixing the two styles in one `require`-based app means a provider mounted through
+one graph is invisible to a consumer loaded through the other. Pick one style per app; this does
+not affect ESM, where both resolve to the same module.
+
 ## Usage
 
 Nest the components you want to use under the `LayerProvider` component. You should provide the component with a few props:
@@ -151,7 +179,7 @@ import { ProfitAndLoss } from "@layerfi/components";
 The P&L Summaries section supports several optional props:
 
 - `actionable`: When enabled, clicking the revenue & expense charts will open the P&L sidebar view.
-- `variants`: Override the size of the component; supports a small and large version.
+- `variants` (deprecated, no longer has any effect): The tiles size themselves responsively to their container; override the `--text-*` font size variables to adjust sizing.
 
 #### Profit and Loss Table
 
@@ -458,8 +486,6 @@ The full list of variables is listed in the [`variables.css`](https://github.com
 --badge-bg-color-error: var(--color-info-error-bg);
 
 --badge-border-radius: var(--border-radius-sm);
-
---table-bg: var(--color-white);
 
 --tooltip-color: var(--color-white);
 --tooltip-bg-color: var(--color-base-800);

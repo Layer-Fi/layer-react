@@ -1,0 +1,49 @@
+.Layer__UI__Table-Table.Layer__ReportsTable {
+  width: 100%;
+
+  // The ui table styles cells as flex containers and expect consumers to lay
+  // rows out with CSS grid. These report tables rely on the native table
+  // algorithm to size a dynamic number of columns, so restore table-cell
+  // display for them.
+  .Layer__UI__Table-Column,
+  .Layer__UI__Table-Cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  &.Layer__ReportsTable--bottom-spacing {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .Layer__UI__Table-Row {
+    background-color: var(--color-base-50);
+
+    .Layer__UI__Table-Cell {
+      background-color: inherit;
+    }
+  }
+
+  .Layer__UI__Table-TableHeader .Layer__UI__Table-Row {
+    background-color: var(--color-base-0);
+  }
+
+  .Layer__UI__Table-Row.Layer__ReportsTable__ExpandableRow {
+    background-color: var(--color-base-0);
+    cursor: pointer;
+  }
+
+  .Layer__UI__Table-Row.Layer__ReportsTable__SummationRow {
+    background-color: var(--color-base-100);
+  }
+
+  .Layer__UI__Table-Row.Layer__ReportsTable__DividerRow .Layer__UI__Table-Cell {
+    border-top: var(--spacing-2xs) solid var(--color-base-100);
+  }
+
+  @for $depth from 1 through 10 {
+    .Layer__UI__Table-Row[data-depth='#{$depth}'] > :first-child {
+      padding-inline-start: calc(var(--spacing-lg) * #{$depth} + var(--spacing-md));
+    }
+  }
+}

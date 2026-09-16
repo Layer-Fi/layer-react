@@ -1,0 +1,189 @@
+import { useCallback, useId, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/features/bankTransactions/taxCode'
+import type { TaxCodeComboBoxOption } from '@utils/features/bankTransactions/taxCodeComboBoxOption'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
+import { useBulkCategorizeBankTransactions } from '@hooks/features/bankTransactions/useBulkBankTransactionMutations'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
+import { VStack } from '@ui/Stack/Stack'
+import { Label, Span } from '@ui/Typography/Text'
+import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
+import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@features/bankTransactions/BankTransactionsBulkActions/utils'
+import { BankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeSelect'
+import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
+
+export enum CategorizationMode {
+  Categorize = 'Categorize',
+  Recategorize = 'Recategorize',
+}
+
+interface BankTransactionsCategorizeAllModalProps {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  mode: CategorizationMode
+  isMobileView?: boolean
+}
+
+export const BankTransactionsCategorizeAllModal = ({
+  isOpen,
+  onOpenChange,
+  mode,
+  isMobileView = false,
+}: BankTransactionsCategorizeAllModalProps) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  const { count } = useCountSelectedIds()
+  const { selectedIds } = useSelectedIds()
+  const { clearSelection } = useBulkSelectionActions()
+  const { data: bankTransactions } = useBankTransactionsContext()
+
+  const [selectedCategory, setSelectedCategory] = useState<BankTransactionNonSuggestedMatchOption | null>(null)
+
+  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeComboBoxOption | null>(null)
+  const { trigger, isMutating } = useBulkCategorizeBankTransactions()
+
+  const bankTransactionsById = useMemo(
+    () => getBankTransactionsById(bankTransactions),
+    [bankTransactions],
+  )
+
+  const selectedTransactions = useMemo(
+    () => getSelectedBankTransactions(selectedIds, bankTransactionsById),
+    [selectedIds, bankTransactionsById],
+  )
+
+  const firstSelectedBankTransactionWithTaxOptions = useMemo(
+    () => getFirstBankTransactionWithTaxOptions(selectedTransactions),
+    [selectedTransactions],
+  )
+
+  const { taxCodeOptions } = useTaxCodeOptions(firstSelectedBankTransactionWithTaxOptions)
+
+  const handleSelectedCategoryChange = useCallback((category: BankTransactionNonSuggestedMatchOption | null) => {
+    setSelectedCategory(category)
+    if (category && !canCategoryHaveTaxCode(category)) {
+      setSelectedTaxCode(null)
+    }
+  }, [])
+
+  const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
+    onOpenChange(isOpen)
+    if (!isOpen) {
+      setSelectedCategory(null)
+      setSelectedTaxCode(null)
+    }
+  }, [onOpenChange])
+
+  const handleConfirm = useCallback(async () => {
+    if (!selectedCategory || selectedCategory.classification === null) {
+      return
+    }
+
+    if (!isCategoryAsOption(selectedCategory) && !isApiCategorizationAsOption(selectedCategory)) {
+      return
+    }
+
+    const categorization = {
+      type: 'Category' as const,
+      category: selectedCategory.classification,
+    }
+
+    await trigger({
+      transactions: Array.from(selectedIds).map(transactionId => ({
+        transactionId,
+        categorization: {
+          ...categorization,
+          taxCode: resolveCategoryTaxCode(
+            bankTransactionsById.get(transactionId),
+            selectedCategory,
+            selectedTaxCode?.value ?? null,
+          ),
+        },
+      })),
+    })
+
+    clearSelection()
+  }, [selectedIds, selectedCategory, selectedTaxCode, trigger, clearSelection, bankTransactionsById])
+
+  const categorySelectId = useId()
+  const taxCodeSelectId = useId()
+  const showTaxCodeSelect = taxCodeOptions.length > 0 && canCategoryHaveTaxCode(selectedCategory)
+
+  return (
+    <BaseConfirmationModal
+      isOpen={isOpen}
+      onOpenChange={handleCategorizeModalClose}
+      title={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.prompt.categorize_selected_transactions', 'Categorize all selected transactions?') : t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.prompt.recategorize_selected_transactions', 'Recategorize all selected transactions?')}
+      content={(
+        <VStack gap='xs'>
+          <VStack gap='3xs'>
+            <Label size='sm' htmlFor={categorySelectId}>{t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.action.select_category', 'Select category')}</Label>
+            {isMobileView
+              ? (
+                <CategorySelectDrawerWithTrigger
+                  aria-labelledby={categorySelectId}
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={handleSelectedCategoryChange}
+                  showTooltips={false}
+                />
+              )
+              : (
+                <BankTransactionCategoryComboBox
+                  inputId={categorySelectId}
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={handleSelectedCategoryChange}
+                  includeSuggestedMatches={false}
+                  isDisabled={isMutating}
+                />
+              )}
+          </VStack>
+          {showTaxCodeSelect && (
+            <VStack gap='3xs' pbs='sm'>
+              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.label.tax_code', 'Tax code')}</Label>
+              <BankTransactionTaxCodeSelect
+                inputId={taxCodeSelectId}
+                isMobile={isMobileView}
+                options={taxCodeOptions}
+                selectedValue={selectedTaxCode}
+                onSelectedValueChange={setSelectedTaxCode}
+                isDisabled={isMutating}
+              />
+            </VStack>
+          )}
+          {selectedCategory && isCategoryAsOption(selectedCategory) && (
+            <Span>
+              {mode === CategorizationMode.Categorize
+                ? tPlural(t, 'bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.label.categorize_count_selected', {
+                  count,
+                  displayCount: formatNumber(count),
+                  category: selectedCategory.original.displayName,
+                  one: 'This will categorize {{displayCount}} selected transaction as {{category}}.',
+                  other: 'This will categorize {{displayCount}} selected transactions as {{category}}.',
+                })
+                : tPlural(t, 'bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.label.recategorize_count_selected', {
+                  count,
+                  displayCount: formatNumber(count),
+                  category: selectedCategory.original.displayName,
+                  one: 'This will recategorize {{displayCount}} selected transaction as {{category}}.',
+                  other: 'This will recategorize {{displayCount}} selected transactions as {{category}}.',
+                })}
+            </Span>
+          )}
+        </VStack>
+      )}
+      onConfirm={handleConfirm}
+      confirmLabel={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.action.categorize_all', 'Categorize All') : t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.action.recategorize_all', 'Recategorize All')}
+      confirmDisabled={!selectedCategory}
+      errorText={mode === CategorizationMode.Categorize ? t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.error.categorize_transactions', 'Failed to categorize transactions') : t('bankTransactions:BankTransactionsBulkActions.BankTransactionsCategorizeAllModal.error.recategorize_transactions', 'Failed to recategorize transactions')}
+      closeOnConfirm
+      useDrawer={isMobileView}
+    />
+  )
+}

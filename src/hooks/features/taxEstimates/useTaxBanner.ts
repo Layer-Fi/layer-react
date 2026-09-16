@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import { DateFormat } from '@utils/i18n/date/patterns'
-import { tPlural } from '@utils/i18n/plural'
+import { type TaxEstimatesBanner } from '@schemas/features/taxEstimates/banner'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 
@@ -29,7 +29,7 @@ export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
 
   if (!isDesktop) {
     return {
-      bannerDescription: tPlural(t, 'taxEstimates:banner.categorization_incomplete.description_short', {
+      bannerDescription: tPlural(t, 'taxEstimates:useTaxBanner.banner.categorization_incomplete.description_short', {
         count,
         deductions,
         income,
@@ -49,7 +49,7 @@ export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
       : formatDateRange(earliestUncategorizedAt, latestUncategorizedAt, DateFormat.DateShort)
 
     return {
-      bannerDescription: tPlural(t, 'taxEstimates:banner.categorization_incomplete.description_with_range', {
+      bannerDescription: tPlural(t, 'taxEstimates:useTaxBanner.banner.categorization_incomplete.description_with_range', {
         count,
         year,
         dateRange,
@@ -62,7 +62,7 @@ export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
   }
 
   return {
-    bannerDescription: tPlural(t, 'taxEstimates:banner.categorization_incomplete.description', {
+    bannerDescription: tPlural(t, 'taxEstimates:useTaxBanner.banner.categorization_incomplete.description', {
       count,
       year,
       deductions,

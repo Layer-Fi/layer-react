@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { range } from '@utils/helpers'
+import { range } from '@utils/shared/array/range'
 
 export enum Dots {
   DotsLeft = 'DotsLeft',

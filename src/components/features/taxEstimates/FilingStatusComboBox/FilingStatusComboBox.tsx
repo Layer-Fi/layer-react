@@ -1,0 +1,68 @@
+import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
+import { translationKey } from '@utils/shared/i18n/translationKey'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
+
+const FILING_STATUS_CONFIG = [
+  { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:FilingStatusComboBox.label.single', 'Single') },
+  { value: FilingStatus.MARRIED, ...translationKey('taxEstimates:FilingStatusComboBox.label.married_filing_jointly', 'Married filing jointly') },
+  { value: FilingStatus.MARRIED_SEPARATELY, ...translationKey('taxEstimates:FilingStatusComboBox.label.married_filing_separately', 'Married filing separately') },
+  { value: FilingStatus.HEAD, ...translationKey('taxEstimates:FilingStatusComboBox.label.head_household', 'Head of household') },
+  { value: FilingStatus.WIDOWER, ...translationKey('taxEstimates:FilingStatusComboBox.label.qualifying_widow_er', 'Qualifying widow(er)') },
+] as const
+
+type FilingStatusOption = { value: FilingStatus, label: string }
+
+type FilingStatusComboBoxProps = {
+  value: FilingStatus | null
+  onChange: (value: FilingStatus | null) => void
+  isReadOnly?: boolean
+  className?: string
+  inline?: boolean
+}
+
+export const FilingStatusComboBox = ({
+  value,
+  onChange,
+  isReadOnly,
+  className,
+  inline,
+}: FilingStatusComboBoxProps) => {
+  const { t } = useTranslation()
+  const options = useMemo<FilingStatusOption[]>(
+    () => FILING_STATUS_CONFIG.map(opt => ({
+      value: opt.value,
+      label: t(opt.i18nKey, opt.defaultValue),
+    })),
+    [t],
+  )
+
+  const selectedValue = useMemo(() =>
+    value
+      ? options.find(o => o.value === value) ?? null
+      : null,
+  [value, options])
+
+  const handleChange = useCallback((option: FilingStatusOption | null) => {
+    onChange(option ? option.value : null)
+  }, [onChange])
+
+  return (
+    <ComboBoxField label={t('taxEstimates:FilingStatusComboBox.label.filing_status', 'Filing status')} className={className} inline={inline}>
+      {controlProps => (
+        <ComboBox<FilingStatusOption>
+          {...controlProps}
+          options={options}
+          selectedValue={selectedValue}
+          onSelectedValueChange={handleChange}
+          isSearchable={false}
+          isClearable
+          isReadOnly={isReadOnly}
+        />
+      )}
+    </ComboBoxField>
+  )
+}

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
 
-import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { useGetMileageSummary } from '@api/businesses/[business-id]/mileage/summary/get'
 
 const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({
   month: i + 1,
@@ -11,7 +11,7 @@ const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({
 }))
 
 export function useMileageTrackingYearlySummary() {
-  const { data, isLoading, isError } = useMileageSummary()
+  const { data, isLoading, isError } = useGetMileageSummary()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)
 

@@ -1,0 +1,156 @@
+{
+  "CategorizationRuleForm": {
+    "action": {
+      "create_rule": "Créer une règle",
+      "save_rule": "Enregistrer la règle"
+    },
+    "CounterpartyComboBox": {
+      "empty": {
+        "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
+        "no_matching_counterparties": "Aucune contrepartie correspondante."
+      },
+      "error": {
+        "load_counterparties": "Impossible de charger les contreparties. Veuillez réessayer."
+      },
+      "validation": {
+        "counterparty_required": "La contrepartie est obligatoire."
+      }
+    },
+    "label": {
+      "amount_max_optional": "Montant maximal (facultatif)",
+      "amount_min_optional": "Montant minimal (facultatif)",
+      "any": "Peu importe"
+    },
+    "placeholder": {
+      "none": "Aucun",
+      "select_account": "Sélectionner un compte",
+      "select_counterparty": "Sélectionner une contrepartie"
+    },
+    "useCategorizationRuleForm": {
+      "validation": {
+        "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal."
+      }
+    },
+    "validation": {
+      "category_required": "La catégorie est obligatoire.",
+      "counterparty_required": "La contrepartie est obligatoire."
+    }
+  },
+  "CategorizationRuleFormDrawer": {
+    "action": {
+      "create_rule": "Créer une règle",
+      "edit_rule": "Modifier la règle"
+    }
+  },
+  "CategorizationRulesMobileList": {
+    "action": {
+      "delete_rule": "Supprimer la règle",
+      "edit_rule": "Modifier la règle"
+    },
+    "CategorizationRuleMobileListItem": {
+      "label": {
+        "suggests_category": "Suggère une catégorie"
+      }
+    },
+    "label": {
+      "categorization_rules": "Règles de catégorisation",
+      "rule_actions": "Actions de la règle"
+    }
+  },
+  "CategorizationRulesTable": {
+    "action": {
+      "delete_rule": "Supprimer la règle",
+      "edit_rule": "Modifier la règle"
+    },
+    "label": {
+      "categorization_rules": "Règles de catégorisation"
+    }
+  },
+  "CategorySelectDrawer": {
+    "action": {
+      "search_categories": "Rechercher des catégories...",
+      "select_category": "Sélectionner une catégorie"
+    }
+  },
+  "CategorySelectDrawerWithTrigger": {
+    "action": {
+      "select_category": "Sélectionner une catégorie"
+    }
+  },
+  "ResponsiveCategorizationRulesView": {
+    "empty": {
+      "no_categorization_rules_match_search": "Nous n’avons trouvé aucune règle de catégorisation correspondant à votre recherche. Essayez un autre terme de recherche.",
+      "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer à mesure que vous catégoriserez les transactions dans le flux bancaire.",
+      "no_rules_found": "Aucune règle trouvée"
+    },
+    "error": {
+      "archive_categorization_rule": "Échec de l’archivage de la règle de catégorisation",
+      "couldnt_load_data": "Nous n’avons pas pu charger vos règles de catégorisation",
+      "load_categorization_rules": "Une erreur s’est produite lors du chargement de vos règles de catégorisation. Veuillez vérifier votre connexion et réessayer."
+    },
+    "label": {
+      "categorization_rules": "Règles de catégorisation",
+      "search_rules": "Rechercher des règles",
+      "selected_counterparty": "cette contrepartie",
+      "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées."
+    },
+    "prompt": {
+      "delete_categorization_rule": "Supprimer la règle de catégorisation?"
+    }
+  },
+  "SuggestedCategorizationRuleUpdates": {
+    "AffectedTransactionsTable": {
+      "empty": {
+        "no_transactions_found": "Aucune transaction trouvée"
+      },
+      "error": {
+        "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
+        "load_transactions": "Erreur lors du chargement des transactions"
+      },
+      "label": {
+        "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
+        "affected_transactions": "Transactions concernées"
+      }
+    },
+    "CreateRuleButton": {
+      "error": {
+        "create_categorization_rule": "Échec de la création de la règle de catégorisation"
+      }
+    },
+    "prompt": {
+      "always_use_category": "Toujours utiliser cette catégorie?"
+    },
+    "RuleUpdatesPromptStep": {
+      "action": {
+        "dont_ask_again": "Ne plus demander",
+        "no_decide_each_time": "Non, je vais décider chaque fois",
+        "yes_always_categorize": "Oui, toujours catégoriser"
+      },
+      "error": {
+        "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
+      },
+      "label": {
+        "or": "OU"
+      }
+    },
+    "RuleUpdatesReviewStep": {
+      "label": {
+        "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
+        "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :"
+      }
+    }
+  },
+  "SuggestedCategorizationRuleUpdatesDialog": {
+    "label": {
+      "update_categorization_rules": "Mettre à jour les règles de catégorisation"
+    }
+  },
+  "utils": {
+    "label": {
+      "any_amount": "N’importe quel montant",
+      "any_direction": "Entrées et sorties d’argent",
+      "money_in": "Entrées d’argent",
+      "money_out": "Sorties d’argent"
+    }
+  }
+}

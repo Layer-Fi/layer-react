@@ -27,10 +27,16 @@
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--border-color);
+  outline: none;
   background: var(--color-base-0);
 
   &[data-variant='compact'] {
-    padding: 0;
+    padding: var(--spacing-3xs);
+    border: none;
+    box-shadow:
+      0 4px 12px 0 var(--base-transparent-8),
+      0 2px 4px 0 var(--base-transparent-6),
+      0 0 0 1px var(--base-transparent-4);
   }
 }
 
@@ -42,21 +48,33 @@
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--border-color);
 
+  outline: none;
+
   cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 
   &:hover,
-  &:focus-visible {
+  &[data-focused] {
     background-color: var(--color-base-50);
   }
 
-  &[data-variant='compact'] {
-    gap: 0;
-    border-radius: 0;
-    border: none;
+  &[data-focus-visible] {
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
+  }
 
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
+  &[data-variant='compact'] {
+    padding: var(--spacing-2xs) var(--spacing-xs);
+    border: none;
+    color: var(--color-base-500);
+
+    .Layer__Span {
+      color: inherit;
+    }
+
+    &:hover,
+    &[data-focused] {
+      color: var(--color-base-800);
     }
   }
 }
@@ -64,8 +82,10 @@
 .Layer__UI__DropdownMenu__Menu {
   display: grid;
   gap: var(--spacing-3xs);
+  outline: none;
 
   &[data-variant='compact'] {
     gap: 0;
+    min-width: 10rem;
   }
 }

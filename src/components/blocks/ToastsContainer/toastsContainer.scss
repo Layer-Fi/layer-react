@@ -1,0 +1,14 @@
+.Layer__toasts-container {
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+
+  @media screen and (width <= 400px) {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}

@@ -8,12 +8,18 @@ import {
   type MultiValueProps,
 } from 'react-select'
 
-import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
-import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
+import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
+import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { COMBO_BOX_CLASS_NAMES, type ComboBoxLegacyClassNames } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
+
+const legacyClassNames = createLegacyClassNames({
+  Layer__ComboBoxMultiValue: 'Layer__select__multi-value',
+} satisfies ComboBoxLegacyClassNames)
 
 const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly T[] | null | undefined): number => {
   if (!selectedValues) {
@@ -29,25 +35,14 @@ const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly
 
 const getSelectedLabels = <T extends ComboBoxOption>(
   selectedValues: T | readonly T[] | null | undefined,
-  locale: string,
+  formatList: ListFormatFn,
 ): string => {
   if (!selectedValues) {
     return ''
   }
 
   if (Array.isArray(selectedValues)) {
-    const labels = (selectedValues as T[]).map(v => v.label)
-
-    if (labels.length === 0) {
-      return ''
-    }
-
-    const listFormatter = new Intl.ListFormat(locale, {
-      style: 'long',
-      type: 'conjunction',
-    })
-
-    return listFormatter.format(labels)
+    return formatList((selectedValues as T[]).map(v => v.label))
   }
 
   return (selectedValues as T).label
@@ -63,7 +58,7 @@ const buildCustomMultiValue = <T extends ComboBoxOption>() => {
     }
 
     return (
-      <components.MultiValue {...restProps} className={COMBO_BOX_CLASS_NAMES.MULTI_VALUE}>
+      <components.MultiValue {...restProps} className={legacyClassNames('Layer__ComboBoxMultiValue')}>
         {children}
       </components.MultiValue>
     )
@@ -72,10 +67,10 @@ const buildCustomMultiValue = <T extends ComboBoxOption>() => {
 
 const buildCustomMultiValueLabel = <T extends ComboBoxOption>() => {
   return function CustomMultiValueLabel({ children, innerProps, ...restProps }: MultiValueGenericProps<T, true, GroupBase<T>>) {
-    const locale = useLocale()
+    const { formatList } = useIntlFormatter()
     const selectedValues = restProps.selectProps.value
     const selectedCount = getSelectedCount(selectedValues)
-    const selectedLabels = getSelectedLabels(selectedValues, locale)
+    const selectedLabels = getSelectedLabels(selectedValues, formatList)
 
     const mergedInnerProps = {
       ...innerProps,

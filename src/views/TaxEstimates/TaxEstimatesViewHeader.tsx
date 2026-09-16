@@ -3,14 +3,14 @@ import { getYear } from 'date-fns'
 import { Menu as MenuIcon, UserRoundPen } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
+import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
-import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
+import { YearPicker } from '@ui/DatePickers/YearPicker/YearPicker'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { YearPicker } from '@components/YearPicker/YearPicker'
 
 const TAX_ESTIMATES_MIN_YEAR = 2024
 
@@ -45,14 +45,14 @@ export const TaxEstimatesViewHeader = () => {
         maxDate={maxDateZdt}
       />
       <DropdownMenu
-        ariaLabel={t('taxEstimates:label.additional_actions', 'Additional actions')}
+        ariaLabel={t('views:TaxEstimates.TaxEstimatesViewHeader.label.additional_actions', 'Additional actions')}
         slots={{ Trigger }}
         slotProps={{ Dialog: { width: 160 } }}
       >
         <MenuList>
           <MenuItem key={TaxEstimatesRoute.Profile} onClick={() => { navigate.toProfile() }}>
             <UserRoundPen size={20} strokeWidth={1.25} />
-            <Span size='sm'>{t('taxEstimates:action.update_tax_profile', 'Update tax profile')}</Span>
+            <Span size='sm'>{t('views:TaxEstimates.TaxEstimatesViewHeader.action.update_tax_profile', 'Update tax profile')}</Span>
           </MenuItem>
         </MenuList>
       </DropdownMenu>

@@ -1,0 +1,21 @@
+import { flattenValidationErrors } from '@utils/shared/form/errors'
+import { useFormContext } from '@blocks/Form/useForm'
+import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
+
+type InvoiceFormErrorBannerProps = {
+  submitError?: string
+}
+
+export const InvoiceFormErrorBanner = ({ submitError }: InvoiceFormErrorBannerProps) => {
+  const form = useFormContext()
+
+  return (
+    <form.Subscribe selector={state => state.errorMap}>
+      {(errorMap) => {
+        const validationErrors = flattenValidationErrors(errorMap)
+        const message = validationErrors[0] || submitError
+        return message ? <FormErrorBanner message={message} /> : null
+      }}
+    </form.Subscribe>
+  )
+}

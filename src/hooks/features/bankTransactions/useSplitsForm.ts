@@ -2,14 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
-import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
-import { SplitAsOption } from '@internal-types/categorizationOption'
-import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
-import { convertCentsToDecimalString } from '@utils/format'
-import { toLocalizedNumber } from '@utils/i18n/number/input'
-import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
-import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { type BankTransaction, type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { SplitAsOption } from '@internal-types/features/categorization/categorizationOption'
 import {
   calculateAddSplit,
   calculateRemoveSplit,
@@ -17,7 +12,12 @@ import {
   getLocalSplitStateForExpandedTransaction,
   getSplitsErrorMessage,
   isSplitsValid,
-} from '@components/ExpandedBankTransactionRow/utils'
+} from '@utils/features/bankTransactions/splits'
+import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
+import { toLocalizedNumber } from '@utils/shared/i18n/number/input'
+import { convertCentsToDecimalString } from '@utils/shared/string/format'
+import { useBankTransactionsCategorizationActions } from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction
@@ -95,7 +95,7 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
 
     setTransactionCategorySelection(bankTransaction.id, new SplitAsOption(splits))
 
-    const nextTaxCode = splits.length === 1 ? splits[0].taxCode : null
+    const nextTaxCode = splits.length === 1 ? splits[0]?.taxCode : null
     setTransactionTaxCodeSelection(bankTransaction.id, nextTaxCode ?? null)
 
     setSplitFormError(undefined)
@@ -143,11 +143,15 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionNonSuggestedMatchOption | null) => {
     if (newCategory === null) return
 
+    const splitAtIndex = localSplits[index]
+
+    if (!splitAtIndex) return
+
     const newLocalSplits = [...localSplits]
     newLocalSplits[index] = {
-      ...newLocalSplits[index],
+      ...splitAtIndex,
       category: newCategory,
-      taxCode: canCategoryHaveTaxCode(newCategory) ? newLocalSplits[index].taxCode : null,
+      taxCode: canCategoryHaveTaxCode(newCategory) ? splitAtIndex.taxCode : null,
     }
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
@@ -156,8 +160,12 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   }, [localSplits, saveLocalSplitsToCategoryStore])
 
   const updateSplitAtIndex = useCallback((index: number, updater: (split: Split) => Split) => {
+    const splitAtIndex = localSplits[index]
+
+    if (!splitAtIndex) return
+
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index] = updater(newLocalSplits[index])
+    newLocalSplits[index] = updater(splitAtIndex)
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

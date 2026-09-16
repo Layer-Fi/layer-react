@@ -1,0 +1,137 @@
+name: Storybook Preview
+
+# A label rather than a `/storybook` comment: applying one already requires write access, so GitHub
+# does the authorizing. This holds VERCEL_TOKEN and the repository is public.
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  STATUS_CONTEXT: Storybook Preview
+
+jobs:
+  instructions:
+    name: Offer a preview
+    # Skipped once labelled, so reopening can't overwrite a URL with instructions.
+    if: |
+      (github.event.action == 'opened' || github.event.action == 'reopened')
+      && !contains(github.event.pull_request.labels.*.name, 'storybook-preview')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+    - name: Comment how to request one
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR: ${{ github.event.pull_request.number }}
+      # `--edit-last` targets this bot's own comment, so the PR keeps one that evolves. Safe only
+      # while no other workflow comments here. `--repo` because this job has no checkout for `gh` to
+      # read a remote from, the same reason the statuses below go through `$GITHUB_REPOSITORY`.
+      run: |
+        gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --edit-last --create-if-none --body "**Storybook preview** — add the \`storybook-preview\` label to build one.
+
+        It renders stories against a live sandbox business instead of MSW fixtures, and rebuilds on every push while the \`storybook-preview\` label is applied."
+
+  deploy:
+    name: Build preview
+    if: |
+      (
+        (github.event.action == 'labeled' && github.event.label.name == 'storybook-preview')
+        || (
+          github.event.action == 'synchronize'
+          && contains(github.event.pull_request.labels.*.name, 'storybook-preview')
+        )
+      )
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    # Before checkout, so the build shows in flight rather than only its outcome.
+    - name: Mark the status pending
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+          -f state=pending -f context="$STATUS_CONTEXT" -f description='Building preview…'
+
+    - uses: actions/checkout@v7
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        persist-credentials: false
+
+    # No `npm ci`: `vercel deploy` uploads source and installs on Vercel, so this only needs the CLI.
+    - name: Deploy
+      id: deploy
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        PR: ${{ github.event.pull_request.number }}
+      # Aliased to a per-PR hostname because each deployment otherwise gets a fresh one, and the
+      # toolbar remembers business ids in `localStorage`, which is per-origin.
+      run: |
+        npx --yes vercel@59 deploy --yes --token="$VERCEL_TOKEN" | tee deploy.log
+        url=$(grep -oE 'https://[a-z0-9-]+\.vercel\.app' deploy.log | tail -1)
+        if [ -z "$url" ]; then echo "No deployment URL in output" >&2; exit 1; fi
+
+        # Via the REST API rather than `vercel alias`, which resolves the token to a user and 404s
+        # for this one. `teamId` here is explicit, so there is no user to look up. Best-effort: a
+        # working deployment shouldn't be reported as failed just because aliasing was.
+        alias="layer-react-storybook-pr-$PR.vercel.app"
+        api="https://api.vercel.com"
+        auth="Authorization: Bearer $VERCEL_TOKEN"
+        if dpl=$(curl -fsS "$api/v13/deployments/${url#https://}?teamId=$VERCEL_ORG_ID" \
+          -H "$auth" | jq -r '.id // empty') \
+          && [ -n "$dpl" ] \
+          && curl -fsS -X POST \
+          "$api/v2/deployments/$dpl/aliases?teamId=$VERCEL_ORG_ID" \
+          -H "$auth" -H 'Content-Type: application/json' \
+          -d "{\"alias\":\"$alias\"}" >/dev/null; then
+          url="https://$alias"
+        else
+          echo "Aliasing failed; reporting the deployment URL instead" >&2
+        fi
+
+        echo "url=$url" >> "$GITHUB_OUTPUT"
+
+    - name: Comment the URL
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR: ${{ github.event.pull_request.number }}
+        URL: ${{ steps.deploy.outputs.url }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+      run: |
+        gh pr comment "$PR" --edit-last --create-if-none --body "**Storybook preview** — [open]($URL) (\`${SHA:0:7}\`)
+
+        Sign in with your Layer Vercel account, then paste a sandbox business ID into the toolbar field. Rebuilds on every push while the \`storybook-preview\` label is applied; remove the label to stop."
+
+    # `always()`, or a failed build leaves the status pending forever. `!cancelled()` excludes a run
+    # that `cancel-in-progress` aborted, so it can't overwrite the newer run's status for the same SHA.
+    - name: Report the status
+      if: always() && !cancelled()
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SHA: ${{ github.event.pull_request.head.sha }}
+        URL: ${{ steps.deploy.outputs.url }}
+      run: |
+        if [ -n "$URL" ]; then
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=success -f context="$STATUS_CONTEXT" \
+            -f description='Preview ready' -f target_url="$URL"
+        else
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$SHA" \
+            -f state=failure -f context="$STATUS_CONTEXT" -f description='Build failed'
+        fi

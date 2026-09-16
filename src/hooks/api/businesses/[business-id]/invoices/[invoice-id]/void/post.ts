@@ -1,0 +1,34 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { InvoiceSchema } from '@schemas/features/invoices/invoice'
+import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
+import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
+
+const VOID_INVOICE_TAG_KEY = '#void-invoice'
+
+const VoidInvoiceReturnSchema = UnwrappedDataResponseSchema(InvoiceSchema)
+
+const voidInvoice = post<
+  typeof VoidInvoiceReturnSchema.Encoded,
+  Record<string, never>,
+  { businessId: string, invoiceId: string }
+>(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/void`)
+
+export const usePostVoidInvoice = createMutationHook({
+  tags: [VOID_INVOICE_TAG_KEY],
+  request: voidInvoice,
+  keyParams: ['invoiceId'],
+  argToBody: (_arg: never) => undefined,
+  schema: VoidInvoiceReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchInvoiceByKey } = useInvoicesGlobalCacheActions()
+    const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+    return (data) => {
+      void patchInvoiceByKey(data)
+
+      void forceReloadInvoiceSummaryStats()
+    }
+  },
+})

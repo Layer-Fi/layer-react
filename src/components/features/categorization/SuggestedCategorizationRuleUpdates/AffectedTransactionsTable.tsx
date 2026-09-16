@@ -1,0 +1,115 @@
+import { useMemo } from 'react'
+import type { Row } from '@tanstack/react-table'
+import { useTranslation } from 'react-i18next'
+
+import type { MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { DateTime } from '@ui/DateTime/DateTime'
+import { VStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
+import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
+import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
+
+import './affectedTransactionsTable.scss'
+
+const COMPONENT_NAME = 'AffectedTransactionsTable'
+
+enum TransactionColumns {
+  Date = 'Date',
+  Description = 'Description',
+  Amount = 'Amount',
+}
+
+export interface AffectedTransactionsTableProps {
+  transactions: MinimalBankTransaction[]
+  isLoading?: boolean
+  isError?: boolean
+}
+
+const ErrorState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.failed}
+      title={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.error.load_transactions', 'Error loading transactions')}
+      description={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.error.load_affected_transactions', 'There was an error loading the affected transactions')}
+    />
+  )
+}
+
+const EmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      spacing
+      status={DataStateStatus.info}
+      title={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.empty.no_transactions_found', 'No transactions found')}
+      description={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.label.affected_transaction_display', 'There are no affected transactions to display')}
+    />
+  )
+}
+
+export const AffectedTransactionsTable = ({
+  transactions,
+  isLoading = false,
+  isError = false,
+}: AffectedTransactionsTableProps) => {
+  const { t } = useTranslation()
+
+  type AffectedTransactionRowType = Row<MinimalBankTransaction>
+  const columnConfig: ColumnConfig<MinimalBankTransaction> = useMemo(() => [
+    {
+      id: TransactionColumns.Date,
+      header: t('common:label.date', 'Date'),
+      cell: (row: AffectedTransactionRowType) => (
+        <DateTime
+          valueAsDate={row.original.date}
+          onlyDate
+          slotProps={{ Date: { variant: 'subtle' } }}
+        />
+      ),
+    },
+    {
+      id: TransactionColumns.Description,
+      header: t('common:label.description', 'Description'),
+      cell: (row: AffectedTransactionRowType) => (
+        <Span withTooltip>
+          {row.original.counterpartyName || row.original.description || '-'}
+        </Span>
+      ),
+      isRowHeader: true,
+    },
+    {
+      id: TransactionColumns.Amount,
+      header: t('common:label.amount', 'Amount'),
+      cell: (row: AffectedTransactionRowType) => (
+        <MoneySpan
+          amount={Math.abs(row.original.amount)}
+          displayPlusSign={row.original.direction === BankTransactionDirection.Credit}
+        />
+      ),
+    },
+  ], [t])
+
+  return (
+    <VStack className='Layer__AffectedTransactionsTable'>
+      <VirtualizedDataTable<MinimalBankTransaction>
+        componentName={COMPONENT_NAME}
+        ariaLabel={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.label.affected_transactions', 'Affected transactions')}
+        columnConfig={columnConfig}
+        data={transactions}
+        isLoading={isLoading}
+        isError={isError}
+        height={500}
+        shrinkHeightToFitRows
+        slots={{
+          EmptyState,
+          ErrorState,
+        }}
+      />
+    </VStack>
+  )
+}

@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { type EventScheduledEvent, useCalendlyEventListener } from 'react-calendly'
 
-import { type LandingPageLink } from '@components/LandingPage/types'
-
 export type CalendlyPayload = EventScheduledEvent['data']['payload']
 
 const ALLOWED_CALENDLY_HOSTS = ['calendly.com', 'www.calendly.com']
-export const isCalendlyLink = (link?: LandingPageLink) => {
+export const isCalendlyLink = (link?: { url: string }) => {
   try {
     if (!link) return false
     const hostname = new URL(link.url).hostname

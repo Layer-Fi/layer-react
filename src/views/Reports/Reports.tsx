@@ -1,25 +1,26 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type View as ViewType } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
-import { translationKey } from '@utils/i18n/translationKey'
+import type { TimeRangePickerConfig } from '@internal-types/features/reports/timeRangePickerConfig'
+import { type View as ViewType } from '@internal-types/shared/view'
+import { translationKey } from '@utils/shared/i18n/translationKey'
+import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
-import { type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { type ReportOption, ReportsHeaderContextProvider, type ReportType } from '@contexts/ReportsHeaderContext/ReportsHeaderContext'
-import { BalanceSheet } from '@components/BalanceSheet/BalanceSheet'
-import { type BalanceSheetStringOverrides } from '@components/BalanceSheet/BalanceSheet'
-import { Container } from '@components/Container/Container'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { type ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
-import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
-import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
-import { StatementOfCashFlow } from '@components/StatementOfCashFlow/StatementOfCashFlow'
-import { type StatementOfCashFlowStringOverrides } from '@components/StatementOfCashFlow/StatementOfCashFlow'
-import { View } from '@components/View/View'
+import { type ReportOption, ReportsHeaderContextProvider, type ReportType } from '@providers/features/reports/ReportsHeaderContext/ReportsHeaderContext'
+import { Container } from '@blocks/Layout/Container/Container'
+import { View } from '@blocks/Layout/View/View'
+import { BalanceSheet } from '@features/balanceSheet/BalanceSheet/BalanceSheet'
+import { type BalanceSheetStringOverrides } from '@features/balanceSheet/BalanceSheet/BalanceSheet'
+import { StatementOfCashFlow } from '@features/cashflowStatement/StatementOfCashFlow/StatementOfCashFlow'
+import { type StatementOfCashFlowStringOverrides } from '@features/cashflowStatement/StatementOfCashFlow/StatementOfCashFlow'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'
+import { ProfitAndLossReport } from '@features/profitAndLoss/ProfitAndLossReport/ProfitAndLossReport'
+import { type ProfitAndLossTableStringOverrides } from '@features/profitAndLoss/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ReportsToggle } from '@views/Reports/ReportsToggle'
-import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
+
+import './reports.scss'
 
 export interface ReportsStringOverrides {
   title?: string
@@ -37,7 +38,11 @@ export interface ReportsProps {
   showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonConfig?: ProfitAndLossCompareConfig
+  /**
+   * @deprecated The Profit & Loss comparison feature has been removed and this prop is ignored.
+   * Use the `UnifiedReports` component for period/tag comparisons instead.
+   */
+  comparisonConfig?: unknown
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
@@ -45,8 +50,8 @@ export interface ReportsProps {
 
 const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
   { value: 'profitAndLoss', ...translationKey('common:label.profit_loss', 'Profit & Loss') },
-  { value: 'balanceSheet', ...translationKey('reports:label.balance_sheet', 'Balance Sheet') },
-  { value: 'statementOfCashFlow', ...translationKey('reports:label.cash_flow_statement', 'Cash Flow Statement') },
+  { value: 'balanceSheet', ...translationKey('views:Reports.label.balance_sheet', 'Balance Sheet') },
+  { value: 'statementOfCashFlow', ...translationKey('views:Reports.label.cash_flow_statement', 'Cash Flow Statement') },
 ]
 
 export interface ReportsPanelProps {
@@ -58,19 +63,20 @@ export interface ReportsPanelProps {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
-const defaultEnabledReports: ReportType[] = ['profitAndLoss', 'balanceSheet', 'statementOfCashFlow']
+const FALLBACK_REPORT: ReportType = 'profitAndLoss'
+
+const defaultEnabledReports: ReportType[] = [FALLBACK_REPORT, 'balanceSheet', 'statementOfCashFlow']
 export const Reports = ({
   title,
   showTitle = true,
   stringOverrides,
   enabledReports = defaultEnabledReports,
-  comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
   renderInAppLink,
 }: ReportsProps) => {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0])
+  const [activeTab, setActiveTab] = useState<ReportType>(enabledReports[0] ?? FALLBACK_REPORT)
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const isMobileView = view === 'mobile'
 
@@ -86,7 +92,7 @@ export const Reports = ({
   )
   const defaultTitle =
     enabledReports.length > 1
-      ? t('reports:label.reports', 'Reports')
+      ? t('views:Reports.label.reports', 'Reports')
       : options.find(option => (option.value === enabledReports[0]))?.label
 
   const resolvedTitle = stringOverrides?.title || title || defaultTitle
@@ -107,7 +113,7 @@ export const Reports = ({
       <View title={resolvedTitle} showHeader={showTitle}>
         {!isMobileView && <ReportsToggle />}
         <Container name='reports' ref={containerRef}>
-          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+          <ProfitAndLoss asContainer={false}>
             <ReportsPanel
               openReport={activeTab}
               stringOverrides={stringOverrides}

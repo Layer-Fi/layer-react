@@ -1,0 +1,102 @@
+.Layer__OpeningBalanceAccountForm {
+  position: relative;
+  display: flex;
+  gap: var(--spacing-sm);
+  max-height: 280px;
+  padding-block: var(--spacing-sm);
+  padding-inline: var(--spacing-md);
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--color-base-100);
+  container-type: inline-size;
+  transition: all 0.25s ease-in-out;
+  transition-delay: 0.8s;
+
+  &[data-confirmed='true'] {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-saved] {
+    overflow: hidden;
+    max-height: 0;
+    padding: 0;
+    border-width: 0;
+
+    .Layer__OpeningBalanceAccountForm__SuccessBanner {
+      z-index: 101;
+      opacity: 1;
+    }
+  }
+}
+
+.Layer__OpeningBalanceAccountForm__Logo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.Layer__OpeningBalanceAccountForm__Details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  color: var(--color-base-700);
+}
+
+.Layer__OpeningBalanceAccountForm__Account {
+  padding-bottom: var(--spacing-sm);
+}
+
+.Layer__OpeningBalanceAccountForm__AccountName {
+  display: flex;
+  gap: var(--spacing-3xs);
+  width: 100%;
+  max-width: 500px;
+
+  > .Layer__Span {
+    overflow: hidden;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.Layer__OpeningBalanceAccountForm__Inputs {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+  border-top: 1px solid var(--color-base-200);
+
+  .Layer__OpeningBalanceAccountForm__InputGroup {
+    width: 100%;
+
+    .Layer__AmountInput {
+      width: 100%;
+    }
+  }
+
+  @container (max-width: 440px) {
+    flex-direction: column;
+  }
+}
+
+.Layer__OpeningBalanceAccountForm__Confirm {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.Layer__OpeningBalanceAccountForm__SuccessBanner {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm);
+  background-color: var(--color-base-50);
+  color: var(--color-info-success-fg);
+  opacity: 0;
+  transition: opacity 0.12s ease-in-out;
+}

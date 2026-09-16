@@ -1,0 +1,109 @@
+import { type Meta, type StoryObj } from '@storybook/react-vite'
+
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { type CallBooking, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
+import { BookkeepingOverview } from '@views/BookkeepingOverview/BookkeepingOverview'
+
+import { makeBookkeepingConfiguration, makeBookkeepingStatus, makeCallBooking } from '@fixtures/bookkeeping/mocks'
+import { get as getBookkeepingConfiguration } from '@msw/api/businesses/[business-id]/bookkeeping/config/get'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { get as getCallBookings } from '@msw/api/businesses/[business-id]/call-bookings/get'
+import {
+  buildSummariesSlotProps,
+  buildSummariesStringOverrides,
+  makeSummariesStoryControls,
+  type SummariesStoryArgs,
+  summariesStoryDefaultArgs,
+} from '@testUtils/storybook/controls/summaries'
+import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
+
+const ONBOARDING_CALL_URL = 'https://calendly.com/layerfi/bookkeeping-onboarding'
+
+const scheduledOnboardingCall: CallBooking = makeCallBooking({
+  callType: CallBookingType.GOOGLE_MEET,
+  eventStartAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  eventEndAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000),
+  callLink: new URL('https://meet.google.com/abc-defg-hij'),
+})
+
+const onboardingCallCardHandlers = (callBookings: readonly CallBooking[] = []) => [
+  getBookkeepingStatus.mock(makeBookkeepingStatus({
+    status: BookkeepingStatus.ACTIVE,
+    showEmbeddedOnboarding: true,
+    onboardingCallUrl: ONBOARDING_CALL_URL,
+  })),
+  getBookkeepingConfiguration.mock(makeBookkeepingConfiguration()),
+  getCallBookings.mock(callBookings),
+  ...profitAndLossStoryHandlers,
+]
+
+type BookkeepingOverviewStoryArgs = SummariesStoryArgs & {
+  showTitle: boolean
+}
+
+const summariesControls = makeSummariesStoryControls({
+  stringOverridesPath: 'stringOverrides.profitAndLoss.summaries',
+  slotPropsPath: 'slotProps.profitAndLoss.summaries',
+  category: 'P&L summaries',
+})
+
+const meta: Meta<BookkeepingOverviewStoryArgs> = {
+  title: 'Views/Overview/Bookkeeping',
+  component: BookkeepingOverview,
+  parameters: {
+    msw: {
+      handlers: [
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...profitAndLossStoryHandlers,
+      ],
+    },
+    controls: { include: ['showTitle', ...summariesControls.controlNames] },
+  },
+  decorators: [withOverviewStoryContext],
+  args: {
+    showTitle: true,
+    ...summariesStoryDefaultArgs,
+  },
+  argTypes: {
+    showTitle: {
+      control: 'boolean',
+      description: 'Show the view title and month picker header',
+    },
+    ...summariesControls.argTypes,
+  },
+  render: args => (
+    <BookkeepingOverview
+      showTitle={args.showTitle}
+      stringOverrides={{ profitAndLoss: { summaries: buildSummariesStringOverrides(args) } }}
+      slotProps={{ profitAndLoss: { summaries: buildSummariesSlotProps(args) } }}
+    />
+  ),
+}
+
+export default meta
+
+type Story = StoryObj<BookkeepingOverviewStoryArgs>
+
+export const Default: Story = {
+  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+}
+
+export const OnboardingCallCard: Story = {
+  tags: ['public-api'],
+  name: 'Onboarding call card (empty)',
+  parameters: {
+    msw: {
+      handlers: onboardingCallCardHandlers(),
+    },
+  },
+}
+
+export const ScheduledOnboardingCallCard: Story = {
+  tags: ['public-api'],
+  name: 'Onboarding call card (scheduled)',
+  parameters: {
+    msw: {
+      handlers: onboardingCallCardHandlers([scheduledOnboardingCall]),
+    },
+  },
+}

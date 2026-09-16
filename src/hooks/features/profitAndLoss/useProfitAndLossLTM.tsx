@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { type ReportingBasis } from '@internal-types/general'
-import type { ProfitAndLossSummary } from '@schemas/reports/profitAndLoss'
-import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
-import type { ChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
+import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
+import type { ProfitAndLossSummary } from '@schemas/features/profitAndLoss/profitAndLossSummaries'
+import type { ChartWindow } from '@utils/features/profitAndLoss/chartWindow'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 
 const MIN_LOADING_DURATION_MS = 1000
 
@@ -65,7 +65,7 @@ const buildMonthsArray = (startDate: Date, endDate: Date) => {
 export const useProfitAndLossLTM = ({ tagFilter, reportingBasis, chartWindow }: UseProfitAndLossLTMProps) => {
   const { startYear, startMonth, endYear, endMonth } = buildDatesFromChartWindow(chartWindow)
 
-  const { data, isLoading, isError } = useProfitAndLossSummaries({
+  const { data, isLoading, isError } = useGetProfitAndLossSummaries({
     startYear,
     startMonth,
     endYear,
@@ -73,7 +73,7 @@ export const useProfitAndLossLTM = ({ tagFilter, reportingBasis, chartWindow }: 
     tagKey: tagFilter?.key,
     tagValues: tagFilter?.values?.join(','),
     reportingBasis,
-    keepPreviousData: true,
+    swrOptions: { keepPreviousData: true },
   })
 
   const [delayedMonths, setDelayedMonths] = useState(data?.months)

@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
 import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
-import { Container } from '@components/Container/Container'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Loader } from '@components/Loader/Loader'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Loader } from '@ui/Loader/Loader'
+import { Container } from '@blocks/Layout/Container/Container'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'
@@ -19,7 +19,7 @@ export const TaxEstimatesViewContent = () => {
           status={DataStateStatus.info}
           title={t('common:state.feature_not_enabled', 'Feature not enabled')}
           description={t(
-            'taxEstimates:error.feature_not_enabled',
+            'views:TaxEstimates.TaxEstimatesViewContent.error.feature_not_enabled',
             'Tax estimates are not enabled.',
           )}
           spacing
@@ -43,7 +43,7 @@ export const TaxEstimatesViewContent = () => {
   if (onboardingStatus === OnboardingStatus.Error) {
     return (
       <Container name='tax-estimates'>
-        <DataState status={DataStateStatus.failed} title={t('taxEstimates:error.load_tax_information', 'Unable to load tax information')} description={t('taxEstimates:error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
+        <DataState status={DataStateStatus.failed} title={t('views:TaxEstimates.TaxEstimatesViewContent.error.load_tax_information', 'Unable to load tax information')} description={t('views:TaxEstimates.TaxEstimatesViewContent.error.retrieve_tax_profile', 'We couldn’t retrieve your tax profile. Please check your connection and try again.')} spacing />
       </Container>
     )
   }

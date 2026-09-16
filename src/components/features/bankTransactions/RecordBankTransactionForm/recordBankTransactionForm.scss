@@ -1,0 +1,41 @@
+$record-transaction-label-width: 7rem;
+
+.Layer__RecordTransactionForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+
+  --form-field-label-inline-size: #{$record-transaction-label-width};
+  --form-field-control-inline-size: 1fr;
+  --form-field-inline-column-gap: var(--spacing-md);
+
+  [data-inline],
+  [class$='--inline'],
+  .Layer__RecordTransactionForm__Field {
+    grid-template-columns: var(--form-field-label-inline-size) var(--form-field-control-inline-size);
+    column-gap: var(--form-field-inline-column-gap);
+  }
+
+  .Layer__RecordTransactionForm__Field {
+    display: grid;
+    row-gap: var(--spacing-3xs);
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+
+    .Layer__RecordTransactionForm__Error {
+      grid-column: 2;
+    }
+  }
+
+  &--mobile {
+    .Layer__RecordTransactionForm__Field {
+      grid-template-columns: 1fr;
+
+      .Layer__RecordTransactionForm__Error {
+        grid-column: 1;
+      }
+    }
+  }
+}

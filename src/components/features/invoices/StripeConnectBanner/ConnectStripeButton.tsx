@@ -1,0 +1,27 @@
+import { ExternalLink, RotateCcw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { BannerButton } from '@ui/Banner/Banner'
+
+export const ConnectStripeButton = ({
+  isError,
+  isMutating,
+  onClick,
+}: {
+  isError: boolean
+  isMutating: boolean
+  onClick: () => void
+}) => {
+  const { t } = useTranslation()
+
+  return (
+    <BannerButton
+      onPress={onClick}
+      isDisabled={isMutating}
+      isPending={isMutating}
+    >
+      {isError ? t('common:action.retry_label', 'Retry') : t('invoices:StripeConnectBanner.ConnectStripeButton.action.connect_stripe_label', 'Connect Stripe')}
+      {isError ? <RotateCcw size={16} /> : <ExternalLink size={16} />}
+    </BannerButton>
+  )
+}

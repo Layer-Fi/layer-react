@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { BigDecimal as BD, Option } from 'effect'
 import { useIntl } from 'react-intl'
 
+import { transformCurrencyValue } from '@utils/shared/i18n/number/currency'
+import { getLocaleNumberSeparators } from '@utils/shared/i18n/number/input'
 import {
   BIG_DECIMAL_ZERO,
   buildDecimalCharRegex,
   convertPercentToDecimal,
   formatBigDecimalToString,
-} from '@utils/bigDecimalUtils'
-import { transformCurrencyValue } from '@utils/i18n/number/currency'
-import { getLocaleNumberSeparators } from '@utils/i18n/number/input'
+} from '@utils/shared/number/bigDecimal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 type UseBigDecimalInputOptions = {

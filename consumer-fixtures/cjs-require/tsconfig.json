@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": ["es2022", "dom"],
+    "jsx": "react-jsx",
+    // Deliberately stricter than the library's own tsconfig: `node16` applies the real Node
+    // resolution rules to `exports`, which is where a single flat `.d.ts` serving both the
+    // `import` and `require` conditions shows up as a problem.
+    "module": "node16",
+    "moduleResolution": "node16",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true
+  },
+  "include": ["types.ts"]
+}
