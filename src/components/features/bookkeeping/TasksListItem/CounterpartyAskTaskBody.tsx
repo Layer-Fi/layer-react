@@ -326,7 +326,6 @@ export const CounterpartyAskTaskBody = ({
             value={null}
             onChange={key => onAnswerRemember(key === 'always')}
             isDisabled={isMutating}
-            wrap
           >
             <Chip size='lg' value='always'>
               {t(
@@ -455,7 +454,6 @@ export const CounterpartyAskTaskBody = ({
           )}
           value={selectedKey}
           onChange={onPick}
-          wrap
         >
           {suggestions.map((suggestion, index) => (
             <Chip key={toSuggestionAnswerKey(index)} size='lg' value={toSuggestionAnswerKey(index)}>

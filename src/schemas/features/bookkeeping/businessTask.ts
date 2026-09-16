@@ -30,9 +30,7 @@ export const isLegacyBusinessTask = <T extends BusinessTask>(
   task: T,
 ): task is T & LegacyBusinessTask => isLegacyBusinessTaskShape(task)
 
-// CounterpartyAskTask has no renderable body yet (the Chip primitive lands in #1803, the
-// ask UI in #1805) — excluded here so it doesn't surface as a dead-end TODO row. Fold it
-// back in once that body ships.
 export const isRenderableBusinessTask = <T extends BusinessTask>(
   task: T,
-): task is T & LegacyBusinessTask => isLegacyBusinessTask(task)
+): task is T & (CounterpartyAskTask | LegacyBusinessTask) =>
+  isCounterpartyAskTask(task) || isLegacyBusinessTask(task)
