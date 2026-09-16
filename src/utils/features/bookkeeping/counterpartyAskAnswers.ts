@@ -9,13 +9,18 @@ export type CounterpartyAskAnswerValue =
   | { kind: 'account', account: CounterpartyAskAccount }
   | { kind: 'text', text: string }
 
+// `user_response` is a NonEmptyTrimmedString on the wire, so encoding throws on
+// anything the user leaves padded; normalise before it reaches the schema.
+const getAnswerText = (value: Extract<CounterpartyAskAnswerValue, { kind: 'text' }>) =>
+  value.text.trim()
+
 const toAnswer = (value: CounterpartyAskAnswerValue): CounterpartyAskAnswer =>
   value.kind === 'account'
     ? { accountIdentifier: value.account.accountIdentifier }
-    : { userResponse: value.text }
+    : { userResponse: getAnswerText(value) }
 
 export const getCounterpartyAskAnswerLabel = (value: CounterpartyAskAnswerValue) =>
-  value.kind === 'account' ? value.account.name : value.text
+  value.kind === 'account' ? value.account.name : getAnswerText(value)
 
 export const areCounterpartyAskAnswersEqual = (
   left: CounterpartyAskAnswerValue,
@@ -29,7 +34,7 @@ export const areCounterpartyAskAnswersEqual = (
   }
 
   if (left.kind === 'text' && right.kind === 'text') {
-    return left.text === right.text
+    return getAnswerText(left) === getAnswerText(right)
   }
 
   return false
@@ -48,11 +53,10 @@ export const collapseUniformCounterpartyAskAnswers = (
 export const countDistinctCounterpartyAskAnswers = (
   answers: readonly CounterpartyAskAnswerValue[],
 ) =>
-  answers.reduce<CounterpartyAskAnswerValue[]>((distinct, answer) => {
-    return distinct.some(seen => areCounterpartyAskAnswersEqual(seen, answer))
-      ? distinct
-      : [...distinct, answer]
-  }, []).length
+  answers.filter(
+    (answer, index) =>
+      answers.findIndex(seen => areCounterpartyAskAnswersEqual(seen, answer)) === index,
+  ).length
 
 export const buildAllSameCounterpartyAskResponse = (
   answer: CounterpartyAskAnswerValue,
@@ -67,14 +71,11 @@ export type CounterpartyAskTransactionAnswerEntry = {
 export const buildItemisedCounterpartyAskResponse = (
   entries: readonly CounterpartyAskTransactionAnswerEntry[],
 ): CounterpartyAskResponse | null => {
-  const [first, ...rest] = entries
+  const [first, ...rest] = entries.map(
+    ({ transactionId, answer }) => ({ transactionId, ...toAnswer(answer) }),
+  )
 
   if (!first) return null
 
-  return {
-    transactionResponses: [
-      { transactionId: first.transactionId, ...toAnswer(first.answer) },
-      ...rest.map(({ transactionId, answer }) => ({ transactionId, ...toAnswer(answer) })),
-    ],
-  }
+  return { transactionResponses: [first, ...rest] }
 }

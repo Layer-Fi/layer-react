@@ -17,7 +17,12 @@ import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
 const encodeTask = Schema.encodeSync(CounterpartyAskTaskSchema)
-const decodeResponse = Schema.decodeUnknownSync(CounterpartyAskResponseSchema)
+// The API 400s on mixed arms (an account and free text, or `always_this` with
+// `transaction_responses`); the union alone ignores the extra key, so reject it here.
+const decodeResponse = Schema.decodeUnknownSync(
+  CounterpartyAskResponseSchema,
+  { onExcessProperty: 'error' },
+)
 
 const toResponse = (task: CounterpartyAskTask) => apiData(encodeTask(task))
 

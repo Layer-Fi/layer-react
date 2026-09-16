@@ -37,7 +37,6 @@ const RENT_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
 
 type AskTransactionSeed = {
   id: string
-  year: number
   month: number
   day: number
   amount: number
@@ -46,10 +45,10 @@ type AskTransactionSeed = {
 }
 
 const makeAskTransaction = (
-  { id, year, month, day, amount, counterpartyName, description }: AskTransactionSeed,
+  { id, month, day, amount, counterpartyName, description }: AskTransactionSeed,
 ): MinimalBankTransaction => ({
   id,
-  date: new Date(Date.UTC(year, month - 1, day)),
+  date: new Date(Date.UTC(FIXTURE_YEAR, month - 1, day)),
   direction: BankTransactionDirection.Debit,
   amount,
   counterpartyName,
@@ -69,7 +68,7 @@ const baseCounterpartyAskTask: CounterpartyAskTask = {
     mccs: [],
   },
   suggestions: RETAIL_SUGGESTIONS,
-  transactions: [makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a01', year: FIXTURE_YEAR, month: 1, day: 14, amount: 30774, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' })],
+  transactions: [makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a01', month: 1, day: 14, amount: 30774, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' })],
   transactionResponses: [],
   userResponse: null,
   responseAccount: null,
@@ -113,7 +112,7 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
     },
     suggestions: [],
     transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a08', year: FIXTURE_YEAR, month, day: 9, amount: 8400, counterpartyName: 'SQ *NAIL BAR', description: 'SQ *NAIL BAR' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a08', month, day: 9, amount: 8400, counterpartyName: 'SQ *NAIL BAR', description: 'SQ *NAIL BAR' }),
     ],
     totalAmount: 8400,
   }),
@@ -130,7 +129,7 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
     },
     suggestions: RENT_SUGGESTIONS,
     transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a07', year: FIXTURE_YEAR, month, day: 1, amount: 73674, counterpartyName: 'Brick and Mortar Real Estate Services', description: 'BRICK+MORTAR RE SVCS' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a07', month, day: 1, amount: 73674, counterpartyName: 'Brick and Mortar Real Estate Services', description: 'BRICK+MORTAR RE SVCS' }),
     ],
     totalAmount: 73674,
   }),
@@ -138,7 +137,7 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
   9: month => makeCounterpartyAskTask({
     id: '00000000-0000-4000-8000-000000000911',
     transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a01', year: FIXTURE_YEAR, month, day: 14, amount: 30774, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a01', month, day: 14, amount: 30774, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
     ],
   }),
 
@@ -147,8 +146,8 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
     question: 'You spent $836.45 at Costco across 2 transactions. '
       + 'Can you tell us a bit more about what these were for?',
     transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a02', year: FIXTURE_YEAR, month, day: 3, amount: 61250, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a03', year: FIXTURE_YEAR, month, day: 19, amount: 22395, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a02', month, day: 3, amount: 61250, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a03', month, day: 19, amount: 22395, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
     ],
     totalCount: 2,
     totalAmount: 83645,
@@ -159,20 +158,20 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
     question: '3 more Costco transactions came in, totaling $297.48. '
       + 'Can you tell us a bit more about what these were for?',
     transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a04', year: FIXTURE_YEAR, month, day: 2, amount: 14899, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a05', year: FIXTURE_YEAR, month, day: 11, amount: 9932, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a06', year: FIXTURE_YEAR, month, day: 27, amount: 4917, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a04', month, day: 2, amount: 14899, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a05', month, day: 11, amount: 9932, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a06', month, day: 27, amount: 4917, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
     ],
     totalCount: 3,
     totalAmount: 29748,
   }),
 }
 
-export const counterpartyAskCountFor = (year: number, month: number) =>
-  year === FIXTURE_YEAR && month in COUNTERPARTY_ASK_SEEDS_BY_MONTH ? 1 : 0
-
 export const makeCounterpartyAskTasks = (year: number, month: number): CounterpartyAskTask[] => {
   const seed = COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
 
   return seed && year === FIXTURE_YEAR ? [seed(month)] : []
 }
+
+export const counterpartyAskCountFor = (year: number, month: number) =>
+  makeCounterpartyAskTasks(year, month).length
