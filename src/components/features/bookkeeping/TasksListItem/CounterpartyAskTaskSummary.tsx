@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
@@ -8,12 +9,14 @@ type CounterpartyAskTaskSummaryProps = {
   title: string
   detail: string
   note?: string
+  onEdit?: () => void
 }
 
 export const CounterpartyAskTaskSummary = ({
   title,
   detail,
   note,
+  onEdit,
 }: CounterpartyAskTaskSummaryProps) => {
   const { t } = useTranslation()
 
@@ -32,6 +35,18 @@ export const CounterpartyAskTaskSummary = ({
         <Span weight='bold'>{title}</Span>
         <Span size='sm' variant='subtle'>{detail}</Span>
         {note ? <Span size='xs' variant='subtle'>{note}</Span> : null}
+        {onEdit
+          ? (
+            <HStack>
+              <Button variant='text' onPress={onEdit}>
+                {t(
+                  'bookkeeping:TasksListItem.CounterpartyAskTaskSummary.action.change_answer',
+                  'Change answer',
+                )}
+              </Button>
+            </HStack>
+          )
+          : null}
       </VStack>
     </HStack>
   )

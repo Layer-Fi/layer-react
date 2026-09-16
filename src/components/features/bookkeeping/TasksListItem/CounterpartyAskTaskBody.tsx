@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
@@ -63,6 +64,7 @@ export const CounterpartyAskTaskBody = ({
   const [openRowId, setOpenRowId] = useState<string | null>(null)
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   const paneObserver = useRef<ResizeObserver | null>(null)
 
@@ -142,6 +144,9 @@ export const CounterpartyAskTaskBody = ({
         }
 
         onAnsweredLabelChange(answerLabel)
+        setIsEditing(false)
+        setView('picker')
+        setSelectedKey(null)
       }
       catch {
         addToast({
@@ -202,17 +207,51 @@ export const CounterpartyAskTaskBody = ({
       return
     }
 
+    if (view === 'picker') {
+      setIsEditing(false)
+      return
+    }
+
     setSelectedKey(null)
     setView('picker')
   }, [selectedKey, view])
 
+  const hasBackAction = isEditing || (!isAnswered && view !== 'picker')
+
   useEffect(() => {
-    onBackActionChange(
-      isAnswered || view === 'picker' ? null : { isDisabled: isMutating, onBack: goBack },
-    )
+    onBackActionChange(hasBackAction ? { isDisabled: isMutating, onBack: goBack } : null)
 
     return () => onBackActionChange(null)
-  }, [goBack, isAnswered, isMutating, onBackActionChange, view])
+  }, [goBack, hasBackAction, isMutating, onBackActionChange])
+
+  const startEditing = useCallback(() => {
+    const seededRowKeys: Record<string, string> = {}
+    const seededRowTexts: Record<string, string> = {}
+
+    task.transactionResponses.forEach(({ transactionId, responseAccount, userResponse }) => {
+      if (responseAccount) {
+        const index = suggestions.findIndex(suggestion =>
+          AccountIdentifierEquivalence(suggestion.accountIdentifier, responseAccount.accountIdentifier),
+        )
+
+        if (index >= 0) seededRowKeys[transactionId] = toSuggestionAnswerKey(index)
+        return
+      }
+
+      if (userResponse) {
+        seededRowKeys[transactionId] = OTHER_ANSWER_KEY
+        seededRowTexts[transactionId] = userResponse
+      }
+    })
+
+    setRowKeys(seededRowKeys)
+    setRowTexts(seededRowTexts)
+    setFreeText(task.userResponse ?? '')
+    setSelectedKey(null)
+    setDirection('forward')
+    setView('picker')
+    setIsEditing(true)
+  }, [suggestions, task.transactionResponses, task.userResponse])
 
   const storedAnswer: CounterpartyAskAnswerValue | null = task.responseAccount
     ? { kind: 'account', account: task.responseAccount }
@@ -222,7 +261,7 @@ export const CounterpartyAskTaskBody = ({
     response => Boolean(response.userResponse) || Boolean(response.responseAccount),
   )
 
-  if (isAnswered && task.resolvedByTaskId) {
+  if (isAnswered && !isEditing && task.resolvedByTaskId) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere', 'Already answered')}
@@ -234,7 +273,7 @@ export const CounterpartyAskTaskBody = ({
     )
   }
 
-  if (isAnswered && storedAnswer) {
+  if (isAnswered && !isEditing && storedAnswer) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
@@ -245,11 +284,12 @@ export const CounterpartyAskTaskBody = ({
             'We’ll use this every time from now on.',
           )
           : undefined}
+        onEdit={startEditing}
       />
     )
   }
 
-  if (isAnswered && answeredTransactions.length > 0) {
+  if (isAnswered && !isEditing && answeredTransactions.length > 0) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
@@ -258,6 +298,7 @@ export const CounterpartyAskTaskBody = ({
           'You answered {{answered}} of {{total}} individually.',
           { answered: answeredTransactions.length, total: totalTransactions },
         )}
+        onEdit={startEditing}
       />
     )
   }

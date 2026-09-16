@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { makeAccountId } from '@schemas/common/accountIdentifier'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
@@ -61,6 +62,15 @@ const AskHost = ({ task }: { task: UserVisibleTask & CounterpartyAskTask }) => {
     </>
   )
 }
+
+const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
+  status: BusinessTaskStatus.UserMarkedCompleted,
+  alwaysThis: true,
+  responseAccount: {
+    accountIdentifier: makeAccountId(OFFICE_ACCOUNT_ID),
+    name: 'Office Expenses',
+  },
+})
 
 const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
   const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
@@ -280,5 +290,69 @@ describe('CounterpartyAskTaskBody', () => {
     })
 
     expect(screen.getByText('Already answered')).toBeInTheDocument()
+  })
+
+  it('offers a way to change an answer that can still be updated', () => {
+    renderBody(answeredWithAccount())
+
+    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
+  })
+
+  it('offers no change for an answer made through a sibling task', () => {
+    renderBody({
+      ...answeredWithAccount(),
+      resolvedByTaskId: '00000000-0000-4000-8000-000000000902',
+    })
+
+    expect(screen.queryByRole('button', { name: 'Change answer' })).not.toBeInTheDocument()
+  })
+
+  it('reopens the picker and submits the replacement answer', async () => {
+    const onRequest = spyOnAskResponse()
+    const { user } = renderBody(answeredWithAccount())
+
+    await user.click(screen.getByRole('button', { name: 'Change answer' }))
+    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
+
+    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
+    expect(onRequest.mock.calls[0]?.[0]).toEqual({
+      account_identifier: { type: 'StableName', stable_name: MEALS_STABLE_NAME },
+      always_this: true,
+    })
+  })
+
+  it('abandons an edit from the picker without submitting', async () => {
+    const onRequest = spyOnAskResponse()
+    const { user } = renderBody(answeredWithAccount())
+
+    await user.click(screen.getByRole('button', { name: 'Change answer' }))
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+
+    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
+    expect(onRequest).not.toHaveBeenCalled()
+  })
+
+  it('seeds the itemised sheet from the previous per-transaction answers', async () => {
+    const { user } = renderBody({
+      ...multiTransactionTask(),
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      transactionResponses: [
+        {
+          transactionId: 'txn-1',
+          userResponse: null,
+          responseAccount: {
+            accountIdentifier: makeAccountId(OFFICE_ACCOUNT_ID),
+            name: 'Office Expenses',
+          },
+        },
+        { transactionId: 'txn-2', userResponse: 'Gas for the van', responseAccount: null },
+      ],
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Change answer' }))
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+
+    expect(screen.getByText('All 2 answered')).toBeInTheDocument()
   })
 })
