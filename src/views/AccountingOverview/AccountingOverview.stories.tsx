@@ -91,9 +91,6 @@ const accountNeedingReconnection = markAccountReadyForRefresh(makeBankAccountWit
   },
 }))
 
-// AccountReconnectionBanner is now driven by real bank-account data: it only renders when
-// getBankAccountNeedingReconnection finds a stale, USER_PRESENT_REQUIRED connection, and its
-// "last refreshed" copy is computed from that account's actual `lastSyncedAt`.
 export const AccountReconnectionBanner: Story = {
   parameters: {
     msw: {
@@ -116,11 +113,6 @@ export const AccountReconnectionBanner: Story = {
   },
 }
 
-// With no `onAccountUpdateClick` supplied, clicking the banner falls through to the built-in
-// Plaid reconnect flow (repairConnection/addConnection via LinkedAccountsContext) instead of
-// being a no-op. Not clicked here: doing so opens the real Plaid Link widget, which isn't safe
-// to drive from an automated play function (see how BankTransactionsWithLinkedAccounts' own
-// stories stop short of clicking their per-connection "Reconnect" items for the same reason).
 export const AccountReconnectionBannerWithDefaultReconnect: Story = {
   args: { onAccountUpdateClick: undefined },
   parameters: {
@@ -138,7 +130,6 @@ export const AccountReconnectionBannerWithDefaultReconnect: Story = {
   },
 }
 
-// With no stale connection needing user action, the banner doesn't render at all.
 export const NoAccountNeedingReconnection: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -161,9 +152,6 @@ const secondAccountNeedingReconnection = markAccountReadyForRefresh(makeBankAcco
   },
 }))
 
-// AccountReconnectionBanner is a single-account surface (unlike BankTransactionsRefreshAlert's
-// header, which lists every stale connection): with several accounts needing reconnection, it
-// still only surfaces the first one getBankAccountNeedingReconnection finds.
 export const MultipleAccountsNeedingReconnection: Story = {
   parameters: {
     msw: {

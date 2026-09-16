@@ -7,10 +7,12 @@ import {
   getBankAccountRefreshConnections,
 } from '@utils/features/bankAccounts/bankAccount'
 import { tPlural } from '@utils/shared/i18n/plural'
+import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useIsMobileContainer } from '@hooks/utils/size/useIsMobileContainer'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsContext, useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
@@ -19,15 +21,30 @@ import { P } from '@ui/Typography/Text'
 import './bankTransactionsRefreshAlert.scss'
 
 export const BankTransactionsRefreshAlert = () => {
+  const hasProvider = useHasLinkedAccountsProvider()
+
+  if (hasProvider) {
+    return <BankTransactionsRefreshAlertContent />
+  }
+
+  return (
+    <LinkedAccountsProvider>
+      <BankTransactionsRefreshAlertContent />
+    </LinkedAccountsProvider>
+  )
+}
+
+const BankTransactionsRefreshAlertContent = () => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { isMobile } = useSizeClass()
+  const { isMobile, containerRef } = useIsMobileContainer<HTMLDivElement>()
   const { data, isLoading } = useBankAccountsContext()
   const { addConnection, repairConnection } = useContext(LinkedAccountsContext)
+  const now = usePeriodicNow()
 
   const refreshConnections = useMemo(
-    () => getBankAccountRefreshConnections(data),
-    [data],
+    () => getBankAccountRefreshConnections(data, now),
+    [data, now],
   )
 
   const handleRefresh = useCallback((connection: BankAccountRefreshConnection) => {
@@ -87,8 +104,10 @@ export const BankTransactionsRefreshAlert = () => {
 
   return (
     <VStack
+      ref={containerRef}
       className='Layer__BankTransactionsRefreshAlert'
       data-status='success'
+      data-view={isMobile ? 'mobile' : 'desktop'}
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
       gap='2xs'

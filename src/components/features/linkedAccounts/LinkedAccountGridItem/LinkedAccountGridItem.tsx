@@ -11,6 +11,7 @@ import {
   isAllExternalAccountsUserCreatedCustom,
 } from '@utils/features/bankAccounts/bankAccount'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
+import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
 import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
@@ -74,9 +75,10 @@ export const LinkedAccountGridItem = ({
   const isFilterEnabled = useIsBankAccountFilterEnabled()
   const isFilterLocked = useIsBankAccountFilterLocked()
 
+  const now = usePeriodicNow()
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getConnectionRepairInfo(bankAccount)
-  const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
+  const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount, now)
 
   let pillConfig
   if (accountNeedsUniquenessConfirmation(bankAccount)) {
@@ -131,8 +133,12 @@ export const LinkedAccountGridItem = ({
         {
           name: t('linkedAccounts:LinkedAccountGridItem.action.refresh_connection', 'Refresh connection'),
           action: () => {
-            if (!refreshInfo.connectionExternalId) return
-            void repairConnection(refreshInfo.source, refreshInfo.connectionExternalId)
+            if (refreshInfo.reconnectWithNewCredentials) {
+              void addConnection(refreshInfo.source)
+            }
+            else if (refreshInfo.connectionExternalId) {
+              void repairConnection(refreshInfo.source, refreshInfo.connectionExternalId)
+            }
           },
         },
       ],

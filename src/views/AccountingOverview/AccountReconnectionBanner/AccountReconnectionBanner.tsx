@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useIsMobileContainer } from '@hooks/utils/size/useIsMobileContainer'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -21,7 +21,7 @@ export type AccountReconnectionBannerProps = {
 export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick }: AccountReconnectionBannerProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { isMobile } = useSizeClass()
+  const { isMobile, containerRef } = useIsMobileContainer<HTMLDivElement>()
 
   const label = t(
     'views:AccountingOverview.AccountReconnectionBanner.label.account_ready_for_refresh',
@@ -44,12 +44,18 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
 
   const refreshNowLabel = t('views:AccountingOverview.AccountReconnectionBanner.action.refresh_now', 'Refresh Now')
 
+  const ariaLabel = t(
+    'views:AccountingOverview.AccountReconnectionBanner.label.account_status',
+    '{{label}}. {{lastRefreshedLabel}}',
+    { label, lastRefreshedLabel },
+  )
+
   return (
-    <HStack className='Layer__AccountingOverview__AccountReconnectionBanner' fluid>
+    <HStack ref={containerRef} className='Layer__AccountingOverview__AccountReconnectionBanner' fluid>
       <Banner
         variant='success'
         title=''
-        ariaLabel={`${label}. ${lastRefreshedLabel}`}
+        ariaLabel={ariaLabel}
         slots={{
           Icon: isMobile ? null : <RefreshCcw size={16} />,
           Button: isMobile

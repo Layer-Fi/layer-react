@@ -286,8 +286,8 @@ export const MobileMultipleInstitutionConnections: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await userEvent.click(await canvas.findByRole('button', { name: 'Reconnect 2 bank connections' }))
-    await screen.findByRole('menuitem', { name: /Reconnect Chase/ })
+    await userEvent.click(await canvas.findByRole('button', { name: 'Refresh 2 bank connections to see recent transactions' }))
+    await screen.findByRole('menuitem', { name: /Refresh Chase/ })
   },
 }
 
@@ -313,8 +313,6 @@ export const BackgroundUpdate: Story = {
   },
 }
 
-// A connection needing reconnection but synced only 16h ago is not yet stale (the alert only
-// fires past 24h), so neither the refresh alert header nor the account's own pill should appear.
 export const RecentlySyncedConnectionNotYetStale: Story = {
   parameters: {
     msw: {

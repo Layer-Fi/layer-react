@@ -5,6 +5,7 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
 import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/bankAccount'
+import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
@@ -85,7 +86,8 @@ const AccountingOverviewContent = ({
   const { value: sizeClass } = useSizeClass()
   const { data: bankAccounts } = useBankAccountsContext()
   const { addConnection, repairConnection } = useContext(LinkedAccountsContext)
-  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts)
+  const now = usePeriodicNow()
+  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts, now)
 
   const handleAccountUpdateClick = useCallback(() => {
     if (onAccountUpdateClick) {

@@ -111,7 +111,6 @@ export type BankAccountNeedingReconnection = {
   reconnectWithNewCredentials: boolean
 }
 
-/** The first account needing reconnection, for a single-account surface like AccountReconnectionBanner. */
 export function getBankAccountNeedingReconnection(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now = new Date(),
