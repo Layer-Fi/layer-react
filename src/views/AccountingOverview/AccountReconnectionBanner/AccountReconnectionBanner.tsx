@@ -24,7 +24,7 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
   const { isMobile, containerRef } = useIsMobileContainer<HTMLDivElement>()
 
   const label = t(
-    'views:AccountingOverview.AccountReconnectionBanner.label.account_ready_for_refresh',
+    'views:AccountReconnectionBanner.label.account_ready_for_refresh',
     '{{accountLabel}} is ready for refresh',
     { accountLabel },
   )
@@ -34,18 +34,18 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
     : null
 
   const lastRefreshedLabel = daysSinceLastSynced === null
-    ? t('views:AccountingOverview.AccountReconnectionBanner.label.never_refreshed', 'Never refreshed')
-    : tPlural(t, 'views:AccountingOverview.AccountReconnectionBanner.label.last_refreshed_days_ago', {
+    ? t('views:AccountReconnectionBanner.label.never_refreshed', 'Never refreshed')
+    : tPlural(t, 'views:AccountReconnectionBanner.label.last_refreshed_days_ago', {
       count: daysSinceLastSynced,
       displayCount: formatNumber(daysSinceLastSynced),
       one: 'Last refreshed {{displayCount}} day ago',
       other: 'Last refreshed {{displayCount}} days ago',
     })
 
-  const refreshNowLabel = t('views:AccountingOverview.AccountReconnectionBanner.action.refresh_now', 'Refresh Now')
+  const refreshNowLabel = t('views:AccountReconnectionBanner.action.refresh_now', 'Refresh Now')
 
   const ariaLabel = t(
-    'views:AccountingOverview.AccountReconnectionBanner.label.account_status',
+    'views:AccountReconnectionBanner.label.account_status',
     '{{label}}. {{lastRefreshedLabel}}',
     { label, lastRefreshedLabel },
   )
