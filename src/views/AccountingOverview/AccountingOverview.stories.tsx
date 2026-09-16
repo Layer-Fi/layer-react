@@ -114,6 +114,7 @@ export const AccountReconnectionBanner: Story = {
 }
 
 export const AccountReconnectionBannerWithDefaultReconnect: Story = {
+  tags: ['docs-screenshot'],
   args: { onAccountUpdateClick: undefined },
   parameters: {
     msw: {

@@ -15,8 +15,11 @@ export function useIsMobileContainer<T extends HTMLElement>() {
     setIsMobile(element.getBoundingClientRect().width <= BREAKPOINTS.MOBILE)
 
     const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect.width
-      if (width != null) setIsMobile(width <= BREAKPOINTS.MOBILE)
+      const entry = entries[0]
+      if (!entry) return
+
+      const width = entry.borderBoxSize[0]?.inlineSize ?? entry.contentRect.width
+      setIsMobile(width <= BREAKPOINTS.MOBILE)
     })
     observer.observe(element)
     observerRef.current = observer

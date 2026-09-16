@@ -236,6 +236,12 @@ export const BookkeepingEnabled: Story = {
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
   tags: ['public-api', 'docs-screenshot', 'real-backend'],
+}
+
+// Dedicated docs-screenshot story: `real-backend` stories can't carry story-level MSW handlers,
+// so the reconnection-workflow capture lives here instead of on BookkeepingDisabled.
+export const RefreshRequired: Story = {
+  tags: ['docs-screenshot'],
   parameters: {
     msw: {
       handlers: [
