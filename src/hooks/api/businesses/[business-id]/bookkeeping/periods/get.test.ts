@@ -43,7 +43,7 @@ describe('useGetBookkeepingPeriods', () => {
     expect(onRequest.mock.calls[0]?.[0]).toContain('legacy_tasks_only=false')
   })
 
-  it('returns the counterparty asks the seeded periods carry', async () => {
+  it('holds counterparty asks out of the visible list until their body ships', async () => {
     mockActiveBookkeeping()
 
     const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
@@ -54,6 +54,6 @@ describe('useGetBookkeepingPeriods', () => {
       .flatMap(period => period.tasks)
       .filter(task => isCounterpartyAskTask(task))
 
-    expect(asks.length).toBeGreaterThan(0)
+    expect(asks).toHaveLength(0)
   })
 })
