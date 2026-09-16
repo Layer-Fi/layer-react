@@ -6,6 +6,7 @@ import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessT
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
+import { counterpartyAskCountFor, makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
@@ -99,7 +100,7 @@ const monthsBeforeCurrent = (year: number, month: number) => {
 /** Past months without open tasks have closed books, so they carry no uncategorized activity. */
 export const hasCompletedBooks = (year: number, month: number) => {
   const monthsAgo = monthsBeforeCurrent(year, month)
-  return monthsAgo > 0 && openTaskCountFor(monthsAgo) === 0
+  return monthsAgo > 0 && openTaskCountFor(monthsAgo) + counterpartyAskCountFor(year, month) === 0
 }
 
 const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingPeriodStatus => {
@@ -117,14 +118,16 @@ export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriod[] =
 
   for (let cursor = start; cursor <= end; cursor++) {
     const { year, month } = fromMonthIndex(cursor)
-    const openTaskCount = openTaskCountFor(end - cursor)
+    const monthsAgo = end - cursor
+    const legacyTasks = makePeriodTasks(cursor, openTaskCountFor(monthsAgo), month)
+    const counterpartyAsks = makeCounterpartyAskTasks(year, month)
 
     periods.push({
       id: periodIdFor(cursor),
       month,
       year,
-      status: periodStatusFor(end - cursor, openTaskCount),
-      tasks: makePeriodTasks(cursor, openTaskCount, month),
+      status: periodStatusFor(monthsAgo, legacyTasks.length + counterpartyAsks.length),
+      tasks: [...legacyTasks, ...counterpartyAsks],
     })
   }
 
