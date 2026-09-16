@@ -355,4 +355,35 @@ describe('CounterpartyAskTaskBody', () => {
 
     expect(screen.getByText('All 2 answered')).toBeInTheDocument()
   })
+
+  it('locks the going-forward answers while the save is in flight', async () => {
+    let releaseResponse = () => {}
+    const held = new Promise<void>((resolve) => {
+      releaseResponse = resolve
+    })
+    const onRequest = vi.fn()
+
+    server.use(
+      postCounterpartyAskResponse.mock(makeCounterpartyAskTask(), {
+        onRequest: async () => {
+          onRequest()
+          await held
+        },
+      }),
+    )
+
+    const { user } = renderBody()
+
+    await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
+
+    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
+
+    expect(screen.getByRole('radio', { name: 'No, keep asking me about them' })).toBeDisabled()
+    expect(screen.getByText('Saving...')).toBeInTheDocument()
+
+    releaseResponse()
+
+    await waitFor(() => expect(screen.queryByText('Saving...')).not.toBeInTheDocument())
+  })
 })

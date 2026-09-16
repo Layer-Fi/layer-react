@@ -22,6 +22,7 @@ type CounterpartyAskTransactionRowProps = {
   selectedKey: string | null
   text: string
   answerLabel: string | null
+  isDisabled: boolean
   isOpen: boolean
   onOpen: () => void
   onSelect: (key: string) => void
@@ -35,6 +36,7 @@ export const CounterpartyAskTransactionRow = ({
   selectedKey,
   text,
   answerLabel,
+  isDisabled,
   isOpen,
   onOpen,
   onSelect,
@@ -50,6 +52,7 @@ export const CounterpartyAskTransactionRow = ({
         className='Layer__CounterpartyAskTask__RowSummary'
         variant='text'
         fullWidth
+        isDisabled={isDisabled}
         onPress={onOpen}
       >
         <HStack align='center' gap='xs' overflow='hidden' fluid>
@@ -90,6 +93,7 @@ export const CounterpartyAskTransactionRow = ({
               )}
               value={selectedKey}
               onChange={onSelect}
+              isDisabled={isDisabled}
             >
               {suggestions.map((suggestion, index) => (
                 <Chip key={toSuggestionAnswerKey(index)} size='sm' value={toSuggestionAnswerKey(index)}>
@@ -112,6 +116,7 @@ export const CounterpartyAskTransactionRow = ({
                       'bookkeeping:TasksListItem.CounterpartyAskTransactionRow.placeholder.what_was_this_for',
                       'What was this one for?',
                     )}
+                    disabled={isDisabled}
                     onChange={event => onChangeText(event.target.value)}
                     onBlur={onCommitText}
                     onKeyDown={(event) => {

@@ -19,6 +19,7 @@ import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/ta
 import { Button } from '@ui/Button/Button'
 import { Chip, ChipGroup } from '@ui/Chip/Chip'
 import { TextArea } from '@ui/Input/TextArea'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import { CounterpartyAskTaskSummary } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskSummary'
@@ -324,6 +325,7 @@ export const CounterpartyAskTaskBody = ({
             )}
             value={null}
             onChange={key => onAnswerRemember(key === 'always')}
+            isDisabled={isMutating}
             wrap
           >
             <Chip size='lg' value='always'>
@@ -339,6 +341,14 @@ export const CounterpartyAskTaskBody = ({
               )}
             </Chip>
           </ChipGroup>
+          {isMutating
+            ? (
+              <HStack align='center' gap='xs'>
+                <LoadingSpinner size={14} />
+                <Span size='xs' variant='subtle'>{t('common:state.saving', 'Saving...')}</Span>
+              </HStack>
+            )
+            : null}
         </VStack>
       )
     }
@@ -392,6 +402,7 @@ export const CounterpartyAskTaskBody = ({
                   selectedKey={rowKeys[transaction.id] ?? null}
                   text={rowTexts[transaction.id] ?? ''}
                   answerLabel={answer ? getCounterpartyAskAnswerLabel(answer) : null}
+                  isDisabled={isMutating}
                   isOpen={openRowId === transaction.id}
                   onOpen={() => setOpenRowId(transaction.id)}
                   onSelect={(answerKey) => {
