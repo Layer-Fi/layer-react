@@ -43,26 +43,26 @@ export const LinkedAccounts = ({
   withProvider = true,
   ...props
 }: LinkedAccountsProps) => {
-  const content = (
-    <AccountConfirmationStoreProvider>
-      <OpeningBalanceModalProvider>
-        <LinkedAccountsComponent {...props} />
-      </OpeningBalanceModalProvider>
-    </AccountConfirmationStoreProvider>
+  const linkedAccounts = (
+    <OpeningBalanceModalProvider>
+      <LinkedAccountsComponent {...props} />
+    </OpeningBalanceModalProvider>
   )
 
-  if (!withProvider) {
-    return content
-  }
-
   return (
-    <LinkedAccountsProvider
-      plaidHostedLinkConfig={plaidHostedLinkConfig}
-      customerManagedPlaidConfig={customerManagedPlaidConfig}
-      onPlaidConnectionSuccess={onPlaidConnectionSuccess}
-    >
-      {content}
-    </LinkedAccountsProvider>
+    <AccountConfirmationStoreProvider>
+      {withProvider
+        ? (
+          <LinkedAccountsProvider
+            plaidHostedLinkConfig={plaidHostedLinkConfig}
+            customerManagedPlaidConfig={customerManagedPlaidConfig}
+            onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+          >
+            {linkedAccounts}
+          </LinkedAccountsProvider>
+        )
+        : linkedAccounts}
+    </AccountConfirmationStoreProvider>
   )
 }
 
