@@ -2,6 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { AccountingOverview, type AccountingOverviewProps } from '@views/AccountingOverview/AccountingOverview'
 
 import { makeBankAccountWithMirroredExternalAccount, markAccountReadyForRefresh } from '@fixtures/bankAccounts/mocks'
@@ -106,9 +107,12 @@ export const AccountReconnectionBanner: Story = {
     await canvas.findByText('RBC Checking (4048) is ready for refresh', {}, { timeout: 5000 })
     await canvas.findByText('Last refreshed 3 days ago', {}, { timeout: 5000 })
 
-    await userEvent.click(canvas.getByRole('button', {
-      name: 'RBC Checking (4048) is ready for refresh',
-    }))
+    const isMobile = canvasElement.getBoundingClientRect().width <= BREAKPOINTS.MOBILE
+    const button = await canvas.findByRole('button', {
+      name: isMobile ? 'Refresh Now' : 'RBC Checking (4048) is ready for refresh',
+    }, { timeout: 5000 })
+
+    await userEvent.click(button)
     await expect(args.onAccountUpdateClick).toHaveBeenCalledTimes(1)
   },
 }
