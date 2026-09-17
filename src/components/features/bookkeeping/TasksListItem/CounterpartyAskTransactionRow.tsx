@@ -1,6 +1,7 @@
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { BankTransactionDirection, type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
+import { type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
 import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -47,7 +48,13 @@ export const CounterpartyAskTransactionRow = ({
   const { formatDate } = useIntlFormatter()
 
   return (
-    <VStack className='Layer__CounterpartyAskTask__Row' pi='2xs'>
+    <VStack
+      className={classNames(
+        'Layer__CounterpartyAskTask__Row',
+        isOpen && 'Layer__CounterpartyAskTask__Row--open',
+      )}
+      pi='md'
+    >
       <Button
         className='Layer__CounterpartyAskTask__RowSummary'
         variant='text'
@@ -56,25 +63,32 @@ export const CounterpartyAskTransactionRow = ({
         onPress={onOpen}
       >
         <HStack align='center' gap='xs' overflow='hidden' fluid>
-          <MoneySpan
-            size='sm'
-            weight='bold'
-            amount={transaction.amount}
-            displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
-          />
+          <MoneySpan size='sm' weight='bold' amount={transaction.amount} />
           <Span size='2xs' variant='subtle' noWrap>
             {formatDate(transaction.date, DateFormat.MonthDayShort)}
           </Span>
           <Span
-            className='Layer__CounterpartyAskTask__RowSummaryDetail'
+            className='Layer__CounterpartyAskTask__RowSummaryDescription'
             size='xs'
-            variant={answerLabel ? 'inherit' : 'subtle'}
-            align='right'
+            variant='subtle'
             ellipsis
             noWrap
           >
-            {answerLabel ?? transaction.description ?? ''}
+            {transaction.description ?? ''}
           </Span>
+          {answerLabel
+            ? (
+              <Span
+                className='Layer__CounterpartyAskTask__RowSummaryAnswer'
+                size='xs'
+                align='right'
+                ellipsis
+                noWrap
+              >
+                {answerLabel}
+              </Span>
+            )
+            : null}
         </HStack>
       </Button>
       {isOpen

@@ -402,4 +402,18 @@ describe('CounterpartyAskTaskBody', () => {
     expect(screen.getByText('Business Meals')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
   })
+
+  it('keeps a row description visible alongside the category it was answered with', async () => {
+    const { user } = renderBody(multiTransactionTask())
+
+    await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+
+    const firstRow = screen.getByRole('radiogroup', { name: 'What this one was for' })
+    await user.click(within(firstRow).getByRole('radio', { name: 'Business Meals' }))
+
+    const answeredSummary = screen.getByText('COSTCO WHSE').closest('button')
+
+    expect(answeredSummary).toHaveTextContent('COSTCO WHSE')
+    expect(answeredSummary).toHaveTextContent('Business Meals')
+  })
 })

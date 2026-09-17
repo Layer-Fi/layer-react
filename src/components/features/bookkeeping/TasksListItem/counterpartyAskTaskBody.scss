@@ -50,8 +50,7 @@
 .Layer__CounterpartyAskTask__Rows {
   overflow: hidden;
 
-  border-radius: var(--border-radius-xs);
-  border: 1px solid var(--border-color);
+  border-block: 1px solid var(--border-color);
 
   background-color: var(--color-base-50);
 }
@@ -62,14 +61,24 @@
   &:first-child {
     border-block-start: none;
   }
+
+  &.Layer__CounterpartyAskTask__Row--open {
+    background: var(--bg-element-focus);
+  }
 }
 
 .Layer__CounterpartyAskTask__RowSummary {
   padding-block: var(--spacing-2xs);
 }
 
-.Layer__CounterpartyAskTask__RowSummaryDetail {
-  flex: 1;
+.Layer__CounterpartyAskTask__RowSummaryDescription {
+  flex: 0 1 auto;
+  max-inline-size: 16ch;
+}
+
+.Layer__CounterpartyAskTask__RowSummaryAnswer {
+  flex: 0 1 auto;
+  margin-inline-start: auto;
 }
 
 .Layer__CounterpartyAskTask__Footer {
