@@ -8,7 +8,7 @@ import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/
 import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsContext, useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
@@ -65,11 +65,19 @@ export interface AccountingOverviewProps {
   }
 }
 
-export const AccountingOverview = (props: AccountingOverviewProps) => (
-  <LinkedAccountsProvider>
-    <AccountingOverviewContent {...props} />
-  </LinkedAccountsProvider>
-)
+export const AccountingOverview = (props: AccountingOverviewProps) => {
+  const hasProvider = useHasLinkedAccountsProvider()
+
+  if (hasProvider) {
+    return <AccountingOverviewContent {...props} />
+  }
+
+  return (
+    <LinkedAccountsProvider>
+      <AccountingOverviewContent {...props} />
+    </LinkedAccountsProvider>
+  )
+}
 
 const AccountingOverviewContent = ({
   title,
