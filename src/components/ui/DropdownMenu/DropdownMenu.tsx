@@ -55,9 +55,9 @@ type MenuItemProps = PropsWithChildren<{
   isDisabled?: boolean
   onClick?: () => void
   className?: string
-}>
+}> & Partial<Record<`data-lrc-${string}`, true>>
 
-export const MenuItem = ({ children, onClick, isDisabled, className }: MenuItemProps) => {
+export const MenuItem = ({ children, onClick, isDisabled, className, ...stableRefProps }: MenuItemProps) => {
   const { variant } = useDropdownMenu()
   const dataProps = toDataProperties({ variant })
 
@@ -67,6 +67,7 @@ export const MenuItem = ({ children, onClick, isDisabled, className }: MenuItemP
       isDisabled={isDisabled}
       className={classNames('Layer__UI__DropdownMenu__MenuItem', className)}
       {...dataProps}
+      {...stableRefProps}
     >
       {children}
     </AriaMenuItem>

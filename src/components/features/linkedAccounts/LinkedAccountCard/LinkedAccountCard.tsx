@@ -69,7 +69,7 @@ export const LinkedAccountCard = ({
   )
 
   return (
-    <div {...dataProperties} className='Layer__LinkedAccountCard'>
+    <div {...dataProperties} data-lrc-linked-account-card className='Layer__LinkedAccountCard'>
       <div {...headerDataProperties} className='Layer__LinkedAccountCard__Header'>
         <div className='Layer__LinkedAccountCard__HeaderDetails'>
           <Span variant='inherit' ellipsis>{displayName}</Span>
@@ -114,7 +114,7 @@ export const LinkedAccountCard = ({
         : (
           <>
             {!asWidget && (
-              <div className='Layer__LinkedAccountCard__Balance'>
+              <div className='Layer__LinkedAccountCard__Balance' data-lrc-linked-account-card-balance>
                 <Span size='sm' variant='subtle' pb='sm'>
                   {t('linkedAccounts:LinkedAccountCard.label.bank_balance', 'Bank balance')}
                 </Span>

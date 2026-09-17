@@ -33,7 +33,7 @@ export function LinkedAccountPill({
   icon,
 }: LinkedAccountPillProps) {
   const Trigger = useCallback(() => (
-    <Pill status={status}>
+    <Pill status={status} data-lrc-linked-account-pill>
       {icon ?? <CircleAlert size={14} />}
       {label}
     </Pill>
@@ -42,7 +42,7 @@ export function LinkedAccountPill({
   const [soleItem] = items
   if (soleItem && items.length === 1) {
     return (
-      <Pill status={status} onPress={soleItem.action}>
+      <Pill status={status} onPress={soleItem.action} data-lrc-linked-account-pill>
         {icon ?? <CircleAlert size={14} />}
         {label}
       </Pill>

@@ -51,7 +51,12 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
   )
 
   return (
-    <HStack ref={containerRef} className='Layer__AccountingOverview__AccountReconnectionBanner' fluid>
+    <HStack
+      ref={containerRef}
+      className='Layer__AccountingOverview__AccountReconnectionBanner'
+      fluid
+      data-lrc-account-reconnection-banner
+    >
       <Banner
         variant='success'
         title=''
@@ -60,7 +65,7 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
           Icon: isMobile ? null : <RefreshCcw size={16} />,
           Button: isMobile
             ? (
-              <BannerButton variant='outlined' onPress={onClick}>
+              <BannerButton variant='outlined' onPress={onClick} data-lrc-account-reconnection-banner-refresh-button>
                 {refreshNowLabel}
               </BannerButton>
             )
@@ -70,6 +75,7 @@ export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick 
                 icon
                 onPress={onClick}
                 aria-label={label}
+                data-lrc-account-reconnection-banner-refresh-button
               >
                 <ChevronRight size={18} />
               </BannerButton>

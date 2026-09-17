@@ -64,7 +64,7 @@ const BankTransactionsRefreshAlertContent = () => {
   })
 
   const Trigger = useCallback(() => (
-    <Button className='Layer__BankTransactionsRefreshAlert__action' variant='text'>
+    <Button className='Layer__BankTransactionsRefreshAlert__action' variant='text' data-lrc-bank-transactions-refresh-alert-action>
       <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
         <RefreshCcw size={14} />
         <P size='sm' weight='normal' variant='inherit'>{summaryLabel}</P>
@@ -108,6 +108,7 @@ const BankTransactionsRefreshAlertContent = () => {
       className='Layer__BankTransactionsRefreshAlert'
       data-status='success'
       data-view={isMobile ? 'mobile' : 'desktop'}
+      data-lrc-bank-transactions-refresh-alert
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
       gap='2xs'
@@ -125,6 +126,7 @@ const BankTransactionsRefreshAlertContent = () => {
                 <MenuItem
                   key={`${connection.source}:${connection.connectionExternalId}`}
                   onClick={() => handleRefresh(connection)}
+                  data-lrc-bank-transactions-refresh-alert-item
                 >
                   <P size='sm' weight='normal'>{connectionLabel(connection)}</P>
                   <Spacer />
@@ -140,6 +142,7 @@ const BankTransactionsRefreshAlertContent = () => {
             className='Layer__BankTransactionsRefreshAlert__action'
             variant='text'
             onPress={() => handleRefresh(connection)}
+            data-lrc-bank-transactions-refresh-alert-action
           >
             <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
               <RefreshCcw size={14} />
