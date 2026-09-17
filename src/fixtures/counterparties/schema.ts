@@ -14,7 +14,7 @@ const base = Schema.Struct({
   // The wire field is optional; the fixture requires a name so external id and
   // website can be derived from it.
   name: withArbitrary(Schema.String, () => merchantNameArbitrary),
-  mccs: withArbitrary(fields.mccs, () => fc => mccArbitrary(fc).map(mcc => [mcc])),
+  mccs: withArbitrary(Schema.Array(Schema.String), () => fc => mccArbitrary(fc).map(mcc => [mcc])),
 })
 
 const baseArbitrary = Arbitrary.make(base)
