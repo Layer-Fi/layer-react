@@ -1,9 +1,10 @@
-import { createContext } from 'react'
+import { createContext, useContext } from 'react'
 
 import { type useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
 export type LinkedAccountsContextType = ReturnType<typeof useLinkedAccounts>
-export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
+
+const UNPROVIDED_LINKED_ACCOUNTS_CONTEXT: LinkedAccountsContextType = {
   isLinking: false,
   isHostedLinkError: false,
   addConnection: () => Promise.resolve(),
@@ -14,4 +15,10 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   excludeAccount: () => Promise.resolve(),
   confirmAccount: () => Promise.resolve(),
   breakConnection: () => Promise.resolve(),
-})
+}
+
+export const LinkedAccountsContext = createContext<LinkedAccountsContextType>(UNPROVIDED_LINKED_ACCOUNTS_CONTEXT)
+
+export function useHasLinkedAccountsProvider(): boolean {
+  return useContext(LinkedAccountsContext) !== UNPROVIDED_LINKED_ACCOUNTS_CONTEXT
+}

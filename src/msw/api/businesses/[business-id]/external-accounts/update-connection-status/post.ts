@@ -18,6 +18,7 @@ export const post = createMockEndpoint({
           ...externalAccount,
           connectionNeedsRepairAsOf: null,
           reconnectWithNewCredentials: false,
+          updateType: null,
         })),
       })
     })
