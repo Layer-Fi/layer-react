@@ -74,7 +74,7 @@ export function getBankAccountRefreshConnections(
       const institutionName = externalAccount.institution?.name ?? bankAccount.institution?.name
       if (institutionName) connection.institutionNames.add(institutionName)
       connection.accountNames.add(formatBankAccountWithMask(bankAccount))
-      connection.reconnectWithNewCredentials ||= externalAccount.reconnectWithNewCredentials
+      connection.reconnectWithNewCredentials ||= externalAccount.reconnectWithNewCredentials ?? false
       connections.set(key, connection)
     }
   }
@@ -97,7 +97,7 @@ export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, no
   return {
     connectionExternalId: refreshAccount.connectionExternalId,
     source: refreshAccount.externalAccountSource,
-    reconnectWithNewCredentials: refreshAccount.reconnectWithNewCredentials,
+    reconnectWithNewCredentials: refreshAccount.reconnectWithNewCredentials ?? false,
     updateType: refreshAccount.updateType,
     lastSyncedAt: refreshAccount.lastSyncedAt,
   }

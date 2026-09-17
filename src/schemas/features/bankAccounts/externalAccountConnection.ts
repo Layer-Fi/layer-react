@@ -29,7 +29,7 @@ export const ExternalAccountConnectionSchema = Schema.Struct({
     Schema.fromKey('connection_needs_repair_as_of'),
   ),
   reconnectWithNewCredentials: pipe(
-    Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true }),
+    Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
     Schema.fromKey('reconnect_with_new_credentials'),
   ),
   connectionExternalId: pipe(
