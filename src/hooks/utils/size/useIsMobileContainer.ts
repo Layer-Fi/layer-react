@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 
@@ -25,5 +25,5 @@ export function useIsMobileContainer<T extends HTMLElement>() {
     observerRef.current = observer
   }, [])
 
-  return { isMobile, containerRef }
+  return useMemo(() => ({ isMobile, containerRef }), [isMobile, containerRef])
 }
