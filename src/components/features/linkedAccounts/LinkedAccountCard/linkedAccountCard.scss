@@ -141,6 +141,18 @@
     padding: var(--spacing-3xs) var(--spacing-xs);
   }
 
+  &[data-ready-for-refresh] {
+    --linked-account-card-action-border-color: color-mix(in srgb, var(--color-info-success) 25%, var(--color-base-0));
+
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+
+  &[data-ready-for-refresh]:hover,
+  .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple']:not([data-selected]) &[data-ready-for-refresh]:hover {
+    border-color: var(--linked-account-card-action-border-color);
+    box-shadow: inset 0 0 0 1px var(--linked-account-card-action-border-color);
+  }
+
   &[data-syncing] {
     position: relative;
     overflow: hidden;

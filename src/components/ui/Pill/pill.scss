@@ -32,4 +32,14 @@
       outline-offset: 1px;
     }
   }
+
+  &[data-status='success'] {
+    background-color: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+
+    &[data-focus-visible] {
+      outline: 1px solid var(--color-info-success-bg);
+      outline-offset: 1px;
+    }
+  }
 }

@@ -1,10 +1,17 @@
 import { useContext, useState } from 'react'
+import { RefreshCcw } from 'lucide-react'
 import { GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
-import { getBankAccountDisplayName, getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/features/bankAccounts/bankAccount'
+import {
+  getBankAccountDisplayName,
+  getBankAccountInstitution,
+  getBankAccountRefreshConnectionInfo,
+  isAllExternalAccountsUserCreatedCustom,
+} from '@utils/features/bankAccounts/bankAccount'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
+import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
 import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
@@ -68,8 +75,10 @@ export const LinkedAccountGridItem = ({
   const isFilterEnabled = useIsBankAccountFilterEnabled()
   const isFilterLocked = useIsBankAccountFilterLocked()
 
+  const now = usePeriodicNow()
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getConnectionRepairInfo(bankAccount)
+  const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount, now)
 
   let pillConfig
   if (accountNeedsUniquenessConfirmation(bankAccount)) {
@@ -109,6 +118,26 @@ export const LinkedAccountGridItem = ({
             }
             else {
               void repairConnection(repairInfo.source, repairInfo.connectionExternalId)
+            }
+          },
+        },
+      ],
+    }
+  }
+  else if (refreshInfo) {
+    pillConfig = {
+      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
+      status: 'success' as const,
+      icon: <RefreshCcw size={14} />,
+      config: [
+        {
+          name: t('linkedAccounts:LinkedAccountGridItem.action.refresh_connection', 'Refresh connection'),
+          action: () => {
+            if (refreshInfo.reconnectWithNewCredentials) {
+              void addConnection(refreshInfo.source)
+            }
+            else if (refreshInfo.connectionExternalId) {
+              void repairConnection(refreshInfo.source, refreshInfo.connectionExternalId)
             }
           },
         },
@@ -205,7 +234,14 @@ export const LinkedAccountGridItem = ({
               showLedgerBalance={showLedgerBalance}
               slots={{
                 Pill: pillConfig
-                  ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
+                  ? (
+                    <LinkedAccountPill
+                      label={pillConfig.text}
+                      items={pillConfig.config}
+                      status={pillConfig.status}
+                      icon={pillConfig.icon}
+                    />
+                  )
                   : null,
               }}
             />
