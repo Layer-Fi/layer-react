@@ -1,0 +1,28 @@
+.Layer__BankTransactionsRefreshAlert {
+  display: flex;
+  padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-md);
+  background: var(--color-info-success-bg);
+  color: var(--color-info-success-fg);
+}
+
+.Layer__BankTransactionsRefreshAlert__action {
+  display: flex;
+  justify-content: flex-start;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  white-space: normal;
+
+  .Layer__BankTransactionsRefreshAlert[data-view='mobile'] &.Layer__UI__Button {
+    inline-size: calc(100% + var(--spacing-md) + var(--spacing-xs));
+    max-inline-size: calc(100% + var(--spacing-md) + var(--spacing-xs));
+    padding-inline: var(--spacing-md) var(--spacing-xs);
+    margin-inline: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-xs));
+  }
+}
+
+.Layer__BankTransactionsRefreshAlert__content {
+  min-inline-size: 0;
+}
