@@ -71,14 +71,17 @@
   padding-block: var(--spacing-2xs);
 }
 
+.Layer__CounterpartyAskTask__RowSummaryAmount {
+  flex: 0 0 auto;
+  min-inline-size: 8ch;
+}
+
 .Layer__CounterpartyAskTask__RowSummaryDescription {
-  flex: 0 1 auto;
-  max-inline-size: 16ch;
+  flex: 0 1 9ch;
 }
 
 .Layer__CounterpartyAskTask__RowSummaryAnswer {
-  flex: 0 1 auto;
-  margin-inline-start: auto;
+  flex: 1 1 auto;
 }
 
 .Layer__CounterpartyAskTask__Footer {

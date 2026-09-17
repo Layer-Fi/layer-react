@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
+import { BankTransactionDirection, type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
 import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -63,7 +63,14 @@ export const CounterpartyAskTransactionRow = ({
         onPress={onOpen}
       >
         <HStack align='center' gap='xs' overflow='hidden' fluid>
-          <MoneySpan size='sm' weight='bold' amount={transaction.amount} />
+          <MoneySpan
+            className='Layer__CounterpartyAskTask__RowSummaryAmount'
+            size='sm'
+            weight='bold'
+            numeric='tabular-nums'
+            amount={transaction.amount}
+            displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
+          />
           <Span size='2xs' variant='subtle' noWrap>
             {formatDate(transaction.date, DateFormat.MonthDayShort)}
           </Span>
