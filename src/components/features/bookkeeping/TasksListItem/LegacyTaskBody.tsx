@@ -80,7 +80,6 @@ export const LegacyTaskBody = ({ task, onAnswered }: LegacyTaskBodyProps) => {
         if (task.userResponse && task.userResponse != userResponse) {
           return (
             <Button
-              variant='outlined'
               onPress={() => {
                 void handleUpdateTaskUploadDescription({
                   taskId: task.id,
@@ -154,7 +153,6 @@ export const LegacyTaskBody = ({ task, onAnswered }: LegacyTaskBodyProps) => {
                 || userResponse.length === 0
                 || userResponse === task.userResponse
               }
-              variant='outlined'
               onPress={() => {
                 void handleSubmitUserResponseForTask({ taskId: task.id, userResponse })
                   .then(() => {
