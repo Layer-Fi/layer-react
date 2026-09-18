@@ -136,6 +136,12 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/accounting-overview.mdx',
   },
   {
+    storyId: 'views-overview-accounting--account-reconnection-banner-with-default-reconnect',
+    out: 'pages/accounting-overview-refresh-required.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/accounting-overview.mdx',
+  },
+  {
     storyId: 'views-banktransactions-withlinkedaccounts--bookkeeping-disabled',
     out: 'pages/bank-transactions-with-linked-accounts.png',
     viewport: 'desktop',
