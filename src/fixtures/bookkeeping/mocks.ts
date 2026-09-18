@@ -5,6 +5,7 @@ import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/book
 import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
+import { range } from '@utils/shared/array/range'
 
 import { counterpartyAskCountFor, makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
@@ -109,27 +110,26 @@ const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingP
   return BookkeepingPeriodStatus.CLOSED_COMPLETE
 }
 
+const makeBookkeepingPeriod = (monthIndex: number, monthsAgo: number): BookkeepingPeriod => {
+  const { year, month } = fromMonthIndex(monthIndex)
+  const tasks = [
+    ...makePeriodTasks(monthIndex, openTaskCountFor(monthsAgo), month),
+    ...makeCounterpartyAskTasks(year, month),
+  ]
+
+  return {
+    id: periodIdFor(monthIndex),
+    month,
+    year,
+    status: periodStatusFor(monthsAgo, tasks.length),
+    tasks,
+  }
+}
+
 export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriod[] => {
   const now = new Date()
   const start = toMonthIndex(startYear, 1)
   const end = toMonthIndex(now.getFullYear(), now.getMonth() + 1)
 
-  const periods: BookkeepingPeriod[] = []
-
-  for (let cursor = start; cursor <= end; cursor++) {
-    const { year, month } = fromMonthIndex(cursor)
-    const monthsAgo = end - cursor
-    const legacyTasks = makePeriodTasks(cursor, openTaskCountFor(monthsAgo), month)
-    const counterpartyAsks = makeCounterpartyAskTasks(year, month)
-
-    periods.push({
-      id: periodIdFor(cursor),
-      month,
-      year,
-      status: periodStatusFor(monthsAgo, legacyTasks.length + counterpartyAsks.length),
-      tasks: [...legacyTasks, ...counterpartyAsks],
-    })
-  }
-
-  return periods
+  return range(start, end).map(monthIndex => makeBookkeepingPeriod(monthIndex, end - monthIndex))
 }
