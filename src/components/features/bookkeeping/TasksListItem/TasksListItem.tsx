@@ -71,7 +71,9 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const storedAnswerLabel = isCounterpartyAskTask(task)
     ? task.responseAccount?.name
-    ?? task.userResponse
+    ?? (task.userResponse
+      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.custom_response', 'Custom response')
+      : null)
     ?? (task.transactionResponses.some(({ responseAccount, userResponse }) => responseAccount || userResponse)
       ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually', 'Answered individually')
       : null)

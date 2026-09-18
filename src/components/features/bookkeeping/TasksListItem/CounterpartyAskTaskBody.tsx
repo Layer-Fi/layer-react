@@ -255,9 +255,11 @@ export const CounterpartyAskTaskBody = ({
     void submit(
       buildAllSameCounterpartyAskResponse(pickerAnswer, alwaysThis),
       pickerAnswer.kind === 'account' || hadAccountAnswer,
-      getCounterpartyAskAnswerLabel(pickerAnswer),
+      pickerAnswer.kind === 'account'
+        ? pickerAnswer.account.name
+        : t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.custom_response', 'Custom response'),
     )
-  }, [hadAccountAnswer, pickerAnswer, submit])
+  }, [hadAccountAnswer, pickerAnswer, submit, t])
 
   const goBack = useCallback(() => {
     setDirection('back')
