@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
@@ -34,6 +35,15 @@ import './counterpartyAskTaskBody.scss'
 const MIX_ANSWER_KEY = 'mix'
 
 type AskView = 'picker' | 'freeText' | 'itemised' | 'remember'
+type PaneDirection = 'forward' | 'back'
+
+const PANE_TRANSITION = { duration: 0.28, ease: [0.32, 0.72, 0, 1] as const }
+
+const paneVariants = {
+  enter: (direction: PaneDirection) => ({ x: direction === 'forward' ? '100%' : '-100%' }),
+  center: { x: 0 },
+  exit: (direction: PaneDirection) => ({ x: direction === 'forward' ? '-100%' : '100%' }),
+}
 
 export type CounterpartyAskBackAction = {
   isDisabled: boolean
@@ -54,6 +64,7 @@ export const CounterpartyAskTaskBody = ({
   onBackActionChange,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
+  const shouldReduceMotion = useReducedMotion()
   const { addToast, eventCallbacks } = useLayerContext()
   const { trigger: submitCounterpartyAskResponse, isMutating } = usePostCounterpartyAskResponse()
 
@@ -63,22 +74,27 @@ export const CounterpartyAskTaskBody = ({
   const [rowKeys, setRowKeys] = useState<Record<string, string>>({})
   const [rowTexts, setRowTexts] = useState<Record<string, string>>({})
   const [openRowId, setOpenRowId] = useState<string | null>(null)
-  const [direction, setDirection] = useState<'forward' | 'back'>('forward')
+  const [direction, setDirection] = useState<PaneDirection>('forward')
+  const [paneNode, setPaneNode] = useState<HTMLDivElement | null>(null)
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [submitted, setSubmitted] = useState<{ label: string | null } | null>(null)
 
-  const paneObserver = useRef<ResizeObserver | null>(null)
-
-  const measurePane = useCallback((pane: HTMLDivElement | null) => {
-    paneObserver.current?.disconnect()
-
-    if (!pane) return
-
-    const observer = new ResizeObserver(() => setPaneHeight(pane.offsetHeight))
-    observer.observe(pane)
-    paneObserver.current = observer
+  // An exiting pane detaches its ref after the next pane attached; ignore the null.
+  const measurePane = useCallback((node: HTMLDivElement | null) => {
+    if (node) setPaneNode(node)
   }, [])
+
+  useEffect(() => {
+    if (!paneNode) return
+
+    const observer = new ResizeObserver(() => setPaneHeight(paneNode.offsetHeight))
+    observer.observe(paneNode)
+
+    return () => observer.disconnect()
+  }, [paneNode])
+
+  const paneTransition = shouldReduceMotion ? { duration: 0 } : PANE_TRANSITION
 
   const goForward = useCallback((nextView: AskView) => {
     setDirection('forward')
@@ -495,18 +511,26 @@ export const CounterpartyAskTaskBody = ({
   }
 
   return (
-    <div
+    <motion.div
       className='Layer__CounterpartyAskTask'
-      style={paneHeight === null ? undefined : { blockSize: paneHeight }}
+      initial={false}
+      animate={paneHeight === null ? undefined : { height: paneHeight }}
+      transition={paneTransition}
     >
-      <div
-        key={view}
-        ref={measurePane}
-        className='Layer__CounterpartyAskTask__Pane'
-        data-direction={direction}
-      >
-        {renderPane()}
-      </div>
-    </div>
+      <AnimatePresence initial={false} mode='popLayout' custom={direction}>
+        <motion.div
+          key={view}
+          ref={measurePane}
+          custom={direction}
+          variants={paneVariants}
+          initial='enter'
+          animate='center'
+          exit='exit'
+          transition={paneTransition}
+        >
+          {renderPane()}
+        </motion.div>
+      </AnimatePresence>
+    </motion.div>
   )
 }

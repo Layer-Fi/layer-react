@@ -1,46 +1,6 @@
 .Layer__CounterpartyAskTask {
   position: relative;
   overflow: hidden;
-
-  transition: block-size 280ms cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-.Layer__CounterpartyAskTask__Pane {
-  animation: counterparty-ask-pane-forward 280ms cubic-bezier(0.32, 0.72, 0, 1);
-
-  &[data-direction='back'] {
-    animation-name: counterparty-ask-pane-back;
-  }
-}
-
-@keyframes counterparty-ask-pane-forward {
-  from {
-    transform: translateX(100%);
-  }
-
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes counterparty-ask-pane-back {
-  from {
-    transform: translateX(-100%);
-  }
-
-  to {
-    transform: translateX(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .Layer__CounterpartyAskTask {
-    transition: none;
-  }
-
-  .Layer__CounterpartyAskTask__Pane {
-    animation: none;
-  }
 }
 
 .Layer__CounterpartyAskTask__FreeText .Layer__UI__TextArea {
