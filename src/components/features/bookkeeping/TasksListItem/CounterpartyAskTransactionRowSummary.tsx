@@ -26,7 +26,7 @@ export const CounterpartyAskTransactionRowSummary = ({
         amount={transaction.amount}
         displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
       />
-      <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='sm' variant='subtle' noWrap>
+      <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='xs' variant='subtle' noWrap>
         {formatDate(transaction.date, DateFormat.MonthDayShort)}
       </Span>
       <Span
