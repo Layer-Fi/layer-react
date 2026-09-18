@@ -181,14 +181,14 @@ describe('CounterpartyAskTaskBody', () => {
     expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
   })
 
-  it('clears the selection on the way back so the same answer can be picked again', async () => {
+  it('keeps the selection on the way back and re-enters from it', async () => {
     const { user } = renderBody()
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
     await user.click(screen.getByRole('button', { name: 'Back' }))
 
     const meals = screen.getByRole('radio', { name: 'Business Meals' })
-    expect(meals).not.toBeChecked()
+    expect(meals).toBeChecked()
 
     await user.click(meals)
 

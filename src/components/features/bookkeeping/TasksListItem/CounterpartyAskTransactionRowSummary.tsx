@@ -26,12 +26,12 @@ export const CounterpartyAskTransactionRowSummary = ({
         amount={transaction.amount}
         displayPlusSign={transaction.direction === BankTransactionDirection.Credit}
       />
-      <Span size='2xs' variant='subtle' noWrap>
+      <Span size='sm' variant='subtle' noWrap>
         {formatDate(transaction.date, DateFormat.MonthDayShort)}
       </Span>
       <Span
         className='Layer__CounterpartyAskTask__RowSummaryDescription'
-        size='xs'
+        size='sm'
         variant='subtle'
         ellipsis
         noWrap
@@ -42,7 +42,7 @@ export const CounterpartyAskTransactionRowSummary = ({
         ? (
           <Span
             className='Layer__CounterpartyAskTask__RowSummaryAnswer'
-            size='xs'
+            size='sm'
             align='right'
             ellipsis
             noWrap

@@ -269,7 +269,6 @@ export const CounterpartyAskTaskBody = ({
       return
     }
 
-    setSelectedKey(null)
     setView('picker')
   }, [selectedKey, view])
 
