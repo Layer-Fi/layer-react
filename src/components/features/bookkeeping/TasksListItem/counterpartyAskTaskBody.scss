@@ -22,6 +22,10 @@
     border-block-start: none;
   }
 
+  &:hover:not(.Layer__CounterpartyAskTask__Row--open) {
+    background: var(--color-base-100);
+  }
+
   &.Layer__CounterpartyAskTask__Row--open {
     background: var(--bg-element-focus);
   }
@@ -29,6 +33,11 @@
 
 .Layer__CounterpartyAskTask__RowSummary {
   padding-block: var(--spacing-2xs);
+}
+
+// Outranks the text button's own hover rule; the row highlights instead.
+.Layer__CounterpartyAskTask__Rows .Layer__CounterpartyAskTask__Row .Layer__CounterpartyAskTask__RowSummary[data-variant='text'][data-hovered] {
+  text-decoration: none;
 }
 
 .Layer__CounterpartyAskTask__RowSummaryAmount {

@@ -66,6 +66,25 @@ const seedRowAnswers = ({ suggestions, transactionResponses }: CounterpartyAskTa
   return { rowKeys, rowTexts }
 }
 
+const seedSelectedKey = (task: CounterpartyAskTask) => {
+  if (task.responseAccount) {
+    const { accountIdentifier } = task.responseAccount
+    const index = task.suggestions.findIndex(suggestion =>
+      AccountIdentifierEquivalence(suggestion.accountIdentifier, accountIdentifier),
+    )
+
+    return index >= 0 ? toSuggestionAnswerKey(index) : null
+  }
+
+  if (task.userResponse) return OTHER_ANSWER_KEY
+
+  const hasRowAnswers = task.transactionResponses.some(
+    ({ responseAccount, userResponse }) => responseAccount || userResponse,
+  )
+
+  return hasRowAnswers ? MIX_ANSWER_KEY : null
+}
+
 export type CounterpartyAskBackAction = {
   isDisabled: boolean
   onBack: () => void
@@ -92,7 +111,7 @@ export const CounterpartyAskTaskBody = ({
   const { trigger: submitCounterpartyAskResponse, isMutating } = usePostCounterpartyAskResponse()
 
   const [view, setView] = useState<AskView>('picker')
-  const [selectedKey, setSelectedKey] = useState<string | null>(null)
+  const [selectedKey, setSelectedKey] = useState<string | null>(() => seedSelectedKey(task))
   const [freeText, setFreeText] = useState(() => task.userResponse ?? '')
   const [rowKeys, setRowKeys] = useState(() => seedRowAnswers(task).rowKeys)
   const [rowTexts, setRowTexts] = useState(() => seedRowAnswers(task).rowTexts)
@@ -183,7 +202,6 @@ export const CounterpartyAskTaskBody = ({
 
         onAnsweredLabelChange(answerLabel)
         setDirection('back')
-        setSelectedKey(null)
         setView('picker')
         onAnswered()
       }
@@ -426,17 +444,22 @@ export const CounterpartyAskTaskBody = ({
           onChange={onPick}
         >
           {suggestions.map((suggestion, index) => (
-            <Chip key={toSuggestionAnswerKey(index)} size='lg' value={toSuggestionAnswerKey(index)}>
+            <Chip
+              key={toSuggestionAnswerKey(index)}
+              size='lg'
+              value={toSuggestionAnswerKey(index)}
+              onReselect={() => onPick(toSuggestionAnswerKey(index))}
+            >
               {suggestion.name}
             </Chip>
           ))}
-          <Chip size='lg' value={OTHER_ANSWER_KEY}>
+          <Chip size='lg' value={OTHER_ANSWER_KEY} onReselect={() => onPick(OTHER_ANSWER_KEY)}>
             {t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.something_else', 'Something else')}
             <ChevronRight size={15} />
           </Chip>
           {totalTransactions > 1
             ? (
-              <Chip size='lg' value={MIX_ANSWER_KEY}>
+              <Chip size='lg' value={MIX_ANSWER_KEY} onReselect={() => onPick(MIX_ANSWER_KEY)}>
                 {t(
                   'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.multiple_different_things',
                   'Multiple different things',

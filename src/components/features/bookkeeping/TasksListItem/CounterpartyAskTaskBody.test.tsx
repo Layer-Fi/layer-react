@@ -299,10 +299,15 @@ describe('CounterpartyAskTaskBody', () => {
     expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   })
 
-  it('offers the picker again for an answer that can still be updated', () => {
-    renderBody(answeredWithAccount())
+  it('reopens with the previous answer selected and re-enters the flow from it', async () => {
+    const { user } = renderBody(answeredWithAccount())
 
-    expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Office Expenses' })).toBeChecked()
+
+    await user.click(screen.getByRole('radio', { name: 'Office Expenses' }))
+
+    expect(screen.getByText(/Should we assume your future Costco purchases are Office Expenses/))
+      .toBeInTheDocument()
   })
 
   it('submits a replacement answer from the picker', async () => {
