@@ -257,7 +257,7 @@ export const CounterpartyAskTaskBody = ({
       pickerAnswer.kind === 'account' || hadAccountAnswer,
       pickerAnswer.kind === 'account'
         ? pickerAnswer.account.name
-        : t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.custom_response', 'Custom response'),
+        : t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_in_own_words', 'Answered in your words'),
     )
   }, [hadAccountAnswer, pickerAnswer, submit, t])
 
