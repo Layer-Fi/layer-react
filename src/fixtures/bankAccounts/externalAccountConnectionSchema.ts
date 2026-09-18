@@ -29,4 +29,8 @@ export const externalAccountConnectionSchema = Schema.Struct({
     fc.boolean()),
   isSyncing: withArbitrary(fields.isSyncing, () => fc =>
     fc.boolean()),
+  lastSyncedAt: withArbitrary(fields.lastSyncedAt, () => fc =>
+    fc.constant(null)),
+  updateType: withArbitrary(fields.updateType, () => fc =>
+    fc.constant(null)),
 })
