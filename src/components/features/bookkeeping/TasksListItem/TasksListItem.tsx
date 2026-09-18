@@ -80,7 +80,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               ? (
                 <Button
                   className='Layer__tasks-list-item__head-info__back'
-                  variant='outlined'
+                  variant='text'
                   icon
                   isDisabled={backAction.isDisabled}
                   onPress={backAction.onBack}

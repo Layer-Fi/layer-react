@@ -41,7 +41,9 @@
           }
 
           .Layer__tasks-list-item__head-info__back {
-            --size: 1.25rem;
+            justify-content: center;
+            block-size: 1.25rem;
+            inline-size: 1.25rem;
           }
 
           &.Layer__tasks-list-item--completed {
