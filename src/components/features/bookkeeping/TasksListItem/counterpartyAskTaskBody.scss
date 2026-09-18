@@ -49,19 +49,3 @@
 
   border-block-start: 1px solid var(--border-color);
 }
-
-.Layer__CounterpartyAskTask__SummaryIcon {
-  box-sizing: border-box;
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  block-size: 1.875rem;
-  inline-size: 1.875rem;
-
-  border-radius: var(--border-radius-5xl);
-
-  background-color: var(--color-info-success-bg);
-
-  color: var(--color-info-success-fg);
-}

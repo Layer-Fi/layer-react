@@ -4,7 +4,6 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
@@ -23,10 +22,6 @@ import { TextArea } from '@ui/Input/TextArea'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
-import {
-  type CounterpartyAskAnsweredRow,
-  CounterpartyAskTaskSummary,
-} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskSummary'
 import {
   CounterpartyAskTransactionRow,
   OTHER_ANSWER_KEY,
@@ -48,6 +43,29 @@ const paneVariants = {
   exit: (direction: PaneDirection) => ({ x: direction === 'forward' ? '-100%' : '100%' }),
 }
 
+const seedRowAnswers = ({ suggestions, transactionResponses }: CounterpartyAskTask) => {
+  const rowKeys: Record<string, string> = {}
+  const rowTexts: Record<string, string> = {}
+
+  transactionResponses.forEach(({ transactionId, responseAccount, userResponse }) => {
+    if (responseAccount) {
+      const index = suggestions.findIndex(suggestion =>
+        AccountIdentifierEquivalence(suggestion.accountIdentifier, responseAccount.accountIdentifier),
+      )
+
+      if (index >= 0) rowKeys[transactionId] = toSuggestionAnswerKey(index)
+      return
+    }
+
+    if (userResponse) {
+      rowKeys[transactionId] = OTHER_ANSWER_KEY
+      rowTexts[transactionId] = userResponse
+    }
+  })
+
+  return { rowKeys, rowTexts }
+}
+
 export type CounterpartyAskBackAction = {
   isDisabled: boolean
   onBack: () => void
@@ -57,6 +75,7 @@ type CounterpartyAskTaskBodyProps = {
   task: UserVisibleTask & CounterpartyAskTask
   counterpartyName: string
   onAnsweredLabelChange: (label: string | null) => void
+  onAnswered: () => void
   onBackActionChange: (backAction: CounterpartyAskBackAction | null) => void
 }
 
@@ -64,6 +83,7 @@ export const CounterpartyAskTaskBody = ({
   task,
   counterpartyName,
   onAnsweredLabelChange,
+  onAnswered,
   onBackActionChange,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
@@ -73,15 +93,13 @@ export const CounterpartyAskTaskBody = ({
 
   const [view, setView] = useState<AskView>('picker')
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
-  const [freeText, setFreeText] = useState('')
-  const [rowKeys, setRowKeys] = useState<Record<string, string>>({})
-  const [rowTexts, setRowTexts] = useState<Record<string, string>>({})
+  const [freeText, setFreeText] = useState(() => task.userResponse ?? '')
+  const [rowKeys, setRowKeys] = useState(() => seedRowAnswers(task).rowKeys)
+  const [rowTexts, setRowTexts] = useState(() => seedRowAnswers(task).rowTexts)
   const [openRowId, setOpenRowId] = useState<string | null>(null)
   const [direction, setDirection] = useState<PaneDirection>('forward')
   const [paneNode, setPaneNode] = useState<HTMLDivElement | null>(null)
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
-  const [isEditing, setIsEditing] = useState(false)
-  const [submitted, setSubmitted] = useState<{ label: string | null, alwaysThis: boolean } | null>(null)
 
   // An exiting pane detaches its ref after the next pane attached; ignore the null.
   const measurePane = useCallback((node: HTMLDivElement | null) => {
@@ -106,7 +124,6 @@ export const CounterpartyAskTaskBody = ({
 
   const { suggestions, transactions } = task
   const totalTransactions = transactions.length
-  const isAnswered = task.status !== BusinessTaskStatus.Todo
 
   const resolveAnswer = useCallback(
     (answerKey: string | undefined, text: string): CounterpartyAskAnswerValue | null => {
@@ -165,8 +182,10 @@ export const CounterpartyAskTaskBody = ({
         }
 
         onAnsweredLabelChange(answerLabel)
-        setSubmitted({ label: answerLabel, alwaysThis: response.alwaysThis === true })
-        setIsEditing(false)
+        setDirection('back')
+        setSelectedKey(null)
+        setView('picker')
+        onAnswered()
       }
       catch {
         addToast({
@@ -178,7 +197,7 @@ export const CounterpartyAskTaskBody = ({
         })
       }
     },
-    [addToast, eventCallbacks, onAnsweredLabelChange, submitCounterpartyAskResponse, t, task.id],
+    [addToast, eventCallbacks, onAnswered, onAnsweredLabelChange, submitCounterpartyAskResponse, t, task.id],
   )
 
   const onPick = useCallback((key: string) => {
@@ -230,16 +249,11 @@ export const CounterpartyAskTaskBody = ({
       return
     }
 
-    if (view === 'picker') {
-      setIsEditing(false)
-      return
-    }
-
     setSelectedKey(null)
     setView('picker')
   }, [selectedKey, view])
 
-  const hasBackAction = isEditing || (!isAnswered && submitted === null && view !== 'picker')
+  const hasBackAction = view !== 'picker'
 
   useEffect(() => {
     onBackActionChange(hasBackAction ? { isDisabled: isMutating, onBack: goBack } : null)
@@ -247,112 +261,16 @@ export const CounterpartyAskTaskBody = ({
     return () => onBackActionChange(null)
   }, [goBack, hasBackAction, isMutating, onBackActionChange])
 
-  const startEditing = useCallback(() => {
-    const seededRowKeys: Record<string, string> = {}
-    const seededRowTexts: Record<string, string> = {}
-
-    task.transactionResponses.forEach(({ transactionId, responseAccount, userResponse }) => {
-      if (responseAccount) {
-        const index = suggestions.findIndex(suggestion =>
-          AccountIdentifierEquivalence(suggestion.accountIdentifier, responseAccount.accountIdentifier),
-        )
-
-        if (index >= 0) seededRowKeys[transactionId] = toSuggestionAnswerKey(index)
-        return
-      }
-
-      if (userResponse) {
-        seededRowKeys[transactionId] = OTHER_ANSWER_KEY
-        seededRowTexts[transactionId] = userResponse
-      }
-    })
-
-    setRowKeys(seededRowKeys)
-    setRowTexts(seededRowTexts)
-    setFreeText(task.userResponse ?? '')
-    setSelectedKey(null)
-    setDirection('forward')
-    setView('picker')
-    setSubmitted(null)
-    setIsEditing(true)
-  }, [suggestions, task.transactionResponses, task.userResponse])
-
-  const storedAnswer: CounterpartyAskAnswerValue | null = task.responseAccount
-    ? { kind: 'account', account: task.responseAccount }
-    : (task.userResponse ? { kind: 'text', text: task.userResponse } : null)
-
-  const storedRows: CounterpartyAskAnsweredRow[] = task.transactionResponses.flatMap(
-    ({ transactionId, responseAccount, userResponse }) => {
-      const label = responseAccount?.name ?? userResponse
-      const transaction = transactions.find(candidate => candidate.id === transactionId)
-
-      return label && transaction ? [{ transaction, label }] : []
-    },
-  )
-
-  if (submitted && !isEditing) {
-    const submittedRows: CounterpartyAskAnsweredRow[] = selectedKey === MIX_ANSWER_KEY
-      ? answeredRows.flatMap(({ transactionId, answer }) => {
-        const transaction = transactions.find(candidate => candidate.id === transactionId)
-
-        return transaction ? [{ transaction, label: getCounterpartyAskAnswerLabel(answer) }] : []
-      })
-      : []
-
+  if (task.resolvedByTaskId) {
     return (
-      <CounterpartyAskTaskSummary
-        title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        answer={submittedRows.length > 0
-          ? undefined
-          : submitted.label ?? getCounterpartyAskAnswerLabel(pickerAnswer ?? { kind: 'text', text: '' })}
-        rows={submittedRows}
-        note={submitted.alwaysThis
-          ? t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_always',
-            'We’ll use this every time from now on.',
-          )
-          : undefined}
-        onEdit={startEditing}
-      />
-    )
-  }
-
-  if (isAnswered && !isEditing && task.resolvedByTaskId) {
-    return (
-      <CounterpartyAskTaskSummary
-        title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere', 'Already answered')}
-        answer={task.responseAccount?.name}
-        detail={t(
-          'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere_detail',
-          'You answered this for every period, so we’ve applied it here too.',
-        )}
-      />
-    )
-  }
-
-  if (isAnswered && !isEditing && storedAnswer) {
-    return (
-      <CounterpartyAskTaskSummary
-        title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        answer={getCounterpartyAskAnswerLabel(storedAnswer)}
-        note={task.alwaysThis
-          ? t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_always',
-            'We’ll use this every time from now on.',
-          )
-          : undefined}
-        onEdit={startEditing}
-      />
-    )
-  }
-
-  if (isAnswered && !isEditing && storedRows.length > 0) {
-    return (
-      <CounterpartyAskTaskSummary
-        title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        rows={storedRows}
-        onEdit={startEditing}
-      />
+      <VStack pb='md' pi='md'>
+        <P size='sm' variant='subtle'>
+          {t(
+            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere_detail',
+            'You answered this for every period, so we’ve applied it here too.',
+          )}
+        </P>
+      </VStack>
     )
   }
 

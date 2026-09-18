@@ -69,6 +69,15 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const onAnswered = useCallback(() => setIsOpen(false), [])
 
+  const storedAnswerLabel = isCounterpartyAskTask(task)
+    ? task.responseAccount?.name
+    ?? task.userResponse
+    ?? (task.transactionResponses.some(({ responseAccount, userResponse }) => responseAccount || userResponse)
+      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually', 'Answered individually')
+      : null)
+    : null
+  const headerAnswerLabel = answeredLabel ?? storedAnswerLabel
+
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={taskItemClassName}>
@@ -96,8 +105,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 </div>
               )}
             <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
-            {answeredLabel
-              ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{answeredLabel}</Badge>
+            {headerAnswerLabel
+              ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{headerAnswerLabel}</Badge>
               : null}
           </div>
           <ChevronDownFill
@@ -115,6 +124,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 task={task}
                 counterpartyName={task.counterparty?.name ?? task.title}
                 onAnsweredLabelChange={setAnsweredLabel}
+                onAnswered={onAnswered}
                 onBackActionChange={setBackAction}
               />
             )

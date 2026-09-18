@@ -41,7 +41,12 @@ const multiTransactionTask = (): Partial<CounterpartyAskTask> => ({
   totalCount: 2,
 })
 
-const AskHost = ({ task }: { task: UserVisibleTask & CounterpartyAskTask }) => {
+type AskHostProps = {
+  task: UserVisibleTask & CounterpartyAskTask
+  onAnswered?: () => void
+}
+
+const AskHost = ({ task, onAnswered = () => {} }: AskHostProps) => {
   const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
 
   return (
@@ -57,6 +62,7 @@ const AskHost = ({ task }: { task: UserVisibleTask & CounterpartyAskTask }) => {
         task={task}
         counterpartyName='Costco'
         onAnsweredLabelChange={vi.fn()}
+        onAnswered={onAnswered}
         onBackActionChange={setBackAction}
       />
     </>
@@ -72,12 +78,12 @@ const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
   },
 })
 
-const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
+const renderBody = (overrides: Partial<CounterpartyAskTask> = {}, onAnswered?: () => void) => {
   const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
 
   return {
     user: userEvent.setup(),
-    ...render(<AskHost task={task} />, { wrapper: LayerTestProvider }),
+    ...render(<AskHost task={task} onAnswered={onAnswered} />, { wrapper: LayerTestProvider }),
   }
 }
 
@@ -283,35 +289,26 @@ describe('CounterpartyAskTaskBody', () => {
     expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeInTheDocument()
   })
 
-  it('renders an ask resolved by another period as already answered', () => {
-    renderBody({
-      status: BusinessTaskStatus.UserMarkedCompleted,
-      resolvedByTaskId: '00000000-0000-4000-8000-000000000999',
-    })
-
-    expect(screen.getByText('Already answered')).toBeInTheDocument()
-  })
-
-  it('offers a way to change an answer that can still be updated', () => {
-    renderBody(answeredWithAccount())
-
-    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
-  })
-
-  it('offers no change for an answer made through a sibling task', () => {
+  it('explains an ask resolved by another period instead of offering the picker', () => {
     renderBody({
       ...answeredWithAccount(),
       resolvedByTaskId: '00000000-0000-4000-8000-000000000902',
     })
 
-    expect(screen.queryByRole('button', { name: 'Change answer' })).not.toBeInTheDocument()
+    expect(screen.getByText(/You answered this for every period/)).toBeInTheDocument()
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
   })
 
-  it('reopens the picker and submits the replacement answer', async () => {
+  it('offers the picker again for an answer that can still be updated', () => {
+    renderBody(answeredWithAccount())
+
+    expect(screen.getByRole('radio', { name: 'Business Meals' })).toBeInTheDocument()
+  })
+
+  it('submits a replacement answer from the picker', async () => {
     const onRequest = spyOnAskResponse()
     const { user } = renderBody(answeredWithAccount())
 
-    await user.click(screen.getByRole('button', { name: 'Change answer' }))
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
     await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
 
@@ -322,15 +319,15 @@ describe('CounterpartyAskTaskBody', () => {
     })
   })
 
-  it('abandons an edit from the picker without submitting', async () => {
-    const onRequest = spyOnAskResponse()
-    const { user } = renderBody(answeredWithAccount())
+  it('seeds the free text from the previous typed answer', async () => {
+    const { user } = renderBody({
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      userResponse: 'Gas for the van',
+    })
 
-    await user.click(screen.getByRole('button', { name: 'Change answer' }))
-    await user.click(screen.getByRole('button', { name: 'Back' }))
+    await user.click(screen.getByRole('radio', { name: /Something else/ }))
 
-    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
-    expect(onRequest).not.toHaveBeenCalled()
+    expect(screen.getByRole('textbox')).toHaveValue('Gas for the van')
   })
 
   it('seeds the itemised sheet from the previous per-transaction answers', async () => {
@@ -350,7 +347,6 @@ describe('CounterpartyAskTaskBody', () => {
       ],
     })
 
-    await user.click(screen.getByRole('button', { name: 'Change answer' }))
     await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
 
     expect(screen.getByText('All 2 answered')).toBeInTheDocument()
@@ -387,20 +383,20 @@ describe('CounterpartyAskTaskBody', () => {
     await waitFor(() => expect(screen.queryByText('Saving...')).not.toBeInTheDocument())
   })
 
-  it('shows the saved answer instead of the picker while the task refetches', async () => {
-    const onRequest = spyOnAskResponse()
-    const { user } = renderBody()
+  it('collapses the card and returns to the picker once the answer saves', async () => {
+    spyOnAskResponse()
+    const onAnswered = vi.fn()
+    const { user } = renderBody({}, onAnswered)
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
     await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
 
-    await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(onAnswered).toHaveBeenCalledTimes(1))
 
+    expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
     await waitFor(() =>
-      expect(screen.queryByRole('radio', { name: /Something else/ })).not.toBeInTheDocument(),
+      expect(screen.queryByRole('radio', { name: 'Yes, automatically categorize them' })).not.toBeInTheDocument(),
     )
-    expect(screen.getByText('Business Meals')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Change answer' })).toBeInTheDocument()
   })
 
   it('keeps a row description visible alongside the category it was answered with', async () => {
