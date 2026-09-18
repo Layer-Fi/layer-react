@@ -5,7 +5,9 @@ import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/book
 import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
+import { range } from '@utils/shared/array/range'
 
+import { counterpartyAskCountFor, makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
@@ -99,7 +101,7 @@ const monthsBeforeCurrent = (year: number, month: number) => {
 /** Past months without open tasks have closed books, so they carry no uncategorized activity. */
 export const hasCompletedBooks = (year: number, month: number) => {
   const monthsAgo = monthsBeforeCurrent(year, month)
-  return monthsAgo > 0 && openTaskCountFor(monthsAgo) === 0
+  return monthsAgo > 0 && openTaskCountFor(monthsAgo) + counterpartyAskCountFor(year, month) === 0
 }
 
 const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingPeriodStatus => {
@@ -108,25 +110,26 @@ const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingP
   return BookkeepingPeriodStatus.CLOSED_COMPLETE
 }
 
+const makeBookkeepingPeriod = (monthIndex: number, monthsAgo: number): BookkeepingPeriod => {
+  const { year, month } = fromMonthIndex(monthIndex)
+  const tasks = [
+    ...makePeriodTasks(monthIndex, openTaskCountFor(monthsAgo), month),
+    ...makeCounterpartyAskTasks(year, month),
+  ]
+
+  return {
+    id: periodIdFor(monthIndex),
+    month,
+    year,
+    status: periodStatusFor(monthsAgo, tasks.length),
+    tasks,
+  }
+}
+
 export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriod[] => {
   const now = new Date()
   const start = toMonthIndex(startYear, 1)
   const end = toMonthIndex(now.getFullYear(), now.getMonth() + 1)
 
-  const periods: BookkeepingPeriod[] = []
-
-  for (let cursor = start; cursor <= end; cursor++) {
-    const { year, month } = fromMonthIndex(cursor)
-    const openTaskCount = openTaskCountFor(end - cursor)
-
-    periods.push({
-      id: periodIdFor(cursor),
-      month,
-      year,
-      status: periodStatusFor(end - cursor, openTaskCount),
-      tasks: makePeriodTasks(cursor, openTaskCount, month),
-    })
-  }
-
-  return periods
+  return range(start, end).map(monthIndex => makeBookkeepingPeriod(monthIndex, end - monthIndex))
 }

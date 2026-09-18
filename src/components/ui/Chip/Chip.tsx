@@ -45,7 +45,7 @@ export const ChipGroup = forwardRef(ChipGroupWithRef) as <T extends string>(
   props: ChipGroupProps<T> & { ref?: ForwardedRef<HTMLDivElement> },
 ) => React.ReactElement
 
-export type ChipSize = 'sm' | 'md'
+export type ChipSize = 'sm' | 'md' | 'lg'
 
 type ChipProps<T extends string> = Pick<ReactAriaRadioProps, 'children'> & {
   size?: ChipSize

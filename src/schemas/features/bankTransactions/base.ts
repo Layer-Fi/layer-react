@@ -63,7 +63,7 @@ export const BankTransactionCounterpartySchema = Schema.Struct({
   name: Schema.optional(Schema.NullOr(Schema.String)),
   website: Schema.optional(Schema.NullOr(Schema.String)),
   logo: Schema.optional(Schema.NullOr(Schema.String)),
-  mccs: Schema.Array(Schema.String),
+  mccs: Schema.optionalWith(Schema.Array(Schema.String), { default: () => [], nullable: true }),
 })
 
 export type BankTransactionCounterparty = typeof BankTransactionCounterpartySchema.Type

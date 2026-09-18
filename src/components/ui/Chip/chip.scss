@@ -25,6 +25,12 @@
   text-align: center;
   color: var(--text-color-primary);
 
+  &[data-size='lg'] {
+    gap: var(--spacing-3xs);
+    min-block-size: 2.25rem;
+    padding-inline: var(--spacing-sm);
+  }
+
   &[data-size='sm'] {
     min-block-size: 1.75rem;
     padding-inline: var(--spacing-2xs);

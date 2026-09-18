@@ -1,6 +1,11 @@
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
-import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import {
+  type BusinessTask,
+  isCounterpartyAskTask,
+  isLegacyBusinessTask,
+} from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
@@ -49,16 +54,17 @@ export const patchTaskInStore = (
   return patched
 }
 
-// Returns undefined for a non-legacy task so callers fall back rather than
-// reporting success for a patch that never applied.
-export const patchLegacyTaskInStore = (
+// Returns undefined for a task of another kind so callers fall back rather
+// than reporting success for a patch that never applied.
+const patchTaskOfKindInStore = <T extends BusinessTask>(
   taskId: string,
-  applyPatch: (task: LegacyBusinessTask) => LegacyBusinessTask,
-): LegacyBusinessTask | undefined => {
-  let patched: LegacyBusinessTask | undefined
+  isKind: (task: BusinessTask) => task is T,
+  applyPatch: (task: T) => T,
+): T | undefined => {
+  let patched: T | undefined
 
   patchTaskInStore(taskId, (task) => {
-    if (!isLegacyBusinessTask(task)) return task
+    if (!isKind(task)) return task
 
     patched = applyPatch(task)
     return patched
@@ -66,6 +72,16 @@ export const patchLegacyTaskInStore = (
 
   return patched
 }
+
+export const patchLegacyTaskInStore = (
+  taskId: string,
+  applyPatch: (task: LegacyBusinessTask) => LegacyBusinessTask,
+) => patchTaskOfKindInStore(taskId, isLegacyBusinessTask, applyPatch)
+
+export const patchCounterpartyAskTaskInStore = (
+  taskId: string,
+  applyPatch: (task: CounterpartyAskTask) => CounterpartyAskTask,
+) => patchTaskOfKindInStore(taskId, isCounterpartyAskTask, applyPatch)
 
 export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
   patchLegacyTaskInStore(taskId, task => ({
