@@ -45,8 +45,6 @@ export const usePostCounterpartyAskResponse = createMutationHook({
     const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
     const onBankTransactionChange = useBankTransactionTriggerSuccess()
 
-    // Re-answering without "always" archives the earlier rule, so rules can
-    // change on every path.
     return () => {
       void invalidateBookkeepingPeriods()
       onBankTransactionChange()
