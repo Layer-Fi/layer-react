@@ -2,10 +2,7 @@ import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/business
 
 import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
 
-export const makeFallbackCounterpartyAskTask = (
-  id: string,
-  overrides?: Partial<CounterpartyAskTask>,
-): CounterpartyAskTask =>
+export const makeFallbackCounterpartyAskTask = (id: string): CounterpartyAskTask =>
   makeCounterpartyAskTask({
     id,
     title: '',
@@ -16,5 +13,4 @@ export const makeFallbackCounterpartyAskTask = (
     transactionResponses: [],
     totalCount: 0,
     totalAmount: 0,
-    ...overrides,
   })

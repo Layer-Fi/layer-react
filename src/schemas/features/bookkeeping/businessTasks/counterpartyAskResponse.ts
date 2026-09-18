@@ -34,7 +34,7 @@ const CounterpartyAskTransactionAnswerSchema = Schema.extend(
   CounterpartyAskAnswerSchema,
 )
 
-export type CounterpartyAskTransactionAnswer = typeof CounterpartyAskTransactionAnswerSchema.Type
+export type CounterpartyAskTransactionAnswer = { transactionId: string } & CounterpartyAskAnswer
 
 const AllSameCounterpartyAskResponseSchema = Schema.extend(
   Schema.Struct({
@@ -58,8 +58,13 @@ export const CounterpartyAskResponseSchema = Schema.Union(
   ItemisedCounterpartyAskResponseSchema,
 )
 
+// Arms are listed flat (not via CounterpartyAskAnswer) so OneOf marks every
+// other arm's keys `?: never`; a union arm only contributes its common keys.
 export type CounterpartyAskResponse = OneOf<[
-  { alwaysThis: boolean } & CounterpartyAskAnswer,
-  typeof ItemisedCounterpartyAskResponseSchema.Type,
+  { alwaysThis: boolean } & typeof AccountAnswerSchema.Type,
+  { alwaysThis: boolean } & typeof FreeTextAnswerSchema.Type,
+  {
+    transactionResponses: readonly [CounterpartyAskTransactionAnswer, ...CounterpartyAskTransactionAnswer[]]
+  },
 ]>
 export type CounterpartyAskResponseEncoded = typeof CounterpartyAskResponseSchema.Encoded

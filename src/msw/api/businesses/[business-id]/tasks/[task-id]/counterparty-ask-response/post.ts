@@ -10,7 +10,10 @@ import {
   CounterpartyAskTaskSchema,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
-import { bookkeepingPeriodStore, patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
+import {
+  bookkeepingPeriodStore,
+  patchCounterpartyAskTaskInStore,
+} from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackCounterpartyAskTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackCounterpartyAskTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -68,24 +71,23 @@ const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
 
   if (!counterpartyId) return
 
-  bookkeepingPeriodStore.all().forEach((period) => {
-    period.tasks.forEach((task) => {
-      if (task.id === answeringTask.id) return
-      if (!isCounterpartyAskTask(task)) return
-      if (task.counterparty?.id !== counterpartyId) return
-      if (task.status !== BusinessTaskStatus.Todo) return
+  const openSiblingIds = bookkeepingPeriodStore.all()
+    .flatMap(period => period.tasks)
+    .filter(task =>
+      task.id !== answeringTask.id
+      && isCounterpartyAskTask(task)
+      && task.counterparty?.id === counterpartyId
+      && task.status === BusinessTaskStatus.Todo,
+    )
+    .map(task => task.id)
 
-      patchTaskInStore(task.id, existing => (
-        isCounterpartyAskTask(existing)
-          ? {
-            ...existing,
-            status: BusinessTaskStatus.UserMarkedCompleted,
-            resolvedByTaskId: answeringTask.id,
-            responseAccount: answeringTask.responseAccount,
-          }
-          : existing
-      ))
-    })
+  openSiblingIds.forEach((siblingId) => {
+    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
+      ...sibling,
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      resolvedByTaskId: answeringTask.id,
+      responseAccount: answeringTask.responseAccount,
+    }))
   })
 }
 
@@ -98,14 +100,7 @@ export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof to
     const response = decodeResponse(await readRequestJson(request))
     const taskId = String(params.taskId)
 
-    let answered: CounterpartyAskTask | undefined
-
-    patchTaskInStore(taskId, (task) => {
-      if (!isCounterpartyAskTask(task)) return task
-
-      answered = applyResponse(task, response)
-      return answered
-    })
+    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response))
 
     if (answered?.alwaysThis && answered.responseAccount) {
       resolveSiblingCounterpartyAsks(answered)

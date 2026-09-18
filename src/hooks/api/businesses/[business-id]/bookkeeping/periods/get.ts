@@ -56,9 +56,7 @@ const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
   request: getBookkeepingPeriods,
   schema: BookkeepingPeriodsResponseSchema,
-  // legacyTasksOnly: false removes the backend filter entirely ("include every
-  // fromLlmTransactionCategorizer type"), not "include counterparty asks" specifically.
-  // Today that set is exactly one type; a future agent-created task type lands here too.
+  // `false` lifts the backend filter on every agent-created task type, not just asks.
   keyDefaults: { legacyTasksOnly: false },
   select: ({ periods }) =>
     periods
