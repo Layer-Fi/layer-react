@@ -2,7 +2,12 @@ import { Landmark, Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
-import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
+import {
+  getBankAccountDisplayName,
+  getBankAccountInstitution,
+  isBankAccountReadyForRefresh,
+  isBankAccountSyncing,
+} from '@utils/features/bankAccounts/bankAccount'
 import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -39,6 +44,7 @@ export const LinkedAccountCard = ({
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const isSyncing = isBankAccountSyncing(bankAccount)
+  const isReadyForRefresh = isBankAccountReadyForRefresh(bankAccount)
   const displayName = getBankAccountDisplayName(bankAccount)
   const institution = getBankAccountInstitution(bankAccount)
   const institutionName = institution?.name
@@ -46,6 +52,7 @@ export const LinkedAccountCard = ({
 
   const dataProperties = toDataProperties({
     'as-widget': asWidget,
+    'ready-for-refresh': isReadyForRefresh,
     'syncing': isSyncing,
     'show-ledger-balance': showLedgerBalance,
   })

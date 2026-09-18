@@ -27,6 +27,7 @@ export interface LinkedAccountsProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  withProvider?: boolean
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   onPlaidConnectionSuccess?: () => Awaitable<void>
@@ -39,19 +40,28 @@ export const LinkedAccounts = ({
   plaidHostedLinkConfig,
   customerManagedPlaidConfig,
   onPlaidConnectionSuccess,
+  withProvider = true,
   ...props
 }: LinkedAccountsProps) => {
+  const linkedAccounts = (
+    <OpeningBalanceModalProvider>
+      <LinkedAccountsComponent {...props} />
+    </OpeningBalanceModalProvider>
+  )
+
   return (
     <AccountConfirmationStoreProvider>
-      <LinkedAccountsProvider
-        plaidHostedLinkConfig={plaidHostedLinkConfig}
-        customerManagedPlaidConfig={customerManagedPlaidConfig}
-        onPlaidConnectionSuccess={onPlaidConnectionSuccess}
-      >
-        <OpeningBalanceModalProvider>
-          <LinkedAccountsComponent {...props} />
-        </OpeningBalanceModalProvider>
-      </LinkedAccountsProvider>
+      {withProvider
+        ? (
+          <LinkedAccountsProvider
+            plaidHostedLinkConfig={plaidHostedLinkConfig}
+            customerManagedPlaidConfig={customerManagedPlaidConfig}
+            onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+          >
+            {linkedAccounts}
+          </LinkedAccountsProvider>
+        )
+        : linkedAccounts}
     </AccountConfirmationStoreProvider>
   )
 }

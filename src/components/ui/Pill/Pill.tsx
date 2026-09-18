@@ -6,7 +6,7 @@ import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './pill.scss'
 
-type PillStatus = 'error'
+type PillStatus = 'error' | 'success'
 
 type PillProps = Pick<
   ButtonProps,
