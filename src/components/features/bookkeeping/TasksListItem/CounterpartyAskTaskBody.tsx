@@ -23,7 +23,10 @@ import { TextArea } from '@ui/Input/TextArea'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
-import { CounterpartyAskTaskSummary } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskSummary'
+import {
+  type CounterpartyAskAnsweredRow,
+  CounterpartyAskTaskSummary,
+} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskSummary'
 import {
   CounterpartyAskTransactionRow,
   OTHER_ANSWER_KEY,
@@ -78,7 +81,7 @@ export const CounterpartyAskTaskBody = ({
   const [paneNode, setPaneNode] = useState<HTMLDivElement | null>(null)
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [submitted, setSubmitted] = useState<{ label: string | null } | null>(null)
+  const [submitted, setSubmitted] = useState<{ label: string | null, alwaysThis: boolean } | null>(null)
 
   // An exiting pane detaches its ref after the next pane attached; ignore the null.
   const measurePane = useCallback((node: HTMLDivElement | null) => {
@@ -162,7 +165,7 @@ export const CounterpartyAskTaskBody = ({
         }
 
         onAnsweredLabelChange(answerLabel)
-        setSubmitted({ label: answerLabel })
+        setSubmitted({ label: answerLabel, alwaysThis: response.alwaysThis === true })
         setIsEditing(false)
       }
       catch {
@@ -278,15 +281,37 @@ export const CounterpartyAskTaskBody = ({
     ? { kind: 'account', account: task.responseAccount }
     : (task.userResponse ? { kind: 'text', text: task.userResponse } : null)
 
-  const answeredTransactions = task.transactionResponses.filter(
-    response => Boolean(response.userResponse) || Boolean(response.responseAccount),
+  const storedRows: CounterpartyAskAnsweredRow[] = task.transactionResponses.flatMap(
+    ({ transactionId, responseAccount, userResponse }) => {
+      const label = responseAccount?.name ?? userResponse
+      const transaction = transactions.find(candidate => candidate.id === transactionId)
+
+      return label && transaction ? [{ transaction, label }] : []
+    },
   )
 
   if (submitted && !isEditing) {
+    const submittedRows: CounterpartyAskAnsweredRow[] = selectedKey === MIX_ANSWER_KEY
+      ? answeredRows.flatMap(({ transactionId, answer }) => {
+        const transaction = transactions.find(candidate => candidate.id === transactionId)
+
+        return transaction ? [{ transaction, label: getCounterpartyAskAnswerLabel(answer) }] : []
+      })
+      : []
+
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        detail={submitted.label ?? getCounterpartyAskAnswerLabel(pickerAnswer ?? { kind: 'text', text: '' })}
+        answer={submittedRows.length > 0
+          ? undefined
+          : submitted.label ?? getCounterpartyAskAnswerLabel(pickerAnswer ?? { kind: 'text', text: '' })}
+        rows={submittedRows}
+        note={submitted.alwaysThis
+          ? t(
+            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_always',
+            'We’ll use this every time from now on.',
+          )
+          : undefined}
         onEdit={startEditing}
       />
     )
@@ -296,6 +321,7 @@ export const CounterpartyAskTaskBody = ({
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere', 'Already answered')}
+        answer={task.responseAccount?.name}
         detail={t(
           'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_elsewhere_detail',
           'You answered this for every period, so we’ve applied it here too.',
@@ -308,7 +334,7 @@ export const CounterpartyAskTaskBody = ({
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        detail={getCounterpartyAskAnswerLabel(storedAnswer)}
+        answer={getCounterpartyAskAnswerLabel(storedAnswer)}
         note={task.alwaysThis
           ? t(
             'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_always',
@@ -320,15 +346,11 @@ export const CounterpartyAskTaskBody = ({
     )
   }
 
-  if (isAnswered && !isEditing && answeredTransactions.length > 0) {
+  if (isAnswered && !isEditing && storedRows.length > 0) {
     return (
       <CounterpartyAskTaskSummary
         title={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered', 'Answered')}
-        detail={t(
-          'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_itemised',
-          'You answered {{answered}} of {{total}} individually.',
-          { answered: answeredTransactions.length, total: totalTransactions },
-        )}
+        rows={storedRows}
         onEdit={startEditing}
       />
     )

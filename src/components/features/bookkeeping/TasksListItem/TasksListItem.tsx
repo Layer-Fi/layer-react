@@ -8,6 +8,7 @@ import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/b
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 import {
@@ -94,8 +95,10 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                   {getIconForTask(task)}
                 </div>
               )}
-            <P variant='inherit'>{task.title}</P>
-            {answeredLabel ? <P size='sm' variant='subtle'>{answeredLabel}</P> : null}
+            <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
+            {answeredLabel
+              ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{answeredLabel}</Badge>
+              : null}
           </div>
           <ChevronDownFill
             size={16}

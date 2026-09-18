@@ -48,10 +48,14 @@
 
           &.Layer__tasks-list-item--completed {
             color: var(--color-base-500);
-            text-decoration: line-through;
+
+            .Layer__tasks-list-item__head-info__title {
+              text-decoration: line-through;
+            }
 
             .Layer__tasks-list-item__head-info__status {
-              color: var(--color-info-success);
+              background: var(--color-info-success-bg);
+              color: var(--color-info-success-fg);
             }
           }
 
