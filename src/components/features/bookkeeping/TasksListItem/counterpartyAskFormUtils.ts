@@ -1,9 +1,12 @@
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
+import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import {
   type CounterpartyAskAccount,
   type CounterpartyAskTask,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import {
+  buildAllSameCounterpartyAskResponse,
+  buildItemisedCounterpartyAskResponse,
   collapseUniformCounterpartyAskAnswers,
   type CounterpartyAskAnswerValue,
   type CounterpartyAskTransactionAnswerEntry,
@@ -13,6 +16,9 @@ export const OTHER_ANSWER_KEY = 'other'
 export const MIX_ANSWER_KEY = 'mix'
 
 export const toSuggestionAnswerKey = (index: number) => `suggestion-${index}`
+
+export const toSuggestionOptions = (suggestions: readonly CounterpartyAskAccount[]) =>
+  suggestions.map((suggestion, index) => ({ value: toSuggestionAnswerKey(index), label: suggestion.name }))
 
 export type GoingForwardChoice = 'always' | 'ask'
 
@@ -64,25 +70,24 @@ const toAnswerKey = (
 }
 
 export const getCounterpartyAskFormDefaultValues = (task: CounterpartyAskTask): CounterpartyAskFormValues => {
-  const rows = task.transactions.map(({ id }) => {
-    const response = task.transactionResponses.find(({ transactionId }) => transactionId === id)
-
-    return {
-      transactionId: id,
-      answerKey: toAnswerKey(task.suggestions, response?.responseAccount, response?.userResponse),
-      text: response?.userResponse ?? '',
-    }
-  })
-
-  const hasRowAnswers = rows.some(({ answerKey }) => answerKey !== null)
-  const hasWholeAnswer = Boolean(task.responseAccount) || Boolean(task.userResponse)
+  const stored = getStoredCounterpartyAskAnswerSummary(task)
+  const hasWholeAnswer = stored !== null && stored.kind !== 'itemised'
 
   return {
-    answerKey: toAnswerKey(task.suggestions, task.responseAccount, task.userResponse)
-      ?? (hasRowAnswers ? MIX_ANSWER_KEY : null),
+    answerKey: stored?.kind === 'itemised'
+      ? MIX_ANSWER_KEY
+      : toAnswerKey(task.suggestions, task.responseAccount, task.userResponse),
     freeText: task.userResponse ?? '',
     goingForward: hasWholeAnswer ? (task.alwaysThis ? 'always' : 'ask') : null,
-    rows,
+    rows: task.transactions.map(({ id }) => {
+      const response = task.transactionResponses.find(({ transactionId }) => transactionId === id)
+
+      return {
+        transactionId: id,
+        answerKey: toAnswerKey(task.suggestions, response?.responseAccount, response?.userResponse),
+        text: response?.userResponse ?? '',
+      }
+    }),
   }
 }
 
@@ -125,4 +130,41 @@ export const getWholeAnswer = (
   return answered.length === rows.length
     ? collapseUniformCounterpartyAskAnswers(answered.map(({ answer }) => answer))
     : null
+}
+
+export type CounterpartyAskSubmission = {
+  response: CounterpartyAskResponse
+  answer: CounterpartyAskAnswerSummary
+  /** Whether the host should hear `onTransactionCategorized`; an earlier account answer counts. */
+  wasCategorized: boolean
+}
+
+export const buildCounterpartyAskSubmission = (
+  task: CounterpartyAskTask,
+  values: CounterpartyAskFormValues,
+): CounterpartyAskSubmission | null => {
+  const { suggestions } = task
+  const hadAccountAnswer = Boolean(task.responseAccount)
+    || task.transactionResponses.some(({ responseAccount }) => Boolean(responseAccount))
+
+  if (values.answerKey === MIX_ANSWER_KEY && values.goingForward === null) {
+    const rows = getAnsweredRows(suggestions, values.rows)
+    const response = buildItemisedCounterpartyAskResponse(rows)
+
+    return response && {
+      response,
+      answer: { kind: 'itemised' },
+      wasCategorized: hadAccountAnswer || rows.every(({ answer }) => answer.kind === 'account'),
+    }
+  }
+
+  const wholeAnswer = getWholeAnswer(suggestions, values)
+
+  if (!wholeAnswer) return null
+
+  return {
+    response: buildAllSameCounterpartyAskResponse(wholeAnswer, values.goingForward === 'always'),
+    answer: wholeAnswer.kind === 'account' ? { kind: 'account', name: wholeAnswer.account.name } : { kind: 'text' },
+    wasCategorized: hadAccountAnswer || wholeAnswer.kind === 'account',
+  }
 }

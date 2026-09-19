@@ -28,36 +28,28 @@ export const useLegacyTaskForm = ({ task, onAnswered }: UseLegacyTaskFormProps) 
   const { trigger: updateUploadDescription } = usePostTaskUploadDescription()
 
   const isUpload = task.userResponseType === TaskUserResponseType.UploadDocument
+  // Editing the description of uploads already sent keeps the card open.
+  const isDescriptionUpdate = isUpload && task.status !== BusinessTaskStatus.Todo
 
   const form = useAppForm<LegacyTaskFormValues>({
     defaultValues: { userResponse: task.userResponse ?? '' },
-    onSubmit: async ({ value }) => {
-      if (!isUpload) {
-        const saved = await postUserResponse({ taskId: task.id, userResponse: value.userResponse })
+    onSubmit: async ({ value: { userResponse } }) => {
+      const save = () => {
+        if (!isUpload) return postUserResponse({ taskId: task.id, userResponse })
+        if (isDescriptionUpdate) return updateUploadDescription({ taskId: task.id, description: userResponse })
+        if (!selectedFiles) return undefined
 
-        if (saved === undefined) return
-
-        form.reset(value)
-        onAnswered()
-        return
+        return uploadDocuments({ taskId: task.id, files: selectedFiles, description: userResponse })
       }
 
-      if (task.status === BusinessTaskStatus.Todo) {
-        if (!selectedFiles) return
+      if (await save() === undefined) return
 
-        const saved = await uploadDocuments({ taskId: task.id, files: selectedFiles, description: value.userResponse })
+      form.reset({ userResponse })
 
-        if (saved === undefined) return
+      if (isDescriptionUpdate) return
 
-        form.reset(value)
-        setSelectedFiles(undefined)
-        onAnswered()
-        return
-      }
-
-      const saved = await updateUploadDescription({ taskId: task.id, description: value.userResponse })
-
-      if (saved !== undefined) form.reset(value)
+      setSelectedFiles(undefined)
+      onAnswered()
     },
   })
 

@@ -1,8 +1,3 @@
-.Layer__CounterpartyAskTask {
-  position: relative;
-  overflow: hidden;
-}
-
 .Layer__CounterpartyAskTask__FreeText .Layer__UI__TextArea {
   min-block-size: 5lh;
 }
@@ -33,11 +28,6 @@
 
 .Layer__CounterpartyAskTask__RowSummary {
   padding-block: var(--spacing-2xs);
-}
-
-// Outranks the text button's own hover rule; the row highlights instead.
-.Layer__CounterpartyAskTask__Rows .Layer__CounterpartyAskTask__Row .Layer__CounterpartyAskTask__RowSummary[data-variant='text'][data-hovered] {
-  text-decoration: none;
 }
 
 .Layer__CounterpartyAskTask__RowSummaryAmount {

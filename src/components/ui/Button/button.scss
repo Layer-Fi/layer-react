@@ -143,6 +143,10 @@
       text-decoration: underline;
     }
 
+    &[data-no-underline][data-hovered] {
+      text-decoration: none;
+    }
+
     &[data-pressed]:not([data-focus-visible]) {
       text-decoration: none;
     }

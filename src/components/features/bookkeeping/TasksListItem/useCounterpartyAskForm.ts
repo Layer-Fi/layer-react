@@ -2,27 +2,19 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
-import {
-  buildAllSameCounterpartyAskResponse,
-  buildItemisedCounterpartyAskResponse,
-} from '@utils/features/bookkeeping/counterpartyAskAnswers'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
-import { useAppForm } from '@blocks/Form/useForm'
+import { type AppForm, useAppForm } from '@blocks/Form/useForm'
 import {
-  type CounterpartyAskAnswerSummary,
+  buildCounterpartyAskSubmission,
   type CounterpartyAskFormValues,
-  getAnsweredRows,
+  type CounterpartyAskSubmission,
   getCounterpartyAskFormDefaultValues,
-  getWholeAnswer,
-  MIX_ANSWER_KEY,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 
-export type CounterpartyAskSaved = {
-  task: CounterpartyAskTask
-  answer: CounterpartyAskAnswerSummary
-  wasCategorized: boolean
-}
+export type CounterpartyAskForm = AppForm<CounterpartyAskFormValues>
+
+export type CounterpartyAskSaved = Pick<CounterpartyAskSubmission, 'answer' | 'wasCategorized'>
 
 type UseCounterpartyAskFormProps = {
   task: CounterpartyAskTask
@@ -34,42 +26,18 @@ export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskForm
   const { addToast } = useLayerContext()
   const { trigger: submitCounterpartyAskResponse } = usePostCounterpartyAskResponse()
 
-  const { suggestions } = task
-  const hadAccountAnswer = Boolean(task.responseAccount)
-    || task.transactionResponses.some(({ responseAccount }) => Boolean(responseAccount))
-
   const form = useAppForm<CounterpartyAskFormValues>({
     defaultValues: getCounterpartyAskFormDefaultValues(task),
     onSubmit: async ({ value }) => {
-      const answeredRows = getAnsweredRows(suggestions, value.rows)
-      const wholeAnswer = getWholeAnswer(suggestions, value)
-      const isItemised = value.answerKey === MIX_ANSWER_KEY && value.goingForward === null
+      const submission = buildCounterpartyAskSubmission(task, value)
 
-      const submission = isItemised
-        ? {
-          response: buildItemisedCounterpartyAskResponse(answeredRows),
-          wasCategorized: answeredRows.every(({ answer }) => answer.kind === 'account'),
-          answer: { kind: 'itemised' } as const,
-        }
-        : wholeAnswer && {
-          response: buildAllSameCounterpartyAskResponse(wholeAnswer, value.goingForward === 'always'),
-          wasCategorized: wholeAnswer.kind === 'account',
-          answer: wholeAnswer.kind === 'account'
-            ? { kind: 'account', name: wholeAnswer.account.name } as const
-            : { kind: 'text' } as const,
-        }
-
-      if (!submission?.response) return
+      if (!submission) return
 
       try {
         const saved = await submitCounterpartyAskResponse({ taskId: task.id, response: submission.response })
 
         form.reset(getCounterpartyAskFormDefaultValues(saved))
-        onSaved({
-          task: saved,
-          answer: submission.answer,
-          wasCategorized: submission.wasCategorized || hadAccountAnswer,
-        })
+        onSaved(submission)
       }
       catch {
         addToast({

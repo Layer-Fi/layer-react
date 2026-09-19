@@ -30,19 +30,19 @@ export function FormChipGroupField<T extends string>({
   const { value } = state
 
   const { labelId, shellProps } = useFormField(props)
-  const { className, inline, align, showLabel } = props
+  const { label, isDisabled, className, inline, align, showLabel } = props
 
   return (
     <div {...formFieldLayoutProps({ className, inline, align, showLabel })}>
       <FormFieldShell {...shellProps} labelId={labelId}>
         <ChipGroup<T>
-          ariaLabel={props.label}
+          ariaLabel={label}
           value={value}
           onChange={(next) => {
             handleChange(next)
             onSelect?.(next)
           }}
-          isDisabled={props.isDisabled}
+          isDisabled={isDisabled}
         >
           {options.map(option => (
             <Chip<T>
