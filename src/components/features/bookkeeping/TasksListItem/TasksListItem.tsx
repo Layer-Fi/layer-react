@@ -8,9 +8,9 @@ import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/b
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
-import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
+import { CounterpartyAskAnswerBadge } from '@features/bookkeeping/TasksListItem/CounterpartyAskAnswerBadge'
 import {
   type CounterpartyAskAnswerSummary,
   getStoredCounterpartyAskAnswerSummary,
@@ -75,21 +75,6 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const headerAnswer = answer ?? (isCounterpartyAskTask(task) ? getStoredCounterpartyAskAnswerSummary(task) : null)
 
-  const getHeaderAnswerLabel = () => {
-    switch (headerAnswer?.kind) {
-      case 'account':
-        return headerAnswer.name
-      case 'text':
-        return t('bookkeeping:TasksListItem.label.answered_in_own_words', 'Answered in your words')
-      case 'itemised':
-        return t('bookkeeping:TasksListItem.label.several_categories', 'Several categories')
-      default:
-        return null
-    }
-  }
-
-  const headerAnswerLabel = getHeaderAnswerLabel()
-
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={taskItemClassName}>
@@ -117,9 +102,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 </div>
               )}
             <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
-            {headerAnswerLabel && !isOpen
-              ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{headerAnswerLabel}</Badge>
-              : null}
+            {headerAnswer && !isOpen ? <CounterpartyAskAnswerBadge answer={headerAnswer} /> : null}
           </div>
           <ChevronDownFill
             size={16}
