@@ -6,7 +6,7 @@ import './slidingPanes.scss'
 
 export type SlidingPanesDirection = 'forward' | 'back'
 
-const PANE_TRANSITION = { duration: 0.28, ease: [0.32, 0.72, 0, 1] as const }
+const PANE_TRANSITION = { duration: 0.4, ease: [0.32, 0.72, 0, 1] as const }
 
 const paneVariants = {
   enter: (direction: SlidingPanesDirection) => ({ x: direction === 'forward' ? '100%' : '-100%' }),
