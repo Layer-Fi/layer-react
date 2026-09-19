@@ -75,7 +75,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
       ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_in_own_words', 'Answered in your words')
       : null)
     ?? (task.transactionResponses.some(({ responseAccount, userResponse }) => responseAccount || userResponse)
-      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually', 'Answered individually')
+      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually', 'Several categories')
       : null)
     : null
   const headerAnswerLabel = answeredLabel ?? storedAnswerLabel
@@ -107,7 +107,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 </div>
               )}
             <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
-            {headerAnswerLabel
+            {headerAnswerLabel && !isOpen
               ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{headerAnswerLabel}</Badge>
               : null}
           </div>
@@ -125,6 +125,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               <CounterpartyAskTaskBody
                 task={task}
                 counterpartyName={task.counterparty?.name ?? task.title}
+                isExpanded={isOpen}
                 onAnsweredLabelChange={setAnsweredLabel}
                 onAnswered={onAnswered}
                 onBackActionChange={setBackAction}

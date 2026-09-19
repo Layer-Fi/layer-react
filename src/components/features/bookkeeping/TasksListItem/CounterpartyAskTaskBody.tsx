@@ -1,36 +1,32 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useStore } from '@tanstack/react-form'
 import { ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
 
-import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import {
-  buildAllSameCounterpartyAskResponse,
-  buildItemisedCounterpartyAskResponse,
-  collapseUniformCounterpartyAskAnswers,
-  type CounterpartyAskAnswerValue,
-  getCounterpartyAskAnswerLabel,
-} from '@utils/features/bookkeeping/counterpartyAskAnswers'
+import { getCounterpartyAskAnswerLabel } from '@utils/features/bookkeeping/counterpartyAskAnswers'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { Button } from '@ui/Button/Button'
-import { Chip, ChipGroup } from '@ui/Chip/Chip'
-import { TextArea } from '@ui/Input/TextArea'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import {
-  CounterpartyAskTransactionRow,
+  getAnsweredRows,
+  getWholeAnswer,
+  MIX_ANSWER_KEY,
   OTHER_ANSWER_KEY,
+  resolveCounterpartyAskAnswer,
   toSuggestionAnswerKey,
-} from '@features/bookkeeping/TasksListItem/CounterpartyAskTransactionRow'
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+import { CounterpartyAskTransactionRow } from '@features/bookkeeping/TasksListItem/CounterpartyAskTransactionRow'
+import {
+  type CounterpartyAskSaved,
+  useCounterpartyAskForm,
+} from '@features/bookkeeping/TasksListItem/useCounterpartyAskForm'
 
 import './counterpartyAskTaskBody.scss'
-
-const MIX_ANSWER_KEY = 'mix'
 
 type AskView = 'picker' | 'freeText' | 'itemised' | 'remember'
 type PaneDirection = 'forward' | 'back'
@@ -43,48 +39,6 @@ const paneVariants = {
   exit: (direction: PaneDirection) => ({ x: direction === 'forward' ? '-100%' : '100%' }),
 }
 
-const seedRowAnswers = ({ suggestions, transactionResponses }: CounterpartyAskTask) => {
-  const rowKeys: Record<string, string> = {}
-  const rowTexts: Record<string, string> = {}
-
-  transactionResponses.forEach(({ transactionId, responseAccount, userResponse }) => {
-    if (responseAccount) {
-      const index = suggestions.findIndex(suggestion =>
-        AccountIdentifierEquivalence(suggestion.accountIdentifier, responseAccount.accountIdentifier),
-      )
-
-      if (index >= 0) rowKeys[transactionId] = toSuggestionAnswerKey(index)
-      return
-    }
-
-    if (userResponse) {
-      rowKeys[transactionId] = OTHER_ANSWER_KEY
-      rowTexts[transactionId] = userResponse
-    }
-  })
-
-  return { rowKeys, rowTexts }
-}
-
-const seedSelectedKey = (task: CounterpartyAskTask) => {
-  if (task.responseAccount) {
-    const { accountIdentifier } = task.responseAccount
-    const index = task.suggestions.findIndex(suggestion =>
-      AccountIdentifierEquivalence(suggestion.accountIdentifier, accountIdentifier),
-    )
-
-    return index >= 0 ? toSuggestionAnswerKey(index) : null
-  }
-
-  if (task.userResponse) return OTHER_ANSWER_KEY
-
-  const hasRowAnswers = task.transactionResponses.some(
-    ({ responseAccount, userResponse }) => responseAccount || userResponse,
-  )
-
-  return hasRowAnswers ? MIX_ANSWER_KEY : null
-}
-
 export type CounterpartyAskBackAction = {
   isDisabled: boolean
   onBack: () => void
@@ -93,6 +47,7 @@ export type CounterpartyAskBackAction = {
 type CounterpartyAskTaskBodyProps = {
   task: UserVisibleTask & CounterpartyAskTask
   counterpartyName: string
+  isExpanded: boolean
   onAnsweredLabelChange: (label: string | null) => void
   onAnswered: () => void
   onBackActionChange: (backAction: CounterpartyAskBackAction | null) => void
@@ -101,24 +56,36 @@ type CounterpartyAskTaskBodyProps = {
 export const CounterpartyAskTaskBody = ({
   task,
   counterpartyName,
+  isExpanded,
   onAnsweredLabelChange,
   onAnswered,
   onBackActionChange,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
   const shouldReduceMotion = useReducedMotion()
-  const { addToast, eventCallbacks } = useLayerContext()
-  const { trigger: submitCounterpartyAskResponse, isMutating } = usePostCounterpartyAskResponse()
+  const { eventCallbacks } = useLayerContext()
 
   const [view, setView] = useState<AskView>('picker')
-  const [selectedKey, setSelectedKey] = useState<string | null>(() => seedSelectedKey(task))
-  const [freeText, setFreeText] = useState(() => task.userResponse ?? '')
-  const [rowKeys, setRowKeys] = useState(() => seedRowAnswers(task).rowKeys)
-  const [rowTexts, setRowTexts] = useState(() => seedRowAnswers(task).rowTexts)
   const [openRowId, setOpenRowId] = useState<string | null>(null)
   const [direction, setDirection] = useState<PaneDirection>('forward')
   const [paneNode, setPaneNode] = useState<HTMLDivElement | null>(null)
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const onSaved = useCallback(({ answerLabel, wasCategorized }: CounterpartyAskSaved) => {
+    if (wasCategorized) {
+      eventCallbacks?.onTransactionCategorized?.()
+    }
+
+    onAnsweredLabelChange(answerLabel)
+    setDirection('back')
+    setView('picker')
+    onAnswered()
+  }, [eventCallbacks, onAnswered, onAnsweredLabelChange])
+
+  const { form } = useCounterpartyAskForm({ task, onSaved })
+  const values = useStore(form.store, state => state.values)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
   // An exiting pane detaches its ref after the next pane attached; ignore the null.
   const measurePane = useCallback((node: HTMLDivElement | null) => {
@@ -136,6 +103,15 @@ export const CounterpartyAskTaskBody = ({
 
   const paneTransition = shouldReduceMotion ? { duration: 0 } : PANE_TRANSITION
 
+  const keepInView = useCallback(() => {
+    if (!isExpanded) return
+
+    containerRef.current?.scrollIntoView({
+      block: 'nearest',
+      behavior: shouldReduceMotion ? 'auto' : 'smooth',
+    })
+  }, [isExpanded, shouldReduceMotion])
+
   const goForward = useCallback((nextView: AskView) => {
     setDirection('forward')
     setView(nextView)
@@ -144,141 +120,56 @@ export const CounterpartyAskTaskBody = ({
   const { suggestions, transactions } = task
   const totalTransactions = transactions.length
 
-  const resolveAnswer = useCallback(
-    (answerKey: string | undefined, text: string): CounterpartyAskAnswerValue | null => {
-      if (!answerKey) return null
-
-      if (answerKey === OTHER_ANSWER_KEY) {
-        const trimmed = text.trim()
-        return trimmed ? { kind: 'text', text: trimmed } : null
-      }
-
-      const suggestion = suggestions.find((_, index) => toSuggestionAnswerKey(index) === answerKey)
-
-      return suggestion ? { kind: 'account', account: suggestion } : null
-    },
-    [suggestions],
-  )
-
-  const answeredRows = useMemo(
-    () =>
-      transactions.flatMap((transaction) => {
-        const answer = resolveAnswer(rowKeys[transaction.id], rowTexts[transaction.id] ?? '')
-
-        return answer ? [{ transactionId: transaction.id, answer }] : []
-      }),
-    [transactions, rowKeys, rowTexts, resolveAnswer],
-  )
-
+  const answeredRows = useMemo(() => getAnsweredRows(suggestions, values.rows), [suggestions, values.rows])
   const isEveryRowAnswered = totalTransactions > 0 && answeredRows.length === totalTransactions
+  const wholeAnswer = useMemo(() => getWholeAnswer(suggestions, values), [suggestions, values])
 
-  const pickerAnswer = selectedKey === MIX_ANSWER_KEY
-    ? (isEveryRowAnswered
-      ? collapseUniformCounterpartyAskAnswers(answeredRows.map(row => row.answer))
-      : null)
-    : resolveAnswer(selectedKey ?? undefined, freeText)
+  const openNextUnanswered = useCallback(() => {
+    const next = form.state.values.rows.find(
+      ({ answerKey, text }) => !resolveCounterpartyAskAnswer(suggestions, answerKey, text),
+    )
 
-  const openNextUnanswered = useCallback(
-    (nextRowKeys: Record<string, string>, nextRowTexts: Record<string, string>) => {
-      const next = transactions.find(
-        transaction => !resolveAnswer(nextRowKeys[transaction.id], nextRowTexts[transaction.id] ?? ''),
-      )
-
-      setOpenRowId(next?.id ?? null)
-    },
-    [transactions, resolveAnswer],
-  )
-
-  const submit = useCallback(
-    async (response: CounterpartyAskResponse | null, wasCategorized: boolean, answerLabel: string | null) => {
-      if (!response) return
-
-      try {
-        await submitCounterpartyAskResponse({ taskId: task.id, response })
-
-        if (wasCategorized) {
-          eventCallbacks?.onTransactionCategorized?.()
-        }
-
-        onAnsweredLabelChange(answerLabel)
-        setDirection('back')
-        setView('picker')
-        onAnswered()
-      }
-      catch {
-        addToast({
-          content: t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.error.submit_answer',
-            'We couldn’t save that answer. Please try again.',
-          ),
-          type: 'error',
-        })
-      }
-    },
-    [addToast, eventCallbacks, onAnswered, onAnsweredLabelChange, submitCounterpartyAskResponse, t, task.id],
-  )
+    setOpenRowId(next?.transactionId ?? null)
+  }, [form, suggestions])
 
   const onPick = useCallback((key: string) => {
     if (key === MIX_ANSWER_KEY) {
-      setSelectedKey(key)
       goForward('itemised')
-      openNextUnanswered(rowKeys, rowTexts)
+      openNextUnanswered()
       return
     }
 
-    setSelectedKey(key)
     goForward(key === OTHER_ANSWER_KEY ? 'freeText' : 'remember')
-  }, [goForward, openNextUnanswered, rowKeys, rowTexts])
-
-  const hadAccountAnswer = Boolean(task.responseAccount)
-    || task.transactionResponses.some(response => Boolean(response.responseAccount))
+  }, [goForward, openNextUnanswered])
 
   const onSaveItemised = useCallback(() => {
-    if (pickerAnswer) {
+    if (wholeAnswer) {
       goForward('remember')
       return
     }
 
-    void submit(
-      buildItemisedCounterpartyAskResponse(answeredRows),
-      answeredRows.every(row => row.answer.kind === 'account') || hadAccountAnswer,
-      t(
-        'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually',
-        'Answered individually',
-      ),
-    )
-  }, [answeredRows, goForward, hadAccountAnswer, pickerAnswer, submit, t])
-
-  const onAnswerRemember = useCallback((alwaysThis: boolean) => {
-    if (!pickerAnswer) return
-
-    void submit(
-      buildAllSameCounterpartyAskResponse(pickerAnswer, alwaysThis),
-      pickerAnswer.kind === 'account' || hadAccountAnswer,
-      pickerAnswer.kind === 'account'
-        ? pickerAnswer.account.name
-        : t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_in_own_words', 'Answered in your words'),
-    )
-  }, [hadAccountAnswer, pickerAnswer, submit, t])
+    form.setFieldValue('goingForward', null)
+    void form.handleSubmit()
+  }, [form, goForward, wholeAnswer])
 
   const goBack = useCallback(() => {
     setDirection('back')
 
-    if (view === 'remember' && selectedKey === MIX_ANSWER_KEY) {
+    if (view === 'remember' && values.answerKey === MIX_ANSWER_KEY) {
       setView('itemised')
       return
     }
 
     setView('picker')
-  }, [selectedKey, view])
+  }, [values.answerKey, view])
 
   const hasBackAction = view !== 'picker'
 
   useEffect(() => {
-    onBackActionChange(hasBackAction ? { isDisabled: isMutating, onBack: goBack } : null)
+    onBackActionChange(hasBackAction ? { isDisabled: isSubmitting, onBack: goBack } : null)
 
     return () => onBackActionChange(null)
-  }, [goBack, hasBackAction, isMutating, onBackActionChange])
+  }, [goBack, hasBackAction, isSubmitting, onBackActionChange])
 
   if (task.resolvedByTaskId) {
     return (
@@ -294,7 +185,7 @@ export const CounterpartyAskTaskBody = ({
   }
 
   const renderPane = () => {
-    if (view === 'remember' && pickerAnswer) {
+    if (view === 'remember' && wholeAnswer) {
       return (
         <VStack gap='md' pb='md' pi='md'>
           <P size='sm'>
@@ -303,33 +194,41 @@ export const CounterpartyAskTaskBody = ({
               'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
               {
                 counterparty: counterpartyName,
-                answer: getCounterpartyAskAnswerLabel(pickerAnswer),
+                answer: getCounterpartyAskAnswerLabel(wholeAnswer),
               },
             )}
           </P>
-          <ChipGroup
-            ariaLabel={t(
-              'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.assume_going_forward',
-              'Whether to assume this going forward',
+          <form.AppField name='goingForward'>
+            {field => (
+              <field.FormChipGroupField
+                label={t(
+                  'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.assume_going_forward',
+                  'Whether to assume this going forward',
+                )}
+                showLabel={false}
+                size='lg'
+                isDisabled={isSubmitting}
+                options={[
+                  {
+                    value: 'always',
+                    label: t(
+                      'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.yes_categorize_automatically',
+                      'Yes, automatically categorize them',
+                    ),
+                  },
+                  {
+                    value: 'ask',
+                    label: t(
+                      'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.no_keep_asking',
+                      'No, keep asking me about them',
+                    ),
+                  },
+                ]}
+                onSelect={() => void form.handleSubmit()}
+              />
             )}
-            value={null}
-            onChange={key => onAnswerRemember(key === 'always')}
-            isDisabled={isMutating}
-          >
-            <Chip size='lg' value='always'>
-              {t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.yes_categorize_automatically',
-                'Yes, automatically categorize them',
-              )}
-            </Chip>
-            <Chip size='lg' value='ask'>
-              {t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.no_keep_asking',
-                'No, keep asking me about them',
-              )}
-            </Chip>
-          </ChipGroup>
-          {isMutating
+          </form.AppField>
+          {isSubmitting
             ? (
               <HStack align='center' gap='xs'>
                 <LoadingSpinner size={14} />
@@ -351,17 +250,24 @@ export const CounterpartyAskTaskBody = ({
             )}
           </P>
           <VStack className='Layer__CounterpartyAskTask__FreeText'>
-            <TextArea
-              value={freeText}
-              placeholder={t(
-                'bookkeeping:TasksListItem.CounterpartyAskTaskBody.placeholder.own_words',
-                'Tell us in your own words',
+            <form.AppField name='freeText'>
+              {field => (
+                <field.FormTextAreaField
+                  label={t(
+                    'bookkeeping:TasksListItem.CounterpartyAskTaskBody.prompt.what_were_these_for',
+                    'What were these purchases for?',
+                  )}
+                  showLabel={false}
+                  placeholder={t(
+                    'bookkeeping:TasksListItem.CounterpartyAskTaskBody.placeholder.own_words',
+                    'Tell us in your own words',
+                  )}
+                />
               )}
-              onChange={event => setFreeText(event.target.value)}
-            />
+            </form.AppField>
           </VStack>
           <HStack justify='end'>
-            <Button isDisabled={!freeText.trim()} onPress={() => goForward('remember')}>
+            <Button isDisabled={!values.freeText.trim()} onPress={() => goForward('remember')}>
               {t('common:action.save_label', 'Save')}
             </Button>
           </HStack>
@@ -379,28 +285,30 @@ export const CounterpartyAskTaskBody = ({
             )}
           </P>
           <VStack className='Layer__CounterpartyAskTask__Rows'>
-            {transactions.map((transaction) => {
-              const answer = resolveAnswer(rowKeys[transaction.id], rowTexts[transaction.id] ?? '')
+            {transactions.map((transaction, index) => {
+              const row = values.rows[index]
+              const answerKey = row?.answerKey ?? null
+              const text = row?.text ?? ''
+              const answer = resolveCounterpartyAskAnswer(suggestions, answerKey, text)
 
               return (
                 <CounterpartyAskTransactionRow
                   key={transaction.id}
                   transaction={transaction}
                   suggestions={suggestions}
-                  selectedKey={rowKeys[transaction.id] ?? null}
-                  text={rowTexts[transaction.id] ?? ''}
+                  selectedKey={answerKey}
+                  text={text}
                   answerLabel={answer ? getCounterpartyAskAnswerLabel(answer) : null}
-                  isDisabled={isMutating}
+                  isDisabled={isSubmitting}
                   isOpen={openRowId === transaction.id}
                   onOpen={() => setOpenRowId(transaction.id)}
-                  onSelect={(answerKey) => {
-                    const nextRowKeys = { ...rowKeys, [transaction.id]: answerKey }
-                    setRowKeys(nextRowKeys)
+                  onSelect={(nextKey) => {
+                    form.setFieldValue(`rows[${index}].answerKey`, nextKey)
 
-                    if (answerKey !== OTHER_ANSWER_KEY) openNextUnanswered(nextRowKeys, rowTexts)
+                    if (nextKey !== OTHER_ANSWER_KEY) openNextUnanswered()
                   }}
-                  onChangeText={text => setRowTexts(current => ({ ...current, [transaction.id]: text }))}
-                  onCommitText={() => openNextUnanswered(rowKeys, rowTexts)}
+                  onChangeText={nextText => form.setFieldValue(`rows[${index}].text`, nextText)}
+                  onCommitText={openNextUnanswered}
                 />
               )
             })}
@@ -425,7 +333,7 @@ export const CounterpartyAskTaskBody = ({
                   { answered: answeredRows.length, total: totalTransactions },
                 )}
             </Span>
-            <Button isDisabled={!isEveryRowAnswered || isMutating} onPress={onSaveItemised}>
+            <Button isDisabled={!isEveryRowAnswered || isSubmitting} onPress={onSaveItemised}>
               {t('common:action.save_label', 'Save')}
             </Button>
           </HStack>
@@ -433,53 +341,62 @@ export const CounterpartyAskTaskBody = ({
       )
     }
 
+    const chevron = <ChevronRight size={15} />
+
     return (
       <VStack gap='sm' pb='md' pi='md'>
         <P size='sm'>{task.question}</P>
-        <ChipGroup
-          ariaLabel={t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answer',
-            'What these were for',
-          )}
-          value={selectedKey}
-          onChange={onPick}
-        >
-          {suggestions.map((suggestion, index) => (
-            <Chip
-              key={toSuggestionAnswerKey(index)}
+        <form.AppField name='answerKey'>
+          {field => (
+            <field.FormChipGroupField
+              label={t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answer', 'What these were for')}
+              showLabel={false}
               size='lg'
-              value={toSuggestionAnswerKey(index)}
-              onReselect={() => onPick(toSuggestionAnswerKey(index))}
-            >
-              {suggestion.name}
-            </Chip>
-          ))}
-          <Chip size='lg' value={OTHER_ANSWER_KEY} onReselect={() => onPick(OTHER_ANSWER_KEY)}>
-            {t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.something_else', 'Something else')}
-            <ChevronRight size={15} />
-          </Chip>
-          {totalTransactions > 1
-            ? (
-              <Chip size='lg' value={MIX_ANSWER_KEY} onReselect={() => onPick(MIX_ANSWER_KEY)}>
-                {t(
-                  'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.multiple_different_things',
-                  'Multiple different things',
-                )}
-                <ChevronRight size={15} />
-              </Chip>
-            )
-            : null}
-        </ChipGroup>
+              options={[
+                ...suggestions.map((suggestion, index) => ({
+                  value: toSuggestionAnswerKey(index),
+                  label: suggestion.name,
+                })),
+                {
+                  value: OTHER_ANSWER_KEY,
+                  label: (
+                    <>
+                      {t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.something_else', 'Something else')}
+                      {chevron}
+                    </>
+                  ),
+                },
+                ...(totalTransactions > 1
+                  ? [{
+                    value: MIX_ANSWER_KEY,
+                    label: (
+                      <>
+                        {t(
+                          'bookkeeping:TasksListItem.CounterpartyAskTaskBody.action.multiple_different_things',
+                          'Multiple different things',
+                        )}
+                        {chevron}
+                      </>
+                    ),
+                  }]
+                  : []),
+              ]}
+              onSelect={onPick}
+            />
+          )}
+        </form.AppField>
       </VStack>
     )
   }
 
   return (
     <motion.div
+      ref={containerRef}
       className='Layer__CounterpartyAskTask'
       initial={false}
       animate={paneHeight === null ? undefined : { height: paneHeight }}
       transition={paneTransition}
+      onAnimationComplete={keepInView}
     >
       <AnimatePresence initial={false} mode='popLayout' custom={direction}>
         <motion.div

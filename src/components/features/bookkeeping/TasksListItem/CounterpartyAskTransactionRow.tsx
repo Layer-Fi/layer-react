@@ -9,11 +9,11 @@ import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import {
+  OTHER_ANSWER_KEY,
+  toSuggestionAnswerKey,
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 import { CounterpartyAskTransactionRowSummary } from '@features/bookkeeping/TasksListItem/CounterpartyAskTransactionRowSummary'
-
-export const OTHER_ANSWER_KEY = 'other'
-
-export const toSuggestionAnswerKey = (index: number) => `suggestion-${index}`
 
 type CounterpartyAskTransactionRowProps = {
   transaction: MinimalBankTransaction

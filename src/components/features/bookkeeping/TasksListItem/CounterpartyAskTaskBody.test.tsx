@@ -61,6 +61,7 @@ const AskHost = ({ task, onAnswered = () => {} }: AskHostProps) => {
       <CounterpartyAskTaskBody
         task={task}
         counterpartyName='Costco'
+        isExpanded
         onAnsweredLabelChange={vi.fn()}
         onAnswered={onAnswered}
         onBackActionChange={setBackAction}
@@ -398,7 +399,7 @@ describe('CounterpartyAskTaskBody', () => {
 
     await waitFor(() => expect(onAnswered).toHaveBeenCalledTimes(1))
 
-    expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
+    await waitFor(() => expect(screen.getAllByRole('radio', { name: /Something else/ })).toHaveLength(1))
     await waitFor(() =>
       expect(screen.queryByRole('radio', { name: 'Yes, automatically categorize them' })).not.toBeInTheDocument(),
     )
