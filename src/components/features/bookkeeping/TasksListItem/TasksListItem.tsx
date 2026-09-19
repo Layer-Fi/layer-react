@@ -74,11 +74,21 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   const onAnswered = useCallback(() => setIsOpen(false), [])
 
   const headerAnswer = answer ?? (isCounterpartyAskTask(task) ? getStoredCounterpartyAskAnswerSummary(task) : null)
-  const headerAnswerLabel = headerAnswer && {
-    account: () => (headerAnswer.kind === 'account' ? headerAnswer.name : null),
-    text: () => t('bookkeeping:TasksListItem.label.answered_in_own_words', 'Answered in your words'),
-    itemised: () => t('bookkeeping:TasksListItem.label.several_categories', 'Several categories'),
-  }[headerAnswer.kind]()
+
+  const getHeaderAnswerLabel = () => {
+    switch (headerAnswer?.kind) {
+      case 'account':
+        return headerAnswer.name
+      case 'text':
+        return t('bookkeeping:TasksListItem.label.answered_in_own_words', 'Answered in your words')
+      case 'itemised':
+        return t('bookkeeping:TasksListItem.label.several_categories', 'Several categories')
+      default:
+        return null
+    }
+  }
+
+  const headerAnswerLabel = getHeaderAnswerLabel()
 
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
