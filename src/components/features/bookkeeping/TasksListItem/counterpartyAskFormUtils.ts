@@ -16,6 +16,24 @@ export const toSuggestionAnswerKey = (index: number) => `suggestion-${index}`
 
 export type GoingForwardChoice = 'always' | 'ask'
 
+export type CounterpartyAskAnswerSummary =
+  | { kind: 'account', name: string }
+  | { kind: 'text' }
+  | { kind: 'itemised' }
+
+export const getStoredCounterpartyAskAnswerSummary = (
+  task: CounterpartyAskTask,
+): CounterpartyAskAnswerSummary | null => {
+  if (task.responseAccount) return { kind: 'account', name: task.responseAccount.name }
+  if (task.userResponse) return { kind: 'text' }
+
+  const hasRowAnswers = task.transactionResponses.some(
+    ({ responseAccount, userResponse }) => responseAccount || userResponse,
+  )
+
+  return hasRowAnswers ? { kind: 'itemised' } : null
+}
+
 export type CounterpartyAskRowValues = {
   transactionId: string
   answerKey: string | null

@@ -62,7 +62,7 @@ const AskHost = ({ task, onAnswered = () => {} }: AskHostProps) => {
         task={task}
         counterpartyName='Costco'
         isExpanded
-        onAnsweredLabelChange={vi.fn()}
+        onAnswerChange={vi.fn()}
         onAnswered={onAnswered}
         onBackActionChange={setBackAction}
       />

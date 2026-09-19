@@ -10,6 +10,7 @@ import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { useAppForm } from '@blocks/Form/useForm'
 import {
+  type CounterpartyAskAnswerSummary,
   type CounterpartyAskFormValues,
   getAnsweredRows,
   getCounterpartyAskFormDefaultValues,
@@ -19,7 +20,7 @@ import {
 
 export type CounterpartyAskSaved = {
   task: CounterpartyAskTask
-  answerLabel: string
+  answer: CounterpartyAskAnswerSummary
   wasCategorized: boolean
 }
 
@@ -48,17 +49,14 @@ export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskForm
         ? {
           response: buildItemisedCounterpartyAskResponse(answeredRows),
           wasCategorized: answeredRows.every(({ answer }) => answer.kind === 'account'),
-          answerLabel: t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually',
-            'Several categories',
-          ),
+          answer: { kind: 'itemised' } as const,
         }
         : wholeAnswer && {
           response: buildAllSameCounterpartyAskResponse(wholeAnswer, value.goingForward === 'always'),
           wasCategorized: wholeAnswer.kind === 'account',
-          answerLabel: wholeAnswer.kind === 'account'
-            ? wholeAnswer.account.name
-            : t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_in_own_words', 'Answered in your words'),
+          answer: wholeAnswer.kind === 'account'
+            ? { kind: 'account', name: wholeAnswer.account.name } as const
+            : { kind: 'text' } as const,
         }
 
       if (!submission?.response) return
@@ -69,14 +67,14 @@ export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskForm
         form.reset(getCounterpartyAskFormDefaultValues(saved))
         onSaved({
           task: saved,
-          answerLabel: submission.answerLabel,
+          answer: submission.answer,
           wasCategorized: submission.wasCategorized || hadAccountAnswer,
         })
       }
       catch {
         addToast({
           content: t(
-            'bookkeeping:TasksListItem.CounterpartyAskTaskBody.error.submit_answer',
+            'bookkeeping:TasksListItem.useCounterpartyAskForm.error.submit_answer',
             'We couldn’t save that answer. Please try again.',
           ),
           type: 'error',

@@ -12,6 +12,10 @@ import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 import {
+  type CounterpartyAskAnswerSummary,
+  getStoredCounterpartyAskAnswerSummary,
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+import {
   type CounterpartyAskBackAction,
   CounterpartyAskTaskBody,
 } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
@@ -31,7 +35,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   const { t } = useTranslation()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const [answeredLabel, setAnsweredLabel] = useState<string | null>(null)
+  const [answer, setAnswer] = useState<CounterpartyAskAnswerSummary | null>(null)
   const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
 
   const taskBodyClassName = classNames(
@@ -69,16 +73,12 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const onAnswered = useCallback(() => setIsOpen(false), [])
 
-  const storedAnswerLabel = isCounterpartyAskTask(task)
-    ? task.responseAccount?.name
-    ?? (task.userResponse
-      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_in_own_words', 'Answered in your words')
-      : null)
-    ?? (task.transactionResponses.some(({ responseAccount, userResponse }) => responseAccount || userResponse)
-      ? t('bookkeeping:TasksListItem.CounterpartyAskTaskBody.label.answered_individually', 'Several categories')
-      : null)
-    : null
-  const headerAnswerLabel = answeredLabel ?? storedAnswerLabel
+  const headerAnswer = answer ?? (isCounterpartyAskTask(task) ? getStoredCounterpartyAskAnswerSummary(task) : null)
+  const headerAnswerLabel = headerAnswer && {
+    account: () => (headerAnswer.kind === 'account' ? headerAnswer.name : null),
+    text: () => t('bookkeeping:TasksListItem.label.answered_in_own_words', 'Answered in your words'),
+    itemised: () => t('bookkeeping:TasksListItem.label.several_categories', 'Several categories'),
+  }[headerAnswer.kind]()
 
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
@@ -126,7 +126,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 task={task}
                 counterpartyName={task.counterparty?.name ?? task.title}
                 isExpanded={isOpen}
-                onAnsweredLabelChange={setAnsweredLabel}
+                onAnswerChange={setAnswer}
                 onAnswered={onAnswered}
                 onBackActionChange={setBackAction}
               />

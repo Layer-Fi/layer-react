@@ -13,6 +13,7 @@ import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import {
+  type CounterpartyAskAnswerSummary,
   getAnsweredRows,
   getWholeAnswer,
   MIX_ANSWER_KEY,
@@ -48,7 +49,7 @@ type CounterpartyAskTaskBodyProps = {
   task: UserVisibleTask & CounterpartyAskTask
   counterpartyName: string
   isExpanded: boolean
-  onAnsweredLabelChange: (label: string | null) => void
+  onAnswerChange: (answer: CounterpartyAskAnswerSummary | null) => void
   onAnswered: () => void
   onBackActionChange: (backAction: CounterpartyAskBackAction | null) => void
 }
@@ -57,7 +58,7 @@ export const CounterpartyAskTaskBody = ({
   task,
   counterpartyName,
   isExpanded,
-  onAnsweredLabelChange,
+  onAnswerChange,
   onAnswered,
   onBackActionChange,
 }: CounterpartyAskTaskBodyProps) => {
@@ -72,16 +73,16 @@ export const CounterpartyAskTaskBody = ({
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const onSaved = useCallback(({ answerLabel, wasCategorized }: CounterpartyAskSaved) => {
+  const onSaved = useCallback(({ answer, wasCategorized }: CounterpartyAskSaved) => {
     if (wasCategorized) {
       eventCallbacks?.onTransactionCategorized?.()
     }
 
-    onAnsweredLabelChange(answerLabel)
+    onAnswerChange(answer)
     setDirection('back')
     setView('picker')
     onAnswered()
-  }, [eventCallbacks, onAnswered, onAnsweredLabelChange])
+  }, [eventCallbacks, onAnswerChange, onAnswered])
 
   const { form } = useCounterpartyAskForm({ task, onSaved })
   const values = useStore(form.store, state => state.values)
