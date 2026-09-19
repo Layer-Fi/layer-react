@@ -53,6 +53,7 @@ export type ButtonStyleProps = {
   flex?: boolean
   tooltip?: ReactNode
   underline?: true
+  noUnderline?: true
 }
 
 export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps & {
@@ -76,6 +77,7 @@ const Button = forwardRef<
     flex = false,
     tooltip,
     underline,
+    noUnderline,
     ...restProps
   },
   ref,
@@ -92,6 +94,7 @@ const Button = forwardRef<
     'full-width': fullWidth,
     flex,
     underline,
+    'no-underline': noUnderline,
   })
 
   const button = (

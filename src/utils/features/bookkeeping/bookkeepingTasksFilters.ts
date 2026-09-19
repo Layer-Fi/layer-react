@@ -1,5 +1,6 @@
 import { type BusinessTask, isRenderableBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 
 export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
@@ -17,11 +18,12 @@ export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
 }
 
 type UserVisibleTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Completed | BusinessTaskStatus.Archived>
-export type UserVisibleTask = LegacyBusinessTask & { status: UserVisibleTaskStatus }
+type RenderableBusinessTask = CounterpartyAskTask | LegacyBusinessTask
+export type UserVisibleTask = RenderableBusinessTask & { status: UserVisibleTaskStatus }
 
 function isUserVisibleTask<T extends BusinessTask>(
   task: T,
-): task is T & LegacyBusinessTask & { status: UserVisibleTaskStatus } {
+): task is T & RenderableBusinessTask & { status: UserVisibleTaskStatus } {
   const { status } = task
 
   return isRenderableBusinessTask(task)

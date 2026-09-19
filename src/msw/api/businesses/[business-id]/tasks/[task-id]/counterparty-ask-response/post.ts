@@ -46,6 +46,9 @@ const applyResponse = (
   if ('transactionResponses' in response) {
     return {
       ...answered,
+      alwaysThis: false,
+      userResponse: null,
+      responseAccount: null,
       transactionResponses: response.transactionResponses.map(transactionResponse => ({
         transactionId: transactionResponse.transactionId,
         userResponse: 'userResponse' in transactionResponse ? transactionResponse.userResponse : null,
@@ -63,6 +66,11 @@ const applyResponse = (
     responseAccount: 'accountIdentifier' in response
       ? resolveAnsweredAccount(task, response.accountIdentifier)
       : null,
+    transactionResponses: task.transactionResponses.map(({ transactionId }) => ({
+      transactionId,
+      userResponse: null,
+      responseAccount: null,
+    })),
   }
 }
 
@@ -91,6 +99,22 @@ const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
   })
 }
 
+const reopenSiblingCounterpartyAsks = (answeringTaskId: string) => {
+  const resolvedSiblingIds = bookkeepingPeriodStore.all()
+    .flatMap(period => period.tasks)
+    .filter(task => isCounterpartyAskTask(task) && task.resolvedByTaskId === answeringTaskId)
+    .map(task => task.id)
+
+  resolvedSiblingIds.forEach((siblingId) => {
+    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
+      ...sibling,
+      status: BusinessTaskStatus.Todo,
+      resolvedByTaskId: null,
+      responseAccount: null,
+    }))
+  })
+}
+
 export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof toResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/tasks/:taskId/counterparty-ask-response',
@@ -104,6 +128,9 @@ export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof to
 
     if (answered?.alwaysThis && answered.responseAccount) {
       resolveSiblingCounterpartyAsks(answered)
+    }
+    else if (answered) {
+      reopenSiblingCounterpartyAsks(answered.id)
     }
 
     return toResponse(answered ?? applyResponse(makeFallbackCounterpartyAskTask(taskId), response))

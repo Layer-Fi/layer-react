@@ -1,8 +1,9 @@
-import { type ForwardedRef, forwardRef } from 'react'
+import { type ForwardedRef, forwardRef, type KeyboardEvent, useContext } from 'react'
 import {
   Radio as ReactAriaRadio,
   RadioGroup as ReactAriaRadioGroup,
   type RadioGroupProps as ReactAriaRadioGroupProps,
+  RadioGroupStateContext,
   type RadioProps as ReactAriaRadioProps,
 } from 'react-aria-components/RadioGroup'
 
@@ -50,18 +51,34 @@ export type ChipSize = 'sm' | 'md' | 'lg'
 type ChipProps<T extends string> = Pick<ReactAriaRadioProps, 'children'> & {
   size?: ChipSize
   value: T
+  /** Radio groups stay silent when the selected value is pressed again; this fires instead. */
+  onReselect?: () => void
 }
 
 function ChipWithRef<T extends string>(
-  { children, size = 'md', ...restProps }: ChipProps<T>,
+  { children, size = 'md', value, onReselect, ...restProps }: ChipProps<T>,
   ref: ForwardedRef<HTMLLabelElement>,
 ) {
+  const groupState = useContext(RadioGroupStateContext)
   const dataProperties = toDataProperties({ size })
+
+  const reselect = onReselect && groupState?.selectedValue === value && !groupState.isDisabled
+    ? onReselect
+    : undefined
+
+  const onKeyUp = reselect
+    ? (event: KeyboardEvent<HTMLLabelElement>) => {
+      if (event.key === 'Enter') reselect()
+    }
+    : undefined
 
   return (
     <ReactAriaRadio
       {...restProps}
       {...dataProperties}
+      value={value}
+      onPointerUp={reselect}
+      onKeyUp={onKeyUp}
       className={CHIP_CLASS_NAME}
       ref={ref}
     >

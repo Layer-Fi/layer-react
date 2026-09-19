@@ -2,12 +2,19 @@ import { forwardRef, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { isCounterpartyAskTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import ChevronDownFill from '@icons/ChevronDownFill'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
-import { P } from '@ui/Typography/Text'
-import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
+import {
+  type CounterpartyAskAnswerSummary,
+  getStoredCounterpartyAskAnswerSummary,
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+import {
+  type CounterpartyAskBackAction,
+  CounterpartyAskTaskBody,
+} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 import { LegacyTaskBody } from '@features/bookkeeping/TasksListItem/LegacyTaskBody'
+import { TasksListItemHeader } from '@features/bookkeeping/TasksListItem/TasksListItemHeader'
 
 type TasksListItemProps = {
   task: UserVisibleTask
@@ -21,24 +28,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 ) => {
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
-
-  const taskBodyClassName = classNames(
-    'Layer__tasks-list-item__body',
-    isOpen && 'Layer__tasks-list-item__body--expanded',
-    isCompletedTask(task) && 'Layer__tasks-list-item--completed',
-  )
-
-  const taskHeadClassName = classNames(
-    'Layer__tasks-list-item__head-info',
-    isCompletedTask(task)
-      ? 'Layer__tasks-list-item--completed'
-      : 'Layer__tasks-list-item--pending',
-  )
-
-  const taskItemClassName = classNames(
-    'Layer__tasks-list-item',
-    isOpen && 'Layer__tasks-list-item__expanded',
-  )
+  const [answer, setAnswer] = useState<CounterpartyAskAnswerSummary | null>(null)
+  const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
 
   useEffect(() => {
     setIsOpen(defaultOpen)
@@ -56,29 +47,40 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const onAnswered = useCallback(() => setIsOpen(false), [])
 
+  const isAsk = isCounterpartyAskTask(task)
+
+  const taskBodyClassName = classNames(
+    'Layer__tasks-list-item__body',
+    isOpen && 'Layer__tasks-list-item__body--expanded',
+    isAsk && 'Layer__tasks-list-item__body--flush',
+    isCompletedTask(task) && 'Layer__tasks-list-item--completed',
+  )
+
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
-      <div className={taskItemClassName}>
-        <div
-          className='Layer__tasks-list-item__head'
+      <div className={classNames('Layer__tasks-list-item', isOpen && 'Layer__tasks-list-item__expanded')}>
+        <TasksListItemHeader
+          task={task}
+          isOpen={isOpen}
+          backAction={backAction}
+          answer={answer ?? (isAsk ? getStoredCounterpartyAskAnswerSummary(task) : null)}
           onClick={onClickTaskItemHead}
-        >
-          <div className={taskHeadClassName}>
-            <div className='Layer__tasks-list-item__head-info__status'>
-              {getIconForTask(task)}
-            </div>
-            <P variant='inherit'>{task.title}</P>
-          </div>
-          <ChevronDownFill
-            size={16}
-            className='Layer__tasks__expand-icon'
-            style={{
-              transform: isOpen ? 'rotate(0deg)' : 'rotate(-180deg)',
-            }}
-          />
-        </div>
+        />
         <div className={taskBodyClassName}>
-          <LegacyTaskBody task={task} onAnswered={onAnswered} />
+          {isCounterpartyAskTask(task)
+            ? (
+              <CounterpartyAskTaskBody
+                task={task}
+                counterpartyName={task.counterparty?.name ?? task.title}
+                isExpanded={isOpen}
+                onAnswerChange={setAnswer}
+                onAnswered={onAnswered}
+                onBackActionChange={setBackAction}
+              />
+            )
+            : isLegacyBusinessTask(task)
+              ? <LegacyTaskBody task={task} onAnswered={onAnswered} />
+              : null}
         </div>
       </div>
     </div>
