@@ -3,6 +3,10 @@
   padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-md);
   background: var(--color-info-success-bg);
   color: var(--color-info-success-fg);
+
+  &[data-view='mobile'] {
+    padding-inline: 0;
+  }
 }
 
 .Layer__BankTransactionsRefreshAlert__action {
@@ -16,13 +20,15 @@
   white-space: normal;
 
   .Layer__BankTransactionsRefreshAlert[data-view='mobile'] &.Layer__UI__Button {
-    inline-size: calc(100% + var(--spacing-md) + var(--spacing-xs));
-    max-inline-size: calc(100% + var(--spacing-md) + var(--spacing-xs));
+    inline-size: 100%;
     padding-inline: var(--spacing-md) var(--spacing-xs);
-    margin-inline: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-xs));
   }
 }
 
 .Layer__BankTransactionsRefreshAlert__content {
   min-inline-size: 0;
+}
+
+.Layer__BankTransactionsRefreshAlert__popover--mobile {
+  inline-size: var(--trigger-width);
 }

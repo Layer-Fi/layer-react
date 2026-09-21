@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import classNames from 'classnames'
 import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -111,8 +112,11 @@ const BankTransactionsRefreshAlertContent = () => {
           <DropdownMenu
             ariaLabel={summaryLabel}
             slots={{ Trigger }}
-            slotProps={{ Dialog: { width: view === 'mobile' ? 'var(--trigger-width)' : 320 } }}
-            popoverClassName='Layer__BankTransactionsRefreshAlert__popover'
+            slotProps={{ Dialog: { width: view === 'mobile' ? undefined : 320 } }}
+            popoverClassName={classNames(
+              'Layer__BankTransactionsRefreshAlert__popover',
+              view === 'mobile' && 'Layer__BankTransactionsRefreshAlert__popover--mobile',
+            )}
           >
             <MenuList>
               {refreshConnections.map(connection => (
