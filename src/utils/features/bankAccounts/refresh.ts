@@ -8,20 +8,20 @@ import {
 
 const REFRESH_ALERT_MINIMUM_SYNC_AGE_MS = 24 * 60 * 60 * 1000
 
-export type BankAccountRefreshConnection = {
+export type RefreshConnectionIdentity = {
   connectionExternalId: string
   source: ExternalAccountConnection['externalAccountSource']
   reconnectWithNewCredentials: boolean
+}
+
+export type BankAccountRefreshConnection = RefreshConnectionIdentity & {
   institutionName: string | null
   accounts: BankAccountLabelParts[]
 }
 
-export type BankAccountNeedingReconnection = {
+export type BankAccountNeedingReconnection = RefreshConnectionIdentity & {
   account: BankAccountLabelParts
   lastSyncedAt: Date | null
-  source: ExternalAccountConnection['externalAccountSource']
-  connectionExternalId: string
-  reconnectWithNewCredentials: boolean
 }
 
 type RepairableExternalAccount = ExternalAccountConnection & { connectionExternalId: string }
@@ -64,6 +64,18 @@ function getRefreshableAccounts(
   )
 }
 
+function getRefreshConnectionIdentity(externalAccount: RepairableExternalAccount): RefreshConnectionIdentity {
+  return {
+    connectionExternalId: externalAccount.connectionExternalId,
+    source: externalAccount.externalAccountSource,
+    reconnectWithNewCredentials: externalAccount.reconnectWithNewCredentials ?? false,
+  }
+}
+
+export function getRefreshConnectionKey({ source, connectionExternalId }: RefreshConnectionIdentity): string {
+  return JSON.stringify([source, connectionExternalId])
+}
+
 function getRefreshInstitutionName({ bankAccount, externalAccount }: RefreshableAccount): string | null {
   return getBankAccountInstitution(bankAccount)?.name ?? externalAccount.institution?.name ?? null
 }
@@ -83,40 +95,28 @@ export function getBankAccountRefreshConnections(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now = new Date(),
 ): BankAccountRefreshConnection[] {
-  const connections = new Map<string, {
-    connectionExternalId: string
-    source: ExternalAccountConnection['externalAccountSource']
-    reconnectWithNewCredentials: boolean
-    institutionNames: Set<string>
-    accounts: Map<string, BankAccountLabelParts>
-  }>()
+  const groups = new Map<string, { identity: RefreshConnectionIdentity, members: RefreshableAccount[] }>()
 
-  for (const { bankAccount, externalAccount } of getRefreshableAccounts(bankAccounts, now)) {
-    const key = JSON.stringify([externalAccount.externalAccountSource, externalAccount.connectionExternalId])
-    const connection = connections.get(key) ?? {
-      connectionExternalId: externalAccount.connectionExternalId,
-      source: externalAccount.externalAccountSource,
-      reconnectWithNewCredentials: false,
-      institutionNames: new Set<string>(),
-      accounts: new Map<string, BankAccountLabelParts>(),
-    }
+  for (const refreshable of getRefreshableAccounts(bankAccounts, now)) {
+    const identity = getRefreshConnectionIdentity(refreshable.externalAccount)
+    const key = getRefreshConnectionKey(identity)
+    const group = groups.get(key) ?? { identity, members: [] }
 
-    const institutionName = getRefreshInstitutionName({ bankAccount, externalAccount })
-    if (institutionName) connection.institutionNames.add(institutionName)
-    connection.accounts.set(bankAccount.id, getBankAccountLabelParts(bankAccount))
-    connection.reconnectWithNewCredentials ||= externalAccount.reconnectWithNewCredentials ?? false
-    connections.set(key, connection)
+    group.members.push(refreshable)
+    groups.set(key, group)
   }
 
-  return [...connections.values()].map(connection => ({
-    connectionExternalId: connection.connectionExternalId,
-    source: connection.source,
-    reconnectWithNewCredentials: connection.reconnectWithNewCredentials,
-    institutionName: connection.institutionNames.size === 1
-      ? [...connection.institutionNames][0] ?? null
-      : null,
-    accounts: [...connection.accounts.values()],
-  }))
+  return [...groups.values()].map(({ identity, members }) => {
+    const institutionNames = new Set(members.flatMap(member => getRefreshInstitutionName(member) ?? []))
+    const accounts = new Map(members.map(({ bankAccount }) => [bankAccount.id, getBankAccountLabelParts(bankAccount)]))
+
+    return {
+      ...identity,
+      reconnectWithNewCredentials: members.some(({ externalAccount }) => externalAccount.reconnectWithNewCredentials ?? false),
+      institutionName: institutionNames.size === 1 ? [...institutionNames][0] ?? null : null,
+      accounts: [...accounts.values()],
+    }
+  })
 }
 
 export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, now = new Date()) {
@@ -136,18 +136,14 @@ export function getBankAccountNeedingReconnection(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now = new Date(),
 ): BankAccountNeedingReconnection | null {
-  for (const bankAccount of bankAccounts ?? []) {
-    const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount, now)
-    if (refreshInfo) {
-      return {
-        account: getBankAccountLabelParts(bankAccount),
-        lastSyncedAt: refreshInfo.lastSyncedAt ?? null,
-        source: refreshInfo.source,
-        connectionExternalId: refreshInfo.connectionExternalId,
-        reconnectWithNewCredentials: refreshInfo.reconnectWithNewCredentials,
-      }
-    }
-  }
+  const [refreshable] = getRefreshableAccounts(bankAccounts, now)
+  if (!refreshable) return null
 
-  return null
+  const { bankAccount, externalAccount } = refreshable
+
+  return {
+    ...getRefreshConnectionIdentity(externalAccount),
+    account: getBankAccountLabelParts(bankAccount),
+    lastSyncedAt: externalAccount.lastSyncedAt ?? null,
+  }
 }
