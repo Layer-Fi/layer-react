@@ -1,10 +1,15 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
+import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/refresh'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
+import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -21,6 +26,7 @@ import {
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { AccountReconnectionBanner } from '@views/AccountingOverview/AccountReconnectionBanner/AccountReconnectionBanner'
 
 import './accountingOverview.scss'
 
@@ -42,6 +48,7 @@ export interface AccountingOverviewProps {
   /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   onboardingStepOverride?: OnboardingStep
   onTransactionsToReviewClick?: () => void
+  onAccountUpdateClick?: () => void
   middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
@@ -58,10 +65,25 @@ export interface AccountingOverviewProps {
   }
 }
 
-export const AccountingOverview = ({
+export const AccountingOverview = (props: AccountingOverviewProps) => {
+  const hasProvider = useHasLinkedAccountsProvider()
+
+  if (hasProvider) {
+    return <AccountingOverviewContent {...props} />
+  }
+
+  return (
+    <LinkedAccountsProvider>
+      <AccountingOverviewContent {...props} />
+    </LinkedAccountsProvider>
+  )
+}
+
+const AccountingOverviewContent = ({
   title,
   showTitle = true,
   onTransactionsToReviewClick,
+  onAccountUpdateClick,
   middleBanner,
   chartColorsList,
   stringOverrides,
@@ -70,6 +92,20 @@ export const AccountingOverview = ({
 }: AccountingOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
+  const { data: bankAccounts } = useBankAccountsContext()
+  const reconnectConnection = useReconnectConnection()
+  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts)
+
+  const handleAccountUpdateClick = useCallback(() => {
+    if (onAccountUpdateClick) {
+      onAccountUpdateClick()
+      return
+    }
+
+    if (!accountNeedingReconnection) return
+
+    reconnectConnection(accountNeedingReconnection)
+  }, [onAccountUpdateClick, accountNeedingReconnection, reconnectConnection])
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -98,6 +134,13 @@ export const AccountingOverview = ({
           </Header>
         )}
       >
+        {accountNeedingReconnection && (
+          <AccountReconnectionBanner
+            account={accountNeedingReconnection.account}
+            lastSyncedAt={accountNeedingReconnection.lastSyncedAt}
+            onClick={handleAccountUpdateClick}
+          />
+        )}
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartConfig={slotProps?.profitAndLoss?.summaries?.chartConfig}

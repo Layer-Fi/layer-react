@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next'
+
 import type { BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { type ExternalAccountConnection } from '@schemas/features/bankAccounts/externalAccountConnection'
 
@@ -31,6 +33,12 @@ export function getBankAccountLabelParts(bankAccount: BankAccount): BankAccountL
     accountName: getBankAccountDisplayName(bankAccount),
     mask: bankAccount.mask ?? bankAccount.externalAccounts[0]?.mask ?? null,
   }
+}
+
+export function getBankAccountLabelWithMask(t: TFunction, { accountName, mask }: BankAccountLabelParts): string {
+  return mask
+    ? t('common:label.account_with_mask', '{{accountName}} ({{mask}})', { accountName, mask })
+    : accountName
 }
 
 export function isAllExternalAccountsUserCreatedCustom(bankAccount: BankAccount): boolean {

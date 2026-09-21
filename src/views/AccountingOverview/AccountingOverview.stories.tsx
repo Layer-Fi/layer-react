@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { fn } from 'storybook/test'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { AccountingOverview, type AccountingOverviewProps } from '@views/AccountingOverview/AccountingOverview'
@@ -14,7 +15,7 @@ import {
 import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@testUtils/storybook/decorators/profitAndLoss'
 
 type AccountingOverviewStoryArgs = SummariesStoryArgs
-  & Pick<AccountingOverviewProps, 'showTitle'>
+  & Pick<AccountingOverviewProps, 'showTitle' | 'onAccountUpdateClick'>
   & { chartConfig?: ProfitAndLossChartConfig }
 
 const summariesControls = makeSummariesStoryControls({
@@ -33,6 +34,7 @@ const meta: Meta<AccountingOverviewStoryArgs> = {
   decorators: [withOverviewStoryContext],
   args: {
     showTitle: true,
+    onAccountUpdateClick: fn(),
     ...summariesStoryDefaultArgs,
   },
   argTypes: {
@@ -46,6 +48,7 @@ const meta: Meta<AccountingOverviewStoryArgs> = {
   render: args => (
     <AccountingOverview
       showTitle={args.showTitle}
+      onAccountUpdateClick={args.onAccountUpdateClick}
       stringOverrides={{ profitAndLoss: { summaries: buildSummariesStringOverrides(args) } }}
       slotProps={{
         profitAndLoss: {

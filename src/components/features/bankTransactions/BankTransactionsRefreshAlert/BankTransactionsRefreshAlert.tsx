@@ -2,6 +2,7 @@ import { type ReactNode, useCallback, useMemo } from 'react'
 import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
 import {
   type BankAccountRefreshConnection,
   getBankAccountRefreshConnections,
@@ -102,14 +103,9 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactio
   const connectionLabel = (connection: BankAccountRefreshConnection) => {
     const [onlyAccount] = connection.accounts
     if (connection.accounts.length === 1 && onlyAccount) {
-      return onlyAccount.mask
-        ? t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect_masked_account', 'Refresh {{accountName}} ({{mask}})', {
-          accountName: onlyAccount.accountName,
-          mask: onlyAccount.mask,
-        })
-        : t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect_account', 'Refresh {{accountName}}', {
-          accountName: onlyAccount.accountName,
-        })
+      return t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect_account', 'Refresh {{accountLabel}}', {
+        accountLabel: getBankAccountLabelWithMask(t, onlyAccount),
+      })
     }
 
     return connection.institutionName
