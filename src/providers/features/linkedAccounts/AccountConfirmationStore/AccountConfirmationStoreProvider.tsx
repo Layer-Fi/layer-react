@@ -12,16 +12,20 @@ type AccountConfirmationStoreShape = {
   }
 }
 
-const AccountConfirmationStoreContext = createContext(
-  createStore<AccountConfirmationStoreShape>(() => ({
-    visibility: 'DEFAULT',
-    actions: {
-      dismiss: () => {},
-      preload: () => {},
-      reset: () => {},
-    },
-  })),
-)
+const UNPROVIDED_ACCOUNT_CONFIRMATION_STORE = createStore<AccountConfirmationStoreShape>(() => ({
+  visibility: 'DEFAULT',
+  actions: {
+    dismiss: () => {},
+    preload: () => {},
+    reset: () => {},
+  },
+}))
+
+const AccountConfirmationStoreContext = createContext(UNPROVIDED_ACCOUNT_CONFIRMATION_STORE)
+
+export function useHasAccountConfirmationStoreProvider(): boolean {
+  return useContext(AccountConfirmationStoreContext) !== UNPROVIDED_ACCOUNT_CONFIRMATION_STORE
+}
 
 export function useAccountConfirmationStore() {
   const store = useContext(AccountConfirmationStoreContext)

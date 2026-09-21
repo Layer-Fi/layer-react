@@ -4,7 +4,10 @@ import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
+import {
+  AccountConfirmationStoreProvider,
+  useHasAccountConfirmationStoreProvider,
+} from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -43,25 +46,33 @@ export const LinkedAccounts = ({
   withProvider = true,
   ...props
 }: LinkedAccountsProps) => {
+  const hasAccountConfirmationStoreProvider = useHasAccountConfirmationStoreProvider()
+
   const linkedAccounts = (
     <OpeningBalanceModalProvider>
       <LinkedAccountsComponent {...props} />
     </OpeningBalanceModalProvider>
   )
 
+  const content = withProvider
+    ? (
+      <LinkedAccountsProvider
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
+        onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+      >
+        {linkedAccounts}
+      </LinkedAccountsProvider>
+    )
+    : linkedAccounts
+
+  if (hasAccountConfirmationStoreProvider) {
+    return content
+  }
+
   return (
     <AccountConfirmationStoreProvider>
-      {withProvider
-        ? (
-          <LinkedAccountsProvider
-            plaidHostedLinkConfig={plaidHostedLinkConfig}
-            customerManagedPlaidConfig={customerManagedPlaidConfig}
-            onPlaidConnectionSuccess={onPlaidConnectionSuccess}
-          >
-            {linkedAccounts}
-          </LinkedAccountsProvider>
-        )
-        : linkedAccounts}
+      {content}
     </AccountConfirmationStoreProvider>
   )
 }
