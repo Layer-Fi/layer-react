@@ -7,6 +7,7 @@ import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 
 const legacyClassNames = createLegacyClassNames({
+  'pill:badge': 'Layer__Pill',
   'menu:popover': 'Layer__linked-accounts__options-menu',
   'Layer__UI__DropdownMenu__Menu': ['Layer__hover-menu__list', 'Layer__linked-accounts__options-menu-list'],
   'Layer__UI__DropdownMenu__MenuItem': [
@@ -35,7 +36,7 @@ export function LinkedAccountPill({
   const variant = status === 'success' ? BadgeVariant.SUCCESS : BadgeVariant.ERROR
 
   const Trigger = useCallback(() => (
-    <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} isTrigger>
+    <Badge className={legacyClassNames('pill:badge')} variant={variant} icon={icon ?? <CircleAlert size={14} />} isTrigger>
       {label}
     </Badge>
   ), [icon, label, variant])
@@ -43,7 +44,7 @@ export function LinkedAccountPill({
   const [soleItem] = items
   if (soleItem && items.length === 1) {
     return (
-      <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} onPress={soleItem.action}>
+      <Badge className={legacyClassNames('pill:badge')} variant={variant} icon={icon ?? <CircleAlert size={14} />} onPress={soleItem.action}>
         {label}
       </Badge>
     )

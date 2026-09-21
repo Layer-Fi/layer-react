@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import classNames from 'classnames'
 import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components/Button'
 
 import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
@@ -42,6 +43,7 @@ const legacyClassNames = createLegacyClassNames({
 
 export interface BadgeProps {
   children?: ReactNode
+  className?: string
   icon?: ReactNode
   onPress?: ButtonProps['onPress']
   tooltip?: ReactNode
@@ -53,6 +55,7 @@ export interface BadgeProps {
 }
 
 export const Badge = ({
+  className,
   icon,
   onPress,
   children,
@@ -69,12 +72,15 @@ export const Badge = ({
   const clickable = isButton || Boolean(tooltip)
 
   const baseProps = {
-    className: legacyClassNames(
-      'Layer__UI__Badge',
-      `size:${size}`,
-      `variant:${variant}`,
-      clickable && 'state:clickable',
-      iconOnly && 'state:iconOnly',
+    className: classNames(
+      legacyClassNames(
+        'Layer__UI__Badge',
+        `size:${size}`,
+        `variant:${variant}`,
+        clickable && 'state:clickable',
+        iconOnly && 'state:iconOnly',
+      ),
+      className,
     ),
     ...toDataProperties({ size, variant, clickable, 'icon-only': iconOnly }),
   }
