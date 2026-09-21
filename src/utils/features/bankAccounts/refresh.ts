@@ -124,9 +124,7 @@ export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, no
   if (!refreshAccount) return null
 
   return {
-    connectionExternalId: refreshAccount.connectionExternalId,
-    source: refreshAccount.externalAccountSource,
-    reconnectWithNewCredentials: refreshAccount.reconnectWithNewCredentials ?? false,
+    ...getRefreshConnectionIdentity(refreshAccount),
     updateType: refreshAccount.updateType,
     lastSyncedAt: refreshAccount.lastSyncedAt,
   }
