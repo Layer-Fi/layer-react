@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useMemo } from 'react'
-import classNames from 'classnames'
 import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -58,15 +57,13 @@ type RefreshAlertActionProps = {
 
 const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
   <Button
-    className={classNames(
-      'Layer__BankTransactionsRefreshAlert__action',
-      isMobile && 'Layer__BankTransactionsRefreshAlert__action--mobile',
-    )}
+    className='Layer__BankTransactionsRefreshAlert__Action'
     variant='text'
+    fullWidth={isMobile}
     onPress={onPress}
   >
     <HStack
-      className='Layer__BankTransactionsRefreshAlert__content'
+      className='Layer__BankTransactionsRefreshAlert__Content'
       align='center'
       gap='xs'
       pis={isMobile ? 'md' : undefined}
@@ -152,7 +149,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactio
             ariaLabel={summaryLabel}
             slots={{ Trigger }}
             slotProps={{ Dialog: { width: isMobile ? undefined : 320 } }}
-            popoverClassName={isMobile ? 'Layer__BankTransactionsRefreshAlert__popover--mobile' : undefined}
+            popoverClassName={isMobile ? 'Layer__BankTransactionsRefreshAlert__Popover--mobile' : undefined}
           >
             <MenuList>
               {refreshConnections.map(connection => (
