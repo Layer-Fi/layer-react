@@ -9,7 +9,6 @@ import {
   getStoredCounterpartyAskAnswerSummary,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
-import { TasksListItemHeader } from '@features/bookkeeping/TasksListItem/TasksListItemHeader'
 import { TasksListItemShell } from '@features/bookkeeping/TasksListItem/TasksListItemShell'
 import {
   type CounterpartyAskSaved,
@@ -51,16 +50,14 @@ export const CounterpartyAskTaskItem = forwardRef<HTMLDivElement, CounterpartyAs
       ref={ref}
       task={task}
       isOpen={isOpen}
+      onToggle={toggle}
       isFlush
-      header={(
-        <TasksListItemHeader
-          task={task}
-          isOpen={isOpen}
-          backAction={navigation.canGoBack ? { isDisabled: isSubmitting, onBack: navigation.goBack } : null}
-          answer={savedAnswer ?? getStoredCounterpartyAskAnswerSummary(task)}
-          onClick={toggle}
-        />
-      )}
+      slotProps={{
+        Header: {
+          backAction: navigation.canGoBack ? { isDisabled: isSubmitting, onBack: navigation.goBack } : null,
+          answer: savedAnswer ?? getStoredCounterpartyAskAnswerSummary(task),
+        },
+      }}
     >
       <CounterpartyAskTaskBody
         task={task}
