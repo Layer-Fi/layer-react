@@ -12,7 +12,10 @@ import {
   makeBankAccount,
   makeBankAccountWithMirroredExternalAccount,
 } from '@fixtures/bankAccounts/mocks'
+import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'
 import { MS_PER_HOUR, NOW } from '@testUtils/dates/fixedDates'
+
+setupFakeSystemTime(NOW)
 
 describe('bankAccount refresh helpers', () => {
   it('treats user-present-required accounts as ready for refresh', () => {
@@ -110,21 +113,21 @@ describe('bankAccount refresh helpers', () => {
         source: 'PLAID',
         reconnectWithNewCredentials: false,
         institutionName: 'Chase',
-        accountNames: ['Chase Checking (1234)'],
+        accounts: [{ accountName: 'Chase Checking', mask: '1234' }],
       },
       {
         connectionExternalId: 'plaid_rbc_1',
         source: 'PLAID',
         reconnectWithNewCredentials: false,
         institutionName: 'RBC',
-        accountNames: ['RBC Checking (9876)'],
+        accounts: [{ accountName: 'RBC Checking', mask: '9876' }],
       },
       {
         connectionExternalId: 'plaid_chase_2',
         source: 'PLAID',
         reconnectWithNewCredentials: false,
         institutionName: 'Chase',
-        accountNames: ['Chase Business Card (2468)'],
+        accounts: [{ accountName: 'Chase Business Card', mask: '2468' }],
       },
     ])
   })
@@ -171,7 +174,7 @@ describe('bankAccount refresh helpers', () => {
     })
 
     expect(getBankAccountNeedingReconnection([healthyAccount, staleAccount], NOW)).toEqual({
-      accountLabel: 'RBC Checking (4048)',
+      account: { accountName: 'RBC Checking', mask: '4048' },
       lastSyncedAt: new Date(NOW.getTime() - 3 * 24 * MS_PER_HOUR),
       source: 'PLAID',
       connectionExternalId: 'plaid_rbc_4048',

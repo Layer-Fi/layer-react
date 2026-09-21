@@ -3,12 +3,24 @@ import { type ExternalAccountConnection, ExternalAccountUpdateType } from '@sche
 
 const REFRESH_ALERT_MINIMUM_SYNC_AGE_MS = 24 * 60 * 60 * 1000
 
+export type BankAccountLabelParts = {
+  accountName: string
+  mask: string | null
+}
+
 export type BankAccountRefreshConnection = {
   connectionExternalId: string
   source: ExternalAccountConnection['externalAccountSource']
   reconnectWithNewCredentials: boolean
   institutionName: string | null
-  accountNames: string[]
+  accounts: BankAccountLabelParts[]
+}
+
+type RepairableExternalAccount = ExternalAccountConnection & { connectionExternalId: string }
+
+type RefreshableAccount = {
+  bankAccount: BankAccount
+  externalAccount: RepairableExternalAccount
 }
 
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
@@ -55,28 +67,24 @@ export function getBankAccountRefreshConnections(
     source: ExternalAccountConnection['externalAccountSource']
     reconnectWithNewCredentials: boolean
     institutionNames: Set<string>
-    accountNames: Set<string>
+    accounts: Map<string, BankAccountLabelParts>
   }>()
 
-  for (const bankAccount of bankAccounts ?? []) {
-    for (const externalAccount of bankAccount.externalAccounts) {
-      if (!externalAccount.connectionExternalId || !isExternalAccountDueForRefresh(externalAccount, now)) continue
-
-      const key = JSON.stringify([externalAccount.externalAccountSource, externalAccount.connectionExternalId])
-      const connection = connections.get(key) ?? {
-        connectionExternalId: externalAccount.connectionExternalId,
-        source: externalAccount.externalAccountSource,
-        reconnectWithNewCredentials: false,
-        institutionNames: new Set<string>(),
-        accountNames: new Set<string>(),
-      }
-
-      const institutionName = externalAccount.institution?.name ?? bankAccount.institution?.name
-      if (institutionName) connection.institutionNames.add(institutionName)
-      connection.accountNames.add(formatBankAccountWithMask(bankAccount))
-      connection.reconnectWithNewCredentials ||= externalAccount.reconnectWithNewCredentials ?? false
-      connections.set(key, connection)
+  for (const { bankAccount, externalAccount } of getRefreshableAccounts(bankAccounts, now)) {
+    const key = JSON.stringify([externalAccount.externalAccountSource, externalAccount.connectionExternalId])
+    const connection = connections.get(key) ?? {
+      connectionExternalId: externalAccount.connectionExternalId,
+      source: externalAccount.externalAccountSource,
+      reconnectWithNewCredentials: false,
+      institutionNames: new Set<string>(),
+      accounts: new Map<string, BankAccountLabelParts>(),
     }
+
+    const institutionName = getRefreshInstitutionName({ bankAccount, externalAccount })
+    if (institutionName) connection.institutionNames.add(institutionName)
+    connection.accounts.set(bankAccount.id, getBankAccountLabelParts(bankAccount))
+    connection.reconnectWithNewCredentials ||= externalAccount.reconnectWithNewCredentials ?? false
+    connections.set(key, connection)
   }
 
   return [...connections.values()].map(connection => ({
@@ -86,7 +94,7 @@ export function getBankAccountRefreshConnections(
     institutionName: connection.institutionNames.size === 1
       ? [...connection.institutionNames][0] ?? null
       : null,
-    accountNames: [...connection.accountNames],
+    accounts: [...connection.accounts.values()],
   }))
 }
 
@@ -104,10 +112,10 @@ export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, no
 }
 
 export type BankAccountNeedingReconnection = {
-  accountLabel: string
+  account: BankAccountLabelParts
   lastSyncedAt: Date | null
   source: ExternalAccountConnection['externalAccountSource']
-  connectionExternalId: string | null
+  connectionExternalId: string
   reconnectWithNewCredentials: boolean
 }
 
@@ -119,10 +127,10 @@ export function getBankAccountNeedingReconnection(
     const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount, now)
     if (refreshInfo) {
       return {
-        accountLabel: formatBankAccountWithMask(bankAccount),
+        account: getBankAccountLabelParts(bankAccount),
         lastSyncedAt: refreshInfo.lastSyncedAt ?? null,
         source: refreshInfo.source,
-        connectionExternalId: refreshInfo.connectionExternalId ?? null,
+        connectionExternalId: refreshInfo.connectionExternalId,
         reconnectWithNewCredentials: refreshInfo.reconnectWithNewCredentials,
       }
     }
@@ -131,7 +139,7 @@ export function getBankAccountNeedingReconnection(
   return null
 }
 
-function isExternalAccountReadyForRefresh(externalAccount: ExternalAccountConnection): boolean {
+function isExternalAccountUserPresentRequired(externalAccount: ExternalAccountConnection): boolean {
   return externalAccount.updateType === ExternalAccountUpdateType.UserPresentRequired
 }
 
@@ -140,15 +148,39 @@ function isExternalAccountRefreshStale(externalAccount: ExternalAccountConnectio
     || now.getTime() - externalAccount.lastSyncedAt.getTime() > REFRESH_ALERT_MINIMUM_SYNC_AGE_MS
 }
 
-function isExternalAccountDueForRefresh(externalAccount: ExternalAccountConnection, now: Date): boolean {
-  return isExternalAccountReadyForRefresh(externalAccount) && isExternalAccountRefreshStale(externalAccount, now)
+function isExternalAccountRepairable(externalAccount: ExternalAccountConnection): externalAccount is RepairableExternalAccount {
+  return externalAccount.connectionExternalId != null
 }
 
-export function formatBankAccountWithMask(bankAccount: BankAccount): string {
-  const accountName = getBankAccountDisplayName(bankAccount)
-  const mask = bankAccount.mask ?? bankAccount.externalAccounts[0]?.mask
+function isExternalAccountDueForRefresh(
+  externalAccount: ExternalAccountConnection,
+  now: Date,
+): externalAccount is RepairableExternalAccount {
+  return isExternalAccountUserPresentRequired(externalAccount)
+    && isExternalAccountRefreshStale(externalAccount, now)
+    && isExternalAccountRepairable(externalAccount)
+}
 
-  return mask ? `${accountName} (${mask})` : accountName
+function getRefreshableAccounts(
+  bankAccounts: ReadonlyArray<BankAccount> | undefined,
+  now: Date,
+): RefreshableAccount[] {
+  return (bankAccounts ?? []).flatMap(bankAccount =>
+    bankAccount.externalAccounts
+      .filter((ea): ea is RepairableExternalAccount => isExternalAccountDueForRefresh(ea, now))
+      .map(externalAccount => ({ bankAccount, externalAccount })),
+  )
+}
+
+function getRefreshInstitutionName({ bankAccount, externalAccount }: RefreshableAccount): string | null {
+  return getBankAccountInstitution(bankAccount)?.name ?? externalAccount.institution?.name ?? null
+}
+
+export function getBankAccountLabelParts(bankAccount: BankAccount): BankAccountLabelParts {
+  return {
+    accountName: getBankAccountDisplayName(bankAccount),
+    mask: bankAccount.mask ?? bankAccount.externalAccounts[0]?.mask ?? null,
+  }
 }
 
 export function isAnyBankAccountSyncing(bankAccounts: ReadonlyArray<BankAccount>): boolean {
