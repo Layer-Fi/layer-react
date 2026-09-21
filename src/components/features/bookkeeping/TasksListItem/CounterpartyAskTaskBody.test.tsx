@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -7,10 +6,7 @@ import { makeAccountId } from '@schemas/common/accountIdentifier'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import {
-  type CounterpartyAskBackAction,
-  CounterpartyAskTaskBody,
-} from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
+import { CounterpartyAskTaskItem } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskItem'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
@@ -41,35 +37,6 @@ const multiTransactionTask = (): Partial<CounterpartyAskTask> => ({
   totalCount: 2,
 })
 
-type AskHostProps = {
-  task: UserVisibleTask & CounterpartyAskTask
-  onAnswered?: () => void
-}
-
-const AskHost = ({ task, onAnswered = () => {} }: AskHostProps) => {
-  const [backAction, setBackAction] = useState<CounterpartyAskBackAction | null>(null)
-
-  return (
-    <>
-      {backAction
-        ? (
-          <button type='button' disabled={backAction.isDisabled} onClick={backAction.onBack}>
-            Back
-          </button>
-        )
-        : null}
-      <CounterpartyAskTaskBody
-        task={task}
-        counterpartyName='Costco'
-        isExpanded
-        onAnswerChange={vi.fn()}
-        onAnswered={onAnswered}
-        onBackActionChange={setBackAction}
-      />
-    </>
-  )
-}
-
 const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
   status: BusinessTaskStatus.UserMarkedCompleted,
   alwaysThis: true,
@@ -79,14 +46,16 @@ const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
   },
 })
 
-const renderBody = (overrides: Partial<CounterpartyAskTask> = {}, onAnswered?: () => void) => {
+const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
   const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
 
   return {
     user: userEvent.setup(),
-    ...render(<AskHost task={task} onAnswered={onAnswered} />, { wrapper: LayerTestProvider }),
+    ...render(<CounterpartyAskTaskItem task={task} defaultOpen />, { wrapper: LayerTestProvider }),
   }
 }
+
+const expandedBody = () => document.querySelector('.Layer__tasks-list-item__body--expanded')
 
 const spyOnAskResponse = () => {
   const onRequest = vi.fn<(body: unknown) => void>()
@@ -391,13 +360,14 @@ describe('CounterpartyAskTaskBody', () => {
 
   it('collapses the card and returns to the picker once the answer saves', async () => {
     spyOnAskResponse()
-    const onAnswered = vi.fn()
-    const { user } = renderBody({}, onAnswered)
+    const { user } = renderBody()
+
+    expect(expandedBody()).not.toBeNull()
 
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
     await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
 
-    await waitFor(() => expect(onAnswered).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(expandedBody()).toBeNull())
 
     await waitFor(() => expect(screen.getAllByRole('radio', { name: /Something else/ })).toHaveLength(1))
     await waitFor(() =>

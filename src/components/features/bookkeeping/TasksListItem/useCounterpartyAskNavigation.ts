@@ -39,3 +39,5 @@ export const useCounterpartyAskNavigation = () => {
     returnToPicker,
   }), [direction, goBack, goForward, history.length, returnToPicker, view])
 }
+
+export type CounterpartyAskNavigation = ReturnType<typeof useCounterpartyAskNavigation>

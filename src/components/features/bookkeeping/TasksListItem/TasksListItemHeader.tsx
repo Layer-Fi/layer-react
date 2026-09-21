@@ -8,13 +8,17 @@ import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 import { CounterpartyAskAnswerBadge } from '@features/bookkeeping/TasksListItem/CounterpartyAskAnswerBadge'
 import { type CounterpartyAskAnswerSummary } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
-import { type CounterpartyAskBackAction } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
+
+export type TasksListItemBackAction = {
+  isDisabled: boolean
+  onBack: () => void
+}
 
 type TasksListItemHeaderProps = {
   task: UserVisibleTask
   isOpen: boolean
-  backAction: CounterpartyAskBackAction | null
+  backAction: TasksListItemBackAction | null
   answer: CounterpartyAskAnswerSummary | null
   onClick: () => void
 }
