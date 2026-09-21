@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useMemo } from 'react'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
-import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
+import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/features/bankAccounts/sync'
 import { type SWRQueryResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 import { useGetBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'

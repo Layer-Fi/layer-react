@@ -1,5 +1,10 @@
 import type { BankAccount } from '@schemas/features/bankAccounts/bankAccount'
-import type { ExternalAccountConnection } from '@schemas/features/bankAccounts/externalAccountConnection'
+import { type ExternalAccountConnection } from '@schemas/features/bankAccounts/externalAccountConnection'
+
+export type BankAccountLabelParts = {
+  accountName: string
+  mask: string | null
+}
 
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
   return bankAccounts.flatMap(ba =>
@@ -21,38 +26,11 @@ export function getBankAccountInstitution(bankAccount: BankAccount): { name: str
     ?? null
 }
 
-export function isBankAccountSyncing(bankAccount: BankAccount): boolean {
-  return bankAccount.externalAccounts.some(ea => ea.isSyncing)
-}
-
-export function isAnyBankAccountSyncing(bankAccounts: ReadonlyArray<BankAccount>): boolean {
-  return bankAccounts.some(isBankAccountSyncing)
-}
-
-export function getSyncingExternalAccountIds(bankAccounts: ReadonlyArray<BankAccount> | undefined): Set<string> {
-  const ids = new Set<string>()
-
-  for (const account of bankAccounts ?? []) {
-    for (const external of account.externalAccounts) {
-      if (external.isSyncing) ids.add(external.id)
-    }
+export function getBankAccountLabelParts(bankAccount: BankAccount): BankAccountLabelParts {
+  return {
+    accountName: getBankAccountDisplayName(bankAccount),
+    mask: bankAccount.mask ?? bankAccount.externalAccounts[0]?.mask ?? null,
   }
-
-  return ids
-}
-
-export function hasNewSyncingAccounts(
-  prevAccounts: ReadonlyArray<BankAccount> | undefined,
-  newAccounts: ReadonlyArray<BankAccount> | undefined,
-): boolean {
-  const prevIds = getSyncingExternalAccountIds(prevAccounts)
-  const newIds = getSyncingExternalAccountIds(newAccounts)
-
-  for (const id of newIds) {
-    if (!prevIds.has(id)) return true
-  }
-
-  return false
 }
 
 export function isAllExternalAccountsUserCreatedCustom(bankAccount: BankAccount): boolean {

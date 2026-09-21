@@ -68,7 +68,9 @@ export const BankAccountArbitrarySchema = base.annotations({
           connectionNeedsRepairAsOf: null,
           reconnectWithNewCredentials: false,
           isSyncing: false,
+          lastSyncedAt: null,
           userCreated: false,
+          updateType: null,
         })),
         notifications: [],
       }
