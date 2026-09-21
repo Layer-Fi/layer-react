@@ -3,6 +3,10 @@
   max-width: var(--max-component-width);
   padding-bottom: var(--spacing-lg);
 
+  &:has(.Layer__BankTransactionsRefreshAlert) .Layer__bank-transactions__header {
+    padding-block-start: var(--spacing-sm);
+  }
+
   .Layer__BankTransactions__TableWrapper {
     overflow: auto;
     max-width: var(--max-component-width);
