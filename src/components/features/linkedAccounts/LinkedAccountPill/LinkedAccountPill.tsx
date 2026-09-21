@@ -1,12 +1,13 @@
-import { useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { CircleAlert } from 'lucide-react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { Pill } from '@ui/Pill/Pill'
 import { Span } from '@ui/Typography/Text'
 
 const legacyClassNames = createLegacyClassNames({
+  'pill:badge': 'Layer__Pill',
   'menu:popover': 'Layer__linked-accounts__options-menu',
   'Layer__UI__DropdownMenu__Menu': ['Layer__hover-menu__list', 'Layer__linked-accounts__options-menu-list'],
   'Layer__UI__DropdownMenu__MenuItem': [
@@ -22,15 +23,32 @@ type LinkedAccountPillProps = {
     action: () => void
     name: string
   }>
+  status?: 'error' | 'success'
+  icon?: ReactNode
 }
 
-export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
+export function LinkedAccountPill({
+  label,
+  items,
+  status = 'error',
+  icon,
+}: LinkedAccountPillProps) {
+  const variant = status === 'success' ? BadgeVariant.SUCCESS : BadgeVariant.ERROR
+
   const Trigger = useCallback(() => (
-    <Pill status='error'>
-      <CircleAlert size={14} />
+    <Badge className={legacyClassNames('pill:badge')} variant={variant} icon={icon ?? <CircleAlert size={14} />} isTrigger>
       {label}
-    </Pill>
-  ), [label])
+    </Badge>
+  ), [icon, label, variant])
+
+  const [soleItem] = items
+  if (soleItem && items.length === 1) {
+    return (
+      <Badge className={legacyClassNames('pill:badge')} variant={variant} icon={icon ?? <CircleAlert size={14} />} onPress={soleItem.action}>
+        {label}
+      </Badge>
+    )
+  }
 
   return (
     <DropdownMenu ariaLabel={label} slots={{ Trigger }} variant='compact' popoverClassName={legacyClassNames('menu:popover')}>

@@ -30,7 +30,7 @@ export function BankTransactionsAccountFilterChip({ slot, variant }: BankTransac
         size={BadgeSize.MEDIUM}
         icon={<X size={12} />}
         iconPosition='right'
-        onClick={() => setSelectedBankAccountIds([])}
+        onPress={() => setSelectedBankAccountIds([])}
       >
         {tPlural(t, 'bankTransactions:BankTransactionsAccountFilterChip.label.accounts_selected', {
           count: selectedBankAccountIds.length,

@@ -73,7 +73,7 @@ const meta: Meta<JournalStoryArgs> = {
           <Badge
             variant={BadgeVariant.INFO}
             tooltip={`Open ${entityName}`}
-            onClick={() => window.alert(`Here is the ${entityName}!`)}
+            onPress={() => window.alert(`Here is the ${entityName}!`)}
           >
             {entityName}
           </Badge>

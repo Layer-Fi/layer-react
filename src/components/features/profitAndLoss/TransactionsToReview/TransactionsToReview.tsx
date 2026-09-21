@@ -66,7 +66,7 @@ export function TransactionsToReview({
           variant={BadgeVariant.ERROR}
           size={BadgeSize.SMALL}
           icon={<RefreshCcw size={12} />}
-          onClick={() => void mutate()}
+          onPress={() => void mutate()}
         >
           {t('common:action.refresh_label', 'Refresh')}
         </Badge>

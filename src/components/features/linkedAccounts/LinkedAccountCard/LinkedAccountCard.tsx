@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/features/bankAccounts/bankAccount'
+import { isBankAccountReadyForRefresh } from '@utils/features/bankAccounts/refresh'
 import { isBankAccountSyncing } from '@utils/features/bankAccounts/sync'
 import { ROTATING_CLASS_NAME } from '@utils/shared/styles/animationClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
@@ -40,6 +41,7 @@ export const LinkedAccountCard = ({
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const isSyncing = isBankAccountSyncing(bankAccount)
+  const isReadyForRefresh = isBankAccountReadyForRefresh(bankAccount)
   const displayName = getBankAccountDisplayName(bankAccount)
   const institution = getBankAccountInstitution(bankAccount)
   const institutionName = institution?.name
@@ -47,6 +49,7 @@ export const LinkedAccountCard = ({
 
   const dataProperties = toDataProperties({
     'as-widget': asWidget,
+    'ready-for-refresh': isReadyForRefresh,
     'syncing': isSyncing,
     'show-ledger-balance': showLedgerBalance,
   })

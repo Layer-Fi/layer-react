@@ -50,6 +50,11 @@
     &:hover {
       background-color: color-mix(in srgb, var(--bg-color), var(--color-base-1000) 6%);
     }
+
+    &[data-focus-visible] {
+      outline: 1px solid var(--bg-color);
+      outline-offset: 1px;
+    }
   }
 
   &[data-variant='default'] {

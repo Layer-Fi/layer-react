@@ -32,7 +32,7 @@ export const DebitCreditPill = ({
     <Badge
       variant={isDebit ? BadgeVariant.WARNING : BadgeVariant.SUCCESS}
       size={BadgeSize.SMALL}
-      onClick={isReadOnly ? undefined : handleClick}
+      onPress={isReadOnly ? undefined : handleClick}
     >
       {isDebit ? t('common:label.debit', 'Debit') : t('common:label.credit', 'Credit')}
     </Badge>
