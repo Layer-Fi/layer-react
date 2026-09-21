@@ -87,7 +87,7 @@ export const CounterpartyAskTransactionRow = ({
       </Button>
       {isOpen
         ? (
-          <VStack gap='2xs' pb='2xs'>
+          <VStack gap='2xs' pb='sm'>
             <Span size='xs'>
               {t('bookkeeping:TasksListItem.CounterpartyAskTransactionRow.label.select_category', 'Select category')}
             </Span>
