@@ -143,11 +143,15 @@
       text-decoration: underline;
     }
 
+    &[data-underline='never'][data-hovered] {
+      text-decoration: none;
+    }
+
     &[data-pressed]:not([data-focus-visible]) {
       text-decoration: none;
     }
 
-    &[data-underline] {
+    &[data-underline='always'] {
       text-decoration: underline;
 
       &[data-pressed]:not([data-focus-visible]) {

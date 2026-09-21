@@ -1,10 +1,12 @@
 import { type ForwardedRef, forwardRef } from 'react'
 import {
-  Radio as ReactAriaRadio,
-  RadioGroup as ReactAriaRadioGroup,
-  type RadioGroupProps as ReactAriaRadioGroupProps,
-  type RadioProps as ReactAriaRadioProps,
-} from 'react-aria-components/RadioGroup'
+  ToggleButton as ReactAriaToggleButton,
+  type ToggleButtonProps as ReactAriaToggleButtonProps,
+} from 'react-aria-components/ToggleButton'
+import {
+  ToggleButtonGroup as ReactAriaToggleButtonGroup,
+  type ToggleButtonGroupProps as ReactAriaToggleButtonGroupProps,
+} from 'react-aria-components/ToggleButtonGroup'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
@@ -14,30 +16,33 @@ import './chip.scss'
 const CHIP_GROUP_CLASS_NAME = 'Layer__UI__ChipGroup'
 const CHIP_CLASS_NAME = 'Layer__UI__Chip'
 
-type ChipGroupProps<T extends string> = Pick<
-  ReactAriaRadioGroupProps,
-  'children' | 'isDisabled'
-> & {
+type ChipGroupProps<T extends string> = Pick<ReactAriaToggleButtonGroupProps, 'children' | 'isDisabled'> & {
   ariaLabel: string
   value?: T | null
   onChange?: (value: T) => void
 }
 
 function ChipGroupWithRef<T extends string>(
-  { ariaLabel, children, onChange, ...restProps }: ChipGroupProps<T>,
+  { ariaLabel, children, value, onChange, ...restProps }: ChipGroupProps<T>,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return (
-    <ReactAriaRadioGroup
+    <ReactAriaToggleButtonGroup
       {...restProps}
       aria-label={ariaLabel}
-      orientation='horizontal'
-      onChange={onChange as ((value: string) => void) | undefined}
+      selectionMode='single'
+      disallowEmptySelection
+      selectedKeys={value == null ? [] : [value]}
+      onSelectionChange={(keys) => {
+        const [next] = keys
+
+        if (next !== undefined) onChange?.(next as T)
+      }}
       className={CHIP_GROUP_CLASS_NAME}
       ref={ref}
     >
       {children}
-    </ReactAriaRadioGroup>
+    </ReactAriaToggleButtonGroup>
   )
 }
 
@@ -47,29 +52,31 @@ export const ChipGroup = forwardRef(ChipGroupWithRef) as <T extends string>(
 
 export type ChipSize = 'sm' | 'md' | 'lg'
 
-type ChipProps<T extends string> = Pick<ReactAriaRadioProps, 'children'> & {
+// A toggle button rather than a radio so `onPress` also fires on the chip already selected.
+type ChipProps<T extends string> = Pick<ReactAriaToggleButtonProps, 'children' | 'onPress'> & {
   size?: ChipSize
   value: T
 }
 
 function ChipWithRef<T extends string>(
-  { children, size = 'md', ...restProps }: ChipProps<T>,
-  ref: ForwardedRef<HTMLLabelElement>,
+  { children, size = 'md', value, ...restProps }: ChipProps<T>,
+  ref: ForwardedRef<HTMLButtonElement>,
 ) {
   const dataProperties = toDataProperties({ size })
 
   return (
-    <ReactAriaRadio
+    <ReactAriaToggleButton
       {...restProps}
       {...dataProperties}
+      id={value}
       className={CHIP_CLASS_NAME}
       ref={ref}
     >
       {withRenderProp(children, node => node)}
-    </ReactAriaRadio>
+    </ReactAriaToggleButton>
   )
 }
 
 export const Chip = forwardRef(ChipWithRef) as <T extends string>(
-  props: ChipProps<T> & { ref?: ForwardedRef<HTMLLabelElement> },
+  props: ChipProps<T> & { ref?: ForwardedRef<HTMLButtonElement> },
 ) => React.ReactElement

@@ -40,12 +40,22 @@
             border-radius: 100%;
           }
 
+          .Layer__tasks-list-item__head-info__back {
+            justify-content: center;
+            block-size: 1.25rem;
+            inline-size: 1.25rem;
+          }
+
           &.Layer__tasks-list-item--completed {
             color: var(--color-base-500);
-            text-decoration: line-through;
+
+            .Layer__tasks-list-item__head-info__title {
+              text-decoration: line-through;
+            }
 
             .Layer__tasks-list-item__head-info__status {
-              color: var(--color-info-success);
+              background: var(--color-info-success-bg);
+              color: var(--color-info-success-fg);
             }
           }
 
@@ -75,7 +85,7 @@
           }
 
           .Layer__tasks-list-item__actions {
-            margin-top: var(--spacing-xs);
+            margin-top: var(--spacing-md);
           }
 
           .Layer__tasks-list__link-list {
@@ -105,6 +115,12 @@
           height: auto;
           opacity: 1;
         }
+
+        &.Layer__tasks-list-item__body--flush {
+          padding-right: 0;
+          padding-left: 0;
+          margin-left: 0;
+        }
       }
     }
   }
@@ -125,7 +141,7 @@
   gap: var(--spacing-xs);
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-md);
 }
 
 .Layer__tasks-icon {

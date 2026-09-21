@@ -6,7 +6,7 @@ import {
 } from 'react-aria-components/Link'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { type ButtonStyleProps } from '@ui/Button/Button'
+import { type ButtonStyleProps, toUnderlineDataValue } from '@ui/Button/Button'
 import { legacyButtonClassNames } from '@ui/Button/legacyClassNames'
 
 import './button.scss'
@@ -42,7 +42,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
       variant,
       'full-width': fullWidth,
       flex,
-      underline,
+      'underline': toUnderlineDataValue(underline),
     })
 
     const effectiveTarget = external ? '_blank' : target

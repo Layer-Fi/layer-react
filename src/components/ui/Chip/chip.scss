@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   min-block-size: 2rem;
+  padding-block: 0;
   padding-inline: var(--spacing-xs);
 
   border-radius: var(--btn-border-radius);
@@ -19,8 +20,9 @@
 
   cursor: pointer;
   user-select: none;
-
   font-size: var(--text-sm);
+
+  font-family: inherit;
   font-weight: var(--font-weight-normal);
   text-align: center;
   color: var(--text-color-primary);
