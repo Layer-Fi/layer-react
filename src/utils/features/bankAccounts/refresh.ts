@@ -44,6 +44,10 @@ function isExternalAccountRepairable(externalAccount: ExternalAccountConnection)
   return externalAccount.connectionExternalId != null
 }
 
+function isExternalAccountNeedingRepair(externalAccount: ExternalAccountConnection): externalAccount is RepairableExternalAccount {
+  return externalAccount.connectionNeedsRepairAsOf != null && isExternalAccountRepairable(externalAccount)
+}
+
 function isExternalAccountDueForRefresh(
   externalAccount: ExternalAccountConnection,
   now: Date,
@@ -117,6 +121,12 @@ export function getBankAccountRefreshConnections(
       accounts: [...accounts.values()],
     }
   })
+}
+
+export function getBankAccountConnectionRepairInfo(bankAccount: BankAccount): RefreshConnectionIdentity | null {
+  const brokenAccount = bankAccount.externalAccounts.find(isExternalAccountNeedingRepair)
+
+  return brokenAccount ? getRefreshConnectionIdentity(brokenAccount) : null
 }
 
 export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, now = new Date()) {
