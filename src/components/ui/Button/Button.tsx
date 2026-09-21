@@ -56,6 +56,9 @@ export type ButtonStyleProps = {
   underline?: boolean
 }
 
+export const toUnderlineDataValue = (underline: boolean | undefined) =>
+  underline === undefined ? undefined : underline ? 'always' : 'never'
+
 export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps & {
   className?: string
 }
@@ -92,7 +95,7 @@ const Button = forwardRef<
     status,
     'full-width': fullWidth,
     flex,
-    'underline': underline === undefined ? undefined : underline ? 'always' : 'never',
+    'underline': toUnderlineDataValue(underline),
   })
 
   const button = (
