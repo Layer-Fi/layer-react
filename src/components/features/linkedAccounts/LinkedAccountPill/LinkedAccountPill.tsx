@@ -35,7 +35,7 @@ export function LinkedAccountPill({
   const variant = status === 'success' ? BadgeVariant.SUCCESS : BadgeVariant.ERROR
 
   const Trigger = useCallback(() => (
-    <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} asButton>
+    <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} isTrigger>
       {label}
     </Badge>
   ), [icon, label, variant])

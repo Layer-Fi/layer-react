@@ -49,7 +49,7 @@ export interface BadgeProps {
   variant?: BadgeVariant
   iconOnly?: boolean
   iconPosition?: 'left' | 'right'
-  asButton?: boolean
+  isTrigger?: boolean
 }
 
 export const Badge = ({
@@ -61,11 +61,11 @@ export const Badge = ({
   variant = BadgeVariant.DEFAULT,
   iconOnly = false,
   iconPosition = 'left',
-  asButton = false,
+  isTrigger = false,
 }: BadgeProps) => {
   // A DropdownMenu trigger carries no handler of its own; MenuTrigger wires press
   // through ButtonContext, which only a React Aria Button consumes.
-  const isButton = Boolean(onPress) || asButton
+  const isButton = Boolean(onPress) || isTrigger
   const clickable = isButton || Boolean(tooltip)
 
   const baseProps = {
