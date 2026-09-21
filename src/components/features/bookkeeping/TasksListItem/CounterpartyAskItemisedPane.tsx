@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -30,26 +30,22 @@ export const CounterpartyAskItemisedPane = ({
   onUniformAnswer,
 }: CounterpartyAskItemisedPaneProps) => {
   const { t } = useTranslation()
-  const [openRowId, setOpenRowId] = useState<string | null>(null)
+
+  const findNextUnanswered = useCallback(() =>
+    form.state.values.rows.find(
+      ({ answerKey, text }) => !resolveCounterpartyAskAnswer(suggestions, answerKey, text),
+    )?.transactionId ?? null, [form, suggestions])
+
+  const [openRowId, setOpenRowId] = useState(findNextUnanswered)
 
   const values = useStore(form.store, state => state.values)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
   const answeredCount = getAnsweredRows(suggestions, values.rows).length
-  const isEveryRowAnswered = transactions.length > 0 && answeredCount === transactions.length
+  const isEveryRowAnswered = values.rows.length > 0 && answeredCount === values.rows.length
   const wholeAnswer = getWholeAnswer(suggestions, values)
 
-  const openNextUnanswered = useCallback(() => {
-    const next = form.state.values.rows.find(
-      ({ answerKey, text }) => !resolveCounterpartyAskAnswer(suggestions, answerKey, text),
-    )
-
-    setOpenRowId(next?.transactionId ?? null)
-  }, [form, suggestions])
-
-  useEffect(() => {
-    openNextUnanswered()
-  }, [openNextUnanswered])
+  const openNextUnanswered = useCallback(() => setOpenRowId(findNextUnanswered()), [findNextUnanswered])
 
   const onSave = () => {
     if (wholeAnswer) {
@@ -70,19 +66,25 @@ export const CounterpartyAskItemisedPane = ({
         )}
       </P>
       <VStack className='Layer__CounterpartyAskTask__Rows'>
-        {transactions.map((transaction, index) => (
-          <CounterpartyAskTransactionRow
-            key={transaction.id}
-            form={form}
-            index={index}
-            transaction={transaction}
-            suggestions={suggestions}
-            isDisabled={isSubmitting}
-            isOpen={openRowId === transaction.id}
-            onOpen={() => setOpenRowId(transaction.id)}
-            onAnswered={openNextUnanswered}
-          />
-        ))}
+        {values.rows.map(({ transactionId }, index) => {
+          const transaction = transactions.find(({ id }) => id === transactionId)
+
+          return transaction
+            ? (
+              <CounterpartyAskTransactionRow
+                key={transactionId}
+                form={form}
+                index={index}
+                transaction={transaction}
+                suggestions={suggestions}
+                isDisabled={isSubmitting}
+                isOpen={openRowId === transactionId}
+                onOpen={() => setOpenRowId(transactionId)}
+                onAnswered={openNextUnanswered}
+              />
+            )
+            : null
+        })}
       </VStack>
       <HStack className='Layer__CounterpartyAskTask__Footer' align='center' justify='space-between' gap='sm' pi='md'>
         <Span size='xs' variant='subtle'>
@@ -90,12 +92,12 @@ export const CounterpartyAskItemisedPane = ({
             ? t(
               'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.label.all_rows_answered',
               'All {{total}} answered',
-              { total: transactions.length },
+              { total: values.rows.length },
             )
             : t(
               'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.label.rows_answered',
               '{{answered}} of {{total}} answered',
-              { answered: answeredCount, total: transactions.length },
+              { answered: answeredCount, total: values.rows.length },
             )}
         </Span>
         <Button isDisabled={!isEveryRowAnswered || isSubmitting} onPress={onSave}>

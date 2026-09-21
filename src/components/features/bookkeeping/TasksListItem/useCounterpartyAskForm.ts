@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
@@ -50,6 +50,16 @@ export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskForm
       }
     },
   })
+
+  // A refetch that links or unlinks transactions invalidates the row set; the API rejects an
+  // itemised response that skips a linked transaction, so start the rows over from the task.
+  const linkedIds = task.transactions.map(({ id }) => id).join(',')
+
+  useEffect(() => {
+    const rowIds = form.state.values.rows.map(({ transactionId }) => transactionId).join(',')
+
+    if (rowIds !== linkedIds) form.reset(getCounterpartyAskFormDefaultValues(task))
+  }, [form, linkedIds, task])
 
   return useMemo(() => ({ form }), [form])
 }

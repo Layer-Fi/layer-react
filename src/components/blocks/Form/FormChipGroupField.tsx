@@ -14,7 +14,7 @@ export type ChipOption<T extends string> = {
 export type FormChipGroupFieldProps<T extends string> = CommonFormFieldProps & {
   options: ChipOption<T>[]
   size?: ChipSize
-  /** Fires on every pick, including pressing the chip that is already selected. */
+  /** Fires on every press, including the chip that is already selected. */
   onSelect?: (value: T) => void
 }
 
@@ -35,21 +35,16 @@ export function FormChipGroupField<T extends string>({
   return (
     <div {...formFieldLayoutProps({ className, inline, align, showLabel })}>
       <FormFieldShell {...shellProps} labelId={labelId}>
-        <ChipGroup<T>
-          ariaLabel={label}
-          value={value}
-          onChange={(next) => {
-            handleChange(next)
-            onSelect?.(next)
-          }}
-          isDisabled={isDisabled}
-        >
+        <ChipGroup<T> ariaLabel={label} value={value} isDisabled={isDisabled}>
           {options.map(option => (
             <Chip<T>
               key={option.value}
               size={size}
               value={option.value}
-              onReselect={onSelect ? () => onSelect(option.value) : undefined}
+              onPress={() => {
+                handleChange(option.value)
+                onSelect?.(option.value)
+              }}
             >
               {option.label}
             </Chip>
