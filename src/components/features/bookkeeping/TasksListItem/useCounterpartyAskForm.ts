@@ -18,9 +18,11 @@ export type CounterpartyAskSaved = Pick<CounterpartyAskSubmission, 'answer' | 'w
 type UseCounterpartyAskFormProps = {
   task: CounterpartyAskTask
   onSaved: (saved: CounterpartyAskSaved) => void
+  /** The linked transactions changed and the rows started over, so any pane built on them is stale. */
+  onRowsReset: () => void
 }
 
-export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskFormProps) => {
+export const useCounterpartyAskForm = ({ task, onSaved, onRowsReset }: UseCounterpartyAskFormProps) => {
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { trigger: submitCounterpartyAskResponse } = usePostCounterpartyAskResponse()
@@ -60,8 +62,11 @@ export const useCounterpartyAskForm = ({ task, onSaved }: UseCounterpartyAskForm
   useEffect(() => {
     const rowIds = form.state.values.itemised.rows.map(({ transactionId }) => transactionId).join(',')
 
-    if (rowIds !== linkedIds) form.reset(getCounterpartyAskFormDefaultValues(task))
-  }, [form, linkedIds, task])
+    if (rowIds === linkedIds) return
+
+    form.reset(getCounterpartyAskFormDefaultValues(task))
+    onRowsReset()
+  }, [form, linkedIds, onRowsReset, task])
 
   return useMemo(() => ({ form }), [form])
 }

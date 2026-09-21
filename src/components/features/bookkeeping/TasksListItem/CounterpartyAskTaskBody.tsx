@@ -61,7 +61,7 @@ export const CounterpartyAskTaskBody = ({
     onAnswered()
   }, [eventCallbacks, onAnswerChange, onAnswered, returnToPicker])
 
-  const { form } = useCounterpartyAskForm({ task, onSaved })
+  const { form } = useCounterpartyAskForm({ task, onSaved, onRowsReset: returnToPicker })
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
   useEffect(() => {
