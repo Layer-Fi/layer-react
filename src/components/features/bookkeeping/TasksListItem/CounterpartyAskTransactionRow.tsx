@@ -44,7 +44,7 @@ export const CounterpartyAskTransactionRow = ({
 }: CounterpartyAskTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const row = useStore(form.store, state => state.values.rows[index])
+  const row = useStore(form.store, state => state.values.itemised.rows[index])
 
   const answer = row ? resolveCounterpartyAskAnswer(suggestions, row.answerKey, row.text) : null
 
@@ -56,7 +56,7 @@ export const CounterpartyAskTransactionRow = ({
       <Button
         className='Layer__CounterpartyAskTask__RowSummary'
         variant='text'
-        noUnderline
+        underline={false}
         fullWidth
         isDisabled={isDisabled}
         onPress={onOpen}
@@ -91,7 +91,7 @@ export const CounterpartyAskTransactionRow = ({
             <Span size='xs'>
               {t('bookkeeping:TasksListItem.CounterpartyAskTransactionRow.label.select_category', 'Select category')}
             </Span>
-            <form.AppField name={`rows[${index}].answerKey`}>
+            <form.AppField name={`itemised.rows[${index}].answerKey`}>
               {field => (
                 <field.FormChipGroupField
                   label={t(
@@ -119,7 +119,7 @@ export const CounterpartyAskTransactionRow = ({
             </form.AppField>
             {row?.answerKey === OTHER_ANSWER_KEY
               ? (
-                <form.Field name={`rows[${index}].text`}>
+                <form.Field name={`itemised.rows[${index}].text`}>
                   {field => (
                     <InputGroup>
                       <Input

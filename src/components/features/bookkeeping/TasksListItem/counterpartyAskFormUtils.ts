@@ -1,3 +1,5 @@
+import { formOptions } from '@tanstack/react-form'
+
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import {
@@ -46,12 +48,23 @@ export type CounterpartyAskRowValues = {
   text: string
 }
 
+/** One group per pane, so each pane validates and submits only its own slice. */
 export type CounterpartyAskFormValues = {
-  answerKey: string | null
-  freeText: string
-  goingForward: GoingForwardChoice | null
-  rows: CounterpartyAskRowValues[]
+  picker: { answerKey: string | null }
+  freeText: { text: string }
+  itemised: { rows: CounterpartyAskRowValues[] }
+  remember: { goingForward: GoingForwardChoice | null }
 }
+
+const EMPTY_VALUES: CounterpartyAskFormValues = {
+  picker: { answerKey: null },
+  freeText: { text: '' },
+  itemised: { rows: [] },
+  remember: { goingForward: null },
+}
+
+// Shared by the form and its `withForm` panes; the real defaults come from the task.
+export const counterpartyAskFormOptions = formOptions({ defaultValues: EMPTY_VALUES })
 
 const toAnswerKey = (
   suggestions: readonly CounterpartyAskAccount[],
@@ -74,20 +87,24 @@ export const getCounterpartyAskFormDefaultValues = (task: CounterpartyAskTask): 
   const hasWholeAnswer = stored !== null && stored.kind !== 'itemised'
 
   return {
-    answerKey: stored?.kind === 'itemised'
-      ? MIX_ANSWER_KEY
-      : toAnswerKey(task.suggestions, task.responseAccount, task.userResponse),
-    freeText: task.userResponse ?? '',
-    goingForward: hasWholeAnswer ? (task.alwaysThis ? 'always' : 'ask') : null,
-    rows: task.transactions.map(({ id }) => {
-      const response = task.transactionResponses.find(({ transactionId }) => transactionId === id)
+    picker: {
+      answerKey: stored?.kind === 'itemised'
+        ? MIX_ANSWER_KEY
+        : toAnswerKey(task.suggestions, task.responseAccount, task.userResponse),
+    },
+    freeText: { text: task.userResponse ?? '' },
+    itemised: {
+      rows: task.transactions.map(({ id }) => {
+        const response = task.transactionResponses.find(({ transactionId }) => transactionId === id)
 
-      return {
-        transactionId: id,
-        answerKey: toAnswerKey(task.suggestions, response?.responseAccount, response?.userResponse),
-        text: response?.userResponse ?? '',
-      }
-    }),
+        return {
+          transactionId: id,
+          answerKey: toAnswerKey(task.suggestions, response?.responseAccount, response?.userResponse),
+          text: response?.userResponse ?? '',
+        }
+      }),
+    },
+    remember: { goingForward: hasWholeAnswer ? (task.alwaysThis ? 'always' : 'ask') : null },
   }
 }
 
@@ -121,9 +138,9 @@ export const getAnsweredRows = (
 /** The single answer a submission would carry; itemised rows only count once they all agree. */
 export const getWholeAnswer = (
   suggestions: readonly CounterpartyAskAccount[],
-  { answerKey, freeText, rows }: CounterpartyAskFormValues,
+  { picker: { answerKey }, freeText: { text }, itemised: { rows } }: CounterpartyAskFormValues,
 ): CounterpartyAskAnswerValue | null => {
-  if (answerKey !== MIX_ANSWER_KEY) return resolveCounterpartyAskAnswer(suggestions, answerKey, freeText)
+  if (answerKey !== MIX_ANSWER_KEY) return resolveCounterpartyAskAnswer(suggestions, answerKey, text)
 
   const answered = getAnsweredRows(suggestions, rows)
 
@@ -147,8 +164,10 @@ export const buildCounterpartyAskSubmission = (
   const hadAccountAnswer = Boolean(task.responseAccount)
     || task.transactionResponses.some(({ responseAccount }) => Boolean(responseAccount))
 
-  if (values.answerKey === MIX_ANSWER_KEY && values.goingForward === null) {
-    const rows = getAnsweredRows(suggestions, values.rows)
+  const { goingForward } = values.remember
+
+  if (values.picker.answerKey === MIX_ANSWER_KEY && goingForward === null) {
+    const rows = getAnsweredRows(suggestions, values.itemised.rows)
     const response = buildItemisedCounterpartyAskResponse(rows)
 
     return response && {
@@ -163,7 +182,7 @@ export const buildCounterpartyAskSubmission = (
   if (!wholeAnswer) return null
 
   return {
-    response: buildAllSameCounterpartyAskResponse(wholeAnswer, values.goingForward === 'always'),
+    response: buildAllSameCounterpartyAskResponse(wholeAnswer, goingForward === 'always'),
     answer: wholeAnswer.kind === 'account' ? { kind: 'account', name: wholeAnswer.account.name } : { kind: 'text' },
     wasCategorized: hadAccountAnswer || wholeAnswer.kind === 'account',
   }

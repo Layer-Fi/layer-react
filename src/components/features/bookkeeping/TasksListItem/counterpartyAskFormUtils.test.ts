@@ -60,14 +60,14 @@ describe('getCounterpartyAskFormDefaultValues', () => {
 
     const defaults = getCounterpartyAskFormDefaultValues(task)
 
-    expect(defaults.answerKey).toBe(toSuggestionAnswerKey(0))
-    expect(defaults.goingForward).toBe('always')
+    expect(defaults.picker.answerKey).toBe(toSuggestionAnswerKey(0))
+    expect(defaults.remember.goingForward).toBe('always')
   })
 
   it('seeds stored free text', () => {
     const defaults = getCounterpartyAskFormDefaultValues(makeCounterpartyAskTask({ userResponse: 'Team lunch' }))
 
-    expect(defaults).toMatchObject({ answerKey: OTHER_ANSWER_KEY, freeText: 'Team lunch', goingForward: 'ask' })
+    expect(defaults).toMatchObject({ picker: { answerKey: OTHER_ANSWER_KEY }, freeText: { text: 'Team lunch' }, remember: { goingForward: 'ask' } })
   })
 
   it('seeds itemised rows from the per-transaction responses', () => {
@@ -81,9 +81,9 @@ describe('getCounterpartyAskFormDefaultValues', () => {
 
     const defaults = getCounterpartyAskFormDefaultValues(task)
 
-    expect(defaults.answerKey).toBe(MIX_ANSWER_KEY)
-    expect(defaults.goingForward).toBeNull()
-    expect(defaults.rows).toEqual([
+    expect(defaults.picker.answerKey).toBe(MIX_ANSWER_KEY)
+    expect(defaults.remember.goingForward).toBeNull()
+    expect(defaults.itemised.rows).toEqual([
       { transactionId: 'txn-1', answerKey: toSuggestionAnswerKey(0), text: '' },
       { transactionId: 'txn-2', answerKey: OTHER_ANSWER_KEY, text: 'Gas for the van' },
     ])
@@ -94,12 +94,12 @@ describe('getWholeAnswer', () => {
   it('collapses itemised rows only once every row agrees', () => {
     const task = makeCounterpartyAskTask(twoTransactions())
     const partial = getCounterpartyAskFormDefaultValues(task)
-    partial.answerKey = MIX_ANSWER_KEY
-    partial.rows[0]!.answerKey = toSuggestionAnswerKey(2)
+    partial.picker.answerKey = MIX_ANSWER_KEY
+    partial.itemised.rows[0]!.answerKey = toSuggestionAnswerKey(2)
 
     expect(getWholeAnswer(task.suggestions, partial)).toBeNull()
 
-    partial.rows[1]!.answerKey = toSuggestionAnswerKey(2)
+    partial.itemised.rows[1]!.answerKey = toSuggestionAnswerKey(2)
 
     expect(getWholeAnswer(task.suggestions, partial)).toEqual({ kind: 'account', account: task.suggestions[2] })
   })
@@ -108,7 +108,7 @@ describe('getWholeAnswer', () => {
 describe('buildCounterpartyAskSubmission', () => {
   it('sends one account for the whole task with the going-forward flag', () => {
     const task = makeCounterpartyAskTask()
-    const values = { ...getCounterpartyAskFormDefaultValues(task), answerKey: toSuggestionAnswerKey(2), goingForward: 'always' as const }
+    const values = { ...getCounterpartyAskFormDefaultValues(task), picker: { answerKey: toSuggestionAnswerKey(2) }, remember: { goingForward: 'always' as const } }
 
     expect(buildCounterpartyAskSubmission(task, values)).toEqual({
       response: { accountIdentifier: MEALS, alwaysThis: true },
@@ -119,7 +119,7 @@ describe('buildCounterpartyAskSubmission', () => {
 
   it('sends free text without categorizing', () => {
     const task = makeCounterpartyAskTask()
-    const values = { ...getCounterpartyAskFormDefaultValues(task), answerKey: OTHER_ANSWER_KEY, freeText: ' Team lunch ', goingForward: 'ask' as const }
+    const values = { ...getCounterpartyAskFormDefaultValues(task), picker: { answerKey: OTHER_ANSWER_KEY }, freeText: { text: ' Team lunch ' }, remember: { goingForward: 'ask' as const } }
 
     expect(buildCounterpartyAskSubmission(task, values)).toEqual({
       response: { userResponse: 'Team lunch', alwaysThis: false },
@@ -131,10 +131,10 @@ describe('buildCounterpartyAskSubmission', () => {
   it('sends itemised rows when no going-forward choice was made', () => {
     const task = makeCounterpartyAskTask(twoTransactions())
     const values = getCounterpartyAskFormDefaultValues(task)
-    values.answerKey = MIX_ANSWER_KEY
-    values.rows[0]!.answerKey = toSuggestionAnswerKey(0)
-    values.rows[1]!.answerKey = OTHER_ANSWER_KEY
-    values.rows[1]!.text = 'Gas'
+    values.picker.answerKey = MIX_ANSWER_KEY
+    values.itemised.rows[0]!.answerKey = toSuggestionAnswerKey(0)
+    values.itemised.rows[1]!.answerKey = OTHER_ANSWER_KEY
+    values.itemised.rows[1]!.text = 'Gas'
 
     expect(buildCounterpartyAskSubmission(task, values)).toEqual({
       response: {

@@ -52,8 +52,8 @@ export type ButtonStyleProps = {
   fullWidth?: boolean
   flex?: boolean
   tooltip?: ReactNode
-  underline?: true
-  noUnderline?: true
+  /** `false` keeps the text variant from underlining on hover. */
+  underline?: boolean
 }
 
 export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps & {
@@ -77,7 +77,6 @@ const Button = forwardRef<
     flex = false,
     tooltip,
     underline,
-    noUnderline,
     ...restProps
   },
   ref,
@@ -93,8 +92,7 @@ const Button = forwardRef<
     status,
     'full-width': fullWidth,
     flex,
-    underline,
-    'no-underline': noUnderline,
+    'underline': underline === undefined ? undefined : underline ? 'always' : 'never',
   })
 
   const button = (

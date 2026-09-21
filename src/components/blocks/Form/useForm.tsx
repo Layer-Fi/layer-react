@@ -22,7 +22,7 @@ import { FormTextField } from './FormTextField'
 
 export { fieldContext, formContext, useFieldContext, useFormContext } from './formContexts'
 
-const { useAppForm: useRawAppForm } = createFormHook({
+const { useAppForm: useRawAppForm, withForm } = createFormHook({
   fieldComponents: {
     BaseFormTextField,
     FormCheckboxField,
@@ -44,7 +44,7 @@ const { useAppForm: useRawAppForm } = createFormHook({
   formContext,
 })
 
-export { useRawAppForm }
+export { useRawAppForm, withForm }
 
 export function useAppForm<T extends Record<string, unknown>>(props: FormOptions<
   T,
