@@ -1,4 +1,5 @@
-import { type MouseEventHandler, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
+import { Button as ReactAriaButton, type ButtonProps } from 'react-aria-components/Button'
 
 import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
@@ -42,25 +43,30 @@ const legacyClassNames = createLegacyClassNames({
 export interface BadgeProps {
   children?: ReactNode
   icon?: ReactNode
-  onClick?: MouseEventHandler<HTMLButtonElement>
+  onPress?: ButtonProps['onPress']
   tooltip?: ReactNode
   size?: BadgeSize
   variant?: BadgeVariant
   iconOnly?: boolean
   iconPosition?: 'left' | 'right'
+  asButton?: boolean
 }
 
 export const Badge = ({
   icon,
-  onClick,
+  onPress,
   children,
   tooltip,
   size = BadgeSize.MEDIUM,
   variant = BadgeVariant.DEFAULT,
   iconOnly = false,
   iconPosition = 'left',
+  asButton = false,
 }: BadgeProps) => {
-  const clickable = Boolean(onClick || tooltip)
+  // A DropdownMenu trigger carries no handler of its own; MenuTrigger wires press
+  // through ButtonContext, which only a React Aria Button consumes.
+  const isButton = Boolean(onPress) || asButton
+  const clickable = isButton || Boolean(tooltip)
 
   const baseProps = {
     className: legacyClassNames(
@@ -71,11 +77,9 @@ export const Badge = ({
       iconOnly && 'state:iconOnly',
     ),
     ...toDataProperties({ size, variant, clickable, 'icon-only': iconOnly }),
-    onClick,
-    children,
   }
 
-  let content = (
+  const inner = (
     <>
       {iconPosition === 'left' && icon}
       {children}
@@ -83,14 +87,14 @@ export const Badge = ({
     </>
   )
 
-  content = onClick
+  const content = isButton
     ? (
-      <button type='button' role='button' {...baseProps}>
-        {content}
-      </button>
+      <ReactAriaButton {...baseProps} onPress={onPress}>
+        {inner}
+      </ReactAriaButton>
     )
     : (
-      <span {...baseProps}>{content}</span>
+      <span {...baseProps}>{inner}</span>
     )
 
   if (tooltip) {

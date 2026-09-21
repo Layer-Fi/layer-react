@@ -21,7 +21,7 @@ const COLUMNS: Column[] = [
   { label: 'icon', render: variant => <Badge variant={variant} icon={<Check size={12} />}>Icon</Badge> },
   { label: 'icon right', render: variant => <Badge variant={variant} icon={<Check size={12} />} iconPosition='right'>Right</Badge> },
   { label: 'icon only', render: variant => <Badge variant={variant} icon={<Check size={12} />} iconOnly /> },
-  { label: 'clickable', render: variant => <Badge variant={variant} onClick={noop}>Click</Badge> },
+  { label: 'clickable', render: variant => <Badge variant={variant} onPress={noop}>Click</Badge> },
 ]
 
 const meta: Meta<typeof Badge> = {

@@ -2,8 +2,8 @@ import { type ReactNode, useCallback } from 'react'
 import { CircleAlert } from 'lucide-react'
 
 import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { Pill } from '@ui/Pill/Pill'
 import { Span } from '@ui/Typography/Text'
 
 const legacyClassNames = createLegacyClassNames({
@@ -32,20 +32,20 @@ export function LinkedAccountPill({
   status = 'error',
   icon,
 }: LinkedAccountPillProps) {
+  const variant = status === 'success' ? BadgeVariant.SUCCESS : BadgeVariant.ERROR
+
   const Trigger = useCallback(() => (
-    <Pill status={status}>
-      {icon ?? <CircleAlert size={14} />}
+    <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} asButton>
       {label}
-    </Pill>
-  ), [icon, label, status])
+    </Badge>
+  ), [icon, label, variant])
 
   const [soleItem] = items
   if (soleItem && items.length === 1) {
     return (
-      <Pill status={status} onPress={soleItem.action}>
-        {icon ?? <CircleAlert size={14} />}
+      <Badge variant={variant} icon={icon ?? <CircleAlert size={14} />} onPress={soleItem.action}>
         {label}
-      </Pill>
+      </Badge>
     )
   }
 

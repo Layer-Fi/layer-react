@@ -45,7 +45,7 @@ export function UncategorizedTransactionsBadge({ onTransactionsToReviewClick }: 
         variant={BadgeVariant.ERROR}
         size={BadgeSize.MEDIUM}
         icon={<RefreshCcw size={12} />}
-        onClick={() => void mutate()}
+        onPress={() => void mutate()}
       >
         {t('common:action.refresh_label', 'Refresh')}
       </Badge>
@@ -57,7 +57,7 @@ export function UncategorizedTransactionsBadge({ onTransactionsToReviewClick }: 
   if (uncategorizedCount > 0) {
     return (
       <Badge
-        onClick={onTransactionsToReviewClick}
+        onPress={onTransactionsToReviewClick}
         variant={BadgeVariant.WARNING}
         size={BadgeSize.MEDIUM}
         icon={<ArrowUpRight size={12} />}
