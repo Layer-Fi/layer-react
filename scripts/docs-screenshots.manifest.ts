@@ -143,13 +143,6 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/bank-transactions-with-linked-accounts.mdx',
   },
   {
-    storyId: 'views-banktransactions-withlinkedaccounts--refresh-required',
-    out: 'pages/bank-transactions-with-linked-accounts-refresh-required.png',
-    viewport: 'desktop',
-    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
-    page: 'embedded-components/pages/bank-transactions-with-linked-accounts.mdx',
-  },
-  {
     storyId: 'views-overview-bookkeeping--default',
     out: 'pages/bookkeeping-overview.png',
     viewport: 'desktop',
