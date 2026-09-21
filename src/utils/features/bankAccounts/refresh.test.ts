@@ -6,7 +6,7 @@ import {
   getBankAccountRefreshConnections,
   getBankAccountsReadyForRefresh,
   isBankAccountReadyForRefresh,
-} from '@utils/features/bankAccounts/bankAccount'
+} from '@utils/features/bankAccounts/refresh'
 
 import {
   makeBankAccount,
@@ -17,7 +17,7 @@ import { MS_PER_HOUR, NOW } from '@testUtils/dates/fixedDates'
 
 setupFakeSystemTime(NOW)
 
-describe('bankAccount refresh helpers', () => {
+describe('refresh', () => {
   it('treats user-present-required accounts as ready for refresh', () => {
     const updateType = 'USER_PRESENT_REQUIRED'
     const account = makeBankAccountWithMirroredExternalAccount({
