@@ -1,15 +1,15 @@
-import { type ReactNode, useCallback, useContext } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
-import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/bankAccount'
-import { usePeriodicNow } from '@hooks/utils/dates/usePeriodicNow'
+import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/refresh'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { LinkedAccountsContext, useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
+import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Container } from '@blocks/Layout/Container/Container'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -93,9 +93,8 @@ const AccountingOverviewContent = ({
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
   const { data: bankAccounts } = useBankAccountsContext()
-  const { addConnection, repairConnection } = useContext(LinkedAccountsContext)
-  const now = usePeriodicNow()
-  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts, now)
+  const reconnectConnection = useReconnectConnection()
+  const accountNeedingReconnection = getBankAccountNeedingReconnection(bankAccounts)
 
   const handleAccountUpdateClick = useCallback(() => {
     if (onAccountUpdateClick) {
@@ -105,13 +104,8 @@ const AccountingOverviewContent = ({
 
     if (!accountNeedingReconnection) return
 
-    if (accountNeedingReconnection.reconnectWithNewCredentials) {
-      void addConnection(accountNeedingReconnection.source)
-    }
-    else if (accountNeedingReconnection.connectionExternalId) {
-      void repairConnection(accountNeedingReconnection.source, accountNeedingReconnection.connectionExternalId)
-    }
-  }, [onAccountUpdateClick, accountNeedingReconnection, addConnection, repairConnection])
+    reconnectConnection(accountNeedingReconnection)
+  }, [onAccountUpdateClick, accountNeedingReconnection, reconnectConnection])
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -142,7 +136,7 @@ const AccountingOverviewContent = ({
       >
         {accountNeedingReconnection && (
           <AccountReconnectionBanner
-            accountLabel={accountNeedingReconnection.accountLabel}
+            account={accountNeedingReconnection.account}
             lastSyncedAt={accountNeedingReconnection.lastSyncedAt}
             onClick={handleAccountUpdateClick}
           />

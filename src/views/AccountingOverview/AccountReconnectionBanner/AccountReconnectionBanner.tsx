@@ -1,9 +1,10 @@
 import { ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { type BankAccountLabelParts } from '@utils/features/bankAccounts/bankAccount'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useIsMobileContainer } from '@hooks/utils/size/useIsMobileContainer'
+import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -13,15 +14,23 @@ import './accountReconnectionBanner.scss'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 export type AccountReconnectionBannerProps = {
-  accountLabel: string
+  account: BankAccountLabelParts
   lastSyncedAt: Date | null
   onClick?: () => void
 }
 
-export const AccountReconnectionBanner = ({ accountLabel, lastSyncedAt, onClick }: AccountReconnectionBannerProps) => {
+export const AccountReconnectionBanner = ({ account, lastSyncedAt, onClick }: AccountReconnectionBannerProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { isMobile, containerRef } = useIsMobileContainer<HTMLDivElement>()
+  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const isMobile = view === 'mobile'
+
+  const accountLabel = account.mask
+    ? t('views:AccountReconnectionBanner.label.account_with_mask', '{{accountName}} ({{mask}})', {
+      accountName: account.accountName,
+      mask: account.mask,
+    })
+    : account.accountName
 
   const label = t(
     'views:AccountReconnectionBanner.label.account_ready_for_refresh',
