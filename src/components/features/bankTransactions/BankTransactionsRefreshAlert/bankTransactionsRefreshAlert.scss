@@ -1,34 +1,22 @@
 .Layer__BankTransactionsRefreshAlert {
-  display: flex;
-  padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs) var(--spacing-md);
   background: var(--color-info-success-bg);
   color: var(--color-info-success-fg);
 
-  &[data-view='mobile'] {
-    padding-inline: 0;
+  &__action {
+    justify-content: flex-start;
+    inline-size: fit-content;
+    white-space: normal;
   }
-}
 
-.Layer__BankTransactionsRefreshAlert__action {
-  display: flex;
-  justify-content: flex-start;
-  inline-size: fit-content;
-  max-inline-size: 100%;
-  padding: 0;
-  text-align: left;
-  color: inherit;
-  white-space: normal;
-
-  .Layer__BankTransactionsRefreshAlert[data-view='mobile'] &.Layer__UI__Button {
+  &__action--mobile {
     inline-size: 100%;
-    padding-inline: var(--spacing-md) var(--spacing-xs);
   }
-}
 
-.Layer__BankTransactionsRefreshAlert__content {
-  min-inline-size: 0;
-}
+  &__content {
+    min-inline-size: 0;
+  }
 
-.Layer__BankTransactionsRefreshAlert__popover--mobile {
-  inline-size: var(--trigger-width);
+  &__popover--mobile {
+    inline-size: var(--trigger-width);
+  }
 }

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { type ReactNode, useCallback, useMemo } from 'react'
 import classNames from 'classnames'
 import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -37,13 +37,59 @@ export const BankTransactionsRefreshAlert = () => {
 }
 
 const BankTransactionsRefreshAlertContent = () => {
+  const { data, isLoading } = useBankAccountsContext()
+
+  const refreshConnections = useMemo(() => getBankAccountRefreshConnections(data), [data])
+
+  if (isLoading || refreshConnections.length === 0) {
+    return null
+  }
+
+  return <BankTransactionsRefreshAlertBody refreshConnections={refreshConnections} />
+}
+
+type RefreshAlertActionProps = {
+  label: string
+  icon: ReactNode
+  isMobile: boolean
+  ellipsis?: true
+  onPress?: () => void
+}
+
+const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
+  <Button
+    className={classNames(
+      'Layer__BankTransactionsRefreshAlert__action',
+      isMobile && 'Layer__BankTransactionsRefreshAlert__action--mobile',
+    )}
+    variant='text'
+    onPress={onPress}
+  >
+    <HStack
+      className='Layer__BankTransactionsRefreshAlert__content'
+      align='center'
+      gap='xs'
+      pis={isMobile ? 'md' : undefined}
+      pie={isMobile ? 'xs' : undefined}
+    >
+      <RefreshCcw size={14} />
+      <P size='sm' weight='normal' variant='inherit' ellipsis={ellipsis}>{label}</P>
+      {icon}
+    </HStack>
+  </Button>
+)
+
+type BankTransactionsRefreshAlertBodyProps = {
+  refreshConnections: ReadonlyArray<BankAccountRefreshConnection>
+}
+
+const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactionsRefreshAlertBodyProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
-  const { data, isLoading } = useBankAccountsContext()
   const reconnectConnection = useReconnectConnection()
 
-  const refreshConnections = useMemo(() => getBankAccountRefreshConnections(data), [data])
+  const isMobile = view === 'mobile'
 
   const summaryLabel = tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
     count: refreshConnections.length,
@@ -53,18 +99,8 @@ const BankTransactionsRefreshAlertContent = () => {
   })
 
   const Trigger = useCallback(() => (
-    <Button className='Layer__BankTransactionsRefreshAlert__action' variant='text'>
-      <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
-        <RefreshCcw size={14} />
-        <P size='sm' weight='normal' variant='inherit'>{summaryLabel}</P>
-        <ChevronDown size={14} />
-      </HStack>
-    </Button>
-  ), [summaryLabel])
-
-  if (isLoading || refreshConnections.length === 0) {
-    return null
-  }
+    <RefreshAlertAction label={summaryLabel} icon={<ChevronDown size={14} />} isMobile={isMobile} />
+  ), [isMobile, summaryLabel])
 
   const connectionLabel = (connection: BankAccountRefreshConnection) => {
     const [onlyAccount] = connection.accounts
@@ -101,22 +137,22 @@ const BankTransactionsRefreshAlertContent = () => {
     <VStack
       ref={containerRef}
       className='Layer__BankTransactionsRefreshAlert'
-      data-status='success'
       data-view={view}
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
       gap='2xs'
+      pbs='xs'
+      pbe='2xs'
+      pis={isMobile ? undefined : 'md'}
+      pie={isMobile ? undefined : 'xs'}
     >
       {multipleConnections
         ? (
           <DropdownMenu
             ariaLabel={summaryLabel}
             slots={{ Trigger }}
-            slotProps={{ Dialog: { width: view === 'mobile' ? undefined : 320 } }}
-            popoverClassName={classNames(
-              'Layer__BankTransactionsRefreshAlert__popover',
-              view === 'mobile' && 'Layer__BankTransactionsRefreshAlert__popover--mobile',
-            )}
+            slotProps={{ Dialog: { width: isMobile ? undefined : 320 } }}
+            popoverClassName={isMobile ? 'Layer__BankTransactionsRefreshAlert__popover--mobile' : undefined}
           >
             <MenuList>
               {refreshConnections.map(connection => (
@@ -133,18 +169,14 @@ const BankTransactionsRefreshAlertContent = () => {
           </DropdownMenu>
         )
         : refreshConnections.map(connection => (
-          <Button
+          <RefreshAlertAction
             key={getRefreshConnectionKey(connection)}
-            className='Layer__BankTransactionsRefreshAlert__action'
-            variant='text'
+            label={summaryLabel}
+            icon={<CircleArrowRight size={14} />}
+            isMobile={isMobile}
+            ellipsis
             onPress={() => reconnectConnection(connection)}
-          >
-            <HStack className='Layer__BankTransactionsRefreshAlert__content' align='center' gap='xs'>
-              <RefreshCcw size={14} />
-              <P size='sm' weight='normal' variant='inherit' ellipsis>{summaryLabel}</P>
-              <CircleArrowRight size={14} />
-            </HStack>
-          </Button>
+          />
         ))}
     </VStack>
   )
