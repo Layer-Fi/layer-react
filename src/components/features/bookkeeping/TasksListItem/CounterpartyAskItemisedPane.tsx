@@ -97,7 +97,7 @@ export const CounterpartyAskItemisedPane = withForm({
                   : null
               })}
             </VStack>
-            <HStack className='Layer__CounterpartyAskTask__Footer' align='center' justify='space-between' gap='sm' pi='md'>
+            <HStack align='center' justify='space-between' gap='sm' pbs='xs' pbe='md' pi='md'>
               <Span size='xs' variant='subtle'>
                 {isEveryRowAnswered
                   ? t(
