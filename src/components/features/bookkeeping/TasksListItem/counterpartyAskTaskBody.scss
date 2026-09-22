@@ -7,7 +7,7 @@
 
   border-block: 1px solid var(--border-color);
 
-  background-color: var(--color-base-50);
+  background-color: var(--color-base-0);
 }
 
 .Layer__CounterpartyAskTask__Row {
@@ -18,11 +18,11 @@
   }
 
   &:hover:not(.Layer__CounterpartyAskTask__Row--open) {
-    background: var(--color-base-100);
+    background: var(--color-base-50);
   }
 
   &.Layer__CounterpartyAskTask__Row--open {
-    background: var(--color-base-0);
+    background: var(--color-base-100);
   }
 }
 
