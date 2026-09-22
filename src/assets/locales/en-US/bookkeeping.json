@@ -90,14 +90,97 @@
     }
   },
   "TasksListItem": {
-    "action": {
-      "delete_uploads": "Delete Uploads",
-      "select_files": "Select files"
+    "CounterpartyAskAnswerBadge": {
+      "label": {
+        "answer_kind_itemised": "Several categories",
+        "answer_kind_text": "Answered in your words"
+      }
     },
-    "label": {
-      "optional_description": "Optional description",
-      "selected_files": "Selected Files:",
-      "uploaded_files": "Uploaded Files:"
+    "CounterpartyAskFreeTextPane": {
+      "placeholder": {
+        "own_words": "Tell us in your own words"
+      },
+      "prompt": {
+        "what_were_these_for": "What were these purchases for?"
+      },
+      "validation": {
+        "text_required": "Tell us what these were for"
+      }
+    },
+    "CounterpartyAskItemisedPane": {
+      "label": {
+        "all_rows_answered": "All {{total}} answered",
+        "rows_answered": "{{answered}} of {{total}} answered"
+      },
+      "prompt": {
+        "answer_each_transaction": "Can you share more about what each transaction was for below?"
+      },
+      "validation": {
+        "answer_every_row": "Answer every transaction to continue"
+      }
+    },
+    "CounterpartyAskPickerPane": {
+      "action": {
+        "multiple_different_things": "Multiple different things",
+        "something_else": "Something else"
+      },
+      "label": {
+        "answer": "What these were for"
+      }
+    },
+    "CounterpartyAskRememberPane": {
+      "action": {
+        "no_keep_asking": "No, keep asking me about them",
+        "yes_categorize_automatically": "Yes, automatically categorize them"
+      },
+      "label": {
+        "assume_going_forward": "Whether to assume this going forward"
+      },
+      "prompt": {
+        "assume_going_forward": "Should we assume your future {{counterparty}} purchases are {{answer}} going forward?"
+      },
+      "validation": {
+        "choice_required": "Choose whether to remember this"
+      }
+    },
+    "CounterpartyAskTaskBody": {
+      "label": {
+        "answered_elsewhere_detail": "You answered this for every period, so we’ve applied it here too."
+      }
+    },
+    "CounterpartyAskTransactionRow": {
+      "action": {
+        "something_else": "Something else"
+      },
+      "label": {
+        "answer_for_transaction": "What this one was for",
+        "select_category": "Select category"
+      },
+      "placeholder": {
+        "what_was_this_for": "What was this one for?"
+      }
+    },
+    "LegacyTaskBody": {
+      "label": {
+        "optional_description": "Optional description"
+      }
+    },
+    "LegacyTaskFileList": {
+      "label": {
+        "selected_files": "Selected Files:",
+        "uploaded_files": "Uploaded Files:"
+      }
+    },
+    "LegacyTaskUploadActions": {
+      "action": {
+        "delete_uploads": "Delete Uploads",
+        "select_files": "Select files"
+      }
+    },
+    "useCounterpartyAskForm": {
+      "error": {
+        "submit_answer": "We couldn’t save that answer. Please try again."
+      }
     }
   },
   "TaskStatusBadge": {

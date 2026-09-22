@@ -58,6 +58,7 @@
   },
   "label": {
     "account": "Compte",
+    "account_with_mask": "",
     "accounting": "Comptabilité",
     "ach": "ACH",
     "address": "Adresse",

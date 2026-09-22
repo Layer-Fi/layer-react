@@ -4,6 +4,18 @@
       "accounting_overview": "Aperçu de la comptabilité"
     }
   },
+  "AccountReconnectionBanner": {
+    "action": {
+      "refresh_now": ""
+    },
+    "label": {
+      "account_ready_for_refresh": "",
+      "account_status": "",
+      "last_refreshed_days_ago_one": "",
+      "last_refreshed_days_ago_other": "",
+      "never_refreshed": ""
+    }
+  },
   "BankTransactionsWithLinkedAccounts": {
     "label": {
       "bank_transactions": "Activité bancaire"

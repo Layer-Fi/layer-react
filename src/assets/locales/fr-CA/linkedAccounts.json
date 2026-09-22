@@ -72,6 +72,8 @@
       "fix_account": "Corriger le compte",
       "mark_duplicate_account": "Marquer comme compte en double",
       "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
+      "refresh_connection": "",
+      "refresh_now": "",
       "repair_connection": "Réparer la connexion",
       "unlink_account": "Déconnecter le compte",
       "unlink_accounts_under_connection": "Déconnecter tous les comptes associés à cette connexion",
