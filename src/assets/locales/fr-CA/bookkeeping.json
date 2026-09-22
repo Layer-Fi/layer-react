@@ -70,8 +70,8 @@
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_many": "",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
+        "completed_over_total_done_many": ""
       }
     }
   },
@@ -93,94 +93,94 @@
   "TasksListItem": {
     "CounterpartyAskAnswerBadge": {
       "label": {
-        "answer_kind_itemised": "",
-        "answer_kind_text": ""
+        "answer_kind_itemised": "Plusieurs catégories",
+        "answer_kind_text": "Réponse dans vos propres mots"
       }
     },
     "CounterpartyAskFreeTextPane": {
       "placeholder": {
-        "own_words": ""
+        "own_words": "Dites-nous dans vos propres mots"
       },
       "prompt": {
-        "what_were_these_for": ""
+        "what_were_these_for": "À quoi servaient ces achats?"
       },
       "validation": {
-        "text_required": ""
+        "text_required": "Dites-nous à quoi cela servait"
       }
     },
     "CounterpartyAskItemisedPane": {
       "label": {
-        "all_rows_answered": "",
-        "rows_answered": ""
+        "all_rows_answered": "Les {{total}} sont tous répondus",
+        "rows_answered": "{{answered}} sur {{total}} répondus"
       },
       "prompt": {
-        "answer_each_transaction": ""
+        "answer_each_transaction": "Pouvez-vous nous en dire plus ci-dessous sur l’objet de chaque transaction?"
       },
       "validation": {
-        "answer_every_row": ""
+        "answer_every_row": "Répondez à chaque transaction pour continuer"
       }
     },
     "CounterpartyAskPickerPane": {
       "action": {
-        "multiple_different_things": "",
-        "something_else": ""
+        "multiple_different_things": "Plusieurs choses différentes",
+        "something_else": "Autre chose"
       },
       "label": {
-        "answer": ""
+        "answer": "À quoi cela servait"
       }
     },
     "CounterpartyAskRememberPane": {
       "action": {
-        "no_keep_asking": "",
-        "yes_categorize_automatically": ""
+        "no_keep_asking": "Non, continuez à me poser la question",
+        "yes_categorize_automatically": "Oui, classez-les automatiquement"
       },
       "label": {
-        "assume_going_forward": ""
+        "assume_going_forward": "S’il faut le présumer à l’avenir"
       },
       "prompt": {
-        "assume_going_forward": ""
+        "assume_going_forward": "Devons-nous considérer à l’avenir que vos futurs achats auprès de {{counterparty}} sont des dépenses de type {{answer}}?"
       },
       "validation": {
-        "choice_required": ""
+        "choice_required": "Choisissez si nous devons retenir cela"
       }
     },
     "CounterpartyAskTaskBody": {
       "label": {
-        "answered_elsewhere_detail": ""
+        "answered_elsewhere_detail": "Vous avez donné cette réponse pour chaque période. Nous l’avons donc aussi appliquée ici."
       }
     },
     "CounterpartyAskTransactionRow": {
       "action": {
-        "something_else": ""
+        "something_else": "Autre chose"
       },
       "label": {
-        "answer_for_transaction": "",
-        "select_category": ""
+        "answer_for_transaction": "À quoi servait celle-ci",
+        "select_category": "Sélectionner une catégorie"
       },
       "placeholder": {
-        "what_was_this_for": ""
+        "what_was_this_for": "À quoi servait celle-ci?"
       }
     },
     "LegacyTaskBody": {
       "label": {
-        "optional_description": ""
+        "optional_description": "Description facultative"
       }
     },
     "LegacyTaskFileList": {
       "label": {
-        "selected_files": "",
-        "uploaded_files": ""
+        "selected_files": "Fichiers sélectionnés :",
+        "uploaded_files": "Fichiers téléversés :"
       }
     },
     "LegacyTaskUploadActions": {
       "action": {
-        "delete_uploads": "",
-        "select_files": ""
+        "delete_uploads": "Supprimer les fichiers téléversés",
+        "select_files": "Sélectionner des fichiers"
       }
     },
     "useCounterpartyAskForm": {
       "error": {
-        "submit_answer": ""
+        "submit_answer": "Nous n’avons pas pu enregistrer cette réponse. Veuillez réessayer."
       }
     }
   },
