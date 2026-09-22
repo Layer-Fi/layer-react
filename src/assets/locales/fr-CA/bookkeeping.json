@@ -70,8 +70,8 @@
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
-        "completed_over_total_done_many": ""
+        "completed_over_total_done_many": "",
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
       }
     }
   },
@@ -91,14 +91,97 @@
     }
   },
   "TasksListItem": {
-    "action": {
-      "delete_uploads": "Supprimer les fichiers téléversés",
-      "select_files": "Sélectionner des fichiers"
+    "CounterpartyAskAnswerBadge": {
+      "label": {
+        "answer_kind_itemised": "",
+        "answer_kind_text": ""
+      }
     },
-    "label": {
-      "optional_description": "Description facultative",
-      "selected_files": "Fichiers sélectionnés :",
-      "uploaded_files": "Fichiers téléversés :"
+    "CounterpartyAskFreeTextPane": {
+      "placeholder": {
+        "own_words": ""
+      },
+      "prompt": {
+        "what_were_these_for": ""
+      },
+      "validation": {
+        "text_required": ""
+      }
+    },
+    "CounterpartyAskItemisedPane": {
+      "label": {
+        "all_rows_answered": "",
+        "rows_answered": ""
+      },
+      "prompt": {
+        "answer_each_transaction": ""
+      },
+      "validation": {
+        "answer_every_row": ""
+      }
+    },
+    "CounterpartyAskPickerPane": {
+      "action": {
+        "multiple_different_things": "",
+        "something_else": ""
+      },
+      "label": {
+        "answer": ""
+      }
+    },
+    "CounterpartyAskRememberPane": {
+      "action": {
+        "no_keep_asking": "",
+        "yes_categorize_automatically": ""
+      },
+      "label": {
+        "assume_going_forward": ""
+      },
+      "prompt": {
+        "assume_going_forward": ""
+      },
+      "validation": {
+        "choice_required": ""
+      }
+    },
+    "CounterpartyAskTaskBody": {
+      "label": {
+        "answered_elsewhere_detail": ""
+      }
+    },
+    "CounterpartyAskTransactionRow": {
+      "action": {
+        "something_else": ""
+      },
+      "label": {
+        "answer_for_transaction": "",
+        "select_category": ""
+      },
+      "placeholder": {
+        "what_was_this_for": ""
+      }
+    },
+    "LegacyTaskBody": {
+      "label": {
+        "optional_description": ""
+      }
+    },
+    "LegacyTaskFileList": {
+      "label": {
+        "selected_files": "",
+        "uploaded_files": ""
+      }
+    },
+    "LegacyTaskUploadActions": {
+      "action": {
+        "delete_uploads": "",
+        "select_files": ""
+      }
+    },
+    "useCounterpartyAskForm": {
+      "error": {
+        "submit_answer": ""
+      }
     }
   },
   "TaskStatusBadge": {

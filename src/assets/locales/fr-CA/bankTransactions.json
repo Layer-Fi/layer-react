@@ -237,6 +237,20 @@
       "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet."
     }
   },
+  "BankTransactionsRefreshAlert": {
+    "action": {
+      "reconnect_account": "",
+      "reconnect_bank_connections_one": "",
+      "reconnect_bank_connections_other": "",
+      "reconnect_institution_accounts_one": "",
+      "reconnect_institution_accounts_other": "",
+      "reconnect_linked_accounts_one": "",
+      "reconnect_linked_accounts_other": ""
+    },
+    "label": {
+      "connections_require_attention": ""
+    }
+  },
   "BankTransactionsSearchField": {
     "label": {
       "search_transactions": "Rechercher des transactions"
