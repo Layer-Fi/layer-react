@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+step() {
+  local label="$1"
+  shift
+  local started=$SECONDS
+  printf '\n==> %s\n' "$label"
+  "$@"
+  printf '<== %s (%ss)\n' "$label" "$((SECONDS - started))"
+}
+
+install_node() {
+  local version
+  version="$(tr -d '[:space:]' < .nvmrc)"
+  version="${version#v}"
+  if [[ "$version" =~ ^[0-9]+\.[0-9]+$ ]]; then
+    version="${version}.0"
+  fi
+
+  local architecture
+  case "$(uname -m)" in
+    x86_64) architecture=x64 ;;
+    aarch64 | arm64) architecture=arm64 ;;
+    *) printf 'Unsupported architecture: %s\n' "$(uname -m)" >&2; return 1 ;;
+  esac
+
+  local archive="node-v${version}-linux-${architecture}.tar.xz"
+  local install_root="$HOME/.local/share/${archive%.tar.xz}"
+  if [[ ! -x "$install_root/bin/node" ]]; then
+    local temporary_directory
+    temporary_directory="$(mktemp -d)"
+    trap 'rm -rf -- "$temporary_directory"' EXIT
+
+    curl --fail --location --silent --show-error "https://nodejs.org/dist/v${version}/${archive}" --output "$temporary_directory/$archive"
+    curl --fail --location --silent --show-error "https://nodejs.org/dist/v${version}/SHASUMS256.txt" --output "$temporary_directory/SHASUMS256.txt"
+    grep "  ${archive}$" "$temporary_directory/SHASUMS256.txt" > "$temporary_directory/checksum"
+    (cd "$temporary_directory" && sha256sum --check checksum)
+
+    mkdir -p "$HOME/.local/share"
+    tar -xJf "$temporary_directory/$archive" -C "$HOME/.local/share"
+    rm -rf -- "$temporary_directory"
+    trap - EXIT
+  fi
+
+  mkdir -p "$HOME/.local/bin"
+  for executable in node npm npx corepack; do
+    ln -sfn "$install_root/bin/$executable" "$HOME/.local/bin/$executable"
+  done
+
+  local profile_marker='# layer-react orb toolchain'
+  if ! grep -Fqx "$profile_marker" "$HOME/.bash_profile" 2>/dev/null; then
+    cat >> "$HOME/.bash_profile" <<'EOF'
+
+# layer-react orb toolchain
+export PATH="$HOME/.local/bin:$PATH"
+EOF
+  fi
+
+  export PATH="$HOME/.local/bin:$PATH"
+  node --version
+  npm --version
+}
+
+step 'Install pinned Node.js toolchain' install_node
+step 'Install npm dependencies' npm ci --prefer-offline --no-audit
+step 'Install Playwright Chromium' npx playwright install chromium

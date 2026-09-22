@@ -8,9 +8,12 @@ node_modules/
 .env.*
 !.env.example
 .codex/
-.agents/
+.agents/*
+!.agents/setup
+!.agents/resume
 .claude/
 .vercel
+.amp/portals/
 storybook-static
 coverage/
 
