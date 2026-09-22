@@ -6,14 +6,14 @@
   },
   "AccountReconnectionBanner": {
     "action": {
-      "refresh_now": ""
+      "refresh_now": "Actualiser maintenant"
     },
     "label": {
-      "account_ready_for_refresh": "",
-      "account_status": "",
-      "last_refreshed_days_ago_one": "",
-      "last_refreshed_days_ago_other": "",
-      "never_refreshed": ""
+      "account_ready_for_refresh": "{{accountLabel}} est prêt à être actualisé",
+      "account_status": "{{label}}. {{lastRefreshedLabel}}",
+      "last_refreshed_days_ago_one": "Dernière actualisation il y a {{displayCount}} jour",
+      "last_refreshed_days_ago_other": "Dernière actualisation il y a {{displayCount}} jours",
+      "never_refreshed": "Jamais actualisé"
     }
   },
   "BankTransactionsWithLinkedAccounts": {
