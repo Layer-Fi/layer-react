@@ -44,6 +44,13 @@
             justify-content: center;
             block-size: 1.25rem;
             inline-size: 1.25rem;
+
+            border-radius: var(--border-radius-5xl);
+
+            &[data-hovered],
+            &[data-focus-visible] {
+              background-color: var(--color-base-200);
+            }
           }
 
           &.Layer__tasks-list-item--completed {
