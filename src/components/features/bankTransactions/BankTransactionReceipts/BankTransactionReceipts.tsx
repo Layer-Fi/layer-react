@@ -108,7 +108,6 @@ const BankTransactionReceipts = forwardRef<
             deletePending={url.status === 'deleting'}
             name={url.name ?? t('bankTransactions:BankTransactionReceipts.label.receipt_number', 'Receipt {{number}}', { number: formatNumber(index + 1) })}
             date={url.date}
-            enableOpen={url.type === 'application/pdf'}
             onOpen={
               url.url && url.type && url.type.startsWith('image/')
                 ? openReceiptInNewTab(
