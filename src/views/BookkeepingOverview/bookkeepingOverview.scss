@@ -1,30 +1,30 @@
 .Layer__bookkeeping-overview--view {
-  .Layer__panel .Layer__panel__content .Layer__component-header {
+  .Layer__ViewPanel .Layer__ViewPanel__Content .Layer__ComponentHeader {
     z-index: 1;
   }
 
-  .Layer__panel.Layer__panel--open .Layer__panel__content {
+  .Layer__ViewPanel[data-open] .Layer__ViewPanel__Content {
     border-right: none;
   }
 
-  .Layer__panel__sidebar {
+  .Layer__ViewPanel__Sidebar {
     padding: var(--spacing-lg);
     border-left: none;
     background: none;
   }
 
-  .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+  .Layer__ViewPanel[data-open] .Layer__ViewPanel__Sidebar {
     max-width: 560px;
   }
 }
 
 @media screen and (width >= 1100px) {
   .Layer__bookkeeping-overview--view {
-    .Layer__panel__content {
+    .Layer__ViewPanel__Content {
       max-width: 1406px;
     }
 
-    .Layer__view-main.Layer__view-main {
+    .Layer__ViewMain.Layer__ViewMain {
       padding-right: 0;
     }
   }

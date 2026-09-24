@@ -1,4 +1,4 @@
-.Layer__view-header {
+.Layer__ViewHeader {
   box-sizing: border-box;
   position: relative;
 
@@ -16,18 +16,18 @@
   }
 }
 
-.Layer__UI__Heading + .Layer__view-header__children {
+.Layer__UI__Heading + .Layer__ViewHeader__Children {
   width: min-content;
 }
 
-.Layer__view-header__content > .Layer__UI__Heading {
+.Layer__ViewHeader__Content > .Layer__UI__Heading {
   display: flex;
   align-items: center;
   min-height: 44px;
   padding: var(--spacing-md) 0;
 }
 
-.Layer__view-header__content {
+.Layer__ViewHeader__Content {
   display: flex;
   gap: var(--spacing-md);
   align-items: center;
@@ -36,28 +36,24 @@
   max-width: 1406px;
 }
 
-.Layer__view-header--paddings {
-  .Layer__view-header__content {
-    padding: var(--spacing-md);
-
-    .Layer__view-header__children {
-      gap: var(--spacing-md);
-    }
-  }
+.Layer__ViewHeader[data-paddings] .Layer__ViewHeader__Content {
+  padding: var(--spacing-md);
 }
 
-.Layer__view-header__children {
+.Layer__ViewHeader[data-paddings] .Layer__ViewHeader__Children {
+  gap: var(--spacing-md);
+}
+
+.Layer__ViewHeader__Children {
   display: flex;
   width: 100%;
 }
 
-.Layer__view--panel {
-  .Layer__view-header {
-    position: relative;
-    padding: 0;
-  }
+.Layer__ViewRoot[data-type='panel'] .Layer__ViewHeader {
+  position: relative;
+  padding: 0;
+}
 
-  .Layer__view-header__content {
-    max-width: 1406px;
-  }
+.Layer__ViewRoot[data-type='panel'] .Layer__ViewHeader__Content {
+  max-width: 1406px;
 }

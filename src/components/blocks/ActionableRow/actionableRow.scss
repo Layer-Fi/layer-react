@@ -1,4 +1,4 @@
-.Layer__actionable_row {
+.Layer__ActionableRow {
   display: flex;
   gap: var(--spacing-md);
   align-items: center;
@@ -14,19 +14,19 @@
     flex-direction: column;
     align-items: stretch;
 
-    .Layer__actionable_row__action {
+    .Layer__ActionableRow__Action {
       justify-content: flex-end;
     }
   }
 }
 
-.Layer__actionable_row__main {
+.Layer__ActionableRow__Main {
   display: flex;
   gap: var(--spacing-md);
   align-items: center;
 }
 
-.Layer__actionable_row__icon {
+.Layer__ActionableRow__Icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,6 +37,6 @@
   background-color: var(--color-base-100);
 }
 
-.Layer__actionable_row__action {
+.Layer__ActionableRow__Action {
   display: flex;
 }
