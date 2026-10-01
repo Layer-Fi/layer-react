@@ -37,14 +37,9 @@ const CounterpartyAskTransactionResponseSchema = Schema.Struct({
 
 export type CounterpartyAskTransactionResponse = typeof CounterpartyAskTransactionResponseSchema.Type
 
-export const CounterpartyAskTaskSchema = Schema.extend(
+export const BaseCounterpartyAskTaskSchema = Schema.extend(
   BaseBusinessTaskSchema,
   Schema.Struct({
-    taskType: pipe(
-      Schema.propertySignature(Schema.Literal(COUNTERPARTY_ASK_TASK_TYPE)),
-      Schema.fromKey('task_type'),
-    ),
-    counterparty: Schema.NullishOr(BankTransactionCounterpartySchema),
     suggestions: Schema.optionalWith(Schema.Array(CounterpartyAskAccountSchema), {
       default: () => [],
       nullable: true,
@@ -78,6 +73,17 @@ export const CounterpartyAskTaskSchema = Schema.extend(
       Schema.propertySignature(Schema.NullishOr(Schema.String)),
       Schema.fromKey('resolved_by_task_id'),
     ),
+  }),
+)
+
+export const CounterpartyAskTaskSchema = Schema.extend(
+  BaseCounterpartyAskTaskSchema,
+  Schema.Struct({
+    taskType: pipe(
+      Schema.propertySignature(Schema.Literal(COUNTERPARTY_ASK_TASK_TYPE)),
+      Schema.fromKey('task_type'),
+    ),
+    counterparty: Schema.NullishOr(BankTransactionCounterpartySchema),
   }),
 )
 
