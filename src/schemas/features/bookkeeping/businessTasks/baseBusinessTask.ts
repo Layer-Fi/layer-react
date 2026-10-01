@@ -32,6 +32,7 @@ export const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema
 )
 
 export const COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD'
+export const P2P_COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_P2P_COUNTERPARTY_FOR_PERIOD'
 
 // Only id and status are guaranteed across every arm: the unknown arm models task
 // types this union can't yet describe, and those may omit title and question.

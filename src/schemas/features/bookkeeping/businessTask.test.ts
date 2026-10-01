@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest'
 
 import {
   BusinessTaskSchema,
+  isAnyCounterpartyAskTask,
   isCounterpartyAskTask,
   isLegacyBusinessTask,
+  isP2PCounterpartyAskTask,
   isRenderableBusinessTask,
 } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
@@ -29,6 +31,22 @@ const encodedCounterpartyAskTask = {
   title: 'Costco purchases',
   question: 'You spent $307.74 at Costco across 1 transaction.',
   counterparty: null,
+  user_response: null,
+  response_account: null,
+  resolved_by_task_id: null,
+}
+
+const encodedP2PCounterpartyAskTask = {
+  id: '00000000-0000-4000-8000-000000000951',
+  status: 'TODO',
+  task_type: 'ASK_ABOUT_P2P_COUNTERPARTY_FOR_PERIOD',
+  title: 'Payments to Jane Doe via Venmo',
+  question: 'In March, you paid Jane Doe via Venmo $85.00. What was this payment for?',
+  p2p_counterparty: {
+    id: '00000000-0000-4000-8000-000000000751',
+    name: 'Jane Doe',
+    provider: { id: '00000000-0000-4000-8000-000000000761', name: 'Venmo' },
+  },
   user_response: null,
   response_account: null,
   resolved_by_task_id: null,
@@ -71,6 +89,20 @@ describe('BusinessTaskSchema', () => {
     expect(isRenderableBusinessTask(task)).toBe(true)
   })
 
+  it('decodes a P2P counterparty ask task', () => {
+    const task = decode(encodedP2PCounterpartyAskTask)
+
+    expect(isP2PCounterpartyAskTask(task)).toBe(true)
+    expect(isCounterpartyAskTask(task)).toBe(false)
+    expect(isAnyCounterpartyAskTask(task)).toBe(true)
+  })
+
+  it('keeps a P2P counterparty ask unrenderable until it has a body', () => {
+    const task = decode(encodedP2PCounterpartyAskTask)
+
+    expect(isRenderableBusinessTask(task)).toBe(false)
+  })
+
   it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
     const task = decode(encodedAutomatedRuleSuggestionTask)
 
@@ -106,6 +138,19 @@ describe('BusinessTaskSchema', () => {
     })
 
     expect(isCounterpartyAskTask(task)).toBe(false)
+    expect(isLegacyBusinessTask(task)).toBe(false)
+  })
+
+  it('does not fall back to the legacy arm when a P2P ask payload is malformed', () => {
+    const task = decode({
+      ...encodedP2PCounterpartyAskTask,
+      id: '00000000-0000-4000-8000-000000000952',
+      p2p_counterparty: null,
+      user_response_type: 'FREE_RESPONSE',
+      documents: null,
+    })
+
+    expect(isP2PCounterpartyAskTask(task)).toBe(false)
     expect(isLegacyBusinessTask(task)).toBe(false)
   })
 
