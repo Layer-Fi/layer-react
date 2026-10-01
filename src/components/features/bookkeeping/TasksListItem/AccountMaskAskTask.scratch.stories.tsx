@@ -96,6 +96,8 @@ type ChoiceOption = {
   effects: readonly Effect[]
   /** Stays on the pane so files can be attached before continuing. */
   collectsFiles?: boolean
+  /** Stays on the pane for a free-form answer, whose text drives the effects. */
+  collectsText?: { placeholder: string, effects: (text: string) => readonly Effect[] }
 }
 
 type BaseQuestion = {
@@ -601,7 +603,7 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
   {
     kind: 'choice',
     id: 'connect',
-    prompt: 'Can you connect this account, or upload its statements?',
+    prompt: 'Can you connect this account so we can pull your transactions for you automatically, or do you want to upload its statements manually?',
     why: 'Shows both sides of each transfer, so internal transfers stay off the P&L.',
     observation: null,
     options: [
@@ -648,7 +650,21 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
         metadata('account.name', `${purpose} ••${mask}`),
         rule(MAIN_RULE, { target: `Transfer to ${purpose} ••${mask} (excluded from P&L)` }),
       ],
-    })),
+    })).concat({
+      value: 'other',
+      label: 'Something else',
+      outcome: 'rule',
+      hint: 'Your description names the account and books every transfer as a transfer, not P&L.',
+      effects: [],
+      collectsText: {
+        placeholder: 'e.g. Equipment fund for the new location',
+        effects: text => [
+          metadata('account.purpose', text),
+          metadata('account.name', `${text} ••${mask}`),
+          rule(MAIN_RULE, { target: `Transfer to ${text} ••${mask} (excluded from P&L)` }),
+        ],
+      },
+    }),
   },
 ]
 
@@ -784,7 +800,11 @@ const isAnswered = (question: Question, answer: Answer | undefined): answer is A
   if (!answer) return false
 
   switch (question.kind) {
-    case 'choice': return answer.choice !== null
+    case 'choice': {
+      const option = question.options.find(({ value }) => value === answer.choice)
+
+      return option !== undefined && (!option.collectsText || answer.text.trim() !== '')
+    }
     case 'counterparty': return answer.text.trim() !== '' && answer.choice !== null
     case 'text': return answer.text.trim() !== ''
     case 'statement': return answer.choice !== null
@@ -804,7 +824,9 @@ const getAnswerEffects = (question: Question, answer: Answer | undefined): reado
     ? [metadata('documents.uploaded', answer.fileNames.join(', '))]
     : []
 
-  return [...option.effects, ...uploads]
+  const freeform = option.collectsText ? option.collectsText.effects(answer.text.trim()) : []
+
+  return [...option.effects, ...uploads, ...freeform]
 }
 
 const getAnswerLabel = (question: Question, answer: Answer | undefined) => {
@@ -812,7 +834,11 @@ const getAnswerLabel = (question: Question, answer: Answer | undefined) => {
 
   switch (question.kind) {
     case 'choice': {
-      const label = question.options.find(({ value }) => value === answer.choice)?.label ?? answer.choice
+      const option = question.options.find(({ value }) => value === answer.choice)
+
+      if (option?.collectsText) return answer.text.trim()
+
+      const label = option?.label ?? answer.choice
       return answer.fileNames.length > 0 ? `${label} (${answer.fileNames.join(', ')})` : label
     }
     case 'counterparty':
@@ -916,8 +942,8 @@ const QuestionInput = ({ question, answer, onChange, onContinue }: QuestionInput
                 onPress={() => {
                   const next = { ...answer, choice: option.value }
 
-                  if (option.collectsFiles) onChange(next)
-                  else onContinue({ ...next, fileNames: [] })
+                  if (option.collectsFiles || option.collectsText) onChange(next)
+                  else onContinue({ ...next, fileNames: [], text: '' })
                 }}
               >
                 {option.label}
@@ -941,6 +967,22 @@ const QuestionInput = ({ question, answer, onChange, onContinue }: QuestionInput
                     onUpload={files => onChange({ ...answer, fileNames: [...answer.fileNames, ...files.map(({ name }) => name)] })}
                   />
                   <Button isDisabled={answer.fileNames.length === 0} onPress={() => onContinue(answer)}>Continue</Button>
+                </HStack>
+              </VStack>
+            )
+            : null}
+          {selected?.collectsText
+            ? (
+              <VStack gap='sm'>
+                <TextArea
+                  aria-label={question.prompt}
+                  placeholder={selected.collectsText.placeholder}
+                  rows={3}
+                  value={answer.text}
+                  onChange={event => onChange({ ...answer, text: event.target.value })}
+                />
+                <HStack justify='end'>
+                  <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
                 </HStack>
               </VStack>
             )
