@@ -1,6 +1,6 @@
-import { type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { Paperclip } from 'lucide-react'
+import { formOptions, revalidateLogic, useStore } from '@tanstack/react-form'
 
 import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
 import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
@@ -8,22 +8,18 @@ import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccount
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { SlidingPanes, type SlidingPanesDirection } from '@components/utility/SlidingPanes/SlidingPanes'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
-import { Chip, ChipGroup } from '@ui/Chip/Chip'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { TextField } from '@ui/Form/Form'
 import { FileInput } from '@ui/Input/FileInput'
-import { Input } from '@ui/Input/Input'
-import { InputGroup } from '@ui/Input/InputGroup'
-import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { P, Span } from '@ui/Typography/Text'
+import { FileThumb } from '@blocks/FileThumb/FileThumb'
+import { useRawAppForm, withForm } from '@blocks/Form/useForm'
 import { Container } from '@blocks/Layout/Container/Container'
 import { TasksListItemShell } from '@features/bookkeeping/TasksListItem/TasksListItemShell'
 
@@ -31,15 +27,18 @@ import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 
 import '@features/bookkeeping/TasksList/tasksList.scss'
+import '@features/bookkeeping/TasksListItem/counterpartyAskTaskBody.scss'
 
 /*
- * Prototype only. Copy is plain strings because it is still being iterated on, and the answer
- * state is local rather than a tanstack form; the real task would follow the counterparty ask.
+ * Prototype only. Copy is plain strings because it is still being iterated on; the real task
+ * would translate it and post the form values instead of resolving them locally.
  */
 
 type AccountType = 'vendor' | 'customer' | 'owned' | 'personal' | 'unsure'
 
 type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerDeposits' | 'loanRepayments'
+
+type TaskTitleKey = 'identify' | 'whoIs' | 'unrecognized' | 'tellUs' | 'current'
 
 type PrototypeConfig = {
   billUploadStyle: 'prompt' | 'statement'
@@ -51,6 +50,7 @@ type MockTransaction = {
   date: Date
   amount: number
   direction: BankTransactionDirection
+  description: string
 }
 
 type PatternSummary = {
@@ -65,18 +65,65 @@ type PatternSummary = {
   loan: { principal: number, payment: number, paymentCount: number } | null
 }
 
+type QuestionId =
+  | 'counterparty'
+  | 'contractor'
+  | 'amount'
+  | 'recurring'
+  | 'refunds'
+  | 'bills'
+  | 'handling'
+  | 'connect'
+  | 'purpose'
+  | 'whose'
+  | 'loan'
+  | 'details'
+
+const QUESTION_IDS: readonly QuestionId[] = [
+  'counterparty',
+  'contractor',
+  'amount',
+  'recurring',
+  'refunds',
+  'bills',
+  'handling',
+  'connect',
+  'purpose',
+  'whose',
+  'loan',
+  'details',
+]
+
+type ThemeId = 'who' | 'nature' | 'handling'
+
+const THEMES: ReadonlyArray<{ id: ThemeId, title: string }> = [
+  { id: 'who', title: 'Who this is and what it’s for' },
+  { id: 'nature', title: 'The transactions' },
+  { id: 'handling', title: 'Handling going forward' },
+]
+
+type StepId = ThemeId | 'uploads' | 'review'
+type View = 'picker' | StepId | 'done'
+
+/** `choice` is the chip; `text` is a typed name or free-form answer; `detail` is the category searched under Other. */
 type Answer = {
   choice: string | null
   text: string
-  fileNames: readonly string[]
+  detail: string | null
 }
 
-type Answers = Partial<Record<string, Answer>>
+type UploadedFile = { id: string, name: string }
+
+type AccountMaskAskFormValues = {
+  accountType: AccountType | null
+  answers: Record<QuestionId, Answer>
+  uploads: { files: UploadedFile[] }
+}
 
 type AskContext = {
   mask: string
   pattern: PatternSummary
-  answers: Answers
+  answers: Record<QuestionId, Answer>
   config: PrototypeConfig
   formatMoney: (cents: number) => string
 }
@@ -97,14 +144,15 @@ type ChoiceOption = {
   outcome: OutcomeTag
   hint: string
   effects: readonly Effect[]
-  /** Stays on the pane so files can be attached before continuing. */
-  collectsFiles?: boolean
-  /** Stays on the pane for a free-form answer, whose text drives the effects. */
+  /** Adds the upload step at the end of the task, with this as its prompt. */
+  uploadPrompt?: string
+  /** Shows a free-form field under the chips, whose text drives the effects. */
   collectsText?: { placeholder: string, effects: (text: string) => readonly Effect[] }
 }
 
 type BaseQuestion = {
-  id: string
+  id: QuestionId
+  theme: ThemeId
   prompt: string
   why: string
   observation: string | null
@@ -152,7 +200,21 @@ const REFUND_RULE = 'refund'
 const OUT = BankTransactionDirection.Debit
 const IN = BankTransactionDirection.Credit
 
-const EMPTY_ANSWER: Answer = { choice: null, text: '', fileNames: [] }
+const OTHER_CATEGORY = 'other'
+const VARIES_CATEGORY = 'varies'
+
+const EMPTY_ANSWER: Answer = { choice: null, text: '', detail: null }
+
+// Every id gets a slot up front so each field has a static, typed path in the form.
+const EMPTY_ANSWERS = Object.fromEntries(QUESTION_IDS.map(id => [id, EMPTY_ANSWER])) as Record<QuestionId, Answer>
+
+const EMPTY_VALUES: AccountMaskAskFormValues = {
+  accountType: null,
+  answers: EMPTY_ANSWERS,
+  uploads: { files: [] },
+}
+
+const accountMaskAskFormOptions = formOptions({ defaultValues: EMPTY_VALUES })
 
 const ACCOUNT_TYPE_OPTIONS: ReadonlyArray<{ value: AccountType, label: string, short: string }> = [
   { value: 'vendor', label: 'A vendor I pay', short: 'Vendor' },
@@ -162,18 +224,42 @@ const ACCOUNT_TYPE_OPTIONS: ReadonlyArray<{ value: AccountType, label: string, s
   { value: 'unsure', label: 'Not sure', short: 'Unknown' },
 ]
 
-const VARIES_CATEGORY = 'varies'
+const TASK_TITLES: Record<TaskTitleKey, { describe: string, title: (mask: string) => string }> = {
+  identify: { describe: 'Help us identify account ••2691', title: mask => `Help us identify account ••${mask}` },
+  whoIs: { describe: 'Who is account ••2691?', title: mask => `Who is account ••${mask}?` },
+  unrecognized: { describe: 'Unrecognized account ending in 2691', title: mask => `Unrecognized account ending in ${mask}` },
+  tellUs: { describe: 'Tell us about account ••2691', title: mask => `Tell us about account ••${mask}` },
+  current: { describe: 'New account transfer (today)', title: () => 'New account transfer' },
+}
+
 const GROUPING_ACCOUNTS = new Set(['Expenses', 'Operating Expenses', 'Uncategorized Expenses', 'Revenue', 'Uncategorized Revenue'])
 
 const VENDOR_CATEGORIES = ['Software', 'Contractors', 'Office Expenses', 'Rent', 'Legal and Professional Services']
 const REVENUE_CATEGORIES = ['Service revenue', 'Product sales', 'Retainers', 'Subscription revenue']
-
-const otherCategoriesOfType = (accountType: LedgerAccountType.Expense | LedgerAccountType.Revenue, suggested: readonly string[]) => chartOfAccounts
-  .filter(account => account.accountType.value === accountType)
-  .map(({ name }) => name)
-  .filter(name => !GROUPING_ACCOUNTS.has(name) && !suggested.includes(name))
 const ACCOUNT_PURPOSES = ['Payroll', 'Tax reserve', 'Savings', 'Payouts']
 const CADENCES = ['Monthly', 'Quarterly', 'Yearly']
+
+const otherCategoriesOfType = (accountType: LedgerAccountType.Expense | LedgerAccountType.Revenue, suggested: readonly string[]) =>
+  chartOfAccounts
+    .filter(account => account.accountType.value === accountType)
+    .map(({ name }) => name)
+    .filter(name => !GROUPING_ACCOUNTS.has(name) && !suggested.includes(name))
+
+const UPLOAD_EXTENSIONS = ['.pdf', '.xlsx', '.docx', '.png', '.jpg', '.jpeg', '.txt', '.csv']
+const UPLOAD_MIME_TYPES = [
+  'application/pdf',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'image/png',
+  'image/jpeg',
+  'text/plain',
+  'text/csv',
+]
+const UPLOAD_ACCEPT = [...UPLOAD_EXTENSIONS, ...UPLOAD_MIME_TYPES].join(',')
+const UPLOAD_TYPES_LABEL = 'PDF, XLSX, DOCX, PNG, JPG, TXT or CSV'
+
+// The picker's accept filter can be switched to "All files", so the extension is checked again here.
+const isAllowedUpload = ({ name }: File) => UPLOAD_EXTENSIONS.some(extension => name.toLowerCase().endsWith(extension))
 
 const OUTCOME_TAGS: Record<OutcomeTag, { label: string, variant: BadgeVariant }> = {
   metadata: { label: 'Metadata only', variant: BadgeVariant.NEUTRAL },
@@ -194,32 +280,48 @@ const review = (reason: string): Effect => ({ kind: 'review', reason })
 
 const accountCondition = (mask: string) => `Account ends in ${mask}`
 
-const makeTransaction = (index: number, month: number, day: number, amount: number, direction: BankTransactionDirection) => ({
+const makeTransaction = (
+  index: number,
+  month: number,
+  day: number,
+  amount: number,
+  direction: BankTransactionDirection,
+  description: string,
+): MockTransaction => ({
   id: `txn-${index}`,
   date: new Date(FIXTURE_YEAR, month - 1, day),
   amount,
   direction,
+  description,
 })
 
-const TRANSACTIONS_BY_PATTERN: Record<TransactionPattern, readonly MockTransaction[]> = {
-  fixedMonthlyTransfers: [5, 6, 7, 8, 9].map((month, index) => makeTransaction(index, month, 16, 100000, OUT)),
-  variableBills: [
-    makeTransaction(0, 5, 3, 42150, OUT),
-    makeTransaction(1, 6, 2, 18700, OUT),
-    makeTransaction(2, 6, 28, 96025, OUT),
-    makeTransaction(3, 8, 4, 31000, OUT),
-    makeTransaction(4, 8, 19, 4500, IN),
-  ],
-  customerDeposits: [
-    makeTransaction(0, 5, 9, 240000, IN),
-    makeTransaction(1, 6, 11, 185000, IN),
-    makeTransaction(2, 7, 8, 312500, IN),
-    makeTransaction(3, 8, 12, 240000, IN),
-  ],
-  loanRepayments: [
-    makeTransaction(0, 3, 2, 500000, IN),
-    ...[4, 5, 6, 7, 8, 9].map((month, index) => makeTransaction(index + 1, month, 1, 50000, OUT)),
-  ],
+const makeTransactions = (pattern: TransactionPattern, mask: string): readonly MockTransaction[] => {
+  switch (pattern) {
+    case 'fixedMonthlyTransfers':
+      return [5, 6, 7, 8, 9].map((month, index) =>
+        makeTransaction(index, month, 16, 100000, OUT, `ONLINE TRANSFER TO XXXXXX${mask} REF #${4810 + index}`))
+    case 'variableBills':
+      return [
+        makeTransaction(0, 5, 3, 42150, OUT, `ACH DEBIT XXXXXX${mask} INV 1042`),
+        makeTransaction(1, 6, 2, 18700, OUT, `ACH DEBIT XXXXXX${mask} INV 1057`),
+        makeTransaction(2, 6, 28, 96025, OUT, `ACH DEBIT XXXXXX${mask} INV 1063`),
+        makeTransaction(3, 8, 4, 31000, OUT, `ACH DEBIT XXXXXX${mask} INV 1080`),
+        makeTransaction(4, 8, 19, 4500, IN, `ACH CREDIT XXXXXX${mask} CREDIT MEMO`),
+      ]
+    case 'customerDeposits':
+      return [
+        makeTransaction(0, 5, 9, 240000, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
+        makeTransaction(1, 6, 11, 185000, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
+        makeTransaction(2, 7, 8, 312500, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
+        makeTransaction(3, 8, 12, 240000, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
+      ]
+    case 'loanRepayments':
+      return [
+        makeTransaction(0, 3, 2, 500000, IN, `TRANSFER FROM XXXXXX${mask}`),
+        ...[4, 5, 6, 7, 8, 9].map((month, index) =>
+          makeTransaction(index + 1, month, 1, 50000, OUT, `TRANSFER TO XXXXXX${mask}`)),
+      ]
+  }
 }
 
 const PATTERN_DESCRIPTIONS: Record<TransactionPattern, string> = {
@@ -262,6 +364,15 @@ const summarizePattern = (transactions: readonly MockTransaction[]): PatternSumm
   }
 }
 
+/** The category a counterparty answer settles on; `varies` when it's a mix. */
+const resolveCategory = ({ choice, detail }: Answer) => (choice === OTHER_CATEGORY ? detail : choice)
+
+const getCategory = (answers: Record<QuestionId, Answer>) => {
+  const category = resolveCategory(answers.counterparty)
+
+  return category && category !== VARIES_CATEGORY ? category : null
+}
+
 const notSureOption = (subject: string): ChoiceOption => ({
   value: 'not_sure',
   label: 'Not sure',
@@ -270,12 +381,76 @@ const notSureOption = (subject: string): ChoiceOption => ({
   effects: [review(`Unsure about ${subject}`)],
 })
 
+type CounterpartyQuestionSpec = {
+  role: 'Vendor' | 'Customer'
+  prompt: string
+  why: string
+  categoryLabel: string
+  suggestedCategories: readonly string[]
+  otherCategories: readonly string[]
+  variesDetail: string
+}
+
+const counterpartyQuestion = ({
+  role,
+  prompt,
+  why,
+  categoryLabel,
+  suggestedCategories,
+  otherCategories,
+  variesDetail,
+}: CounterpartyQuestionSpec): Question => ({
+  kind: 'counterparty',
+  id: 'counterparty',
+  theme: 'who',
+  prompt,
+  why,
+  observation: null,
+  namePlaceholder: `${role} name`,
+  categoryLabel,
+  suggestedCategories,
+  otherCategories,
+  outcomes: [
+    {
+      label: 'A suggested category, or one picked under Other',
+      outcome: 'rule',
+      hint: 'Names the counterparty and gives the rule its category.',
+      matches: (answer) => {
+        const category = answer ? resolveCategory(answer) : null
+        return category !== null && category !== VARIES_CATEGORY
+      },
+    },
+    {
+      label: 'It’s a mix or it varies',
+      outcome: 'askFreeform',
+      hint: 'No main rule: each new transaction opens a task, and the answer categorizes that transaction only.',
+      matches: answer => answer?.choice === VARIES_CATEGORY,
+    },
+  ],
+  effects: (answer) => {
+    const category = resolveCategory(answer)
+
+    return [
+      metadata('counterparty.name', answer.text.trim()),
+      metadata('counterparty.role', role),
+      ...(category === VARIES_CATEGORY
+        ? [
+          metadata('counterparty.category', 'Mixed / varies per transaction'),
+          blockRules('It’s a mix or varies per transaction, so no single category fits'),
+          ask('freeform', variesDetail),
+        ]
+        : category ? [metadata('counterparty.category', category), rule(MAIN_RULE, { target: category })] : []),
+    ]
+  },
+})
+
 const amountQuestion = ({ pattern, formatMoney }: AskContext, noun: 'payments' | 'deposits'): Question => {
   const { fixedAmount } = pattern
 
   return {
     kind: 'choice',
     id: 'amount',
+    theme: 'nature',
     prompt: 'Is it the same amount every time, or does it vary per invoice?',
     why: 'Decides whether the rule can match on amount, or only on the account and direction.',
     observation: fixedAmount !== null
@@ -308,11 +483,15 @@ const amountQuestion = ({ pattern, formatMoney }: AskContext, noun: 'payments' |
 
 const billsQuestion = ({ config }: AskContext, vendorName: string): Question => {
   const why = 'Enables bill-to-payment matching and user-submitted vendor bills.'
+  const uploadPrompt = `Upload the bills ${vendorName} sent for these payments.`
+  const parseNow = extra('Parse the uploaded bills with receipt parsing and match each one to its payment')
+  const askEachPayment = ask('upload', `Each new payment to ${vendorName} opens a task asking for its bill; receipt parsing matches it to the payment`)
 
   if (config.billUploadStyle === 'statement') {
     return {
       kind: 'statement',
       id: 'bills',
+      theme: 'handling',
       prompt: `For more accurate books, you can upload the bills ${vendorName} sends you from any of these transactions.`,
       why,
       observation: null,
@@ -329,6 +508,7 @@ const billsQuestion = ({ config }: AskContext, vendorName: string): Question => 
   return {
     kind: 'choice',
     id: 'bills',
+    theme: 'handling',
     prompt: `For more accurate books, you can upload the bills ${vendorName} sends you.`,
     why,
     observation: null,
@@ -337,27 +517,24 @@ const billsQuestion = ({ config }: AskContext, vendorName: string): Question => 
         value: 'upload_now_and_ask',
         label: 'Upload a bill now, and ask me with each payment',
         outcome: 'askUpload',
-        hint: 'Today’s bill is parsed and matched now, and each new payment opens a task asking for its bill.',
-        collectsFiles: true,
-        effects: [
-          extra('Parse the uploaded bills with receipt parsing and match each one to its payment'),
-          ask('upload', `Each new payment to ${vendorName} opens a task asking for its bill; receipt parsing matches it to the payment`),
-        ],
+        hint: 'Today’s bills are parsed and matched at the end of this task, and each new payment opens a task asking for its bill.',
+        uploadPrompt,
+        effects: [parseNow, askEachPayment],
       },
       {
         value: 'upload_now',
         label: 'Upload a bill now, just this time',
         outcome: 'askUpload',
-        hint: 'The bill runs through receipt parsing and is matched to its payment; no future bills are requested.',
-        collectsFiles: true,
-        effects: [extra('Parse the uploaded bills with receipt parsing and match each one to its payment')],
+        hint: 'Bills uploaded at the end of this task are parsed and matched; no future bills are requested.',
+        uploadPrompt,
+        effects: [parseNow],
       },
       {
         value: 'ask_each',
         label: 'Ask me for the bill with each payment',
         outcome: 'askUpload',
         hint: 'Each new payment opens a task asking for its bill → receipt parsing → bill-to-payment match.',
-        effects: [ask('upload', `Each new payment to ${vendorName} opens a task asking for its bill; receipt parsing matches it to the payment`)],
+        effects: [askEachPayment],
       },
       {
         value: 'skip',
@@ -370,71 +547,10 @@ const billsQuestion = ({ config }: AskContext, vendorName: string): Question => 
   }
 }
 
-const getCategory = (answers: Answers) => {
-  const choice = answers.counterparty?.choice
-
-  return choice && choice !== VARIES_CATEGORY ? choice : null
-}
-
-type CounterpartyQuestionSpec = {
-  role: 'Vendor' | 'Customer'
-  prompt: string
-  why: string
-  categoryLabel: string
-  suggestedCategories: readonly string[]
-  otherCategories: readonly string[]
-  variesDetail: string
-}
-
-const counterpartyQuestion = ({
-  role,
-  prompt,
-  why,
-  categoryLabel,
-  suggestedCategories,
-  otherCategories,
-  variesDetail,
-}: CounterpartyQuestionSpec): Question => ({
-  kind: 'counterparty',
-  id: 'counterparty',
-  prompt,
-  why,
-  observation: null,
-  namePlaceholder: `${role} name`,
-  categoryLabel,
-  suggestedCategories,
-  otherCategories,
-  outcomes: [
-    {
-      label: 'A suggested or searched category',
-      outcome: 'rule',
-      hint: 'Names the counterparty and gives the rule its category.',
-      matches: answer => !!answer?.choice && answer.choice !== VARIES_CATEGORY,
-    },
-    {
-      label: 'It’s a mix or it varies',
-      outcome: 'askFreeform',
-      hint: 'No main rule: each new transaction opens a task, and the answer categorizes that transaction only.',
-      matches: answer => answer?.choice === VARIES_CATEGORY,
-    },
-  ],
-  effects: ({ text, choice }) => [
-    metadata('counterparty.name', text.trim()),
-    metadata('counterparty.role', role),
-    ...(choice === VARIES_CATEGORY
-      ? [
-        metadata('counterparty.category', 'Mixed / varies per transaction'),
-        blockRules('It’s a mix or varies per transaction, so no single category fits'),
-        ask('freeform', variesDetail),
-      ]
-      : choice ? [metadata('counterparty.category', choice), rule(MAIN_RULE, { target: choice })] : []),
-  ],
-})
-
 const buildVendorQuestions = (ctx: AskContext): Question[] => {
   const { answers, pattern, mask } = ctx
   const category = getCategory(answers) ?? 'vendor purchases'
-  const vendorName = answers.counterparty?.text.trim() || 'this vendor'
+  const vendorName = answers.counterparty.text.trim() || 'this vendor'
 
   return [
     counterpartyQuestion({
@@ -446,37 +562,10 @@ const buildVendorQuestions = (ctx: AskContext): Question[] => {
       otherCategories: otherCategoriesOfType(LedgerAccountType.Expense, VENDOR_CATEGORIES),
       variesDetail: 'Each new payment to this vendor opens a freeform task; the answer categorizes that payment only',
     }),
-    amountQuestion(ctx, 'payments'),
-    {
-      kind: 'choice',
-      id: 'recurring',
-      prompt: 'Is this a recurring payment? If so, how often?',
-      why: 'Lets us auto-categorize and flag a missed or unusual payment.',
-      observation: pattern.isMonthly ? 'These landed about a month apart.' : null,
-      options: [
-        ...CADENCES.map((cadence): ChoiceOption => ({
-          value: cadence.toLowerCase(),
-          label: cadence,
-          outcome: 'extra',
-          hint: `Expects a ${cadence.toLowerCase()} payment and flags a missed or unusually large one.`,
-          effects: [
-            metadata('schedule.cadence', cadence),
-            extra(`Watch for a ${cadence.toLowerCase()} payment to ${vendorName}; flag a missed or unusual one`),
-          ],
-        })),
-        {
-          value: 'one_off',
-          label: 'Not recurring',
-          outcome: 'metadata',
-          hint: 'Recorded only; there is no schedule to watch.',
-          effects: [metadata('schedule.cadence', 'One-off')],
-        },
-      ],
-    },
-    billsQuestion(ctx, vendorName),
     {
       kind: 'choice',
       id: 'contractor',
+      theme: 'who',
       prompt: `Is ${vendorName} an individual or contractor rather than a company?`,
       why: 'Triggers W-9 collection and 1099 tracking.',
       observation: null,
@@ -501,9 +590,38 @@ const buildVendorQuestions = (ctx: AskContext): Question[] => {
         notSureOption('1099 eligibility'),
       ],
     },
+    amountQuestion(ctx, 'payments'),
+    {
+      kind: 'choice',
+      id: 'recurring',
+      theme: 'nature',
+      prompt: 'Is this a recurring payment? If so, how often?',
+      why: 'Lets us auto-categorize and flag a missed or unusual payment.',
+      observation: pattern.isMonthly ? 'These landed about a month apart.' : null,
+      options: [
+        ...CADENCES.map((cadence): ChoiceOption => ({
+          value: cadence.toLowerCase(),
+          label: cadence,
+          outcome: 'extra',
+          hint: `Expects a ${cadence.toLowerCase()} payment and flags a missed or unusually large one.`,
+          effects: [
+            metadata('schedule.cadence', cadence),
+            extra(`Watch for a ${cadence.toLowerCase()} payment to ${vendorName}; flag a missed or unusual one`),
+          ],
+        })),
+        {
+          value: 'one_off',
+          label: 'Not recurring',
+          outcome: 'metadata',
+          hint: 'Recorded only; there is no schedule to watch.',
+          effects: [metadata('schedule.cadence', 'One-off')],
+        },
+      ],
+    },
     {
       kind: 'choice',
       id: 'refunds',
+      theme: 'nature',
       prompt: `Do you ever receive money back from ${vendorName}?`,
       why: 'Adds a direction-aware rule so refunds aren’t categorized as income.',
       observation: pattern.inflowCount > 0 ? `We’ve already seen ${pattern.inflowCount} deposit(s) from this account.` : null,
@@ -524,14 +642,15 @@ const buildVendorQuestions = (ctx: AskContext): Question[] => {
         },
       ],
     },
+    billsQuestion(ctx, vendorName),
   ]
 }
 
 const buildCustomerQuestions = (ctx: AskContext): Question[] => {
   const { answers, mask, config } = ctx
   const category = getCategory(answers)
-  const isVaried = answers.counterparty?.choice === VARIES_CATEGORY
-  const customerName = answers.counterparty?.text.trim() || 'this customer'
+  const isVaried = answers.counterparty.choice === VARIES_CATEGORY
+  const customerName = answers.counterparty.text.trim() || 'this customer'
   const ruleSuggestion = config.suggestRuleAfter > 0
     ? ` After ${config.suggestRuleAfter} consistent answers we suggest turning it into a rule.`
     : ''
@@ -549,7 +668,32 @@ const buildCustomerQuestions = (ctx: AskContext): Question[] => {
     amountQuestion(ctx, 'deposits'),
     {
       kind: 'choice',
+      id: 'refunds',
+      theme: 'nature',
+      prompt: `Do you ever send money back to ${customerName}?`,
+      why: 'Adds a direction-aware rule for refunds.',
+      observation: null,
+      options: [
+        {
+          value: 'yes',
+          label: 'Yes, refunds sometimes',
+          outcome: 'rule',
+          hint: 'Adds a second rule: money out to this account is a refund of revenue.',
+          effects: [rule(REFUND_RULE, { conditions: [accountCondition(mask), 'Money out'], target: `Refund of ${category ?? 'revenue'}` })],
+        },
+        {
+          value: 'no',
+          label: 'No',
+          outcome: 'metadata',
+          hint: 'Payments to this account stay uncategorized and get asked about.',
+          effects: [metadata('counterparty.refunds', 'None expected')],
+        },
+      ],
+    },
+    {
+      kind: 'choice',
       id: 'handling',
+      theme: 'handling',
       prompt: `How should we handle future deposits from ${customerName}?`,
       why: 'Chooses between a rule, document evidence for revenue matching, or a question per deposit.',
       observation: null,
@@ -587,36 +731,50 @@ const buildCustomerQuestions = (ctx: AskContext): Question[] => {
         },
       ],
     },
-    {
-      kind: 'choice',
-      id: 'refunds',
-      prompt: `Do you ever send money back to ${customerName}?`,
-      why: 'Adds a direction-aware rule for refunds.',
-      observation: null,
-      options: [
-        {
-          value: 'yes',
-          label: 'Yes, refunds sometimes',
-          outcome: 'rule',
-          hint: 'Adds a second rule: money out to this account is a refund of revenue.',
-          effects: [rule(REFUND_RULE, { conditions: [accountCondition(mask), 'Money out'], target: `Refund of ${category ?? 'revenue'}` })],
-        },
-        {
-          value: 'no',
-          label: 'No',
-          outcome: 'metadata',
-          hint: 'Payments to this account stay uncategorized and get asked about.',
-          effects: [metadata('counterparty.refunds', 'None expected')],
-        },
-      ],
-    },
   ]
 }
 
 const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
   {
     kind: 'choice',
+    id: 'purpose',
+    theme: 'who',
+    prompt: 'What’s this account used for?',
+    why: 'Names the account and sets the transfer rule.',
+    observation: null,
+    options: [
+      ...ACCOUNT_PURPOSES.map((purpose): ChoiceOption => ({
+        value: purpose.toLowerCase(),
+        label: purpose,
+        outcome: 'rule',
+        hint: `Names it “${purpose} ••${mask}” and books every transfer as a transfer, not P&L.`,
+        effects: [
+          metadata('account.purpose', purpose),
+          metadata('account.name', `${purpose} ••${mask}`),
+          rule(MAIN_RULE, { target: `Transfer to ${purpose} ••${mask} (excluded from P&L)` }),
+        ],
+      })),
+      {
+        value: 'other',
+        label: 'Something else',
+        outcome: 'rule',
+        hint: 'Your description names the account and books every transfer as a transfer, not P&L.',
+        effects: [],
+        collectsText: {
+          placeholder: 'e.g. Equipment fund for the new location',
+          effects: text => [
+            metadata('account.purpose', text),
+            metadata('account.name', `${text} ••${mask}`),
+            rule(MAIN_RULE, { target: `Transfer to ${text} ••${mask} (excluded from P&L)` }),
+          ],
+        },
+      },
+    ],
+  },
+  {
+    kind: 'choice',
     id: 'connect',
+    theme: 'handling',
     prompt: 'Can you connect this account so we can pull your transactions for you automatically, or do you want to upload its statements manually?',
     why: 'Shows both sides of each transfer, so internal transfers stay off the P&L.',
     observation: null,
@@ -632,8 +790,8 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
         value: 'statements',
         label: 'Upload statements',
         outcome: 'askUpload',
-        hint: 'A monthly task requests the statement; parsing it reconciles the transfers.',
-        collectsFiles: true,
+        hint: 'Statements are uploaded at the end of this task, then a monthly task requests the next one.',
+        uploadPrompt: `Upload recent statements for the account ending in ${mask}.`,
         effects: [
           metadata('account.source', 'Statements'),
           ask('upload', `Each month opens a task requesting the ••${mask} statement; parsing it reconciles the transfers`),
@@ -648,44 +806,13 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
       },
     ],
   },
-  {
-    kind: 'choice',
-    id: 'purpose',
-    prompt: 'What’s this account used for?',
-    why: 'Names the account and sets the transfer rule.',
-    observation: null,
-    options: ACCOUNT_PURPOSES.map((purpose): ChoiceOption => ({
-      value: purpose.toLowerCase(),
-      label: purpose,
-      outcome: 'rule',
-      hint: `Names it “${purpose} ••${mask}” and books every transfer as a transfer, not P&L.`,
-      effects: [
-        metadata('account.purpose', purpose),
-        metadata('account.name', `${purpose} ••${mask}`),
-        rule(MAIN_RULE, { target: `Transfer to ${purpose} ••${mask} (excluded from P&L)` }),
-      ],
-    })).concat({
-      value: 'other',
-      label: 'Something else',
-      outcome: 'rule',
-      hint: 'Your description names the account and books every transfer as a transfer, not P&L.',
-      effects: [],
-      collectsText: {
-        placeholder: 'e.g. Equipment fund for the new location',
-        effects: text => [
-          metadata('account.purpose', text),
-          metadata('account.name', `${text} ••${mask}`),
-          rule(MAIN_RULE, { target: `Transfer to ${text} ••${mask} (excluded from P&L)` }),
-        ],
-      },
-    }),
-  },
 ]
 
 const buildPersonalQuestions = ({ pattern, formatMoney }: AskContext): Question[] => [
   {
     kind: 'choice',
     id: 'whose',
+    theme: 'who',
     prompt: 'Whose account is it?',
     why: 'Determines owner vs. related-party treatment.',
     observation: null,
@@ -730,6 +857,7 @@ const buildPersonalQuestions = ({ pattern, formatMoney }: AskContext): Question[
     ? [{
       kind: 'choice',
       id: 'loan',
+      theme: 'nature',
       prompt: 'Is this a loan, or regular draws and contributions?',
       why: 'Only asked because a lump sum followed by fixed repayments looks like a loan.',
       observation: `We noticed a ${formatMoney(pattern.loan.principal)} deposit followed by ${pattern.loan.paymentCount} payments of ${formatMoney(pattern.loan.payment)}.`,
@@ -763,6 +891,7 @@ const buildUnsureQuestions = (): Question[] => [
   {
     kind: 'text',
     id: 'details',
+    theme: 'who',
     prompt: 'Tell us anything you know about this account.',
     why: 'Free text goes to a bookkeeper, who classifies the account.',
     observation: null,
@@ -793,6 +922,8 @@ const buildQuestions = (type: AccountType, ctx: AskContext): Question[] => {
 
 const getTypeLabel = (type: AccountType) => ACCOUNT_TYPE_OPTIONS.find(({ value }) => value === type)?.short ?? type
 
+const getThemeTitle = (theme: ThemeId) => THEMES.find(({ id }) => id === theme)?.title ?? theme
+
 const baseEffects = (type: AccountType, mask: string): Effect[] => {
   const account = accountCondition(mask)
   const common = [metadata('account.mask', `••${mask}`), metadata('account.type', getTypeLabel(type))]
@@ -810,62 +941,65 @@ const baseEffects = (type: AccountType, mask: string): Effect[] => {
   }
 }
 
-const isAnswered = (question: Question, answer: Answer | undefined): answer is Answer => {
-  if (!answer) return false
+const getSelectedOption = (question: Question, answer: Answer) =>
+  (question.kind === 'choice' ? question.options.find(({ value }) => value === answer.choice) : undefined)
 
+const isAnswered = (question: Question, answer: Answer) => {
   switch (question.kind) {
     case 'choice': {
-      const option = question.options.find(({ value }) => value === answer.choice)
+      const option = getSelectedOption(question, answer)
 
       return option !== undefined && (!option.collectsText || answer.text.trim() !== '')
     }
-    case 'counterparty': return answer.text.trim() !== '' && answer.choice !== null
+    case 'counterparty': return answer.text.trim() !== '' && resolveCategory(answer) !== null
     case 'text': return answer.text.trim() !== ''
-    case 'statement': return answer.choice !== null
+    case 'statement': return true
   }
 }
 
-const getAnswerEffects = (question: Question, answer: Answer | undefined): readonly Effect[] => {
+const getAnswerEffects = (question: Question, answer: Answer): readonly Effect[] => {
   if (!isAnswered(question, answer)) return []
 
   if (question.kind !== 'choice') return question.effects(answer)
 
-  const option = question.options.find(({ value }) => value === answer.choice)
+  const option = getSelectedOption(question, answer)
 
   if (!option) return []
 
-  const uploads = option.collectsFiles && answer.fileNames.length > 0
-    ? [metadata('documents.uploaded', answer.fileNames.join(', '))]
-    : []
-
-  const freeform = option.collectsText ? option.collectsText.effects(answer.text.trim()) : []
-
-  return [...option.effects, ...uploads, ...freeform]
+  return [...option.effects, ...(option.collectsText ? option.collectsText.effects(answer.text.trim()) : [])]
 }
 
-const getAnswerLabel = (question: Question, answer: Answer | undefined) => {
+const getAnswerLabel = (question: Question, answer: Answer) => {
   if (!isAnswered(question, answer)) return null
 
   switch (question.kind) {
     case 'choice': {
-      const option = question.options.find(({ value }) => value === answer.choice)
-
-      if (option?.collectsText) return answer.text.trim()
-
-      const label = option?.label ?? answer.choice
-      return answer.fileNames.length > 0 ? `${label} (${answer.fileNames.join(', ')})` : label
+      const option = getSelectedOption(question, answer)
+      return option?.collectsText ? answer.text.trim() : (option?.label ?? null)
     }
-    case 'counterparty':
-      return `${answer.text.trim()} · ${answer.choice === VARIES_CATEGORY ? 'It’s a mix or it varies' : answer.choice}`
+    case 'counterparty': {
+      const category = resolveCategory(answer)
+      return `${answer.text.trim()} · ${category === VARIES_CATEGORY ? 'It’s a mix or it varies' : category}`
+    }
     case 'text': return answer.text.trim()
     case 'statement': return 'Seen'
   }
 }
 
-const buildPlan = (type: AccountType, questions: readonly Question[], ctx: AskContext): Plan => {
+const getUploadPrompts = (questions: readonly Question[], answers: Record<QuestionId, Answer>) =>
+  questions.flatMap(question => getSelectedOption(question, answers[question.id])?.uploadPrompt ?? [])
+
+const getSteps = (questions: readonly Question[], answers: Record<QuestionId, Answer>): StepId[] => [
+  ...THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id }) => id),
+  ...(getUploadPrompts(questions, answers).length > 0 ? ['uploads' as const] : []),
+  'review',
+]
+
+const buildPlan = (type: AccountType, questions: readonly Question[], ctx: AskContext, files: readonly UploadedFile[]): Plan => {
   const effects = [
     ...baseEffects(type, ctx.mask),
     ...questions.flatMap(question => getAnswerEffects(question, ctx.answers[question.id])),
+    ...(files.length > 0 ? [metadata('documents.uploaded', files.map(({ name }) => name).join(', '))] : []),
   ]
 
   const metadataByField = new Map<string, string>()
@@ -916,10 +1050,10 @@ const buildPlan = (type: AccountType, questions: readonly Question[], ctx: AskCo
   }
 }
 
-const makeTask = (status: BusinessTaskStatus.Todo | BusinessTaskStatus.UserMarkedCompleted): UserVisibleTask => ({
+const makeTask = (title: string, status: BusinessTaskStatus.Todo | BusinessTaskStatus.UserMarkedCompleted): UserVisibleTask => ({
   id: '00000000-0000-4000-8000-000000000b01',
   status,
-  title: 'New account transfer',
+  title,
   question: '',
   taskType: null,
   userResponse: null,
@@ -927,161 +1061,284 @@ const makeTask = (status: BusinessTaskStatus.Todo | BusinessTaskStatus.UserMarke
   documents: null,
 })
 
+const describeTransfers = (mask: string, pattern: PatternSummary) => {
+  const flow = pattern.inflowCount === 0
+    ? 'transfers to'
+    : pattern.outflowCount === 0 ? 'deposits from' : 'transfers to and from'
+
+  return `We noticed ${pattern.count} ${flow} an account ending in ${mask} that we don’t recognize. What kind of account is this?`
+}
+
 const OutcomeBadge = ({ outcome }: { outcome: OutcomeTag }) => {
   const { label, variant } = OUTCOME_TAGS[outcome]
 
   return <Badge size={BadgeSize.EXTRA_SMALL} variant={variant}>{label}</Badge>
 }
 
-type QuestionInputProps = {
-  question: Question
-  answer: Answer
-  onChange: (answer: Answer) => void
-  onContinue: (answer: Answer) => void
-}
-
-type CounterpartyInputProps = Omit<QuestionInputProps, 'question'> & {
-  question: Extract<Question, { kind: 'counterparty' }>
-}
-
-const CounterpartyInput = ({ question, answer, onChange, onContinue }: CounterpartyInputProps) => {
-  const [showCategories, setShowCategories] = useState(() => answer.text.trim() !== '')
-  const revealCategories = useDebounce((name: string) => setShowCategories(name.trim() !== ''))
+const TransactionTable = ({ transactions }: { transactions: readonly MockTransaction[] }) => {
+  const { formatDate } = useIntlFormatter()
 
   return (
-    <VStack gap='sm'>
-      <TextField
-        aria-label={question.namePlaceholder}
-        value={answer.text}
-        onChange={(text) => {
-          onChange({ ...answer, text })
-          revealCategories(text)
-        }}
-      >
-        <InputGroup slot='input'>
-          <Input placeholder={question.namePlaceholder} inset />
-        </InputGroup>
-      </TextField>
-      {showCategories
-        ? (
-          <VStack gap='sm'>
-            <Span size='xs' variant='subtle'>{question.categoryLabel}</Span>
-            <ChipGroup ariaLabel={question.categoryLabel} value={answer.choice}>
-              {[...question.suggestedCategories, VARIES_CATEGORY].map(category => (
-                <Chip key={category} value={category} onPress={() => onChange({ ...answer, choice: category })}>
-                  {category === VARIES_CATEGORY ? 'It’s a mix or it varies' : category}
-                </Chip>
-              ))}
-            </ChipGroup>
-            <ComboBox
-              aria-label={`Other ${question.categoryLabel.toLowerCase()} categories`}
-              placeholder='Or search other categories…'
-              options={question.otherCategories.map(category => ({ label: category, value: category }))}
-              selectedValue={answer.choice && question.otherCategories.includes(answer.choice)
-                ? { label: answer.choice, value: answer.choice }
-                : null}
-              onSelectedValueChange={option => onChange({ ...answer, choice: option?.value ?? null })}
-              isClearable
+    <VStack className='Layer__CounterpartyAskTask__Rows AccountMaskAskStory__Rows'>
+      {transactions.map(({ id, date, amount, direction, description }) => (
+        <VStack key={id} className='Layer__CounterpartyAskTask__Row' pi='md'>
+          <HStack className='Layer__CounterpartyAskTask__RowSummary' align='center' gap='xs' overflow='hidden' fluid>
+            <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='xs' variant='subtle' noWrap>
+              {formatDate(date, DateFormat.MonthDayShort)}
+            </Span>
+            <Span className='Layer__CounterpartyAskTask__RowSummaryDescription' size='sm' variant='subtle' ellipsis noWrap>
+              {description}
+            </Span>
+            <MoneySpan
+              className='Layer__CounterpartyAskTask__RowSummaryAmount'
+              size='sm'
+              weight='bold'
+              numeric='tabular-nums'
+              align='right'
+              amount={direction === OUT ? -amount : amount}
+              displayPlusSign={direction === IN}
             />
-          </VStack>
-        )
-        : null}
-      <HStack justify='end'>
-        <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
-      </HStack>
+          </HStack>
+        </VStack>
+      ))}
     </VStack>
   )
 }
 
-const QuestionInput = ({ question, answer, onChange, onContinue }: QuestionInputProps) => {
-  switch (question.kind) {
-    case 'choice': {
-      const selected = question.options.find(({ value }) => value === answer.choice)
-
-      return (
-        <VStack gap='sm'>
-          <ChipGroup ariaLabel={question.prompt} value={answer.choice}>
-            {question.options.map(option => (
-              <Chip
-                key={option.value}
+const AccountTypePane = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    prompt: '',
+    transactions: [] as readonly MockTransaction[],
+    onPick: (_type: AccountType) => {},
+  },
+  render: function Render({ form, prompt, transactions, onPick }) {
+    return (
+      <VStack gap='md' pb='md'>
+        <P size='sm' pi='md'>{prompt}</P>
+        <TransactionTable transactions={transactions} />
+        <VStack pi='md'>
+          <form.AppField name='accountType'>
+            {field => (
+              <field.FormChipGroupField
+                label='What kind of account this is'
+                showLabel={false}
                 size='lg'
-                value={option.value}
-                onPress={() => {
-                  const next = { ...answer, choice: option.value }
+                options={ACCOUNT_TYPE_OPTIONS.map(({ value, label }) => ({ value, label }))}
+                onSelect={onPick}
+              />
+            )}
+          </form.AppField>
+        </VStack>
+      </VStack>
+    )
+  },
+})
 
-                  if (option.collectsFiles || option.collectsText) onChange(next)
-                  else onContinue({ ...next, fileNames: [], text: '' })
-                }}
-              >
-                {option.label}
-              </Chip>
-            ))}
-          </ChipGroup>
-          {selected?.collectsFiles
-            ? (
-              <VStack gap='xs'>
-                {answer.fileNames.map(name => (
-                  <HStack key={name} gap='2xs' align='center'>
-                    <Paperclip size={12} />
-                    <Span size='xs'>{name}</Span>
-                  </HStack>
-                ))}
-                <HStack gap='xs' justify='end'>
-                  <FileInput
-                    secondary
-                    allowMultipleUploads
-                    text='Select files'
-                    onUpload={files => onChange({ ...answer, fileNames: [...answer.fileNames, ...files.map(({ name }) => name)] })}
-                  />
-                  <Button isDisabled={answer.fileNames.length === 0} onPress={() => onContinue(answer)}>Continue</Button>
-                </HStack>
-              </VStack>
-            )
-            : null}
-          {selected?.collectsText
-            ? (
-              <VStack gap='sm'>
-                <TextArea
-                  aria-label={question.prompt}
-                  placeholder={selected.collectsText.placeholder}
-                  rows={3}
-                  value={answer.text}
-                  onChange={event => onChange({ ...answer, text: event.target.value })}
+const QuestionHeading = ({ question }: { question: Question }) => (
+  <VStack gap='3xs'>
+    <P size='sm'>{question.prompt}</P>
+    {question.observation ? <Span size='xs' variant='subtle'>{question.observation}</Span> : null}
+  </VStack>
+)
+
+const QuestionField = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    question: null as Question | null,
+  },
+  render: function Render({ form, question }) {
+    const answer = useStore(form.store, state => (question ? state.values.answers[question.id] : EMPTY_ANSWER))
+
+    if (!question) return null
+
+    switch (question.kind) {
+      case 'choice': {
+        const selected = getSelectedOption(question, answer)
+
+        return (
+          <VStack gap='xs'>
+            <QuestionHeading question={question} />
+            <form.AppField name={`answers.${question.id}.choice`}>
+              {field => (
+                <field.FormChipGroupField
+                  label={question.prompt}
+                  showLabel={false}
+                  options={question.options.map(({ value, label }) => ({ value, label }))}
                 />
-                <HStack justify='end'>
-                  <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
-                </HStack>
-              </VStack>
-            )
-            : null}
-        </VStack>
-      )
+              )}
+            </form.AppField>
+            {selected?.collectsText
+              ? (
+                <form.AppField name={`answers.${question.id}.text`}>
+                  {field => (
+                    <field.FormTextField label={question.prompt} showLabel={false} placeholder={selected.collectsText?.placeholder} />
+                  )}
+                </form.AppField>
+              )
+              : null}
+          </VStack>
+        )
+      }
+      case 'counterparty':
+        return (
+          <VStack gap='xs'>
+            <QuestionHeading question={question} />
+            <form.AppField name={`answers.${question.id}.text`}>
+              {field => <field.FormTextField label={question.namePlaceholder} showLabel={false} placeholder={question.namePlaceholder} />}
+            </form.AppField>
+            <Span size='xs' variant='subtle'>{question.categoryLabel}</Span>
+            <form.AppField name={`answers.${question.id}.choice`}>
+              {field => (
+                <field.FormChipGroupField
+                  label={question.categoryLabel}
+                  showLabel={false}
+                  options={[
+                    ...question.suggestedCategories.map(category => ({ value: category, label: category })),
+                    { value: OTHER_CATEGORY, label: 'Other' },
+                    { value: VARIES_CATEGORY, label: 'It’s a mix or it varies' },
+                  ]}
+                />
+              )}
+            </form.AppField>
+            {answer.choice === OTHER_CATEGORY
+              ? (
+                <form.Field name={`answers.${question.id}.detail`}>
+                  {field => (
+                    <ComboBox
+                      aria-label={`Other ${question.categoryLabel.toLowerCase()} categories`}
+                      placeholder='Search categories…'
+                      options={question.otherCategories.map(category => ({ label: category, value: category }))}
+                      selectedValue={field.state.value ? { label: field.state.value, value: field.state.value } : null}
+                      onSelectedValueChange={option => field.handleChange(option?.value ?? null)}
+                      isClearable
+                    />
+                  )}
+                </form.Field>
+              )
+              : null}
+          </VStack>
+        )
+      case 'text':
+        return (
+          <VStack gap='xs'>
+            <QuestionHeading question={question} />
+            <form.AppField name={`answers.${question.id}.text`}>
+              {field => <field.FormTextAreaField label={question.prompt} showLabel={false} placeholder={question.placeholder} />}
+            </form.AppField>
+          </VStack>
+        )
+      case 'statement':
+        return <QuestionHeading question={question} />
     }
-    case 'counterparty':
-      return <CounterpartyInput question={question} answer={answer} onChange={onChange} onContinue={onContinue} />
-    case 'text':
-      return (
-        <VStack gap='sm'>
-          <TextArea
-            aria-label={question.prompt}
-            placeholder={question.placeholder}
-            rows={4}
-            value={answer.text}
-            onChange={event => onChange({ ...answer, text: event.target.value })}
-          />
-          <HStack justify='end'>
-            <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
-          </HStack>
-        </VStack>
-      )
-    case 'statement':
-      return (
-        <HStack justify='end'>
-          <Button variant='outlined' onPress={() => onContinue({ ...answer, choice: 'seen' })}>Got it</Button>
-        </HStack>
-      )
-  }
-}
+  },
+})
+
+const ThemePane = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    questions: [] as readonly Question[],
+    progress: '',
+    onContinue: () => {},
+  },
+  render: function Render({ form, questions, progress, onContinue }) {
+    const isComplete = useStore(form.store, state => questions.every(question => isAnswered(question, state.values.answers[question.id])))
+
+    return (
+      <form.FormGroup
+        name='answers'
+        validators={{
+          onDynamic: ({ value }) => (questions.every(question => isAnswered(question, value[question.id]))
+            ? undefined
+            : 'Answer every question to continue'),
+        }}
+        onGroupSubmit={onContinue}
+      >
+        {formGroup => (
+          <VStack gap='lg' pb='md' pi='md'>
+            <Span size='xs' variant='subtle'>{progress}</Span>
+            {questions.map(question => <QuestionField key={question.id} form={form} question={question} />)}
+            <HStack justify='end'>
+              <Button isDisabled={!isComplete} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
+            </HStack>
+          </VStack>
+        )}
+      </form.FormGroup>
+    )
+  },
+})
+
+const UploadPane = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    prompts: [] as readonly string[],
+    progress: '',
+    onContinue: () => {},
+  },
+  render: function Render({ form, prompts, progress, onContinue }) {
+    const [rejectedNames, setRejectedNames] = useState<readonly string[]>([])
+    const fileCount = useStore(form.store, state => state.values.uploads.files.length)
+
+    return (
+      <form.FormGroup
+        name='uploads'
+        validators={{ onDynamic: ({ value }) => (value.files.length > 0 ? undefined : 'Add at least one file to continue') }}
+        onGroupSubmit={onContinue}
+      >
+        {formGroup => (
+          <VStack gap='md' pb='md' pi='md'>
+            <VStack gap='3xs'>
+              <Span size='xs' variant='subtle'>{progress}</Span>
+              {prompts.map(prompt => <P key={prompt} size='sm'>{prompt}</P>)}
+              <Span size='xs' variant='subtle'>{`Accepted file types: ${UPLOAD_TYPES_LABEL}.`}</Span>
+            </VStack>
+            <form.Field name='uploads.files'>
+              {field => (
+                <VStack gap='xs'>
+                  {field.state.value.map(file => (
+                    <FileThumb
+                      key={file.id}
+                      name={file.name}
+                      onDelete={() => {
+                        setRejectedNames([])
+                        field.handleChange(field.state.value.filter(({ id }) => id !== file.id))
+                      }}
+                    />
+                  ))}
+                  {rejectedNames.length > 0
+                    ? (
+                      <Span size='xs' status='error'>
+                        {`Couldn’t add ${rejectedNames.join(', ')}. Upload a ${UPLOAD_TYPES_LABEL} file instead.`}
+                      </Span>
+                    )
+                    : null}
+                  <HStack gap='xs' justify='space-between' align='center'>
+                    <FileInput
+                      allowMultipleUploads
+                      accept={UPLOAD_ACCEPT}
+                      text={fileCount > 0 ? 'Add more files' : 'Select files'}
+                      onUpload={(files) => {
+                        const existingIds = new Set(field.state.value.map(({ id }) => id))
+                        const added = files
+                          .filter(isAllowedUpload)
+                          .map(file => ({ id: `${file.name}-${file.size}-${file.lastModified}`, name: file.name }))
+                          .filter(({ id }) => !existingIds.has(id))
+
+                        setRejectedNames(files.filter(file => !isAllowedUpload(file)).map(({ name }) => name))
+                        field.handleChange([...field.state.value, ...added])
+                      }}
+                    />
+                    <Button isDisabled={fileCount === 0} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
+                  </HStack>
+                </VStack>
+              )}
+            </form.Field>
+          </VStack>
+        )}
+      </form.FormGroup>
+    )
+  },
+})
 
 const PlanSummary = ({ plan }: { plan: Plan }) => {
   const lines = [
@@ -1098,44 +1355,51 @@ const PlanSummary = ({ plan }: { plan: Plan }) => {
   )
 }
 
-type TransactionListProps = { transactions: readonly MockTransaction[] }
+type ReviewPaneProps = {
+  mask: string
+  accountType: AccountType
+  questions: readonly Question[]
+  answers: Record<QuestionId, Answer>
+  files: readonly UploadedFile[]
+  isSubmitting: boolean
+  onSubmit: () => void
+}
 
-const TransactionList = ({ transactions }: TransactionListProps) => {
-  const { formatDate } = useIntlFormatter()
-
-  return (
-    <VStack className='AccountMaskAskStory__Transactions'>
-      {transactions.map(({ id, date, amount, direction }) => (
-        <HStack key={id} gap='sm' justify='space-between' className='AccountMaskAskStory__Transaction'>
-          <Span size='xs' variant='subtle'>{formatDate(date, DateFormat.DateShort)}</Span>
-          <Span size='xs' variant='subtle'>{direction === OUT ? 'Money out' : 'Money in'}</Span>
-          <MoneySpan size='xs' amount={amount} />
-        </HStack>
-      ))}
+const ReviewPane = ({ mask, accountType, questions, answers, files, isSubmitting, onSubmit }: ReviewPaneProps) => (
+  <VStack gap='md' pb='md' pi='md'>
+    <P size='sm'>{`Here’s what you told us about the account ending in ${mask}:`}</P>
+    <VStack gap='3xs'>
+      <Span size='xs' variant='subtle'>Account type</Span>
+      <Span size='sm'>{getTypeLabel(accountType)}</Span>
     </VStack>
-  )
-}
-
-const describeTransfers = (
-  transactions: readonly MockTransaction[],
-  mask: string,
-  pattern: PatternSummary,
-  formatMoney: (cents: number) => string,
-  formatShortDate: (date: Date) => string,
-) => {
-  const shown = transactions.slice(0, 2).map(({ amount, date }) => `${formatMoney(amount)} on ${formatShortDate(date)}`)
-  const remaining = transactions.length - shown.length
-  const list = remaining > 0 ? `${shown.join(', ')}, and ${remaining} others` : shown.join(' and ')
-  const flow = pattern.inflowCount === 0
-    ? 'transfers to'
-    : pattern.outflowCount === 0 ? 'deposits from' : 'transfers to and from'
-
-  return `We noticed ${flow} an account ending in ${mask} that we don’t recognize (${list}). What kind of account is this?`
-}
+    {THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id, title }) => (
+      <VStack key={id} gap='xs'>
+        <Span size='xs' weight='bold'>{title}</Span>
+        {questions.filter(({ theme }) => theme === id).map(question => (
+          <VStack key={question.id} gap='3xs'>
+            <Span size='xs' variant='subtle'>{question.prompt}</Span>
+            <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
+          </VStack>
+        ))}
+      </VStack>
+    ))}
+    {files.length > 0
+      ? (
+        <VStack gap='3xs'>
+          <Span size='xs' weight='bold'>Uploads</Span>
+          <Span size='sm'>{files.map(({ name }) => name).join(', ')}</Span>
+        </VStack>
+      )
+      : null}
+    <HStack justify='end'>
+      <Button isDisabled={isSubmitting} onPress={onSubmit}>Submit</Button>
+    </HStack>
+  </VStack>
+)
 
 type NavState = {
-  view: string
-  history: readonly string[]
+  view: View
+  history: readonly View[]
   direction: SlidingPanesDirection
 }
 
@@ -1143,106 +1407,109 @@ type AccountMaskAskStoryProps = {
   accountMask: string
   transactionPattern: TransactionPattern
   startAs: AccountType | 'picker'
+  taskTitle: TaskTitleKey
 } & PrototypeConfig
 
-const AccountMaskAskStory = ({ accountMask, transactionPattern, startAs, billUploadStyle, suggestRuleAfter }: AccountMaskAskStoryProps) => {
-  const { formatCurrencyFromCents, formatDate } = useIntlFormatter()
-  const transactions = TRANSACTIONS_BY_PATTERN[transactionPattern]
+const AccountMaskAskStory = ({
+  accountMask,
+  transactionPattern,
+  startAs,
+  taskTitle,
+  billUploadStyle,
+  suggestRuleAfter,
+}: AccountMaskAskStoryProps) => {
+  const { formatCurrencyFromCents } = useIntlFormatter()
+  const transactions = useMemo(() => makeTransactions(transactionPattern, accountMask), [transactionPattern, accountMask])
   const pattern = useMemo(() => summarizePattern(transactions), [transactions])
-  const config = useMemo(() => ({ billUploadStyle, suggestRuleAfter }), [billUploadStyle, suggestRuleAfter])
 
-  const makeContext = (answers: Answers): AskContext => ({
+  const makeContext = useCallback((answers: Record<QuestionId, Answer>): AskContext => ({
     mask: accountMask,
     pattern,
     answers,
-    config,
+    config: { billUploadStyle, suggestRuleAfter },
     formatMoney: cents => formatCurrencyFromCents(cents),
-  })
+  }), [accountMask, billUploadStyle, formatCurrencyFromCents, pattern, suggestRuleAfter])
 
   const initialType = startAs === 'picker' ? null : startAs
-  const [accountType, setAccountType] = useState<AccountType | null>(initialType)
-  const [answers, setAnswers] = useState<Answers>({})
+  const answeredTypeRef = useRef<AccountType | null>(initialType)
   const [isOpen, setIsOpen] = useState(true)
   const [nav, setNav] = useState<NavState>(() => (initialType
-    ? { view: buildQuestions(initialType, makeContext({}))[0]?.id ?? 'review', history: ['picker'], direction: 'forward' }
+    ? { view: getSteps(buildQuestions(initialType, makeContext(EMPTY_ANSWERS)), EMPTY_ANSWERS)[0] ?? 'review', history: ['picker'], direction: 'forward' }
     : { view: 'picker', history: [], direction: 'forward' }))
 
-  const ctx = makeContext(answers)
-  const questions = accountType ? buildQuestions(accountType, ctx) : []
-  const plan = accountType ? buildPlan(accountType, questions, ctx) : null
-  const isDone = nav.view === 'done'
-  const currentQuestion = questions.find(({ id }) => id === nav.view) ?? null
+  const goForward = useCallback((view: View) => setNav(current => ({
+    view,
+    history: [...current.history, current.view],
+    direction: 'forward',
+  })), [])
 
-  const goForward = (view: string) => setNav(current => ({ view, history: [...current.history, current.view], direction: 'forward' }))
   const goBack = () => setNav(current => ({
     view: current.history.at(-1) ?? 'picker',
     history: current.history.slice(0, -1),
     direction: 'back',
   }))
 
+  // The raw hook infers the same validator generics as the `withForm` panes; the wrapper pins them.
+  const form = useRawAppForm({
+    ...accountMaskAskFormOptions,
+    defaultValues: { ...EMPTY_VALUES, accountType: initialType },
+    validationLogic: revalidateLogic(),
+    onSubmit: () => goForward('done'),
+  })
+
+  const values = useStore(form.store, state => state.values)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
+
+  const { accountType, answers, uploads } = values
+  const ctx = makeContext(answers)
+  const questions = accountType ? buildQuestions(accountType, ctx) : []
+  const steps = getSteps(questions, answers)
+  const plan = accountType ? buildPlan(accountType, questions, ctx, uploads.files) : null
+  const isDone = nav.view === 'done'
+
+  // Read from the form rather than the render snapshot, so a step answered a moment ago counts.
+  const nextStepAfter = (view: View): View => {
+    const current = form.state.values
+    const currentQuestions = current.accountType ? buildQuestions(current.accountType, makeContext(current.answers)) : []
+    const currentSteps = getSteps(currentQuestions, current.answers)
+    const index = view === 'picker' ? 0 : currentSteps.findIndex(step => step === view) + 1
+
+    return currentSteps[index] ?? 'review'
+  }
+
   const onPickType = (type: AccountType) => {
-    const nextAnswers = type === accountType ? answers : {}
+    if (type !== answeredTypeRef.current) {
+      form.setFieldValue('answers', EMPTY_ANSWERS)
+      form.setFieldValue('uploads', { files: [] })
+      answeredTypeRef.current = type
+    }
 
-    setAccountType(type)
-    setAnswers(nextAnswers)
-    goForward(buildQuestions(type, makeContext(nextAnswers))[0]?.id ?? 'review')
+    goForward(nextStepAfter('picker'))
   }
 
-  const setAnswer = (question: Question, answer: Answer) => setAnswers(current => ({ ...current, [question.id]: answer }))
-
-  const continueFrom = (question: Question, answer: Answer) => {
-    if (!accountType) return
-
-    const nextAnswers = { ...answers, [question.id]: answer }
-    const nextQuestions = buildQuestions(accountType, makeContext(nextAnswers))
-    const index = nextQuestions.findIndex(({ id }) => id === question.id)
-
-    setAnswers(nextAnswers)
-    goForward(nextQuestions[index + 1]?.id ?? 'review')
-  }
+  const progressFor = (step: StepId, title: string) => (accountType
+    ? `${getTypeLabel(accountType)} · Step ${steps.indexOf(step) + 1} of ${steps.length - 1} · ${title}`
+    : title)
 
   const renderPane = () => {
-    if (nav.view === 'picker' || !accountType) {
+    const { view } = nav
+
+    if (view === 'picker' || !accountType) {
       return (
-        <VStack gap='md' pb='md' pi='md'>
-          <P size='sm'>
-            {describeTransfers(transactions, accountMask, pattern, ctx.formatMoney, date => formatDate(date, DateFormat.DateShort))}
-          </P>
-          <TransactionList transactions={transactions} />
-          <ChipGroup ariaLabel='What kind of account this is' value={accountType}>
-            {ACCOUNT_TYPE_OPTIONS.map(({ value, label }) => (
-              <Chip key={value} size='lg' value={value} onPress={() => onPickType(value)}>{label}</Chip>
-            ))}
-          </ChipGroup>
-        </VStack>
+        <AccountTypePane
+          form={form}
+          prompt={describeTransfers(accountMask, pattern)}
+          transactions={transactions}
+          onPick={onPickType}
+        />
       )
     }
 
-    if (currentQuestion) {
-      const index = questions.indexOf(currentQuestion)
-
-      return (
-        <VStack gap='md' pb='md' pi='md'>
-          <VStack gap='3xs'>
-            <Span size='xs' variant='subtle'>{`${getTypeLabel(accountType)} · Question ${index + 1} of ${questions.length}`}</Span>
-            <P size='sm'>{currentQuestion.prompt}</P>
-            {currentQuestion.observation ? <Span size='xs' variant='subtle'>{currentQuestion.observation}</Span> : null}
-          </VStack>
-          <QuestionInput
-            question={currentQuestion}
-            answer={answers[currentQuestion.id] ?? EMPTY_ANSWER}
-            onChange={answer => setAnswer(currentQuestion, answer)}
-            onContinue={answer => continueFrom(currentQuestion, answer)}
-          />
-        </VStack>
-      )
-    }
-
-    if (isDone && plan) {
+    if (view === 'done') {
       return (
         <VStack gap='md' pb='md' pi='md'>
           <P size='sm' weight='bold'>Thanks, we’ll take it from here.</P>
-          <PlanSummary plan={plan} />
+          {plan ? <PlanSummary plan={plan} /> : null}
           <HStack justify='end'>
             <Button variant='outlined' onPress={() => setNav({ view: 'picker', history: [], direction: 'back' })}>Edit answers</Button>
           </HStack>
@@ -1250,27 +1517,44 @@ const AccountMaskAskStory = ({ accountMask, transactionPattern, startAs, billUpl
       )
     }
 
+    if (view === 'uploads') {
+      return (
+        <UploadPane
+          form={form}
+          prompts={getUploadPrompts(questions, answers)}
+          progress={progressFor('uploads', 'Upload documents')}
+          onContinue={() => goForward(nextStepAfter('uploads'))}
+        />
+      )
+    }
+
+    if (view === 'review') {
+      return (
+        <ReviewPane
+          mask={accountMask}
+          accountType={accountType}
+          questions={questions}
+          answers={answers}
+          files={uploads.files}
+          isSubmitting={isSubmitting}
+          onSubmit={() => void form.handleSubmit()}
+        />
+      )
+    }
+
     return (
-      <VStack gap='md' pb='md' pi='md'>
-        <P size='sm'>{`Here’s what you told us about the account ending in ${accountMask}:`}</P>
-        <VStack gap='xs'>
-          <VStack gap='3xs'>
-            <Span size='xs' variant='subtle'>Account type</Span>
-            <Span size='sm'>{getTypeLabel(accountType)}</Span>
-          </VStack>
-          {questions.map(question => (
-            <VStack key={question.id} gap='3xs'>
-              <Span size='xs' variant='subtle'>{question.prompt}</Span>
-              <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
-            </VStack>
-          ))}
-        </VStack>
-        <HStack justify='end'>
-          <Button onPress={() => goForward('done')}>Submit</Button>
-        </HStack>
-      </VStack>
+      <ThemePane
+        form={form}
+        questions={questions.filter(({ theme }) => theme === view)}
+        progress={progressFor(view, getThemeTitle(view))}
+        onContinue={() => goForward(nextStepAfter(view))}
+      />
     )
   }
+
+  const inspectedQuestions = nav.view === 'who' || nav.view === 'nature' || nav.view === 'handling'
+    ? questions.filter(({ theme }) => theme === nav.view)
+    : []
 
   return (
     <HStack gap='lg' className='AccountMaskAskStory'>
@@ -1278,13 +1562,13 @@ const AccountMaskAskStory = ({ accountMask, transactionPattern, startAs, billUpl
         <Container name='tasks'>
           <div className='Layer__tasks-list'>
             <TasksListItemShell
-              task={makeTask(isDone ? BusinessTaskStatus.UserMarkedCompleted : BusinessTaskStatus.Todo)}
+              task={makeTask(TASK_TITLES[taskTitle].title(accountMask), isDone ? BusinessTaskStatus.UserMarkedCompleted : BusinessTaskStatus.Todo)}
               isOpen={isOpen}
               onToggle={() => setIsOpen(open => !open)}
               isFlush
               slotProps={{
                 Header: {
-                  backAction: nav.history.length > 0 && !isDone ? { isDisabled: false, onBack: goBack } : null,
+                  backAction: nav.history.length > 0 && !isDone ? { isDisabled: isSubmitting, onBack: goBack } : null,
                   answer: isDone && accountType ? { kind: 'account', name: getTypeLabel(accountType) } : null,
                 },
               }}
@@ -1298,8 +1582,9 @@ const AccountMaskAskStory = ({ accountMask, transactionPattern, startAs, billUpl
       </VStack>
       <OutcomeInspector
         plan={plan}
-        question={currentQuestion}
-        answer={currentQuestion ? answers[currentQuestion.id] : undefined}
+        questions={inspectedQuestions}
+        answers={answers}
+        isUploadStep={nav.view === 'uploads'}
       />
     </HStack>
   )
@@ -1353,11 +1638,12 @@ const QuestionOutcomes = ({ question, answer }: { question: Question, answer: An
 
 type OutcomeInspectorProps = {
   plan: Plan | null
-  question: Question | null
-  answer: Answer | undefined
+  questions: readonly Question[]
+  answers: Record<QuestionId, Answer>
+  isUploadStep: boolean
 }
 
-const OutcomeInspector = ({ plan, question, answer }: OutcomeInspectorProps) => {
+const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeInspectorProps) => {
   const uploadAsks = plan?.asks.filter(({ mode }) => mode === 'upload') ?? []
   const freeformAsks = plan?.asks.filter(({ mode }) => mode === 'freeform') ?? []
 
@@ -1368,11 +1654,28 @@ const OutcomeInspector = ({ plan, question, answer }: OutcomeInspectorProps) => 
         <Span size='xs' variant='subtle'>Prototype only: what the backend would do with the answers so far.</Span>
       </VStack>
 
-      {question
+      {questions.length > 0
         ? (
-          <InspectorSection title='This question'>
-            <Span size='xs' variant='subtle'>{question.why}</Span>
-            <QuestionOutcomes question={question} answer={answer} />
+          <InspectorSection title='This step'>
+            {questions.map(question => (
+              <VStack key={question.id} gap='xs'>
+                <VStack gap='3xs'>
+                  <Span size='xs'>{question.prompt}</Span>
+                  <Span size='xs' variant='subtle'>{question.why}</Span>
+                </VStack>
+                <QuestionOutcomes question={question} answer={answers[question.id]} />
+              </VStack>
+            ))}
+          </InspectorSection>
+        )
+        : null}
+
+      {isUploadStep
+        ? (
+          <InspectorSection title='This step'>
+            <Span size='xs' variant='subtle'>
+              {`Uploads run through receipt parsing (Outcome 2a) and are matched to the transactions above. Only ${UPLOAD_TYPES_LABEL} files are accepted.`}
+            </Span>
           </InspectorSection>
         )
         : null}
@@ -1433,7 +1736,7 @@ const MATRIX_PATTERNS: Record<AccountType, TransactionPattern> = {
   unsure: 'fixedMonthlyTransfers',
 }
 
-const OutcomeMatrix = ({ accountMask, billUploadStyle, suggestRuleAfter }: Omit<AccountMaskAskStoryProps, 'transactionPattern' | 'startAs'>) => {
+const OutcomeMatrix = ({ accountMask, billUploadStyle, suggestRuleAfter }: Pick<AccountMaskAskStoryProps, 'accountMask' | keyof PrototypeConfig>) => {
   const { formatCurrencyFromCents } = useIntlFormatter()
 
   return (
@@ -1448,22 +1751,28 @@ const OutcomeMatrix = ({ accountMask, billUploadStyle, suggestRuleAfter }: Omit<
       {ACCOUNT_TYPE_OPTIONS.map(({ value: type, short }) => {
         const ctx: AskContext = {
           mask: accountMask,
-          pattern: summarizePattern(TRANSACTIONS_BY_PATTERN[MATRIX_PATTERNS[type]]),
-          answers: {},
+          pattern: summarizePattern(makeTransactions(MATRIX_PATTERNS[type], accountMask)),
+          answers: EMPTY_ANSWERS,
           config: { billUploadStyle, suggestRuleAfter },
           formatMoney: cents => formatCurrencyFromCents(cents),
         }
+        const questions = buildQuestions(type, ctx)
 
         return (
-          <VStack key={type} gap='sm' className='AccountMaskAskStory__Section'>
+          <VStack key={type} gap='md' className='AccountMaskAskStory__Section'>
             <Heading size='xs' level={3}>{short}</Heading>
-            {buildQuestions(type, ctx).map(question => (
-              <VStack key={question.id} gap='xs'>
-                <VStack gap='3xs'>
-                  <Span size='sm' weight='bold'>{question.prompt}</Span>
-                  <Span size='xs' variant='subtle'>{question.why}</Span>
-                </VStack>
-                <QuestionOutcomes question={question} answer={undefined} />
+            {THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id, title }) => (
+              <VStack key={id} gap='sm'>
+                <Span size='xs' weight='bold'>{title}</Span>
+                {questions.filter(({ theme }) => theme === id).map(question => (
+                  <VStack key={question.id} gap='xs'>
+                    <VStack gap='3xs'>
+                      <Span size='sm' weight='bold'>{question.prompt}</Span>
+                      <Span size='xs' variant='subtle'>{question.why}</Span>
+                    </VStack>
+                    <QuestionOutcomes question={question} answer={undefined} />
+                  </VStack>
+                ))}
               </VStack>
             ))}
           </VStack>
@@ -1516,12 +1825,8 @@ const STORY_STYLES = `
     background: var(--color-base-100);
   }
 
-  .AccountMaskAskStory__Transactions {
-    border-block: 1px solid var(--border-color);
-  }
-
-  .AccountMaskAskStory__Transaction {
-    padding-block: var(--spacing-3xs);
+  .AccountMaskAskStory__Rows .Layer__CounterpartyAskTask__Row:hover {
+    background: none;
   }
 
   .AccountMaskAskStory__Matrix {
@@ -1532,7 +1837,8 @@ const STORY_STYLES = `
 
 const DOCS = `
 Prototype of a task that asks what kind of account a mask belongs to (vendor, customer, owned business account,
-personal), then walks a type-specific set of follow-up questions.
+personal), then walks type-specific follow-up questions grouped into themes: who this is and what it's for, the
+transactions, and handling going forward. Any upload the answers call for comes last.
 
 The **Outcome preview** panel shows what each answer would do:
 
@@ -1543,9 +1849,9 @@ The **Outcome preview** panel shows what each answer would do:
   - **a**: upload receipts / invoices / bills → receipt parsing
   - **b**: freeform response → per-transaction categorization
 
-“Not sure” answers route to a bookkeeper for review. Use the controls to change the mock transactions (a loan-shaped pattern
-unlocks the personal loan question), how the vendor bill ask looks (open question 2), and when we suggest a rule after
-repeated “ask me each time” answers (open question 1).
+“Not sure” answers route to a bookkeeper for review. Use the controls to change the task title, the mock transactions
+(a loan-shaped pattern unlocks the personal loan question), how the vendor bill ask looks (open question 2), and when we
+suggest a rule after repeated “ask me each time” answers (open question 1).
 `
 
 type StoryArgs = AccountMaskAskStoryProps
@@ -1560,14 +1866,20 @@ const meta: Meta<StoryArgs> = {
     accountMask: '2691',
     transactionPattern: 'fixedMonthlyTransfers',
     startAs: 'picker',
+    taskTitle: 'identify',
     billUploadStyle: 'prompt',
     suggestRuleAfter: 3,
   },
   argTypes: {
     accountMask: { control: 'text', description: 'Last four digits of the unrecognized account.' },
+    taskTitle: {
+      control: 'select',
+      options: Object.keys(TASK_TITLES),
+      description: Object.entries(TASK_TITLES).map(([key, { describe }]) => `\`${key}\`: ${describe}`).join('<br/>'),
+    },
     transactionPattern: {
       control: 'select',
-      options: Object.keys(TRANSACTIONS_BY_PATTERN),
+      options: Object.keys(PATTERN_DESCRIPTIONS),
       description: Object.entries(PATTERN_DESCRIPTIONS).map(([key, value]) => `\`${key}\`: ${value}`).join('<br/>'),
     },
     startAs: {
@@ -1578,7 +1890,7 @@ const meta: Meta<StoryArgs> = {
     billUploadStyle: {
       control: 'inline-radio',
       options: ['prompt', 'statement'],
-      description: 'Open question 2: the vendor bill ask as a prompt with an upload button, or as a statement.',
+      description: 'Open question 2: the vendor bill ask as a prompt with an upload option, or as a statement.',
     },
     suggestRuleAfter: {
       control: { type: 'number', min: 0, max: 10 },
