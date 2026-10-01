@@ -40,11 +40,6 @@ type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerD
 
 type TaskTitleKey = 'identify' | 'whoIs' | 'unrecognized' | 'tellUs' | 'current'
 
-type PrototypeConfig = {
-  billUploadStyle: 'prompt' | 'statement'
-  suggestRuleAfter: number
-}
-
 type MockTransaction = {
   id: string
   date: Date
@@ -53,56 +48,11 @@ type MockTransaction = {
   description: string
 }
 
-type PatternSummary = {
-  count: number
-  inflowCount: number
-  outflowCount: number
-  dominantCount: number
-  fixedAmount: number | null
-  minAmount: number
-  maxAmount: number
-  isMonthly: boolean
-  loan: { principal: number, payment: number, paymentCount: number } | null
-}
+type QuestionId = 'counterparty' | 'platform' | 'connect' | 'details'
 
-type QuestionId =
-  | 'counterparty'
-  | 'contractor'
-  | 'amount'
-  | 'recurring'
-  | 'refunds'
-  | 'bills'
-  | 'handling'
-  | 'connect'
-  | 'purpose'
-  | 'whose'
-  | 'loan'
-  | 'details'
+const QUESTION_IDS: readonly QuestionId[] = ['counterparty', 'platform', 'connect', 'details']
 
-const QUESTION_IDS: readonly QuestionId[] = [
-  'counterparty',
-  'contractor',
-  'amount',
-  'recurring',
-  'refunds',
-  'bills',
-  'handling',
-  'connect',
-  'purpose',
-  'whose',
-  'loan',
-  'details',
-]
-
-type ThemeId = 'who' | 'nature' | 'handling'
-
-const THEMES: ReadonlyArray<{ id: ThemeId, title: string }> = [
-  { id: 'who', title: 'Who this is and what it’s for' },
-  { id: 'nature', title: 'The transactions' },
-  { id: 'handling', title: 'Handling going forward' },
-]
-
-type StepId = ThemeId | 'uploads' | 'review'
+type StepId = 'questions' | 'uploads' | 'review'
 type View = 'picker' | StepId | 'done'
 
 /** `choice` is the chip; `text` is a typed name or free-form answer; `detail` is the category searched under Other. */
@@ -122,10 +72,8 @@ type AccountMaskAskFormValues = {
 
 type AskContext = {
   mask: string
-  pattern: PatternSummary
+  platformName: string
   answers: Record<QuestionId, Answer>
-  config: PrototypeConfig
-  formatMoney: (cents: number) => string
 }
 
 type OutcomeTag = 'metadata' | 'rule' | 'askUpload' | 'askFreeform' | 'extra' | 'review'
@@ -144,18 +92,14 @@ type ChoiceOption = {
   outcome: OutcomeTag
   hint: string
   effects: readonly Effect[]
-  /** Adds the upload step at the end of the task, with this as its prompt. */
+  /** Adds the upload step after the questions, with this as its prompt. */
   uploadPrompt?: string
-  /** Shows a free-form field under the chips, whose text drives the effects. */
-  collectsText?: { placeholder: string, effects: (text: string) => readonly Effect[] }
 }
 
 type BaseQuestion = {
   id: QuestionId
-  theme: ThemeId
   prompt: string
   why: string
-  observation: string | null
 }
 
 type InputOutcomeCase = {
@@ -180,7 +124,6 @@ type Question =
     otherCategories: readonly string[]
   }
   | BaseQuestion & InputOutcome & { kind: 'text', placeholder: string }
-  | BaseQuestion & InputOutcome & { kind: 'statement' }
 
 type PlanRule = { conditions: readonly string[], target: string }
 
@@ -194,8 +137,6 @@ type Plan = {
 }
 
 const MAIN_RULE = 'main'
-const INBOUND_RULE = 'inbound'
-const REFUND_RULE = 'refund'
 
 const OUT = BankTransactionDirection.Debit
 const IN = BankTransactionDirection.Credit
@@ -232,18 +173,14 @@ const TASK_TITLES: Record<TaskTitleKey, { describe: string, title: (mask: string
   current: { describe: 'New account transfer (today)', title: () => 'New account transfer' },
 }
 
-const GROUPING_ACCOUNTS = new Set(['Expenses', 'Operating Expenses', 'Uncategorized Expenses', 'Revenue', 'Uncategorized Revenue'])
+const GROUPING_ACCOUNTS = new Set(['Expenses', 'Operating Expenses', 'Uncategorized Expenses'])
 
 const VENDOR_CATEGORIES = ['Software', 'Contractors', 'Office Expenses', 'Rent', 'Legal and Professional Services']
-const REVENUE_CATEGORIES = ['Service revenue', 'Product sales', 'Retainers', 'Subscription revenue']
-const ACCOUNT_PURPOSES = ['Payroll', 'Tax reserve', 'Savings', 'Payouts']
-const CADENCES = ['Monthly', 'Quarterly', 'Yearly']
 
-const otherCategoriesOfType = (accountType: LedgerAccountType.Expense | LedgerAccountType.Revenue, suggested: readonly string[]) =>
-  chartOfAccounts
-    .filter(account => account.accountType.value === accountType)
-    .map(({ name }) => name)
-    .filter(name => !GROUPING_ACCOUNTS.has(name) && !suggested.includes(name))
+const OTHER_VENDOR_CATEGORIES = chartOfAccounts
+  .filter(account => account.accountType.value === LedgerAccountType.Expense)
+  .map(({ name }) => name)
+  .filter(name => !GROUPING_ACCOUNTS.has(name) && !VENDOR_CATEGORIES.includes(name))
 
 const UPLOAD_EXTENSIONS = ['.pdf', '.xlsx', '.docx', '.png', '.jpg', '.jpeg', '.txt', '.csv']
 const UPLOAD_MIME_TYPES = [
@@ -338,51 +275,12 @@ const PATTERN_DESCRIPTIONS: Record<TransactionPattern, string> = {
   fixedMonthlyTransfers: '5 × $1,000 out, monthly (matches the current task)',
   variableBills: '4 variable payments out + 1 small deposit back',
   customerDeposits: '4 variable deposits in',
-  loanRepayments: '$5,000 in, then 6 × $500 out (looks like a loan)',
+  loanRepayments: '$5,000 in, then 6 × $500 out',
   highVolume: '60 variable payments out, about every 6 days',
-}
-
-const DAY_MS = 24 * 60 * 60 * 1000
-
-const summarizePattern = (transactions: readonly MockTransaction[]): PatternSummary => {
-  const inflows = transactions.filter(({ direction }) => direction === IN)
-  const outflows = transactions.filter(({ direction }) => direction === OUT)
-  const dominant = outflows.length >= inflows.length ? outflows : inflows
-  const amounts = dominant.map(({ amount }) => amount)
-  const dates = transactions.map(({ date }) => date.getTime()).sort((a, b) => a - b)
-  const gaps = dates.slice(1).map((time, index) => (time - (dates[index] ?? time)) / DAY_MS)
-  const [firstInflow] = inflows
-  const firstOutflow = outflows[0]
-  const looksLikeLoan = inflows.length === 1
-    && outflows.length >= 2
-    && new Set(outflows.map(({ amount }) => amount)).size === 1
-    && firstInflow !== undefined
-    && firstOutflow !== undefined
-    && firstInflow.date < firstOutflow.date
-
-  return {
-    count: transactions.length,
-    inflowCount: inflows.length,
-    outflowCount: outflows.length,
-    dominantCount: dominant.length,
-    fixedAmount: new Set(amounts).size === 1 ? (amounts[0] ?? null) : null,
-    minAmount: Math.min(...amounts),
-    maxAmount: Math.max(...amounts),
-    isMonthly: gaps.length > 0 && gaps.every(gap => gap >= 26 && gap <= 36),
-    loan: looksLikeLoan
-      ? { principal: firstInflow.amount, payment: firstOutflow.amount, paymentCount: outflows.length }
-      : null,
-  }
 }
 
 /** The category a counterparty answer settles on; `varies` when it's a mix. */
 const resolveCategory = ({ choice, detail }: Answer) => (choice === OTHER_CATEGORY ? detail : choice)
-
-const getCategory = (answers: Record<QuestionId, Answer>) => {
-  const category = resolveCategory(answers.counterparty)
-
-  return category && category !== VARIES_CATEGORY ? category : null
-}
 
 const notSureOption = (subject: string): ChoiceOption => ({
   value: 'not_sure',
@@ -392,403 +290,83 @@ const notSureOption = (subject: string): ChoiceOption => ({
   effects: [review(`Unsure about ${subject}`)],
 })
 
-type CounterpartyQuestionSpec = {
-  role: 'Vendor' | 'Customer'
-  prompt: string
-  why: string
-  categoryLabel: string
-  suggestedCategories: readonly string[]
-  otherCategories: readonly string[]
-  variesDetail: string
-}
-
-const counterpartyQuestion = ({
-  role,
-  prompt,
-  why,
-  categoryLabel,
-  suggestedCategories,
-  otherCategories,
-  variesDetail,
-}: CounterpartyQuestionSpec): Question => ({
-  kind: 'counterparty',
-  id: 'counterparty',
-  theme: 'who',
-  prompt,
-  why,
-  observation: null,
-  namePlaceholder: `${role} name`,
-  categoryLabel,
-  suggestedCategories,
-  otherCategories,
-  outcomes: [
-    {
-      label: 'A suggested category, or one picked under Other',
-      outcome: 'rule',
-      hint: 'Names the counterparty and gives the rule its category.',
-      matches: (answer) => {
-        const category = answer ? resolveCategory(answer) : null
-        return category !== null && category !== VARIES_CATEGORY
+const buildVendorQuestions = (): Question[] => [
+  {
+    kind: 'counterparty',
+    id: 'counterparty',
+    prompt: 'What’s the vendor’s name, and what do you buy from them?',
+    why: 'Sets the counterparty and the expense category.',
+    namePlaceholder: 'Vendor name',
+    categoryLabel: 'What you buy from them',
+    suggestedCategories: VENDOR_CATEGORIES,
+    otherCategories: OTHER_VENDOR_CATEGORIES,
+    outcomes: [
+      {
+        label: 'A suggested category, or one picked under Other',
+        outcome: 'rule',
+        hint: 'Names the counterparty and gives the rule its category.',
+        matches: (answer) => {
+          const category = answer ? resolveCategory(answer) : null
+          return category !== null && category !== VARIES_CATEGORY
+        },
       },
-    },
-    {
-      label: 'It’s a mix or it varies',
-      outcome: 'askFreeform',
-      hint: 'No main rule: each new transaction opens a task, and the answer categorizes that transaction only.',
-      matches: answer => answer?.choice === VARIES_CATEGORY,
-    },
-  ],
-  effects: (answer) => {
-    const category = resolveCategory(answer)
+      {
+        label: 'It’s a mix or it varies',
+        outcome: 'askFreeform',
+        hint: 'No rule: each new payment opens a task, and the answer categorizes that payment only.',
+        matches: answer => answer?.choice === VARIES_CATEGORY,
+      },
+    ],
+    effects: (answer) => {
+      const category = resolveCategory(answer)
 
-    return [
-      metadata('counterparty.name', answer.text.trim()),
-      metadata('counterparty.role', role),
-      ...(category === VARIES_CATEGORY
-        ? [
-          metadata('counterparty.category', 'Mixed / varies per transaction'),
-          blockRules('It’s a mix or varies per transaction, so no single category fits'),
-          ask('freeform', variesDetail),
-        ]
-        : category ? [metadata('counterparty.category', category), rule(MAIN_RULE, { target: category })] : []),
-    ]
+      return [
+        metadata('counterparty.name', answer.text.trim()),
+        metadata('counterparty.role', 'Vendor'),
+        ...(category === VARIES_CATEGORY
+          ? [
+            metadata('counterparty.category', 'Mixed / varies per transaction'),
+            blockRules('It’s a mix or varies per transaction, so no single category fits'),
+            ask('freeform', 'Each new payment to this vendor opens a freeform task; the answer categorizes that payment only'),
+          ]
+          : category ? [metadata('counterparty.category', category), rule(MAIN_RULE, { target: category })] : []),
+      ]
+    },
   },
-})
+]
 
-const amountQuestion = ({ pattern, formatMoney }: AskContext, noun: 'payments' | 'deposits'): Question => {
-  const { fixedAmount } = pattern
-
-  return {
+const buildCustomerQuestions = ({ platformName }: AskContext): Question[] => [
+  {
     kind: 'choice',
-    id: 'amount',
-    theme: 'nature',
-    prompt: 'Is it the same amount every time, or does it vary per invoice?',
-    why: 'Decides whether the rule can match on amount, or only on the account and direction.',
-    observation: fixedAmount !== null
-      ? `All ${pattern.dominantCount} ${noun} were ${formatMoney(fixedAmount)}.`
-      : `These ${noun} ranged from ${formatMoney(pattern.minAmount)} to ${formatMoney(pattern.maxAmount)}.`,
+    id: 'platform',
+    prompt: `Did these payments come through ${platformName}?`,
+    why: 'Decides which clearing account the deposits land in.',
     options: [
       {
-        value: 'fixed',
-        label: 'Same amount every time',
+        value: 'platform',
+        label: `Yes, through ${platformName}`,
         outcome: 'rule',
-        hint: fixedAmount !== null
-          ? `Rule matches account + ${formatMoney(fixedAmount)} + direction.`
-          : 'Rule matches account + the usual amount + direction.',
-        effects: [
-          metadata('amount.pattern', 'Fixed'),
-          rule(MAIN_RULE, { conditions: [fixedAmount !== null ? `Amount is ${formatMoney(fixedAmount)}` : 'Amount matches the usual amount'] }),
-        ],
+        hint: `Deposits go to the ${platformName} clearing account and reconcile against ${platformName}’s payouts.`,
+        effects: [metadata('payment.channel', platformName), rule(MAIN_RULE, { target: `${platformName} clearing account` })],
       },
       {
-        value: 'per_invoice',
-        label: 'It varies per invoice',
+        value: 'direct',
+        label: 'No, they paid me directly',
         outcome: 'rule',
-        hint: 'Rule matches account + direction only (counterparty-only rule).',
-        effects: [metadata('amount.pattern', 'Per invoice')],
+        hint: 'Deposits go to Undeposited Funds until they’re matched to an invoice.',
+        effects: [metadata('payment.channel', 'Direct'), rule(MAIN_RULE, { target: 'Undeposited Funds' })],
       },
-      notSureOption('the amount pattern'),
+      notSureOption('how these payments were made'),
     ],
-  }
-}
-
-const billsQuestion = ({ config }: AskContext, vendorName: string): Question => {
-  const why = 'Enables bill-to-payment matching and user-submitted vendor bills.'
-  const uploadPrompt = `Upload the bills ${vendorName} sent for these payments.`
-  const parseNow = extra('Parse the uploaded bills with receipt parsing and match each one to its payment')
-  const askEachPayment = ask('upload', `Each new payment to ${vendorName} opens a task asking for its bill; receipt parsing matches it to the payment`)
-
-  if (config.billUploadStyle === 'statement') {
-    return {
-      kind: 'statement',
-      id: 'bills',
-      theme: 'handling',
-      prompt: `For more accurate books, you can upload the bills ${vendorName} sends you from any of these transactions.`,
-      why,
-      observation: null,
-      outcomes: [{
-        label: null,
-        outcome: 'metadata',
-        hint: 'Informational only: no task is created, and uploads stay optional on each transaction.',
-        matches: () => false,
-      }],
-      effects: () => [metadata('bills.prompt', 'Shown as a statement')],
-    }
-  }
-
-  return {
-    kind: 'choice',
-    id: 'bills',
-    theme: 'handling',
-    prompt: `For more accurate books, you can upload the bills ${vendorName} sends you.`,
-    why,
-    observation: null,
-    options: [
-      {
-        value: 'upload_now_and_ask',
-        label: 'Upload a bill now, and ask me with each payment',
-        outcome: 'askUpload',
-        hint: 'Today’s bills are parsed and matched at the end of this task, and each new payment opens a task asking for its bill.',
-        uploadPrompt,
-        effects: [parseNow, askEachPayment],
-      },
-      {
-        value: 'upload_now',
-        label: 'Upload a bill now, just this time',
-        outcome: 'askUpload',
-        hint: 'Bills uploaded at the end of this task are parsed and matched; no future bills are requested.',
-        uploadPrompt,
-        effects: [parseNow],
-      },
-      {
-        value: 'ask_each',
-        label: 'Ask me for the bill with each payment',
-        outcome: 'askUpload',
-        hint: 'Each new payment opens a task asking for its bill → receipt parsing → bill-to-payment match.',
-        effects: [askEachPayment],
-      },
-      {
-        value: 'skip',
-        label: 'Not now',
-        outcome: 'metadata',
-        hint: 'Nothing is requested; the rule still categorizes the payments.',
-        effects: [metadata('bills.prompt', 'Skipped')],
-      },
-    ],
-  }
-}
-
-const buildVendorQuestions = (ctx: AskContext): Question[] => {
-  const { answers, pattern, mask } = ctx
-  const category = getCategory(answers) ?? 'vendor purchases'
-  const vendorName = answers.counterparty.text.trim() || 'this vendor'
-
-  return [
-    counterpartyQuestion({
-      role: 'Vendor',
-      prompt: 'What’s the vendor’s name, and what do you buy from them?',
-      why: 'Sets the counterparty and the expense category.',
-      categoryLabel: 'What you buy from them',
-      suggestedCategories: VENDOR_CATEGORIES,
-      otherCategories: otherCategoriesOfType(LedgerAccountType.Expense, VENDOR_CATEGORIES),
-      variesDetail: 'Each new payment to this vendor opens a freeform task; the answer categorizes that payment only',
-    }),
-    {
-      kind: 'choice',
-      id: 'contractor',
-      theme: 'who',
-      prompt: `Is ${vendorName} an individual or contractor rather than a company?`,
-      why: 'Triggers W-9 collection and 1099 tracking.',
-      observation: null,
-      options: [
-        {
-          value: 'individual',
-          label: 'An individual or contractor',
-          outcome: 'extra',
-          hint: 'Requests a W-9 and tracks payments toward a 1099-NEC.',
-          effects: [
-            metadata('counterparty.entity', 'Individual / contractor'),
-            extra('Open a W-9 upload task and track payments toward a 1099-NEC'),
-          ],
-        },
-        {
-          value: 'company',
-          label: 'A company',
-          outcome: 'metadata',
-          hint: 'Recorded only; no 1099 tracking.',
-          effects: [metadata('counterparty.entity', 'Company')],
-        },
-        notSureOption('1099 eligibility'),
-      ],
-    },
-    amountQuestion(ctx, 'payments'),
-    {
-      kind: 'choice',
-      id: 'recurring',
-      theme: 'nature',
-      prompt: 'Is this a recurring payment? If so, how often?',
-      why: 'Lets us auto-categorize and flag a missed or unusual payment.',
-      observation: pattern.isMonthly ? 'These landed about a month apart.' : null,
-      options: [
-        ...CADENCES.map((cadence): ChoiceOption => ({
-          value: cadence.toLowerCase(),
-          label: cadence,
-          outcome: 'extra',
-          hint: `Expects a ${cadence.toLowerCase()} payment and flags a missed or unusually large one.`,
-          effects: [
-            metadata('schedule.cadence', cadence),
-            extra(`Watch for a ${cadence.toLowerCase()} payment to ${vendorName}; flag a missed or unusual one`),
-          ],
-        })),
-        {
-          value: 'one_off',
-          label: 'Not recurring',
-          outcome: 'metadata',
-          hint: 'Recorded only; there is no schedule to watch.',
-          effects: [metadata('schedule.cadence', 'One-off')],
-        },
-      ],
-    },
-    {
-      kind: 'choice',
-      id: 'refunds',
-      theme: 'nature',
-      prompt: `Do you ever receive money back from ${vendorName}?`,
-      why: 'Adds a direction-aware rule so refunds aren’t categorized as income.',
-      observation: pattern.inflowCount > 0 ? `We’ve already seen ${pattern.inflowCount} deposit(s) from this account.` : null,
-      options: [
-        {
-          value: 'yes',
-          label: 'Yes, sometimes',
-          outcome: 'rule',
-          hint: 'Adds a second rule: money in from this account is a refund, not income.',
-          effects: [rule(REFUND_RULE, { conditions: [accountCondition(mask), 'Money in'], target: `Refund of ${category}` })],
-        },
-        {
-          value: 'no',
-          label: 'No, I only pay them',
-          outcome: 'metadata',
-          hint: 'Deposits from this account stay uncategorized and get asked about.',
-          effects: [metadata('counterparty.refunds', 'None expected')],
-        },
-      ],
-    },
-    billsQuestion(ctx, vendorName),
-  ]
-}
-
-const buildCustomerQuestions = (ctx: AskContext): Question[] => {
-  const { answers, mask, config } = ctx
-  const category = getCategory(answers)
-  const isVaried = answers.counterparty.choice === VARIES_CATEGORY
-  const customerName = answers.counterparty.text.trim() || 'this customer'
-  const ruleSuggestion = config.suggestRuleAfter > 0
-    ? ` After ${config.suggestRuleAfter} consistent answers we suggest turning it into a rule.`
-    : ''
-
-  return [
-    counterpartyQuestion({
-      role: 'Customer',
-      prompt: 'Who is the customer, and what are they paying for?',
-      why: 'Sets the counterparty and the revenue category.',
-      categoryLabel: 'What they pay for',
-      suggestedCategories: REVENUE_CATEGORIES,
-      otherCategories: otherCategoriesOfType(LedgerAccountType.Revenue, REVENUE_CATEGORIES),
-      variesDetail: 'Each deposit from this customer opens a freeform task; the answer categorizes that deposit only',
-    }),
-    amountQuestion(ctx, 'deposits'),
-    {
-      kind: 'choice',
-      id: 'refunds',
-      theme: 'nature',
-      prompt: `Do you ever send money back to ${customerName}?`,
-      why: 'Adds a direction-aware rule for refunds.',
-      observation: null,
-      options: [
-        {
-          value: 'yes',
-          label: 'Yes, refunds sometimes',
-          outcome: 'rule',
-          hint: 'Adds a second rule: money out to this account is a refund of revenue.',
-          effects: [rule(REFUND_RULE, { conditions: [accountCondition(mask), 'Money out'], target: `Refund of ${category ?? 'revenue'}` })],
-        },
-        {
-          value: 'no',
-          label: 'No',
-          outcome: 'metadata',
-          hint: 'Payments to this account stay uncategorized and get asked about.',
-          effects: [metadata('counterparty.refunds', 'None expected')],
-        },
-      ],
-    },
-    {
-      kind: 'choice',
-      id: 'handling',
-      theme: 'handling',
-      prompt: `How should we handle future deposits from ${customerName}?`,
-      why: 'Chooses between a rule, document evidence for revenue matching, or a question per deposit.',
-      observation: null,
-      options: [
-        ...(isVaried
-          ? []
-          : [{
-            value: 'tell_once',
-            label: category ? `Always categorize them as ${category}` : 'Always categorize them the same way',
-            outcome: 'rule',
-            hint: 'Creates the counterparty rule, so you won’t be asked again.',
-            effects: [metadata('deposits.handling', 'Rule')],
-          } satisfies ChoiceOption]),
-        {
-          value: 'upload',
-          label: 'I’ll upload the invoice or receipt',
-          outcome: 'askUpload',
-          hint: 'Each deposit opens a task requesting the invoice; receipt parsing reads it and matches the revenue.',
-          effects: [
-            metadata('deposits.handling', 'Upload per deposit'),
-            blockRules('Deposits are categorized from the uploaded invoices instead'),
-            ask('upload', `Each deposit from ${customerName} opens a task requesting the invoice or receipt; receipt parsing matches it to revenue`),
-          ],
-        },
-        {
-          value: 'ask_each',
-          label: 'Ask me about each deposit',
-          outcome: 'askFreeform',
-          hint: `Each deposit opens a task, and the answer categorizes that deposit only.${ruleSuggestion}`,
-          effects: [
-            metadata('deposits.handling', 'Ask per deposit'),
-            blockRules('Deposits are categorized one at a time from your answers'),
-            ask('freeform', `Each deposit from ${customerName} opens a freeform task that categorizes that deposit.${ruleSuggestion}`),
-          ],
-        },
-      ],
-    },
-  ]
-}
+  },
+]
 
 const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
   {
     kind: 'choice',
-    id: 'purpose',
-    theme: 'who',
-    prompt: 'What’s this account used for?',
-    why: 'Names the account and sets the transfer rule.',
-    observation: null,
-    options: [
-      ...ACCOUNT_PURPOSES.map((purpose): ChoiceOption => ({
-        value: purpose.toLowerCase(),
-        label: purpose,
-        outcome: 'rule',
-        hint: `Names it “${purpose} ••${mask}” and books every transfer as a transfer, not P&L.`,
-        effects: [
-          metadata('account.purpose', purpose),
-          metadata('account.name', `${purpose} ••${mask}`),
-          rule(MAIN_RULE, { target: `Transfer to ${purpose} ••${mask} (excluded from P&L)` }),
-        ],
-      })),
-      {
-        value: 'other',
-        label: 'Something else',
-        outcome: 'rule',
-        hint: 'Your description names the account and books every transfer as a transfer, not P&L.',
-        effects: [],
-        collectsText: {
-          placeholder: 'e.g. Equipment fund for the new location',
-          effects: text => [
-            metadata('account.purpose', text),
-            metadata('account.name', `${text} ••${mask}`),
-            rule(MAIN_RULE, { target: `Transfer to ${text} ••${mask} (excluded from P&L)` }),
-          ],
-        },
-      },
-    ],
-  },
-  {
-    kind: 'choice',
     id: 'connect',
-    theme: 'handling',
     prompt: 'Can you connect this account so we can pull your transactions for you automatically, or do you want to upload its statements manually?',
     why: 'Shows both sides of each transfer, so internal transfers stay off the P&L.',
-    observation: null,
     options: [
       {
         value: 'connect',
@@ -801,7 +379,7 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
         value: 'statements',
         label: 'Upload statements',
         outcome: 'askUpload',
-        hint: 'Statements are uploaded at the end of this task, then a monthly task requests the next one.',
+        hint: 'Statements are uploaded on the next step, then a monthly task requests the next one.',
         uploadPrompt: `Upload recent statements for the account ending in ${mask}.`,
         effects: [
           metadata('account.source', 'Statements'),
@@ -819,93 +397,12 @@ const buildOwnedQuestions = ({ mask }: AskContext): Question[] => [
   },
 ]
 
-const buildPersonalQuestions = ({ pattern, formatMoney }: AskContext): Question[] => [
-  {
-    kind: 'choice',
-    id: 'whose',
-    theme: 'who',
-    prompt: 'Whose account is it?',
-    why: 'Determines owner vs. related-party treatment.',
-    observation: null,
-    options: [
-      {
-        value: 'mine',
-        label: 'Mine',
-        outcome: 'rule',
-        hint: 'Money out → owner draw; money in → owner contribution.',
-        effects: [
-          metadata('account.owner', 'Owner'),
-          rule(MAIN_RULE, { target: 'Owner draw' }),
-          rule(INBOUND_RULE, { target: 'Owner contribution' }),
-        ],
-      },
-      {
-        value: 'co_owner',
-        label: 'A co-owner',
-        outcome: 'rule',
-        hint: 'Money out → partner draw; money in → partner contribution, tracked per owner.',
-        effects: [
-          metadata('account.owner', 'Co-owner'),
-          rule(MAIN_RULE, { target: 'Partner draw' }),
-          rule(INBOUND_RULE, { target: 'Partner contribution' }),
-        ],
-      },
-      {
-        value: 'family',
-        label: 'A family member',
-        outcome: 'rule',
-        hint: 'Booked as related-party balances and flagged for disclosure.',
-        effects: [
-          metadata('account.owner', 'Family member'),
-          rule(MAIN_RULE, { target: 'Due from related party' }),
-          rule(INBOUND_RULE, { target: 'Due to related party' }),
-          extra('Flag the counterparty for related-party disclosure'),
-        ],
-      },
-    ],
-  },
-  ...(pattern.loan
-    ? [{
-      kind: 'choice',
-      id: 'loan',
-      theme: 'nature',
-      prompt: 'Is this a loan, or regular draws and contributions?',
-      why: 'Only asked because a lump sum followed by fixed repayments looks like a loan.',
-      observation: `We noticed a ${formatMoney(pattern.loan.principal)} deposit followed by ${pattern.loan.paymentCount} payments of ${formatMoney(pattern.loan.payment)}.`,
-      options: [
-        {
-          value: 'loan',
-          label: 'It’s a loan',
-          outcome: 'rule',
-          hint: 'Deposit → loan payable; repayments → loan repayment. A bookkeeper splits out interest.',
-          effects: [
-            metadata('account.relationship', 'Loan'),
-            rule(INBOUND_RULE, { target: 'Loan payable (proceeds)' }),
-            rule(MAIN_RULE, { target: 'Loan repayment (principal + interest)' }),
-            extra('Bookkeeper sets up the loan schedule and splits interest from principal'),
-          ],
-        },
-        {
-          value: 'regular',
-          label: 'Regular draws and contributions',
-          outcome: 'metadata',
-          hint: 'Keeps the owner draw / contribution rules from the previous answer.',
-          effects: [metadata('account.relationship', 'Draws and contributions')],
-        },
-        notSureOption('whether this is a loan'),
-      ],
-    } satisfies Question]
-    : []),
-]
-
 const buildUnsureQuestions = (): Question[] => [
   {
     kind: 'text',
     id: 'details',
-    theme: 'who',
     prompt: 'Tell us anything you know about this account.',
     why: 'Free text goes to a bookkeeper, who classifies the account.',
-    observation: null,
     placeholder: 'e.g. I think it’s my spouse’s checking account',
     outcomes: [{
       label: null,
@@ -921,12 +418,13 @@ const buildUnsureQuestions = (): Question[] => [
   },
 ]
 
+/** Personal has no follow-ups: picking it is the whole answer. */
 const buildQuestions = (type: AccountType, ctx: AskContext): Question[] => {
   switch (type) {
-    case 'vendor': return buildVendorQuestions(ctx)
+    case 'vendor': return buildVendorQuestions()
     case 'customer': return buildCustomerQuestions(ctx)
     case 'owned': return buildOwnedQuestions(ctx)
-    case 'personal': return buildPersonalQuestions(ctx)
+    case 'personal': return []
     case 'unsure': return buildUnsureQuestions()
   }
 }
@@ -940,12 +438,8 @@ const baseEffects = (type: AccountType, mask: string): Effect[] => {
   switch (type) {
     case 'vendor': return [...common, rule(MAIN_RULE, { conditions: [account, 'Money out'] })]
     case 'customer': return [...common, rule(MAIN_RULE, { conditions: [account, 'Money in'] })]
-    case 'owned': return [...common, rule(MAIN_RULE, { conditions: [account] })]
-    case 'personal': return [
-      ...common,
-      rule(MAIN_RULE, { conditions: [account, 'Money out'] }),
-      rule(INBOUND_RULE, { conditions: [account, 'Money in'] }),
-    ]
+    case 'owned': return [...common, rule(MAIN_RULE, { conditions: [account], target: `Transfer between your accounts ••${mask} (excluded from P&L)` })]
+    case 'personal': return [...common, rule(MAIN_RULE, { conditions: [account], target: 'Personal (excluded from business books)' })]
     case 'unsure': return common
   }
 }
@@ -955,14 +449,9 @@ const getSelectedOption = (question: Question, answer: Answer) =>
 
 const isAnswered = (question: Question, answer: Answer) => {
   switch (question.kind) {
-    case 'choice': {
-      const option = getSelectedOption(question, answer)
-
-      return option !== undefined && (!option.collectsText || answer.text.trim() !== '')
-    }
+    case 'choice': return getSelectedOption(question, answer) !== undefined
     case 'counterparty': return answer.text.trim() !== '' && resolveCategory(answer) !== null
     case 'text': return answer.text.trim() !== ''
-    case 'statement': return true
   }
 }
 
@@ -971,38 +460,29 @@ const getAnswerEffects = (question: Question, answer: Answer): readonly Effect[]
 
   if (question.kind !== 'choice') return question.effects(answer)
 
-  const option = getSelectedOption(question, answer)
-
-  if (!option) return []
-
-  return [...option.effects, ...(option.collectsText ? option.collectsText.effects(answer.text.trim()) : [])]
+  return getSelectedOption(question, answer)?.effects ?? []
 }
 
 const getAnswerLabel = (question: Question, answer: Answer) => {
   if (!isAnswered(question, answer)) return null
 
   switch (question.kind) {
-    case 'choice': {
-      const option = getSelectedOption(question, answer)
-      return option?.collectsText ? answer.text.trim() : (option?.label ?? null)
-    }
+    case 'choice': return getSelectedOption(question, answer)?.label ?? null
     case 'counterparty': {
       const category = resolveCategory(answer)
       return `${answer.text.trim()} · ${category === VARIES_CATEGORY ? 'It’s a mix or it varies' : category}`
     }
     case 'text': return answer.text.trim()
-    case 'statement': return 'Seen'
   }
 }
 
 const getUploadPrompts = (questions: readonly Question[], answers: Record<QuestionId, Answer>) =>
   questions.flatMap(question => getSelectedOption(question, answers[question.id])?.uploadPrompt ?? [])
 
-const getSteps = (questions: readonly Question[], answers: Record<QuestionId, Answer>): StepId[] => [
-  ...THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id }) => id),
-  ...(getUploadPrompts(questions, answers).length > 0 ? ['uploads' as const] : []),
-  'review',
-]
+/** Empty when the account type needs no follow-ups, so picking it submits straight away. */
+const getSteps = (questions: readonly Question[], answers: Record<QuestionId, Answer>): StepId[] => (questions.length > 0
+  ? ['questions', ...(getUploadPrompts(questions, answers).length > 0 ? ['uploads' as const] : []), 'review']
+  : [])
 
 const buildPlan = (type: AccountType, questions: readonly Question[], ctx: AskContext, files: readonly UploadedFile[]): Plan => {
   const effects = [
@@ -1116,25 +596,21 @@ const AccountTypePane = withForm({
     return (
       <VStack gap='sm' pb='md' pi='md'>
         <P size='sm'>{prompt}</P>
-        <VStack>
-          <form.AppField name='accountType'>
-            {field => (
-              <field.FormChipGroupField
-                label='What kind of account this is'
-                showLabel={false}
-                size='lg'
-                options={ACCOUNT_TYPE_OPTIONS.map(({ value, label }) => ({ value, label }))}
-                onSelect={onPick}
-              />
-            )}
-          </form.AppField>
-        </VStack>
+        <form.AppField name='accountType'>
+          {field => (
+            <field.FormChipGroupField
+              label='What kind of account this is'
+              showLabel={false}
+              size='lg'
+              options={ACCOUNT_TYPE_OPTIONS.map(({ value, label }) => ({ value, label }))}
+              onSelect={onPick}
+            />
+          )}
+        </form.AppField>
       </VStack>
     )
   },
 })
-
-const QuestionHeading = ({ question }: { question: Question }) => <P size='sm'>{question.prompt}</P>
 
 const QuestionField = withForm({
   ...accountMaskAskFormOptions,
@@ -1147,12 +623,10 @@ const QuestionField = withForm({
     if (!question) return null
 
     switch (question.kind) {
-      case 'choice': {
-        const selected = getSelectedOption(question, answer)
-
+      case 'choice':
         return (
           <VStack gap='xs'>
-            <QuestionHeading question={question} />
+            <P size='sm'>{question.prompt}</P>
             <form.AppField name={`answers.${question.id}.choice`}>
               {field => (
                 <field.FormChipGroupField
@@ -1162,22 +636,12 @@ const QuestionField = withForm({
                 />
               )}
             </form.AppField>
-            {selected?.collectsText
-              ? (
-                <form.AppField name={`answers.${question.id}.text`}>
-                  {field => (
-                    <field.FormTextField label={question.prompt} showLabel={false} placeholder={selected.collectsText?.placeholder} />
-                  )}
-                </form.AppField>
-              )
-              : null}
           </VStack>
         )
-      }
       case 'counterparty':
         return (
           <VStack gap='xs'>
-            <QuestionHeading question={question} />
+            <P size='sm'>{question.prompt}</P>
             <form.AppField name={`answers.${question.id}.text`}>
               {field => <field.FormTextField label={question.namePlaceholder} showLabel={false} placeholder={question.namePlaceholder} />}
             </form.AppField>
@@ -1215,23 +679,21 @@ const QuestionField = withForm({
       case 'text':
         return (
           <VStack gap='xs'>
-            <QuestionHeading question={question} />
+            <P size='sm'>{question.prompt}</P>
             <form.AppField name={`answers.${question.id}.text`}>
               {field => <field.FormTextAreaField label={question.prompt} showLabel={false} placeholder={question.placeholder} />}
             </form.AppField>
           </VStack>
         )
-      case 'statement':
-        return <QuestionHeading question={question} />
     }
   },
 })
 
-const ThemePane = withForm({
+const QuestionsPane = withForm({
   ...accountMaskAskFormOptions,
   props: {
     questions: [] as readonly Question[],
-    progress: '',
+    progress: null as string | null,
     onContinue: () => {},
   },
   render: function Render({ form, questions, progress, onContinue }) {
@@ -1265,7 +727,7 @@ const UploadPane = withForm({
   ...accountMaskAskFormOptions,
   props: {
     prompts: [] as readonly string[],
-    progress: '',
+    progress: null as string | null,
     onContinue: () => {},
   },
   render: function Render({ form, prompts, progress, onContinue }) {
@@ -1364,7 +826,7 @@ const ReviewPane = ({ mask, accountType, questions, answers, files, isSubmitting
       <Span size='xs' variant='subtle'>Account type</Span>
       <Span size='sm'>{getTypeLabel(accountType)}</Span>
     </VStack>
-    {THEMES.flatMap(({ id }) => questions.filter(({ theme }) => theme === id)).map(question => (
+    {questions.map(question => (
       <VStack key={question.id} gap='3xs'>
         <Span size='xs' variant='subtle'>{question.prompt}</Span>
         <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
@@ -1392,36 +854,28 @@ type NavState = {
 
 type AccountMaskAskStoryProps = {
   accountMask: string
+  platformName: string
   transactionPattern: TransactionPattern
   startAs: AccountType | 'picker'
   taskTitle: TaskTitleKey
-} & PrototypeConfig
+}
 
-const AccountMaskAskStory = ({
-  accountMask,
-  transactionPattern,
-  startAs,
-  taskTitle,
-  billUploadStyle,
-  suggestRuleAfter,
-}: AccountMaskAskStoryProps) => {
-  const { formatCurrencyFromCents } = useIntlFormatter()
+const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, startAs, taskTitle }: AccountMaskAskStoryProps) => {
   const transactions = useMemo(() => makeTransactions(transactionPattern, accountMask), [transactionPattern, accountMask])
-  const pattern = useMemo(() => summarizePattern(transactions), [transactions])
 
-  const makeContext = useCallback((answers: Record<QuestionId, Answer>): AskContext => ({
-    mask: accountMask,
-    pattern,
-    answers,
-    config: { billUploadStyle, suggestRuleAfter },
-    formatMoney: cents => formatCurrencyFromCents(cents),
-  }), [accountMask, billUploadStyle, formatCurrencyFromCents, pattern, suggestRuleAfter])
+  const makeContext = useCallback(
+    (answers: Record<QuestionId, Answer>): AskContext => ({ mask: accountMask, platformName, answers }),
+    [accountMask, platformName],
+  )
 
-  const initialType = startAs === 'picker' ? null : startAs
+  // A type with no follow-ups has nothing to jump into, so it starts at the picker.
+  const startingSteps = startAs === 'picker' ? [] : getSteps(buildQuestions(startAs, makeContext(EMPTY_ANSWERS)), EMPTY_ANSWERS)
+  const initialType = startAs !== 'picker' && startingSteps.length > 0 ? startAs : null
+
   const answeredTypeRef = useRef<AccountType | null>(initialType)
   const [isOpen, setIsOpen] = useState(true)
   const [nav, setNav] = useState<NavState>(() => (initialType
-    ? { view: getSteps(buildQuestions(initialType, makeContext(EMPTY_ANSWERS)), EMPTY_ANSWERS)[0] ?? 'review', history: ['picker'], direction: 'forward' }
+    ? { view: startingSteps[0] ?? 'review', history: ['picker'], direction: 'forward' }
     : { view: 'picker', history: [], direction: 'forward' }))
 
   const goForward = useCallback((view: View) => setNav(current => ({
@@ -1471,13 +925,37 @@ const AccountMaskAskStory = ({
       answeredTypeRef.current = type
     }
 
+    if (buildQuestions(type, makeContext(EMPTY_ANSWERS)).length === 0) {
+      void form.handleSubmit()
+      return
+    }
+
     goForward(nextStepAfter('picker'))
   }
 
-  const progressFor = (step: StepId) => `Step ${steps.indexOf(step) + 1} of ${steps.length - 1}`
+  const answerSteps = steps.filter(step => step !== 'review')
+  const progressFor = (step: (typeof answerSteps)[number]) => (answerSteps.length > 1 ? `Step ${answerSteps.indexOf(step) + 1} of ${answerSteps.length}` : null)
 
   const renderPane = () => {
     const { view } = nav
+
+    if (view === 'done' && accountType) {
+      return (
+        <VStack gap='md' pb='md' pi='md'>
+          {questions.length > 0
+            ? (
+              <>
+                <P size='sm' weight='bold'>Thanks, we’ll take it from here.</P>
+                {plan ? <PlanSummary plan={plan} /> : null}
+              </>
+            )
+            : <P size='sm'>{`Got it. We’ll keep transactions with account ••${accountMask} out of your business books.`}</P>}
+          <HStack justify='end'>
+            <Button variant='outlined' onPress={() => setNav({ view: 'picker', history: [], direction: 'back' })}>Edit answer</Button>
+          </HStack>
+        </VStack>
+      )
+    }
 
     if (view === 'picker' || !accountType) {
       return (
@@ -1486,18 +964,6 @@ const AccountMaskAskStory = ({
           prompt={`What kind of account is ••${accountMask}?`}
           onPick={onPickType}
         />
-      )
-    }
-
-    if (view === 'done') {
-      return (
-        <VStack gap='md' pb='md' pi='md'>
-          <P size='sm' weight='bold'>Thanks, we’ll take it from here.</P>
-          {plan ? <PlanSummary plan={plan} /> : null}
-          <HStack justify='end'>
-            <Button variant='outlined' onPress={() => setNav({ view: 'picker', history: [], direction: 'back' })}>Edit answers</Button>
-          </HStack>
-        </VStack>
       )
     }
 
@@ -1527,18 +993,14 @@ const AccountMaskAskStory = ({
     }
 
     return (
-      <ThemePane
+      <QuestionsPane
         form={form}
-        questions={questions.filter(({ theme }) => theme === view)}
-        progress={progressFor(view)}
-        onContinue={() => goForward(nextStepAfter(view))}
+        questions={questions}
+        progress={progressFor('questions')}
+        onContinue={() => goForward(nextStepAfter('questions'))}
       />
     )
   }
-
-  const inspectedQuestions = nav.view === 'who' || nav.view === 'nature' || nav.view === 'handling'
-    ? questions.filter(({ theme }) => theme === nav.view)
-    : []
 
   return (
     <HStack gap='lg' className='AccountMaskAskStory'>
@@ -1569,7 +1031,7 @@ const AccountMaskAskStory = ({
       </VStack>
       <OutcomeInspector
         plan={plan}
-        questions={inspectedQuestions}
+        questions={nav.view === 'questions' ? questions : []}
         answers={answers}
         isUploadStep={nav.view === 'uploads'}
       />
@@ -1649,7 +1111,6 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
                 <VStack gap='3xs'>
                   <Span size='xs'>{question.prompt}</Span>
                   <Span size='xs' variant='subtle'>{question.why}</Span>
-                  {question.observation ? <Span size='xs' variant='subtle'>{`Pattern noticed: ${question.observation}`}</Span> : null}
                 </VStack>
                 <QuestionOutcomes question={question} answer={answers[question.id]} />
               </VStack>
@@ -1662,7 +1123,7 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
         ? (
           <InspectorSection title='This step'>
             <Span size='xs' variant='subtle'>
-              {`Uploads run through receipt parsing (Outcome 2a) and are matched to the transactions above. Only ${UPLOAD_TYPES_LABEL} files are accepted.`}
+              {`Uploaded statements are parsed (Outcome 2a) to reconcile the transfers above. Only ${UPLOAD_TYPES_LABEL} files are accepted.`}
             </Span>
           </InspectorSection>
         )
@@ -1686,7 +1147,7 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
             <Span size='xs' weight='bold'>{`→ Categorize as ${target}`}</Span>
           </VStack>
         ))}
-        {plan?.blockedRuleReason ? <NotTriggered>{`No main rule: ${plan.blockedRuleReason}.`}</NotTriggered> : null}
+        {plan?.blockedRuleReason ? <NotTriggered>{`No rule: ${plan.blockedRuleReason}.`}</NotTriggered> : null}
         {!plan || (plan.rules.length === 0 && !plan.blockedRuleReason)
           ? <NotTriggered>No rule yet; it needs a category from the answers.</NotTriggered>
           : null}
@@ -1694,7 +1155,7 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
 
       <InspectorSection title='Outcome 2 · Create a task on every new transaction'>
         <VStack gap='3xs'>
-          <Span size='xs' weight='bold'>a. Upload receipt / invoice / bill → receipt parsing</Span>
+          <Span size='xs' weight='bold'>a. Upload receipt / invoice / statement → parsing</Span>
           {uploadAsks.length > 0
             ? uploadAsks.map(({ detail }) => <Span key={detail} size='xs'>{detail}</Span>)
             : <NotTriggered>Not triggered</NotTriggered>}
@@ -1716,59 +1177,45 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
   )
 }
 
-const MATRIX_PATTERNS: Record<AccountType, TransactionPattern> = {
-  vendor: 'fixedMonthlyTransfers',
-  customer: 'customerDeposits',
-  owned: 'fixedMonthlyTransfers',
-  personal: 'loanRepayments',
-  unsure: 'fixedMonthlyTransfers',
-}
-
-const OutcomeMatrix = ({ accountMask, billUploadStyle, suggestRuleAfter }: Pick<AccountMaskAskStoryProps, 'accountMask' | keyof PrototypeConfig>) => {
-  const { formatCurrencyFromCents } = useIntlFormatter()
-
-  return (
-    <VStack gap='lg' className='AccountMaskAskStory__Matrix'>
-      <VStack gap='2xs'>
-        <Heading size='sm' level={2}>Follow-up questions → outcomes</Heading>
-        <Span size='sm' variant='subtle'>
-          Every response is captured as metadata. On top of that, each answer leads to Outcome 1 (a categorization rule) or
-          Outcome 2 (a task on every new transaction: 2a upload → receipt parsing, 2b freeform → per-transaction categorization).
-        </Span>
-      </VStack>
-      {ACCOUNT_TYPE_OPTIONS.map(({ value: type, short }) => {
-        const ctx: AskContext = {
-          mask: accountMask,
-          pattern: summarizePattern(makeTransactions(MATRIX_PATTERNS[type], accountMask)),
-          answers: EMPTY_ANSWERS,
-          config: { billUploadStyle, suggestRuleAfter },
-          formatMoney: cents => formatCurrencyFromCents(cents),
-        }
-        const questions = buildQuestions(type, ctx)
-
-        return (
-          <VStack key={type} gap='md' className='AccountMaskAskStory__Section'>
-            <Heading size='xs' level={3}>{short}</Heading>
-            {THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id, title }) => (
-              <VStack key={id} gap='sm'>
-                <Span size='xs' weight='bold'>{title}</Span>
-                {questions.filter(({ theme }) => theme === id).map(question => (
-                  <VStack key={question.id} gap='xs'>
-                    <VStack gap='3xs'>
-                      <Span size='sm' weight='bold'>{question.prompt}</Span>
-                      <Span size='xs' variant='subtle'>{question.why}</Span>
-                    </VStack>
-                    <QuestionOutcomes question={question} answer={undefined} />
-                  </VStack>
-                ))}
-              </VStack>
-            ))}
-          </VStack>
-        )
-      })}
+const OutcomeMatrix = ({ accountMask, platformName }: Pick<AccountMaskAskStoryProps, 'accountMask' | 'platformName'>) => (
+  <VStack gap='lg' className='AccountMaskAskStory__Matrix'>
+    <VStack gap='2xs'>
+      <Heading size='sm' level={2}>Follow-up questions → outcomes</Heading>
+      <Span size='sm' variant='subtle'>
+        Every response is captured as metadata. On top of that, each answer leads to Outcome 1 (a categorization rule) or
+        Outcome 2 (a task on every new transaction: 2a upload → parsing, 2b freeform → per-transaction categorization).
+      </Span>
     </VStack>
-  )
-}
+    {ACCOUNT_TYPE_OPTIONS.map(({ value: type, short }) => {
+      const questions = buildQuestions(type, { mask: accountMask, platformName, answers: EMPTY_ANSWERS })
+
+      return (
+        <VStack key={type} gap='sm' className='AccountMaskAskStory__Section'>
+          <Heading size='xs' level={3}>{short}</Heading>
+          {questions.length > 0
+            ? questions.map(question => (
+              <VStack key={question.id} gap='xs'>
+                <VStack gap='3xs'>
+                  <Span size='sm' weight='bold'>{question.prompt}</Span>
+                  <Span size='xs' variant='subtle'>{question.why}</Span>
+                </VStack>
+                <QuestionOutcomes question={question} answer={undefined} />
+              </VStack>
+            ))
+            : (
+              <VStack gap='2xs' className='AccountMaskAskStory__Option'>
+                <HStack gap='xs' align='center'>
+                  <Span size='xs' weight='bold'>No follow-ups</Span>
+                  <OutcomeBadge outcome='rule' />
+                </HStack>
+                <Span size='xs' variant='subtle'>Picking it is the whole answer: every transaction with the account is categorized as Personal.</Span>
+              </VStack>
+            )}
+        </VStack>
+      )
+    })}
+  </VStack>
+)
 
 const STORY_STYLES = `
   .AccountMaskAskStory__Root {
@@ -1829,22 +1276,21 @@ const STORY_STYLES = `
 `
 
 const DOCS = `
-Prototype of a task that asks what kind of account a mask belongs to (vendor, customer, owned business account,
-personal), then walks type-specific follow-up questions grouped into themes: who this is and what it's for, the
-transactions, and handling going forward. Any upload the answers call for comes last.
+Prototype of a task that asks what kind of account a mask belongs to, then one focused follow-up per type:
+
+- **Vendor**: the vendor's name and what you buy from them (the category)
+- **Customer**: whether the payments came through the platform (e.g. Jobber, Moxie), which picks the clearing account
+- **Owned business account**: connect it, upload statements, or neither
+- **Personal**: no follow-up; picking it categorizes the transactions as Personal
+- **Not sure**: free text for a bookkeeper
 
 The **Outcome preview** panel shows what each answer would do:
 
 - **Always**: metadata captured from the task response
-- **Outcome 1**: categorization rule (auto-categorization). A fixed amount gives a counterparty + amount + direction rule;
-  per-invoice gives counterparty + direction only
+- **Outcome 1**: categorization rule (auto-categorization)
 - **Outcome 2**: create a task on every new transaction
-  - **a**: upload receipts / invoices / bills → receipt parsing
+  - **a**: upload → parsing
   - **b**: freeform response → per-transaction categorization
-
-“Not sure” answers route to a bookkeeper for review. Use the controls to change the task title, the mock transactions
-(a loan-shaped pattern unlocks the personal loan question), how the vendor bill ask looks (open question 2), and when we
-suggest a rule after repeated “ask me each time” answers (open question 1).
 `
 
 type StoryArgs = AccountMaskAskStoryProps
@@ -1857,14 +1303,14 @@ const meta: Meta<StoryArgs> = {
   },
   args: {
     accountMask: '2691',
+    platformName: 'Jobber',
     transactionPattern: 'fixedMonthlyTransfers',
     startAs: 'picker',
     taskTitle: 'identify',
-    billUploadStyle: 'prompt',
-    suggestRuleAfter: 3,
   },
   argTypes: {
     accountMask: { control: 'text', description: 'Last four digits of the unrecognized account.' },
+    platformName: { control: 'text', description: 'The platform the business takes payments through, named in the customer question.' },
     taskTitle: {
       control: 'select',
       options: Object.keys(TASK_TITLES),
@@ -1878,16 +1324,7 @@ const meta: Meta<StoryArgs> = {
     startAs: {
       control: 'select',
       options: ['picker', ...ACCOUNT_TYPE_OPTIONS.map(({ value }) => value)],
-      description: 'Start at the type picker, or jump straight into a type’s follow-ups.',
-    },
-    billUploadStyle: {
-      control: 'inline-radio',
-      options: ['prompt', 'statement'],
-      description: 'Open question 2: the vendor bill ask as a prompt with an upload option, or as a statement.',
-    },
-    suggestRuleAfter: {
-      control: { type: 'number', min: 0, max: 10 },
-      description: 'Open question 1: after how many consistent “ask me each time” answers we suggest a rule (0 = never).',
+      description: 'Start at the type picker, or jump straight into a type’s follow-up. Personal has none, so it starts at the picker.',
     },
   },
   decorators: [
@@ -1919,17 +1356,11 @@ export const OwnedBusinessAccount: Story = {
   args: { startAs: 'owned', transactionPattern: 'fixedMonthlyTransfers' },
 }
 
-export const PersonalLoan: Story = {
-  args: { startAs: 'personal', transactionPattern: 'loanRepayments' },
-}
-
 export const SixtyTransactions: Story = {
   args: { startAs: 'vendor', transactionPattern: 'highVolume' },
 }
 
 export const OutcomeMatrixReference: Story = {
   name: 'Outcome matrix',
-  render: ({ accountMask, billUploadStyle, suggestRuleAfter }) => (
-    <OutcomeMatrix accountMask={accountMask} billUploadStyle={billUploadStyle} suggestRuleAfter={suggestRuleAfter} />
-  ),
+  render: ({ accountMask, platformName }) => <OutcomeMatrix accountMask={accountMask} platformName={platformName} />,
 }
