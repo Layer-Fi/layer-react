@@ -334,10 +334,21 @@ const billsQuestion = ({ config }: AskContext, vendorName: string): Question => 
     observation: null,
     options: [
       {
-        value: 'upload_now',
-        label: 'Upload a bill now',
+        value: 'upload_now_and_ask',
+        label: 'Upload a bill now, and ask me with each payment',
         outcome: 'askUpload',
-        hint: 'The bill runs through receipt parsing and is matched to its payment.',
+        hint: 'Today’s bill is parsed and matched now, and each new payment opens a task asking for its bill.',
+        collectsFiles: true,
+        effects: [
+          extra('Parse the uploaded bills with receipt parsing and match each one to its payment'),
+          ask('upload', `Each new payment to ${vendorName} opens a task asking for its bill; receipt parsing matches it to the payment`),
+        ],
+      },
+      {
+        value: 'upload_now',
+        label: 'Upload a bill now, just this time',
+        outcome: 'askUpload',
+        hint: 'The bill runs through receipt parsing and is matched to its payment; no future bills are requested.',
         collectsFiles: true,
         effects: [extra('Parse the uploaded bills with receipt parsing and match each one to its payment')],
       },
