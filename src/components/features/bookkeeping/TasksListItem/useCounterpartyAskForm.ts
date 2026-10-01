@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { useRawAppForm } from '@blocks/Form/useForm'
@@ -16,7 +16,7 @@ import {
 export type CounterpartyAskSaved = Pick<CounterpartyAskSubmission, 'answer' | 'wasCategorized'>
 
 type UseCounterpartyAskFormProps = {
-  task: CounterpartyAskTask
+  task: AnyCounterpartyAskTask
   onSaved: (saved: CounterpartyAskSaved) => void
   /** The linked transactions changed and the rows started over, so any pane built on them is stale. */
   onRowsReset: () => void

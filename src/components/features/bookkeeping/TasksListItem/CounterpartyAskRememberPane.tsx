@@ -8,6 +8,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import { withForm } from '@blocks/Form/useForm'
 import {
+  type CounterpartyAskCounterparty,
   counterpartyAskFormOptions,
   getWholeAnswer,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
@@ -16,14 +17,16 @@ export const CounterpartyAskRememberPane = withForm({
   ...counterpartyAskFormOptions,
   props: {
     suggestions: [] as readonly CounterpartyAskAccount[],
-    counterpartyName: '',
+    counterparty: { kind: 'purchase', name: '' } as CounterpartyAskCounterparty,
   },
-  render: function Render({ form, suggestions, counterpartyName }) {
+  render: function Render({ form, suggestions, counterparty }) {
     const { t } = useTranslation()
     const wholeAnswer = useStore(form.store, state => getWholeAnswer(suggestions, state.values))
     const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
     if (!wholeAnswer) return null
+
+    const answer = getCounterpartyAskAnswerLabel(wholeAnswer)
 
     return (
       <form.FormGroup
@@ -45,11 +48,17 @@ export const CounterpartyAskRememberPane = withForm({
         {formGroup => (
           <VStack gap='md' pb='md' pi='md'>
             <P size='sm'>
-              {t(
-                'bookkeeping:TasksListItem.CounterpartyAskRememberPane.prompt.assume_going_forward',
-                'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
-                { counterparty: counterpartyName, answer: getCounterpartyAskAnswerLabel(wholeAnswer) },
-              )}
+              {counterparty.kind === 'p2p'
+                ? t(
+                  'bookkeeping:TasksListItem.CounterpartyAskRememberPane.prompt.assume_p2p_going_forward',
+                  'Should we assume your future {{provider}} payments to {{counterparty}} are {{answer}} going forward?',
+                  { provider: counterparty.providerName, counterparty: counterparty.name, answer },
+                )
+                : t(
+                  'bookkeeping:TasksListItem.CounterpartyAskRememberPane.prompt.assume_going_forward',
+                  'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
+                  { counterparty: counterparty.name, answer },
+                )}
             </P>
             <form.AppField name='remember.goingForward'>
               {field => (

@@ -3,13 +3,16 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 import { makeAccountId } from '@schemas/common/accountIdentifier'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type P2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/p2pCounterpartyAskTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { CounterpartyAskTaskItem } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskItem'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
-import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
+import { makeCounterpartyAskTask, makeP2PCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { post as postCounterpartyAskResponse } from '@msw/api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
@@ -37,6 +40,15 @@ const multiTransactionTask = (): Partial<CounterpartyAskTask> => ({
   totalCount: 2,
 })
 
+const twoP2PPayments = (): Partial<P2PCounterpartyAskTask> => ({
+  transactions: TWO_TRANSACTIONS.map(transaction => ({
+    ...transaction,
+    direction: BankTransactionDirection.Debit,
+    counterpartyName: 'Jane Doe',
+  })),
+  totalCount: 2,
+})
+
 const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
   status: BusinessTaskStatus.UserMarkedCompleted,
   alwaysThis: true,
@@ -46,22 +58,26 @@ const answeredWithAccount = (): Partial<CounterpartyAskTask> => ({
   },
 })
 
-const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => {
-  const task = makeCounterpartyAskTask(overrides) as UserVisibleTask & CounterpartyAskTask
+const renderTask = (task: AnyCounterpartyAskTask) => ({
+  user: userEvent.setup(),
+  ...render(
+    <CounterpartyAskTaskItem task={task as UserVisibleTask & AnyCounterpartyAskTask} defaultOpen />,
+    { wrapper: LayerTestProvider },
+  ),
+})
 
-  return {
-    user: userEvent.setup(),
-    ...render(<CounterpartyAskTaskItem task={task} defaultOpen />, { wrapper: LayerTestProvider }),
-  }
-}
+const renderBody = (overrides: Partial<CounterpartyAskTask> = {}) => renderTask(makeCounterpartyAskTask(overrides))
+
+const renderP2PBody = (overrides: Partial<P2PCounterpartyAskTask> = {}) =>
+  renderTask(makeP2PCounterpartyAskTask(overrides))
 
 const expandedBody = () => document.querySelector('.Layer__tasks-list-item__body--expanded')
 
-const spyOnAskResponse = () => {
+const spyOnAskResponse = (saved: AnyCounterpartyAskTask = makeCounterpartyAskTask()) => {
   const onRequest = vi.fn<(body: unknown) => void>()
 
   server.use(
-    postCounterpartyAskResponse.mock(makeCounterpartyAskTask(), {
+    postCounterpartyAskResponse.mock(saved, {
       onRequest: async ({ request }) => {
         onRequest(await readRequestJson(request))
       },
@@ -387,5 +403,46 @@ describe('CounterpartyAskTaskBody', () => {
 
     expect(answeredSummary).toHaveTextContent('COSTCO WHSE')
     expect(answeredSummary).toHaveTextContent('Business Meals')
+  })
+
+  describe('for a P2P counterparty', () => {
+    it('asks whether to assume future payments to the counterparty on that provider', async () => {
+      const { user } = renderP2PBody()
+
+      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
+
+      expect(screen.getByText('Should we assume your future Venmo payments to Jane Doe are Contractors going forward?'))
+        .toBeInTheDocument()
+    })
+
+    it('asks what the payments were for in free text', async () => {
+      const { user } = renderP2PBody()
+
+      await user.click(screen.getByRole('radio', { name: /Something else/ }))
+
+      expect(screen.getByText('What were these payments for?')).toBeInTheDocument()
+    })
+
+    it('asks about each payment in the itemised sheet', async () => {
+      const { user } = renderP2PBody(twoP2PPayments())
+
+      await user.click(screen.getByRole('radio', { name: /Multiple different things/ }))
+
+      expect(screen.getByText('Can you share more about what each payment was for below?')).toBeInTheDocument()
+    })
+
+    it('collapses the card once the answer saves', async () => {
+      const onRequest = spyOnAskResponse(makeP2PCounterpartyAskTask())
+      const { user } = renderP2PBody()
+
+      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
+      await user.click(screen.getByRole('radio', { name: 'Yes, automatically categorize them' }))
+
+      await waitFor(() => expect(expandedBody()).toBeNull())
+      expect(onRequest.mock.calls[0]?.[0]).toEqual({
+        account_identifier: { type: 'StableName', stable_name: bankTransactionCategories.payrollContractors.stableName },
+        always_this: true,
+      })
+    })
   })
 })

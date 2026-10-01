@@ -1,11 +1,12 @@
 import { forwardRef, useCallback, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
-import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type AnyCounterpartyAskTask, isP2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import {
   type CounterpartyAskAnswerSummary,
+  type CounterpartyAskCounterparty,
   getStoredCounterpartyAskAnswerSummary,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 import { CounterpartyAskTaskBody } from '@features/bookkeeping/TasksListItem/CounterpartyAskTaskBody'
@@ -18,7 +19,7 @@ import { useCounterpartyAskNavigation } from '@features/bookkeeping/TasksListIte
 import { useTasksListItemOpenState } from '@features/bookkeeping/TasksListItem/useTasksListItemOpenState'
 
 type CounterpartyAskTaskItemProps = {
-  task: UserVisibleTask & CounterpartyAskTask
+  task: UserVisibleTask & AnyCounterpartyAskTask
   defaultOpen: boolean
   onExpandTask?: (isOpen: boolean) => void
 }
@@ -45,6 +46,10 @@ export const CounterpartyAskTaskItem = forwardRef<HTMLDivElement, CounterpartyAs
   const { form } = useCounterpartyAskForm({ task, onSaved, onRowsReset: navigation.returnToPicker })
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
+  const counterparty: CounterpartyAskCounterparty = isP2PCounterpartyAskTask(task)
+    ? { kind: 'p2p', name: task.p2pCounterparty.name, providerName: task.p2pCounterparty.provider.name }
+    : { kind: 'purchase', name: task.counterparty?.name ?? task.title }
+
   return (
     <TasksListItemShell
       ref={ref}
@@ -63,7 +68,7 @@ export const CounterpartyAskTaskItem = forwardRef<HTMLDivElement, CounterpartyAs
         task={task}
         form={form}
         navigation={navigation}
-        counterpartyName={task.counterparty?.name ?? task.title}
+        counterparty={counterparty}
         isExpanded={isOpen}
       />
     </TasksListItemShell>

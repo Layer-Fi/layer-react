@@ -53,5 +53,5 @@ export const isLegacyBusinessTask = <T extends BusinessTask>(
 
 export const isRenderableBusinessTask = <T extends BusinessTask>(
   task: T,
-): task is T & (CounterpartyAskTask | LegacyBusinessTask) =>
-  isCounterpartyAskTask(task) || isLegacyBusinessTask(task)
+): task is T & (AnyCounterpartyAskTask | LegacyBusinessTask) =>
+  isAnyCounterpartyAskTask(task) || isLegacyBusinessTask(task)

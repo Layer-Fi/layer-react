@@ -5,12 +5,10 @@ import { describe, expect, it } from 'vitest'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
-import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
+import { makeCounterpartyAskTask, makeP2PCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const renderItem = () => {
-  const task = makeCounterpartyAskTask() as UserVisibleTask
-
+const renderItem = (task = makeCounterpartyAskTask() as UserVisibleTask) => {
   return {
     user: userEvent.setup(),
     ...render(<TasksListItem task={task} defaultOpen />, { wrapper: LayerTestProvider }),
@@ -30,6 +28,13 @@ describe('TasksListItem', () => {
 
     expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
     expect(expandedBody()).not.toBeNull()
+  })
+
+  it('renders a P2P counterparty ask as an answerable ask', () => {
+    renderItem(makeP2PCounterpartyAskTask() as UserVisibleTask)
+
+    expect(screen.getByText('Payments to Jane Doe via Venmo')).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: 'Contractors' })).toBeInTheDocument()
   })
 
   it('still collapses when the header itself is clicked', async () => {

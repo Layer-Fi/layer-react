@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import { isCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { isCounterpartyAskTask, isP2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
@@ -63,6 +63,20 @@ describe('useGetBookkeepingPeriods', () => {
     const asks = (result.current.data ?? [])
       .flatMap(period => period.tasks)
       .filter(task => isCounterpartyAskTask(task))
+
+    expect(asks.length).toBeGreaterThan(0)
+  })
+
+  it('returns the P2P counterparty asks the seeded periods carry', async () => {
+    mockActiveBookkeeping()
+
+    const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
+
+    await waitFor(() => expect(result.current.data).toBeDefined())
+
+    const asks = (result.current.data ?? [])
+      .flatMap(period => period.tasks)
+      .filter(task => isP2PCounterpartyAskTask(task))
 
     expect(asks.length).toBeGreaterThan(0)
   })
