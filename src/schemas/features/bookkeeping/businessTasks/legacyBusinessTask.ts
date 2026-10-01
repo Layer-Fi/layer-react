@@ -4,6 +4,7 @@ import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
 import {
   BaseBusinessTaskSchema,
   COUNTERPARTY_ASK_TASK_TYPE,
+  P2P_COUNTERPARTY_ASK_TASK_TYPE,
   TransformedTaskUserResponseTypeSchema,
   UserResponseFromKey,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
@@ -24,7 +25,7 @@ const TaskDocumentSchema = Schema.Struct({
 // would post a free-response answer to an ask.
 const NonCounterpartyAskTaskTypeSchema = Schema.NullishOr(
   Schema.String.pipe(
-    Schema.filter(taskType => taskType !== COUNTERPARTY_ASK_TASK_TYPE, {
+    Schema.filter(taskType => taskType !== COUNTERPARTY_ASK_TASK_TYPE && taskType !== P2P_COUNTERPARTY_ASK_TASK_TYPE, {
       identifier: 'NonCounterpartyAskTaskType',
     }),
   ),
