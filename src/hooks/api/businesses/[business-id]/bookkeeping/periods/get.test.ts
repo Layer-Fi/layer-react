@@ -43,6 +43,16 @@ describe('useGetBookkeepingPeriods', () => {
     expect(onRequest.mock.calls[0]?.[0]).toContain('legacy_tasks_only=false')
   })
 
+  it('opts in to P2P counterparty asks', async () => {
+    mockActiveBookkeeping()
+    const onRequest = spyOnPeriodsRequest()
+
+    await renderHookWithAuth(() => useGetBookkeepingPeriods())
+
+    await waitFor(() => expect(onRequest).toHaveBeenCalled())
+    expect(onRequest.mock.calls[0]?.[0]).toContain('include_p2p_counterparty_tasks=true')
+  })
+
   it('returns the counterparty asks the seeded periods carry', async () => {
     mockActiveBookkeeping()
 
