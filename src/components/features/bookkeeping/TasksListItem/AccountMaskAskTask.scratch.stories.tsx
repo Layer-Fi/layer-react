@@ -8,14 +8,17 @@ import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccount
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { SlidingPanes, type SlidingPanesDirection } from '@components/utility/SlidingPanes/SlidingPanes'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { Chip, ChipGroup } from '@ui/Chip/Chip'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { TextField } from '@ui/Form/Form'
 import { FileInput } from '@ui/Input/FileInput'
 import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -926,6 +929,59 @@ type QuestionInputProps = {
   onContinue: (answer: Answer) => void
 }
 
+type CounterpartyInputProps = Omit<QuestionInputProps, 'question'> & {
+  question: Extract<Question, { kind: 'counterparty' }>
+}
+
+const CounterpartyInput = ({ question, answer, onChange, onContinue }: CounterpartyInputProps) => {
+  const [showCategories, setShowCategories] = useState(() => answer.text.trim() !== '')
+  const revealCategories = useDebounce((name: string) => setShowCategories(name.trim() !== ''))
+
+  return (
+    <VStack gap='sm'>
+      <TextField
+        aria-label={question.namePlaceholder}
+        value={answer.text}
+        onChange={(text) => {
+          onChange({ ...answer, text })
+          revealCategories(text)
+        }}
+      >
+        <InputGroup slot='input'>
+          <Input placeholder={question.namePlaceholder} inset />
+        </InputGroup>
+      </TextField>
+      {showCategories
+        ? (
+          <VStack gap='sm'>
+            <Span size='xs' variant='subtle'>{question.categoryLabel}</Span>
+            <ChipGroup ariaLabel={question.categoryLabel} value={answer.choice}>
+              {[...question.suggestedCategories, VARIES_CATEGORY].map(category => (
+                <Chip key={category} value={category} onPress={() => onChange({ ...answer, choice: category })}>
+                  {category === VARIES_CATEGORY ? 'It’s a mix or it varies' : category}
+                </Chip>
+              ))}
+            </ChipGroup>
+            <ComboBox
+              aria-label={`Other ${question.categoryLabel.toLowerCase()} categories`}
+              placeholder='Or search other categories…'
+              options={question.otherCategories.map(category => ({ label: category, value: category }))}
+              selectedValue={answer.choice && question.otherCategories.includes(answer.choice)
+                ? { label: answer.choice, value: answer.choice }
+                : null}
+              onSelectedValueChange={option => onChange({ ...answer, choice: option?.value ?? null })}
+              isClearable
+            />
+          </VStack>
+        )
+        : null}
+      <HStack justify='end'>
+        <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
+      </HStack>
+    </VStack>
+  )
+}
+
 const QuestionInput = ({ question, answer, onChange, onContinue }: QuestionInputProps) => {
   switch (question.kind) {
     case 'choice': {
@@ -991,37 +1047,7 @@ const QuestionInput = ({ question, answer, onChange, onContinue }: QuestionInput
       )
     }
     case 'counterparty':
-      return (
-        <VStack gap='sm'>
-          <Input
-            aria-label={question.namePlaceholder}
-            placeholder={question.namePlaceholder}
-            value={answer.text}
-            onChange={event => onChange({ ...answer, text: event.target.value })}
-          />
-          <Span size='xs' variant='subtle'>{question.categoryLabel}</Span>
-          <ChipGroup ariaLabel={question.categoryLabel} value={answer.choice}>
-            {[...question.suggestedCategories, VARIES_CATEGORY].map(category => (
-              <Chip key={category} value={category} onPress={() => onChange({ ...answer, choice: category })}>
-                {category === VARIES_CATEGORY ? 'It’s a mix or it varies' : category}
-              </Chip>
-            ))}
-          </ChipGroup>
-          <ComboBox
-            aria-label={`Other ${question.categoryLabel.toLowerCase()} categories`}
-            placeholder='Or search other categories…'
-            options={question.otherCategories.map(category => ({ label: category, value: category }))}
-            selectedValue={answer.choice && question.otherCategories.includes(answer.choice)
-              ? { label: answer.choice, value: answer.choice }
-              : null}
-            onSelectedValueChange={option => onChange({ ...answer, choice: option?.value ?? null })}
-            isClearable
-          />
-          <HStack justify='end'>
-            <Button isDisabled={!isAnswered(question, answer)} onPress={() => onContinue(answer)}>Continue</Button>
-          </HStack>
-        </VStack>
-      )
+      return <CounterpartyInput question={question} answer={answer} onChange={onChange} onContinue={onContinue} />
     case 'text':
       return (
         <VStack gap='sm'>
