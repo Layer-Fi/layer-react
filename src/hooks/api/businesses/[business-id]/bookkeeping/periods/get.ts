@@ -37,6 +37,7 @@ const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(Bookkeeping
 type GetBookkeepingPeriodsParams = {
   businessId: string
   legacyTasksOnly?: boolean
+  includeP2PCounterpartyTasks?: boolean
 }
 
 const getBookkeepingPeriods = getWithQuery<
@@ -57,7 +58,8 @@ const useBookkeepingPeriodsQuery = createQueryHook({
   request: getBookkeepingPeriods,
   schema: BookkeepingPeriodsResponseSchema,
   // `false` lifts the backend filter on every agent-created task type, not just asks.
-  keyDefaults: { legacyTasksOnly: false },
+  // P2P asks need their own opt-in: the API withholds them from builds that predate it.
+  keyDefaults: { legacyTasksOnly: false, includeP2PCounterpartyTasks: true },
   select: ({ periods }) =>
     periods
       .map(period => ({
