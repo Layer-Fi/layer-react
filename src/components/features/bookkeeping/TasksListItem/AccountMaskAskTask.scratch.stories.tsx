@@ -36,7 +36,7 @@ import '@features/bookkeeping/TasksListItem/counterpartyAskTaskBody.scss'
 
 type AccountType = 'vendor' | 'customer' | 'owned' | 'personal' | 'unsure'
 
-type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerDeposits' | 'loanRepayments' | 'highVolume'
+type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerDeposits' | 'customerChecks' | 'loanRepayments' | 'highVolume'
 
 type TaskTitleKey = 'identify' | 'whoIs' | 'unrecognized' | 'tellUs' | 'current'
 
@@ -73,6 +73,8 @@ type AccountMaskAskFormValues = {
 type AskContext = {
   mask: string
   platformName: string
+  /** The CoA clearing account for payments that don't come through the platform. */
+  directClearingAccount: string
   answers: Record<QuestionId, Answer>
 }
 
@@ -252,6 +254,12 @@ const makeTransactions = (pattern: TransactionPattern, mask: string): readonly M
         makeTransaction(2, 7, 8, 312500, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
         makeTransaction(3, 8, 12, 240000, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
       ]
+    case 'customerChecks':
+      return [
+        makeTransaction(0, 5, 14, 125000, IN, `MOBILE CHECK DEPOSIT #3301 XXXXXX${mask}`),
+        makeTransaction(1, 6, 18, 98000, IN, `MOBILE CHECK DEPOSIT #3317 XXXXXX${mask}`),
+        makeTransaction(2, 8, 2, 152500, IN, `MOBILE CHECK DEPOSIT #3342 XXXXXX${mask}`),
+      ]
     case 'highVolume':
       // Every 6 days from Jan 3, with amounts that vary so the table reads like real vendor activity.
       return Array.from({ length: 60 }, (_, index) => makeTransaction(
@@ -274,9 +282,20 @@ const makeTransactions = (pattern: TransactionPattern, mask: string): readonly M
 const PATTERN_DESCRIPTIONS: Record<TransactionPattern, string> = {
   fixedMonthlyTransfers: '5 × $1,000 out, monthly (matches the current task)',
   variableBills: '4 variable payments out + 1 small deposit back',
-  customerDeposits: '4 variable deposits in',
+  customerDeposits: '4 variable ACH deposits in',
+  customerChecks: '3 check deposits in',
   loanRepayments: '$5,000 in, then 6 × $500 out',
   highVolume: '60 variable payments out, about every 6 days',
+}
+
+// Mirrors the Incoming Payment Method Clearing Accounts on the business's chart of accounts.
+const getDirectClearingAccount = (transactions: readonly MockTransaction[]) => {
+  const deposits = transactions.filter(({ direction }) => direction === IN).map(({ description }) => description.toUpperCase())
+
+  if (deposits.length > 0 && deposits.every(description => description.includes('ACH'))) return 'Incoming ACH Payments Clearing'
+  if (deposits.length > 0 && deposits.every(description => /\b(CHECK|CHK)\b/.test(description))) return 'Incoming Check Payments Clearing'
+
+  return 'Incoming Other Payments Clearing'
 }
 
 /** The category a counterparty answer settles on; `varies` when it's a mix. */
@@ -335,7 +354,7 @@ const buildVendorQuestions = (): Question[] => [
   },
 ]
 
-const buildCustomerQuestions = ({ platformName }: AskContext): Question[] => [
+const buildCustomerQuestions = ({ platformName, directClearingAccount }: AskContext): Question[] => [
   {
     kind: 'choice',
     id: 'platform',
@@ -346,15 +365,23 @@ const buildCustomerQuestions = ({ platformName }: AskContext): Question[] => [
         value: 'platform',
         label: `Yes, through ${platformName}`,
         outcome: 'rule',
-        hint: `Deposits go to the ${platformName} clearing account and reconcile against ${platformName}’s payouts.`,
-        effects: [metadata('payment.channel', platformName), rule(MAIN_RULE, { target: `${platformName} clearing account` })],
+        hint: `Deposits go to ${platformName} Clearing (under Payment Processor Clearing Accounts) and reconcile against ${platformName}’s payouts.`,
+        effects: [
+          metadata('payment.channel', platformName),
+          metadata('clearing.account', `${platformName} Clearing`),
+          rule(MAIN_RULE, { target: `${platformName} Clearing` }),
+        ],
       },
       {
         value: 'direct',
         label: 'No, they paid me directly',
         outcome: 'rule',
-        hint: 'Deposits go to Undeposited Funds until they’re matched to an invoice.',
-        effects: [metadata('payment.channel', 'Direct'), rule(MAIN_RULE, { target: 'Undeposited Funds' })],
+        hint: `Deposits go to ${directClearingAccount}, the clearing account this business’s chart of accounts designates for how they were paid. Not shown to the user.`,
+        effects: [
+          metadata('payment.channel', 'Direct'),
+          metadata('clearing.account', directClearingAccount),
+          rule(MAIN_RULE, { target: directClearingAccount }),
+        ],
       },
       notSureOption('how these payments were made'),
     ],
@@ -864,8 +891,13 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
   const transactions = useMemo(() => makeTransactions(transactionPattern, accountMask), [transactionPattern, accountMask])
 
   const makeContext = useCallback(
-    (answers: Record<QuestionId, Answer>): AskContext => ({ mask: accountMask, platformName, answers }),
-    [accountMask, platformName],
+    (answers: Record<QuestionId, Answer>): AskContext => ({
+      mask: accountMask,
+      platformName,
+      directClearingAccount: getDirectClearingAccount(transactions),
+      answers,
+    }),
+    [accountMask, platformName, transactions],
   )
 
   // A type with no follow-ups has nothing to jump into, so it starts at the picker.
@@ -1187,7 +1219,12 @@ const OutcomeMatrix = ({ accountMask, platformName }: Pick<AccountMaskAskStoryPr
       </Span>
     </VStack>
     {ACCOUNT_TYPE_OPTIONS.map(({ value: type, short }) => {
-      const questions = buildQuestions(type, { mask: accountMask, platformName, answers: EMPTY_ANSWERS })
+      const questions = buildQuestions(type, {
+        mask: accountMask,
+        platformName,
+        directClearingAccount: getDirectClearingAccount(makeTransactions('customerDeposits', accountMask)),
+        answers: EMPTY_ANSWERS,
+      })
 
       return (
         <VStack key={type} gap='sm' className='AccountMaskAskStory__Section'>
