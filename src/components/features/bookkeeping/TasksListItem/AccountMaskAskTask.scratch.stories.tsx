@@ -36,7 +36,7 @@ import '@features/bookkeeping/TasksListItem/counterpartyAskTaskBody.scss'
 
 type AccountType = 'vendor' | 'customer' | 'owned' | 'personal' | 'unsure'
 
-type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerDeposits' | 'loanRepayments'
+type TransactionPattern = 'fixedMonthlyTransfers' | 'variableBills' | 'customerDeposits' | 'loanRepayments' | 'highVolume'
 
 type TaskTitleKey = 'identify' | 'whoIs' | 'unrecognized' | 'tellUs' | 'current'
 
@@ -315,6 +315,16 @@ const makeTransactions = (pattern: TransactionPattern, mask: string): readonly M
         makeTransaction(2, 7, 8, 312500, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
         makeTransaction(3, 8, 12, 240000, IN, `ACH CREDIT XXXXXX${mask} PAYMENT`),
       ]
+    case 'highVolume':
+      // Every 6 days from Jan 3, with amounts that vary so the table reads like real vendor activity.
+      return Array.from({ length: 60 }, (_, index) => makeTransaction(
+        index,
+        1,
+        3 + index * 6,
+        12500 + ((index * 7919) % 48000),
+        OUT,
+        `ACH DEBIT XXXXXX${mask} INV ${2001 + index}`,
+      ))
     case 'loanRepayments':
       return [
         makeTransaction(0, 3, 2, 500000, IN, `TRANSFER FROM XXXXXX${mask}`),
@@ -329,6 +339,7 @@ const PATTERN_DESCRIPTIONS: Record<TransactionPattern, string> = {
   variableBills: '4 variable payments out + 1 small deposit back',
   customerDeposits: '4 variable deposits in',
   loanRepayments: '$5,000 in, then 6 × $500 out (looks like a loan)',
+  highVolume: '60 variable payments out, about every 6 days',
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000
@@ -1353,21 +1364,16 @@ const ReviewPane = ({ mask, accountType, questions, answers, files, isSubmitting
       <Span size='xs' variant='subtle'>Account type</Span>
       <Span size='sm'>{getTypeLabel(accountType)}</Span>
     </VStack>
-    {THEMES.filter(({ id }) => questions.some(({ theme }) => theme === id)).map(({ id, title }) => (
-      <VStack key={id} gap='xs'>
-        <Span size='xs' weight='bold'>{title}</Span>
-        {questions.filter(({ theme }) => theme === id).map(question => (
-          <VStack key={question.id} gap='3xs'>
-            <Span size='xs' variant='subtle'>{question.prompt}</Span>
-            <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
-          </VStack>
-        ))}
+    {THEMES.flatMap(({ id }) => questions.filter(({ theme }) => theme === id)).map(question => (
+      <VStack key={question.id} gap='3xs'>
+        <Span size='xs' variant='subtle'>{question.prompt}</Span>
+        <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
       </VStack>
     ))}
     {files.length > 0
       ? (
         <VStack gap='3xs'>
-          <Span size='xs' weight='bold'>Uploads</Span>
+          <Span size='xs' variant='subtle'>Uploaded files</Span>
           <Span size='sm'>{files.map(({ name }) => name).join(', ')}</Span>
         </VStack>
       )
@@ -1915,6 +1921,10 @@ export const OwnedBusinessAccount: Story = {
 
 export const PersonalLoan: Story = {
   args: { startAs: 'personal', transactionPattern: 'loanRepayments' },
+}
+
+export const SixtyTransactions: Story = {
+  args: { startAs: 'vendor', transactionPattern: 'highVolume' },
 }
 
 export const OutcomeMatrixReference: Story = {
