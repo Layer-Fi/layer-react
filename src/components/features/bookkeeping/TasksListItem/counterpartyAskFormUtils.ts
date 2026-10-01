@@ -3,10 +3,7 @@ import { formOptions } from '@tanstack/react-form'
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
 import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import {
-  type CounterpartyAskAccount,
-  type CounterpartyAskTask,
-} from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import {
   buildAllSameCounterpartyAskResponse,
   buildItemisedCounterpartyAskResponse,
@@ -24,6 +21,10 @@ export const toSuggestionOptions = (suggestions: readonly CounterpartyAskAccount
   suggestions.map((suggestion, index) => ({ value: toSuggestionAnswerKey(index), label: suggestion.name }))
 
 export type GoingForwardChoice = 'always' | 'ask'
+
+export type CounterpartyAskCounterparty =
+  | { kind: 'purchase', name: string }
+  | { kind: 'p2p', name: string, providerName: string }
 
 export type CounterpartyAskAnswerSummary =
   | { kind: 'account', name: string }
@@ -158,7 +159,7 @@ export type CounterpartyAskSubmission = {
 }
 
 export const buildCounterpartyAskSubmission = (
-  task: CounterpartyAskTask,
+  task: AnyCounterpartyAskTask,
   values: CounterpartyAskFormValues,
 ): CounterpartyAskSubmission | null => {
   const { suggestions } = task

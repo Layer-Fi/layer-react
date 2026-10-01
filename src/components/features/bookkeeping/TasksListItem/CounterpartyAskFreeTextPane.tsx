@@ -5,21 +5,24 @@ import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { withForm } from '@blocks/Form/useForm'
-import { counterpartyAskFormOptions } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+import {
+  type CounterpartyAskCounterparty,
+  counterpartyAskFormOptions,
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 
 export const CounterpartyAskFreeTextPane = withForm({
   ...counterpartyAskFormOptions,
   props: {
+    kind: 'purchase' as CounterpartyAskCounterparty['kind'],
     onContinue: () => {},
   },
-  render: function Render({ form, onContinue }) {
+  render: function Render({ form, kind, onContinue }) {
     const { t } = useTranslation()
     const text = useStore(form.store, state => state.values.freeText.text)
 
-    const prompt = t(
-      'bookkeeping:TasksListItem.CounterpartyAskFreeTextPane.prompt.what_were_these_for',
-      'What were these purchases for?',
-    )
+    const prompt = kind === 'p2p'
+      ? t('bookkeeping:TasksListItem.CounterpartyAskFreeTextPane.prompt.what_were_these_payments_for', 'What were these payments for?')
+      : t('bookkeeping:TasksListItem.CounterpartyAskFreeTextPane.prompt.what_were_these_for', 'What were these purchases for?')
 
     return (
       <form.FormGroup

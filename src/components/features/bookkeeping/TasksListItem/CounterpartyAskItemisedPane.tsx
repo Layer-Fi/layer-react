@@ -9,6 +9,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import { withForm } from '@blocks/Form/useForm'
 import {
+  type CounterpartyAskCounterparty,
   counterpartyAskFormOptions,
   getAnsweredRows,
   getWholeAnswer,
@@ -19,12 +20,13 @@ import { CounterpartyAskTransactionRow } from '@features/bookkeeping/TasksListIt
 export const CounterpartyAskItemisedPane = withForm({
   ...counterpartyAskFormOptions,
   props: {
+    kind: 'purchase' as CounterpartyAskCounterparty['kind'],
     transactions: [] as readonly MinimalBankTransaction[],
     suggestions: [] as readonly CounterpartyAskAccount[],
     /** Every row agreed on one answer, so the flow continues to the going-forward step instead of saving. */
     onUniformAnswer: () => {},
   },
-  render: function Render({ form, transactions, suggestions, onUniformAnswer }) {
+  render: function Render({ form, kind, transactions, suggestions, onUniformAnswer }) {
     const { t } = useTranslation()
 
     const findNextUnanswered = useCallback(() =>
@@ -51,10 +53,9 @@ export const CounterpartyAskItemisedPane = withForm({
             ? undefined
             : {
               fields: {
-                rows: t(
-                  'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_row',
-                  'Answer every transaction to continue',
-                ),
+                rows: kind === 'p2p'
+                  ? t('bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_payment', 'Answer every payment to continue')
+                  : t('bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_row', 'Answer every transaction to continue'),
               },
             }),
         }}
@@ -71,10 +72,15 @@ export const CounterpartyAskItemisedPane = withForm({
         {formGroup => (
           <VStack gap='sm'>
             <P size='sm' pi='md'>
-              {t(
-                'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_transaction',
-                'Can you share more about what each transaction was for below?',
-              )}
+              {kind === 'p2p'
+                ? t(
+                  'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_payment',
+                  'Can you share more about what each payment was for below?',
+                )
+                : t(
+                  'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_transaction',
+                  'Can you share more about what each transaction was for below?',
+                )}
             </P>
             <VStack className='Layer__CounterpartyAskTask__Rows'>
               {rows.map(({ transactionId }, index) => {

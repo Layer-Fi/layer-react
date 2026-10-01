@@ -150,3 +150,12 @@ const JULY: DateRange = {
 export const CounterpartyAskWithoutSuggestions: Story = {
   parameters: { pinnedDateRange: JULY },
 }
+
+const OCTOBER: DateRange = {
+  startDate: new Date(FIXTURE_YEAR, 9, 1),
+  endDate: new Date(FIXTURE_YEAR, 9, 31),
+}
+
+export const P2PCounterpartyAsk: Story = {
+  parameters: { pinnedDateRange: OCTOBER },
+}
