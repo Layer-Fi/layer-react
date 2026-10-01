@@ -97,10 +97,10 @@ describe('BusinessTaskSchema', () => {
     expect(isAnyCounterpartyAskTask(task)).toBe(true)
   })
 
-  it('keeps a P2P counterparty ask unrenderable until it has a body', () => {
+  it('treats a P2P counterparty ask task as renderable', () => {
     const task = decode(encodedP2PCounterpartyAskTask)
 
-    expect(isRenderableBusinessTask(task)).toBe(false)
+    expect(isRenderableBusinessTask(task)).toBe(true)
   })
 
   it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
