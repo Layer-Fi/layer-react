@@ -38,13 +38,14 @@ export const TasksListItemHeader = ({ task, isOpen, backAction, answer, onClick 
           ? (
             <Button
               className='Layer__tasks-list-item__head-info__back'
-              variant='text'
+              variant='ghost'
               icon
+              inset
               isDisabled={backAction.isDisabled}
               onPress={backAction.onBack}
               aria-label={t('common:action.back', 'Back')}
             >
-              <ChevronLeft size={14} />
+              <ChevronLeft size={18} />
             </Button>
           )
           : <div className='Layer__tasks-list-item__head-info__status'>{getIconForTask(task)}</div>}
