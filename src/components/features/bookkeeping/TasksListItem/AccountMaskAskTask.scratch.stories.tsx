@@ -922,8 +922,6 @@ const buildQuestions = (type: AccountType, ctx: AskContext): Question[] => {
 
 const getTypeLabel = (type: AccountType) => ACCOUNT_TYPE_OPTIONS.find(({ value }) => value === type)?.short ?? type
 
-const getThemeTitle = (theme: ThemeId) => THEMES.find(({ id }) => id === theme)?.title ?? theme
-
 const baseEffects = (type: AccountType, mask: string): Effect[] => {
   const account = accountCondition(mask)
   const common = [metadata('account.mask', `••${mask}`), metadata('account.type', getTypeLabel(type))]
@@ -1061,14 +1059,6 @@ const makeTask = (title: string, status: BusinessTaskStatus.Todo | BusinessTaskS
   documents: null,
 })
 
-const describeTransfers = (mask: string, pattern: PatternSummary) => {
-  const flow = pattern.inflowCount === 0
-    ? 'transfers to'
-    : pattern.outflowCount === 0 ? 'deposits from' : 'transfers to and from'
-
-  return `We noticed ${pattern.count} ${flow} an account ending in ${mask} that we don’t recognize. What kind of account is this?`
-}
-
 const OutcomeBadge = ({ outcome }: { outcome: OutcomeTag }) => {
   const { label, variant } = OUTCOME_TAGS[outcome]
 
@@ -1109,15 +1099,13 @@ const AccountTypePane = withForm({
   ...accountMaskAskFormOptions,
   props: {
     prompt: '',
-    transactions: [] as readonly MockTransaction[],
     onPick: (_type: AccountType) => {},
   },
-  render: function Render({ form, prompt, transactions, onPick }) {
+  render: function Render({ form, prompt, onPick }) {
     return (
-      <VStack gap='md' pb='md'>
-        <P size='sm' pi='md'>{prompt}</P>
-        <TransactionTable transactions={transactions} />
-        <VStack pi='md'>
+      <VStack gap='sm' pb='md' pi='md'>
+        <P size='sm'>{prompt}</P>
+        <VStack>
           <form.AppField name='accountType'>
             {field => (
               <field.FormChipGroupField
@@ -1135,12 +1123,7 @@ const AccountTypePane = withForm({
   },
 })
 
-const QuestionHeading = ({ question }: { question: Question }) => (
-  <VStack gap='3xs'>
-    <P size='sm'>{question.prompt}</P>
-    {question.observation ? <Span size='xs' variant='subtle'>{question.observation}</Span> : null}
-  </VStack>
-)
+const QuestionHeading = ({ question }: { question: Question }) => <P size='sm'>{question.prompt}</P>
 
 const QuestionField = withForm({
   ...accountMaskAskFormOptions,
@@ -1187,7 +1170,6 @@ const QuestionField = withForm({
             <form.AppField name={`answers.${question.id}.text`}>
               {field => <field.FormTextField label={question.namePlaceholder} showLabel={false} placeholder={question.namePlaceholder} />}
             </form.AppField>
-            <Span size='xs' variant='subtle'>{question.categoryLabel}</Span>
             <form.AppField name={`answers.${question.id}.choice`}>
               {field => (
                 <field.FormChipGroupField
@@ -1256,9 +1238,9 @@ const ThemePane = withForm({
       >
         {formGroup => (
           <VStack gap='lg' pb='md' pi='md'>
-            <Span size='xs' variant='subtle'>{progress}</Span>
             {questions.map(question => <QuestionField key={question.id} form={form} question={question} />)}
-            <HStack justify='end'>
+            <HStack justify='space-between' align='center'>
+              <Span size='xs' variant='subtle'>{progress}</Span>
               <Button isDisabled={!isComplete} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
             </HStack>
           </VStack>
@@ -1287,11 +1269,7 @@ const UploadPane = withForm({
       >
         {formGroup => (
           <VStack gap='md' pb='md' pi='md'>
-            <VStack gap='3xs'>
-              <Span size='xs' variant='subtle'>{progress}</Span>
-              {prompts.map(prompt => <P key={prompt} size='sm'>{prompt}</P>)}
-              <Span size='xs' variant='subtle'>{`Accepted file types: ${UPLOAD_TYPES_LABEL}.`}</Span>
-            </VStack>
+            {prompts.map(prompt => <P key={prompt} size='sm'>{prompt}</P>)}
             <form.Field name='uploads.files'>
               {field => (
                 <VStack gap='xs'>
@@ -1313,22 +1291,25 @@ const UploadPane = withForm({
                     )
                     : null}
                   <HStack gap='xs' justify='space-between' align='center'>
-                    <FileInput
-                      allowMultipleUploads
-                      accept={UPLOAD_ACCEPT}
-                      text={fileCount > 0 ? 'Add more files' : 'Select files'}
-                      onUpload={(files) => {
-                        const existingIds = new Set(field.state.value.map(({ id }) => id))
-                        const added = files
-                          .filter(isAllowedUpload)
-                          .map(file => ({ id: `${file.name}-${file.size}-${file.lastModified}`, name: file.name }))
-                          .filter(({ id }) => !existingIds.has(id))
+                    <Span size='xs' variant='subtle'>{progress}</Span>
+                    <HStack gap='xs' align='center'>
+                      <FileInput
+                        allowMultipleUploads
+                        accept={UPLOAD_ACCEPT}
+                        text={fileCount > 0 ? 'Add more files' : 'Select files'}
+                        onUpload={(files) => {
+                          const existingIds = new Set(field.state.value.map(({ id }) => id))
+                          const added = files
+                            .filter(isAllowedUpload)
+                            .map(file => ({ id: `${file.name}-${file.size}-${file.lastModified}`, name: file.name }))
+                            .filter(({ id }) => !existingIds.has(id))
 
-                        setRejectedNames(files.filter(file => !isAllowedUpload(file)).map(({ name }) => name))
-                        field.handleChange([...field.state.value, ...added])
-                      }}
-                    />
-                    <Button isDisabled={fileCount === 0} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
+                          setRejectedNames(files.filter(file => !isAllowedUpload(file)).map(({ name }) => name))
+                          field.handleChange([...field.state.value, ...added])
+                        }}
+                      />
+                      <Button isDisabled={fileCount === 0} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
+                    </HStack>
                   </HStack>
                 </VStack>
               )}
@@ -1487,9 +1468,7 @@ const AccountMaskAskStory = ({
     goForward(nextStepAfter('picker'))
   }
 
-  const progressFor = (step: StepId, title: string) => (accountType
-    ? `${getTypeLabel(accountType)} · Step ${steps.indexOf(step) + 1} of ${steps.length - 1} · ${title}`
-    : title)
+  const progressFor = (step: StepId) => `Step ${steps.indexOf(step) + 1} of ${steps.length - 1}`
 
   const renderPane = () => {
     const { view } = nav
@@ -1498,8 +1477,7 @@ const AccountMaskAskStory = ({
       return (
         <AccountTypePane
           form={form}
-          prompt={describeTransfers(accountMask, pattern)}
-          transactions={transactions}
+          prompt={`What kind of account is ••${accountMask}?`}
           onPick={onPickType}
         />
       )
@@ -1522,7 +1500,7 @@ const AccountMaskAskStory = ({
         <UploadPane
           form={form}
           prompts={getUploadPrompts(questions, answers)}
-          progress={progressFor('uploads', 'Upload documents')}
+          progress={progressFor('uploads')}
           onContinue={() => goForward(nextStepAfter('uploads'))}
         />
       )
@@ -1546,7 +1524,7 @@ const AccountMaskAskStory = ({
       <ThemePane
         form={form}
         questions={questions.filter(({ theme }) => theme === view)}
-        progress={progressFor(view, getThemeTitle(view))}
+        progress={progressFor(view)}
         onContinue={() => goForward(nextStepAfter(view))}
       />
     )
@@ -1573,9 +1551,12 @@ const AccountMaskAskStory = ({
                 },
               }}
             >
-              <SlidingPanes paneKey={nav.view} direction={nav.direction} keepInView={isOpen}>
-                {renderPane()}
-              </SlidingPanes>
+              <VStack gap='md'>
+                <TransactionTable transactions={transactions} />
+                <SlidingPanes paneKey={nav.view} direction={nav.direction} keepInView={isOpen}>
+                  {renderPane()}
+                </SlidingPanes>
+              </VStack>
             </TasksListItemShell>
           </div>
         </Container>
@@ -1662,6 +1643,7 @@ const OutcomeInspector = ({ plan, questions, answers, isUploadStep }: OutcomeIns
                 <VStack gap='3xs'>
                   <Span size='xs'>{question.prompt}</Span>
                   <Span size='xs' variant='subtle'>{question.why}</Span>
+                  {question.observation ? <Span size='xs' variant='subtle'>{`Pattern noticed: ${question.observation}`}</Span> : null}
                 </VStack>
                 <QuestionOutcomes question={question} answer={answers[question.id]} />
               </VStack>
@@ -1823,6 +1805,11 @@ const STORY_STYLES = `
   .AccountMaskAskStory__Option[data-selected] {
     outline: 1px solid var(--color-base-500);
     background: var(--color-base-100);
+  }
+
+  .AccountMaskAskStory__Rows.Layer__CounterpartyAskTask__Rows {
+    overflow-y: auto;
+    max-block-size: 10rem;
   }
 
   .AccountMaskAskStory__Rows .Layer__CounterpartyAskTask__Row:hover {
