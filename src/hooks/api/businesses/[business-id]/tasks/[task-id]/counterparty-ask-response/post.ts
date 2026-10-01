@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { AnyCounterpartyAskTaskSchema } from '@schemas/features/bookkeeping/businessTask'
 import {
   type CounterpartyAskResponse,
   type CounterpartyAskResponseEncoded,
   CounterpartyAskResponseSchema,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import { CounterpartyAskTaskSchema } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
@@ -15,7 +15,7 @@ import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[busin
 
 const COUNTERPARTY_ASK_RESPONSE_TAG_KEY = '#counterparty-ask-response'
 
-const PostCounterpartyAskResponseReturnSchema = UnwrappedDataResponseSchema(CounterpartyAskTaskSchema)
+const PostCounterpartyAskResponseReturnSchema = UnwrappedDataResponseSchema(AnyCounterpartyAskTaskSchema)
 
 const encodeCounterpartyAskResponse = Schema.encodeSync(CounterpartyAskResponseSchema)
 
