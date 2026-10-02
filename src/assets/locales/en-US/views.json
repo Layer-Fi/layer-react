@@ -4,6 +4,18 @@
       "accounting_overview": "Accounting overview"
     }
   },
+  "AccountReconnectionBanner": {
+    "action": {
+      "refresh_now": "Refresh Now"
+    },
+    "label": {
+      "account_ready_for_refresh": "{{accountLabel}} is ready for refresh",
+      "account_status": "{{label}}. {{lastRefreshedLabel}}",
+      "last_refreshed_days_ago_one": "Last refreshed {{displayCount}} day ago",
+      "last_refreshed_days_ago_other": "Last refreshed {{displayCount}} days ago",
+      "never_refreshed": "Never refreshed"
+    }
+  },
   "BankTransactionsWithLinkedAccounts": {
     "label": {
       "bank_transactions": "Bank transactions"

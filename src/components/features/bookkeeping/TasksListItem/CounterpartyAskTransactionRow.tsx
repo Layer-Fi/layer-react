@@ -73,7 +73,13 @@ export const CounterpartyAskTransactionRow = ({
           <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='xs' variant='subtle' noWrap>
             {formatDate(transaction.date, DateFormat.MonthDayShort)}
           </Span>
-          <Span className='Layer__CounterpartyAskTask__RowSummaryDescription' size='sm' variant='subtle' ellipsis noWrap>
+          <Span
+            className='Layer__CounterpartyAskTask__RowSummaryDescription'
+            size='sm'
+            variant='subtle'
+            noWrap
+            withTooltip
+          >
             {transaction.description ?? ''}
           </Span>
           {answer

@@ -7,7 +7,7 @@
 
   border-block: 1px solid var(--border-color);
 
-  background-color: var(--color-base-50);
+  background-color: var(--color-base-0);
 }
 
 .Layer__CounterpartyAskTask__Row {
@@ -18,12 +18,16 @@
   }
 
   &:hover:not(.Layer__CounterpartyAskTask__Row--open) {
-    background: var(--color-base-100);
+    background: var(--color-base-50);
   }
 
   &.Layer__CounterpartyAskTask__Row--open {
-    background: var(--bg-element-focus);
+    background: var(--color-base-100);
   }
+}
+
+.Layer__CounterpartyAskTask__Rows:has(.Layer__CounterpartyAskTask__Row--open) .Layer__CounterpartyAskTask__Row:not(.Layer__CounterpartyAskTask__Row--open) {
+  opacity: 0.6;
 }
 
 .Layer__CounterpartyAskTask__RowSummary {
@@ -41,6 +45,10 @@
 }
 
 .Layer__CounterpartyAskTask__RowSummaryDescription {
+  min-inline-size: 0;
+}
+
+.Layer__CounterpartyAskTask__RowSummary .Layer__UI__TooltipTrigger {
   flex: 1 1 16ch;
 }
 

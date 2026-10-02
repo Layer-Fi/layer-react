@@ -237,6 +237,20 @@
       "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet."
     }
   },
+  "BankTransactionsRefreshAlert": {
+    "action": {
+      "reconnect_account": "Actualiser {{accountLabel}}",
+      "reconnect_bank_connections_one": "Actualiser {{displayCount}} connexion bancaire pour voir les transactions récentes",
+      "reconnect_bank_connections_other": "Actualiser {{displayCount}} connexions bancaires pour voir les transactions récentes",
+      "reconnect_institution_accounts_one": "Actualiser {{institutionName}} ({{displayCount}} compte)",
+      "reconnect_institution_accounts_other": "Actualiser {{institutionName}} ({{displayCount}} comptes)",
+      "reconnect_linked_accounts_one": "Actualiser {{displayCount}} compte lié",
+      "reconnect_linked_accounts_other": "Actualiser {{displayCount}} comptes liés"
+    },
+    "label": {
+      "connections_require_attention": "Les connexions bancaires requièrent votre attention"
+    }
+  },
   "BankTransactionsSearchField": {
     "label": {
       "search_transactions": "Rechercher des transactions"

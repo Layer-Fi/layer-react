@@ -72,6 +72,8 @@
       "fix_account": "Fix account",
       "mark_duplicate_account": "Mark as a duplicate account",
       "mark_not_duplicate_account": "Mark as not a duplicate account",
+      "refresh_connection": "Refresh connection",
+      "refresh_now": "Refresh Now",
       "repair_connection": "Repair connection",
       "unlink_account": "Unlink account",
       "unlink_accounts_under_connection": "Unlink all accounts under this connection",
