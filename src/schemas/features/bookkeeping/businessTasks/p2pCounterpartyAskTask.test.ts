@@ -33,10 +33,15 @@ describe('P2PCounterpartyAskTaskSchema', () => {
     expect(task.suggestions).toEqual([])
   })
 
-  it('rejects an ask without a P2P counterparty', () => {
+  it('decodes an ask whose P2P counterparty is omitted or null', () => {
     const { p2p_counterparty: _p2pCounterparty, ...withoutCounterparty } = baseEncodedAsk
 
-    expect(() => decode(withoutCounterparty)).toThrow()
+    expect(decode(withoutCounterparty).p2pCounterparty).toBeUndefined()
+    expect(decode({ ...baseEncodedAsk, p2p_counterparty: null }).p2pCounterparty).toBeNull()
+  })
+
+  it('rejects a malformed P2P counterparty', () => {
+    expect(() => decode({ ...baseEncodedAsk, p2p_counterparty: { unexpected: true } })).toThrow()
   })
 
   it('rejects the purchase ask task_type', () => {

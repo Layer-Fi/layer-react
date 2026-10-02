@@ -7,7 +7,7 @@ import { SlidingPanes } from '@components/utility/SlidingPanes/SlidingPanes'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import {
-  type CounterpartyAskCounterparty,
+  getCounterpartyAskCounterparty,
   MIX_ANSWER_KEY,
   OTHER_ANSWER_KEY,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
@@ -24,7 +24,6 @@ type CounterpartyAskTaskBodyProps = {
   task: UserVisibleTask & AnyCounterpartyAskTask
   form: CounterpartyAskForm
   navigation: CounterpartyAskNavigation
-  counterparty: CounterpartyAskCounterparty
   isExpanded: boolean
 }
 
@@ -32,7 +31,6 @@ export const CounterpartyAskTaskBody = ({
   task,
   form,
   navigation: { view, direction, goForward },
-  counterparty,
   isExpanded,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
@@ -57,6 +55,7 @@ export const CounterpartyAskTaskBody = ({
   }
 
   const { suggestions, transactions } = task
+  const counterparty = getCounterpartyAskCounterparty(task)
 
   const panes = {
     picker: (
@@ -68,11 +67,11 @@ export const CounterpartyAskTaskBody = ({
         onPick={onPick}
       />
     ),
-    freeText: <CounterpartyAskFreeTextPane form={form} kind={counterparty.kind} onContinue={() => goForward('remember')} />,
+    freeText: <CounterpartyAskFreeTextPane form={form} counterparty={counterparty} onContinue={() => goForward('remember')} />,
     itemised: (
       <CounterpartyAskItemisedPane
         form={form}
-        kind={counterparty.kind}
+        counterparty={counterparty}
         transactions={transactions}
         suggestions={suggestions}
         onUniformAnswer={() => goForward('remember')}

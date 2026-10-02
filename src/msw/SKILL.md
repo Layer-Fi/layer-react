@@ -75,6 +75,9 @@ Wrap the payload with the response helpers from `@msw/utils/apiResponse`:
 - `apiData(payload)` → `{ data: payload }`
 - `paginatedApiData(items, request, pageSize?)` → `{ data, meta.pagination }` with real
   cursor/limit handling, so infinite-scroll paths actually paginate.
+- `apiNotFound(description)` / `apiBadRequest(description)` → an error `Response`, which
+  `resolve` may return where the real API rejects instead of falling back. Prefer
+  `store.findById(id) ?? makeBase(id)` when the API does have a fallback shape.
 
 ## Stateful stores
 

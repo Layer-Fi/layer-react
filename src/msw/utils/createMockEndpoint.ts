@@ -33,9 +33,10 @@ type CreateMockEndpointConfig<TOverride, TBody extends JsonBodyType> = {
   /**
    * Builds the JSON response body from the request context. `override` is the
    * value passed to `.mock(...)`, or undefined for the default handler. May be
-   * async, e.g. to echo fields from the request body.
+   * async, e.g. to echo fields from the request body. A `Response` is served
+   * as-is, for error statuses such as `apiNotFound`.
    */
-  resolve: (context: ResolveContext<TOverride>) => TBody | Promise<TBody>
+  resolve: (context: ResolveContext<TOverride>) => TBody | Response | Promise<TBody | Response>
 }
 
 type MockOptions<TOverride> = {
@@ -65,7 +66,9 @@ export const createMockEndpoint = <TOverride, TBody extends JsonBodyType>({
       await onRequest?.({ ...context, request: request.clone() })
       await applyMinimumResponseDelay()
 
-      return HttpResponse.json(await resolve(context))
+      const resolved = await resolve(context)
+
+      return resolved instanceof Response ? resolved : HttpResponse.json(resolved)
     })
 
   const toErrorHandler = (body: JsonBodyType, options?: MockErrorOptions<TOverride>): HttpHandler =>
