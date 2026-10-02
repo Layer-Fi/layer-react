@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
 import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { tConditional } from '@utils/shared/i18n/conditional'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
@@ -20,13 +21,13 @@ import { CounterpartyAskTransactionRow } from '@features/bookkeeping/TasksListIt
 export const CounterpartyAskItemisedPane = withForm({
   ...counterpartyAskFormOptions,
   props: {
-    kind: 'purchase' as CounterpartyAskCounterparty['kind'],
+    counterparty: { kind: 'purchase', name: '' } as CounterpartyAskCounterparty,
     transactions: [] as readonly MinimalBankTransaction[],
     suggestions: [] as readonly CounterpartyAskAccount[],
     /** Every row agreed on one answer, so the flow continues to the going-forward step instead of saving. */
     onUniformAnswer: () => {},
   },
-  render: function Render({ form, kind, transactions, suggestions, onUniformAnswer }) {
+  render: function Render({ form, counterparty, transactions, suggestions, onUniformAnswer }) {
     const { t } = useTranslation()
 
     const findNextUnanswered = useCallback(() =>
@@ -53,9 +54,14 @@ export const CounterpartyAskItemisedPane = withForm({
             ? undefined
             : {
               fields: {
-                rows: kind === 'p2p'
-                  ? t('bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_payment', 'Answer every payment to continue')
-                  : t('bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_row', 'Answer every transaction to continue'),
+                rows: tConditional(t, 'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.validation.answer_every_item', {
+                  condition: counterparty.kind,
+                  cases: {
+                    purchase: 'Answer every transaction to continue',
+                    p2p: 'Answer every payment to continue',
+                  },
+                  contexts: { purchase: 'purchase', p2p: 'p2p' },
+                }),
               },
             }),
         }}
@@ -72,15 +78,14 @@ export const CounterpartyAskItemisedPane = withForm({
         {formGroup => (
           <VStack gap='sm'>
             <P size='sm' pi='md'>
-              {kind === 'p2p'
-                ? t(
-                  'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_payment',
-                  'Can you share more about what each payment was for below?',
-                )
-                : t(
-                  'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_transaction',
-                  'Can you share more about what each transaction was for below?',
-                )}
+              {tConditional(t, 'bookkeeping:TasksListItem.CounterpartyAskItemisedPane.prompt.answer_each_item', {
+                condition: counterparty.kind,
+                cases: {
+                  purchase: 'Can you share more about what each transaction was for below?',
+                  p2p: 'Can you share more about what each payment was for below?',
+                },
+                contexts: { purchase: 'purchase', p2p: 'p2p' },
+              })}
             </P>
             <VStack className='Layer__CounterpartyAskTask__Rows'>
               {rows.map(({ transactionId }, index) => {

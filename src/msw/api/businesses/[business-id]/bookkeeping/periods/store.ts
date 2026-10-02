@@ -54,8 +54,8 @@ export const patchTaskInStore = (
   return patched
 }
 
-// Returns undefined for a task of another kind so callers fall back rather
-// than reporting success for a patch that never applied.
+// Returns undefined for a task of another kind so callers can reject rather
+// than report success for a patch that never applied.
 const patchTaskOfKindInStore = <T extends BusinessTask>(
   taskId: string,
   isKind: (task: BusinessTask) => task is T,

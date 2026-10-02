@@ -1,7 +1,7 @@
 import { formOptions } from '@tanstack/react-form'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { type AnyCounterpartyAskTask, isP2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import {
@@ -24,7 +24,19 @@ export type GoingForwardChoice = 'always' | 'ask'
 
 export type CounterpartyAskCounterparty =
   | { kind: 'purchase', name: string }
-  | { kind: 'p2p', name: string, providerName: string }
+  | { kind: 'p2p', name: string, providerName: string | null }
+
+export const getCounterpartyAskCounterparty = (task: AnyCounterpartyAskTask): CounterpartyAskCounterparty => {
+  if (isP2PCounterpartyAskTask(task)) {
+    return {
+      kind: 'p2p',
+      name: task.p2pCounterparty?.name || task.title,
+      providerName: task.p2pCounterparty?.provider.name || null,
+    }
+  }
+
+  return { kind: 'purchase', name: task.counterparty?.name || task.title }
+}
 
 export type CounterpartyAskAnswerSummary =
   | { kind: 'account', name: string }

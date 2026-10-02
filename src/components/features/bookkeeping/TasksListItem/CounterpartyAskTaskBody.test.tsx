@@ -415,6 +415,26 @@ describe('CounterpartyAskTaskBody', () => {
         .toBeInTheDocument()
     })
 
+    it('falls back to the task title when the counterparty is missing', async () => {
+      const { user } = renderP2PBody({ p2pCounterparty: null })
+
+      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
+
+      expect(screen.getByText('Should we assume your future payments to Payments to Jane Doe via Venmo are Contractors going forward?'))
+        .toBeInTheDocument()
+    })
+
+    it('falls back to the task title when the counterparty name is blank', async () => {
+      const { user } = renderP2PBody({
+        p2pCounterparty: { id: 'cp-1', name: '', provider: { id: 'pr-1', name: 'Venmo' } },
+      })
+
+      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
+
+      expect(screen.getByText('Should we assume your future Venmo payments to Payments to Jane Doe via Venmo are Contractors going forward?'))
+        .toBeInTheDocument()
+    })
+
     it('asks what the payments were for in free text', async () => {
       const { user } = renderP2PBody()
 

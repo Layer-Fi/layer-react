@@ -205,6 +205,11 @@ tConditional(t, 'bankTransactions:BankTransactionsTable.state.status', {
 `tConditional` maps a condition onto i18next `context` variants; `tPlural` onto
 `_one`/`_other` suffixes. Both live in `@utils/shared/i18n/{conditional,plural}.ts`.
 
+When splitting an existing `t()` key into variants, **rename the key** and give every case a
+`contexts` entry. i18next falls back from a missing `key_context` to the base `key` before it
+reads the inline default, so while the old base entry is still in the JSON (until extraction
+runs) every variant would render that old copy — tests included.
+
 For joining a list of labels, use `formatList` (`@utils/shared/i18n/list/formatters`) — it wraps
 `Intl.ListFormat`, so don't `join(', ')`.
 

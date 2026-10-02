@@ -103,6 +103,13 @@ describe('BusinessTaskSchema', () => {
     expect(isRenderableBusinessTask(task)).toBe(true)
   })
 
+  it('keeps a P2P ask without a counterparty on the P2P arm', () => {
+    const task = decode({ ...encodedP2PCounterpartyAskTask, p2p_counterparty: null })
+
+    expect(isP2PCounterpartyAskTask(task)).toBe(true)
+    expect(isRenderableBusinessTask(task)).toBe(true)
+  })
+
   it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
     const task = decode(encodedAutomatedRuleSuggestionTask)
 
@@ -145,7 +152,7 @@ describe('BusinessTaskSchema', () => {
     const task = decode({
       ...encodedP2PCounterpartyAskTask,
       id: '00000000-0000-4000-8000-000000000952',
-      p2p_counterparty: null,
+      p2p_counterparty: { unexpected: true },
       user_response_type: 'FREE_RESPONSE',
       documents: null,
     })
