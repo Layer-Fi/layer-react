@@ -15,8 +15,7 @@ import {
   bookkeepingPeriodStore,
   patchCounterpartyAskTaskInStore,
 } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
-import { makeFallbackCounterpartyAskTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackCounterpartyAskTask'
-import { apiData } from '@msw/utils/apiResponse'
+import { apiBadRequest, apiData, apiNotFound } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
@@ -76,7 +75,7 @@ const applyResponse = (
 }
 
 const askCounterpartyId = (task: AnyCounterpartyAskTask) =>
-  isP2PCounterpartyAskTask(task) ? task.p2pCounterparty.id : task.counterparty?.id
+  isP2PCounterpartyAskTask(task) ? task.p2pCounterparty?.id : task.counterparty?.id
 
 const resolveSiblingCounterpartyAsks = (answeringTask: AnyCounterpartyAskTask) => {
   const counterpartyId = askCounterpartyId(answeringTask)
@@ -129,15 +128,22 @@ export const post = createMockEndpoint<AnyCounterpartyAskTask, ReturnType<typeof
     const response = decodeResponse(await readRequestJson(request))
     const taskId = String(params.taskId)
 
-    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response))
+    const existing = bookkeepingPeriodStore.all().flatMap(period => period.tasks).find(task => task.id === taskId)
 
-    if (answered?.alwaysThis && answered.responseAccount) {
+    // Mirrors the API, which has no fallback here: the response echoes the stored task, and
+    // which ask arm that is can't be told from the id alone.
+    if (!existing) return apiNotFound(`No task found with ID ${taskId}`)
+    if (!isAnyCounterpartyAskTask(existing)) return apiBadRequest(`Task ${taskId} does not accept a counterparty ask response`)
+
+    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response)) ?? existing
+
+    if (answered.alwaysThis && answered.responseAccount) {
       resolveSiblingCounterpartyAsks(answered)
     }
-    else if (answered) {
+    else {
       reopenSiblingCounterpartyAsks(answered.id)
     }
 
-    return toResponse(answered ?? applyResponse(makeFallbackCounterpartyAskTask(taskId), response))
+    return toResponse(answered)
   },
 })

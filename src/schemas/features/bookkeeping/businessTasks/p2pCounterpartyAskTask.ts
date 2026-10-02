@@ -22,7 +22,7 @@ export const P2PCounterpartyAskTaskSchema = Schema.extend(
       Schema.fromKey('task_type'),
     ),
     p2pCounterparty: pipe(
-      Schema.propertySignature(P2PCounterpartySchema),
+      Schema.propertySignature(Schema.NullishOr(P2PCounterpartySchema)),
       Schema.fromKey('p2p_counterparty'),
     ),
   }),
