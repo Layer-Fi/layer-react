@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
-import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import {
@@ -18,7 +18,7 @@ import { useCounterpartyAskNavigation } from '@features/bookkeeping/TasksListIte
 import { useTasksListItemOpenState } from '@features/bookkeeping/TasksListItem/useTasksListItemOpenState'
 
 type CounterpartyAskTaskItemProps = {
-  task: UserVisibleTask & CounterpartyAskTask
+  task: UserVisibleTask & AnyCounterpartyAskTask
   defaultOpen: boolean
   onExpandTask?: (isOpen: boolean) => void
 }
@@ -63,7 +63,6 @@ export const CounterpartyAskTaskItem = forwardRef<HTMLDivElement, CounterpartyAs
         task={task}
         form={form}
         navigation={navigation}
-        counterpartyName={task.counterparty?.name ?? task.title}
         isExpanded={isOpen}
       />
     </TasksListItemShell>

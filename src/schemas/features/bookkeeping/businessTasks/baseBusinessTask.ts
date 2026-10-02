@@ -34,6 +34,15 @@ export const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema
 export const COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD'
 export const P2P_COUNTERPARTY_ASK_TASK_TYPE = 'ASK_ABOUT_P2P_COUNTERPARTY_FOR_PERIOD'
 
+// Every ask arm in `BusinessTaskSchema` must be listed here: the legacy arm excludes
+// these so a malformed ask can never decode as a free-response task.
+export const COUNTERPARTY_ASK_TASK_TYPES = [COUNTERPARTY_ASK_TASK_TYPE, P2P_COUNTERPARTY_ASK_TASK_TYPE] as const
+
+export type CounterpartyAskTaskType = typeof COUNTERPARTY_ASK_TASK_TYPES[number]
+
+export const isCounterpartyAskTaskType = (taskType: string): taskType is CounterpartyAskTaskType =>
+  COUNTERPARTY_ASK_TASK_TYPES.some(askTaskType => askTaskType === taskType)
+
 // Only id and status are guaranteed across every arm: the unknown arm models task
 // types this union can't yet describe, and those may omit title and question.
 export const TaskIdentitySchema = Schema.Struct({

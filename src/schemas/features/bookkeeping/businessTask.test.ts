@@ -97,10 +97,17 @@ describe('BusinessTaskSchema', () => {
     expect(isAnyCounterpartyAskTask(task)).toBe(true)
   })
 
-  it('keeps a P2P counterparty ask unrenderable until it has a body', () => {
+  it('treats a P2P counterparty ask task as renderable', () => {
     const task = decode(encodedP2PCounterpartyAskTask)
 
-    expect(isRenderableBusinessTask(task)).toBe(false)
+    expect(isRenderableBusinessTask(task)).toBe(true)
+  })
+
+  it('keeps a P2P ask without a counterparty on the P2P arm', () => {
+    const task = decode({ ...encodedP2PCounterpartyAskTask, p2p_counterparty: null })
+
+    expect(isP2PCounterpartyAskTask(task)).toBe(true)
+    expect(isRenderableBusinessTask(task)).toBe(true)
   })
 
   it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
@@ -145,7 +152,7 @@ describe('BusinessTaskSchema', () => {
     const task = decode({
       ...encodedP2PCounterpartyAskTask,
       id: '00000000-0000-4000-8000-000000000952',
-      p2p_counterparty: null,
+      p2p_counterparty: { unexpected: true },
       user_response_type: 'FREE_RESPONSE',
       documents: null,
     })

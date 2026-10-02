@@ -1,12 +1,9 @@
 import { formOptions } from '@tanstack/react-form'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { type AnyCounterpartyAskTask, isP2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import {
-  type CounterpartyAskAccount,
-  type CounterpartyAskTask,
-} from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import {
   buildAllSameCounterpartyAskResponse,
   buildItemisedCounterpartyAskResponse,
@@ -24,6 +21,22 @@ export const toSuggestionOptions = (suggestions: readonly CounterpartyAskAccount
   suggestions.map((suggestion, index) => ({ value: toSuggestionAnswerKey(index), label: suggestion.name }))
 
 export type GoingForwardChoice = 'always' | 'ask'
+
+export type CounterpartyAskCounterparty =
+  | { kind: 'purchase', name: string }
+  | { kind: 'p2p', name: string | null, providerName: string | null }
+
+export const getCounterpartyAskCounterparty = (task: AnyCounterpartyAskTask): CounterpartyAskCounterparty => {
+  if (isP2PCounterpartyAskTask(task)) {
+    return {
+      kind: 'p2p',
+      name: task.p2pCounterparty?.name || null,
+      providerName: task.p2pCounterparty?.provider?.name || null,
+    }
+  }
+
+  return { kind: 'purchase', name: task.counterparty?.name || task.title }
+}
 
 export type CounterpartyAskAnswerSummary =
   | { kind: 'account', name: string }
@@ -158,7 +171,7 @@ export type CounterpartyAskSubmission = {
 }
 
 export const buildCounterpartyAskSubmission = (
-  task: CounterpartyAskTask,
+  task: AnyCounterpartyAskTask,
   values: CounterpartyAskFormValues,
 ): CounterpartyAskSubmission | null => {
   const { suggestions } = task

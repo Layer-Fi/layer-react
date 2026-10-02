@@ -1,7 +1,15 @@
 import { Schema } from 'effect'
+import { HttpResponse } from 'msw'
 
 /** Layer API responses wrap their payload in a top-level `data` envelope. */
 export const apiData = <T>(data: T) => ({ data })
+
+const apiError = (status: number, description: string) =>
+  HttpResponse.json({ errors: [{ description }] }, { status })
+
+/** Return these from a resolver when the API would reject the request rather than fall back. */
+export const apiNotFound = (description: string) => apiError(404, description)
+export const apiBadRequest = (description: string) => apiError(400, description)
 
 const DEFAULT_PAGE_SIZE = 100
 

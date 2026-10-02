@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { SlidingPanes } from '@components/utility/SlidingPanes/SlidingPanes'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import {
+  getCounterpartyAskCounterparty,
   MIX_ANSWER_KEY,
   OTHER_ANSWER_KEY,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
@@ -20,10 +21,9 @@ import { type CounterpartyAskNavigation } from '@features/bookkeeping/TasksListI
 import './counterpartyAskTaskBody.scss'
 
 type CounterpartyAskTaskBodyProps = {
-  task: UserVisibleTask & CounterpartyAskTask
+  task: UserVisibleTask & AnyCounterpartyAskTask
   form: CounterpartyAskForm
   navigation: CounterpartyAskNavigation
-  counterpartyName: string
   isExpanded: boolean
 }
 
@@ -31,7 +31,6 @@ export const CounterpartyAskTaskBody = ({
   task,
   form,
   navigation: { view, direction, goForward },
-  counterpartyName,
   isExpanded,
 }: CounterpartyAskTaskBodyProps) => {
   const { t } = useTranslation()
@@ -56,6 +55,7 @@ export const CounterpartyAskTaskBody = ({
   }
 
   const { suggestions, transactions } = task
+  const counterparty = getCounterpartyAskCounterparty(task)
 
   const panes = {
     picker: (
@@ -67,16 +67,17 @@ export const CounterpartyAskTaskBody = ({
         onPick={onPick}
       />
     ),
-    freeText: <CounterpartyAskFreeTextPane form={form} onContinue={() => goForward('remember')} />,
+    freeText: <CounterpartyAskFreeTextPane form={form} counterparty={counterparty} onContinue={() => goForward('remember')} />,
     itemised: (
       <CounterpartyAskItemisedPane
         form={form}
+        counterparty={counterparty}
         transactions={transactions}
         suggestions={suggestions}
         onUniformAnswer={() => goForward('remember')}
       />
     ),
-    remember: <CounterpartyAskRememberPane form={form} suggestions={suggestions} counterpartyName={counterpartyName} />,
+    remember: <CounterpartyAskRememberPane form={form} suggestions={suggestions} counterparty={counterparty} />,
   }
 
   return (

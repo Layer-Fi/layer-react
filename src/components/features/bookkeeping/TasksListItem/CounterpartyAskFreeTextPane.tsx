@@ -1,25 +1,34 @@
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
+import { tConditional } from '@utils/shared/i18n/conditional'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { withForm } from '@blocks/Form/useForm'
-import { counterpartyAskFormOptions } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+import {
+  type CounterpartyAskCounterparty,
+  counterpartyAskFormOptions,
+} from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 
 export const CounterpartyAskFreeTextPane = withForm({
   ...counterpartyAskFormOptions,
   props: {
+    counterparty: { kind: 'purchase', name: '' } as CounterpartyAskCounterparty,
     onContinue: () => {},
   },
-  render: function Render({ form, onContinue }) {
+  render: function Render({ form, counterparty, onContinue }) {
     const { t } = useTranslation()
     const text = useStore(form.store, state => state.values.freeText.text)
 
-    const prompt = t(
-      'bookkeeping:TasksListItem.CounterpartyAskFreeTextPane.prompt.what_were_these_for',
-      'What were these purchases for?',
-    )
+    const prompt = tConditional(t, 'bookkeeping:TasksListItem.CounterpartyAskFreeTextPane.prompt.purpose', {
+      condition: counterparty.kind,
+      cases: {
+        purchase: 'What were these purchases for?',
+        p2p: 'What were these payments for?',
+      },
+      contexts: { purchase: 'purchase', p2p: 'p2p' },
+    })
 
     return (
       <form.FormGroup

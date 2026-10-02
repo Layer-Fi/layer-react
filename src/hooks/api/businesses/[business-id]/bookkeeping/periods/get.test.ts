@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import { isCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { isCounterpartyAskTask, isP2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
@@ -11,6 +11,8 @@ import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookke
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { server } from '@msw/node'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
+
+const renderBookkeepingPeriods = () => renderHookWithAuth(() => useGetBookkeepingPeriods())
 
 const mockActiveBookkeeping = () => {
   server.use(
@@ -37,7 +39,7 @@ describe('useGetBookkeepingPeriods', () => {
     mockActiveBookkeeping()
     const onRequest = spyOnPeriodsRequest()
 
-    await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    await renderBookkeepingPeriods()
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(onRequest.mock.calls[0]?.[0]).toContain('legacy_tasks_only=false')
@@ -47,7 +49,7 @@ describe('useGetBookkeepingPeriods', () => {
     mockActiveBookkeeping()
     const onRequest = spyOnPeriodsRequest()
 
-    await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    await renderBookkeepingPeriods()
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(onRequest.mock.calls[0]?.[0]).toContain('include_peer_to_peer_tasks=true')
@@ -56,13 +58,27 @@ describe('useGetBookkeepingPeriods', () => {
   it('returns the counterparty asks the seeded periods carry', async () => {
     mockActiveBookkeeping()
 
-    const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    const { result } = await renderBookkeepingPeriods()
 
     await waitFor(() => expect(result.current.data).toBeDefined())
 
     const asks = (result.current.data ?? [])
       .flatMap(period => period.tasks)
       .filter(task => isCounterpartyAskTask(task))
+
+    expect(asks.length).toBeGreaterThan(0)
+  })
+
+  it('returns the P2P counterparty asks the seeded periods carry', async () => {
+    mockActiveBookkeeping()
+
+    const { result } = await renderBookkeepingPeriods()
+
+    await waitFor(() => expect(result.current.data).toBeDefined())
+
+    const asks = (result.current.data ?? [])
+      .flatMap(period => period.tasks)
+      .filter(task => isP2PCounterpartyAskTask(task))
 
     expect(asks.length).toBeGreaterThan(0)
   })

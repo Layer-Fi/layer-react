@@ -32,4 +32,15 @@ describe('usePostCounterpartyAskResponse', () => {
 
     expect(saved).toEqual(p2pTask)
   })
+
+  it('rejects an answer for a task the periods do not carry, as the API does', async () => {
+    const { result } = await renderPostCounterpartyAskResponse()
+
+    await act(async () => {
+      await expect(result.current.trigger({
+        taskId: makeP2PCounterpartyAskTask().id,
+        response: { userResponse: 'Contract work', alwaysThis: false },
+      })).rejects.toThrow()
+    })
+  })
 })
