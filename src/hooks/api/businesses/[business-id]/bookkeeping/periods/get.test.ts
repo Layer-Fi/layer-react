@@ -12,6 +12,8 @@ import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/b
 import { server } from '@msw/node'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
+const renderBookkeepingPeriods = () => renderHookWithAuth(() => useGetBookkeepingPeriods())
+
 const mockActiveBookkeeping = () => {
   server.use(
     getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
@@ -37,7 +39,7 @@ describe('useGetBookkeepingPeriods', () => {
     mockActiveBookkeeping()
     const onRequest = spyOnPeriodsRequest()
 
-    await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    await renderBookkeepingPeriods()
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(onRequest.mock.calls[0]?.[0]).toContain('legacy_tasks_only=false')
@@ -47,7 +49,7 @@ describe('useGetBookkeepingPeriods', () => {
     mockActiveBookkeeping()
     const onRequest = spyOnPeriodsRequest()
 
-    await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    await renderBookkeepingPeriods()
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(onRequest.mock.calls[0]?.[0]).toContain('include_peer_to_peer_tasks=true')
@@ -56,7 +58,7 @@ describe('useGetBookkeepingPeriods', () => {
   it('returns the counterparty asks the seeded periods carry', async () => {
     mockActiveBookkeeping()
 
-    const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    const { result } = await renderBookkeepingPeriods()
 
     await waitFor(() => expect(result.current.data).toBeDefined())
 
@@ -70,7 +72,7 @@ describe('useGetBookkeepingPeriods', () => {
   it('returns the P2P counterparty asks the seeded periods carry', async () => {
     mockActiveBookkeeping()
 
-    const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
+    const { result } = await renderBookkeepingPeriods()
 
     await waitFor(() => expect(result.current.data).toBeDefined())
 

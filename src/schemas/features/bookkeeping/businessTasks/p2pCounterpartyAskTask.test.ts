@@ -40,6 +40,13 @@ describe('P2PCounterpartyAskTaskSchema', () => {
     expect(decode({ ...baseEncodedAsk, p2p_counterparty: null }).p2pCounterparty).toBeNull()
   })
 
+  it('decodes a P2P counterparty whose provider is omitted or null', () => {
+    const { provider: _provider, ...withoutProvider } = baseEncodedAsk.p2p_counterparty
+
+    expect(decode({ ...baseEncodedAsk, p2p_counterparty: withoutProvider }).p2pCounterparty?.provider).toBeUndefined()
+    expect(decode({ ...baseEncodedAsk, p2p_counterparty: { ...withoutProvider, provider: null } }).p2pCounterparty?.provider).toBeNull()
+  })
+
   it('rejects a malformed P2P counterparty', () => {
     expect(() => decode({ ...baseEncodedAsk, p2p_counterparty: { unexpected: true } })).toThrow()
   })

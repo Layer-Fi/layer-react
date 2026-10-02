@@ -8,12 +8,13 @@ import {
   isP2PCounterpartyAskTask,
 } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import { CounterpartyAskResponseSchema } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
 import {
   bookkeepingPeriodStore,
   patchCounterpartyAskTaskInStore,
+  patchTaskInStore,
 } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { apiBadRequest, apiData, apiNotFound } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -135,7 +136,8 @@ export const post = createMockEndpoint<AnyCounterpartyAskTask, ReturnType<typeof
     if (!existing) return apiNotFound(`No task found with ID ${taskId}`)
     if (!isAnyCounterpartyAskTask(existing)) return apiBadRequest(`Task ${taskId} does not accept a counterparty ask response`)
 
-    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response)) ?? existing
+    const answered = applyResponse(existing, response)
+    patchTaskInStore(taskId, () => answered)
 
     if (answered.alwaysThis && answered.responseAccount) {
       resolveSiblingCounterpartyAsks(answered)

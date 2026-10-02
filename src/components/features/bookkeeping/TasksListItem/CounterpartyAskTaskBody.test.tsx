@@ -415,23 +415,34 @@ describe('CounterpartyAskTaskBody', () => {
         .toBeInTheDocument()
     })
 
-    it('falls back to the task title when the counterparty is missing', async () => {
+    it('asks about payments to the counterparty when the provider is missing', async () => {
+      const { user } = renderP2PBody({
+        p2pCounterparty: { id: 'cp-1', name: 'Jane Doe', provider: null },
+      })
+
+      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
+
+      expect(screen.getByText('Should we assume your future payments to Jane Doe are Contractors going forward?'))
+        .toBeInTheDocument()
+    })
+
+    it('asks about payments like these when the counterparty is missing', async () => {
       const { user } = renderP2PBody({ p2pCounterparty: null })
 
       await user.click(screen.getByRole('radio', { name: 'Contractors' }))
 
-      expect(screen.getByText('Should we assume your future payments to Payments to Jane Doe via Venmo are Contractors going forward?'))
+      expect(screen.getByText('Should we assume future payments like these are Contractors going forward?'))
         .toBeInTheDocument()
     })
 
-    it('falls back to the task title when the counterparty name is blank', async () => {
+    it('asks about payments like these when the counterparty name is blank', async () => {
       const { user } = renderP2PBody({
         p2pCounterparty: { id: 'cp-1', name: '', provider: { id: 'pr-1', name: 'Venmo' } },
       })
 
       await user.click(screen.getByRole('radio', { name: 'Contractors' }))
 
-      expect(screen.getByText('Should we assume your future Venmo payments to Payments to Jane Doe via Venmo are Contractors going forward?'))
+      expect(screen.getByText('Should we assume future payments like these are Contractors going forward?'))
         .toBeInTheDocument()
     })
 

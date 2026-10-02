@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
-import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import { tConditional } from '@utils/shared/i18n/conditional'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
