@@ -26,12 +26,17 @@ export type CounterpartyAskCounterparty =
   | { kind: 'purchase', name: string }
   | { kind: 'p2p', name: string | null, providerName: string | null }
 
+const toKnownP2PName = (name: string | undefined) => {
+  const trimmed = name?.trim()
+  return trimmed && trimmed.toLowerCase() !== 'unknown' ? trimmed : null
+}
+
 export const getCounterpartyAskCounterparty = (task: AnyCounterpartyAskTask): CounterpartyAskCounterparty => {
   if (isP2PCounterpartyAskTask(task)) {
     return {
       kind: 'p2p',
-      name: task.p2pCounterparty?.name || null,
-      providerName: task.p2pCounterparty?.provider?.name || null,
+      name: toKnownP2PName(task.p2pCounterparty?.name),
+      providerName: toKnownP2PName(task.p2pCounterparty?.provider?.name),
     }
   }
 
