@@ -19,11 +19,11 @@ const applyTaskFilters = (
 ): readonly BookkeepingPeriod[] => {
   const { searchParams } = new URL(request.url)
   const legacyTasksOnly = searchParams.get('legacy_tasks_only') !== 'false'
-  const includeP2PCounterpartyTasks = searchParams.get('include_p2p_counterparty_tasks') === 'true'
+  const includePeerToPeerTasks = searchParams.get('include_peer_to_peer_tasks') === 'true'
 
   const isExcluded = (task: BusinessTask) =>
     (legacyTasksOnly && isAnyCounterpartyAskTask(task))
-    || (!includeP2PCounterpartyTasks && isP2PCounterpartyAskTask(task))
+    || (!includePeerToPeerTasks && isP2PCounterpartyAskTask(task))
 
   return periods.map(period => ({
     ...period,
