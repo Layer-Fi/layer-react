@@ -50,7 +50,7 @@ describe('useGetBookkeepingPeriods', () => {
     await renderHookWithAuth(() => useGetBookkeepingPeriods())
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
-    expect(onRequest.mock.calls[0]?.[0]).toContain('include_p2p_counterparty_tasks=true')
+    expect(onRequest.mock.calls[0]?.[0]).toContain('include_peer_to_peer_tasks=true')
   })
 
   it('returns the counterparty asks the seeded periods carry', async () => {
