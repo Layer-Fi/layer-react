@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { P2P_COUNTERPARTY_ASK_TASK_TYPE } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { BaseCounterpartyAskTaskSchema } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { BaseCounterpartyAskTaskSchema } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 
 const P2PProviderSchema = Schema.Struct({
   id: Schema.String,
@@ -11,7 +11,7 @@ const P2PProviderSchema = Schema.Struct({
 const P2PCounterpartySchema = Schema.Struct({
   id: Schema.String,
   name: Schema.String,
-  provider: P2PProviderSchema,
+  provider: Schema.NullishOr(P2PProviderSchema),
 })
 
 export const P2PCounterpartyAskTaskSchema = Schema.extend(

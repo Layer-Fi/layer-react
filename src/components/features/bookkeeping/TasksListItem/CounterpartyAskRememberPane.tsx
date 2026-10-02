@@ -1,7 +1,7 @@
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import { getCounterpartyAskAnswerLabel } from '@utils/features/bookkeeping/counterpartyAskAnswers'
 import { tConditional } from '@utils/shared/i18n/conditional'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -14,10 +14,11 @@ import {
   getWholeAnswer,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 
-type GoingForwardPromptCondition = 'purchase' | 'p2p' | 'p2pWithProvider'
+type GoingForwardPromptCondition = 'purchase' | 'p2p' | 'p2pWithProvider' | 'p2pUnnamed'
 
 const toGoingForwardPromptCondition = (counterparty: CounterpartyAskCounterparty): GoingForwardPromptCondition => {
   if (counterparty.kind !== 'p2p') return 'purchase'
+  if (!counterparty.name) return 'p2pUnnamed'
 
   return counterparty.providerName ? 'p2pWithProvider' : 'p2p'
 }
@@ -42,8 +43,9 @@ export const CounterpartyAskRememberPane = withForm({
         purchase: 'Should we assume your future {{counterparty}} purchases are {{answer}} going forward?',
         p2p: 'Should we assume your future payments to {{counterparty}} are {{answer}} going forward?',
         p2pWithProvider: 'Should we assume your future {{provider}} payments to {{counterparty}} are {{answer}} going forward?',
+        p2pUnnamed: 'Should we assume future payments like these are {{answer}} going forward?',
       },
-      contexts: { purchase: 'purchase', p2p: 'p2p', p2pWithProvider: 'p2p_with_provider' },
+      contexts: { purchase: 'purchase', p2p: 'p2p', p2pWithProvider: 'p2p_with_provider', p2pUnnamed: 'p2p_unnamed' },
       counterparty: counterparty.name,
       provider: counterparty.kind === 'p2p' ? counterparty.providerName : null,
       answer,

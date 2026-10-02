@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { withForm } from '@blocks/Form/useForm'
