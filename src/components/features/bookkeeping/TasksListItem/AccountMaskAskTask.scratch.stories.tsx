@@ -1,6 +1,7 @@
 import { type ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { formOptions, revalidateLogic, useStore } from '@tanstack/react-form'
+import classNames from 'classnames'
 
 import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
 import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
@@ -50,7 +51,7 @@ type QuestionId = 'counterparty' | 'platform' | 'connect' | 'details'
 
 const QUESTION_IDS: readonly QuestionId[] = ['counterparty', 'platform', 'connect', 'details']
 
-type StepId = 'questions' | 'review'
+type StepId = 'questions' | 'itemised' | 'review'
 type View = 'picker' | StepId | 'done'
 
 /** `choice` is the chip; `text` is a typed name or free-form answer; `detail` is the category searched under Other. */
@@ -60,9 +61,17 @@ type Answer = {
   detail: string | null
 }
 
+/** One per transaction, for when a vendor's payments are a mix; `detail` is the category searched under Other. */
+type ItemisedRow = {
+  transactionId: string
+  choice: string | null
+  detail: string | null
+}
+
 type AccountMaskAskFormValues = {
   accountType: AccountType | null
   answers: Record<QuestionId, Answer>
+  itemised: { rows: ItemisedRow[] }
 }
 
 type AskContext = {
@@ -149,6 +158,7 @@ const EMPTY_ANSWERS = Object.fromEntries(QUESTION_IDS.map(id => [id, EMPTY_ANSWE
 const EMPTY_VALUES: AccountMaskAskFormValues = {
   accountType: null,
   answers: EMPTY_ANSWERS,
+  itemised: { rows: [] },
 }
 
 const accountMaskAskFormOptions = formOptions({ defaultValues: EMPTY_VALUES })
@@ -313,7 +323,7 @@ const buildVendorQuestions = (): Question[] => [
       {
         label: 'It’s a mix or it varies',
         outcome: 'askFreeform',
-        hint: 'No rule: each new payment opens a task, and the answer categorizes that payment only.',
+        hint: 'No rule: the next step asks you to categorize each of these transactions, and each new payment opens a task asking about it.',
         matches: answer => answer?.choice === VARIES_CATEGORY,
       },
     ],
@@ -473,11 +483,23 @@ const getAnswerLabel = (question: Question, answer: Answer) => {
   }
 }
 
-/** Empty when picking the type is the whole answer; an action step submits itself, so it skips review. */
-const getSteps = (questions: readonly Question[]): StepId[] => {
-  if (questions.length === 0) return []
+const isMixedVendor = (questions: readonly Question[], answers: Record<QuestionId, Answer>) =>
+  questions.some(({ kind }) => kind === 'counterparty') && answers.counterparty.choice === VARIES_CATEGORY
 
-  return questions.every(({ kind }) => kind === 'action') ? ['questions'] : ['questions', 'review']
+const resolveRowCategory = ({ choice, detail }: ItemisedRow) => (choice === OTHER_CATEGORY ? detail : choice)
+
+const makeItemisedRows = (transactions: readonly MockTransaction[]): ItemisedRow[] =>
+  transactions.map(({ id }) => ({ transactionId: id, choice: null, detail: null }))
+
+/**
+ * Empty when picking the type is the whole answer; an action step submits itself, so it skips review.
+ * A vendor whose payments are a mix gets a step to categorize each transaction.
+ */
+const getSteps = (questions: readonly Question[], answers: Record<QuestionId, Answer>): StepId[] => {
+  if (questions.length === 0) return []
+  if (questions.every(({ kind }) => kind === 'action')) return ['questions']
+
+  return isMixedVendor(questions, answers) ? ['questions', 'itemised', 'review'] : ['questions', 'review']
 }
 
 const buildPlan = (type: AccountType, questions: readonly Question[], ctx: AskContext): Plan => {
@@ -552,35 +574,41 @@ const OutcomeBadge = ({ outcome }: { outcome: OutcomeTag }) => {
   return <Badge size={BadgeSize.EXTRA_SMALL} variant={variant}>{label}</Badge>
 }
 
-const TransactionTable = ({ transactions }: { transactions: readonly MockTransaction[] }) => {
+const TransactionCells = ({ transaction: { date, amount, direction, description } }: { transaction: MockTransaction }) => {
   const { formatDate } = useIntlFormatter()
 
   return (
-    <VStack className='Layer__CounterpartyAskTask__Rows AccountMaskAskStory__Rows'>
-      {transactions.map(({ id, date, amount, direction, description }) => (
-        <VStack key={id} className='Layer__CounterpartyAskTask__Row' pi='md'>
-          <HStack className='Layer__CounterpartyAskTask__RowSummary' align='center' gap='xs' overflow='hidden' fluid>
-            <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='xs' variant='subtle' noWrap>
-              {formatDate(date, DateFormat.MonthDayShort)}
-            </Span>
-            <Span className='Layer__CounterpartyAskTask__RowSummaryDescription' size='sm' variant='subtle' ellipsis noWrap>
-              {description}
-            </Span>
-            <MoneySpan
-              className='Layer__CounterpartyAskTask__RowSummaryAmount'
-              size='sm'
-              weight='bold'
-              numeric='tabular-nums'
-              align='right'
-              amount={direction === OUT ? -amount : amount}
-              displayPlusSign={direction === IN}
-            />
-          </HStack>
-        </VStack>
-      ))}
-    </VStack>
+    <>
+      <Span className='Layer__CounterpartyAskTask__RowSummaryDate' size='xs' variant='subtle' noWrap>
+        {formatDate(date, DateFormat.MonthDayShort)}
+      </Span>
+      <Span className='Layer__CounterpartyAskTask__RowSummaryDescription' size='sm' variant='subtle' ellipsis noWrap>
+        {description}
+      </Span>
+      <MoneySpan
+        className='Layer__CounterpartyAskTask__RowSummaryAmount'
+        size='sm'
+        weight='bold'
+        numeric='tabular-nums'
+        align='right'
+        amount={direction === OUT ? -amount : amount}
+        displayPlusSign={direction === IN}
+      />
+    </>
   )
 }
+
+const TransactionTable = ({ transactions }: { transactions: readonly MockTransaction[] }) => (
+  <VStack className='Layer__CounterpartyAskTask__Rows AccountMaskAskStory__Rows'>
+    {transactions.map(transaction => (
+      <VStack key={transaction.id} className='Layer__CounterpartyAskTask__Row' pi='md'>
+        <HStack className='Layer__CounterpartyAskTask__RowSummary' align='center' gap='xs' overflow='hidden' fluid>
+          <TransactionCells transaction={transaction} />
+        </HStack>
+      </VStack>
+    ))}
+  </VStack>
+)
 
 const AccountTypePane = withForm({
   ...accountMaskAskFormOptions,
@@ -691,9 +719,10 @@ const QuestionsPane = withForm({
   ...accountMaskAskFormOptions,
   props: {
     questions: [] as readonly Question[],
+    progress: null as string | null,
     onContinue: () => {},
   },
-  render: function Render({ form, questions, onContinue }) {
+  render: function Render({ form, questions, progress, onContinue }) {
     const isComplete = useStore(form.store, state => questions.every(question => isAnswered(question, state.values.answers[question.id])))
     const isSubmitting = useStore(form.store, state => state.isSubmitting)
     const action = questions.find(question => question.kind === 'action')
@@ -711,7 +740,8 @@ const QuestionsPane = withForm({
         {formGroup => (
           <VStack gap='lg' pb='md' pi='md'>
             {questions.map(question => <QuestionField key={question.id} form={form} question={question} />)}
-            <HStack justify='end'>
+            <HStack justify='space-between' align='center'>
+              <Span size='xs' variant='subtle'>{progress}</Span>
               <Button isDisabled={!isComplete || isSubmitting} onPress={() => void formGroup.handleSubmit()}>
                 {action?.kind === 'action' ? action.actionLabel : 'Continue'}
               </Button>
@@ -723,8 +753,143 @@ const QuestionsPane = withForm({
   },
 })
 
-const PlanSummary = ({ plan }: { plan: Plan }) => {
+const ItemisedTransactionRow = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    index: 0,
+    transaction: null as MockTransaction | null,
+    isOpen: false,
+    onOpen: () => {},
+    /** The row holds a category; the sheet moves on to the next uncategorized row. */
+    onAnswered: () => {},
+  },
+  render: function Render({ form, index, transaction, isOpen, onOpen, onAnswered }) {
+    const row = useStore(form.store, state => state.values.itemised.rows[index])
+
+    if (!transaction || !row) return null
+
+    const category = resolveRowCategory(row)
+
+    return (
+      <VStack
+        className={classNames('Layer__CounterpartyAskTask__Row', isOpen && 'Layer__CounterpartyAskTask__Row--open')}
+        pi='md'
+      >
+        <Button className='Layer__CounterpartyAskTask__RowSummary' variant='text' underline={false} fullWidth onPress={onOpen}>
+          <HStack align='center' gap='xs' overflow='hidden' fluid>
+            <TransactionCells transaction={transaction} />
+            {category
+              ? <Span className='Layer__CounterpartyAskTask__RowSummaryAnswer' size='sm' align='right' ellipsis noWrap>{category}</Span>
+              : null}
+          </HStack>
+        </Button>
+        {isOpen
+          ? (
+            <VStack gap='2xs' pbe='sm' pbs='3xs'>
+              <Span size='xs'>Select category</Span>
+              <form.AppField name={`itemised.rows[${index}].choice`}>
+                {field => (
+                  <field.FormChipGroupField
+                    label='What this payment was for'
+                    showLabel={false}
+                    size='sm'
+                    options={[
+                      ...VENDOR_CATEGORIES.map(option => ({ value: option, label: option })),
+                      { value: OTHER_CATEGORY, label: 'Other' },
+                    ]}
+                    onSelect={(value) => {
+                      if (value !== OTHER_CATEGORY) onAnswered()
+                    }}
+                  />
+                )}
+              </form.AppField>
+              {row.choice === OTHER_CATEGORY
+                ? (
+                  <form.Field name={`itemised.rows[${index}].detail`}>
+                    {field => (
+                      <ComboBox
+                        aria-label='Other categories for this payment'
+                        placeholder='Search categories…'
+                        options={OTHER_VENDOR_CATEGORIES.map(option => ({ label: option, value: option }))}
+                        selectedValue={field.state.value ? { label: field.state.value, value: field.state.value } : null}
+                        onSelectedValueChange={(option) => {
+                          field.handleChange(option?.value ?? null)
+                          if (option) onAnswered()
+                        }}
+                        isClearable
+                      />
+                    )}
+                  </form.Field>
+                )
+                : null}
+            </VStack>
+          )
+          : null}
+      </VStack>
+    )
+  },
+})
+
+const ItemisedPane = withForm({
+  ...accountMaskAskFormOptions,
+  props: {
+    transactions: [] as readonly MockTransaction[],
+    progress: null as string | null,
+    onContinue: () => {},
+  },
+  render: function Render({ form, transactions, progress, onContinue }) {
+    const findNextUncategorized = useCallback(
+      () => form.state.values.itemised.rows.find(row => !resolveRowCategory(row))?.transactionId ?? null,
+      [form],
+    )
+
+    const [openRowId, setOpenRowId] = useState(findNextUncategorized)
+    const rows = useStore(form.store, state => state.values.itemised.rows)
+
+    const categorizedCount = rows.filter(row => resolveRowCategory(row)).length
+    const isComplete = rows.length > 0 && categorizedCount === rows.length
+
+    return (
+      <form.FormGroup
+        name='itemised'
+        validators={{
+          onDynamic: ({ value }) => (value.rows.every(row => resolveRowCategory(row)) ? undefined : 'Categorize every transaction to continue'),
+        }}
+        onGroupSubmit={onContinue}
+      >
+        {formGroup => (
+          <VStack gap='sm' pb='md'>
+            <P size='sm' pi='md'>What was each of these payments for?</P>
+            <VStack className='Layer__CounterpartyAskTask__Rows AccountMaskAskStory__ItemisedRows'>
+              {rows.map(({ transactionId }, index) => (
+                <ItemisedTransactionRow
+                  key={transactionId}
+                  form={form}
+                  index={index}
+                  transaction={transactions.find(({ id }) => id === transactionId) ?? null}
+                  isOpen={openRowId === transactionId}
+                  onOpen={() => setOpenRowId(transactionId)}
+                  onAnswered={() => setOpenRowId(findNextUncategorized())}
+                />
+              ))}
+            </VStack>
+            <HStack align='center' justify='space-between' gap='sm' pbs='3xs' pi='md'>
+              <Span size='xs' variant='subtle'>{progress}</Span>
+              <HStack align='center' gap='sm'>
+                <Span size='xs' variant='subtle'>{`${categorizedCount} of ${rows.length} categorized`}</Span>
+                <Button isDisabled={!isComplete} onPress={() => void formGroup.handleSubmit()}>Continue</Button>
+              </HStack>
+            </HStack>
+          </VStack>
+        )}
+      </form.FormGroup>
+    )
+  },
+})
+
+const PlanSummary = ({ plan, itemisedCount }: { plan: Plan, itemisedCount: number }) => {
   const lines = [
+    ...(itemisedCount > 0 ? [`We’ll categorize each of these ${itemisedCount} transactions the way you told us.`] : []),
     ...plan.rules.map(({ conditions, target, revenue }) =>
       `We’ll automatically categorize matching transactions (${conditions.join(', ')}) as ${target}${revenue ? `, with revenue recorded as ${revenue}` : ''}.`),
     ...plan.asks.map(({ detail }) => `${detail}.`),
@@ -744,11 +909,12 @@ type ReviewPaneProps = {
   accountType: AccountType
   questions: readonly Question[]
   answers: Record<QuestionId, Answer>
+  itemisedLines: readonly string[]
   isSubmitting: boolean
   onSubmit: () => void
 }
 
-const ReviewPane = ({ mask, accountType, questions, answers, isSubmitting, onSubmit }: ReviewPaneProps) => (
+const ReviewPane = ({ mask, accountType, questions, answers, itemisedLines, isSubmitting, onSubmit }: ReviewPaneProps) => (
   <VStack gap='md' pb='md' pi='md'>
     <P size='sm'>{`Here’s what you told us about the account ending in ${mask}:`}</P>
     <VStack gap='3xs'>
@@ -761,6 +927,14 @@ const ReviewPane = ({ mask, accountType, questions, answers, isSubmitting, onSub
         <Span size='sm'>{getAnswerLabel(question, answers[question.id]) ?? '—'}</Span>
       </VStack>
     ))}
+    {itemisedLines.length > 0
+      ? (
+        <VStack gap='3xs'>
+          <Span size='xs' variant='subtle'>Each transaction</Span>
+          {itemisedLines.map(line => <Span key={line} size='sm'>{line}</Span>)}
+        </VStack>
+      )
+      : null}
     <HStack justify='end'>
       <Button isDisabled={isSubmitting} onPress={onSubmit}>Submit</Button>
     </HStack>
@@ -782,6 +956,7 @@ type AccountMaskAskStoryProps = {
 }
 
 const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, startAs, taskTitle }: AccountMaskAskStoryProps) => {
+  const { formatCurrencyFromCents, formatDate } = useIntlFormatter()
   const transactions = useMemo(() => makeTransactions(transactionPattern, accountMask), [transactionPattern, accountMask])
 
   const makeContext = useCallback(
@@ -795,7 +970,7 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
   )
 
   // A type with no follow-ups has nothing to jump into, so it starts at the picker.
-  const startingSteps = startAs === 'picker' ? [] : getSteps(buildQuestions(startAs, makeContext(EMPTY_ANSWERS)))
+  const startingSteps = startAs === 'picker' ? [] : getSteps(buildQuestions(startAs, makeContext(EMPTY_ANSWERS)), EMPTY_ANSWERS)
   const initialType = startAs !== 'picker' && startingSteps.length > 0 ? startAs : null
 
   const answeredTypeRef = useRef<AccountType | null>(initialType)
@@ -819,7 +994,7 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
   // The raw hook infers the same validator generics as the `withForm` panes; the wrapper pins them.
   const form = useRawAppForm({
     ...accountMaskAskFormOptions,
-    defaultValues: { ...EMPTY_VALUES, accountType: initialType },
+    defaultValues: { ...EMPTY_VALUES, accountType: initialType, itemised: { rows: makeItemisedRows(transactions) } },
     validationLogic: revalidateLogic(),
     onSubmit: () => goForward('done'),
   })
@@ -833,10 +1008,30 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
   const plan = accountType ? buildPlan(accountType, questions, ctx) : null
   const isDone = nav.view === 'done'
 
+  const answerSteps = getSteps(questions, answers).filter(step => step !== 'review')
+  const progressFor = (step: (typeof answerSteps)[number]) =>
+    (answerSteps.length > 1 ? `Step ${answerSteps.indexOf(step) + 1} of ${answerSteps.length}` : null)
+
+  const isItemising = isMixedVendor(questions, answers)
+  const itemisedLines = isItemising
+    ? values.itemised.rows.flatMap((row) => {
+      const transaction = transactions.find(({ id }) => id === row.transactionId)
+      const category = resolveRowCategory(row)
+
+      if (!transaction || !category) return []
+
+      const amount = transaction.direction === OUT
+        ? formatCurrencyFromCents(-transaction.amount)
+        : formatCurrencyFromCents(transaction.amount, { signDisplay: 'always' })
+
+      return [`${formatDate(transaction.date, DateFormat.MonthDayShort)} · ${amount} → ${category}`]
+    })
+    : []
+
   /** The step after `view`, or null when there is none left and the task submits. */
   const nextStepAfter = (view: View): View | null => {
     const current = form.state.values
-    const currentSteps = getSteps(current.accountType ? buildQuestions(current.accountType, makeContext(current.answers)) : [])
+    const currentSteps = getSteps(current.accountType ? buildQuestions(current.accountType, makeContext(current.answers)) : [], current.answers)
     const index = view === 'picker' ? 0 : currentSteps.findIndex(step => step === view) + 1
 
     return currentSteps[index] ?? null
@@ -852,6 +1047,7 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
   const onPickType = (type: AccountType) => {
     if (type !== answeredTypeRef.current) {
       form.setFieldValue('answers', EMPTY_ANSWERS)
+      form.setFieldValue('itemised', { rows: makeItemisedRows(transactions) })
       answeredTypeRef.current = type
     }
 
@@ -868,7 +1064,7 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
             ? (
               <>
                 <P size='sm' weight='bold'>Thanks, we’ll take it from here.</P>
-                {plan ? <PlanSummary plan={plan} /> : null}
+                {plan ? <PlanSummary plan={plan} itemisedCount={itemisedLines.length} /> : null}
               </>
             )
             : <P size='sm'>{`Got it. We’ll keep transactions with account ••${accountMask} out of your business books.`}</P>}
@@ -896,13 +1092,32 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
           accountType={accountType}
           questions={questions}
           answers={answers}
+          itemisedLines={itemisedLines}
           isSubmitting={isSubmitting}
           onSubmit={() => void form.handleSubmit()}
         />
       )
     }
 
-    return <QuestionsPane form={form} questions={questions} onContinue={() => continueFrom('questions')} />
+    if (view === 'itemised') {
+      return (
+        <ItemisedPane
+          form={form}
+          transactions={transactions}
+          progress={progressFor('itemised')}
+          onContinue={() => continueFrom('itemised')}
+        />
+      )
+    }
+
+    return (
+      <QuestionsPane
+        form={form}
+        questions={questions}
+        progress={progressFor('questions')}
+        onContinue={() => continueFrom('questions')}
+      />
+    )
   }
 
   return (
@@ -923,7 +1138,7 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
               }}
             >
               <VStack gap='md'>
-                <TransactionTable transactions={transactions} />
+                {nav.view === 'itemised' ? null : <TransactionTable transactions={transactions} />}
                 <SlidingPanes paneKey={nav.view} direction={nav.direction} keepInView={isOpen}>
                   {renderPane()}
                 </SlidingPanes>
@@ -936,6 +1151,8 @@ const AccountMaskAskStory = ({ accountMask, platformName, transactionPattern, st
         plan={plan}
         questions={nav.view === 'questions' ? questions : []}
         answers={answers}
+        itemisedLines={isItemising ? itemisedLines : null}
+        transactionCount={transactions.length}
       />
     </HStack>
   )
@@ -991,9 +1208,14 @@ type OutcomeInspectorProps = {
   plan: Plan | null
   questions: readonly Question[]
   answers: Record<QuestionId, Answer>
+  /** Null unless the vendor's payments are a mix and each one is being categorized. */
+  itemisedLines: readonly string[] | null
+  transactionCount: number
 }
 
-const OutcomeInspector = ({ plan, questions, answers }: OutcomeInspectorProps) => {
+const ITEMISED_PREVIEW_LIMIT = 8
+
+const OutcomeInspector = ({ plan, questions, answers, itemisedLines, transactionCount }: OutcomeInspectorProps) => {
   const uploadAsks = plan?.asks.filter(({ mode }) => mode === 'upload') ?? []
   const freeformAsks = plan?.asks.filter(({ mode }) => mode === 'freeform') ?? []
 
@@ -1016,6 +1238,18 @@ const OutcomeInspector = ({ plan, questions, answers }: OutcomeInspectorProps) =
                 <QuestionOutcomes question={question} answer={answers[question.id]} />
               </VStack>
             ))}
+          </InspectorSection>
+        )
+        : null}
+
+      {itemisedLines
+        ? (
+          <InspectorSection title='Now · Each transaction categorized individually'>
+            <Span size='xs' variant='subtle'>{`${itemisedLines.length} of ${transactionCount} categorized`}</Span>
+            {itemisedLines.slice(0, ITEMISED_PREVIEW_LIMIT).map(line => <Span key={line} size='xs'>{line}</Span>)}
+            {itemisedLines.length > ITEMISED_PREVIEW_LIMIT
+              ? <NotTriggered>{`and ${itemisedLines.length - ITEMISED_PREVIEW_LIMIT} more`}</NotTriggered>
+              : null}
           </InspectorSection>
         )
         : null}
@@ -1164,6 +1398,11 @@ const STORY_STYLES = `
 
   .AccountMaskAskStory__Rows .Layer__CounterpartyAskTask__Row:hover {
     background: none;
+  }
+
+  .AccountMaskAskStory__ItemisedRows.Layer__CounterpartyAskTask__Rows {
+    overflow-y: auto;
+    max-block-size: 24rem;
   }
 
   .AccountMaskAskStory__Matrix {
