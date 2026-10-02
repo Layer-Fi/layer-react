@@ -6,10 +6,8 @@ import {
   COUNTERPARTY_ASK_TASK_TYPE,
   P2P_COUNTERPARTY_ASK_TASK_TYPE,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import {
-  type CounterpartyAskAccount,
-  type CounterpartyAskTask,
-} from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
+import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type P2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/p2pCounterpartyAskTask'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'

@@ -1,9 +1,9 @@
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/baseCounterpartyAskTask'
 import {
   type CounterpartyAskAnswer,
   type CounterpartyAskResponse,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
 export type CounterpartyAskAnswerValue =
   | { kind: 'account', account: CounterpartyAskAccount }
