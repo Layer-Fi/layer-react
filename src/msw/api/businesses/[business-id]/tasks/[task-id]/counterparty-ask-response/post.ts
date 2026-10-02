@@ -1,14 +1,15 @@
 import { Schema } from 'effect'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { isCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import {
+  type AnyCounterpartyAskTask,
+  AnyCounterpartyAskTaskSchema,
+  isAnyCounterpartyAskTask,
+  isP2PCounterpartyAskTask,
+} from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { CounterpartyAskResponseSchema } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
-import {
-  type CounterpartyAskAccount,
-  type CounterpartyAskTask,
-  CounterpartyAskTaskSchema,
-} from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type CounterpartyAskAccount } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
 import {
   bookkeepingPeriodStore,
@@ -19,7 +20,7 @@ import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
-const encodeTask = Schema.encodeSync(CounterpartyAskTaskSchema)
+const encodeTask = Schema.encodeSync(AnyCounterpartyAskTaskSchema)
 // The API 400s on mixed arms (an account and free text, or `always_this` with
 // `transaction_responses`); the union alone ignores the extra key, so reject it here.
 const decodeResponse = Schema.decodeUnknownSync(
@@ -27,10 +28,10 @@ const decodeResponse = Schema.decodeUnknownSync(
   { onExcessProperty: 'error' },
 )
 
-const toResponse = (task: CounterpartyAskTask) => apiData(encodeTask(task))
+const toResponse = (task: AnyCounterpartyAskTask) => apiData(encodeTask(task))
 
 const resolveAnsweredAccount = (
-  task: CounterpartyAskTask,
+  task: AnyCounterpartyAskTask,
   accountIdentifier: CounterpartyAskAccount['accountIdentifier'],
 ): CounterpartyAskAccount =>
   task.suggestions.find(suggestion =>
@@ -38,9 +39,9 @@ const resolveAnsweredAccount = (
   ) ?? { accountIdentifier, name: '' }
 
 const applyResponse = (
-  task: CounterpartyAskTask,
+  task: AnyCounterpartyAskTask,
   response: ReturnType<typeof decodeResponse>,
-): CounterpartyAskTask => {
+): AnyCounterpartyAskTask => {
   const answered = { ...task, status: BusinessTaskStatus.UserMarkedCompleted }
 
   if ('transactionResponses' in response) {
@@ -74,8 +75,11 @@ const applyResponse = (
   }
 }
 
-const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
-  const counterpartyId = answeringTask.counterparty?.id
+const askCounterpartyId = (task: AnyCounterpartyAskTask) =>
+  isP2PCounterpartyAskTask(task) ? task.p2pCounterparty.id : task.counterparty?.id
+
+const resolveSiblingCounterpartyAsks = (answeringTask: AnyCounterpartyAskTask) => {
+  const counterpartyId = askCounterpartyId(answeringTask)
 
   if (!counterpartyId) return
 
@@ -83,8 +87,9 @@ const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
     .flatMap(period => period.tasks)
     .filter(task =>
       task.id !== answeringTask.id
-      && isCounterpartyAskTask(task)
-      && task.counterparty?.id === counterpartyId
+      && isAnyCounterpartyAskTask(task)
+      && task.taskType === answeringTask.taskType
+      && askCounterpartyId(task) === counterpartyId
       && task.status === BusinessTaskStatus.Todo,
     )
     .map(task => task.id)
@@ -102,7 +107,7 @@ const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
 const reopenSiblingCounterpartyAsks = (answeringTaskId: string) => {
   const resolvedSiblingIds = bookkeepingPeriodStore.all()
     .flatMap(period => period.tasks)
-    .filter(task => isCounterpartyAskTask(task) && task.resolvedByTaskId === answeringTaskId)
+    .filter(task => isAnyCounterpartyAskTask(task) && task.resolvedByTaskId === answeringTaskId)
     .map(task => task.id)
 
   resolvedSiblingIds.forEach((siblingId) => {
@@ -115,7 +120,7 @@ const reopenSiblingCounterpartyAsks = (answeringTaskId: string) => {
   })
 }
 
-export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof toResponse>>({
+export const post = createMockEndpoint<AnyCounterpartyAskTask, ReturnType<typeof toResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/tasks/:taskId/counterparty-ask-response',
   resolve: async ({ override, request, params }) => {

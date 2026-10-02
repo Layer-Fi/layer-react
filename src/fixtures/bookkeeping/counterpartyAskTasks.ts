@@ -1,13 +1,16 @@
 import { makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'
 import { BankTransactionDirection, type MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import {
   BusinessTaskStatus,
   COUNTERPARTY_ASK_TASK_TYPE,
+  P2P_COUNTERPARTY_ASK_TASK_TYPE,
 } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import {
   type CounterpartyAskAccount,
   type CounterpartyAskTask,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
+import { type P2PCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/p2pCounterpartyAskTask'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
@@ -32,6 +35,17 @@ const RENT_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
   {
     accountIdentifier: makeStableName(bankTransactionCategories.rent.stableName),
     name: bankTransactionCategories.rent.displayName,
+  },
+]
+
+const P2P_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
+  {
+    accountIdentifier: makeStableName(bankTransactionCategories.payrollContractors.stableName),
+    name: bankTransactionCategories.payrollContractors.displayName,
+  },
+  {
+    accountIdentifier: makeAccountId(bankTransactionCategories.otherBusinessExpenses.id),
+    name: bankTransactionCategories.otherBusinessExpenses.displayName,
   },
 ]
 
@@ -80,6 +94,30 @@ const baseCounterpartyAskTask: CounterpartyAskTask = {
 
 const { make: makeBaseCounterpartyAskTask } = createFixtureFactory(baseCounterpartyAskTask)
 
+const baseP2PCounterpartyAskTask: P2PCounterpartyAskTask = {
+  id: '00000000-0000-4000-8000-000000000951',
+  status: BusinessTaskStatus.Todo,
+  taskType: P2P_COUNTERPARTY_ASK_TASK_TYPE,
+  title: 'Payments to Jane Doe via Venmo',
+  question: 'In January, you paid Jane Doe via Venmo $85.00. What was this payment for?',
+  p2pCounterparty: {
+    id: '00000000-0000-4000-8000-000000000751',
+    name: 'Jane Doe',
+    provider: { id: '00000000-0000-4000-8000-000000000761', name: 'Venmo' },
+  },
+  suggestions: P2P_SUGGESTIONS,
+  transactions: [makeAskTransaction({ id: '00000000-0000-4000-8000-000000000b01', month: 1, day: 6, amount: 8500, counterpartyName: 'Jane Doe', description: 'VENMO PAYMENT JANE DOE' })],
+  transactionResponses: [],
+  userResponse: null,
+  responseAccount: null,
+  totalCount: 1,
+  totalAmount: 8500,
+  alwaysThis: false,
+  resolvedByTaskId: null,
+}
+
+const { make: makeBaseP2PCounterpartyAskTask } = createFixtureFactory(baseP2PCounterpartyAskTask)
+
 const toUnansweredResponses = (
   transactions: CounterpartyAskTask['transactions'],
 ): CounterpartyAskTask['transactionResponses'] =>
@@ -89,15 +127,18 @@ const toUnansweredResponses = (
     responseAccount: null,
   }))
 
-export const makeCounterpartyAskTask = (
-  overrides?: Partial<CounterpartyAskTask>,
-): CounterpartyAskTask => {
-  const task = makeBaseCounterpartyAskTask(overrides)
-
-  return overrides?.transactionResponses
+const withUnansweredResponses = <T extends AnyCounterpartyAskTask>(task: T, overrides?: Partial<T>): T =>
+  overrides?.transactionResponses
     ? task
     : { ...task, transactionResponses: toUnansweredResponses(task.transactions) }
-}
+
+export const makeCounterpartyAskTask = (
+  overrides?: Partial<CounterpartyAskTask>,
+): CounterpartyAskTask => withUnansweredResponses(makeBaseCounterpartyAskTask(overrides), overrides)
+
+export const makeP2PCounterpartyAskTask = (
+  overrides?: Partial<P2PCounterpartyAskTask>,
+): P2PCounterpartyAskTask => withUnansweredResponses(makeBaseP2PCounterpartyAskTask(overrides), overrides)
 
 const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => CounterpartyAskTask> = {
   7: month => makeCounterpartyAskTask({
@@ -167,10 +208,37 @@ const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => Counter
   }),
 }
 
-export const makeCounterpartyAskTasks = (year: number, month: number): CounterpartyAskTask[] => {
-  const seed = COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
+const P2P_COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => P2PCounterpartyAskTask> = {
+  9: month => makeP2PCounterpartyAskTask({
+    id: '00000000-0000-4000-8000-000000000959',
+    question: 'In September, you paid Jane Doe via Venmo $85.00. What was this payment for?',
+    transactions: [
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000b02', month, day: 12, amount: 8500, counterpartyName: 'Jane Doe', description: 'VENMO PAYMENT JANE DOE' }),
+    ],
+  }),
 
-  return seed && year === FIXTURE_YEAR ? [seed(month)] : []
+  10: month => makeP2PCounterpartyAskTask({
+    id: '00000000-0000-4000-8000-000000000960',
+    question: 'In October, you paid Jane Doe via Venmo $420.00 across 2 payments. What were these payments for?',
+    transactions: [
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000b03', month, day: 4, amount: 25000, counterpartyName: 'Jane Doe', description: 'VENMO PAYMENT JANE DOE' }),
+      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000b04', month, day: 21, amount: 17000, counterpartyName: 'Jane Doe', description: 'VENMO PAYMENT JANE DOE' }),
+    ],
+    totalCount: 2,
+    totalAmount: 42000,
+  }),
+}
+
+export const makeCounterpartyAskTasks = (year: number, month: number): AnyCounterpartyAskTask[] => {
+  if (year !== FIXTURE_YEAR) return []
+
+  const purchaseSeed = COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
+  const p2pSeed = P2P_COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
+
+  return [
+    ...(p2pSeed ? [p2pSeed(month)] : []),
+    ...(purchaseSeed ? [purchaseSeed(month)] : []),
+  ]
 }
 
 export const counterpartyAskCountFor = (year: number, month: number) =>

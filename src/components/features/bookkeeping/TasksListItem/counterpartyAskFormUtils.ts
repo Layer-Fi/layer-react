@@ -1,6 +1,7 @@
 import { formOptions } from '@tanstack/react-form'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
+import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { type CounterpartyAskResponse } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import {
   type CounterpartyAskAccount,
@@ -30,7 +31,7 @@ export type CounterpartyAskAnswerSummary =
   | { kind: 'itemised' }
 
 export const getStoredCounterpartyAskAnswerSummary = (
-  task: CounterpartyAskTask,
+  task: AnyCounterpartyAskTask,
 ): CounterpartyAskAnswerSummary | null => {
   if (task.responseAccount) return { kind: 'account', name: task.responseAccount.name }
   if (task.userResponse) return { kind: 'text' }
@@ -82,7 +83,7 @@ const toAnswerKey = (
   return text ? OTHER_ANSWER_KEY : null
 }
 
-export const getCounterpartyAskFormDefaultValues = (task: CounterpartyAskTask): CounterpartyAskFormValues => {
+export const getCounterpartyAskFormDefaultValues = (task: AnyCounterpartyAskTask): CounterpartyAskFormValues => {
   const stored = getStoredCounterpartyAskAnswerSummary(task)
   const hasWholeAnswer = stored !== null && stored.kind !== 'itemised'
 
