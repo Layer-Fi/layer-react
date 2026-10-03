@@ -13,6 +13,7 @@ import { Chip, ChipGroup } from '@ui/Chip/Chip'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { SearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
+import { ErrorBoundary } from '@ui/ErrorBoundary/ErrorBoundary'
 import { FileInput } from '@ui/Input/FileInput'
 import { Input } from '@ui/Input/Input'
 import { TextArea } from '@ui/Input/TextArea'
@@ -888,7 +889,7 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
   <VStack gap='md' className='UnifiedAskFormStory__Inspector'>
     <VStack gap='3xs'>
       <Heading size='xs' level={3}>{`Contract v${SPEC_VERSION} · ${task.form_subtype}`}</Heading>
-      <Span size='xs' variant='subtle'>{`Prototype only. Edit the task spec in Controls. Spec: ${SPEC_URL}`}</Span>
+      <Span size='xs' variant='subtle'>{`Prototype only. Spec: ${SPEC_URL}`}</Span>
     </VStack>
 
     <InspectorSection title='Spec checks'>
@@ -924,7 +925,7 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
     </InspectorSection>
 
     <InspectorSection title='Form definition (the task the backend sent)'>
-      <Span size='xs' variant='subtle'>Edit it in Controls → task. The form resets on every change.</Span>
+      <Span size='xs' variant='subtle'>Edit it in Controls → task, or paste your own in the “Paste a form” story.</Span>
       <Json value={task} />
     </InspectorSection>
   </VStack>
@@ -1240,6 +1241,119 @@ const BROKEN_SPEC_TASK: UnifiedAskFormTask = {
   },
 }
 
+/* ---------------------------------------------------------------- paste a form */
+
+const PASTE_EXAMPLES: ReadonlyArray<{ label: string, task: UnifiedAskFormTask }> = [
+  { label: 'Counterparty', task: COUNTERPARTY_TASK },
+  { label: 'Account mask', task: ACCOUNT_MASK_TASK },
+  { label: 'Every step kind', task: STEP_GALLERY_TASK },
+]
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+// Pasted JSON is only checked for the shape the renderer navigates by; the spec checks report the rest.
+const isForm = (value: unknown): value is UnifiedAskFormTask['form'] =>
+  isRecord(value) && typeof value.entry_page_id === 'string' && Array.isArray(value.pages)
+  && value.pages.every(page => isRecord(page) && typeof page.id === 'string' && Array.isArray(page.steps) && isRecord(page.next))
+
+const isTransactions = (value: unknown): value is AskTransaction[] =>
+  Array.isArray(value) && value.every(transaction =>
+    isRecord(transaction) && typeof transaction.id === 'string' && typeof transaction.date === 'string' && typeof transaction.amount === 'number')
+
+type ParsedForm = { task: UnifiedAskFormTask, error: null } | { task: null, error: string }
+
+const parsePastedForm = (text: string): ParsedForm => {
+  let value: unknown
+
+  try {
+    value = JSON.parse(text)
+  }
+  catch (error) {
+    return { task: null, error: `That isn’t valid JSON. ${error instanceof Error ? error.message : String(error)}` }
+  }
+
+  const source: Record<string, unknown> = isRecord(value) && isForm(value.form) ? value : {}
+  const form = isForm(source.form) ? source.form : isForm(value) ? value : null
+
+  if (!form) {
+    return { task: null, error: 'Paste a whole task, or a form with entry_page_id and pages. Every page needs an id, steps and next.' }
+  }
+
+  return {
+    task: {
+      task_type: 'UNIFIED_ASK_FORM',
+      form_subtype: typeof source.form_subtype === 'string' ? source.form_subtype : 'PASTED',
+      title: typeof source.title === 'string' ? source.title : 'Pasted form',
+      transactions: isTransactions(source.transactions) ? source.transactions : COUNTERPARTY_TASK.transactions,
+      form,
+    },
+    error: null,
+  }
+}
+
+const PasteFormStory = ({ stateEndpoint }: { stateEndpoint: StateEndpointBehaviour }) => {
+  const [text, setText] = useState(() => JSON.stringify(COUNTERPARTY_TASK, null, 2))
+  const [applied, setApplied] = useState({ task: COUNTERPARTY_TASK, version: 0 })
+  const [parseError, setParseError] = useState<string | null>(null)
+  const [renderError, setRenderError] = useState<string | null>(null)
+
+  const renderText = (nextText: string) => {
+    const parsed = parsePastedForm(nextText)
+    const { task } = parsed
+
+    setParseError(parsed.error)
+    if (!task) return
+
+    setRenderError(null)
+    setApplied(current => ({ task, version: current.version + 1 }))
+  }
+
+  const loadExample = (task: UnifiedAskFormTask) => {
+    const nextText = JSON.stringify(task, null, 2)
+    setText(nextText)
+    renderText(nextText)
+  }
+
+  return (
+    <VStack>
+      <VStack gap='sm' className='UnifiedAskFormStory__Paste'>
+        <Heading size='sm' level={2}>Paste a form</Heading>
+        <Span size='sm' variant='subtle'>
+          {`Paste the task the backend would send, or just its form (entry_page_id and pages), then render it. A form without transactions gets three sample ones. Contract v${SPEC_VERSION}.`}
+        </Span>
+        <HStack gap='xs' align='center'>
+          <Span size='xs' variant='subtle'>Start from:</Span>
+          {PASTE_EXAMPLES.map(({ label, task }) => (
+            <Button key={label} variant='outlined' onPress={() => loadExample(task)}>{label}</Button>
+          ))}
+        </HStack>
+        <VStack className='UnifiedAskFormStory__PasteInput'>
+          <TextArea aria-label='Form JSON' value={text} onChange={event => setText(event.target.value)} spellCheck={false} />
+        </VStack>
+        <HStack justify='space-between' align='center' gap='md'>
+          {parseError ? <Span size='sm' status='error'>{parseError}</Span> : <Span size='sm' variant='subtle'>{`Showing: ${applied.task.title}`}</Span>}
+          <Button onPress={() => renderText(text)}>Render form</Button>
+        </HStack>
+      </VStack>
+      {renderError
+        ? (
+          <VStack pi='lg' pbs='md'>
+            <Span size='sm' status='error'>{`The form couldn’t render: ${renderError}. Check that each step has the fields its type needs.`}</Span>
+          </VStack>
+        )
+        : null}
+      {renderError
+        ? null
+        : (
+          <ErrorBoundary key={applied.version} onError={({ payload }) => setRenderError(payload.message)}>
+            <UnifiedAskFormStory task={applied.task} stateEndpoint={stateEndpoint} />
+          </ErrorBoundary>
+        )}
+    </VStack>
+  )
+}
+
 /* ---------------------------------------------------------------- stories */
 
 const STORY_STYLES = `
@@ -1284,6 +1398,17 @@ const STORY_STYLES = `
     white-space: pre;
   }
 
+  .UnifiedAskFormStory__Paste {
+    max-inline-size: 68rem;
+    padding: var(--spacing-lg) var(--spacing-lg) 0;
+  }
+
+  .UnifiedAskFormStory__PasteInput textarea {
+    min-block-size: 16rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+  }
+
   .UnifiedAskFormStory__File {
     padding: var(--spacing-2xs) var(--spacing-xs);
     border: 1px solid var(--border-color);
@@ -1318,7 +1443,7 @@ Renders any form written against the [Unified Ask Form contract v${SPEC_VERSION}
   categories, vendors and customers.
 
 Stories: counterparty and P2P (the same pages, different server copy), account mask, account mask with 60 transactions,
-every step kind, and a spec that breaks the rules.
+every step kind, a spec that breaks the rules, and a story to paste in any form and render it.
 `
 
 const meta: Meta<UnifiedAskFormStoryProps> = {
@@ -1386,4 +1511,11 @@ export const SpecChecks: Story = {
   name: 'Spec that breaks the rules',
   tags: ['real-backend'],
   args: { task: BROKEN_SPEC_TASK },
+}
+
+export const PasteAForm: Story = {
+  name: 'Paste a form',
+  tags: ['real-backend'],
+  parameters: { controls: { exclude: ['task'] } },
+  render: ({ stateEndpoint }) => <PasteFormStory stateEndpoint={stateEndpoint} />,
 }
