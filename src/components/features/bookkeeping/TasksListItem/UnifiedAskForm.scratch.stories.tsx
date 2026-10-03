@@ -541,7 +541,9 @@ const TransactionTable = ({ transactions }: { transactions: readonly AskTransact
 const TransactionSheet = (props: Omit<StepViewProps, 'step'> & { step: CategoryFields, transactions: readonly AskTransaction[] }) => {
   const { step, answer, onChange, labels, transactions, prompt } = props
   const rows = answer && 'transaction_answers' in answer ? answer.transaction_answers : []
-  const rowStep: SearchFields = { type: 'SEARCH', entity: 'CATEGORY', options: step.options, placeholder: 'Search categories…' }
+  const rowStep: ChoiceFields | SearchFields = step.options?.length
+    ? { type: 'CHOICE', prompt: '', options: step.options }
+    : { type: 'SEARCH', entity: 'CATEGORY', placeholder: 'Search categories…' }
 
   const getRow = (transactionId: string) => rows.find(row => row.transaction_id === transactionId)?.answer
   const isRowAnswered = (transactionId: string) => isAnswered(rowStep, getRow(transactionId), 0)
@@ -942,10 +944,17 @@ const txn = (prefix: string, index: number, month: number, day: number, amount: 
   description,
 })
 
-const somethingElse = (placeholder: string): Option => ({
-  value: 'something_else',
-  label: 'Something else',
+const differentCategory: Option = {
+  value: 'different_category',
+  label: 'A different category',
+  follow_up: { type: 'SEARCH', entity: 'CATEGORY', placeholder: 'Search all categories…' },
+}
+
+const notSure = (placeholder: string, next?: Next): Option => ({
+  value: 'not_sure',
+  label: 'Not sure',
   follow_up: { type: 'TEXT', multiline: true, placeholder },
+  ...(next ? { next } : {}),
 })
 
 const mixOption = (pageId: PageId): Option => ({ value: 'mix', label: 'It’s a mix or it varies', next: { kind: 'PAGE', page_id: pageId } })
@@ -954,7 +963,8 @@ type CounterpartyCopy = {
   subtype: 'COUNTERPARTY' | 'P2P_COUNTERPARTY'
   title: string
   pickPrompt: string
-  describePlaceholder: string
+  notSurePlaceholder: string
+  rowNotSurePlaceholder: string
   sheetPrompt: string
   rememberPrompt: string
   suggestions: string[]
@@ -974,11 +984,9 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
         next: { kind: 'PAGE', page_id: 'remember' },
         steps: [{
           id: 'category',
-          type: 'SEARCH',
-          entity: 'CATEGORY',
+          type: 'CHOICE',
           prompt: copy.pickPrompt,
-          placeholder: 'Search all categories…',
-          options: [...copy.suggestions.map(category), somethingElse(copy.describePlaceholder), mixOption('itemise')],
+          options: [...copy.suggestions.map(category), differentCategory, mixOption('itemise'), notSure(copy.notSurePlaceholder, { kind: 'SUBMIT' })],
         }],
       },
       {
@@ -988,7 +996,7 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
           id: 'rows',
           type: 'CATEGORY',
           prompt: copy.sheetPrompt,
-          options: [...copy.suggestions.map(category), somethingElse(copy.describePlaceholder)],
+          options: [...copy.suggestions.map(category), differentCategory, notSure(copy.rowNotSurePlaceholder)],
         }],
       },
       {
@@ -1012,7 +1020,8 @@ const COUNTERPARTY_TASK = makeCounterpartyTask({
   subtype: 'COUNTERPARTY',
   title: 'What were your Costco purchases for?',
   pickPrompt: 'You spent $307.74 at Costco across 3 transactions. What were these for?',
-  describePlaceholder: 'What were these purchases for?',
+  notSurePlaceholder: 'Tell us anything you remember about these purchases',
+  rowNotSurePlaceholder: 'Tell us anything you remember about this purchase',
   sheetPrompt: 'Can you share more about what each transaction was for below?',
   rememberPrompt: 'Should we assume your future Costco purchases are {{answer.category.label}} going forward?',
   suggestions: ['Office Expenses', 'Software', 'Business Meals'],
@@ -1027,7 +1036,8 @@ const P2P_TASK = makeCounterpartyTask({
   subtype: 'P2P_COUNTERPARTY',
   title: 'What were your Venmo payments to Alex Rivera for?',
   pickPrompt: 'You paid Alex Rivera $525.00 on Venmo across 3 payments. What were these for?',
-  describePlaceholder: 'What were these payments for?',
+  notSurePlaceholder: 'Tell us anything you remember about these payments',
+  rowNotSurePlaceholder: 'Tell us anything you remember about this payment',
   sheetPrompt: 'Can you share more about what each payment was for below?',
   rememberPrompt: 'Should we assume your future Venmo payments to Alex Rivera are {{answer.category.label}} going forward?',
   suggestions: ['Contractors', 'Rent', 'Legal and Professional Services'],
@@ -1103,7 +1113,7 @@ const makeAccountMaskTask = (transactions: AskTransaction[]): UnifiedAskFormTask
       {
         id: 'itemise',
         next: { kind: 'SUBMIT' },
-        steps: [{ id: 'rows', type: 'CATEGORY', prompt: 'What was each of these payments for?', options: VENDOR_CATEGORIES.map(category) }],
+        steps: [{ id: 'rows', type: 'CATEGORY', prompt: 'What was each of these payments for?', options: [...VENDOR_CATEGORIES.map(category), differentCategory] }],
       },
       {
         id: 'customer',
