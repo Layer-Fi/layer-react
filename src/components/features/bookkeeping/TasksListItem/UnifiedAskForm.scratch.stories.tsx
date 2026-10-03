@@ -1497,8 +1497,572 @@ const SAMPLE_ONBOARDING_TASK: UnifiedAskFormTask = {
   },
 }
 
+/** Pasted from Darren's tax estimates profile spec. */
+const SAMPLE_TAX_PROFILE_TASK: UnifiedAskFormTask = {
+  task_type: 'UNIFIED_ASK_FORM',
+  form_subtype: 'TAX_PROFILE',
+  title: 'Set up your tax estimates profile',
+  transactions: [],
+  form: {
+    entry_page_id: 'entity',
+    pages: [
+      {
+        id: 'entity',
+        next: {
+          kind: 'PAGE',
+          page_id: 'filing',
+        },
+        steps: [
+          {
+            id: 'business_type',
+            type: 'CHOICE',
+            prompt: 'How is your business taxed?',
+            options: [
+              {
+                value: 'sole_prop',
+                label: 'Sole proprietor / single-member LLC',
+              },
+              {
+                value: 'partnership',
+                label: 'Partnership / multi-member LLC',
+              },
+              {
+                value: 's_corp',
+                label: 'S-Corp',
+              },
+              {
+                value: 'c_corp',
+                label: 'C-Corp',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Tell us how you registered your business, or which tax forms you filed last year',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'filing',
+        next: {
+          kind: 'PAGE',
+          page_id: 'location',
+        },
+        steps: [
+          {
+            id: 'filing_status',
+            type: 'CHOICE',
+            prompt: 'What\'s your personal filing status?',
+            options: [
+              {
+                value: 'single',
+                label: 'Single',
+              },
+              {
+                value: 'mfj',
+                label: 'Married filing jointly',
+              },
+              {
+                value: 'mfs',
+                label: 'Married filing separately',
+              },
+              {
+                value: 'hoh',
+                label: 'Head of household',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'location',
+        next: {
+          kind: 'PAGE',
+          page_id: 'other_income',
+        },
+        steps: [
+          {
+            id: 'state_scope',
+            type: 'CHOICE',
+            prompt: 'Where do you owe state income tax?',
+            options: [
+              {
+                value: 'one_state',
+                label: 'Just one state',
+              },
+              {
+                value: 'multiple',
+                label: 'More than one state',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: false,
+                  placeholder: 'List the states (e.g. CA, NY)',
+                },
+              },
+              {
+                value: 'none',
+                label: 'None (no state income tax)',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'other_income',
+        next: {
+          kind: 'PAGE',
+          page_id: 'estimate',
+        },
+        steps: [
+          {
+            id: 'other_income_type',
+            type: 'CHOICE',
+            prompt: 'Do you or your spouse have other income this year?',
+            options: [
+              {
+                value: 'none',
+                label: 'No, just this business',
+              },
+              {
+                value: 'w2',
+                label: 'Yes, a W-2 job with withholding',
+                next: {
+                  kind: 'PAGE',
+                  page_id: 'withholding',
+                },
+              },
+              {
+                value: 'investments',
+                label: 'Yes, rental or investment income',
+              },
+              {
+                value: 'other',
+                label: 'Something else',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Describe your other income sources',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'withholding',
+        next: {
+          kind: 'PAGE',
+          page_id: 'estimate',
+        },
+        steps: [
+          {
+            id: 'withholding_coverage',
+            type: 'CHOICE',
+            prompt: 'Does your W-2 withholding cover most of your total tax?',
+            options: [
+              {
+                value: 'mostly',
+                label: 'Yes, mostly',
+              },
+              {
+                value: 'partly',
+                label: 'Partly, I still expect to owe',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'estimate',
+        next: {
+          kind: 'PAGE',
+          page_id: 'prior_year',
+        },
+        steps: [
+          {
+            id: 'expected_profit',
+            type: 'CHOICE',
+            prompt: 'What do you expect your net business profit to be this year?',
+            options: [
+              {
+                value: 'under_50k',
+                label: 'Under $50,000',
+              },
+              {
+                value: '50k_100k',
+                label: '$50,000 to $100,000',
+              },
+              {
+                value: '100k_250k',
+                label: '$100,000 to $250,000',
+              },
+              {
+                value: 'over_250k',
+                label: 'Over $250,000',
+              },
+              {
+                value: 'use_books',
+                label: 'Not sure, estimate it from my books',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Anything that will change this year vs. last? (new clients, big purchases)',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'prior_year',
+        next: {
+          kind: 'PAGE',
+          page_id: 'automation',
+        },
+        steps: [
+          {
+            id: 'prior_year_result',
+            type: 'CHOICE',
+            prompt: 'How did last year\'s tax return turn out?',
+            options: [
+              {
+                value: 'owed_a_lot',
+                label: 'I owed more than $1,000',
+              },
+              {
+                value: 'owed_little',
+                label: 'I owed a little or got a refund',
+              },
+              {
+                value: 'first_year',
+                label: 'This is my first year in business',
+              },
+              {
+                value: 'not_sure',
+                label: 'I don\'t remember',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'automation',
+        next: {
+          kind: 'SUBMIT',
+        },
+        steps: [
+          {
+            id: 'set_aside',
+            type: 'CHOICE',
+            prompt: 'Should we automatically track your estimated tax set-aside as a {{answer.business_type.label}} and remind you before each quarterly deadline?',
+            options: [
+              {
+                value: 'auto',
+                label: 'Yes, track it and remind me',
+              },
+              {
+                value: 'reminders_only',
+                label: 'Just send me reminders',
+              },
+              {
+                value: 'manual',
+                label: 'No, I\'ll handle it myself',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
+
+/** A sample mileage tracking onboarding: two steps on the first page, two option routes and an upload. */
+const SAMPLE_MILEAGE_TASK: UnifiedAskFormTask = {
+  task_type: 'UNIFIED_ASK_FORM',
+  form_subtype: 'MILEAGE_ONBOARDING',
+  title: 'Set up mileage tracking',
+  transactions: [],
+  form: {
+    entry_page_id: 'vehicles',
+    pages: [
+      {
+        id: 'vehicles',
+        next: {
+          kind: 'PAGE',
+          page_id: 'method',
+        },
+        steps: [
+          {
+            id: 'vehicle_count',
+            type: 'CHOICE',
+            prompt: 'How many vehicles do you drive for work?',
+            options: [
+              {
+                value: 'one',
+                label: 'One vehicle',
+              },
+              {
+                value: 'several',
+                label: 'Two or more',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'List each vehicle (e.g. 2021 Toyota Tacoma, 2018 Honda Civic)',
+                },
+              },
+            ],
+          },
+          {
+            id: 'vehicle_owner',
+            type: 'CHOICE',
+            prompt: 'Who owns or leases it?',
+            options: [
+              {
+                value: 'personal',
+                label: 'I do, personally',
+              },
+              {
+                value: 'business',
+                label: 'My business',
+              },
+              {
+                value: 'leased',
+                label: 'It\'s leased',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'method',
+        next: {
+          kind: 'PAGE',
+          page_id: 'logging',
+        },
+        steps: [
+          {
+            id: 'deduction_method',
+            type: 'CHOICE',
+            prompt: 'How do you want to deduct your vehicle costs?',
+            options: [
+              {
+                value: 'standard',
+                label: 'Standard mileage rate (track miles)',
+              },
+              {
+                value: 'actual',
+                label: 'Actual expenses (gas, repairs, insurance)',
+                next: {
+                  kind: 'PAGE',
+                  page_id: 'business_use',
+                },
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure, recommend one for me',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Anything we should know? (e.g. you used one method last year, your accountant\'s preference)',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'business_use',
+        next: {
+          kind: 'PAGE',
+          page_id: 'logging',
+        },
+        steps: [
+          {
+            id: 'business_share',
+            type: 'CHOICE',
+            prompt: 'Roughly how much of your driving is for business?',
+            options: [
+              {
+                value: 'under_50',
+                label: 'Less than half',
+              },
+              {
+                value: '50_80',
+                label: 'About half to most of it',
+              },
+              {
+                value: 'over_80',
+                label: 'Nearly all of it',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure yet',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'logging',
+        next: {
+          kind: 'PAGE',
+          page_id: 'commute',
+        },
+        steps: [
+          {
+            id: 'logging_method',
+            type: 'CHOICE',
+            prompt: 'How will you log your trips?',
+            options: [
+              {
+                value: 'in_app',
+                label: 'In the app, as I drive',
+              },
+              {
+                value: 'by_hand',
+                label: 'I\'ll add trips by hand',
+              },
+              {
+                value: 'other_app',
+                label: 'I already use another mileage app',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: false,
+                  placeholder: 'Which app? (e.g. MileIQ, Everlance)',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'commute',
+        next: {
+          kind: 'PAGE',
+          page_id: 'history',
+        },
+        steps: [
+          {
+            id: 'regular_commute',
+            type: 'CHOICE',
+            prompt: 'Do you drive from home to the same work location most days? Commuting miles usually don\'t count as business miles.',
+            options: [
+              {
+                value: 'yes',
+                label: 'Yes, I commute to one place',
+              },
+              {
+                value: 'no',
+                label: 'No, I drive to different job sites',
+              },
+              {
+                value: 'home_office',
+                label: 'No, I work from a home office',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'history',
+        next: {
+          kind: 'PAGE',
+          page_id: 'automation',
+        },
+        steps: [
+          {
+            id: 'past_trips',
+            type: 'CHOICE',
+            prompt: 'Do you have trips from earlier this year to add?',
+            options: [
+              {
+                value: 'yes',
+                label: 'Yes, I have a log',
+                next: {
+                  kind: 'PAGE',
+                  page_id: 'upload_log',
+                },
+              },
+              {
+                value: 'no',
+                label: 'No, start from today',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'upload_log',
+        next: {
+          kind: 'PAGE',
+          page_id: 'automation',
+        },
+        steps: [
+          {
+            id: 'mileage_log',
+            type: 'UPLOAD',
+            prompt: 'Upload your mileage log. A spreadsheet export or a PDF works.',
+            accept: [
+              'csv',
+              'xlsx',
+              'pdf',
+            ],
+            multiple: true,
+          },
+        ],
+      },
+      {
+        id: 'automation',
+        next: {
+          kind: 'SUBMIT',
+        },
+        steps: [
+          {
+            id: 'auto_classify',
+            type: 'CHOICE',
+            prompt: 'Should we automatically mark trips you take often as business trips, and only ask about new ones?',
+            options: [
+              {
+                value: 'auto',
+                label: 'Yes, only ask me about new trips',
+              },
+              {
+                value: 'ask',
+                label: 'No, check with me on every trip',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
+
 const PASTE_EXAMPLES: ReadonlyArray<{ label: string, task: UnifiedAskFormTask }> = [
   { label: 'Sample onboarding', task: SAMPLE_ONBOARDING_TASK },
+  { label: 'Sample tax profile', task: SAMPLE_TAX_PROFILE_TASK },
+  { label: 'Sample mileage onboarding', task: SAMPLE_MILEAGE_TASK },
   { label: 'Counterparty', task: COUNTERPARTY_TASK },
   { label: 'Account mask', task: ACCOUNT_MASK_TASK },
   { label: 'Every step kind', task: STEP_GALLERY_TASK },
@@ -1577,7 +2141,7 @@ const PasteFormStory = ({ stateEndpoint }: { stateEndpoint: StateEndpointBehavio
         <Span size='sm' variant='subtle'>
           {`Paste the task the backend would send, or just its form (entry_page_id and pages), then render it. A form without transactions gets three sample ones. Contract v${SPEC_VERSION}.`}
         </Span>
-        <HStack gap='xs' align='center'>
+        <HStack gap='xs' align='center' className='UnifiedAskFormStory__Starters'>
           <Span size='xs' variant='subtle'>Start from:</Span>
           {PASTE_EXAMPLES.map(({ label, task }) => (
             <Button key={label} variant='outlined' onPress={() => loadExample(task)}>{label}</Button>
@@ -1656,6 +2220,10 @@ const STORY_STYLES = `
   .UnifiedAskFormStory__Paste {
     max-inline-size: 68rem;
     padding: var(--spacing-lg) var(--spacing-lg) 0;
+  }
+
+  .UnifiedAskFormStory__Starters {
+    flex-wrap: wrap;
   }
 
   .UnifiedAskFormStory__PasteInput textarea {
