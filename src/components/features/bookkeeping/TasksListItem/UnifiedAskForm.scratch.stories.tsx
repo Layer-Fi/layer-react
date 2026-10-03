@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ReactNode, useMemo, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import classNames from 'classnames'
 
@@ -14,8 +14,10 @@ import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { SearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { ErrorBoundary } from '@ui/ErrorBoundary/ErrorBoundary'
+import { TextField } from '@ui/Form/Form'
 import { FileInput } from '@ui/Input/FileInput'
 import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -484,14 +486,21 @@ function StepView(props: StepViewProps) {
     if (isAction(step)) return null
 
     const text = answer && 'text' in answer ? answer.text : ''
-    const onText = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange({ text: event.target.value })
+    const onText = (value: string) => onChange({ text: value })
     const placeholder = isText(step) ? step.placeholder : 'Answer in your own words'
+    const isMultiline = !isText(step) || step.multiline === true
 
-    if (isText(step) && !step.multiline) {
-      return <Input aria-label={prompt ?? placeholder ?? 'Answer'} placeholder={placeholder} value={text} onChange={onText} />
-    }
-
-    return <TextArea aria-label={prompt ?? placeholder ?? 'Answer'} placeholder={placeholder} value={text} onChange={onText} rows={3} />
+    return (
+      <TextField aria-label={prompt ?? placeholder ?? 'Answer'} value={text} onChange={onText} textarea={isMultiline}>
+        {isMultiline
+          ? <TextArea placeholder={placeholder} rows={3} />
+          : (
+            <InputGroup slot='input'>
+              <Input placeholder={placeholder} inset />
+            </InputGroup>
+          )}
+      </TextField>
+    )
   }
 
   return (
@@ -2214,7 +2223,8 @@ const STORY_STYLES = `
     border-radius: 6px;
     background: var(--color-base-50);
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    white-space: pre;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
   .UnifiedAskFormStory__Paste {
