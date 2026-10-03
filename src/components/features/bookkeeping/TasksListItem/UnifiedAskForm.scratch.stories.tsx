@@ -237,6 +237,7 @@ type Labels = Record<string, string>
 const isAnswered = (step: StepFields, answer: Answer | undefined, transactionCount: number, depth = 0): boolean => {
   if (isAction(step)) return true
   if (isText(step) && step.required === false) return true
+  if (isCategory(step) && transactionCount === 0) return true
   if (!answer) return false
 
   if (isCategory(step)) {
@@ -578,6 +579,9 @@ const TransactionSheet = (props: Omit<StepViewProps, 'step'> & { step: CategoryF
   return (
     <VStack gap='sm'>
       {prompt ? <P size='sm' pi='md'>{prompt}</P> : null}
+      {transactions.length === 0
+        ? <Span size='sm' variant='subtle' pi='md'>This task has no transactions, so this sheet has no rows to answer.</Span>
+        : null}
       <VStack className='Layer__CounterpartyAskTask__Rows UnifiedAskFormStory__SheetRows'>
         {transactions.map((transaction) => {
           const rowAnswer = getRow(transaction.id)
@@ -817,7 +821,8 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
     </VStack>
   )
 
-  const showsTable = view.kind !== 'DONE' && !(view.kind === 'PAGE' && view.page.steps.some(step => isCategory(step)))
+  const showsTable = task.transactions.length > 0 && view.kind !== 'DONE'
+    && !(view.kind === 'PAGE' && view.page.steps.some(step => isCategory(step)))
   const [firstStep] = entryPage.steps
   const summary = firstStep ? getLabel(firstStep, answers[firstStep.id], labels) : null
   const paneKey = view.kind === 'PAGE' ? `page:${view.page.id}` : view.kind
@@ -1243,7 +1248,257 @@ const BROKEN_SPEC_TASK: UnifiedAskFormTask = {
 
 /* ---------------------------------------------------------------- paste a form */
 
+/** Pasted from Darren's onboarding spec; the default in “Paste a form”. */
+const SAMPLE_ONBOARDING_TASK: UnifiedAskFormTask = {
+  task_type: 'UNIFIED_ASK_FORM',
+  form_subtype: 'ONBOARDING',
+  title: 'Let\'s get your bookkeeping set up',
+  transactions: [],
+  form: {
+    entry_page_id: 'business',
+    pages: [
+      {
+        id: 'business',
+        next: {
+          kind: 'PAGE',
+          page_id: 'basis',
+        },
+        steps: [
+          {
+            id: 'business_type',
+            type: 'CHOICE',
+            prompt: 'What best describes your business?',
+            options: [
+              {
+                value: 'sole_prop',
+                label: 'Sole proprietor / freelancer',
+              },
+              {
+                value: 'llc',
+                label: 'LLC',
+              },
+              {
+                value: 'corp',
+                label: 'S-Corp or C-Corp',
+              },
+              {
+                value: 'nonprofit',
+                label: 'Nonprofit',
+              },
+              {
+                value: 'other',
+                label: 'Something else',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: false,
+                  placeholder: 'Tell us about your business structure',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'basis',
+        next: {
+          kind: 'PAGE',
+          page_id: 'start',
+        },
+        steps: [
+          {
+            id: 'accounting_basis',
+            type: 'CHOICE',
+            prompt: 'How do you want to track income and expenses?',
+            options: [
+              {
+                value: 'cash',
+                label: 'Cash basis (when money moves)',
+              },
+              {
+                value: 'accrual',
+                label: 'Accrual basis (when invoiced or billed)',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure, recommend one for me',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Anything we should know? (e.g. you send invoices, your accountant\'s preference)',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'start',
+        next: {
+          kind: 'PAGE',
+          page_id: 'accounts',
+        },
+        steps: [
+          {
+            id: 'start_date',
+            type: 'CHOICE',
+            prompt: 'When should we start your books?',
+            options: [
+              {
+                value: 'this_year',
+                label: 'January 1 of this year',
+              },
+              {
+                value: 'last_year',
+                label: 'Last year (I need to catch up)',
+              },
+              {
+                value: 'custom',
+                label: 'A different date',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: false,
+                  placeholder: 'Enter a start date (e.g. 2025-03-01)',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'accounts',
+        next: {
+          kind: 'PAGE',
+          page_id: 'tools',
+        },
+        steps: [
+          {
+            id: 'account_usage',
+            type: 'CHOICE',
+            prompt: 'Which accounts will we be connecting?',
+            options: [
+              {
+                value: 'business_only',
+                label: 'Business accounts only',
+              },
+              {
+                value: 'mixed',
+                label: 'A mix of business and personal',
+                next: {
+                  kind: 'PAGE',
+                  page_id: 'classify_accounts',
+                },
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Tell us which banks or cards you use',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'classify_accounts',
+        next: {
+          kind: 'PAGE',
+          page_id: 'tools',
+        },
+        steps: [
+          {
+            id: 'account_rows',
+            type: 'CATEGORY',
+            prompt: 'How is each connected account used?',
+            options: [
+              {
+                value: 'business',
+                label: 'Business',
+              },
+              {
+                value: 'personal',
+                label: 'Personal',
+              },
+              {
+                value: 'shared',
+                label: 'Both, a mix',
+              },
+              {
+                value: 'not_sure',
+                label: 'Not sure',
+                follow_up: {
+                  type: 'TEXT',
+                  multiline: true,
+                  placeholder: 'Tell us anything you remember about this account',
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'tools',
+        next: {
+          kind: 'PAGE',
+          page_id: 'automation',
+        },
+        steps: [
+          {
+            id: 'existing_tools',
+            type: 'CHOICE',
+            prompt: 'How have you been tracking your books so far?',
+            options: [
+              {
+                value: 'spreadsheet',
+                label: 'Spreadsheets',
+              },
+              {
+                value: 'software',
+                label: 'Other accounting software',
+              },
+              {
+                value: 'accountant',
+                label: 'My accountant handles it',
+              },
+              {
+                value: 'none',
+                label: 'I haven\'t been tracking them',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'automation',
+        next: {
+          kind: 'SUBMIT',
+        },
+        steps: [
+          {
+            id: 'auto_categorize',
+            type: 'CHOICE',
+            prompt: 'Should we automatically categorize recurring transactions for your {{answer.business_type.label}} going forward?',
+            options: [
+              {
+                value: 'auto',
+                label: 'Yes, only ask me about unusual ones',
+              },
+              {
+                value: 'ask',
+                label: 'No, check with me on everything',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
+
 const PASTE_EXAMPLES: ReadonlyArray<{ label: string, task: UnifiedAskFormTask }> = [
+  { label: 'Sample onboarding', task: SAMPLE_ONBOARDING_TASK },
   { label: 'Counterparty', task: COUNTERPARTY_TASK },
   { label: 'Account mask', task: ACCOUNT_MASK_TASK },
   { label: 'Every step kind', task: STEP_GALLERY_TASK },
@@ -1293,8 +1548,8 @@ const parsePastedForm = (text: string): ParsedForm => {
 }
 
 const PasteFormStory = ({ stateEndpoint }: { stateEndpoint: StateEndpointBehaviour }) => {
-  const [text, setText] = useState(() => JSON.stringify(COUNTERPARTY_TASK, null, 2))
-  const [applied, setApplied] = useState({ task: COUNTERPARTY_TASK, version: 0 })
+  const [text, setText] = useState(() => JSON.stringify(SAMPLE_ONBOARDING_TASK, null, 2))
+  const [applied, setApplied] = useState({ task: SAMPLE_ONBOARDING_TASK, version: 0 })
   const [parseError, setParseError] = useState<string | null>(null)
   const [renderError, setRenderError] = useState<string | null>(null)
 
