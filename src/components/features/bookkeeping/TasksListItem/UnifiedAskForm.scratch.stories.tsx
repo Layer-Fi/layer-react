@@ -403,7 +403,7 @@ const FollowUpView = (props: StepViewProps & { option: Option | undefined }) => 
   if (!option?.follow_up || !answer || !('choice' in answer)) return null
 
   return (
-    <VStack className='UnifiedAskFormStory__FollowUp'>
+    <VStack>
       <StepView
         {...props}
         step={option.follow_up}
@@ -1282,11 +1282,6 @@ const STORY_STYLES = `
     background: var(--color-base-50);
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     white-space: pre;
-  }
-
-  .UnifiedAskFormStory__FollowUp {
-    padding-inline-start: var(--spacing-sm);
-    border-inline-start: 2px solid var(--border-color);
   }
 
   .UnifiedAskFormStory__File {
