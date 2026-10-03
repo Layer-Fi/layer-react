@@ -854,7 +854,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
         lastSearch={lastSearch}
         answers={getAnswersForPages(visitedPages, answers)}
         submitted={submitted}
-        subtype={task.form_subtype}
+        task={task}
       />
     </HStack>
   )
@@ -879,13 +879,13 @@ type InspectorProps = {
   lastSearch: string | null
   answers: Answers
   submitted: LogEntry | null
-  subtype: string
+  task: UnifiedAskFormTask
 }
 
-const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answers, submitted, subtype }: InspectorProps) => (
+const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answers, submitted, task }: InspectorProps) => (
   <VStack gap='md' className='UnifiedAskFormStory__Inspector'>
     <VStack gap='3xs'>
-      <Heading size='xs' level={3}>{`Contract v${SPEC_VERSION} · ${subtype}`}</Heading>
+      <Heading size='xs' level={3}>{`Contract v${SPEC_VERSION} · ${task.form_subtype}`}</Heading>
       <Span size='xs' variant='subtle'>{`Prototype only. Edit the task spec in Controls. Spec: ${SPEC_URL}`}</Span>
     </VStack>
 
@@ -919,6 +919,11 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
     <InspectorSection title={submitted ? 'Submitted' : 'Answers so far (pages visited)'}>
       {submitted ? <Span size='xs'>{submitted.call}</Span> : null}
       <Json value={submitted?.body ?? { answers }} />
+    </InspectorSection>
+
+    <InspectorSection title='Form definition (the task the backend sent)'>
+      <Span size='xs' variant='subtle'>Edit it in Controls → task. The form resets on every change.</Span>
+      <Json value={task} />
     </InspectorSection>
   </VStack>
 )
