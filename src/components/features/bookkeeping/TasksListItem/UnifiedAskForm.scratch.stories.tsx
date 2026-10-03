@@ -167,16 +167,16 @@ type StateEndpointBehaviour = 'responds' | 'fails'
 
 const STATE_ENDPOINT_DELAY_MS = 700
 
-/** Stands in for the backend: after the per-transaction sheet, ask to remember only when every row matches. */
+/**
+ * Stands in for the backend: after the customer lookup, ask about a customer it hasn't seen before. A typed name
+ * stands in for "not seen"; the real backend would check the business's history.
+ */
 const resolveState = (task: UnifiedAskFormTask, { page_id, answers }: StateRequest): StateResponse => {
-  const sheet = task.form.pages.find(({ id }) => id === page_id)?.steps.find(step => step.type === 'CATEGORY')
-  const rows = sheet ? answers[sheet.id] : undefined
+  const has = (pageId: PageId) => task.form.pages.some(({ id }) => id === pageId)
+  const customer = answers.customer
 
-  if (rows && 'transaction_answers' in rows) {
-    const distinct = new Set(rows.transaction_answers.map(({ answer }) => ('choice' in answer ? answer.choice : `text:${answer.text}`)))
-
-    if (distinct.size === 1 && task.form.pages.some(({ id }) => id === 'remember')) return { next_page_id: 'remember' }
-  }
+  if (page_id === 'who_paid' && customer && 'text' in customer && has('new_customer')) return { next_page_id: 'new_customer' }
+  if (page_id === 'who_paid' && has('upload')) return { next_page_id: 'upload' }
 
   return { next_page_id: 'SUBMIT' }
 }
@@ -978,7 +978,7 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
       },
       {
         id: 'itemise',
-        next: { kind: 'SERVER' },
+        next: { kind: 'SUBMIT' },
         steps: [{
           id: 'rows',
           type: 'CATEGORY',
@@ -1135,11 +1135,11 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
     txn('gallery', 1, 5, 11, 185000, 'ACH CREDIT XXXXXX5520 PAYMENT'),
   ],
   form: {
-    entry_page_id: 'choice',
+    entry_page_id: 'how_paid',
     pages: [
       {
-        id: 'choice',
-        next: { kind: 'PAGE', page_id: 'two_steps' },
+        id: 'how_paid',
+        next: { kind: 'PAGE', page_id: 'who_paid' },
         steps: [{
           id: 'how_paid',
           type: 'CHOICE',
@@ -1152,18 +1152,31 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
         }],
       },
       {
-        id: 'two_steps',
-        next: { kind: 'PAGE', page_id: 'upload' },
+        id: 'who_paid',
+        next: { kind: 'SERVER' },
         steps: [
           {
             id: 'customer',
             type: 'SEARCH_WITH_FREEFORM',
             entity: 'CUSTOMER',
-            prompt: 'SEARCH_WITH_FREEFORM: who paid you?',
+            prompt: 'SEARCH_WITH_FREEFORM on a SERVER page: who paid you? Type a new name to get a follow-up page.',
             placeholder: 'Search your customers or type a name',
           },
           { id: 'invoice', type: 'TEXT', prompt: 'TEXT on the same page: what was the invoice number?', placeholder: 'e.g. INV-1042' },
         ],
+      },
+      {
+        id: 'new_customer',
+        next: { kind: 'PAGE', page_id: 'upload' },
+        steps: [{
+          id: 'customer_kind',
+          type: 'CHOICE',
+          prompt: 'Only shown when the backend hasn’t seen this customer: is {{answer.customer.label}} a regular customer?',
+          options: [
+            { value: 'regular', label: 'Yes, they pay me regularly' },
+            { value: 'one_off', label: 'No, this was a one-off' },
+          ],
+        }],
       },
       {
         id: 'upload',
@@ -1289,8 +1302,9 @@ Renders any form written against the [Unified Ask Form contract v${SPEC_VERSION}
   add pages; the form resets on every edit.
 - **Inspector**: spec checks (the backend's validation rules), the pages visited, the last state endpoint call, the last
   search request, and the answers the client would post.
-- **Mocked endpoints**: the state endpoint returns \`remember\` after the per-transaction sheet when every row matches, and
-  \`SUBMIT\` otherwise. Set \`stateEndpoint\` to \`fails\` to see the retry state. Search filters a local index of
+- **Mocked endpoints**: in "Every step kind", the state endpoint sends a customer typed as a new name to an extra
+  \`new_customer\` page, and a picked customer straight on to \`upload\`. "It's a mix" always submits after the sheet, so
+  no other story routes through SERVER. Set \`stateEndpoint\` to \`fails\` to see the retry state. Search filters a local index of
   categories, vendors and customers.
 
 Stories: counterparty and P2P (the same pages, different server copy), account mask, account mask with 60 transactions,
