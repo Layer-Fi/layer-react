@@ -42,7 +42,6 @@ const AllSameCounterpartyAskResponseSchema = Schema.extend(
       Schema.propertySignature(Schema.Boolean),
       Schema.fromKey('always_this'),
     ),
-    alwaysAsk: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('always_ask')),
   }),
   CounterpartyAskAnswerSchema,
 )
@@ -62,8 +61,8 @@ export const CounterpartyAskResponseSchema = Schema.Union(
 // Arms are listed flat (not via CounterpartyAskAnswer) so OneOf marks every
 // other arm's keys `?: never`; a union arm only contributes its common keys.
 export type CounterpartyAskResponse = OneOf<[
-  { alwaysThis: boolean, alwaysAsk?: boolean } & typeof AccountAnswerSchema.Type,
-  { alwaysThis: boolean, alwaysAsk?: boolean } & typeof FreeTextAnswerSchema.Type,
+  { alwaysThis: boolean } & typeof AccountAnswerSchema.Type,
+  { alwaysThis: boolean } & typeof FreeTextAnswerSchema.Type,
   {
     transactionResponses: readonly [CounterpartyAskTransactionAnswer, ...CounterpartyAskTransactionAnswer[]]
   },

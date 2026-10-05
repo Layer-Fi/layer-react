@@ -497,35 +497,5 @@ describe('CounterpartyAskTaskBody', () => {
         always_this: true,
       })
     })
-
-    it('submits always_ask and confirms when the owner wants to keep being asked', async () => {
-      const onRequest = spyOnAskResponse(makeP2PCounterpartyAskTask())
-      const { user } = renderP2PBody()
-
-      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
-      await user.click(screen.getByRole('radio', { name: 'No, keep asking me about them' }))
-
-      await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
-      expect(onRequest.mock.calls[0]?.[0]).toEqual({
-        account_identifier: { type: 'StableName', stable_name: bankTransactionCategories.payrollContractors.stableName },
-        always_this: false,
-        always_ask: true,
-      })
-      expect(await screen.findByText('Got it. We’ll always ask you about future payments to Jane Doe via Venmo.'))
-        .toBeInTheDocument()
-    })
-
-    it('confirms with the provider when the counterparty name is unknown', async () => {
-      spyOnAskResponse(makeP2PCounterpartyAskTask())
-      const { user } = renderP2PBody({
-        p2pCounterparty: { id: 'cp-1', name: 'UNKNOWN', provider: { id: 'pr-1', name: 'Venmo' } },
-      })
-
-      await user.click(screen.getByRole('radio', { name: 'Contractors' }))
-      await user.click(screen.getByRole('radio', { name: 'No, keep asking me about them' }))
-
-      expect(await screen.findByText('Got it. We’ll always ask you about future Venmo payments like these.'))
-        .toBeInTheDocument()
-    })
   })
 })

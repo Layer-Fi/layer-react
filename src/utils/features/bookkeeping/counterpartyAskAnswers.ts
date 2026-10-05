@@ -61,8 +61,7 @@ export const countDistinctCounterpartyAskAnswers = (
 export const buildAllSameCounterpartyAskResponse = (
   answer: CounterpartyAskAnswerValue,
   alwaysThis: boolean,
-  alwaysAsk = false,
-): CounterpartyAskResponse => ({ ...toAnswer(answer), alwaysThis, ...(alwaysAsk ? { alwaysAsk } : {}) })
+): CounterpartyAskResponse => ({ ...toAnswer(answer), alwaysThis })
 
 export type CounterpartyAskTransactionAnswerEntry = {
   transactionId: string
