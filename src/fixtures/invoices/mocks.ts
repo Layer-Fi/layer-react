@@ -45,6 +45,7 @@ const baseInvoice: Invoice = {
   outstandingBalance: 32400,
   importedAt: null,
   updatedAt: new Date('2025-03-01T16:30:00.000Z'),
+  isEditable: true,
   memo: null,
   customPaymentInstructions: null,
 }

@@ -80,7 +80,8 @@ export const invoices = [
     "outstandingBalance": 125620,
     "importedAt": null,
     "updatedAt": new Date("2025-12-17T16:30:00.000Z"),
-    "memo": "Net terms as agreed",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -134,8 +135,9 @@ export const invoices = [
     "outstandingBalance": 35100,
     "importedAt": null,
     "updatedAt": new Date("2025-12-10T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": null
+    "isEditable": false,
+    "memo": "Net terms as agreed",
+    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
     "id": "0000000d-d27a-494e-81f3-9f01ab782850",
@@ -199,7 +201,8 @@ export const invoices = [
     "outstandingBalance": 197640,
     "importedAt": null,
     "updatedAt": new Date("2025-12-02T16:30:00.000Z"),
-    "memo": "Net terms as agreed",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -249,7 +252,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-11-25T16:30:00.000Z"),
-    "memo": "Net terms as agreed",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -344,8 +348,9 @@ export const invoices = [
     "outstandingBalance": 154540,
     "importedAt": null,
     "updatedAt": new Date("2025-11-18T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": null
+    "isEditable": false,
+    "memo": "Thank you for your business!",
+    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
     "id": "0000000d-64d3-491f-8a75-199b157bfc38",
@@ -394,6 +399,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-11-10T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -459,8 +465,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-10-27T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-bdbf-41cd-89c1-d131a65c21a5",
@@ -539,8 +546,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-10-20T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": null
+    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
     "id": "0000000d-6428-432c-830d-18df0cce6275",
@@ -619,7 +627,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-10-12T16:30:00.000Z"),
-    "memo": null,
+    "isEditable": true,
+    "memo": "Thank you for your business!",
     "customPaymentInstructions": "Make checks payable to Acme Corp."
   },
   {
@@ -699,6 +708,7 @@ export const invoices = [
     "outstandingBalance": 225500,
     "importedAt": null,
     "updatedAt": new Date("2025-10-05T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -764,6 +774,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-09-28T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
@@ -859,8 +870,9 @@ export const invoices = [
     "outstandingBalance": 305340,
     "importedAt": null,
     "updatedAt": new Date("2025-09-13T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "isEditable": false,
+    "memo": "Net terms as agreed",
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-7e2d-4184-84c3-f831e73f1465",
@@ -939,7 +951,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-09-06T16:30:00.000Z"),
-    "memo": "Thank you for your business!",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": "Make checks payable to Acme Corp."
   },
   {
@@ -1004,7 +1017,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-08-29T16:30:00.000Z"),
-    "memo": "Net terms as agreed",
+    "isEditable": true,
+    "memo": null,
     "customPaymentInstructions": "Make checks payable to Acme Corp."
   },
   {
@@ -1069,7 +1083,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-08-22T16:30:00.000Z"),
-    "memo": null,
+    "isEditable": true,
+    "memo": "Second notice",
     "customPaymentInstructions": null
   },
   {
@@ -1149,8 +1164,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-08-15T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "isEditable": false,
+    "memo": "Thank you for your business!",
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-f8be-4bcd-8787-e43ce7b65503",
@@ -1244,6 +1260,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-08-08T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -1309,7 +1326,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-07-31T16:30:00.000Z"),
-    "memo": null,
+    "isEditable": true,
+    "memo": "Second notice",
     "customPaymentInstructions": null
   },
   {
@@ -1389,8 +1407,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-07-24T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "isEditable": true,
+    "memo": "Thank you for your business!",
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-c481-41b4-8217-127d494ee6cb",
@@ -1439,6 +1458,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-07-17T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -1478,8 +1498,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-07-09T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
-    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-014e-4ed9-83f2-614c651b4861",
@@ -1573,8 +1594,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-07-02T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
+    "isEditable": true,
+    "memo": "Second notice",
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-37d7-47be-8033-e445e939f4d6",
@@ -1668,7 +1690,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-06-25T16:30:00.000Z"),
-    "memo": "Second notice",
+    "isEditable": false,
+    "memo": "Thank you for your business!",
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
@@ -1733,6 +1756,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-06-17T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -1787,7 +1811,8 @@ export const invoices = [
     "outstandingBalance": 130800,
     "importedAt": null,
     "updatedAt": new Date("2025-06-10T16:30:00.000Z"),
-    "memo": "Thank you for your business!",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -1882,6 +1907,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-06-03T16:30:00.000Z"),
+    "isEditable": false,
     "memo": "Second notice",
     "customPaymentInstructions": null
   },
@@ -1947,8 +1973,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-05-27T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
-    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-cbd8-443f-8843-260a9110c0b0",
@@ -2012,8 +2039,9 @@ export const invoices = [
     "outstandingBalance": 143400,
     "importedAt": null,
     "updatedAt": new Date("2025-05-19T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
-    "customPaymentInstructions": null
+    "customPaymentInstructions": "Make checks payable to Acme Corp."
   },
   {
     "id": "0000000d-b15c-43ef-8725-c29411ec4786",
@@ -2092,8 +2120,9 @@ export const invoices = [
     "outstandingBalance": 241380,
     "importedAt": null,
     "updatedAt": new Date("2025-05-12T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": null
+    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
     "id": "0000000d-e7c6-41dd-8e98-cf2a7327514a",
@@ -2142,7 +2171,8 @@ export const invoices = [
     "outstandingBalance": 5000,
     "importedAt": null,
     "updatedAt": new Date("2025-05-05T16:30:00.000Z"),
-    "memo": null,
+    "isEditable": true,
+    "memo": "Thank you for your business!",
     "customPaymentInstructions": null
   },
   {
@@ -2192,6 +2222,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-04-27T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -2242,7 +2273,8 @@ export const invoices = [
     "outstandingBalance": 64800,
     "importedAt": null,
     "updatedAt": new Date("2025-04-20T16:30:00.000Z"),
-    "memo": "Net terms as agreed",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
@@ -2322,7 +2354,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-04-13T16:30:00.000Z"),
-    "memo": "Thank you for your business!",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -2417,7 +2450,8 @@ export const invoices = [
     "outstandingBalance": 470500,
     "importedAt": null,
     "updatedAt": new Date("2025-04-05T16:30:00.000Z"),
-    "memo": "Second notice",
+    "isEditable": true,
+    "memo": "Net terms as agreed",
     "customPaymentInstructions": null
   },
   {
@@ -2497,8 +2531,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-03-29T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-f2c1-4314-8a14-c37d1c4836f2",
@@ -2592,6 +2627,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-03-22T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -2672,6 +2708,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-03-15T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -2741,7 +2778,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-03-07T16:30:00.000Z"),
-    "memo": "Thank you for your business!",
+    "isEditable": true,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -2821,8 +2859,9 @@ export const invoices = [
     "outstandingBalance": 53060,
     "importedAt": null,
     "updatedAt": new Date("2025-02-28T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": "Make checks payable to Acme Corp."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-255f-4d8e-840d-764b57ca903c",
@@ -2901,7 +2940,8 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-02-21T16:30:00.000Z"),
-    "memo": "Thank you for your business!",
+    "isEditable": false,
+    "memo": null,
     "customPaymentInstructions": null
   },
   {
@@ -2966,6 +3006,7 @@ export const invoices = [
     "outstandingBalance": 39520,
     "importedAt": null,
     "updatedAt": new Date("2025-02-13T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3031,6 +3072,7 @@ export const invoices = [
     "outstandingBalance": 115200,
     "importedAt": null,
     "updatedAt": new Date("2025-01-30T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3096,6 +3138,7 @@ export const invoices = [
     "outstandingBalance": 234960,
     "importedAt": null,
     "updatedAt": new Date("2025-01-22T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3176,8 +3219,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-01-15T16:30:00.000Z"),
-    "memo": null,
-    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
+    "isEditable": false,
+    "memo": "Thank you for your business!",
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-1ef0-4bc9-8b0a-7b74f9b85a82",
@@ -3271,8 +3315,9 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-01-08T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": "Wire transfers accepted — contact us for details."
+    "customPaymentInstructions": null
   },
   {
     "id": "0000000d-604a-46b9-8423-7ce206de2a4b",
@@ -3321,6 +3366,7 @@ export const invoices = [
     "outstandingBalance": 0,
     "importedAt": null,
     "updatedAt": new Date("2025-01-01T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3401,6 +3447,7 @@ export const invoices = [
     "outstandingBalance": 48940,
     "importedAt": null,
     "updatedAt": new Date("2025-02-06T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3466,6 +3513,7 @@ export const invoices = [
     "outstandingBalance": 82460,
     "importedAt": null,
     "updatedAt": new Date("2025-09-20T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3531,6 +3579,7 @@ export const invoices = [
     "outstandingBalance": 170100,
     "importedAt": null,
     "updatedAt": new Date("2025-11-03T16:30:00.000Z"),
+    "isEditable": true,
     "memo": null,
     "customPaymentInstructions": null
   },
@@ -3611,7 +3660,8 @@ export const invoices = [
     "outstandingBalance": 291600,
     "importedAt": null,
     "updatedAt": new Date("2025-12-24T16:30:00.000Z"),
+    "isEditable": false,
     "memo": null,
-    "customPaymentInstructions": null
+    "customPaymentInstructions": "Make checks payable to Acme Corp."
   }
 ] as (typeof schema.Type)[]

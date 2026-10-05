@@ -105,8 +105,10 @@ export const InvoiceDetailHeader = ({
   const headerMode = getHeaderMode(viewState)
   const headingContent = getHeadingContent(headerMode, viewState.invoice.invoiceNumber, t)
 
-  const canMarkAsPaid = viewState.invoice.status === InvoiceStatus.Saved
+  const canMarkAsPaid = viewState.invoice.isEditable && (
+    viewState.invoice.status === InvoiceStatus.Saved
     || viewState.invoice.status === InvoiceStatus.PartiallyPaid
+  )
 
   return (
     <HStack className='Layer__InvoiceDetail__Header' justify='space-between' align='center' fluid pie='md'>
