@@ -68,7 +68,17 @@ type SearchFields = {
   options?: Option[]
   placeholder?: string
 }
-type CategoryFields = { type: 'CATEGORY', prompt?: string, options?: Option[] }
+/**
+ * A category question about the task's transactions: suggested categories, "It's a mix" and "Not sure" as options, and an
+ * optional category search. `scope: 'EACH_TRANSACTION'` asks it once per transaction instead (the per-transaction sheet).
+ */
+type CategoryFields = {
+  type: 'CATEGORY'
+  prompt?: string
+  options?: Option[]
+  search?: boolean
+  scope?: 'TASK' | 'EACH_TRANSACTION'
+}
 type TextFields = { type: 'TEXT', prompt?: string, placeholder?: string, multiline?: boolean, required?: boolean }
 type ActionFields = { type: 'ACTION', prompt: string, action: 'CONNECT_ACCOUNT' }
 type UploadFields = { type: 'UPLOAD', prompt: string, accept: string[], multiple?: boolean }
@@ -117,6 +127,14 @@ const isCategory = (step: StepFields): step is CategoryFields => step.type === '
 const isText = (step: StepFields): step is TextFields => step.type === 'TEXT'
 const isAction = (step: StepFields): step is ActionFields => step.type === 'ACTION'
 const isUpload = (step: StepFields): step is UploadFields => step.type === 'UPLOAD'
+
+const isSheet = (step: StepFields): step is CategoryFields => isCategory(step) && step.scope === 'EACH_TRANSACTION'
+
+/** How a CATEGORY question renders: chips, plus a category search when it asks for one or has no suggestions. */
+const asCategoryInput = (step: CategoryFields): ChoiceFields | SearchFields =>
+  (step.search === true || !step.options?.length
+    ? { type: 'SEARCH', entity: 'CATEGORY', options: step.options, placeholder: 'Search all categories…' }
+    : { type: 'CHOICE', prompt: step.prompt ?? '', options: step.options })
 
 const getOptions = (step: StepFields): readonly Option[] => {
   if (isChoice(step)) return step.options
@@ -170,25 +188,47 @@ type StateEndpointBehaviour = 'responds' | 'fails'
 
 const STATE_ENDPOINT_DELAY_MS = 700
 
+const STATE_URL = '/v1/businesses/:business_id/tasks/:task_id/state'
+
+type MockBackend = { accountConnected: boolean }
+type StateResult = { response: StateResponse, effects: string[] }
+
+const ACCOUNT_TYPE_ROUTES: Record<string, PageId> = { personal: 'SUBMIT', vendor: 'vendor', customer: 'customer', unsure: 'SUBMIT' }
+
 /**
- * Stands in for the backend: after the customer lookup, ask about a customer it hasn't seen before. A typed name
- * stands in for "not seen"; the real backend would check the business's history.
+ * Stands in for the backend. Account mask: route by account type, and for the business's own account store its type and
+ * ask to connect it only when it isn't connected yet. Gallery: ask about a customer typed as a new name.
  */
-const resolveState = (task: UnifiedAskFormTask, { page_id, answers }: StateRequest): StateResponse => {
+const resolveState = (task: UnifiedAskFormTask, { page_id, answers }: StateRequest, backend: MockBackend): StateResult => {
   const has = (pageId: PageId) => task.form.pages.some(({ id }) => id === pageId)
-  const customer = answers.customer
+  const route = (next: PageId, effects: string[] = []): StateResult => ({ response: { next_page_id: next !== 'SUBMIT' && !has(next) ? 'SUBMIT' : next }, effects })
 
-  if (page_id === 'who_paid' && customer && 'text' in customer && has('new_customer')) return { next_page_id: 'new_customer' }
-  if (page_id === 'who_paid' && has('upload')) return { next_page_id: 'upload' }
+  if (page_id === 'account_type') {
+    const answer = answers.account_type
+    const choice = answer && 'choice' in answer ? answer.choice : null
 
-  return { next_page_id: 'SUBMIT' }
+    if (choice === 'owned') {
+      const stored = ['Stored the account’s type as BUSINESS']
+      return backend.accountConnected
+        ? route('SUBMIT', [...stored, 'The account is already connected, so no connect page'])
+        : route('connect', [...stored, 'The account isn’t connected yet, so ask to connect it'])
+    }
+    return route(choice ? ACCOUNT_TYPE_ROUTES[choice] ?? 'SUBMIT' : 'SUBMIT')
+  }
+
+  if (page_id === 'who_paid') {
+    const customer = answers.customer
+    return route(customer && 'text' in customer && has('new_customer') ? 'new_customer' : 'upload')
+  }
+
+  return route('SUBMIT')
 }
 
-const callStateEndpoint = (task: UnifiedAskFormTask, request: StateRequest, behaviour: StateEndpointBehaviour) =>
-  new Promise<StateResponse>((resolve, reject) => {
+const callStateEndpoint = (task: UnifiedAskFormTask, request: StateRequest, behaviour: StateEndpointBehaviour, backend: MockBackend) =>
+  new Promise<StateResult>((resolve, reject) => {
     setTimeout(() => {
       if (behaviour === 'fails') reject(new Error('The state endpoint timed out'))
-      else resolve(resolveState(task, request))
+      else resolve(resolveState(task, request, backend))
     }, STATE_ENDPOINT_DELAY_MS)
   })
 
@@ -246,13 +286,14 @@ type Labels = Record<string, string>
 const isAnswered = (step: StepFields, answer: Answer | undefined, transactionCount: number, depth = 0): boolean => {
   if (isAction(step)) return true
   if (isText(step) && step.required === false) return true
-  if (isCategory(step) && transactionCount === 0) return true
+  if (isSheet(step) && transactionCount === 0) return true
   if (!answer) return false
 
-  if (isCategory(step)) {
+  if (isSheet(step)) {
+    const rowStep = asCategoryInput(step)
     return 'transaction_answers' in answer
       && answer.transaction_answers.length === transactionCount
-      && answer.transaction_answers.every(row => isAnswered({ type: 'SEARCH', entity: 'CATEGORY', options: step.options }, row.answer, 0))
+      && answer.transaction_answers.every(row => isAnswered(rowStep, row.answer, 0))
   }
 
   if (isUpload(step)) return 'document_ids' in answer && answer.document_ids.length > 0
@@ -469,6 +510,9 @@ const UploadView = ({ step, answer, onChange }: { step: UploadFields, answer: An
 
 function StepView(props: StepViewProps) {
   const { step, answer, onChange, onPickOption, prompt, depth } = props
+
+  if (isCategory(step) && !isSheet(step)) return <StepView {...props} step={asCategoryInput(step)} />
+
   const choice = answer && 'choice' in answer ? answer.choice : null
   const options = getOptions(step)
   const chosenOption = options.find(({ value }) => value === choice)
@@ -559,9 +603,7 @@ const TransactionTable = ({ transactions }: { transactions: readonly AskTransact
 const TransactionSheet = (props: Omit<StepViewProps, 'step'> & { step: CategoryFields, transactions: readonly AskTransaction[] }) => {
   const { step, answer, onChange, labels, transactions, prompt } = props
   const rows = answer && 'transaction_answers' in answer ? answer.transaction_answers : []
-  const rowStep: ChoiceFields | SearchFields = step.options?.length
-    ? { type: 'CHOICE', prompt: '', options: step.options }
-    : { type: 'SEARCH', entity: 'CATEGORY', placeholder: 'Search categories…' }
+  const rowStep = asCategoryInput(step)
 
   const getRow = (transactionId: string) => rows.find(row => row.transaction_id === transactionId)?.answer
   const isRowAnswered = (transactionId: string) => isAnswered(rowStep, getRow(transactionId), 0)
@@ -639,11 +681,12 @@ const TransactionSheet = (props: Omit<StepViewProps, 'step'> & { step: CategoryF
 type View = { kind: 'PAGE', page: Page } | { kind: 'REVIEW' } | { kind: 'DONE' }
 type Nav = { view: View, history: readonly Page[], direction: SlidingPanesDirection }
 
-type LogEntry = { call: string, body?: unknown, response?: unknown }
+type LogEntry = { call: string, body?: unknown, response?: unknown, effects?: string[] }
 
 type UnifiedAskFormStoryProps = {
   task: UnifiedAskFormTask
   stateEndpoint: StateEndpointBehaviour
+  accountConnected: boolean
 }
 
 const makeShellTask = (title: string, isDone: boolean): UserVisibleTask => ({
@@ -657,7 +700,7 @@ const makeShellTask = (title: string, isDone: boolean): UserVisibleTask => ({
   documents: null,
 })
 
-const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) => {
+const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedAskFormStoryProps) => {
   const { pages, entry_page_id } = task.form
   const entryPage = pages.find(({ id }) => id === entry_page_id) ?? FALLBACK_PAGE
   const stepsById = useMemo(() => new Map(pages.flatMap(({ steps }) => steps.map(step => [step.id, step] as const))), [pages])
@@ -732,10 +775,10 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
     setRouting('loading')
     setLastStateCall({ call: `POST ${url}`, body: request })
 
-    callStateEndpoint(task, request, stateEndpoint).then(
-      (response) => {
+    callStateEndpoint(task, request, stateEndpoint, { accountConnected }).then(
+      ({ response, effects }) => {
         setRouting('idle')
-        setLastStateCall({ call: `POST ${url}`, body: request, response })
+        setLastStateCall({ call: `POST ${url}`, body: request, response, effects })
         follow(response.next_page_id === 'SUBMIT' ? { kind: 'SUBMIT' } : { kind: 'PAGE', page_id: response.next_page_id }, page, currentAnswers)
       },
       (error: unknown) => {
@@ -785,7 +828,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
             depth: 0,
           }
 
-          if (isCategory(step)) return <TransactionSheet key={step.id} {...common} step={step} transactions={task.transactions} />
+          if (isSheet(step)) return <TransactionSheet key={step.id} {...common} step={step} transactions={task.transactions} />
 
           return (
             <VStack key={step.id} pi='md'>
@@ -844,7 +887,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
   )
 
   const showsTable = task.transactions.length > 0 && view.kind !== 'DONE'
-    && !(view.kind === 'PAGE' && view.page.steps.some(step => isCategory(step)))
+    && !(view.kind === 'PAGE' && view.page.steps.some(step => isSheet(step)))
   const [firstStep] = entryPage.steps
   const summary = firstStep ? getLabel(firstStep, answers[firstStep.id], labels) : null
   const paneKey = view.kind === 'PAGE' ? `page:${view.page.id}` : view.kind
@@ -937,6 +980,7 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
             <Span size='xs'>{lastStateCall.call}</Span>
             <Json value={lastStateCall.body} />
             {lastStateCall.response === undefined ? <Span size='xs' variant='subtle'>Waiting…</Span> : <Json value={lastStateCall.response} />}
+            {lastStateCall.effects?.map(effect => <Span key={effect} size='xs'>{`Mock backend: ${effect}.`}</Span>)}
           </>
         )
         : <Span size='xs' variant='subtle'>None yet. Only pages whose next is SERVER call it.</Span>}
@@ -972,18 +1016,12 @@ const txn = (prefix: string, index: number, month: number, day: number, amount: 
   description,
 })
 
+/** Optional on any CATEGORY: opens a category search dropdown. Counterparty and P2P leave it out. */
 const differentCategory: Option = {
   value: 'different_category',
   label: 'A different category',
   follow_up: { type: 'SEARCH', entity: 'CATEGORY', placeholder: 'Search all categories…' },
 }
-
-/** Counterparty and P2P never show a category dropdown, so a different category is typed. */
-const typedCategory = (placeholder: string): Option => ({
-  value: 'different_category',
-  label: 'A different category',
-  follow_up: { type: 'TEXT', placeholder },
-})
 
 const notSure = (placeholder: string, next?: Next): Option => ({
   value: 'not_sure',
@@ -998,8 +1036,6 @@ type CounterpartyCopy = {
   subtype: 'COUNTERPARTY' | 'P2P_COUNTERPARTY'
   title: string
   pickPrompt: string
-  categoryPlaceholder: string
-  rowCategoryPlaceholder: string
   notSurePlaceholder: string
   rowNotSurePlaceholder: string
   sheetPrompt: string
@@ -1021,11 +1057,10 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
         next: { kind: 'PAGE', page_id: 'remember' },
         steps: [{
           id: 'category',
-          type: 'CHOICE',
+          type: 'CATEGORY',
           prompt: copy.pickPrompt,
           options: [
             ...copy.suggestions.map(category),
-            typedCategory(copy.categoryPlaceholder),
             mixOption('itemise'),
             notSure(copy.notSurePlaceholder, { kind: 'SUBMIT' }),
           ],
@@ -1037,8 +1072,9 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
         steps: [{
           id: 'rows',
           type: 'CATEGORY',
+          scope: 'EACH_TRANSACTION',
           prompt: copy.sheetPrompt,
-          options: [...copy.suggestions.map(category), typedCategory(copy.rowCategoryPlaceholder), notSure(copy.rowNotSurePlaceholder)],
+          options: [...copy.suggestions.map(category), notSure(copy.rowNotSurePlaceholder)],
         }],
       },
       {
@@ -1062,8 +1098,6 @@ const COUNTERPARTY_TASK = makeCounterpartyTask({
   subtype: 'COUNTERPARTY',
   title: 'What were your Costco purchases for?',
   pickPrompt: 'You spent $307.74 at Costco across 3 transactions. What were these for?',
-  categoryPlaceholder: 'What category are these purchases?',
-  rowCategoryPlaceholder: 'What category is this purchase?',
   notSurePlaceholder: 'Tell us anything you remember about these purchases',
   rowNotSurePlaceholder: 'Tell us anything you remember about this purchase',
   sheetPrompt: 'Can you share more about what each transaction was for below?',
@@ -1080,8 +1114,6 @@ const P2P_TASK = makeCounterpartyTask({
   subtype: 'P2P_COUNTERPARTY',
   title: 'What were your Venmo payments to Alex Rivera for?',
   pickPrompt: 'You paid Alex Rivera $525.00 on Venmo across 3 payments. What were these for?',
-  categoryPlaceholder: 'What category are these payments?',
-  rowCategoryPlaceholder: 'What category is this payment?',
   notSurePlaceholder: 'Tell us anything you remember about these payments',
   rowNotSurePlaceholder: 'Tell us anything you remember about this payment',
   sheetPrompt: 'Can you share more about what each payment was for below?',
@@ -1106,17 +1138,16 @@ const makeAccountMaskTask = (transactions: AskTransaction[]): UnifiedAskFormTask
     pages: [
       {
         id: 'account_type',
-        next: { kind: 'SUBMIT' },
+        next: { kind: 'SERVER', url: STATE_URL },
         steps: [{
           id: 'account_type',
           type: 'CHOICE',
-          auto_advance: true,
           prompt: 'What kind of account is ••2691?',
           options: [
             { value: 'personal', label: 'A personal account' },
-            { value: 'owned', label: 'Another account my business owns', next: { kind: 'PAGE', page_id: 'connect' } },
-            { value: 'vendor', label: 'A vendor I pay', next: { kind: 'PAGE', page_id: 'vendor' } },
-            { value: 'customer', label: 'A customer who pays me', next: { kind: 'PAGE', page_id: 'customer' } },
+            { value: 'owned', label: 'Another account my business owns' },
+            { value: 'vendor', label: 'A vendor I pay' },
+            { value: 'customer', label: 'A customer who pays me' },
             {
               value: 'unsure',
               label: 'Not sure',
@@ -1148,10 +1179,9 @@ const makeAccountMaskTask = (transactions: AskTransaction[]): UnifiedAskFormTask
           },
           {
             id: 'vendor_category',
-            type: 'SEARCH',
-            entity: 'CATEGORY',
+            type: 'CATEGORY',
+            search: true,
             prompt: 'What do you buy from them?',
-            placeholder: 'Search all categories…',
             options: [...VENDOR_CATEGORIES.map(category), mixOption('itemise')],
           },
         ],
@@ -1159,7 +1189,14 @@ const makeAccountMaskTask = (transactions: AskTransaction[]): UnifiedAskFormTask
       {
         id: 'itemise',
         next: { kind: 'SUBMIT' },
-        steps: [{ id: 'rows', type: 'CATEGORY', prompt: 'What was each of these payments for?', options: [...VENDOR_CATEGORIES.map(category), differentCategory] }],
+        steps: [{
+          id: 'rows',
+          type: 'CATEGORY',
+          scope: 'EACH_TRANSACTION',
+          search: true,
+          prompt: 'What was each of these payments for?',
+          options: VENDOR_CATEGORIES.map(category),
+        }],
       },
       {
         id: 'customer',
@@ -1200,7 +1237,7 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
     pages: [
       {
         id: 'how_paid',
-        next: { kind: 'PAGE', page_id: 'who_paid' },
+        next: { kind: 'PAGE', page_id: 'category' },
         steps: [{
           id: 'how_paid',
           type: 'CHOICE',
@@ -1213,8 +1250,23 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
         }],
       },
       {
+        id: 'category',
+        next: { kind: 'PAGE', page_id: 'who_paid' },
+        steps: [{
+          id: 'deposit_category',
+          type: 'CATEGORY',
+          prompt: 'CATEGORY with "A different category": what were these deposits for?',
+          options: [
+            category('Sales'),
+            category('Refunds'),
+            differentCategory,
+            notSure('Tell us anything you remember about these deposits'),
+          ],
+        }],
+      },
+      {
         id: 'who_paid',
-        next: { kind: 'SERVER', url: '/v1/businesses/:business_id/tasks/:task_id/state' },
+        next: { kind: 'SERVER', url: STATE_URL },
         steps: [
           {
             id: 'customer',
@@ -2151,7 +2203,7 @@ const parsePastedForm = (text: string): ParsedForm => {
   }
 }
 
-const PasteFormStory = ({ stateEndpoint }: { stateEndpoint: StateEndpointBehaviour }) => {
+const PasteFormStory = ({ stateEndpoint, accountConnected }: Omit<UnifiedAskFormStoryProps, 'task'>) => {
   const [text, setText] = useState(() => JSON.stringify(SAMPLE_ONBOARDING_TASK, null, 2))
   const [applied, setApplied] = useState({ task: SAMPLE_ONBOARDING_TASK, version: 0 })
   const [parseError, setParseError] = useState<string | null>(null)
@@ -2206,7 +2258,7 @@ const PasteFormStory = ({ stateEndpoint }: { stateEndpoint: StateEndpointBehavio
         ? null
         : (
           <ErrorBoundary key={applied.version} onError={({ payload }) => setRenderError(payload.message)}>
-            <UnifiedAskFormStory task={applied.task} stateEndpoint={stateEndpoint} />
+            <UnifiedAskFormStory task={applied.task} stateEndpoint={stateEndpoint} accountConnected={accountConnected} />
           </ErrorBoundary>
         )}
     </VStack>
@@ -2319,6 +2371,7 @@ const meta: Meta<UnifiedAskFormStoryProps> = {
   args: {
     task: COUNTERPARTY_TASK,
     stateEndpoint: 'responds',
+    accountConnected: false,
   },
   argTypes: {
     task: { control: 'object', description: `The task as the backend sends it, per contract v${SPEC_VERSION}.` },
@@ -2326,6 +2379,10 @@ const meta: Meta<UnifiedAskFormStoryProps> = {
       control: 'inline-radio',
       options: ['responds', 'fails'],
       description: 'How the mocked state endpoint behaves for pages whose next is SERVER.',
+    },
+    accountConnected: {
+      control: 'boolean',
+      description: 'Mock backend: whether ••2691 is already connected. On account mask, "Another account my business owns" asks to connect it only when this is off.',
     },
   },
   decorators: [
@@ -2381,5 +2438,5 @@ export const PasteAForm: Story = {
   name: 'Paste a form',
   tags: ['real-backend'],
   parameters: { controls: { exclude: ['task'] } },
-  render: ({ stateEndpoint }) => <PasteFormStory stateEndpoint={stateEndpoint} />,
+  render: ({ stateEndpoint, accountConnected }) => <PasteFormStory stateEndpoint={stateEndpoint} accountConnected={accountConnected} />,
 }
