@@ -70,7 +70,8 @@ const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> 
 }
 
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
-  return availableActions[invoice.status]
+  const actions = availableActions[invoice.status]
+  return invoice.isEditable ? actions : actions.filter(action => action !== InvoiceDetailHeaderMenuActions.Edit)
 }
 
 type InvoiceDetailHeaderMenuProps = {

@@ -142,6 +142,11 @@ export const InvoiceSchema = Schema.Struct({
     Schema.fromKey('updated_at'),
   ),
 
+  isEditable: pipe(
+    Schema.optionalWith(Schema.Boolean, { default: () => true }),
+    Schema.fromKey('is_editable'),
+  ),
+
   memo: Schema.NullOr(Schema.String),
 
   customPaymentInstructions: pipe(
