@@ -143,7 +143,7 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   isEditable: pipe(
-    Schema.optionalWith(Schema.Boolean, { default: () => true }),
+    Schema.optionalWith(Schema.Boolean, { default: () => true, nullable: true }),
     Schema.fromKey('is_editable'),
   ),
 
