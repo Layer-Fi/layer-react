@@ -73,6 +73,8 @@ const nonEditableInvoiceHiddenActions = [
   InvoiceDetailHeaderMenuActions.Edit,
   InvoiceDetailHeaderMenuActions.Void,
   InvoiceDetailHeaderMenuActions.Writeoff,
+  InvoiceDetailHeaderMenuActions.Refund,
+  InvoiceDetailHeaderMenuActions.Reset,
 ]
 
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
