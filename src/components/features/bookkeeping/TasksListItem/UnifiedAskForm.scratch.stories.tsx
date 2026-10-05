@@ -35,7 +35,7 @@ import '@features/bookkeeping/TasksListItem/counterpartyAskTaskBody.scss'
 /*
  * Prototype only. Renders any form written against the Unified Ask Form contract v0.0.4
  * (https://claude.ai/artifact/FERckK69QPAnmwPnbZZ2kC). The spec is the story's `task` arg, so it can be edited live in
- * the Controls panel. The state and search endpoints are mocked in this file. Client copy is plain strings while the
+ * the Controls panel. The next-page and search endpoints are mocked in this file. Client copy is plain strings while the
  * contract is still moving; server copy comes from the spec.
  */
 
@@ -115,9 +115,9 @@ type TransactionAnswers = { transaction_answers: { transaction_id: string, answe
 type Answer = ChoiceAnswer | TextAnswer | { completed: true } | DocumentsAnswer | TransactionAnswers
 type Answers = Record<string, Answer>
 
-type StateRequest = { page_id: PageId, page_history: PageId[], answers: Answers }
+type NextPageRequest = { page_id: PageId, page_history: PageId[], answers: Answers }
 /** A page id from this form, or `SUBMIT`. */
-type StateResponse = { next_page_id: string }
+type NextPageResponse = { next_page_id: string }
 
 type SearchResult = { id: string, entity: SearchEntity, label: string, sublabel: string }
 
@@ -182,16 +182,16 @@ const searchEndpoint = (entity: SearchEntity, query: string): readonly SearchRes
   return SEARCH_INDEX[entity].filter(({ label }) => normalize(label).includes(needle)).slice(0, 20)
 }
 
-/* ---------------------------------------------------------------- mock state endpoint */
+/* ---------------------------------------------------------------- mock next-page endpoint */
 
-type StateEndpointBehaviour = 'responds' | 'fails'
+type NextPageEndpointBehaviour = 'responds' | 'fails'
 
-const STATE_ENDPOINT_DELAY_MS = 700
+const NEXT_PAGE_DELAY_MS = 700
 
-const STATE_URL = '/v1/businesses/:business_id/tasks/:task_id/state'
+const NEXT_PAGE_URL = '/v1/businesses/:business_id/tasks/:task_id/next-page?form_version=1'
 
 type MockBackend = { accountConnected: boolean }
-type StateResult = { response: StateResponse, effects: string[] }
+type NextPageResult = { response: NextPageResponse, effects: string[] }
 
 const ACCOUNT_TYPE_ROUTES: Record<string, PageId> = { personal: 'SUBMIT', vendor: 'vendor', customer: 'customer', unsure: 'SUBMIT' }
 
@@ -199,9 +199,9 @@ const ACCOUNT_TYPE_ROUTES: Record<string, PageId> = { personal: 'SUBMIT', vendor
  * Stands in for the backend. Account mask: route by account type, and for the business's own account store its type and
  * ask to connect it only when it isn't connected yet. Gallery: ask about a customer typed as a new name.
  */
-const resolveState = (task: UnifiedAskFormTask, { page_id, answers }: StateRequest, backend: MockBackend): StateResult => {
+const resolveNextPage = (task: UnifiedAskFormTask, { page_id, answers }: NextPageRequest, backend: MockBackend): NextPageResult => {
   const has = (pageId: PageId) => task.form.pages.some(({ id }) => id === pageId)
-  const route = (next: PageId, effects: string[] = []): StateResult => ({ response: { next_page_id: next !== 'SUBMIT' && !has(next) ? 'SUBMIT' : next }, effects })
+  const route = (next: PageId, effects: string[] = []): NextPageResult => ({ response: { next_page_id: next !== 'SUBMIT' && !has(next) ? 'SUBMIT' : next }, effects })
 
   if (page_id === 'account_type') {
     const answer = answers.account_type
@@ -224,19 +224,19 @@ const resolveState = (task: UnifiedAskFormTask, { page_id, answers }: StateReque
   return route('SUBMIT')
 }
 
-const callStateEndpoint = (task: UnifiedAskFormTask, request: StateRequest, behaviour: StateEndpointBehaviour, backend: MockBackend) =>
-  new Promise<StateResult>((resolve, reject) => {
+const callNextPageEndpoint = (task: UnifiedAskFormTask, request: NextPageRequest, behaviour: NextPageEndpointBehaviour, backend: MockBackend) =>
+  new Promise<NextPageResult>((resolve, reject) => {
     setTimeout(() => {
-      if (behaviour === 'fails') reject(new Error('The state endpoint timed out'))
-      else resolve(resolveState(task, request, backend))
-    }, STATE_ENDPOINT_DELAY_MS)
+      if (behaviour === 'fails') reject(new Error('The next-page endpoint timed out'))
+      else resolve(resolveNextPage(task, request, backend))
+    }, NEXT_PAGE_DELAY_MS)
   })
 
 /* ---------------------------------------------------------------- spec rules the backend checks */
 
-/** A SERVER url must be on the client's API origin: a path, or the API host itself. */
+/** A SERVER url must be a relative `/v1/` path, as the API's form validation requires; absolute urls are rejected. */
 const isApiOriginUrl = (url: unknown): url is string =>
-  typeof url === 'string' && (url.startsWith('/v1/') || url.startsWith('https://api.layerfi.com/'))
+  typeof url === 'string' && url.startsWith('/v1/')
 
 const validateForm = ({ entry_page_id, pages }: UnifiedAskFormTask['form']): string[] => {
   const issues: string[] = []
@@ -251,7 +251,7 @@ const validateForm = ({ entry_page_id, pages }: UnifiedAskFormTask['form']): str
   for (const page of pages) {
     checkTarget(page.next, `Page "${page.id}"`)
     if (page.next.kind === 'SERVER' && !isApiOriginUrl(page.next.url)) {
-      issues.push(`Page "${page.id}" routes through SERVER without a url on the API origin. The customer would move on to free text.`)
+      issues.push(`Page "${page.id}" routes through SERVER without a relative /v1/ url. The customer would move on to free text.`)
     }
 
     const routingSteps = page.steps.filter(step => getOptions(step).some(({ next }) => next))
@@ -685,7 +685,7 @@ type LogEntry = { call: string, body?: unknown, response?: unknown, effects?: st
 
 type UnifiedAskFormStoryProps = {
   task: UnifiedAskFormTask
-  stateEndpoint: StateEndpointBehaviour
+  nextPageEndpoint: NextPageEndpointBehaviour
   accountConnected: boolean
 }
 
@@ -700,7 +700,7 @@ const makeShellTask = (title: string, isDone: boolean): UserVisibleTask => ({
   documents: null,
 })
 
-const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedAskFormStoryProps) => {
+const UnifiedAskFormStory = ({ task, nextPageEndpoint, accountConnected }: UnifiedAskFormStoryProps) => {
   const { pages, entry_page_id } = task.form
   const entryPage = pages.find(({ id }) => id === entry_page_id) ?? FALLBACK_PAGE
   const stepsById = useMemo(() => new Map(pages.flatMap(({ steps }) => steps.map(step => [step.id, step] as const))), [pages])
@@ -711,7 +711,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedA
   const [labels, setLabels] = useState<Labels>({})
   const [nav, setNav] = useState<Nav>({ view: { kind: 'PAGE', page: entryPage }, history: [], direction: 'forward' })
   const [routing, setRouting] = useState<'idle' | 'loading' | 'error'>('idle')
-  const [lastStateCall, setLastStateCall] = useState<LogEntry | null>(null)
+  const [lastNextPageCall, setLastNextPageCall] = useState<LogEntry | null>(null)
   const [lastSearch, setLastSearch] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState<LogEntry | null>(null)
 
@@ -735,7 +735,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedA
 
   const submit = (finalAnswers: Answers, pagesOnPath: readonly Page[]) => {
     const body = { answers: getAnswersForPages(pagesOnPath, finalAnswers) }
-    setSubmitted({ call: 'POST /v1/businesses/:business_id/tasks/:task_id/unified-ask-form-response', body })
+    setSubmitted({ call: 'POST /v1/businesses/:business_id/tasks/:task_id/unified-response?form_version=1', body })
     goForward({ kind: 'DONE' })
   }
 
@@ -766,24 +766,24 @@ const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedA
     }
 
     const pageHistory = [...history, page]
-    const request: StateRequest = {
+    const request: NextPageRequest = {
       page_id: page.id,
       page_history: pageHistory.map(({ id }) => id),
       answers: getAnswersForPages(pageHistory, currentAnswers),
     }
 
     setRouting('loading')
-    setLastStateCall({ call: `POST ${url}`, body: request })
+    setLastNextPageCall({ call: `POST ${url}`, body: request })
 
-    callStateEndpoint(task, request, stateEndpoint, { accountConnected }).then(
+    callNextPageEndpoint(task, request, nextPageEndpoint, { accountConnected }).then(
       ({ response, effects }) => {
         setRouting('idle')
-        setLastStateCall({ call: `POST ${url}`, body: request, response, effects })
+        setLastNextPageCall({ call: `POST ${url}`, body: request, response, effects })
         follow(response.next_page_id === 'SUBMIT' ? { kind: 'SUBMIT' } : { kind: 'PAGE', page_id: response.next_page_id }, page, currentAnswers)
       },
       (error: unknown) => {
         setRouting('error')
-        setLastStateCall({ call: `POST ${url}`, body: request, response: String(error) })
+        setLastNextPageCall({ call: `POST ${url}`, body: request, response: String(error) })
       },
     )
   }
@@ -923,7 +923,7 @@ const UnifiedAskFormStory = ({ task, stateEndpoint, accountConnected }: UnifiedA
         issues={issues}
         location={view.kind === 'PAGE' ? view.page.id : view.kind}
         history={visitedPages.map(({ id }) => id)}
-        lastStateCall={lastStateCall}
+        lastNextPageCall={lastNextPageCall}
         lastSearch={lastSearch}
         answers={getAnswersForPages(visitedPages, answers)}
         submitted={submitted}
@@ -948,14 +948,14 @@ type InspectorProps = {
   issues: readonly string[]
   location: string
   history: readonly string[]
-  lastStateCall: LogEntry | null
+  lastNextPageCall: LogEntry | null
   lastSearch: string | null
   answers: Answers
   submitted: LogEntry | null
   task: UnifiedAskFormTask
 }
 
-const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answers, submitted, task }: InspectorProps) => (
+const Inspector = ({ issues, location, history, lastNextPageCall, lastSearch, answers, submitted, task }: InspectorProps) => (
   <VStack gap='md' className='UnifiedAskFormStory__Inspector'>
     <VStack gap='3xs'>
       <Heading size='xs' level={3}>{`Contract v${SPEC_VERSION} · ${task.form_subtype}`}</Heading>
@@ -973,14 +973,14 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
       <Span size='xs' variant='subtle'>{`Pages visited: ${history.join(' → ') || '—'}`}</Span>
     </InspectorSection>
 
-    <InspectorSection title='Last state endpoint call'>
-      {lastStateCall
+    <InspectorSection title='Last next-page call'>
+      {lastNextPageCall
         ? (
           <>
-            <Span size='xs'>{lastStateCall.call}</Span>
-            <Json value={lastStateCall.body} />
-            {lastStateCall.response === undefined ? <Span size='xs' variant='subtle'>Waiting…</Span> : <Json value={lastStateCall.response} />}
-            {lastStateCall.effects?.map(effect => <Span key={effect} size='xs'>{`Mock backend: ${effect}.`}</Span>)}
+            <Span size='xs'>{lastNextPageCall.call}</Span>
+            <Json value={lastNextPageCall.body} />
+            {lastNextPageCall.response === undefined ? <Span size='xs' variant='subtle'>Waiting…</Span> : <Json value={lastNextPageCall.response} />}
+            {lastNextPageCall.effects?.map(effect => <Span key={effect} size='xs'>{`Mock backend: ${effect}.`}</Span>)}
           </>
         )
         : <Span size='xs' variant='subtle'>None yet. Only pages whose next is SERVER call it.</Span>}
@@ -1138,7 +1138,7 @@ const makeAccountMaskTask = (transactions: AskTransaction[]): UnifiedAskFormTask
     pages: [
       {
         id: 'account_type',
-        next: { kind: 'SERVER', url: STATE_URL },
+        next: { kind: 'SERVER', url: NEXT_PAGE_URL },
         steps: [{
           id: 'account_type',
           type: 'CHOICE',
@@ -1266,7 +1266,7 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
       },
       {
         id: 'who_paid',
-        next: { kind: 'SERVER', url: STATE_URL },
+        next: { kind: 'SERVER', url: NEXT_PAGE_URL },
         steps: [
           {
             id: 'customer',
@@ -1314,11 +1314,11 @@ const BROKEN_SPEC_TASK: UnifiedAskFormTask = {
     pages: [
       {
         id: 'pick',
-        next: { kind: 'SERVER', url: 'https://example.com/route-this-form' },
+        next: { kind: 'SERVER', url: 'https://api.layerfi.com/v1/businesses/:business_id/tasks/:task_id/next-page?form_version=1' },
         steps: [{
           id: 'category',
           type: 'CHOICE',
-          prompt: 'This page routes through SERVER, but an option also sets next.',
+          prompt: 'This page routes through SERVER with an absolute url, and an option also sets next.',
           options: [
             { value: 'acct_office_expenses', label: 'Office Expenses', next: { kind: 'PAGE', page_id: 'remember' } },
             {
@@ -2203,7 +2203,7 @@ const parsePastedForm = (text: string): ParsedForm => {
   }
 }
 
-const PasteFormStory = ({ stateEndpoint, accountConnected }: Omit<UnifiedAskFormStoryProps, 'task'>) => {
+const PasteFormStory = ({ nextPageEndpoint, accountConnected }: Omit<UnifiedAskFormStoryProps, 'task'>) => {
   const [text, setText] = useState(() => JSON.stringify(SAMPLE_ONBOARDING_TASK, null, 2))
   const [applied, setApplied] = useState({ task: SAMPLE_ONBOARDING_TASK, version: 0 })
   const [parseError, setParseError] = useState<string | null>(null)
@@ -2258,7 +2258,7 @@ const PasteFormStory = ({ stateEndpoint, accountConnected }: Omit<UnifiedAskForm
         ? null
         : (
           <ErrorBoundary key={applied.version} onError={({ payload }) => setRenderError(payload.message)}>
-            <UnifiedAskFormStory task={applied.task} stateEndpoint={stateEndpoint} accountConnected={accountConnected} />
+            <UnifiedAskFormStory task={applied.task} nextPageEndpoint={nextPageEndpoint} accountConnected={accountConnected} />
           </ErrorBoundary>
         )}
     </VStack>
@@ -2351,11 +2351,11 @@ Renders any form written against the [Unified Ask Form contract v${SPEC_VERSION}
 
 - **Edit the spec live**: the \`task\` control holds the whole task the backend would send. Change copy, options, routes or
   add pages; the form resets on every edit.
-- **Inspector**: spec checks (the backend's validation rules), the pages visited, the last state endpoint call, the last
+- **Inspector**: spec checks (the backend's validation rules), the pages visited, the last next-page call, the last
   search request, and the answers the client would post.
-- **Mocked endpoints**: in "Every step kind", the state endpoint sends a customer typed as a new name to an extra
+- **Mocked endpoints**: in "Every step kind", the next-page endpoint sends a customer typed as a new name to an extra
   \`new_customer\` page, and a picked customer straight on to \`upload\`. "It's a mix" always submits after the sheet, so
-  no other story routes through SERVER. Set \`stateEndpoint\` to \`fails\` to see the retry state. Search filters a local index of
+  no other story routes through SERVER. Set \`nextPageEndpoint\` to \`fails\` to see the retry state. Search filters a local index of
   categories, vendors and customers.
 
 Stories: counterparty and P2P (the same pages, different server copy), account mask, account mask with 60 transactions,
@@ -2370,15 +2370,15 @@ const meta: Meta<UnifiedAskFormStoryProps> = {
   },
   args: {
     task: COUNTERPARTY_TASK,
-    stateEndpoint: 'responds',
+    nextPageEndpoint: 'responds',
     accountConnected: false,
   },
   argTypes: {
     task: { control: 'object', description: `The task as the backend sends it, per contract v${SPEC_VERSION}.` },
-    stateEndpoint: {
+    nextPageEndpoint: {
       control: 'inline-radio',
       options: ['responds', 'fails'],
-      description: 'How the mocked state endpoint behaves for pages whose next is SERVER.',
+      description: 'How the mocked next-page endpoint behaves for pages whose next is SERVER.',
     },
     accountConnected: {
       control: 'boolean',
@@ -2438,5 +2438,5 @@ export const PasteAForm: Story = {
   name: 'Paste a form',
   tags: ['real-backend'],
   parameters: { controls: { exclude: ['task'] } },
-  render: ({ stateEndpoint, accountConnected }) => <PasteFormStory stateEndpoint={stateEndpoint} accountConnected={accountConnected} />,
+  render: ({ nextPageEndpoint, accountConnected }) => <PasteFormStory nextPageEndpoint={nextPageEndpoint} accountConnected={accountConnected} />,
 }
