@@ -49,7 +49,7 @@ type PageId = string
 type Next =
   | { kind: 'PAGE', page_id: PageId }
   | { kind: 'SUBMIT', review?: boolean }
-  | { kind: 'SERVER' }
+  | { kind: 'SERVER', url: string }
 
 type SearchEntity = 'CATEGORY' | 'CUSTOMER' | 'VENDOR'
 
@@ -194,6 +194,10 @@ const callStateEndpoint = (task: UnifiedAskFormTask, request: StateRequest, beha
 
 /* ---------------------------------------------------------------- spec rules the backend checks */
 
+/** A SERVER url must be on the client's API origin: a path, or the API host itself. */
+const isApiOriginUrl = (url: unknown): url is string =>
+  typeof url === 'string' && (url.startsWith('/v1/') || url.startsWith('https://api.layerfi.com/'))
+
 const validateForm = ({ entry_page_id, pages }: UnifiedAskFormTask['form']): string[] => {
   const issues: string[] = []
   const pageIds = new Set(pages.map(({ id }) => id))
@@ -206,6 +210,9 @@ const validateForm = ({ entry_page_id, pages }: UnifiedAskFormTask['form']): str
 
   for (const page of pages) {
     checkTarget(page.next, `Page "${page.id}"`)
+    if (page.next.kind === 'SERVER' && !isApiOriginUrl(page.next.url)) {
+      issues.push(`Page "${page.id}" routes through SERVER without a url on the API origin. The customer would move on to free text.`)
+    }
 
     const routingSteps = page.steps.filter(step => getOptions(step).some(({ next }) => next))
     if (routingSteps.length > 1) {
@@ -709,6 +716,12 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
       return
     }
 
+    const { url } = page.next
+    if (!isApiOriginUrl(url)) {
+      goForward({ kind: 'PAGE', page: FALLBACK_PAGE })
+      return
+    }
+
     const pageHistory = [...history, page]
     const request: StateRequest = {
       page_id: page.id,
@@ -717,17 +730,17 @@ const UnifiedAskFormStory = ({ task, stateEndpoint }: UnifiedAskFormStoryProps) 
     }
 
     setRouting('loading')
-    setLastStateCall({ call: 'POST /v1/businesses/:business_id/tasks/:task_id/state', body: request })
+    setLastStateCall({ call: `POST ${url}`, body: request })
 
     callStateEndpoint(task, request, stateEndpoint).then(
       (response) => {
         setRouting('idle')
-        setLastStateCall({ call: 'POST /v1/businesses/:business_id/tasks/:task_id/state', body: request, response })
+        setLastStateCall({ call: `POST ${url}`, body: request, response })
         follow(response.next_page_id === 'SUBMIT' ? { kind: 'SUBMIT' } : { kind: 'PAGE', page_id: response.next_page_id }, page, currentAnswers)
       },
       (error: unknown) => {
         setRouting('error')
-        setLastStateCall({ call: 'POST /v1/businesses/:business_id/tasks/:task_id/state', body: request, response: String(error) })
+        setLastStateCall({ call: `POST ${url}`, body: request, response: String(error) })
       },
     )
   }
@@ -1201,7 +1214,7 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
       },
       {
         id: 'who_paid',
-        next: { kind: 'SERVER' },
+        next: { kind: 'SERVER', url: '/v1/businesses/:business_id/tasks/:task_id/state' },
         steps: [
           {
             id: 'customer',
@@ -1249,7 +1262,7 @@ const BROKEN_SPEC_TASK: UnifiedAskFormTask = {
     pages: [
       {
         id: 'pick',
-        next: { kind: 'SERVER' },
+        next: { kind: 'SERVER', url: 'https://example.com/route-this-form' },
         steps: [{
           id: 'category',
           type: 'CHOICE',
