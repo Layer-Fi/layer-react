@@ -965,6 +965,13 @@ const differentCategory: Option = {
   follow_up: { type: 'SEARCH', entity: 'CATEGORY', placeholder: 'Search all categories…' },
 }
 
+/** Counterparty and P2P never show a category dropdown, so a different category is typed. */
+const typedCategory = (placeholder: string): Option => ({
+  value: 'different_category',
+  label: 'A different category',
+  follow_up: { type: 'TEXT', placeholder },
+})
+
 const notSure = (placeholder: string, next?: Next): Option => ({
   value: 'not_sure',
   label: 'Not sure',
@@ -978,6 +985,8 @@ type CounterpartyCopy = {
   subtype: 'COUNTERPARTY' | 'P2P_COUNTERPARTY'
   title: string
   pickPrompt: string
+  categoryPlaceholder: string
+  rowCategoryPlaceholder: string
   notSurePlaceholder: string
   rowNotSurePlaceholder: string
   sheetPrompt: string
@@ -1001,7 +1010,12 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
           id: 'category',
           type: 'CHOICE',
           prompt: copy.pickPrompt,
-          options: [...copy.suggestions.map(category), differentCategory, mixOption('itemise'), notSure(copy.notSurePlaceholder, { kind: 'SUBMIT' })],
+          options: [
+            ...copy.suggestions.map(category),
+            typedCategory(copy.categoryPlaceholder),
+            mixOption('itemise'),
+            notSure(copy.notSurePlaceholder, { kind: 'SUBMIT' }),
+          ],
         }],
       },
       {
@@ -1011,7 +1025,7 @@ const makeCounterpartyTask = (copy: CounterpartyCopy): UnifiedAskFormTask => ({
           id: 'rows',
           type: 'CATEGORY',
           prompt: copy.sheetPrompt,
-          options: [...copy.suggestions.map(category), differentCategory, notSure(copy.rowNotSurePlaceholder)],
+          options: [...copy.suggestions.map(category), typedCategory(copy.rowCategoryPlaceholder), notSure(copy.rowNotSurePlaceholder)],
         }],
       },
       {
@@ -1035,6 +1049,8 @@ const COUNTERPARTY_TASK = makeCounterpartyTask({
   subtype: 'COUNTERPARTY',
   title: 'What were your Costco purchases for?',
   pickPrompt: 'You spent $307.74 at Costco across 3 transactions. What were these for?',
+  categoryPlaceholder: 'What category are these purchases?',
+  rowCategoryPlaceholder: 'What category is this purchase?',
   notSurePlaceholder: 'Tell us anything you remember about these purchases',
   rowNotSurePlaceholder: 'Tell us anything you remember about this purchase',
   sheetPrompt: 'Can you share more about what each transaction was for below?',
@@ -1051,6 +1067,8 @@ const P2P_TASK = makeCounterpartyTask({
   subtype: 'P2P_COUNTERPARTY',
   title: 'What were your Venmo payments to Alex Rivera for?',
   pickPrompt: 'You paid Alex Rivera $525.00 on Venmo across 3 payments. What were these for?',
+  categoryPlaceholder: 'What category are these payments?',
+  rowCategoryPlaceholder: 'What category is this payment?',
   notSurePlaceholder: 'Tell us anything you remember about these payments',
   rowNotSurePlaceholder: 'Tell us anything you remember about this payment',
   sheetPrompt: 'Can you share more about what each payment was for below?',
