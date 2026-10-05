@@ -33,16 +33,16 @@ import '@features/bookkeeping/TasksList/tasksList.scss'
 import '@features/bookkeeping/TasksListItem/counterpartyAskTaskBody.scss'
 
 /*
- * Prototype only. Renders any form written against the Unified Ask Form contract v0.0.3
- * (https://claude.ai/artifact/2NcpUjQVRoNqPzPz11ofHy). The spec is the story's `task` arg, so it can be edited live in
+ * Prototype only. Renders any form written against the Unified Ask Form contract v0.0.4
+ * (https://claude.ai/artifact/FERckK69QPAnmwPnbZZ2kC). The spec is the story's `task` arg, so it can be edited live in
  * the Controls panel. The state and search endpoints are mocked in this file. Client copy is plain strings while the
  * contract is still moving; server copy comes from the spec.
  */
 
-const SPEC_VERSION = '0.0.3'
-const SPEC_URL = 'https://claude.ai/artifact/2NcpUjQVRoNqPzPz11ofHy'
+const SPEC_VERSION = '0.0.4'
+const SPEC_URL = 'https://claude.ai/artifact/FERckK69QPAnmwPnbZZ2kC'
 
-/* ---------------------------------------------------------------- contract v0.0.3 */
+/* ---------------------------------------------------------------- contract v0.0.4 */
 
 type PageId = string
 
@@ -965,7 +965,7 @@ const Inspector = ({ issues, location, history, lastStateCall, lastSearch, answe
     <InspectorSection title='Spec checks'>
       {issues.length > 0
         ? issues.map(issue => <Span key={issue} size='xs' status='warning'>{`• ${issue}`}</Span>)
-        : <Span size='xs' variant='subtle'>No issues. The form follows the v0.0.3 rules.</Span>}
+        : <Span size='xs' variant='subtle'>{`No issues. The form follows the v${SPEC_VERSION} rules.`}</Span>}
     </InspectorSection>
 
     <InspectorSection title='Where the customer is'>
@@ -1227,7 +1227,7 @@ const ACCOUNT_MASK_TASK = makeAccountMaskTask(MONTHLY_TRANSFERS)
 const STEP_GALLERY_TASK: UnifiedAskFormTask = {
   task_type: 'UNIFIED_ASK_FORM',
   form_subtype: 'STEP_GALLERY',
-  title: 'Every step kind in v0.0.3',
+  title: 'Every step kind in v0.0.4',
   transactions: [
     txn('gallery', 0, 4, 9, 240000, 'ACH CREDIT XXXXXX5520 PAYMENT'),
     txn('gallery', 1, 5, 11, 185000, 'ACH CREDIT XXXXXX5520 PAYMENT'),
@@ -1308,7 +1308,7 @@ const STEP_GALLERY_TASK: UnifiedAskFormTask = {
 const BROKEN_SPEC_TASK: UnifiedAskFormTask = {
   ...COUNTERPARTY_TASK,
   form_subtype: 'COUNTERPARTY',
-  title: 'A spec that breaks the v0.0.3 rules',
+  title: 'A spec that breaks the v0.0.4 rules',
   form: {
     entry_page_id: 'pick',
     pages: [
