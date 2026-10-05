@@ -14,11 +14,11 @@ import {
   getWholeAnswer,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
 
-type GoingForwardPromptCondition = 'purchase' | 'p2p' | 'p2pWithProvider' | 'p2pUnnamed'
+type GoingForwardPromptCondition = 'purchase' | 'p2p' | 'p2pWithProvider' | 'p2pUnnamed' | 'p2pUnnamedWithProvider'
 
 const toGoingForwardPromptCondition = (counterparty: CounterpartyAskCounterparty): GoingForwardPromptCondition => {
   if (counterparty.kind !== 'p2p') return 'purchase'
-  if (!counterparty.name) return 'p2pUnnamed'
+  if (!counterparty.name) return counterparty.providerName ? 'p2pUnnamedWithProvider' : 'p2pUnnamed'
 
   return counterparty.providerName ? 'p2pWithProvider' : 'p2p'
 }
@@ -44,8 +44,15 @@ export const CounterpartyAskRememberPane = withForm({
         p2p: 'Should we assume your future payments to {{counterparty}} are {{answer}} going forward?',
         p2pWithProvider: 'Should we assume your future {{provider}} payments to {{counterparty}} are {{answer}} going forward?',
         p2pUnnamed: 'Should we assume future payments like these are {{answer}} going forward?',
+        p2pUnnamedWithProvider: 'Should we assume your future {{provider}} payments are {{answer}} going forward?',
       },
-      contexts: { purchase: 'purchase', p2p: 'p2p', p2pWithProvider: 'p2p_with_provider', p2pUnnamed: 'p2p_unnamed' },
+      contexts: {
+        purchase: 'purchase',
+        p2p: 'p2p',
+        p2pWithProvider: 'p2p_with_provider',
+        p2pUnnamed: 'p2p_unnamed',
+        p2pUnnamedWithProvider: 'p2p_unnamed_with_provider',
+      },
       counterparty: counterparty.name,
       provider: counterparty.kind === 'p2p' ? counterparty.providerName : null,
       answer,

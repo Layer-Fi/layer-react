@@ -3,15 +3,28 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AnyCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
+import { tConditional } from '@utils/shared/i18n/conditional'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostCounterpartyAskResponse } from '@api/businesses/[business-id]/tasks/[task-id]/counterparty-ask-response/post'
 import { useRawAppForm } from '@blocks/Form/useForm'
 import {
   buildCounterpartyAskSubmission,
+  type CounterpartyAskCounterparty,
   counterpartyAskFormOptions,
   type CounterpartyAskSubmission,
+  getCounterpartyAskCounterparty,
   getCounterpartyAskFormDefaultValues,
 } from '@features/bookkeeping/TasksListItem/counterpartyAskFormUtils'
+
+type AlwaysAskConfirmationCondition = 'p2p' | 'p2pWithProvider' | 'p2pUnnamed' | 'p2pUnnamedWithProvider'
+
+const toAlwaysAskConfirmationCondition = (
+  { name, providerName }: Extract<CounterpartyAskCounterparty, { kind: 'p2p' }>,
+): AlwaysAskConfirmationCondition => {
+  if (name) return providerName ? 'p2pWithProvider' : 'p2p'
+
+  return providerName ? 'p2pUnnamedWithProvider' : 'p2pUnnamed'
+}
 
 export type CounterpartyAskSaved = Pick<CounterpartyAskSubmission, 'answer' | 'wasCategorized'>
 
@@ -42,6 +55,31 @@ export const useCounterpartyAskForm = ({ task, onSaved, onRowsReset }: UseCounte
 
         form.reset(getCounterpartyAskFormDefaultValues(saved))
         onSaved(submission)
+
+        const counterparty = getCounterpartyAskCounterparty(task)
+
+        if (submission.response.alwaysAsk && counterparty.kind === 'p2p') {
+          addToast({
+            content: tConditional(t, 'bookkeeping:TasksListItem.useCounterpartyAskForm.label.always_ask_confirmation', {
+              condition: toAlwaysAskConfirmationCondition(counterparty),
+              cases: {
+                p2p: 'Got it. We’ll always ask you about future payments to {{counterparty}}.',
+                p2pWithProvider: 'Got it. We’ll always ask you about future payments to {{counterparty}} via {{provider}}.',
+                p2pUnnamed: 'Got it. We’ll always ask you about future payments like these.',
+                p2pUnnamedWithProvider: 'Got it. We’ll always ask you about future {{provider}} payments like these.',
+              },
+              contexts: {
+                p2p: 'p2p',
+                p2pWithProvider: 'p2p_with_provider',
+                p2pUnnamed: 'p2p_unnamed',
+                p2pUnnamedWithProvider: 'p2p_unnamed_with_provider',
+              },
+              counterparty: counterparty.name,
+              provider: counterparty.providerName,
+            }),
+            type: 'success',
+          })
+        }
       }
       catch {
         addToast({

@@ -201,7 +201,11 @@ export const buildCounterpartyAskSubmission = (
   if (!wholeAnswer) return null
 
   return {
-    response: buildAllSameCounterpartyAskResponse(wholeAnswer, goingForward === 'always'),
+    response: buildAllSameCounterpartyAskResponse(
+      wholeAnswer,
+      goingForward === 'always',
+      goingForward === 'ask' && isP2PCounterpartyAskTask(task),
+    ),
     answer: wholeAnswer.kind === 'account' ? { kind: 'account', name: wholeAnswer.account.name } : { kind: 'text' },
     wasCategorized: hadAccountAnswer || wholeAnswer.kind === 'account',
   }
