@@ -69,17 +69,9 @@ const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> 
   ],
 }
 
-const nonEditableInvoiceHiddenActions = [
-  InvoiceDetailHeaderMenuActions.Edit,
-  InvoiceDetailHeaderMenuActions.Void,
-  InvoiceDetailHeaderMenuActions.Writeoff,
-  InvoiceDetailHeaderMenuActions.Refund,
-  InvoiceDetailHeaderMenuActions.Reset,
-]
-
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
   const actions = availableActions[invoice.status]
-  return invoice.isEditable ? actions : actions.filter(action => !nonEditableInvoiceHiddenActions.includes(action))
+  return invoice.isEditable ? actions : actions.filter(action => action === InvoiceDetailHeaderMenuActions.DownloadPdf)
 }
 
 type InvoiceDetailHeaderMenuProps = {
