@@ -99,12 +99,12 @@ const toPostedRow = (answer: AskFormRowAnswer): AskFormRowAnswer | null => {
 }
 
 // The API rejects blank text, so an optional TEXT the customer left empty is left out entirely.
-const toPostedAnswer = (answer: AskFormAnswer): AskFormAnswer | null => {
+const toPostedAnswer = (answer: AskFormAnswer, transactionIds: ReadonlySet<string>): AskFormAnswer | null => {
   if ('choice' in answer) return withoutBlankFollowUp(answer)
   if ('text' in answer) return hasText(answer) ? answer : null
   if ('transactionAnswers' in answer) {
     const transactionAnswers = answer.transactionAnswers.flatMap((row) => {
-      const posted = toPostedRow(row.answer)
+      const posted = transactionIds.has(row.transactionId) ? toPostedRow(row.answer) : null
       return posted ? [{ transactionId: row.transactionId, answer: posted }] : []
     })
 
@@ -114,17 +114,22 @@ const toPostedAnswer = (answer: AskFormAnswer): AskFormAnswer | null => {
   return answer
 }
 
-export const pickAnswersForPages = (pages: ReadonlyArray<AskFormPage>, answers: AskFormAnswers): AskFormAnswers => {
+export const pickAnswersForPages = (
+  pages: ReadonlyArray<AskFormPage>,
+  answers: AskFormAnswers,
+  transactionIds: ReadonlyArray<string>,
+): AskFormAnswers => {
   const stepIds = new Set(pages.flatMap(({ steps }) => steps.map(({ id }) => id)))
+  const currentTransactionIds = new Set(transactionIds)
 
   return Object.fromEntries(Object.entries(answers).flatMap(([stepId, answer]) => {
-    const posted = stepIds.has(stepId) ? toPostedAnswer(answer) : null
+    const posted = stepIds.has(stepId) ? toPostedAnswer(answer, currentTransactionIds) : null
     return posted ? [[stepId, posted]] : []
   }))
 }
 
-export const hasAnswersToPost = (pages: ReadonlyArray<AskFormPage>, answers: AskFormAnswers) =>
-  Object.keys(pickAnswersForPages(pages, answers)).length > 0
+export const hasAnswersToPost = (pages: ReadonlyArray<AskFormPage>, answers: AskFormAnswers, transactionIds: ReadonlyArray<string>) =>
+  Object.keys(pickAnswersForPages(pages, answers, transactionIds)).length > 0
 
 /** The API rejects a SERVER url off its own origin; the client never posts answers anywhere else. */
 export const isApiOriginUrl = (url: string) => url.startsWith('/v1/')

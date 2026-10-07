@@ -85,6 +85,8 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     direction: 'back',
   }), [entryPageId, pagesById])
 
+  const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
+
   const [navigation, setNavigation] = useState<NavigationState>(atEntry)
   const [routing, setRouting] = useState<UnifiedAskFormRouting>('idle')
   const submitPathRef = useRef<ReadonlyArray<AskFormPage>>([])
@@ -101,7 +103,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       try {
         const saved = await submitResponse({
           taskId: task.id,
-          answers: pickAnswersForPages(submitPathRef.current, value.answers),
+          answers: pickAnswersForPages(submitPathRef.current, value.answers, transactionIds),
         })
 
         form.reset({ answers: saved.task.answers ?? value.answers, labels: value.labels })
@@ -182,7 +184,6 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     }
   }, [goForward, pagesById, submit])
 
-  const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
   const visitedPages = useMemo(() => navigation.history.map(getPage), [getPage, navigation.history])
 
   const canContinueFrom = useCallback((page: AskFormPage, currentAnswers: AskFormAnswers) => {
@@ -190,7 +191,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
 
     const next = getPageNext(page, currentAnswers)
 
-    return next.kind !== AskFormNextKind.Submit || hasAnswersToPost([...visitedPages, page], currentAnswers)
+    return next.kind !== AskFormNextKind.Submit || hasAnswersToPost([...visitedPages, page], currentAnswers, transactionIds)
   }, [transactionIds, visitedPages])
 
   const continueFrom = useCallback((page: AskFormPage, currentAnswers: AskFormAnswers) => {
@@ -218,7 +219,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       request: {
         pageId: page.id,
         pageHistory: pagesOnPath.map(({ id }) => id),
-        answers: pickAnswersForPages(pagesOnPath, currentAnswers),
+        answers: pickAnswersForPages(pagesOnPath, currentAnswers, transactionIds),
       },
     }).then(
       ({ next: serverNext }) => {
@@ -231,7 +232,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         if (routingRequestRef.current === requestId) setRouting('error')
       },
     )
-  }, [canContinueFrom, follow, goForward, postNextPage, visitedPages])
+  }, [canContinueFrom, follow, goForward, postNextPage, transactionIds, visitedPages])
 
   const submitReviewed = useCallback(() => {
     submit(visitedPages)
