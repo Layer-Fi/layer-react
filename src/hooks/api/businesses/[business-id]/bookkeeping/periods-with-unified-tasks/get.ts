@@ -1,5 +1,3 @@
-import { useCallback, useMemo } from 'react'
-
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import {
@@ -53,29 +51,15 @@ const getBookkeepingPeriods = getWithQuery<
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 
-const useBookkeepingPeriodsResourceCacheActions =
+export const useBookkeepingPeriodsGlobalCacheActions =
   createResourceGlobalCacheActions<ReadonlyArray<BookkeepingPeriod>>(BOOKKEEPING_PERIODS_TAG_KEY)
 
-const patchTaskById = (updatedTask: BusinessTask) =>
+export const replaceTaskInPeriods = (updatedTask: BusinessTask) =>
   (periods?: ReadonlyArray<BookkeepingPeriod>) =>
     periods?.map(period => ({
       ...period,
       tasks: getUserVisibleTasks(period.tasks.map(task => task.id === updatedTask.id ? updatedTask : task)),
     }))
-
-export function useBookkeepingPeriodsGlobalCacheActions() {
-  const actions = useBookkeepingPeriodsResourceCacheActions()
-
-  const patchTask = useCallback(
-    (updatedTask: BusinessTask) => actions.patchCache(patchTaskById(updatedTask), { withRevalidate: false }),
-    [actions],
-  )
-
-  return useMemo(() => ({
-    ...actions,
-    patchTask,
-  }), [actions, patchTask])
-}
 
 const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],

@@ -5,8 +5,8 @@ import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStat
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
-import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { get as getBookkeepingPeriods } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/store'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { server } from '@msw/node'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
