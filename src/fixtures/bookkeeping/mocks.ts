@@ -7,7 +7,6 @@ import { range } from '@utils/shared/array/range'
 
 import { PeriodIdSchema } from '@fixtures/bookkeeping/schema'
 import { makeSeededTasks } from '@fixtures/bookkeeping/unifiedAskFormTasks/seeds'
-import { monthsBeforeCurrent } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 import { fromMonthIndex, toMonthIndex } from '@fixtures/utils/monthIndex'
@@ -62,6 +61,11 @@ export const { make: makeCallBooking, makeMany: makeCallBookings } = createFixtu
 const generatePeriodIds = createGenerator(PeriodIdSchema)
 
 const periodIdFor = (monthIndex: number) => pickCyclic(generatePeriodIds({ numRuns: 1, seed: monthIndex }), 0)
+
+const monthsBeforeCurrent = (year: number, month: number) => {
+  const now = new Date()
+  return toMonthIndex(now.getFullYear(), now.getMonth() + 1) - toMonthIndex(year, month)
+}
 
 /** Past months without open tasks have closed books, so they carry no uncategorized activity. */
 export const hasCompletedBooks = (year: number, month: number) => {
