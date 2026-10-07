@@ -59,7 +59,7 @@ const encodedCounterpartyTask = {
       },
       {
         id: 'remember',
-        steps: [{ type: 'SOME_FUTURE_KIND', id: 'always_this', prompt: 'Remember this?' }],
+        steps: [{ type: 'CHOICE', id: 'always_this', prompt: 'Remember this?', options: [{ value: 'always', label: 'Always' }, { value: 'ask', label: 'Ask me each time' }] }],
         next: { kind: 'SERVER', url: '/v1/businesses/b/unified-tasks/t/next-page?form_version=1' },
       },
     ],
@@ -74,6 +74,14 @@ const encodedCounterpartyTask = {
   user_marked_completed_at: null,
   completed_at: null,
 }
+
+const withPage = (index: number, page: Record<string, unknown>) => ({
+  ...encodedCounterpartyTask,
+  form: {
+    ...encodedCounterpartyTask.form,
+    pages: encodedCounterpartyTask.form.pages.map((existing, i) => (i === index ? { ...existing, ...page } : existing)),
+  },
+})
 
 describe('UnifiedAskFormTaskSchema', () => {
   it('decodes a task whose defaulted fields are omitted', () => {
@@ -92,12 +100,6 @@ describe('UnifiedAskFormTaskSchema', () => {
     expect(notSure?.followUp).toMatchObject({ type: AskFormStepType.Text, multiline: true, required: true })
   })
 
-  it('decodes a step kind it does not know as UNKNOWN instead of rejecting the task', () => {
-    const task = decodeTask(encodedCounterpartyTask)
-
-    expect(task.form.pages[2]?.steps[0]).toMatchObject({ type: AskFormStepType.Unknown, id: 'always_this', prompt: 'Remember this?' })
-  })
-
   it('is matched by the business task union ahead of the legacy arm', () => {
     const task = decodeBusinessTask(encodedCounterpartyTask)
 
@@ -105,11 +107,25 @@ describe('UnifiedAskFormTaskSchema', () => {
     expect(isLegacyBusinessTask(task)).toBe(false)
   })
 
-  it('does not fall back to the legacy arm when its form is malformed', () => {
-    const task = decodeBusinessTask({ ...encodedCounterpartyTask, form: null, user_response_type: 'FREE_RESPONSE' })
+  it.each([
+    ['step type', withPage(2, { steps: [{ type: 'SOME_FUTURE_KIND', id: 'always_this', prompt: 'Remember this?' }] })],
+    ['next kind', withPage(2, { next: { kind: 'SOME_FUTURE_KIND' } })],
+    ['action', withPage(2, { steps: [{ type: 'ACTION', id: 'always_this', prompt: 'Connect', action: 'CONNECT_PAYROLL' }] })],
+    ['category scope', withPage(1, { steps: [{ type: 'CATEGORY', id: 'rows', scope: 'EACH_VENDOR' }] })],
+    ['echoed answer shape', { ...encodedCounterpartyTask, answers: { category: { rating: 5 } } }],
+    ['form', { ...encodedCounterpartyTask, form: null, user_response_type: 'FREE_RESPONSE' }],
+  ])('hides the task when it has an unrecognised %s', (_, payload) => {
+    const task = decodeBusinessTask(payload)
 
     expect(isUnifiedAskFormTask(task)).toBe(false)
     expect(isLegacyBusinessTask(task)).toBe(false)
+  })
+
+  it.each([
+    ['search entity', withPage(2, { steps: [{ type: 'SEARCH', id: 'always_this', entity: 'EMPLOYEE' }] })],
+    ['form subtype', { ...encodedCounterpartyTask, form_subtype: 'SOMETHING_NEW' }],
+  ])('still shows the task when it has an unrecognised %s', (_, payload) => {
+    expect(isUnifiedAskFormTask(decodeBusinessTask(payload))).toBe(true)
   })
 
   it('decodes answers echoed back on an answered task', () => {

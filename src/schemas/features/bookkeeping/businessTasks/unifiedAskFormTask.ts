@@ -7,7 +7,11 @@ import { AskFormAnswersSchema } from '@schemas/features/bookkeeping/businessTask
 
 export const UNIFIED_ASK_FORM_TASK_TYPE = 'UNIFIED_ASK_FORM'
 
-/** The `form_version` this client renders. The API serves every ask and human task unified at or above it. */
+/**
+ * The `form_version` this client renders. The schemas in this folder describe exactly this version:
+ * bump it only together with the schema changes for the new version. The API must not send a
+ * client at this version any kind or enum value outside these schemas; such a task is hidden.
+ */
 export const UNIFIED_ASK_FORM_VERSION = 1
 
 export enum AskFormSubtype {

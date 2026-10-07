@@ -18,7 +18,6 @@ const AskFormCompletedAnswerSchema = Schema.Struct({
 const AskFormFollowUpAnswerSchema = Schema.Union(
   Schema.Struct({ choice: Schema.String }),
   AskFormTextAnswerSchema,
-  AskFormDocumentsAnswerSchema,
 )
 
 export type AskFormFollowUpAnswer = typeof AskFormFollowUpAnswerSchema.Type

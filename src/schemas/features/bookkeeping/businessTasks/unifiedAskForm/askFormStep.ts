@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { createOpenEnumSchema, createTransformedEnumSchema } from '@schemas/common/utils'
+import { createOpenEnumSchema } from '@schemas/common/utils'
 import { AskFormNextSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 
 export enum AskFormStepType {
@@ -11,7 +11,6 @@ export enum AskFormStepType {
   Text = 'TEXT',
   Action = 'ACTION',
   Upload = 'UPLOAD',
-  Unknown = 'UNKNOWN',
 }
 
 export enum AskFormSearchEntity {
@@ -29,29 +28,12 @@ export enum AskFormAction {
   ConnectAccount = 'CONNECT_ACCOUNT',
 }
 
+// Passed unchanged to GET /search, which accepts any entity the API puts in a form.
 const AskFormSearchEntitySchema = createOpenEnumSchema(AskFormSearchEntity)
 
-const AskFormActionSchema = createOpenEnumSchema(AskFormAction)
+const AskFormActionSchema = Schema.Enums(AskFormAction)
 
-const AskFormCategoryScopeSchema = createTransformedEnumSchema(
-  Schema.Enums(AskFormCategoryScope),
-  AskFormCategoryScope,
-  AskFormCategoryScope.Task,
-)
-
-const KNOWN_STEP_TYPES: ReadonlyArray<string> = Object.values(AskFormStepType).filter(type => type !== AskFormStepType.Unknown)
-
-// Any kind this client doesn't know decodes as UNKNOWN and renders as free text, so a new
-// kind never strands a task. Encoding writes UNKNOWN back; only mocks encode steps.
-const UnknownStepTypeSchema = Schema.transform(
-  Schema.String.pipe(Schema.filter(type => !KNOWN_STEP_TYPES.includes(type))),
-  Schema.Literal(AskFormStepType.Unknown),
-  {
-    strict: true,
-    decode: (): AskFormStepType.Unknown => AskFormStepType.Unknown,
-    encode: (): AskFormStepType.Unknown => AskFormStepType.Unknown,
-  },
-)
+const AskFormCategoryScopeSchema = Schema.Enums(AskFormCategoryScope)
 
 const optionalBoolean = Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true })
 
@@ -107,11 +89,6 @@ const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Sch
       prompt,
       accept: Schema.optionalWith(Schema.Array(Schema.String), { default: () => [], nullable: true }),
       multiple: optionalBoolean,
-    }),
-    Schema.Struct({
-      ...identity,
-      type: UnknownStepTypeSchema,
-      prompt,
     }),
   )
 }
