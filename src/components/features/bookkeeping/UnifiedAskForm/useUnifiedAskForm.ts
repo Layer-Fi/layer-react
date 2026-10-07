@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type AskFormAnswer, type AskFormAnswers } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
-import { ASK_FORM_NEXT_PAGE_SUBMIT } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
@@ -222,16 +221,11 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         answers: pickAnswersForPages(pagesOnPath, currentAnswers),
       },
     }).then(
-      ({ nextPageId }) => {
+      ({ next: serverNext }) => {
         if (routingRequestRef.current !== requestId) return
 
         setRouting('idle')
-        follow(
-          nextPageId === ASK_FORM_NEXT_PAGE_SUBMIT
-            ? { kind: AskFormNextKind.Submit, review: false }
-            : { kind: AskFormNextKind.Page, pageId: nextPageId },
-          pagesOnPath,
-        )
+        follow(serverNext, pagesOnPath)
       },
       () => {
         if (routingRequestRef.current === requestId) setRouting('error')
