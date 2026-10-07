@@ -6,11 +6,12 @@ import {
   ASK_FORM_STEP_IDS,
   makeUnifiedAskFormTask,
   page,
+  seedsInFixtureYear,
   singlePageForm,
-  type TaskSeeds,
   textStep,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
-import { formatDollars, formatTaskDate, monthsBeforeCurrent } from '@fixtures/bookkeeping/utils'
+import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 import { toMonthIndex } from '@fixtures/utils/monthIndex'
 
@@ -26,14 +27,8 @@ const generateTaskSeeds = createGenerator(schema, {
   uniqueBy: [seed => seed.id, seed => seed.day],
 })
 
-const TASK_COUNT_BY_MONTHS_AGO: Record<number, number> = { 1: 3, 3: 1, 5: 2, 8: 1, 10: 1 }
-
-export const freeResponseTaskSeeds: TaskSeeds = (year, month) => {
-  const count = TASK_COUNT_BY_MONTHS_AGO[monthsBeforeCurrent(year, month)] ?? 0
-
-  if (count === 0) return []
-
-  return generateTaskSeeds({ numRuns: count, seed: toMonthIndex(year, month) }).map(({ id, day, amountCents, merchant }) => {
+const generateFreeResponseTasks = (month: number, count: number) =>
+  generateTaskSeeds({ numRuns: count, seed: toMonthIndex(FIXTURE_YEAR, month) }).map(({ id, day, amountCents, merchant }) => {
     const date = formatTaskDate(month, day)
 
     return makeFreeResponseTask({
@@ -43,4 +38,11 @@ export const freeResponseTaskSeeds: TaskSeeds = (year, month) => {
         + 'Can you tell us a bit more about what this transaction was for?',
     })
   })
-}
+
+export const freeResponseTaskSeeds = seedsInFixtureYear({
+  2: generateFreeResponseTasks(2, 1),
+  4: generateFreeResponseTasks(4, 1),
+  7: generateFreeResponseTasks(7, 2),
+  9: generateFreeResponseTasks(9, 1),
+  11: generateFreeResponseTasks(11, 3),
+})
