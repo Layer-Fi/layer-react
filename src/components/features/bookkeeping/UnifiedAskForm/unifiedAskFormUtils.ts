@@ -70,7 +70,7 @@ export const isPageComplete = (page: AskFormPage, answers: AskFormAnswers, trans
 
 export const toFollowUpAnswer = (answer: AskFormAnswer): AskFormFollowUpAnswer | undefined => {
   if ('choice' in answer) return { choice: answer.choice }
-  if ('text' in answer || 'documentIds' in answer) return answer
+  if ('text' in answer) return answer
   return undefined
 }
 
