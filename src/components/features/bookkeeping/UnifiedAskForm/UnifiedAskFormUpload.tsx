@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { type AskFormAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
@@ -22,6 +23,10 @@ type UnifiedAskFormUploadProps = {
 
 const getExtension = (fileName: string) => fileName.split('.').pop()?.toLowerCase() ?? ''
 
+const getTaskDocuments = (task: BusinessTask | undefined) =>
+  (task && isLegacyBusinessTask(task) ? task.documents ?? [] : [])
+    .flatMap(({ fileName, presignedUrl }) => (presignedUrl.documentId ? [{ id: presignedUrl.documentId, name: fileName }] : []))
+
 export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels, onChange, onLabel }: UnifiedAskFormUploadProps) => {
   const { t } = useTranslation()
   const { formatList } = useIntlFormatter()
@@ -36,14 +41,8 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
     const rejected = files.filter(({ name }) => !isAccepted(name))
     const toUpload = files.filter(file => !rejected.includes(file))
 
-    const results = await Promise.all(toUpload.map(async (file) => {
-      const response = await uploadDocument({ taskId, files: [file] }).catch(() => null)
-      const id = response?.data.id
-
-      return id ? { id, name: file.name } : null
-    }))
-
-    const uploaded = results.filter(result => result !== null)
+    const task = toUpload.length > 0 ? await uploadDocument({ taskId, files: toUpload }).catch(() => undefined) : undefined
+    const uploaded = getTaskDocuments(task).filter(({ id }) => !documentIds.includes(id))
 
     if (rejected.length > 0) {
       setError(t(
@@ -52,7 +51,7 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
         { fileTypes: formatList(acceptedExtensions.map(extension => extension.toUpperCase()), { type: 'disjunction' }) },
       ))
     }
-    else if (uploaded.length < toUpload.length) {
+    else if (toUpload.length > 0 && uploaded.length === 0) {
       setError(t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.error.upload_failed', 'Some files couldn’t be uploaded. Try again.'))
     }
     else {
