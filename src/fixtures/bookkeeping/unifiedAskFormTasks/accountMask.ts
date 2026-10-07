@@ -20,8 +20,8 @@ import {
   fixtureId,
   makeUnifiedAskFormTask,
   page,
+  seedsInFixtureYear,
   textFollowUp,
-  type UnifiedAskFormTaskSeeds,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 
 const VENDOR_CATEGORIES = [
@@ -76,7 +76,7 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
 
 const ACCOUNT_MASK_TASK_ID = fixtureId('c21')
 
-export const accountMaskTaskSeeds: UnifiedAskFormTaskSeeds = {
+export const accountMaskTaskSeeds = seedsInFixtureYear({
   10: makeUnifiedAskFormTask({
     id: ACCOUNT_MASK_TASK_ID,
     title: 'Help us identify account ••2691',
@@ -88,4 +88,4 @@ export const accountMaskTaskSeeds: UnifiedAskFormTaskSeeds = {
     ]),
     form: makeAccountMaskAskForm(ACCOUNT_MASK_TASK_ID, '2691'),
   }),
-}
+})

@@ -13,10 +13,10 @@ import {
   fixtureId,
   makeUnifiedAskFormTask,
   page,
+  seedsInFixtureYear,
   SUBMIT,
   textFollowUp,
   toPage,
-  type UnifiedAskFormTaskSeeds,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { formatDollars } from '@fixtures/bookkeeping/utils'
 
@@ -103,7 +103,7 @@ const RETAIL_SUGGESTIONS = [
   bankTransactionCategories.meals,
 ]
 
-export const counterpartyTaskSeeds: UnifiedAskFormTaskSeeds = {
+export const counterpartyTaskSeeds = seedsInFixtureYear({
   7: makeCounterpartyTask({
     id: fixtureId('917'),
     counterparty: 'SQ *NAIL BAR',
@@ -142,4 +142,4 @@ export const counterpartyTaskSeeds: UnifiedAskFormTaskSeeds = {
       { id: 'a06', day: 27, amount: -4917, description: 'COSTCO GAS #1042' },
     ]),
   }),
-}
+})

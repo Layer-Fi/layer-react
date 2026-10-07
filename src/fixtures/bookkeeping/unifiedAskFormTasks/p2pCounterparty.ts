@@ -1,8 +1,8 @@
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { makeCounterpartyTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
-import { askTransactions, fixtureId, type UnifiedAskFormTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { askTransactions, fixtureId, seedsInFixtureYear } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 
-export const p2pCounterpartyTaskSeeds: UnifiedAskFormTaskSeeds = {
+export const p2pCounterpartyTaskSeeds = seedsInFixtureYear({
   9: makeCounterpartyTask({
     id: fixtureId('c11'),
     counterparty: 'Alex Rivera',
@@ -16,4 +16,4 @@ export const p2pCounterpartyTaskSeeds: UnifiedAskFormTaskSeeds = {
       { id: 'b13', day: 24, amount: -22500, description: 'VENMO PAYMENT 1034410 ALEX RIVERA' },
     ]),
   }),
-}
+})

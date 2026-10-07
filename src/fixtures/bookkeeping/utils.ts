@@ -1,3 +1,5 @@
+import { toMonthIndex } from '@fixtures/utils/monthIndex'
+
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
@@ -15,3 +17,8 @@ export const formatTaskDate = (month: number, day: number) =>
 
 export const formatDollars = (cents: number) =>
   (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+
+export const monthsBeforeCurrent = (year: number, month: number) => {
+  const now = new Date()
+  return toMonthIndex(now.getFullYear(), now.getMonth() + 1) - toMonthIndex(year, month)
+}
