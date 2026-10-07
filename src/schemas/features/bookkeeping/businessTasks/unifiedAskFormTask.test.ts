@@ -7,6 +7,7 @@ import {
   isUnifiedAskFormTask,
 } from '@schemas/features/bookkeeping/businessTask'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { AskFormNextPageResultSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
 import { AskFormCategoryScope, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { UnifiedAskFormSubmissionSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmission'
 import { UnifiedAskFormTaskSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
@@ -150,6 +151,22 @@ describe('UnifiedAskFormTaskSchema', () => {
     })
 
     expect(task.answers?.category).toEqual({ choice: 'acct_office' })
+  })
+})
+
+describe('AskFormNextPageResultSchema', () => {
+  const decodeNextPage = Schema.decodeUnknownSync(AskFormNextPageResultSchema)
+
+  it('decodes the next page or a submit', () => {
+    expect(decodeNextPage({ next: { kind: 'PAGE', page_id: 'vendor' } })).toEqual({ next: { kind: AskFormNextKind.Page, pageId: 'vendor' } })
+    expect(decodeNextPage({ next: { kind: 'SUBMIT' } })).toEqual({ next: { kind: AskFormNextKind.Submit, review: false } })
+  })
+
+  it.each([
+    ['a SERVER next', { next: { kind: 'SERVER', url: '/v1/businesses/b/unified-tasks/t/next-page' } }],
+    ['a bare page id', { next_page_id: 'vendor' }],
+  ])('rejects %s', (_, payload) => {
+    expect(() => decodeNextPage(payload)).toThrow()
   })
 })
 

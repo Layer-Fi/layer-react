@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { AskFormAnswersSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormStaticNextSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 
 export const AskFormNextPageRequestSchema = Schema.Struct({
   pageId: pipe(
@@ -17,13 +18,8 @@ export const AskFormNextPageRequestSchema = Schema.Struct({
 export type AskFormNextPageRequest = typeof AskFormNextPageRequestSchema.Type
 export type AskFormNextPageRequestEncoded = typeof AskFormNextPageRequestSchema.Encoded
 
-export const ASK_FORM_NEXT_PAGE_SUBMIT = 'SUBMIT'
-
 export const AskFormNextPageResultSchema = Schema.Struct({
-  nextPageId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('next_page_id'),
-  ),
+  next: AskFormStaticNextSchema,
 })
 
 export type AskFormNextPageResult = typeof AskFormNextPageResultSchema.Type
