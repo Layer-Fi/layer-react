@@ -116,4 +116,10 @@ const baseUnifiedAskFormTask: UnifiedAskFormTask = {
 
 export const { make: makeUnifiedAskFormTask } = createFixtureFactory(baseUnifiedAskFormTask)
 
-export type UnifiedAskFormTaskSeeds = Partial<Record<number, UnifiedAskFormTask>>
+export type TaskSeeds = (year: number, month: number) => UnifiedAskFormTask[]
+
+export const seedsInFixtureYear = (tasksByMonth: Partial<Record<number, UnifiedAskFormTask>>): TaskSeeds =>
+  (year, month) => {
+    const task = year === FIXTURE_YEAR ? tasksByMonth[month] : undefined
+    return task ? [task] : []
+  }
