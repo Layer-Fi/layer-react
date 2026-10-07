@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { type AskFormAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
+import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
+import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -22,14 +22,10 @@ type UnifiedAskFormUploadProps = {
 
 const getExtension = (fileName: string) => fileName.split('.').pop()?.toLowerCase() ?? ''
 
-const getTaskDocuments = (task: BusinessTask | undefined) =>
-  (task && isLegacyBusinessTask(task) ? task.documents ?? [] : [])
-    .flatMap(({ fileName, presignedUrl }) => (presignedUrl.documentId ? [{ id: presignedUrl.documentId, name: fileName }] : []))
-
 export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels, onChange, onLabel }: UnifiedAskFormUploadProps) => {
   const { t } = useTranslation()
   const { formatList } = useIntlFormatter()
-  const { trigger: uploadDocument, isMutating } = usePostTaskUpload()
+  const { trigger: uploadDocuments, isMutating } = usePostUnifiedAskFormUpload()
   const [error, setError] = useState<string | null>(null)
 
   const documentIds = answer && 'documentIds' in answer ? answer.documentIds : []
@@ -40,8 +36,8 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
     const rejected = files.filter(({ name }) => !isAccepted(name))
     const toUpload = files.filter(file => !rejected.includes(file))
 
-    const task = toUpload.length > 0 ? await uploadDocument({ taskId, files: toUpload }).catch(() => undefined) : undefined
-    const uploaded = getTaskDocuments(task).filter(({ id }) => !documentIds.includes(id))
+    const result = toUpload.length > 0 ? await uploadDocuments({ taskId, files: toUpload }).catch(() => undefined) : undefined
+    const uploaded = result?.documents ?? []
 
     if (rejected.length > 0) {
       setError(t(
@@ -59,31 +55,40 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
 
     if (uploaded.length === 0) return
 
-    uploaded.forEach(({ id, name }) => onLabel(id, name))
-    onChange({ documentIds: uploaded.map(({ id }) => id) })
+    uploaded.forEach(({ id, fileName }) => onLabel(id, fileName))
+    onChange({ documentIds: [...(multiple ? documentIds : []), ...uploaded.map(({ id }) => id)] })
+  }
+
+  const getUploadLabel = () => {
+    if (documentIds.length === 0) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')
+    if (multiple) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.add_more_files', 'Add more files')
+    return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.replace_file', 'Replace file')
+  }
+
+  const onRemove = (id: string) => {
+    onChange({ documentIds: documentIds.filter(other => other !== id) })
   }
 
   return (
     <VStack gap='xs'>
       {documentIds.map(id => (
-        <HStack key={id} align='center' className='Layer__UnifiedAskForm__File'>
+        <HStack key={id} gap='sm' align='center' justify='space-between' className='Layer__UnifiedAskForm__File'>
           <Span size='sm' ellipsis noWrap>{labels[id] ?? id}</Span>
+          <Button variant='text' isDisabled={isMutating} onPress={() => onRemove(id)}>
+            {t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.remove_file', 'Remove')}
+          </Button>
         </HStack>
       ))}
       {error ? <Span size='xs' status='error'>{error}</Span> : null}
-      {documentIds.length === 0
-        ? (
-          <HStack>
-            <FileInput
-              text={t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')}
-              accept={acceptedExtensions.map(extension => `.${extension}`).join(',')}
-              allowMultipleUploads={multiple}
-              isDisabled={isMutating}
-              onUpload={files => void onUpload(files)}
-            />
-          </HStack>
-        )
-        : null}
+      <HStack>
+        <FileInput
+          text={getUploadLabel()}
+          accept={acceptedExtensions.map(extension => `.${extension}`).join(',')}
+          allowMultipleUploads={multiple}
+          isDisabled={isMutating}
+          onUpload={files => void onUpload(files)}
+        />
+      </HStack>
     </VStack>
   )
 }
