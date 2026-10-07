@@ -14,14 +14,6 @@ export const UNIFIED_ASK_FORM_TASK_TYPE = 'UNIFIED_ASK_FORM'
  */
 export const UNIFIED_ASK_FORM_VERSION = 1
 
-export enum AskFormSubtype {
-  Counterparty = 'COUNTERPARTY',
-  P2PCounterparty = 'P2P_COUNTERPARTY',
-  AccountMask = 'ACCOUNT_MASK',
-  FreeResponse = 'FREE_RESPONSE',
-  UploadDocument = 'UPLOAD_DOCUMENT',
-}
-
 export enum AskFormResolutionKind {
   ResolvedByTask = 'RESOLVED_BY_TASK',
 }
@@ -50,10 +42,6 @@ export const UnifiedAskFormTaskSchema = Schema.extend(
     taskType: pipe(
       Schema.propertySignature(Schema.Literal(UNIFIED_ASK_FORM_TASK_TYPE)),
       Schema.fromKey('task_type'),
-    ),
-    formSubtype: pipe(
-      Schema.propertySignature(createOpenEnumSchema(AskFormSubtype)),
-      Schema.fromKey('form_subtype'),
     ),
     transactions: Schema.optionalWith(Schema.Array(AskFormTransactionSchema), {
       default: () => [],
