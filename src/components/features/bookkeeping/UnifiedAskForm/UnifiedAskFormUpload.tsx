@@ -5,7 +5,6 @@ import { type BusinessTask, isLegacyBusinessTask } from '@schemas/features/bookk
 import { type AskFormAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
-import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -61,39 +60,30 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
     if (uploaded.length === 0) return
 
     uploaded.forEach(({ id, name }) => onLabel(id, name))
-    onChange({ documentIds: [...(multiple ? documentIds : []), ...uploaded.map(({ id }) => id)] })
-  }
-
-  const getUploadLabel = () => {
-    if (documentIds.length === 0) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')
-    if (multiple) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.add_more_files', 'Add more files')
-    return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.replace_file', 'Replace file')
-  }
-
-  const onRemove = (id: string) => {
-    onChange({ documentIds: documentIds.filter(other => other !== id) })
+    onChange({ documentIds: uploaded.map(({ id }) => id) })
   }
 
   return (
     <VStack gap='xs'>
       {documentIds.map(id => (
-        <HStack key={id} gap='sm' align='center' justify='space-between' className='Layer__UnifiedAskForm__File'>
+        <HStack key={id} align='center' className='Layer__UnifiedAskForm__File'>
           <Span size='sm' ellipsis noWrap>{labels[id] ?? id}</Span>
-          <Button variant='text' isDisabled={isMutating} onPress={() => onRemove(id)}>
-            {t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.remove_file', 'Remove')}
-          </Button>
         </HStack>
       ))}
       {error ? <Span size='xs' status='error'>{error}</Span> : null}
-      <HStack>
-        <FileInput
-          text={getUploadLabel()}
-          accept={acceptedExtensions.map(extension => `.${extension}`).join(',')}
-          allowMultipleUploads={multiple}
-          isDisabled={isMutating}
-          onUpload={files => void onUpload(files)}
-        />
-      </HStack>
+      {documentIds.length === 0
+        ? (
+          <HStack>
+            <FileInput
+              text={t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')}
+              accept={acceptedExtensions.map(extension => `.${extension}`).join(',')}
+              allowMultipleUploads={multiple}
+              isDisabled={isMutating}
+              onUpload={files => void onUpload(files)}
+            />
+          </HStack>
+        )
+        : null}
     </VStack>
   )
 }
