@@ -3,10 +3,12 @@ import {
   type BusinessTask,
   isCounterpartyAskTask,
   isLegacyBusinessTask,
+  isUnifiedAskFormTask,
 } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
 import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
@@ -83,9 +85,67 @@ export const patchCounterpartyAskTaskInStore = (
   applyPatch: (task: CounterpartyAskTask) => CounterpartyAskTask,
 ) => patchTaskOfKindInStore(taskId, isCounterpartyAskTask, applyPatch)
 
+export const patchUnifiedAskFormTaskInStore = (
+  taskId: string,
+  applyPatch: (task: UnifiedAskFormTask) => UnifiedAskFormTask,
+) => patchTaskOfKindInStore(taskId, isUnifiedAskFormTask, applyPatch)
+
+export const findTaskInStore = (taskId: string): BusinessTask | undefined =>
+  bookkeepingPeriodStore.all().flatMap(period => period.tasks).find(task => task.id === taskId)
+
 export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
   patchLegacyTaskInStore(taskId, task => ({
     ...task,
     status: BusinessTaskStatus.UserMarkedCompleted,
     userResponse,
   }))
+
+const resolveCounterpartyAskSiblings = (answeringTask: CounterpartyAskTask) => {
+  const counterpartyId = answeringTask.counterparty?.id
+
+  if (!counterpartyId) return
+
+  const openSiblingIds = bookkeepingPeriodStore.all()
+    .flatMap(period => period.tasks)
+    .filter(task =>
+      task.id !== answeringTask.id
+      && isCounterpartyAskTask(task)
+      && task.counterparty?.id === counterpartyId
+      && task.status === BusinessTaskStatus.Todo,
+    )
+    .map(task => task.id)
+
+  openSiblingIds.forEach((siblingId) => {
+    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
+      ...sibling,
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      resolvedByTaskId: answeringTask.id,
+      responseAccount: answeringTask.responseAccount,
+    }))
+  })
+}
+
+const reopenCounterpartyAskSiblings = (answeringTaskId: string) => {
+  const resolvedSiblingIds = bookkeepingPeriodStore.all()
+    .flatMap(period => period.tasks)
+    .filter(task => isCounterpartyAskTask(task) && task.resolvedByTaskId === answeringTaskId)
+    .map(task => task.id)
+
+  resolvedSiblingIds.forEach((siblingId) => {
+    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
+      ...sibling,
+      status: BusinessTaskStatus.Todo,
+      resolvedByTaskId: null,
+      responseAccount: null,
+    }))
+  })
+}
+
+export const syncCounterpartyAskSiblings = (answeringTask: CounterpartyAskTask) => {
+  if (answeringTask.alwaysThis && answeringTask.responseAccount) {
+    resolveCounterpartyAskSiblings(answeringTask)
+    return
+  }
+
+  reopenCounterpartyAskSiblings(answeringTask.id)
+}
