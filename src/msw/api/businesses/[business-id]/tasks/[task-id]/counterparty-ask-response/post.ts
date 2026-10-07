@@ -1,7 +1,6 @@
 import { Schema } from 'effect'
 
 import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
-import { isCounterpartyAskTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { CounterpartyAskResponseSchema } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskResponse'
 import {
@@ -10,10 +9,6 @@ import {
   CounterpartyAskTaskSchema,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
-import {
-  bookkeepingPeriodStore,
-  patchCounterpartyAskTaskInStore,
-} from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackCounterpartyAskTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackCounterpartyAskTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -74,47 +69,6 @@ const applyResponse = (
   }
 }
 
-const resolveSiblingCounterpartyAsks = (answeringTask: CounterpartyAskTask) => {
-  const counterpartyId = answeringTask.counterparty?.id
-
-  if (!counterpartyId) return
-
-  const openSiblingIds = bookkeepingPeriodStore.all()
-    .flatMap(period => period.tasks)
-    .filter(task =>
-      task.id !== answeringTask.id
-      && isCounterpartyAskTask(task)
-      && task.counterparty?.id === counterpartyId
-      && task.status === BusinessTaskStatus.Todo,
-    )
-    .map(task => task.id)
-
-  openSiblingIds.forEach((siblingId) => {
-    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
-      ...sibling,
-      status: BusinessTaskStatus.UserMarkedCompleted,
-      resolvedByTaskId: answeringTask.id,
-      responseAccount: answeringTask.responseAccount,
-    }))
-  })
-}
-
-const reopenSiblingCounterpartyAsks = (answeringTaskId: string) => {
-  const resolvedSiblingIds = bookkeepingPeriodStore.all()
-    .flatMap(period => period.tasks)
-    .filter(task => isCounterpartyAskTask(task) && task.resolvedByTaskId === answeringTaskId)
-    .map(task => task.id)
-
-  resolvedSiblingIds.forEach((siblingId) => {
-    patchCounterpartyAskTaskInStore(siblingId, sibling => ({
-      ...sibling,
-      status: BusinessTaskStatus.Todo,
-      resolvedByTaskId: null,
-      responseAccount: null,
-    }))
-  })
-}
-
 export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof toResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/tasks/:taskId/counterparty-ask-response',
@@ -122,17 +76,7 @@ export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof to
     if (override) return toResponse(override)
 
     const response = decodeResponse(await readRequestJson(request))
-    const taskId = String(params.taskId)
 
-    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response))
-
-    if (answered?.alwaysThis && answered.responseAccount) {
-      resolveSiblingCounterpartyAsks(answered)
-    }
-    else if (answered) {
-      reopenSiblingCounterpartyAsks(answered.id)
-    }
-
-    return toResponse(answered ?? applyResponse(makeFallbackCounterpartyAskTask(taskId), response))
+    return toResponse(applyResponse(makeFallbackCounterpartyAskTask(String(params.taskId)), response))
   },
 })

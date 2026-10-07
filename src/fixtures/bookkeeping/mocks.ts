@@ -1,15 +1,12 @@
 import { type BookkeepingConfiguration, BookkeepingStatus as ConfigurationBookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingConfiguration'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { range } from '@utils/shared/array/range'
 
-import { counterpartyAskCountFor, makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
-import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
-import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
+import { PeriodIdSchema } from '@fixtures/bookkeeping/schema'
+import { makeSeededTasks } from '@fixtures/bookkeeping/unifiedAskFormTasks/seeds'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 import { fromMonthIndex, toMonthIndex } from '@fixtures/utils/monthIndex'
@@ -61,37 +58,9 @@ const baseCallBooking: CallBooking = {
 
 export const { make: makeCallBooking, makeMany: makeCallBookings } = createFixtureFactory(baseCallBooking)
 
-const generateTaskSeeds = createGenerator(schema, {
-  uniqueBy: [seed => seed.id, seed => seed.day],
-})
-
 const generatePeriodIds = createGenerator(PeriodIdSchema)
 
 const periodIdFor = (monthIndex: number) => pickCyclic(generatePeriodIds({ numRuns: 1, seed: monthIndex }), 0)
-
-const makePeriodTasks = (periodIndex: number, count: number, month: number): LegacyBusinessTask[] => {
-  if (count === 0) return []
-
-  return generateTaskSeeds({ numRuns: count, seed: periodIndex }).map(({ id, day, amountCents, merchant }) => {
-    const date = formatTaskDate(month, day)
-
-    return {
-      id,
-      status: BusinessTaskStatus.Todo,
-      taskType: null,
-      title: `Transaction on ${date}`,
-      question: `On ${date}, you spent ${formatDollars(amountCents)} at ${merchant}. `
-        + 'Can you tell us a bit more about what this transaction was for?',
-      userResponse: null,
-      userResponseType: TaskUserResponseType.FreeResponse,
-      documents: null,
-    }
-  })
-}
-
-const OPEN_TASK_COUNT_BY_MONTHS_AGO: Record<number, number> = { 1: 3, 3: 1, 5: 2, 8: 1, 10: 1 }
-
-const openTaskCountFor = (monthsAgo: number) => OPEN_TASK_COUNT_BY_MONTHS_AGO[monthsAgo] ?? 0
 
 const monthsBeforeCurrent = (year: number, month: number) => {
   const now = new Date()
@@ -101,7 +70,7 @@ const monthsBeforeCurrent = (year: number, month: number) => {
 /** Past months without open tasks have closed books, so they carry no uncategorized activity. */
 export const hasCompletedBooks = (year: number, month: number) => {
   const monthsAgo = monthsBeforeCurrent(year, month)
-  return monthsAgo > 0 && openTaskCountFor(monthsAgo) + counterpartyAskCountFor(year, month) === 0
+  return monthsAgo > 0 && makeSeededTasks(year, month).length === 0
 }
 
 const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingPeriodStatus => {
@@ -112,10 +81,7 @@ const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingP
 
 const makeBookkeepingPeriod = (monthIndex: number, monthsAgo: number): BookkeepingPeriod => {
   const { year, month } = fromMonthIndex(monthIndex)
-  const tasks = [
-    ...makePeriodTasks(monthIndex, openTaskCountFor(monthsAgo), month),
-    ...makeCounterpartyAskTasks(year, month),
-  ]
+  const tasks = makeSeededTasks(year, month)
 
   return {
     id: periodIdFor(monthIndex),

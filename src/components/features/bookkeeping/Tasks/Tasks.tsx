@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { Loader } from '@ui/Loader/Loader'

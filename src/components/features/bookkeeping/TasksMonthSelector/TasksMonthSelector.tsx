@@ -8,7 +8,7 @@ import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { TaskMonthTile } from '@features/bookkeeping/TasksMonthSelector/TaskMonthTile'
 import { type MonthData } from '@features/bookkeeping/TasksMonthSelector/types'
 

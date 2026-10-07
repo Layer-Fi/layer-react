@@ -5,6 +5,8 @@ import {
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
 } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { type BusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { UNIFIED_ASK_FORM_VERSION } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
 import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
@@ -36,7 +38,7 @@ const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(Bookkeeping
 
 type GetBookkeepingPeriodsParams = {
   businessId: string
-  legacyTasksOnly?: boolean
+  formVersion?: number
 }
 
 const getBookkeepingPeriods = getWithQuery<
@@ -44,7 +46,7 @@ const getBookkeepingPeriods = getWithQuery<
   GetBookkeepingPeriodsParams
 >(
   ['businessId'],
-  ({ businessId }) => `/v1/businesses/${businessId}/bookkeeping/periods`,
+  ({ businessId }) => `/v1/businesses/${businessId}/bookkeeping/periods-with-unified-tasks`,
 )
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
@@ -52,12 +54,19 @@ export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 export const useBookkeepingPeriodsGlobalCacheActions =
   createResourceGlobalCacheActions<ReadonlyArray<BookkeepingPeriod>>(BOOKKEEPING_PERIODS_TAG_KEY)
 
+export const replaceTaskInPeriods = (updatedTask: BusinessTask) =>
+  (periods?: ReadonlyArray<BookkeepingPeriod>) =>
+    periods?.map(period => ({
+      ...period,
+      tasks: getUserVisibleTasks(period.tasks.map(task => task.id === updatedTask.id ? updatedTask : task)),
+    }))
+
 const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
   request: getBookkeepingPeriods,
   schema: BookkeepingPeriodsResponseSchema,
-  // `false` lifts the backend filter on every agent-created task type, not just asks.
-  keyDefaults: { legacyTasksOnly: false },
+  // This route requires `form_version`; plain `/periods` ignores it and serves legacy tasks.
+  keyDefaults: { formVersion: UNIFIED_ASK_FORM_VERSION },
   select: ({ periods }) =>
     periods
       .map(period => ({
