@@ -1,3 +1,4 @@
+import { AccountIdentifierEquivalence } from '@schemas/common/accountIdentifier'
 import {
   type BusinessTask,
   isCounterpartyAskTask,
@@ -114,6 +115,15 @@ const deriveCounterpartyAnswers = (task: CounterpartyAskTask): AskFormAnswers | 
     : null
 }
 
+const withAnsweredAccountSuggested = (task: CounterpartyAskTask): CounterpartyAskTask => {
+  const answered = task.responseAccount
+
+  if (!answered || !findCategoryOptionValue(answered.accountIdentifier)) return task
+  if (task.suggestions.some(({ accountIdentifier }) => AccountIdentifierEquivalence(accountIdentifier, answered.accountIdentifier))) return task
+
+  return { ...task, suggestions: [...task.suggestions, answered] }
+}
+
 const deriveLegacyAnswers = (task: LegacyBusinessTask): AskFormAnswers | null => {
   if (task.userResponseType === TaskUserResponseType.FreeResponse) {
     return task.userResponse ? { [ASK_FORM_STEP_IDS.response]: { text: task.userResponse } } : null
@@ -153,7 +163,7 @@ export const toUnifiedAskFormTask = (task: BusinessTask): BusinessTask => {
   if (isUnifiedAskFormTask(task)) return task
 
   if (isCounterpartyAskTask(task)) {
-    return toUnified(task, AskFormSubtype.Counterparty, makeCounterpartyAskFormFor(task), deriveCounterpartyAnswers(task))
+    return toUnified(task, AskFormSubtype.Counterparty, makeCounterpartyAskFormFor(withAnsweredAccountSuggested(task)), deriveCounterpartyAnswers(task))
   }
 
   if (isLegacyBusinessTask(task)) {
