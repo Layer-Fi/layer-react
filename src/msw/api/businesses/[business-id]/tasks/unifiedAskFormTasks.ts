@@ -22,7 +22,6 @@ import {
 import { type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import {
   AskFormResolutionKind,
-  AskFormSubtype,
   UNIFIED_ASK_FORM_TASK_TYPE,
   type UnifiedAskFormTask,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
@@ -136,7 +135,6 @@ const deriveLegacyAnswers = (task: LegacyBusinessTask): AskFormAnswers | null =>
 
 const toUnified = (
   task: CounterpartyAskTask | LegacyBusinessTask,
-  formSubtype: AskFormSubtype,
   form: AskForm,
   derivedAnswers: AskFormAnswers | null,
 ): UnifiedAskFormTask => {
@@ -147,7 +145,6 @@ const toUnified = (
     id: task.id,
     status: task.status,
     taskType: UNIFIED_ASK_FORM_TASK_TYPE,
-    formSubtype,
     title: task.title,
     question: task.question,
     transactions: isCounterpartyAskTask(task) ? task.transactions.map(toAskFormTransaction) : [],
@@ -163,15 +160,15 @@ export const toUnifiedAskFormTask = (task: BusinessTask): BusinessTask => {
   if (isUnifiedAskFormTask(task)) return task
 
   if (isCounterpartyAskTask(task)) {
-    return toUnified(task, AskFormSubtype.Counterparty, makeCounterpartyAskFormFor(withAnsweredAccountSuggested(task)), deriveCounterpartyAnswers(task))
+    return toUnified(task, makeCounterpartyAskFormFor(withAnsweredAccountSuggested(task)), deriveCounterpartyAnswers(task))
   }
 
   if (isLegacyBusinessTask(task)) {
     if (task.userResponseType === TaskUserResponseType.FreeResponse) {
-      return toUnified(task, AskFormSubtype.FreeResponse, makeFreeResponseAskForm(task.question), deriveLegacyAnswers(task))
+      return toUnified(task, makeFreeResponseAskForm(task.question), deriveLegacyAnswers(task))
     }
     if (task.userResponseType === TaskUserResponseType.UploadDocument) {
-      return toUnified(task, AskFormSubtype.UploadDocument, makeUploadDocumentAskForm(task.question), deriveLegacyAnswers(task))
+      return toUnified(task, makeUploadDocumentAskForm(task.question), deriveLegacyAnswers(task))
     }
   }
 

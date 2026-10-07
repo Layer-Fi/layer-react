@@ -12,7 +12,6 @@ import {
   AskFormStepType,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import {
-  AskFormSubtype,
   type AskFormTransaction,
   UNIFIED_ASK_FORM_TASK_TYPE,
   UNIFIED_ASK_FORM_VERSION,
@@ -302,7 +301,6 @@ const baseUnifiedAskFormTask: UnifiedAskFormTask = {
   id: '00000000-0000-4000-8000-000000000c01',
   status: BusinessTaskStatus.Todo,
   taskType: UNIFIED_ASK_FORM_TASK_TYPE,
-  formSubtype: AskFormSubtype.FreeResponse,
   title: 'Tell us about this transaction',
   question: 'Can you tell us a bit more about what this transaction was for?',
   transactions: [],
@@ -325,7 +323,6 @@ const ACCOUNT_MASK_TASK_ID = '00000000-0000-4000-8000-000000000c21'
 const UNIFIED_ASK_FORM_SEEDS_BY_MONTH: Record<number, (month: number) => UnifiedAskFormTask> = {
   9: month => makeUnifiedAskFormTask({
     id: P2P_TASK_ID,
-    formSubtype: AskFormSubtype.P2PCounterparty,
     title: 'Venmo payments to Alex Rivera',
     question: 'You paid Alex Rivera $525.00 on Venmo across 3 payments. What were these for?',
     transactions: [
@@ -342,7 +339,6 @@ const UNIFIED_ASK_FORM_SEEDS_BY_MONTH: Record<number, (month: number) => Unified
 
   10: month => makeUnifiedAskFormTask({
     id: ACCOUNT_MASK_TASK_ID,
-    formSubtype: AskFormSubtype.AccountMask,
     title: 'Help us identify account ••2691',
     question: 'We found transfers to an account ending in 2691 that isn’t connected.',
     transactions: [6, 13, 20].map((day, index) =>
