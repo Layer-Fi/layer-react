@@ -65,6 +65,12 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
     onChange({ documentIds: [...(multiple ? documentIds : []), ...uploaded.map(({ id }) => id)] })
   }
 
+  const getUploadLabel = () => {
+    if (documentIds.length === 0) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')
+    if (multiple) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.add_more_files', 'Add more files')
+    return t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.replace_file', 'Replace file')
+  }
+
   const onRemove = (id: string) => {
     onChange({ documentIds: documentIds.filter(other => other !== id) })
   }
@@ -82,9 +88,7 @@ export const UnifiedAskFormUpload = ({ taskId, accept, multiple, answer, labels,
       {error ? <Span size='xs' status='error'>{error}</Span> : null}
       <HStack>
         <FileInput
-          text={documentIds.length > 0
-            ? t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.add_more_files', 'Add more files')
-            : t('bookkeeping:UnifiedAskForm.UnifiedAskFormUpload.action.upload_files', 'Upload files')}
+          text={getUploadLabel()}
           accept={acceptedExtensions.map(extension => `.${extension}`).join(',')}
           allowMultipleUploads={multiple}
           isDisabled={isMutating}
