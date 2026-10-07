@@ -124,6 +124,17 @@ describe('UnifiedAskFormTaskSchema', () => {
     expect(task.answers?.category).toEqual({ choice: 'not_sure', followUp: { text: 'Snacks for an offsite' } })
     expect(task.answerSummary).toBe('Snacks for an offsite')
   })
+
+  it('decodes an echoed answer whose follow_up is null', () => {
+    const task = decodeTask({
+      ...encodedCounterpartyTask,
+      answers: {
+        category: { choice: 'acct_office', follow_up: null },
+      },
+    })
+
+    expect(task.answers?.category).toEqual({ choice: 'acct_office' })
+  })
 })
 
 describe('UnifiedAskFormSubmissionSchema', () => {

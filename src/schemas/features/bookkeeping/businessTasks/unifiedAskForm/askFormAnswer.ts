@@ -26,7 +26,7 @@ export type AskFormFollowUpAnswer = typeof AskFormFollowUpAnswerSchema.Type
 const AskFormChoiceAnswerSchema = Schema.Struct({
   choice: Schema.String,
   followUp: pipe(
-    Schema.optional(AskFormFollowUpAnswerSchema),
+    Schema.optionalWith(AskFormFollowUpAnswerSchema, { nullable: true }),
     Schema.fromKey('follow_up'),
   ),
 })
