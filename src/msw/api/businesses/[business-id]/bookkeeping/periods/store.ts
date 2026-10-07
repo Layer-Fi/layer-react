@@ -12,6 +12,7 @@ import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessT
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
 import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
+import { unifiedAskFormAnswerStore } from '@msw/api/businesses/[business-id]/tasks/unifiedAskFormTasks'
 import { createMockStore } from '@msw/utils/createMockStore'
 
 export const bookkeepingPeriodStore = createMockStore(
@@ -78,12 +79,18 @@ const patchTaskOfKindInStore = <T extends BusinessTask>(
 export const patchLegacyTaskInStore = (
   taskId: string,
   applyPatch: (task: LegacyBusinessTask) => LegacyBusinessTask,
-) => patchTaskOfKindInStore(taskId, isLegacyBusinessTask, applyPatch)
+) => {
+  unifiedAskFormAnswerStore.deleteById(taskId)
+  return patchTaskOfKindInStore(taskId, isLegacyBusinessTask, applyPatch)
+}
 
 export const patchCounterpartyAskTaskInStore = (
   taskId: string,
   applyPatch: (task: CounterpartyAskTask) => CounterpartyAskTask,
-) => patchTaskOfKindInStore(taskId, isCounterpartyAskTask, applyPatch)
+) => {
+  unifiedAskFormAnswerStore.deleteById(taskId)
+  return patchTaskOfKindInStore(taskId, isCounterpartyAskTask, applyPatch)
+}
 
 export const patchUnifiedAskFormTaskInStore = (
   taskId: string,
