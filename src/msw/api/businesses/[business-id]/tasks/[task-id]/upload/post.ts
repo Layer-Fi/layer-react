@@ -3,7 +3,6 @@ import { Schema } from 'effect'
 import { type BusinessTask, BusinessTaskSchema } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
-import { patchLegacyTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -29,18 +28,14 @@ export const post = createMockEndpoint<BusinessTask, ReturnType<typeof toRespons
   resolve: async ({ override, request, params }) => {
     if (override) return toResponse(override)
 
-    const taskId = String(params.taskId)
     const formData = await request.formData()
     const files = formData.getAll('file').filter((entry): entry is File => entry instanceof File)
     const description = formData.get('description')
 
-    const uploaded = patchLegacyTaskInStore(taskId, task => ({
-      ...task,
+    return toResponse(makeFallbackTask(String(params.taskId), {
       status: BusinessTaskStatus.UserMarkedCompleted,
-      userResponse: typeof description === 'string' ? description : task.userResponse,
-      documents: [...(task.documents ?? []), ...files.map(toTaskDocument)],
+      userResponse: typeof description === 'string' ? description : null,
+      documents: files.map(toTaskDocument),
     }))
-
-    return toResponse(uploaded ?? makeFallbackTask(taskId))
   },
 })

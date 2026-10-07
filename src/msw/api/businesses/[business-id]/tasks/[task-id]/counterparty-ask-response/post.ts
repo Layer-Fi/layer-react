@@ -9,10 +9,6 @@ import {
   CounterpartyAskTaskSchema,
 } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
 
-import {
-  patchCounterpartyAskTaskInStore,
-  syncCounterpartyAskSiblings,
-} from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackCounterpartyAskTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackCounterpartyAskTask'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -80,12 +76,7 @@ export const post = createMockEndpoint<CounterpartyAskTask, ReturnType<typeof to
     if (override) return toResponse(override)
 
     const response = decodeResponse(await readRequestJson(request))
-    const taskId = String(params.taskId)
 
-    const answered = patchCounterpartyAskTaskInStore(taskId, task => applyResponse(task, response))
-
-    if (answered) syncCounterpartyAskSiblings(answered)
-
-    return toResponse(answered ?? applyResponse(makeFallbackCounterpartyAskTask(taskId), response))
+    return toResponse(applyResponse(makeFallbackCounterpartyAskTask(String(params.taskId)), response))
   },
 })

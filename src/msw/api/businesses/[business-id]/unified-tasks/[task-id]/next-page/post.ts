@@ -7,7 +7,7 @@ import {
   AskFormNextPageResultSchema,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
 
-import { ASK_FORM_STEP_IDS } from '@fixtures/bookkeeping/unifiedAskFormTasks'
+import { ASK_FORM_STEP_IDS } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/tasks/askFormValidation'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

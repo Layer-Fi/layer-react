@@ -28,13 +28,6 @@ const RETAIL_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
   },
 ]
 
-const RENT_SUGGESTIONS: readonly CounterpartyAskAccount[] = [
-  {
-    accountIdentifier: makeStableName(bankTransactionCategories.rent.stableName),
-    name: bankTransactionCategories.rent.displayName,
-  },
-]
-
 type AskTransactionSeed = {
   id: string
   month: number
@@ -98,80 +91,3 @@ export const makeCounterpartyAskTask = (
     ? task
     : { ...task, transactionResponses: toUnansweredResponses(task.transactions) }
 }
-
-const COUNTERPARTY_ASK_SEEDS_BY_MONTH: Record<number, (month: number) => CounterpartyAskTask> = {
-  7: month => makeCounterpartyAskTask({
-    id: '00000000-0000-4000-8000-000000000917',
-    title: 'SQ *NAIL BAR purchases',
-    question: 'You spent $84.00 at SQ *NAIL BAR across 1 transaction. '
-      + 'Can you tell us a bit more about what these were for?',
-    counterparty: {
-      id: '00000000-0000-4000-8000-000000000703',
-      name: 'SQ *NAIL BAR',
-      mccs: [],
-    },
-    suggestions: [],
-    transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a08', month, day: 9, amount: 8400, counterpartyName: 'SQ *NAIL BAR', description: 'SQ *NAIL BAR' }),
-    ],
-    totalAmount: 8400,
-  }),
-
-  8: month => makeCounterpartyAskTask({
-    id: '00000000-0000-4000-8000-000000000916',
-    title: 'Brick and Mortar Real Estate Services purchases',
-    question: 'You spent $736.74 at Brick and Mortar Real Estate Services across 1 transaction. '
-      + 'Can you tell us a bit more about what these were for?',
-    counterparty: {
-      id: '00000000-0000-4000-8000-000000000702',
-      name: 'Brick and Mortar Real Estate Services',
-      mccs: [],
-    },
-    suggestions: RENT_SUGGESTIONS,
-    transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a07', month, day: 1, amount: 73674, counterpartyName: 'Brick and Mortar Real Estate Services', description: 'BRICK+MORTAR RE SVCS' }),
-    ],
-    totalAmount: 73674,
-  }),
-
-  9: month => makeCounterpartyAskTask({
-    id: '00000000-0000-4000-8000-000000000911',
-    transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a01', month, day: 14, amount: 30774, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-    ],
-  }),
-
-  10: month => makeCounterpartyAskTask({
-    id: '00000000-0000-4000-8000-000000000912',
-    question: 'You spent $836.45 at Costco across 2 transactions. '
-      + 'Can you tell us a bit more about what these were for?',
-    transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a02', month, day: 3, amount: 61250, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a03', month, day: 19, amount: 22395, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
-    ],
-    totalCount: 2,
-    totalAmount: 83645,
-  }),
-
-  11: month => makeCounterpartyAskTask({
-    id: '00000000-0000-4000-8000-000000000913',
-    question: '3 more Costco transactions came in, totaling $297.48. '
-      + 'Can you tell us a bit more about what these were for?',
-    transactions: [
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a04', month, day: 2, amount: 14899, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a05', month, day: 11, amount: 9932, counterpartyName: 'Costco', description: 'COSTCO WHSE #1042' }),
-      makeAskTransaction({ id: '00000000-0000-4000-8000-000000000a06', month, day: 27, amount: 4917, counterpartyName: 'Costco', description: 'COSTCO GAS #1042' }),
-    ],
-    totalCount: 3,
-    totalAmount: 29748,
-  }),
-}
-
-export const makeCounterpartyAskTasks = (year: number, month: number): CounterpartyAskTask[] => {
-  const seed = COUNTERPARTY_ASK_SEEDS_BY_MONTH[month]
-
-  return seed && year === FIXTURE_YEAR ? [seed(month)] : []
-}
-
-export const counterpartyAskCountFor = (year: number, month: number) =>
-  makeCounterpartyAskTasks(year, month).length

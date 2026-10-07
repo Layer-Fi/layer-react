@@ -14,7 +14,7 @@ import { UNIFIED_ASK_FORM_VERSION } from '@schemas/features/bookkeeping/business
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { replaceTaskInPeriods, useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 
 const UNIFIED_ASK_FORM_RESPONSE_TAG_KEY = '#unified-ask-form-response'
@@ -45,13 +45,12 @@ export const usePostUnifiedAskFormResponse = createMutationHook({
   argToBody: ({ answers }: UsePostUnifiedAskFormResponseArg) => encodeSubmission({ answers }),
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
-    const { patchTask, invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+    const { patchCache: patchBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
     const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
     const onBankTransactionChange = useBankTransactionTriggerSuccess()
 
     return async ({ task }: UnifiedAskFormSubmissionResult) => {
-      await patchTask(task)
-      void invalidateBookkeepingPeriods()
+      await patchBookkeepingPeriods(replaceTaskInPeriods(task))
       onBankTransactionChange()
       void forceReloadCategorizationRules()
     }
