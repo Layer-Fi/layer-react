@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
+import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import {
-  ASK_FORM_NEXT_PAGE_SUBMIT,
   AskFormNextPageRequestSchema,
   type AskFormNextPageResult,
   AskFormNextPageResultSchema,
@@ -36,6 +36,8 @@ export const post = createMockEndpoint<AskFormNextPageResult, ReturnType<typeof 
     const choice = accountType && 'choice' in accountType ? accountType.choice : null
     const nextPageId = pageId === ASK_FORM_STEP_IDS.accountType && choice ? ACCOUNT_TYPE_ROUTES[choice] : undefined
 
-    return toResponse({ nextPageId: nextPageId ?? ASK_FORM_NEXT_PAGE_SUBMIT })
+    return toResponse({
+      next: nextPageId ? { kind: AskFormNextKind.Page, pageId: nextPageId } : { kind: AskFormNextKind.Submit, review: false },
+    })
   },
 })
