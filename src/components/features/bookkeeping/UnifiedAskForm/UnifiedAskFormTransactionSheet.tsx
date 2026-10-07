@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -8,6 +7,7 @@ import {
   type AskFormTransactionAnswer,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -62,7 +62,7 @@ export const UnifiedAskFormTransactionSheet = (props: UnifiedAskFormTransactionS
   return (
     <VStack gap='sm'>
       {prompt ? <P size='sm' pi='md'>{prompt}</P> : null}
-      <VStack className='Layer__UnifiedAskForm__Rows Layer__UnifiedAskForm__Rows--Sheet'>
+      <VStack className='Layer__UnifiedAskForm__Rows' {...toDataProperties({ variant: 'sheet' })}>
         {transactions.map((transaction) => {
           const rowAnswer = getRowAnswer(transaction.id)
           const isOpen = openId === transaction.id
@@ -71,7 +71,8 @@ export const UnifiedAskFormTransactionSheet = (props: UnifiedAskFormTransactionS
           return (
             <VStack
               key={transaction.id}
-              className={classNames('Layer__UnifiedAskForm__Row', isOpen && 'Layer__UnifiedAskForm__Row--Open')}
+              className='Layer__UnifiedAskForm__Row'
+              {...toDataProperties({ open: isOpen })}
               pi='md'
             >
               <Button

@@ -68,7 +68,17 @@ export function UnifiedAskFormStep(props: UnifiedAskFormStepProps) {
     if (step.type === AskFormStepType.Action) return null
 
     if (step.type === AskFormStepType.Upload) {
-      return <UnifiedAskFormUpload taskId={taskId} accept={step.accept} multiple={step.multiple} answer={answer} onChange={onChange} />
+      return (
+        <UnifiedAskFormUpload
+          taskId={taskId}
+          accept={step.accept}
+          multiple={step.multiple}
+          answer={answer}
+          labels={labels}
+          onChange={onChange}
+          onLabel={onLabel}
+        />
+      )
     }
 
     if (options.length > 0 || searchConfig) {

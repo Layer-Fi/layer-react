@@ -98,6 +98,8 @@ export const UnifiedAskFormSearch = ({
         options={options}
         selectedValue={selectedValue}
         onSelectedValueChange={onSelect}
+        isClearable={false}
+        filterOption={null}
         onInputValueChange={searchComboBoxProps.onSearchQueryChange}
         onCreateOption={onCreate}
         formatCreateLabel={formatCreateLabel}
@@ -113,6 +115,7 @@ export const UnifiedAskFormSearch = ({
       options={options}
       selectedValue={selectedValue}
       onSelectedValueChange={onSelect}
+      isClearable={false}
       {...searchComboBoxProps}
     />
   )
