@@ -17,7 +17,6 @@ export const AskFormNextPageRequestSchema = Schema.Struct({
 export type AskFormNextPageRequest = typeof AskFormNextPageRequestSchema.Type
 export type AskFormNextPageRequestEncoded = typeof AskFormNextPageRequestSchema.Encoded
 
-/** A page id from the form, or `SUBMIT`. */
 export const ASK_FORM_NEXT_PAGE_SUBMIT = 'SUBMIT'
 
 export const AskFormNextPageResultSchema = Schema.Struct({
