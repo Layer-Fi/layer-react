@@ -6,7 +6,7 @@ import {
   type AskFormFollowUpAnswer,
   type AskFormRowAnswer,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
-import { type AskFormNext } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import {
   AskFormCategoryScope,
   type AskFormFollowUp,
@@ -34,7 +34,7 @@ const isChoiceOrTextAnswered = (step: AskFormStepFields, answer: AskFormAnswer, 
   if ('choice' in answer) {
     const followUp = findChosenOption(step, answer)?.followUp
 
-    return !followUp || depth > 0 || isStepAnswered(followUp, answer.followUp, 0, depth + 1)
+    return !followUp || depth > 0 || isStepAnswered(followUp, answer.followUp, [], depth + 1)
   }
 
   return 'text' in answer && answer.text.trim().length > 0
@@ -46,19 +46,17 @@ export const isRowAnswered = (step: AskFormStepFields, answer: AskFormRowAnswer 
 export function isStepAnswered(
   step: AskFormStepFields,
   answer: AskFormAnswer | undefined,
-  transactionCount: number,
+  transactionIds: ReadonlyArray<string>,
   depth = 0,
 ): boolean {
   if (step.type === AskFormStepType.Action) return true
   if (step.type === AskFormStepType.Text && !step.required) return true
 
   if (isSheetStep(step)) {
-    if (transactionCount === 0) return true
+    const rows = answer && 'transactionAnswers' in answer ? answer.transactionAnswers : []
 
-    return answer !== undefined
-      && 'transactionAnswers' in answer
-      && answer.transactionAnswers.length === transactionCount
-      && answer.transactionAnswers.every(row => isRowAnswered(step, row.answer))
+    return transactionIds.every(transactionId =>
+      isRowAnswered(step, rows.find(row => row.transactionId === transactionId)?.answer))
   }
 
   if (!answer) return false
@@ -67,8 +65,8 @@ export function isStepAnswered(
   return isChoiceOrTextAnswered(step, answer, depth)
 }
 
-export const isPageComplete = (page: AskFormPage, answers: AskFormAnswers, transactionCount: number) =>
-  page.steps.every(step => isStepAnswered(step, answers[step.id], transactionCount))
+export const isPageComplete = (page: AskFormPage, answers: AskFormAnswers, transactionIds: ReadonlyArray<string>) =>
+  page.steps.every(step => isStepAnswered(step, answers[step.id], transactionIds))
 
 export const toFollowUpAnswer = (answer: AskFormAnswer): AskFormFollowUpAnswer | undefined => {
   if ('choice' in answer) return { choice: answer.choice }
@@ -76,8 +74,7 @@ export const toFollowUpAnswer = (answer: AskFormAnswer): AskFormFollowUpAnswer |
   return undefined
 }
 
-/** An option's `next` beats the page's on a static page; at most one step per page routes. */
-export const getChosenOptionNext = (page: AskFormPage, answers: AskFormAnswers): AskFormNext | null => {
+const getChosenOptionNext = (page: AskFormPage, answers: AskFormAnswers): AskFormNext | null => {
   for (const step of page.steps) {
     const next = findChosenOption(step, answers[step.id])?.next
 
@@ -86,6 +83,10 @@ export const getChosenOptionNext = (page: AskFormPage, answers: AskFormAnswers):
 
   return null
 }
+
+/** An option's `next` beats the page's on a static page; at most one step per page routes. */
+export const getPageNext = (page: AskFormPage, answers: AskFormAnswers): AskFormNext =>
+  (page.next.kind === AskFormNextKind.Server ? page.next : getChosenOptionNext(page, answers) ?? page.next)
 
 const hasText = ({ text }: { text: string }) => text.trim().length > 0
 
@@ -121,6 +122,9 @@ export const pickAnswersForPages = (pages: ReadonlyArray<AskFormPage>, answers: 
     return posted ? [[stepId, posted]] : []
   }))
 }
+
+export const hasAnswersToPost = (pages: ReadonlyArray<AskFormPage>, answers: AskFormAnswers) =>
+  Object.keys(pickAnswersForPages(pages, answers)).length > 0
 
 /** The API rejects a SERVER url off its own origin; the client never posts answers anywhere else. */
 export const isApiOriginUrl = (url: string) => url.startsWith('/v1/')
