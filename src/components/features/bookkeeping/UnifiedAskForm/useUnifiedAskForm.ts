@@ -166,9 +166,20 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   }, [atEntry, cancelRouting])
 
   const submit = useCallback((pagesOnPath: ReadonlyArray<AskFormPage>) => {
+    const incompletePage = pagesOnPath.find(page => !isPageComplete(page, form.state.values.answers, transactionIds))
+
+    if (incompletePage) {
+      setNavigation({
+        view: { kind: 'PAGE', pageId: incompletePage.id },
+        history: pagesOnPath.slice(0, pagesOnPath.indexOf(incompletePage)).map(({ id }) => id),
+        direction: 'back',
+      })
+      return
+    }
+
     submitPathRef.current = pagesOnPath
     void form.handleSubmit()
-  }, [form])
+  }, [form, transactionIds])
 
   const follow = useCallback((next: AskFormNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
     switch (next.kind) {
