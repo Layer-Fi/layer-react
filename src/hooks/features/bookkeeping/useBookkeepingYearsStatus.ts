@@ -4,7 +4,7 @@ import { getYear } from 'date-fns'
 import { isIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { getActivationDate } from '@utils/features/business/business'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()

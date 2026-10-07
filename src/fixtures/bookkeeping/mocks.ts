@@ -9,6 +9,7 @@ import { range } from '@utils/shared/array/range'
 
 import { counterpartyAskCountFor, makeCounterpartyAskTasks } from '@fixtures/bookkeeping/counterpartyAskTasks'
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
+import { makeUnifiedAskFormTasks } from '@fixtures/bookkeeping/unifiedAskFormTasks'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 import { createGenerator } from '@fixtures/utils/createGenerator'
@@ -115,6 +116,7 @@ const makeBookkeepingPeriod = (monthIndex: number, monthsAgo: number): Bookkeepi
   const tasks = [
     ...makePeriodTasks(monthIndex, openTaskCountFor(monthsAgo), month),
     ...makeCounterpartyAskTasks(year, month),
+    ...makeUnifiedAskFormTasks(year, month),
   ]
 
   return {
