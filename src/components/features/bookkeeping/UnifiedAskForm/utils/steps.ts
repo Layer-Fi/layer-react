@@ -8,9 +8,8 @@ import {
 
 export type AskFormStepFields = AskFormStep | AskFormFollowUp
 
-export type AskFormStepOption = Pick<AskFormOption, 'value' | 'label'> & Partial<Pick<AskFormOption, 'next' | 'followUp'>>
-
-export const getStepOptions = (step: AskFormStepFields): ReadonlyArray<AskFormStepOption> =>
+// A follow-up's options are plain `{ value, label }`, which fits `AskFormOption` with no `next` or `followUp`.
+export const getStepOptions = (step: AskFormStepFields): ReadonlyArray<AskFormOption> =>
   ('options' in step ? step.options : [])
 
 export const findOption = (step: AskFormStepFields, value: string | null) =>

@@ -35,7 +35,8 @@ const serverNext = (taskId: string): AskFormNext => ({ kind: AskFormNextKind.Ser
 
 export const ACCOUNT_MASK_ENTRY_PAGE_ID = 'account_type'
 
-export const ACCOUNT_MASK_ROUTES = { owned: 'connect', vendor: 'vendor', customer: 'customer' } as const
+// Like the API, every other account type submits straight from the first page.
+export const ACCOUNT_MASK_ROUTES = { owned: 'connect', vendor: 'vendor' } as const
 
 export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm => ({
   entryPageId: ACCOUNT_MASK_ENTRY_PAGE_ID,
@@ -70,11 +71,6 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
       scope: AskFormCategoryScope.EachTransaction,
       search: true,
     })]),
-    page(ACCOUNT_MASK_ROUTES.customer, [choiceStep('paid_through', 'Did these payments come through your payments platform?', choiceOptions({
-      platform: 'Yes, through the platform',
-      direct: 'No, they paid me directly',
-      not_sure: 'Not sure',
-    }))]),
   ],
 })
 
