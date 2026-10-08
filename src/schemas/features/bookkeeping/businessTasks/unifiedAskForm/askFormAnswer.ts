@@ -10,48 +10,9 @@ export const AccountOptionValueSchema = Schema.String.pipe(Schema.filter(hasAcco
 
 export const isAccountOptionValue = Schema.is(AccountOptionValueSchema)
 
-const makeAskFormAnswerSchemas = (text: Schema.Schema<string>, choice: Schema.Schema<string>) => {
-  const textAnswer = Schema.Struct({ text })
-
-  const followUpAnswer = Schema.Union(Schema.Struct({ choice }), textAnswer)
-
-  const choiceAnswer = Schema.Struct({
-    choice,
-    followUp: pipe(
-      Schema.optionalWith(followUpAnswer, { nullable: true }),
-      Schema.fromKey('follow_up'),
-    ),
-  })
-
-  const rowAnswer = Schema.Union(choiceAnswer, textAnswer)
-
-  const transactionAnswer = Schema.Struct({
-    transactionId: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('transaction_id'),
-    ),
-    answer: rowAnswer,
-  })
-
-  const transactionAnswers = Schema.Struct({
-    transactionAnswers: pipe(
-      Schema.propertySignature(Schema.Array(transactionAnswer)),
-      Schema.fromKey('transaction_answers'),
-    ),
-  })
-
-  return { textAnswer, followUpAnswer, choiceAnswer, rowAnswer, transactionAnswer, transactionAnswers }
-}
-
-// The API checks these rules on requests only; answers it returns are rebuilt from legacy task fields.
-const answerSchemas = makeAskFormAnswerSchemas(Schema.String, Schema.String)
-const requestAnswerSchemas = makeAskFormAnswerSchemas(
-  Schema.String.pipe(Schema.filter(text => text.trim().length > 0 || 'text must not be blank')),
-  Schema.String.pipe(Schema.filter(choice =>
-    !choice.startsWith(ACCOUNT_OPTION_PREFIX) || hasAccountId(choice) || `Invalid acct id: ${choice}`)),
-)
-
-const AskFormTextAnswerSchema = answerSchemas.textAnswer
+const AskFormTextAnswerSchema = Schema.Struct({
+  text: Schema.String,
+})
 
 const AskFormDocumentsAnswerSchema = Schema.Struct({
   documentIds: pipe(
@@ -64,17 +25,43 @@ const AskFormCompletedAnswerSchema = Schema.Struct({
   completed: Schema.Literal(true),
 })
 
-export type AskFormFollowUpAnswer = typeof answerSchemas.followUpAnswer.Type
+const AskFormFollowUpAnswerSchema = Schema.Union(
+  Schema.Struct({ choice: Schema.String }),
+  AskFormTextAnswerSchema,
+)
 
-const AskFormChoiceAnswerSchema = answerSchemas.choiceAnswer
+export type AskFormFollowUpAnswer = typeof AskFormFollowUpAnswerSchema.Type
+
+const AskFormChoiceAnswerSchema = Schema.Struct({
+  choice: Schema.String,
+  followUp: pipe(
+    Schema.optionalWith(AskFormFollowUpAnswerSchema, { nullable: true }),
+    Schema.fromKey('follow_up'),
+  ),
+})
 
 export type AskFormChoiceAnswer = typeof AskFormChoiceAnswerSchema.Type
 
-export type AskFormRowAnswer = typeof answerSchemas.rowAnswer.Type
+const AskFormRowAnswerSchema = Schema.Union(AskFormChoiceAnswerSchema, AskFormTextAnswerSchema)
 
-export type AskFormTransactionAnswer = typeof answerSchemas.transactionAnswer.Type
+export type AskFormRowAnswer = typeof AskFormRowAnswerSchema.Type
 
-const AskFormTransactionAnswersSchema = answerSchemas.transactionAnswers
+const AskFormTransactionAnswerSchema = Schema.Struct({
+  transactionId: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('transaction_id'),
+  ),
+  answer: AskFormRowAnswerSchema,
+})
+
+export type AskFormTransactionAnswer = typeof AskFormTransactionAnswerSchema.Type
+
+const AskFormTransactionAnswersSchema = Schema.Struct({
+  transactionAnswers: pipe(
+    Schema.propertySignature(Schema.Array(AskFormTransactionAnswerSchema)),
+    Schema.fromKey('transaction_answers'),
+  ),
+})
 
 export const isChoiceAnswer = Schema.is(AskFormChoiceAnswerSchema)
 export const isTextAnswer = Schema.is(AskFormTextAnswerSchema)
@@ -96,21 +83,26 @@ export const AskFormAnswersSchema = Schema.Record({ key: Schema.String, value: A
 export type AskFormAnswers = typeof AskFormAnswersSchema.Type
 export type AskFormAnswersEncoded = typeof AskFormAnswersSchema.Encoded
 
-const AskFormAnswerRequestSchema = Schema.Union(
-  requestAnswerSchemas.choiceAnswer,
-  requestAnswerSchemas.textAnswer,
-  AskFormCompletedAnswerSchema,
-  AskFormDocumentsAnswerSchema.pipe(
-    Schema.filter(({ documentIds }) => documentIds.length > 0 || 'document_ids must not be empty'),
-  ),
-  requestAnswerSchemas.transactionAnswers.pipe(
-    Schema.filter(({ transactionAnswers }) => {
-      const ids = transactionAnswers.map(({ transactionId }) => transactionId)
+const findRequestProblem = (answer: AskFormAnswer | AskFormFollowUpAnswer): string | null => {
+  if (isChoiceAnswer(answer)) {
+    if (answer.choice.startsWith(ACCOUNT_OPTION_PREFIX) && !hasAccountId(answer.choice)) return `Invalid acct id: ${answer.choice}`
+    return answer.followUp ? findRequestProblem(answer.followUp) : null
+  }
+  if (isTextAnswer(answer)) return answer.text.trim() ? null : 'text must not be blank'
+  if (isDocumentsAnswer(answer)) return answer.documentIds.length > 0 ? null : 'document_ids must not be empty'
+  if (isTransactionAnswers(answer)) {
+    const ids = answer.transactionAnswers.map(({ transactionId }) => transactionId)
 
-      if (ids.length === 0) return 'transaction_answers must not be empty'
-      return new Set(ids).size === ids.length || 'Duplicate transaction answers'
-    }),
-  ),
-)
+    if (ids.length === 0) return 'transaction_answers must not be empty'
+    if (new Set(ids).size !== ids.length) return 'Duplicate transaction answers'
+
+    return answer.transactionAnswers.map(row => findRequestProblem(row.answer)).find(problem => problem !== null) ?? null
+  }
+
+  return null
+}
+
+// The API checks these rules on requests only; answers it returns are rebuilt from legacy task fields.
+const AskFormAnswerRequestSchema = AskFormAnswerSchema.pipe(Schema.filter(answer => findRequestProblem(answer) ?? true))
 
 export const AskFormAnswersRequestSchema = Schema.Record({ key: Schema.String, value: AskFormAnswerRequestSchema })
