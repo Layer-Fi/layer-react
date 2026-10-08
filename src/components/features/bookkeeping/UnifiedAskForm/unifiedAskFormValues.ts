@@ -107,7 +107,8 @@ export const toFormValues = (
 
 // The API rejects blank text, so an untouched text input is no answer at all.
 const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): AskFormFollowUpAnswer | null => {
-  if (selection) return selection.isCreated ? { text: selection.label } : { choice: selection.value }
+  if (selection?.isCreated) return selection.label.trim() ? { text: selection.label } : null
+  if (selection) return { choice: selection.value }
   if (choice) return { choice }
   return text.trim() ? { text } : null
 }
