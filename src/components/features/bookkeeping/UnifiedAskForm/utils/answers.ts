@@ -7,8 +7,14 @@ import {
   isChoiceAnswer,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
-import { type AskFormAnswerValues, type AskFormInputValues, type AskFormStepValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormStepFields, findFollowUp, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import {
+  type AskFormAnswerValues,
+  type AskFormInputValues,
+  type AskFormStepValues,
+  getFollowUpStep,
+  type UnifiedAskFormValues,
+} from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormStepFields, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 // The API rejects blank text, so an untouched text input is no answer at all.
 export const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): AskFormFollowUpAnswer | null => {
@@ -20,13 +26,9 @@ export const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): 
 
 const toRowAnswer = (step: AskFormStepFields, values: AskFormAnswerValues): AskFormRowAnswer | null => {
   const answer = toInputAnswer(values)
+  const followUp = getFollowUpStep(step, values) ? toInputAnswer(values.followUp) : null
 
-  if (!isChoiceAnswer(answer)) return answer
-
-  const followUpStep = findFollowUp(step, answer.choice)
-  const followUp = followUpStep ? toInputAnswer(values.followUp) : null
-
-  return followUp ? { ...answer, followUp } : answer
+  return isChoiceAnswer(answer) && followUp ? { ...answer, followUp } : answer
 }
 
 export const toStepAnswer = (

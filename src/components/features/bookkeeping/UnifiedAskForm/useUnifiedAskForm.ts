@@ -81,7 +81,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   // A refetch that links or unlinks transactions changes which sheet rows the API requires.
   useEffect(() => {
     const synced = syncSheetRows(pages, form.state.values, task.answers ?? {}, transactionIds)
-    if (synced) form.setFieldValue('pages', synced.pages)
+    if (synced) form.setFieldValue('pages', synced.pages, { dontUpdateMeta: true })
   }, [form, pages, task.answers, transactionIds])
 
   return useMemo(() => ({ form, isSubmitting }), [form, isSubmitting])

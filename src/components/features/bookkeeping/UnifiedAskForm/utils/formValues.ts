@@ -4,6 +4,7 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
   isChoiceAnswer,
+  isCompletedAnswer,
   isDocumentsAnswer,
   isTextAnswer,
   isTransactionAnswers,
@@ -35,6 +36,12 @@ export type AskFormPageValues = Record<string, AskFormStepValues>
 
 /** Grouped by page so each page validates and continues through its own `FormGroup`. */
 export type UnifiedAskFormValues = { pages: Record<string, AskFormPageValues> }
+
+/** The option or search result the customer picked; a typed-in search answer is not a pick. */
+export const getPickedValue = ({ choice, selection }: AskFormInputValues) =>
+  choice ?? (selection && !selection.isCreated ? selection.value : null)
+
+export const getFollowUpStep = (step: AskFormStepFields, values: AskFormInputValues) => findFollowUp(step, getPickedValue(values))
 
 const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | undefined): AskFormInputValues => {
   if (!answer) return { choice: null, selection: null, text: '' }
@@ -82,7 +89,7 @@ export const toStepValues = (
   return {
     ...toAnswerValues(step, answer),
     files: isDocumentsAnswer(answer) ? answer.documentIds.map(id => ({ id, name: id })) : [],
-    completed: Boolean(answer && 'completed' in answer),
+    completed: isCompletedAnswer(answer),
     rows,
   }
 }

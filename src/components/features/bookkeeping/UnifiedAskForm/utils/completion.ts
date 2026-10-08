@@ -1,41 +1,37 @@
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
-import {
-  isChoiceAnswer,
-} from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
-import { toInputAnswer } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
-import { type AskFormAnswerValues, type AskFormInputValues, type AskFormStepValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormStepFields, findFollowUp, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import { toAnswers, toInputAnswer } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
+import {
+  type AskFormAnswerValues,
+  type AskFormInputValues,
+  type AskFormStepValues,
+  getFollowUpStep,
+  type UnifiedAskFormValues,
+} from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { getPageNext } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
+import { type AskFormStepFields, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
-const isInputComplete = (step: AskFormStepFields, values: AskFormInputValues) => {
-  if (step.type === AskFormStepType.Action) return true
-  if (step.type === AskFormStepType.Text && !step.required) return true
+const isInputComplete = (step: AskFormStepFields, values: AskFormInputValues) =>
+  (step.type === AskFormStepType.Text && !step.required) || toInputAnswer(values) !== null
 
-  return toInputAnswer(values) !== null
+export const isRowComplete = (step: AskFormStepFields, values: AskFormAnswerValues) => {
+  const followUpStep = getFollowUpStep(step, values)
+
+  return isInputComplete(step, values) && (!followUpStep || isInputComplete(followUpStep, values.followUp))
 }
-
-const isAnswerComplete = (step: AskFormStepFields, values: AskFormAnswerValues) => {
-  if (!isInputComplete(step, values)) return false
-
-  const answer = toInputAnswer(values)
-  const followUpStep = isChoiceAnswer(answer) ? findFollowUp(step, answer.choice) : undefined
-
-  return !followUpStep || isInputComplete(followUpStep, values.followUp)
-}
-
-export const isRowComplete = (step: AskFormStepFields, row: AskFormAnswerValues) => isAnswerComplete(step, row)
 
 export const isStepComplete = (step: AskFormStepFields, values: AskFormStepValues, transactionIds: ReadonlyArray<string>) => {
   if (step.type === AskFormStepType.Action) return true
   if (step.type === AskFormStepType.Upload) return values.files.length > 0
-  if (isSheetStep(step)) {
-    return transactionIds.every((transactionId) => {
-      const row = values.rows.find(other => other.transactionId === transactionId)
-      return row !== undefined && isRowComplete(step, row)
-    })
-  }
+  if (!isSheetStep(step)) return isRowComplete(step, values)
 
-  return isAnswerComplete(step, values)
+  const rowsById = new Map(values.rows.map(row => [row.transactionId, row]))
+
+  return transactionIds.every((transactionId) => {
+    const row = rowsById.get(transactionId)
+    return row !== undefined && isRowComplete(step, row)
+  })
 }
 
 export const isPageComplete = (page: AskFormPage, values: UnifiedAskFormValues, transactionIds: ReadonlyArray<string>) =>
@@ -43,3 +39,26 @@ export const isPageComplete = (page: AskFormPage, values: UnifiedAskFormValues, 
     const stepValues = values.pages[page.id]?.[step.id]
     return stepValues !== undefined && isStepComplete(step, stepValues, transactionIds)
   })
+
+export const findFirstIncompletePage = (
+  pages: ReadonlyArray<AskFormPage>,
+  values: UnifiedAskFormValues,
+  transactionIds: ReadonlyArray<string>,
+) => pages.find(page => !isPageComplete(page, values, transactionIds))
+
+export type AskFormPageProblem = 'incomplete' | 'nothing_to_post'
+
+/** Why the customer can't continue from a page: a step is unanswered, or it would leave the form with nothing to post. */
+export const getPageProblem = (
+  page: AskFormPage,
+  values: UnifiedAskFormValues,
+  visitedPages: ReadonlyArray<AskFormPage>,
+  transactionIds: ReadonlyArray<string>,
+): AskFormPageProblem | null => {
+  if (!isPageComplete(page, values, transactionIds)) return 'incomplete'
+
+  const leavesPages = getPageNext(page, values).kind !== AskFormNextKind.Page
+  const hasAnswers = Object.keys(toAnswers([...visitedPages, page], values, transactionIds)).length > 0
+
+  return leavesPages && !hasAnswers ? 'nothing_to_post' : null
+}

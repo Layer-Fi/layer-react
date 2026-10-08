@@ -4,33 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { type AskFormAnswerValues, type AskFormInputValues, type AskFormStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
-
-const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
-
-const UNANSWERED_PLACEHOLDER = '…'
-
-const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: AskFormInputValues) => {
-  if (selection) return selection.label
-  if (choice) return findOption(step, choice)?.label ?? choice
-  return text.trim() || null
-}
-
-const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
-  const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
-  const followUpLabel = followUpStep && !values.followUp.text.trim() ? getInputLabel(followUpStep, values.followUp) : null
-
-  return followUpLabel ?? getInputLabel(step, values)
-}
+import { type AskFormStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { fillPromptTemplate, getChoiceLabel, getFollowUpLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { type AskFormStepFields, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 export const useAskFormAnswerLabel = () => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
 
-  const getAnswerLabel = useCallback((step: AskFormStepFields, values: AskFormStepValues | AskFormAnswerValues | undefined): string | null => {
+  const getAnswerLabel = useCallback((step: AskFormStepFields, values: AskFormStepValues | undefined): string | null => {
     if (!values) return null
-    if (!('rows' in values)) return getChoiceLabel(step, values)
 
     if (step.type === AskFormStepType.Action) {
       return values.completed ? t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.done', 'Done') : null
@@ -49,31 +32,28 @@ export const useAskFormAnswerLabel = () => {
 
     if (!isSheetStep(step)) return getChoiceLabel(step, values)
 
-    const rowLabels = new Set(values.rows.map(row => getChoiceLabel(step, row)).filter(label => label !== null))
+    const rowLabels = new Set(values.rows.flatMap((row) => {
+      const label = getChoiceLabel(step, row)
+      return label === null ? [] : [label]
+    }))
     const [onlyLabel] = rowLabels
 
-    if (rowLabels.size === 0) return null
-
-    return rowLabels.size === 1 && onlyLabel
-      ? onlyLabel
-      : t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.varies_by_transaction', 'Varies by transaction')
+    return rowLabels.size > 1
+      ? t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.varies_by_transaction', 'Varies by transaction')
+      : onlyLabel ?? null
   }, [formatNumber, t])
 
-  const fillPromptTemplate = useCallback((
+  const fillStepPrompt = useCallback((
     text: string | null | undefined,
     stepsById: ReadonlyMap<string, AskFormStepFields>,
     stepValues: Readonly<Record<string, AskFormStepValues>>,
-  ) => text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) => {
+  ) => fillPromptTemplate(text, (stepId, isFollowUp) => {
     const step = stepsById.get(stepId)
     const values = stepValues[stepId]
 
-    if (!step || !values) return UNANSWERED_PLACEHOLDER
-    if (!followUp) return getAnswerLabel(step, values) ?? UNANSWERED_PLACEHOLDER
+    if (!step || !values) return null
+    return isFollowUp ? getFollowUpLabel(step, values) : getAnswerLabel(step, values)
+  }, t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.unanswered', '…')), [getAnswerLabel, t])
 
-    const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
-
-    return followUpStep ? getInputLabel(followUpStep, values.followUp) ?? UNANSWERED_PLACEHOLDER : UNANSWERED_PLACEHOLDER
-  }) ?? null, [getAnswerLabel])
-
-  return useMemo(() => ({ getAnswerLabel, fillPromptTemplate }), [fillPromptTemplate, getAnswerLabel])
+  return useMemo(() => ({ getAnswerLabel, fillPromptTemplate: fillStepPrompt }), [fillStepPrompt, getAnswerLabel])
 }
