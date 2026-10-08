@@ -1,113 +1,74 @@
-import { useState } from 'react'
+import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import {
-  type AskFormAnswer,
-  type AskFormRowAnswer,
-  type AskFormTransactionAnswer,
-} from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { P, Span } from '@ui/Typography/Text'
-import { UnifiedAskFormStep, type UnifiedAskFormStepProps } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStep'
+import { FormRowSheet } from '@blocks/FormSteps/FormRowSheet'
+import { UnifiedAskFormInput } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { UnifiedAskFormTransactionCells } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTransactionCells'
-import { findChosenOption, isRowAnswered } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { findOption } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { isRowComplete } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 import { useAskFormAnswerLabel } from '@features/bookkeeping/UnifiedAskForm/useAskFormAnswerLabel'
+import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 
-type UnifiedAskFormTransactionSheetProps = Omit<UnifiedAskFormStepProps, 'onPickOption' | 'depth'> & {
+type UnifiedAskFormTransactionSheetProps = {
+  form: UnifiedAskFormApi
+  pageId: string
+  taskId: string
+  step: AskFormStep
+  prompt: string | null
   transactions: ReadonlyArray<AskFormTransaction>
 }
 
-const toRowAnswer = (answer: AskFormAnswer): AskFormRowAnswer | undefined => {
-  if ('choice' in answer) return answer
-  if ('text' in answer) return answer
-  return undefined
-}
-
-export const UnifiedAskFormTransactionSheet = (props: UnifiedAskFormTransactionSheetProps) => {
-  const { step, prompt, answer, labels, onChange, transactions } = props
+export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, prompt, transactions }: UnifiedAskFormTransactionSheetProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const getAnswerLabel = useAskFormAnswerLabel(labels)
+  const { getAnswerLabel } = useAskFormAnswerLabel()
+  const fields = `pages.${pageId}.${step.id}` as const
+  const rows = useStore(form.store, state => state.values.pages[pageId]?.[step.id]?.rows ?? [])
 
-  const rows: ReadonlyArray<AskFormTransactionAnswer> = answer && 'transactionAnswers' in answer ? answer.transactionAnswers : []
-  const getRowAnswer = (transactionId: string) => rows.find(row => row.transactionId === transactionId)?.answer
-  const isAnswered = (transactionId: string) => isRowAnswered(step, getRowAnswer(transactionId))
+  const sheetRows = transactions.flatMap((transaction) => {
+    const row = rows.find(({ transactionId }) => transactionId === transaction.id)
+    if (!row) return []
 
-  const [openId, setOpenId] = useState(() => transactions.find(({ id }) => !isAnswered(id))?.id ?? null)
-  const answeredCount = transactions.filter(({ id }) => isAnswered(id)).length
+    const isComplete = isRowComplete(step, row)
 
-  const setRow = (transactionId: string, next: AskFormAnswer) => {
-    const rowAnswer = toRowAnswer(next)
-    if (!rowAnswer) return
+    return [{
+      id: transaction.id,
+      summary: <UnifiedAskFormTransactionCells transaction={transaction} />,
+      answerLabel: isComplete ? getAnswerLabel(step, row) : null,
+      isComplete,
+    }]
+  })
 
-    const nextRows = transactions.flatMap(({ id }) => {
-      if (id === transactionId) return [{ transactionId: id, answer: rowAnswer }]
-      const existing = rows.find(row => row.transactionId === id)
-      return existing ? [existing] : []
-    })
-
-    onChange({ transactionAnswers: nextRows })
-
-    if (!findChosenOption(step, rowAnswer)?.followUp && isRowAnswered(step, rowAnswer)) {
-      const nextOpen = transactions.find(({ id }) =>
-        id !== transactionId && !isRowAnswered(step, nextRows.find(row => row.transactionId === id)?.answer))
-      setOpenId(nextOpen?.id ?? null)
-    }
-  }
+  const answeredCount = sheetRows.filter(({ isComplete }) => isComplete).length
 
   return (
-    <VStack gap='sm'>
-      {prompt ? <P size='sm' pi='md'>{prompt}</P> : null}
-      <VStack className='Layer__UnifiedAskForm__Rows' {...toDataProperties({ variant: 'sheet' })}>
-        {transactions.map((transaction) => {
-          const rowAnswer = getRowAnswer(transaction.id)
-          const isOpen = openId === transaction.id
-          const label = isAnswered(transaction.id) ? getAnswerLabel(step, rowAnswer) : null
+    <FormRowSheet
+      rows={sheetRows}
+      prompt={prompt}
+      countLabel={t('bookkeeping:UnifiedAskForm.UnifiedAskFormTransactionSheet.label.categorized_count', '{{answered}} of {{total}} categorized', {
+        answered: formatNumber(answeredCount),
+        total: formatNumber(sheetRows.length),
+      })}
+      renderEditor={(transactionId, { advance }) => {
+        const index = rows.findIndex(row => row.transactionId === transactionId)
 
-          return (
-            <VStack
-              key={transaction.id}
-              className='Layer__UnifiedAskForm__Row'
-              {...toDataProperties({ open: isOpen })}
-              pi='md'
-            >
-              <Button
-                className='Layer__UnifiedAskForm__RowSummary'
-                variant='text'
-                underline={false}
-                fullWidth
-                onPress={() => setOpenId(transaction.id)}
-              >
-                <HStack align='center' gap='xs' overflow='hidden' fluid>
-                  <UnifiedAskFormTransactionCells transaction={transaction} />
-                  {label
-                    ? <Span className='Layer__UnifiedAskForm__RowAnswer' size='sm' align='right' ellipsis noWrap>{label}</Span>
-                    : null}
-                </HStack>
-              </Button>
-              {isOpen
-                ? (
-                  <VStack pbe='sm' pbs='3xs'>
-                    <UnifiedAskFormStep {...props} prompt={null} answer={rowAnswer} onChange={next => setRow(transaction.id, next)} />
-                  </VStack>
-                )
-                : null}
-            </VStack>
-          )
-        })}
-      </VStack>
-      <HStack justify='end' pi='md'>
-        <Span size='xs' variant='subtle'>
-          {t('bookkeeping:UnifiedAskForm.UnifiedAskFormTransactionSheet.label.categorized_count', '{{answered}} of {{total}} categorized', {
-            answered: formatNumber(answeredCount),
-            total: formatNumber(transactions.length),
-          })}
-        </Span>
-      </HStack>
-    </VStack>
+        return (
+          <UnifiedAskFormInput
+            form={form}
+            fields={`${fields}.rows[${index}]`}
+            followUpFields={`${fields}.rows[${index}].followUp`}
+            taskId={taskId}
+            step={step}
+            prompt={null}
+            onSelect={(value) => {
+              if (!findOption(step, value)?.followUp) advance()
+            }}
+          />
+        )
+      }}
+    />
   )
 }

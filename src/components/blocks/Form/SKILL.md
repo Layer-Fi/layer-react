@@ -83,6 +83,9 @@ Use `form.Field` (not `AppField`) only when rendering a control that has no `For
 | `FormSwitchField` | a boolean rendered as a toggle |
 | `FormRadioGroupField` | one of N options (`RadioOption<T>[]`) |
 | `FormRadioGroupYesNoField` | the common yes/no pair |
+| `FormChipGroupField` | one of N options as chips; `onSelect` fires on every press, for auto-advance |
+| `FormSearchComboBoxField` | a server-searched pick (`{ value, label }`), optionally keeping typed text (`allowCreate`) |
+| `FormFileUploadField` | uploaded files (`{ id, name }[]`); the caller injects `upload` |
 | `BaseFormTextField` | building a new text-like field — wrap your own control as the `slot='input'` child |
 
 All of them accept `CommonFormFieldProps`:
@@ -94,6 +97,25 @@ All of them accept `CommonFormFieldProps`:
 Adding a new field type means adding the component to `src/components/blocks/Form/` **and** registering
 it in the `createFormHook` `fieldComponents` map in `@blocks/Form/useForm` — it isn't
 available on `field.` until then.
+
+## Multi-step forms
+
+A wizard keeps one form and gives each step its own `form.FormGroup`: the group's `onDynamic`
+validator gates that step, and `onGroupSubmit` moves to the next one. `useStepNavigation`
+(`@hooks/utils/navigation`) holds the step history for back navigation, and `SlidingPanes` animates
+between steps.
+
+Reusable step bodies live in `@blocks/FormSteps` as `withFieldGroup` components, so one step binds
+to any form at any path whose value has its shape:
+
+| Step | Binds to |
+| --- | --- |
+| `ChoiceStep` | `{ choice, selection }` — chips, an optional search, and a follow-up slot |
+| `TextStep` | `{ text }` |
+| `UploadStep` | `{ files }` |
+
+`FormRowSheet` lays out one editor per row, such as a step answered per transaction. Reference:
+`UnifiedAskForm` and `useUnifiedAskForm`.
 
 ## Validation
 
