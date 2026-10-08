@@ -15,10 +15,9 @@ import {
 } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/store'
 import { unifiedTaskDocumentStore } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/store'
 import { isCategorizedByAskFormAnswers, summarizeAskFormAnswers } from '@msw/api/businesses/[business-id]/unified-tasks/askFormAnswers'
-import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/unified-tasks/askFormValidation'
 import { apiData, apiError } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { readRequestJson } from '@msw/utils/request'
+import { assertRequest, decodeRequestBody, readRequestJson } from '@msw/utils/request'
 
 const encodeResult = Schema.encodeSync(UnifiedAskFormSubmissionResultSchema)
 
@@ -36,8 +35,7 @@ export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnTyp
   resolve: async ({ override, request, params }) => {
     if (override) return toResponse(override)
 
-    const { answers } = decodeAskFormRequest(UnifiedAskFormSubmissionSchema, await readRequestJson(request))
-    assertAskFormRequest(Object.keys(answers).length > 0, 'answers must not be empty')
+    const { answers } = decodeRequestBody(UnifiedAskFormSubmissionSchema, await readRequestJson(request))
     const taskId = String(params.taskId)
     const existing = findUnifiedAskFormTaskInStore(taskId)
 
@@ -51,7 +49,7 @@ export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnTyp
     ])
     const submittedDocumentIds = collectDocumentIds(answers)
     const unknownDocumentIds = submittedDocumentIds.filter(id => !knownDocumentIds.has(id))
-    assertAskFormRequest(unknownDocumentIds.length === 0, `Documents ${unknownDocumentIds.join(',')} are not uploaded to task ${taskId}`)
+    assertRequest(unknownDocumentIds.length === 0, `Documents ${unknownDocumentIds.join(',')} are not uploaded to task ${taskId}`)
 
     const task = patchUnifiedAskFormTaskInStore(taskId, task => ({
       ...task,
