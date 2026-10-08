@@ -57,6 +57,18 @@ describe('FormSearchComboBoxField', () => {
     expect(onSelect).toHaveBeenCalledWith({ value: 'Corner shop', label: 'Corner shop', isCreated: true })
   })
 
+  it('offers no created answer when a result already matches the typed text', async () => {
+    const { user } = renderSearchField({
+      allowCreate: true,
+      formatCreateLabel: text => `Use “${text}”`,
+    })
+
+    await user.type(screen.getByRole('combobox', { name: 'Vendor' }), 'acme supplies')
+
+    expect(await screen.findByRole('option', { name: 'Acme Supplies' })).toBeInTheDocument()
+    expect(screen.queryByRole('option', { name: 'Use “acme supplies”' })).not.toBeInTheDocument()
+  })
+
   it('offers no created answer while results are loading', async () => {
     const { user } = renderSearchField({
       options: [],

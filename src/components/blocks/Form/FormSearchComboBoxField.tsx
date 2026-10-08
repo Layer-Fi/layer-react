@@ -48,6 +48,11 @@ export function FormSearchComboBoxField({
 
   const selectedValue = value ? { value: value.value, label: value.label } : null
 
+  const isValidNewOption = (text: string) => {
+    const typed = text.trim().toLocaleLowerCase()
+    return !isLoading && typed.length > 0 && !options.some(({ label }) => label.trim().toLocaleLowerCase() === typed)
+  }
+
   return (
     <>
       <ComboBoxField {...props}>
@@ -66,7 +71,7 @@ export function FormSearchComboBoxField({
               filterOption={null}
               onInputValueChange={onSearchQueryChange}
               onCreateOption={text => select({ value: text, label: text, isCreated: true })}
-              isValidNewOption={text => !isLoading && text.trim().length > 0}
+              isValidNewOption={isValidNewOption}
               formatCreateLabel={formatCreateLabel}
               createOptionPosition='last'
             />
