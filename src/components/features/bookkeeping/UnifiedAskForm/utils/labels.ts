@@ -47,12 +47,14 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
 }
 
 /** The short label a whole step's answer shows in the review and in prompt templates. */
-export const getStepLabel = (
-  t: TFunction,
-  formatNumber: FormatNumber,
-  step: AskFormStepFields,
-  values: AskFormStepValues | undefined,
-): string | null => {
+type StepLabelOptions = {
+  t: TFunction
+  formatNumber: FormatNumber
+  step: AskFormStepFields
+  values: AskFormStepValues | undefined
+}
+
+export const getStepLabel = ({ t, formatNumber, step, values }: StepLabelOptions): string | null => {
   if (!values) return null
 
   switch (step.type) {
@@ -73,18 +75,23 @@ export const getStepLabel = (
 }
 
 /** Fills `{{answer.<step>.label}}` and `{{answer.<step>.follow_up.label}}` placeholders with the answers given so far. */
-export const fillPromptTemplate = (
-  t: TFunction,
-  formatNumber: FormatNumber,
-  text: string | null | undefined,
-  stepsById: ReadonlyMap<string, AskFormStepFields>,
-  stepValues: Readonly<Record<string, AskFormStepValues>>,
-) => text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) => {
-  const step = stepsById.get(stepId)
-  const values = stepValues[stepId]
-  const label = step && values
-    ? (followUp ? getFollowUpLabel(step, values) : getStepLabel(t, formatNumber, step, values))
-    : null
+type PromptTemplateOptions = {
+  t: TFunction
+  formatNumber: FormatNumber
+  text: string | null | undefined
+  stepsById: ReadonlyMap<string, AskFormStepFields>
+  stepValues: Readonly<Record<string, AskFormStepValues>>
+}
 
-  return label ?? t('bookkeeping:utils.labels.label.unanswered', '…')
-}) ?? null
+export const fillPromptTemplate = ({ t, formatNumber, text, stepsById, stepValues }: PromptTemplateOptions) => {
+  const getLabel = (stepId: string, isFollowUp: boolean) => {
+    const step = stepsById.get(stepId)
+    const values = stepValues[stepId]
+
+    if (!step || !values) return null
+    return isFollowUp ? getFollowUpLabel(step, values) : getStepLabel({ t, formatNumber, step, values })
+  }
+
+  return text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) =>
+    getLabel(stepId, followUp !== undefined) ?? t('bookkeeping:utils.labels.label.unanswered', '…')) ?? null
+}
