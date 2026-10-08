@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import type userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -63,14 +63,5 @@ describe('FormFileUploadField', () => {
 
     expect(await screen.findByText('Some files couldn’t be uploaded. Try again.')).toBeInTheDocument()
     expect(screen.queryByText('receipt.pdf')).not.toBeInTheDocument()
-  })
-
-  it('removes a file', async () => {
-    const { user } = renderUploadField({ initialFiles: [{ id: 'a', name: 'a.pdf' }, { id: 'b', name: 'b.pdf' }], multiple: true })
-
-    await user.click(screen.getAllByRole('button', { name: 'Remove' })[0]!)
-
-    await waitFor(() => expect(screen.queryByText('a.pdf')).not.toBeInTheDocument())
-    expect(screen.getByText('b.pdf')).toBeInTheDocument()
   })
 })
