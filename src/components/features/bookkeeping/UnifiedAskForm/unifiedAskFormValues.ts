@@ -105,6 +105,36 @@ export const toFormValues = (
   ])),
 })
 
+/** Rebuilds each sheet's rows for the current transaction ids, keeping existing rows; `null` when nothing changed. */
+export const syncSheetRows = (
+  pages: ReadonlyArray<AskFormPage>,
+  values: UnifiedAskFormValues,
+  answers: AskFormAnswers,
+  transactionIds: ReadonlyArray<string>,
+): UnifiedAskFormValues | null => {
+  const transactionKey = transactionIds.join(',')
+  let changed = false
+
+  const syncedPages = Object.fromEntries(pages.map((page) => {
+    const pageValues = values.pages[page.id] ?? {}
+    const syncedSteps = page.steps.flatMap((step) => {
+      const stepValues = pageValues[step.id]
+      if (!stepValues || !isSheetStep(step)) return []
+      if (stepValues.rows.map(({ transactionId }) => transactionId).join(',') === transactionKey) return []
+
+      changed = true
+      const defaultRows = toStepValues(step, answers[step.id], transactionIds).rows
+      const rows = defaultRows.map(row => stepValues.rows.find(other => other.transactionId === row.transactionId) ?? row)
+
+      return [[step.id, { ...stepValues, rows }]]
+    })
+
+    return [page.id, { ...pageValues, ...Object.fromEntries(syncedSteps) }]
+  }))
+
+  return changed ? { pages: { ...values.pages, ...syncedPages } } : null
+}
+
 // The API rejects blank text, so an untouched text input is no answer at all.
 const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): AskFormFollowUpAnswer | null => {
   if (selection?.isCreated) return selection.label.trim() ? { text: selection.label } : null

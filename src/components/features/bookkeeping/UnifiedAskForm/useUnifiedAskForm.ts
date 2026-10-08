@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -17,6 +17,7 @@ import { isApiOriginUrl } from '@features/bookkeeping/UnifiedAskForm/unifiedAskF
 import {
   getPageNext,
   isPageComplete,
+  syncSheetRows,
   toAnswers,
   toFormValues,
   type UnifiedAskFormValues,
@@ -122,6 +123,12 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   })
 
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
+
+  // A refetch that links or unlinks transactions changes which sheet rows the API requires.
+  useEffect(() => {
+    const synced = syncSheetRows(allPages, form.state.values, task.answers ?? {}, transactionIds)
+    if (synced) form.setFieldValue('pages', synced.pages)
+  }, [allPages, form, task.answers, transactionIds])
 
   const visitedPages = useMemo(
     () => navigation.history.flatMap(view => (view.kind === 'PAGE' ? [getPage(view.pageId)] : [])),
