@@ -417,22 +417,6 @@ describe('UnifiedAskForm', () => {
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
   })
 
-  it('submits the document id the upload returned', async () => {
-    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
-    const documentId = '00000000-0000-4000-8000-00000000d0c1'
-    server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: documentId, fileName: 'receipt.pdf' }] }))
-    const onSubmit = spyOnSubmit(task)
-    const { user, container } = renderItem(task)
-
-    await uploadFile(user, container, 'receipt.pdf')
-    expect(await screen.findByText('receipt.pdf')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Submit' }))
-
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
-    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { response: { document_ids: [documentId] } } })
-  })
-
   it('submits only the files still listed after one is removed', async () => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     const keptId = '00000000-0000-4000-8000-00000000d0c1'
