@@ -5,7 +5,7 @@ import { type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/un
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { FormRowSheet } from '@blocks/FormSteps/FormRowSheet'
-import { UnifiedAskFormInput } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
+import { UnifiedAskFormStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStep'
 import { UnifiedAskFormTransactionCells } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTransactionCells'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { isRowComplete } from '@features/bookkeeping/UnifiedAskForm/utils/completion'
@@ -58,7 +58,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
         const index = rowIndexById.get(transactionId) ?? -1
 
         return (
-          <UnifiedAskFormInput
+          <UnifiedAskFormStep
             form={form}
             fields={`${fields}.rows[${index}]`}
             taskId={taskId}

@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { UploadStep } from '@blocks/FormSteps/UploadStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
-import { type AskFormStepPath } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormInputPath } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
 // The API stores at most this many files per upload request.
 const MAX_FILES_PER_UPLOAD = 10
 
 type UnifiedAskFormUploadProps = {
   form: UnifiedAskFormApi
-  fields: AskFormStepPath
+  fields: AskFormInputPath
   taskId: string
   prompt: string | null
   accept: ReadonlyArray<string>

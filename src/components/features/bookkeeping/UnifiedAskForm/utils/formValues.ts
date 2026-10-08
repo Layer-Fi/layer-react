@@ -39,7 +39,7 @@ export type AskFormPageValues = Record<string, AskFormStepValues>
 export type UnifiedAskFormValues = { pages: Record<string, AskFormPageValues> }
 
 /** Where a step's answer lives in `UnifiedAskFormValues`. */
-export type AskFormStepPath = `pages.${string}.${string}`
+type AskFormStepPath = `pages.${string}.${string}`
 
 /** Where a step, its follow-up, a sheet row or a row's follow-up is answered. */
 export type AskFormInputPath =
