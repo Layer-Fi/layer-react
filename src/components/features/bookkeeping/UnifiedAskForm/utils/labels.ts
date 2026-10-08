@@ -40,7 +40,7 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
     return label === null ? [] : [label]
   }))
 
-  if (rowLabels.size > 1) return t('bookkeeping:UnifiedAskForm.labels.varies_by_transaction', 'Varies by transaction')
+  if (rowLabels.size > 1) return t('bookkeeping:utils.labels.label.varies_by_transaction', 'Varies by transaction')
 
   const [onlyLabel] = rowLabels
   return onlyLabel ?? null
@@ -57,10 +57,10 @@ export const getStepLabel = (
 
   switch (step.type) {
     case AskFormStepType.Action:
-      return values.completed ? t('bookkeeping:UnifiedAskForm.labels.done', 'Done') : null
+      return values.completed ? t('bookkeeping:utils.labels.label.done', 'Done') : null
     case AskFormStepType.Upload:
       return values.files.length > 0
-        ? tPlural(t, 'bookkeeping:UnifiedAskForm.labels.file_count', {
+        ? tPlural(t, 'bookkeeping:utils.labels.label.file_count', {
           count: values.files.length,
           displayCount: formatNumber(values.files.length),
           one: '{{displayCount}} file',
@@ -86,5 +86,5 @@ export const fillPromptTemplate = (
     ? (followUp ? getFollowUpLabel(step, values) : getStepLabel(t, formatNumber, step, values))
     : null
 
-  return label ?? t('bookkeeping:UnifiedAskForm.labels.unanswered', '…')
+  return label ?? t('bookkeeping:utils.labels.label.unanswered', '…')
 }) ?? null
