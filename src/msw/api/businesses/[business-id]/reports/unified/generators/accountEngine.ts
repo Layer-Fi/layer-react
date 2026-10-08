@@ -1,18 +1,13 @@
 import { sumBy } from 'lodash-es'
 
 import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
-import { type LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 import { type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   entriesInRange,
   type MockReportEntry,
 } from '@fixtures/unifiedReports/deterministicAmounts'
-import {
-  groupByParentAccountId,
-  ledgerAccountStore,
-  resolveParentAccountId,
-} from '@msw/api/businesses/[business-id]/ledger/accounts/store'
+import { type AccountNode } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import {
   accountFlow,
   accountMagnitude,
@@ -21,39 +16,6 @@ import {
   type ReportDateRange,
   textCell,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-
-export const accountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
-  ledgerAccountStore.all().filter(account => types.includes(account.accountType.value))
-
-export type AccountNode = {
-  account: SingleChartAccountType
-  children: AccountNode[]
-}
-
-export const buildAccountForest = (accounts: readonly SingleChartAccountType[]): AccountNode[] => {
-  const idsInSet = new Set(accounts.map(account => account.accountId))
-  const childrenByParentId = groupByParentAccountId(accounts)
-
-  const toNode = (account: SingleChartAccountType): AccountNode => ({
-    account,
-    children: (childrenByParentId.get(account.accountId) ?? []).map(toNode),
-  })
-
-  return accounts
-    .filter((account) => {
-      const parentId = resolveParentAccountId(account)
-      return parentId == null || !idsInSet.has(parentId)
-    })
-    .map(toNode)
-}
-
-export const collectLeafAccounts = (nodes: readonly AccountNode[]): SingleChartAccountType[] =>
-  nodes.flatMap(node => node.children.length === 0
-    ? [node.account]
-    : collectLeafAccounts(node.children))
-
-export const leafAccountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
-  collectLeafAccounts(buildAccountForest(accountsOfTypes(types)))
 
 export const accountStreamKey = (account: SingleChartAccountType): string =>
   account.stableName ?? account.accountId

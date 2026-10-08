@@ -5,7 +5,7 @@ import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccount
 import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
-import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import {
   accumulatedMagnitudeCents,
   balanceSheetRange,

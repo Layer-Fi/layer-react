@@ -43,14 +43,40 @@ export const groupByParentAccountId = (accounts: readonly SingleChartAccountType
   return childrenByParentId
 }
 
-export const listCategorizableLeafAccounts = () => {
-  const accounts = ledgerAccountStore.all()
-  const parentIds = new Set(groupByParentAccountId(accounts).keys())
+export const accountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
+  ledgerAccountStore.all().filter(account => types.includes(account.accountType.value))
 
-  return accounts.filter(({ accountId, accountType }) =>
-    !parentIds.has(accountId)
-    && (accountType.value === LedgerAccountType.Expense || accountType.value === LedgerAccountType.Revenue))
+export type AccountNode = {
+  account: SingleChartAccountType
+  children: AccountNode[]
 }
+
+export const buildAccountForest = (accounts: readonly SingleChartAccountType[]): AccountNode[] => {
+  const idsInSet = new Set(accounts.map(account => account.accountId))
+  const childrenByParentId = groupByParentAccountId(accounts)
+
+  const toNode = (account: SingleChartAccountType): AccountNode => ({
+    account,
+    children: (childrenByParentId.get(account.accountId) ?? []).map(toNode),
+  })
+
+  return accounts
+    .filter((account) => {
+      const parentId = resolveParentAccountId(account)
+      return parentId == null || !idsInSet.has(parentId)
+    })
+    .map(toNode)
+}
+
+export const collectLeafAccounts = (nodes: readonly AccountNode[]): SingleChartAccountType[] =>
+  nodes.flatMap(node => node.children.length === 0
+    ? [node.account]
+    : collectLeafAccounts(node.children))
+
+export const leafAccountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
+  collectLeafAccounts(buildAccountForest(accountsOfTypes(types)))
+
+export const CATEGORIZABLE_ACCOUNT_TYPES = [LedgerAccountType.Expense, LedgerAccountType.Revenue] as const
 
 export const isAccountDeletable = (accountId: string): boolean => {
   const treeIds = collectAccountTreeIds(accountId)

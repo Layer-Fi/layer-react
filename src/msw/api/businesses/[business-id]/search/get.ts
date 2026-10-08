@@ -5,7 +5,7 @@ import { AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks
 
 import { toSearchId } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
-import { listCategorizableLeafAccounts } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
+import { CATEGORIZABLE_ACCOUNT_TYPES, leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
 import { apiData, readLimit } from '@msw/utils/apiResponse'
 import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
@@ -26,7 +26,7 @@ const contactIndex = (entity: AskFormSearchEntity, all: () => readonly Contact[]
   () => all().map(contact => ({ id: toSearchId(entity, contact.id), entity, label: contactLabel(contact), sublabel: contact.email }))
 
 const SEARCH_INDEXES: Record<string, () => readonly UnifiedSearchResult[]> = {
-  [AskFormSearchEntity.Category]: () => listCategorizableLeafAccounts().map(({ accountId, name, accountType }) => ({
+  [AskFormSearchEntity.Category]: () => leafAccountsOfTypes(CATEGORIZABLE_ACCOUNT_TYPES).map(({ accountId, name, accountType }) => ({
     id: toSearchId(AskFormSearchEntity.Category, accountId),
     entity: AskFormSearchEntity.Category,
     label: name,

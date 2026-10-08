@@ -7,12 +7,8 @@ import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccount
 import { type ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
-import {
-  type AccountNode,
-  accountsOfTypes,
-  buildAccountForest,
-  nodeActivityCents,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import { type AccountNode, accountsOfTypes, buildAccountForest } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
+import { nodeActivityCents } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import { TOTAL_COLUMN_KEY } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
   currencyCell,
