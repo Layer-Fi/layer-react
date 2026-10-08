@@ -20,7 +20,6 @@ const findAnswerProblem = (answer: AskFormAnswer | AskFormFollowUpAnswer): strin
     }
 
     if (!('followUp' in answer) || !answer.followUp) return null
-    if ('documentIds' in answer.followUp) return 'A follow_up answer must be a choice or text'
 
     return findAnswerProblem(answer.followUp)
   }

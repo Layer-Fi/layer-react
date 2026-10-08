@@ -7,8 +7,9 @@ import {
   AskFormNextPageResultSchema,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
 
+import { ACCOUNT_MASK_ENTRY_PAGE_ID } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { ASK_FORM_STEP_IDS } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
-import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/tasks/askFormValidation'
+import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/unified-tasks/askFormValidation'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -34,7 +35,7 @@ export const post = createMockEndpoint<AskFormNextPageResult, ReturnType<typeof 
 
     const accountType = answers[ASK_FORM_STEP_IDS.accountType]
     const choice = accountType && 'choice' in accountType ? accountType.choice : null
-    const nextPageId = pageId === ASK_FORM_STEP_IDS.accountType && choice ? ACCOUNT_TYPE_ROUTES[choice] : undefined
+    const nextPageId = pageId === ACCOUNT_MASK_ENTRY_PAGE_ID && choice ? ACCOUNT_TYPE_ROUTES[choice] : undefined
 
     return toResponse({
       next: nextPageId ? { kind: AskFormNextKind.Page, pageId: nextPageId } : { kind: AskFormNextKind.Submit, review: false },

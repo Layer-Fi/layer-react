@@ -33,10 +33,12 @@ const VENDOR_CATEGORIES = [
 
 const serverNext = (taskId: string): AskFormNext => ({ kind: AskFormNextKind.Server, url: askFormNextPageUrl(taskId) })
 
+export const ACCOUNT_MASK_ENTRY_PAGE_ID = 'account_type'
+
 export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm => ({
-  entryPageId: ASK_FORM_STEP_IDS.accountType,
+  entryPageId: ACCOUNT_MASK_ENTRY_PAGE_ID,
   pages: [
-    page(ASK_FORM_STEP_IDS.accountType, [choiceStep(ASK_FORM_STEP_IDS.accountType, `What kind of account is ••${mask}?`, [
+    page(ACCOUNT_MASK_ENTRY_PAGE_ID, [choiceStep(ASK_FORM_STEP_IDS.accountType, `What kind of account is ••${mask}?`, [
       ...choiceOptions({
         personal: 'A personal account',
         owned: 'Another account my business owns',
