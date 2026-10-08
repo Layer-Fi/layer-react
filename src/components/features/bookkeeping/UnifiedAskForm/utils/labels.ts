@@ -59,7 +59,7 @@ export const getStepLabel = ({ t, formatNumber, step, values }: StepLabelOptions
 
   switch (step.type) {
     case AskFormStepType.Action:
-      return values.completed ? t('bookkeeping:utils.labels.label.done', 'Done') : null
+      return t('bookkeeping:utils.labels.label.done', 'Done')
     case AskFormStepType.Upload:
       return values.files.length > 0
         ? tPlural(t, 'bookkeeping:utils.labels.label.file_count', {

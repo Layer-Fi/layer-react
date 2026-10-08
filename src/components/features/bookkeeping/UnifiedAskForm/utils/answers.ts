@@ -36,7 +36,8 @@ export const toStepAnswer = (
   values: AskFormStepValues,
   transactionIds: ReadonlyArray<string>,
 ): AskFormAnswer | null => {
-  if (step.type === AskFormStepType.Action) return values.completed ? { completed: true } : null
+  // The primary button is the only way off an ACTION page, so an action on the path has been done.
+  if (step.type === AskFormStepType.Action) return { completed: true }
   if (step.type === AskFormStepType.Upload) {
     return values.files.length > 0 ? { documentIds: values.files.map(({ id }) => id) } : null
   }
