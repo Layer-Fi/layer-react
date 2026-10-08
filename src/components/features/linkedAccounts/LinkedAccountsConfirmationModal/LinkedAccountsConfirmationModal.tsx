@@ -219,20 +219,35 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   )
 }
 
-export function LinkedAccountsConfirmationModal() {
-  const { preloadIsOpen, mainIsOpen, onDismiss } = useLinkedAccountsConfirmationModal()
+type LinkedAccountsConfirmationModalProps = {
+  /** When set, the caller opens the modal, and it never opens by itself. */
+  isOpen?: boolean
+  onOpenChange?: (isOpen: boolean) => void
+}
+
+export function LinkedAccountsConfirmationModal({ isOpen, onOpenChange }: LinkedAccountsConfirmationModalProps = {}) {
+  const { preloadIsOpen, mainIsOpen, accounts, onDismiss } = useLinkedAccountsConfirmationModal()
+
+  const isControlled = isOpen !== undefined
+  const showsPreload = !isControlled && preloadIsOpen
+  const showsMain = isControlled ? isOpen && accounts.length > 0 : mainIsOpen
 
   return (
     <Modal
-      isOpen={preloadIsOpen || mainIsOpen}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) {
+      isOpen={showsPreload || showsMain}
+      onOpenChange={(nextIsOpen) => {
+        if (isControlled) {
+          onOpenChange?.(nextIsOpen)
+          return
+        }
+
+        if (!nextIsOpen) {
           onDismiss()
         }
       }}
     >
       {({ close }) =>
-        preloadIsOpen
+        showsPreload
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
           : <LinkedAccountsConfirmationModalContent onClose={close} />}
     </Modal>

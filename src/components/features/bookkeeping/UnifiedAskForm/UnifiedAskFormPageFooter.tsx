@@ -1,9 +1,10 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useConnectAccount } from '@providers/features/bookkeeping/ConnectAccountContext/ConnectAccountContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -31,6 +32,22 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const isTakeover = presentation === 'takeover'
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
+  const connectAccount = useConnectAccount()
+  const [isConnecting, setIsConnecting] = useState(false)
+
+  // Connect account continues only once the account connects; closing Link keeps the customer on the page.
+  const onPrimary = () => {
+    if (routing === 'error' || getPagePrimaryAction(page, values) !== 'CONNECT_ACCOUNT' || !connectAccount) {
+      onContinue()
+      return
+    }
+
+    setIsConnecting(true)
+    void connectAccount().then((isConnected) => {
+      setIsConnecting(false)
+      if (isConnected) onContinue()
+    })
+  }
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
@@ -78,7 +95,11 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
               )}
             {showsPrimary
               ? (
-                <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
+                <Button
+                  isDisabled={!canContinue || isSubmitting || isConnecting}
+                  isPending={routing === 'loading' || isSubmitting || isConnecting}
+                  onPress={onPrimary}
+                >
                   {getPrimaryLabel()}
                 </Button>
               )

@@ -20,6 +20,8 @@ type UsePlaidLinkModalOptions = {
   /** Called after the connection set changes, so the caller can refresh accounts. */
   onSuccess: () => Awaitable<void>
   onAddConnectionSuccess?: () => Awaitable<void>
+  /** Called when an add flow ends without a new connection: Link closed, or the token exchange failed. */
+  onAddConnectionExit?: () => void
   /** Updates the active link mode; reset to 'add' when a flow completes or the modal exits. */
   setLinkMode: (mode: LinkMode) => void
   /** When set, the customer owns the Plaid item and handles the public token themselves. */
@@ -36,6 +38,7 @@ export function usePlaidLinkModal({
   linkMode,
   onSuccess,
   onAddConnectionSuccess,
+  onAddConnectionExit,
   setLinkMode,
   customerManagedPlaidConfig,
 }: UsePlaidLinkModalOptions) {
@@ -75,10 +78,13 @@ export function usePlaidLinkModal({
         .then(
           // Only refresh once the link has actually persisted.
           () => handleAddConnectionSuccess(),
-          () => addToast({
-            content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
-            type: 'error',
-          }),
+          () => {
+            addToast({
+              content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
+              type: 'error',
+            })
+            onAddConnectionExit?.()
+          },
         )
         .finally(() => {
           setIsLinking(false)
@@ -89,6 +95,7 @@ export function usePlaidLinkModal({
       triggerExchangePlaidPublicToken,
       customerManagedPlaidConfig,
       handleAddConnectionSuccess,
+      onAddConnectionExit,
       addToast,
       t,
       preloadAccountConfirmation,
@@ -118,7 +125,10 @@ export function usePlaidLinkModal({
         })
       }
     },
-    onExit: () => setLinkMode('add'),
+    onExit: () => {
+      if (linkMode === 'add') onAddConnectionExit?.()
+      setLinkMode('add')
+    },
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 

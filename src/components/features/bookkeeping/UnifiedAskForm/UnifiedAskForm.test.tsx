@@ -7,6 +7,7 @@ import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/uni
 import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type ConnectAccount, ConnectAccountContext } from '@providers/features/bookkeeping/ConnectAccountContext/ConnectAccountContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
@@ -42,10 +43,35 @@ const counterpartyTask = () => makeUnifiedAskFormTask({
   ),
 })
 
-const renderItem = (task: UnifiedAskFormTask) => ({
+const renderItem = (task: UnifiedAskFormTask, connectAccount: ConnectAccount | null = null) => ({
   user: userEvent.setup(),
-  ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
+  ...render(
+    <ConnectAccountContext.Provider value={connectAccount}>
+      <TasksListItem task={task as UserVisibleTask} defaultOpen />
+    </ConnectAccountContext.Provider>,
+    { wrapper: LayerTestProvider },
+  ),
 })
+
+const connectOnlyTask = () => makeUnifiedAskFormTask({
+  form: {
+    entryPageId: 'connect',
+    pages: [{
+      id: 'connect',
+      next: { kind: AskFormNextKind.Submit, review: false },
+      steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
+    }],
+  },
+})
+
+const deferredConnection = () => {
+  let finish: (isConnected: boolean) => void = () => undefined
+  const connectAccount = vi.fn(() => new Promise<boolean>((resolve) => {
+    finish = resolve
+  }))
+
+  return { connectAccount, finish: (isConnected: boolean) => finish(isConnected) }
+}
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {
   const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]')
@@ -347,16 +373,7 @@ describe('UnifiedAskForm', () => {
   })
 
   it('submits a page whose only step is Connect account', async () => {
-    const task = makeUnifiedAskFormTask({
-      form: {
-        entryPageId: 'connect',
-        pages: [{
-          id: 'connect',
-          next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
-        }],
-      },
-    })
+    const task = connectOnlyTask()
     const onSubmit = spyOnSubmit(task)
     const { user } = renderItem(task)
 
@@ -364,6 +381,36 @@ describe('UnifiedAskForm', () => {
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+  })
+
+  it('submits Connect account only once the account connects', async () => {
+    const task = connectOnlyTask()
+    const onSubmit = spyOnSubmit(task)
+    const { connectAccount, finish } = deferredConnection()
+    const { user } = renderItem(task, connectAccount)
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    expect(connectAccount).toHaveBeenCalledOnce()
+    expect(onSubmit).not.toHaveBeenCalled()
+
+    finish(true)
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+  })
+
+  it('stays on the connect page when the account isn’t connected', async () => {
+    const task = connectOnlyTask()
+    const onSubmit = spyOnSubmit(task)
+    const { connectAccount, finish } = deferredConnection()
+    const { user } = renderItem(task, connectAccount)
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+    finish(false)
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Connect account' })).toBeEnabled())
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
   it('says the task was already answered when the API rejects a changed answer', async () => {

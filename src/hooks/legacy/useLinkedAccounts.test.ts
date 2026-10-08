@@ -1,3 +1,5 @@
+import { act, waitFor } from '@testing-library/react'
+import { type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -7,14 +9,17 @@ import { post as postSandboxResetPlaidItemLogin } from '@msw/api/businesses/[bus
 import { post as postUnlinkPlaidItem } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
 import { post as postPlaidLink } from '@msw/api/businesses/[business-id]/plaid/link/post'
 import { post as postPlaidUpdateModeLink } from '@msw/api/businesses/[business-id]/plaid/update-mode-link/post'
+import { server } from '@msw/node'
 import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 // `ready: false` keeps the hook from auto-opening the widget.
 vi.mock('react-plaid-link', () => ({
-  usePlaidLink: () => ({ open: vi.fn(), ready: false }),
+  usePlaidLink: vi.fn(() => ({ open: vi.fn(), ready: false })),
 }))
+
+const lastPlaidLinkOptions = () => vi.mocked(usePlaidLink).mock.lastCall?.[0] as PlaidLinkOptions
 
 // `connectionExternalId` is the Plaid item id for a Layer-managed connection and the processor
 // token for a customer-managed one, so each suite passes the id its mode would really carry.
@@ -119,5 +124,54 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
     await result.current.removeConnection('PLAID', PLAID_ITEM_ID)
 
     expect(unlinkPlaidItem).toHaveBeenCalledOnce()
+  })
+})
+
+describe('useLinkedAccounts addConnection completion', () => {
+  it('reports a connection once the new item is saved', async () => {
+    const onComplete = vi.fn()
+    const { result } = await renderLinkedAccounts()
+
+    await result.current.addConnection('PLAID', { onComplete })
+    act(() => {
+      lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
+    })
+
+    await waitFor(() => expect(onComplete).toHaveBeenCalledWith(true))
+    expect(onComplete).toHaveBeenCalledOnce()
+  })
+
+  it('reports no connection when Link is closed', async () => {
+    const onComplete = vi.fn()
+    const { result } = await renderLinkedAccounts()
+
+    await result.current.addConnection('PLAID', { onComplete })
+    act(() => {
+      lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
+    })
+
+    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
+  })
+
+  it('reports no connection when Link can’t be started', async () => {
+    const onComplete = vi.fn()
+    server.use(postPlaidLink.mockError({ error: 'unavailable' }))
+    const { result } = await renderLinkedAccounts()
+
+    await result.current.addConnection('PLAID', { onComplete })
+
+    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
+  })
+
+  it('ends an earlier add flow when another one starts', async () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    const { result } = await renderLinkedAccounts()
+
+    await result.current.addConnection('PLAID', { onComplete: first })
+    await result.current.addConnection('PLAID', { onComplete: second })
+
+    expect(first).toHaveBeenCalledExactlyOnceWith(false)
+    expect(second).not.toHaveBeenCalled()
   })
 })

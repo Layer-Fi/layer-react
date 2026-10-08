@@ -1,10 +1,10 @@
 import { type PropsWithChildren } from 'react'
 import { act, waitFor } from '@testing-library/react'
-import { type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
-import { usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
+import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
 import { post as postExchangePlaidPublicToken } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
 import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
@@ -28,21 +28,31 @@ const completePlaidLink = () =>
     return Promise.resolve()
   })
 
+const closePlaidLink = () =>
+  act(() => {
+    lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
+  })
+
 type RenderAddModeModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   usePlaidSandbox?: boolean
+  linkMode?: LinkMode
+  onAddConnectionExit?: () => void
 }
 
 const renderAddModeModal = ({
   customerManagedPlaidConfig,
   usePlaidSandbox = false,
+  linkMode = 'add',
+  onAddConnectionExit,
 }: RenderAddModeModalOptions = {}) =>
   renderHookWithAuth(
     () => usePlaidLinkModal({
       linkToken: 'a-link-token',
-      linkMode: 'add',
+      linkMode,
       setLinkMode: vi.fn(),
       onSuccess: vi.fn(),
+      onAddConnectionExit,
       customerManagedPlaidConfig,
     }),
     {
@@ -137,5 +147,39 @@ describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
     await renderAddModeModal({ usePlaidSandbox: true })
 
     expect(lastPlaidLinkOptions().env).toBe('sandbox')
+  })
+})
+
+describe('usePlaidLinkModal when an add flow ends without a connection', () => {
+  it('reports closing Link', async () => {
+    const onAddConnectionExit = vi.fn()
+    await renderAddModeModal({ onAddConnectionExit })
+
+    closePlaidLink()
+
+    expect(onAddConnectionExit).toHaveBeenCalledOnce()
+  })
+
+  it('does not report closing Link during a repair', async () => {
+    const onAddConnectionExit = vi.fn()
+    await renderAddModeModal({ linkMode: 'update', onAddConnectionExit })
+
+    closePlaidLink()
+
+    expect(onAddConnectionExit).not.toHaveBeenCalled()
+  })
+
+  it('reports a public token that couldn’t be saved', async () => {
+    const onAddConnectionExit = vi.fn()
+    await renderAddModeModal({
+      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+        onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
+      }),
+      onAddConnectionExit,
+    })
+
+    await completePlaidLink()
+
+    await waitFor(() => expect(onAddConnectionExit).toHaveBeenCalledOnce())
   })
 })
