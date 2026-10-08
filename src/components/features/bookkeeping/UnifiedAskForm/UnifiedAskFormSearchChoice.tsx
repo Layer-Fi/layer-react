@@ -2,9 +2,9 @@ import { type ReactNode } from 'react'
 
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
 import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
-import { type AskFormInputPath } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type AskFormSearchConfig, useUnifiedAskFormSearch } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
+import { type AskFormInputPath } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
 type UnifiedAskFormSearchChoiceProps = {
   form: UnifiedAskFormApi

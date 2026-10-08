@@ -61,7 +61,6 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
           <UnifiedAskFormInput
             form={form}
             fields={`${fields}.rows[${index}]`}
-            followUpFields={`${fields}.rows[${index}].followUp`}
             taskId={taskId}
             step={step}
             prompt={null}

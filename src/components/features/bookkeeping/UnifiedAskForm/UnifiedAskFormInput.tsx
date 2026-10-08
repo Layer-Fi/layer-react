@@ -7,35 +7,42 @@ import { TextStep } from '@blocks/FormSteps/TextStep'
 import { UnifiedAskFormSearchChoice } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormSearchChoice'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
-import { type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormInputPath, type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '' }
 
-export type AskFormStepPath = `pages.${string}.${string}`
-
-export type AskFormInputPath =
-  | AskFormStepPath
-  | `${AskFormStepPath}.followUp`
-  | `${AskFormStepPath}.rows[${number}]`
-  | `${AskFormStepPath}.rows[${number}].followUp`
-
 type UnifiedAskFormInputProps = {
   form: UnifiedAskFormApi
   fields: AskFormInputPath
-  /** Where the chosen option's follow-up is answered; omitted for a follow-up itself. */
-  followUpFields?: AskFormInputPath
   taskId: string
   step: AskFormStepFields
   prompt: string | null
+  /** A follow-up has no follow-up of its own. */
+  isFollowUp?: boolean
   onSelect?: (value: string) => void
 }
 
 /** A choice, search or text answer; the parts of a step that a follow-up or a sheet row can also hold. */
-export const UnifiedAskFormInput = ({ form, fields, followUpFields, taskId, step, prompt, onSelect }: UnifiedAskFormInputProps) => {
+export const UnifiedAskFormInput = ({ form, fields, taskId, step, prompt, isFollowUp = false, onSelect }: UnifiedAskFormInputProps) => {
   const { t } = useTranslation()
-  // Hooks can't be conditional, so without a follow-up path this binds to the step itself and is never used.
-  const followUp = useFieldGroup({ form, fields: followUpFields ?? fields, defaultValues: EMPTY_FOLLOW_UP, formComponents: {} })
+  const followUpFields = `${fields}.followUp` as const
+  // Hooks can't be conditional, so a follow-up binds this to its own fields and never uses it.
+  const followUp = useFieldGroup({ form, fields: isFollowUp ? fields : followUpFields, defaultValues: EMPTY_FOLLOW_UP, formComponents: {} })
+
+  const clearFollowUp = () => {
+    followUp.setFieldValue('choice', null, { dontValidate: true })
+    followUp.setFieldValue('selection', null, { dontValidate: true })
+    followUp.setFieldValue('text', '')
+  }
+
+  const renderFollowUp = (value: string) => {
+    const followUpStep = findFollowUp(step, value)
+
+    return followUpStep
+      ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} isFollowUp />
+      : null
+  }
 
   switch (step.type) {
     case AskFormStepType.Text:
@@ -58,24 +65,10 @@ export const UnifiedAskFormInput = ({ form, fields, followUpFields, taskId, step
         fields,
         label: t('bookkeeping:UnifiedAskForm.UnifiedAskFormInput.label.options', 'Options'),
         prompt,
-        options: getStepOptions(step).map(({ value, label }) => ({ value, label })),
+        options: getStepOptions(step),
         onSelect,
-        onPickChange: followUpFields
-          ? () => {
-            followUp.setFieldValue('choice', null, { dontValidate: true })
-            followUp.setFieldValue('selection', null, { dontValidate: true })
-            followUp.setFieldValue('text', '')
-          }
-          : undefined,
-        renderFollowUp: followUpFields
-          ? (value: string) => {
-            const followUpStep = findFollowUp(step, value)
-
-            return followUpStep
-              ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} />
-              : null
-          }
-          : undefined,
+        onPickChange: isFollowUp ? undefined : clearFollowUp,
+        renderFollowUp: isFollowUp ? undefined : renderFollowUp,
       }
       const searchConfig = getSearchConfig(step)
 

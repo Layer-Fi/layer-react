@@ -26,7 +26,6 @@ export const UnifiedAskFormStep = ({ form, pageId, taskId, step, prompt, onSelec
         <UnifiedAskFormInput
           form={form}
           fields={fields}
-          followUpFields={`${fields}.followUp`}
           taskId={taskId}
           step={step}
           prompt={prompt}
