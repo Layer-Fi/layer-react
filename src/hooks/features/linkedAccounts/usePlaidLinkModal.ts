@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnEvent, type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -12,7 +12,7 @@ import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/ext
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
 import { usePostPlaidLinkOutcome } from '@api/businesses/[business-id]/plaid/link/outcome/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
-import { PlaidLinkError } from '@hooks/features/linkedAccounts/plaidLinkError'
+import { PlaidLinkError, type PlaidLinkExitError } from '@hooks/features/linkedAccounts/plaidLinkError'
 
 export type LinkMode = 'update' | 'add'
 
@@ -60,7 +60,24 @@ export function usePlaidLinkModal({
     void triggerPlaidLinkOutcome(params).catch(() => undefined)
   }
 
-  const handlePlaidLinkExit: PlaidLinkOnExit = (error, metadata) => {
+  const lastSessionErrorRef = useRef<PlaidLinkExitError | null>(null)
+
+  const handlePlaidLinkEvent: PlaidLinkOnEvent = (eventName, metadata) => {
+    if (eventName === 'ERROR' && metadata.error_code) {
+      lastSessionErrorRef.current = {
+        error_type: metadata.error_type ?? '',
+        error_code: metadata.error_code,
+        error_message: metadata.error_message ?? '',
+        display_message: '',
+      }
+    }
+  }
+
+  const handlePlaidLinkExit: PlaidLinkOnExit = (exitError, metadata) => {
+    // Plaid passes a null error when the user backs out of its error screen before closing Link.
+    const error = exitError ?? lastSessionErrorRef.current
+    lastSessionErrorRef.current = null
+
     if (error) {
       reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code })
       reportError({ type: 'plaid_link', scope: 'LinkedAccounts', payload: new PlaidLinkError(error, metadata, linkMode) })
@@ -127,6 +144,7 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      lastSessionErrorRef.current = null
       reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
 
       if (linkMode == 'add') {
@@ -143,6 +161,7 @@ export function usePlaidLinkModal({
       }
     },
     onExit: handlePlaidLinkExit,
+    onEvent: handlePlaidLinkEvent,
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 

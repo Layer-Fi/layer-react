@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 import { act, waitFor } from '@testing-library/react'
-import { type PlaidLinkError as PlaidLinkExitError, type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkError as PlaidLinkExitError, type PlaidLinkOnEventMetadata, type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -48,6 +48,28 @@ const INVALID_CREDENTIALS: PlaidLinkExitError = {
 const exitPlaidLink = (error: PlaidLinkExitError | null) =>
   act(() => {
     lastPlaidLinkOptions().onExit?.(error, EXIT_METADATA)
+    return Promise.resolve()
+  })
+
+const ERROR_EVENT_METADATA: PlaidLinkOnEventMetadata = {
+  error_type: 'INSTITUTION_ERROR',
+  error_code: 'INSTITUTION_NOT_RESPONDING',
+  error_message: 'this institution is not currently responding to this request. please try again soon',
+  exit_status: null,
+  institution_id: 'ins_1',
+  institution_name: 'Test Bank',
+  institution_search_query: null,
+  mfa_type: null,
+  view_name: null,
+  selection: null,
+  timestamp: '2026-10-08T00:00:00.000Z',
+  link_session_id: 'link-session-1',
+  request_id: 'request-1',
+}
+
+const emitPlaidLinkErrorEvent = () =>
+  act(() => {
+    lastPlaidLinkOptions().onEvent?.('ERROR', ERROR_EVENT_METADATA)
     return Promise.resolve()
   })
 
@@ -239,5 +261,61 @@ describe('usePlaidLinkModal Link outcomes', () => {
       institution: EXIT_METADATA.institution,
       linkMode: 'update',
     })
+  })
+
+  it('reports the last Link error when the user backs out of the error screen before exiting', async () => {
+    const reportOutcome = spyOnEndpoint(postPlaidLinkOutcome)
+    const onError = vi.fn()
+
+    await renderModal({ onError })
+
+    await emitPlaidLinkErrorEvent()
+    await exitPlaidLink(null)
+
+    await waitFor(() => expect(reportOutcome).toHaveBeenCalledWith(
+      expect.objectContaining({ body: { outcome: 'ERROR', error_code: 'INSTITUTION_NOT_RESPONDING' } }),
+    ))
+
+    expect(onError).toHaveBeenCalledOnce()
+    const [reported] = onError.mock.lastCall as [LayerError]
+    expect(reported.payload).toMatchObject({
+      message: ERROR_EVENT_METADATA.error_message,
+      errorType: 'INSTITUTION_ERROR',
+      errorCode: 'INSTITUTION_NOT_RESPONDING',
+      displayMessage: null,
+      linkSessionId: 'link-session-1',
+    })
+  })
+
+  it('does not carry a Link error over to a later session', async () => {
+    const reportOutcome = spyOnEndpoint(postPlaidLinkOutcome)
+    const onError = vi.fn()
+
+    await renderModal({ onError })
+
+    await emitPlaidLinkErrorEvent()
+    await exitPlaidLink(null)
+    await exitPlaidLink(null)
+
+    await waitFor(() => expect(reportOutcome).toHaveBeenCalledWith(
+      expect.objectContaining({ body: { outcome: 'EXITED' } }),
+    ))
+    expect(onError).toHaveBeenCalledOnce()
+  })
+
+  it('surfaces an empty Plaid display message as null', async () => {
+    const onError = vi.fn()
+
+    await renderModal({ onError })
+
+    await exitPlaidLink({
+      error_type: 'API_ERROR',
+      error_code: 'INTERNAL_SERVER_ERROR',
+      error_message: 'an unexpected error occurred',
+      display_message: '',
+    })
+
+    const [reported] = onError.mock.lastCall as [LayerError]
+    expect(reported.payload).toMatchObject({ errorCode: 'INTERNAL_SERVER_ERROR', displayMessage: null })
   })
 })

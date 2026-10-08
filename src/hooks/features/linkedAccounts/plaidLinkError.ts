@@ -2,7 +2,7 @@ import { type PlaidLinkOnExit } from 'react-plaid-link'
 
 import { type LinkMode } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
-type PlaidLinkExitError = NonNullable<Parameters<PlaidLinkOnExit>[0]>
+export type PlaidLinkExitError = NonNullable<Parameters<PlaidLinkOnExit>[0]>
 type PlaidLinkExitMetadata = Parameters<PlaidLinkOnExit>[1]
 
 export class PlaidLinkError extends Error {
@@ -19,7 +19,7 @@ export class PlaidLinkError extends Error {
     this.name = 'PlaidLinkError'
     this.errorType = error.error_type
     this.errorCode = error.error_code
-    this.displayMessage = error.display_message ?? null
+    this.displayMessage = error.display_message || null
     this.linkSessionId = metadata.link_session_id
     this.requestId = metadata.request_id
     this.institution = metadata.institution
