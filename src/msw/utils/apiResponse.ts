@@ -32,6 +32,12 @@ const encodeCursor = Schema.encodeSync(CursorSchema)
 
 const decodeCursor = (cursor: string | null) => cursor == null ? 0 : decodeCursorParam(cursor)
 
+export const readLimit = (request: Request, defaultLimit: number) => {
+  const requestedLimit = Number(new URL(request.url).searchParams.get('limit'))
+
+  return Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : defaultLimit
+}
+
 export const paginatedApiData = <T>(
   items: readonly T[],
   request: Request,
@@ -39,8 +45,7 @@ export const paginatedApiData = <T>(
 ) => {
   const params = new URL(request.url).searchParams
 
-  const requestedLimit = Number(params.get('limit'))
-  const pageSize = Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : defaultPageSize
+  const pageSize = readLimit(request, defaultPageSize)
 
   const start = decodeCursor(params.get('cursor'))
   const page = items.slice(start, start + pageSize)

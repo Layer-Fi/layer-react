@@ -2,12 +2,13 @@ import { Schema } from 'effect'
 
 import { type UnifiedSearchResult, UnifiedSearchResultsSchema } from '@schemas/common/unifiedSearch'
 import { AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
-import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 
+import { toSearchId } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
-import { groupByParentAccountId, ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
+import { listCategorizableLeafAccounts } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
-import { apiData } from '@msw/utils/apiResponse'
+import { apiData, readLimit } from '@msw/utils/apiResponse'
+import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
 const encodeResults = Schema.encodeSync(UnifiedSearchResultsSchema)
@@ -16,39 +17,28 @@ const DEFAULT_LIMIT = 20
 
 const toResponse = (results: readonly UnifiedSearchResult[]) => apiData(encodeResults({ results }))
 
-const contactLabel = ({ companyName, individualName }: { companyName: string | null, individualName: string | null }) =>
-  companyName ?? individualName ?? ''
+type Contact = { id: string, companyName: string | null, individualName: string | null, email: string | null }
 
-const categoryResults = (): readonly UnifiedSearchResult[] => {
-  const parentIds = new Set(groupByParentAccountId(ledgerAccountStore.all()).keys())
+// Company name first, matching the API's search label.
+const contactLabel = ({ companyName, individualName }: Contact) => companyName ?? individualName ?? ''
 
-  return ledgerAccountStore.all()
-    .filter(({ accountId, accountType }) =>
-      !parentIds.has(accountId)
-      && (accountType.value === LedgerAccountType.Expense || accountType.value === LedgerAccountType.Revenue))
-    .map(({ accountId, name, accountType }) => ({
-      id: `acct_${accountId}`,
-      entity: AskFormSearchEntity.Category,
-      label: name,
-      sublabel: accountType.displayName,
-    }))
-}
+const contactIndex = (entity: AskFormSearchEntity, all: () => readonly Contact[]) =>
+  () => all().map(contact => ({ id: toSearchId(entity, contact.id), entity, label: contactLabel(contact), sublabel: contact.email }))
 
 const SEARCH_INDEXES: Record<string, () => readonly UnifiedSearchResult[]> = {
-  [AskFormSearchEntity.Category]: categoryResults,
-  [AskFormSearchEntity.Vendor]: () => vendorStore.all().map(vendor => ({
-    id: `vend_${vendor.id}`,
-    entity: AskFormSearchEntity.Vendor,
-    label: contactLabel(vendor),
-    sublabel: vendor.email,
+  [AskFormSearchEntity.Category]: () => listCategorizableLeafAccounts().map(({ accountId, name, accountType }) => ({
+    id: toSearchId(AskFormSearchEntity.Category, accountId),
+    entity: AskFormSearchEntity.Category,
+    label: name,
+    sublabel: accountType.displayName,
   })),
-  [AskFormSearchEntity.Customer]: () => customerStore.all().map(customer => ({
-    id: `cust_${customer.id}`,
-    entity: AskFormSearchEntity.Customer,
-    label: contactLabel(customer),
-    sublabel: customer.email,
-  })),
+  [AskFormSearchEntity.Vendor]: contactIndex(AskFormSearchEntity.Vendor, vendorStore.all),
+  [AskFormSearchEntity.Customer]: contactIndex(AskFormSearchEntity.Customer, customerStore.all),
 }
+
+const filterResults = createListFilter<UnifiedSearchResult>({
+  q: matchesQuery(({ label }) => [label]),
+})
 
 export const get = createMockEndpoint<readonly UnifiedSearchResult[], ReturnType<typeof toResponse>>({
   method: 'get',
@@ -56,14 +46,8 @@ export const get = createMockEndpoint<readonly UnifiedSearchResult[], ReturnType
   resolve: ({ override, request }) => {
     if (override) return toResponse(override)
 
-    const { searchParams } = new URL(request.url)
-    const needle = (searchParams.get('q') ?? '').trim().toLowerCase()
-    const limit = Number(searchParams.get('limit') ?? DEFAULT_LIMIT)
+    const index = SEARCH_INDEXES[new URL(request.url).searchParams.get('entity') ?? '']?.() ?? []
 
-    return toResponse(
-      (SEARCH_INDEXES[searchParams.get('entity') ?? '']?.() ?? [])
-        .filter(({ label }) => label.toLowerCase().includes(needle))
-        .slice(0, limit),
-    )
+    return toResponse(filterResults(index, request).slice(0, readLimit(request, DEFAULT_LIMIT)))
   },
 })

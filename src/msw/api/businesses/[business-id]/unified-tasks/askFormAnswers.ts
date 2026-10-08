@@ -1,8 +1,8 @@
 import { type AskForm } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type AskFormAnswer, type AskFormAnswers } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
-import { type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { AskFormSearchEntity, type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 
-import { ASK_FORM_STEP_IDS, COUNTERPARTY_ASK_FORM_VALUES } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { ASK_FORM_STEP_IDS, COUNTERPARTY_ASK_FORM_VALUES, SEARCH_ID_PREFIXES } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 
 const findChosenLabel = (step: AskFormStep, answer: AskFormAnswer): string | null => {
   if ('choice' in answer) {
@@ -29,7 +29,7 @@ export const summarizeAskFormAnswers = (form: AskForm, answers: AskFormAnswers):
 }
 
 const isCategoryChoice = (answer: AskFormAnswer | undefined) =>
-  answer !== undefined && 'choice' in answer && answer.choice.startsWith('acct_')
+  answer !== undefined && 'choice' in answer && answer.choice.startsWith(SEARCH_ID_PREFIXES[AskFormSearchEntity.Category])
 
 export const isCategorizedByAskFormAnswers = (answers: AskFormAnswers) => {
   const rows = answers[ASK_FORM_STEP_IDS.rows]

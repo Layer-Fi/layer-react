@@ -17,7 +17,7 @@ const whenPresent = <TItem>(predicate: (item: TItem, value: string) => boolean):
 
 export const matchesQuery = <TItem>(fields: (item: TItem) => ReadonlyArray<string | null | undefined>) =>
   whenPresent<TItem>((item, value) => {
-    const query = value.toLowerCase()
+    const query = value.trim().toLowerCase()
 
     return fields(item).some(field => field?.toLowerCase()?.includes(query) ?? false)
   })

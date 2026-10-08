@@ -1,5 +1,7 @@
+import { type EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { UnifiedSearchResultsSchema } from '@schemas/common/unifiedSearch'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { type AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
@@ -9,7 +11,7 @@ const UnifiedSearchResponseSchema = UnwrappedDataResponseSchema(UnifiedSearchRes
 
 type GetUnifiedSearchParams = {
   businessId: string
-  entity: string
+  entity: EnumWithUnknownValues<AskFormSearchEntity>
   q: string
   taskId?: string
   limit?: number

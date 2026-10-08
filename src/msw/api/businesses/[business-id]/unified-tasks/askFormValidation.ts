@@ -6,9 +6,12 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+
+import { SEARCH_ID_PREFIXES } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-const ACCOUNT_PREFIX = 'acct_'
+const ACCOUNT_PREFIX = SEARCH_ID_PREFIXES[AskFormSearchEntity.Category]
 
 const badRequest = (description: string) =>
   HttpResponse.json({ errors: [{ type: 'Bad Request', description }] }, { status: 400 })

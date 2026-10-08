@@ -1,5 +1,6 @@
 import type { AccountIdentifier } from '@schemas/common/accountIdentifier'
 import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 import { accountIdentifierIsForCategory } from '@utils/features/categorization/categories'
 
 import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
@@ -40,6 +41,15 @@ export const groupByParentAccountId = (accounts: readonly SingleChartAccountType
   })
 
   return childrenByParentId
+}
+
+export const listCategorizableLeafAccounts = () => {
+  const accounts = ledgerAccountStore.all()
+  const parentIds = new Set(groupByParentAccountId(accounts).keys())
+
+  return accounts.filter(({ accountId, accountType }) =>
+    !parentIds.has(accountId)
+    && (accountType.value === LedgerAccountType.Expense || accountType.value === LedgerAccountType.Revenue))
 }
 
 export const isAccountDeletable = (accountId: string): boolean => {
