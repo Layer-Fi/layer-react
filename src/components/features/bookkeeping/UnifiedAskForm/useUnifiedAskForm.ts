@@ -34,6 +34,10 @@ export type UnifiedAskFormSaved = {
   categorized: boolean
 }
 
+type UnifiedAskFormSubmitMeta = { pagesOnPath: ReadonlyArray<AskFormPage> }
+
+const NO_SUBMIT_PATH: UnifiedAskFormSubmitMeta = { pagesOnPath: [] }
+
 type UseUnifiedAskFormProps = {
   task: UnifiedAskFormTask
   onSaved: (saved: UnifiedAskFormSaved) => void
@@ -76,7 +80,6 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const navigation = useStepNavigation(entryView)
 
   const [routing, setRouting] = useState<UnifiedAskFormRouting>('idle')
-  const submitPathRef = useRef<ReadonlyArray<AskFormPage>>([])
   const routingRequestRef = useRef(0)
 
   const cancelRouting = useCallback(() => {
@@ -91,13 +94,14 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
 
   const form = useRawAppForm({
     defaultValues,
+    onSubmitMeta: NO_SUBMIT_PATH,
     validationLogic: revalidateLogic(),
     listeners: { onChange: cancelRouting },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value, meta: { pagesOnPath } }) => {
       try {
         const saved = await submitResponse({
           taskId: task.id,
-          answers: toAnswers(submitPathRef.current, value, transactionIds),
+          answers: toAnswers(pagesOnPath, value, transactionIds),
         })
 
         form.reset(value)
@@ -162,8 +166,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       return
     }
 
-    submitPathRef.current = pagesOnPath
-    void form.handleSubmit()
+    void form.handleSubmit({ pagesOnPath })
   }, [form, navigation, toPageView, transactionIds])
 
   const follow = useCallback((next: AskFormNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
