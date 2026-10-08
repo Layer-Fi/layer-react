@@ -48,7 +48,7 @@ export const UnifiedAskFormSearch = ({
 }: UnifiedAskFormSearchProps) => {
   const { t } = useTranslation()
   const { searchQuery, isSearchEnabled, searchComboBoxProps } = useSearchComboBox()
-  const { data: results } = useGetUnifiedSearch({ entity, q: searchQuery, taskId, isEnabled: isSearchEnabled })
+  const { data: results, isLoading } = useGetUnifiedSearch({ entity, q: searchQuery, taskId, isEnabled: isSearchEnabled })
 
   const options = useMemo(() => (isSearchEnabled ? (results ?? []).map(toComboBoxOption) : []), [isSearchEnabled, results])
 
@@ -99,9 +99,11 @@ export const UnifiedAskFormSearch = ({
         selectedValue={selectedValue}
         onSelectedValueChange={onSelect}
         isClearable={false}
+        isLoading={isLoading}
         filterOption={null}
         onInputValueChange={searchComboBoxProps.onSearchQueryChange}
         onCreateOption={onCreate}
+        isValidNewOption={() => !isLoading}
         formatCreateLabel={formatCreateLabel}
         createOptionPosition='last'
       />
@@ -116,6 +118,7 @@ export const UnifiedAskFormSearch = ({
       selectedValue={selectedValue}
       onSelectedValueChange={onSelect}
       isClearable={false}
+      isLoading={isLoading}
       {...searchComboBoxProps}
     />
   )
