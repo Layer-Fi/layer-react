@@ -98,6 +98,9 @@ export const toFormValues = (
   ])),
 })
 
+const hasRowsFor = (rows: ReadonlyArray<AskFormRowValues>, transactionIds: ReadonlyArray<string>) =>
+  rows.length === transactionIds.length && rows.every((row, index) => row.transactionId === transactionIds[index])
+
 /** Rebuilds each sheet's rows for the current transaction ids, keeping existing rows; `null` when nothing changed. */
 export const syncSheetRows = (
   pages: ReadonlyArray<AskFormPage>,
@@ -105,27 +108,19 @@ export const syncSheetRows = (
   answers: AskFormAnswers,
   transactionIds: ReadonlyArray<string>,
 ): UnifiedAskFormValues | null => {
-  const transactionKey = transactionIds.join(',')
-  let changed = false
-
-  const syncedPages = Object.fromEntries(pages.map((page) => {
-    const pageValues = values.pages[page.id] ?? {}
-    const syncedSteps = page.steps.flatMap((step) => {
-      const stepValues = pageValues[step.id]
-      if (!stepValues || !isSheetStep(step)) return []
-      if (stepValues.rows.map(({ transactionId }) => transactionId).join(',') === transactionKey) return []
-
-      changed = true
-      const defaultRows = toStepValues(step, answers[step.id], transactionIds).rows
-      const rows = defaultRows.map(row => stepValues.rows.find(other => other.transactionId === row.transactionId) ?? row)
-
-      return [[step.id, { ...stepValues, rows }]]
-    })
-
-    return [page.id, { ...pageValues, ...Object.fromEntries(syncedSteps) }]
+  const staleSheets = pages.flatMap(page => page.steps.filter(isSheetStep).flatMap((step) => {
+    const stepValues = values.pages[page.id]?.[step.id]
+    return stepValues && !hasRowsFor(stepValues.rows, transactionIds) ? [{ pageId: page.id, step, stepValues }] : []
   }))
 
-  return changed ? { pages: { ...values.pages, ...syncedPages } } : null
+  if (staleSheets.length === 0) return null
+
+  return staleSheets.reduce<UnifiedAskFormValues>((synced, { pageId, step, stepValues }) => {
+    const existingRows = new Map(stepValues.rows.map(row => [row.transactionId, row]))
+    const rows = toStepValues(step, answers[step.id], transactionIds).rows.map(row => existingRows.get(row.transactionId) ?? row)
+
+    return { pages: { ...synced.pages, [pageId]: { ...synced.pages[pageId], [step.id]: { ...stepValues, rows } } } }
+  }, values)
 }
 
 export const flattenStepValues = (values: UnifiedAskFormValues): Readonly<Record<string, AskFormStepValues>> =>
