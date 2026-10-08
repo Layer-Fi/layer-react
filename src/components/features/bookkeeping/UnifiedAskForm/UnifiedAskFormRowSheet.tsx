@@ -5,17 +5,17 @@ import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 
-import './formRowSheet.scss'
+import './unifiedAskFormRowSheet.scss'
 
-export type FormRowSheetRow = {
+export type UnifiedAskFormRowSheetRow = {
   id: string
   summary: ReactNode
   answerLabel: string | null
   isComplete: boolean
 }
 
-type FormRowSheetProps = {
-  rows: ReadonlyArray<FormRowSheetRow>
+type UnifiedAskFormRowSheetProps = {
+  rows: ReadonlyArray<UnifiedAskFormRowSheetRow>
   prompt?: string | null
   countLabel: string
   isDisabled?: boolean
@@ -24,7 +24,7 @@ type FormRowSheetProps = {
 }
 
 /** One editor open at a time over a list of rows, each answered on its own. */
-export const FormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEditor }: FormRowSheetProps) => {
+export const UnifiedAskFormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEditor }: UnifiedAskFormRowSheetProps) => {
   const [openId, setOpenId] = useState(() => rows.find(({ isComplete }) => !isComplete)?.id ?? null)
   // A refetch can drop the open row; fall back to the first unanswered one rather than leaving every row closed.
   const currentOpenId = openId !== null && rows.some(({ id }) => id === openId)
@@ -38,14 +38,14 @@ export const FormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEdito
   return (
     <VStack gap='sm'>
       {prompt ? <P size='sm' pi='md'>{prompt}</P> : null}
-      <VStack className='Layer__FormRowSheet'>
+      <VStack className='Layer__UnifiedAskFormRowSheet'>
         {rows.map(({ id, summary, answerLabel }) => {
           const isOpen = currentOpenId === id
 
           return (
-            <VStack key={id} className='Layer__FormRowSheet__Row' {...toDataProperties({ open: isOpen })} pi='md'>
+            <VStack key={id} className='Layer__UnifiedAskFormRowSheet__Row' {...toDataProperties({ open: isOpen })} pi='md'>
               <Button
-                className='Layer__FormRowSheet__RowSummary'
+                className='Layer__UnifiedAskFormRowSheet__RowSummary'
                 variant='text'
                 underline={false}
                 fullWidth
@@ -55,7 +55,7 @@ export const FormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEdito
                 <HStack align='center' gap='xs' overflow='hidden' fluid>
                   {summary}
                   {answerLabel
-                    ? <Span className='Layer__FormRowSheet__RowAnswer' size='sm' align='right' ellipsis noWrap>{answerLabel}</Span>
+                    ? <Span className='Layer__UnifiedAskFormRowSheet__RowAnswer' size='sm' align='right' ellipsis noWrap>{answerLabel}</Span>
                     : null}
                 </HStack>
               </Button>

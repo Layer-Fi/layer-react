@@ -3,13 +3,13 @@ import { type ReactNode } from 'react'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
-type FormStepShellProps = {
+type UnifiedAskFormStepShellProps = {
   prompt?: string | null
   children: ReactNode
 }
 
 /** A form step's prompt above its fields. */
-export const FormStepShell = ({ prompt, children }: FormStepShellProps) => (
+export const UnifiedAskFormStepShell = ({ prompt, children }: UnifiedAskFormStepShellProps) => (
   <VStack gap='xs'>
     {prompt ? <P size='sm'>{prompt}</P> : null}
     {children}

@@ -1,4 +1,4 @@
-.Layer__FormRowSheet {
+.Layer__UnifiedAskFormRowSheet {
   overflow: hidden auto;
   max-block-size: 24rem;
 
@@ -7,7 +7,7 @@
   background-color: var(--color-base-0);
 }
 
-.Layer__FormRowSheet__Row {
+.Layer__UnifiedAskFormRowSheet__Row {
   border-block-start: 1px solid var(--border-color);
 
   &:first-child {
@@ -23,18 +23,18 @@
   }
 }
 
-.Layer__FormRowSheet:has(.Layer__FormRowSheet__Row[data-open]) .Layer__FormRowSheet__Row:not([data-open]) {
+.Layer__UnifiedAskFormRowSheet:has(.Layer__UnifiedAskFormRowSheet__Row[data-open]) .Layer__UnifiedAskFormRowSheet__Row:not([data-open]) {
   opacity: 0.6;
 }
 
-.Layer__FormRowSheet__RowSummary {
+.Layer__UnifiedAskFormRowSheet__RowSummary {
   padding-block: var(--spacing-2xs);
 }
 
-.Layer__FormRowSheet__RowSummary .Layer__UI__TooltipTrigger {
+.Layer__UnifiedAskFormRowSheet__RowSummary .Layer__UI__TooltipTrigger {
   flex: 1 1 16ch;
 }
 
-.Layer__FormRowSheet__RowAnswer {
+.Layer__UnifiedAskFormRowSheet__RowAnswer {
   flex: 0 1 auto;
 }

@@ -1,12 +1,12 @@
 import { type ReactNode } from 'react'
 
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
-import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
+import { UnifiedAskFormChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormChoiceStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type AskFormSearchConfig, useUnifiedAskFormSearch } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
 import { type AskFormInputPath } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
-type UnifiedAskFormSearchChoiceProps = {
+type UnifiedAskFormSearchChoiceStepProps = {
   form: UnifiedAskFormApi
   fields: AskFormInputPath
   taskId: string
@@ -19,9 +19,9 @@ type UnifiedAskFormSearchChoiceProps = {
   renderFollowUp?: (value: string) => ReactNode
 }
 
-/** A `ChoiceStep` with search; kept apart so only searchable steps set up a search. */
-export const UnifiedAskFormSearchChoice = ({ taskId, config, ...choiceProps }: UnifiedAskFormSearchChoiceProps) => {
+/** A `UnifiedAskFormChoiceStep` with search; kept apart so only searchable steps set up a search. */
+export const UnifiedAskFormSearchChoiceStep = ({ taskId, config, ...choiceProps }: UnifiedAskFormSearchChoiceStepProps) => {
   const search = useUnifiedAskFormSearch(taskId, config)
 
-  return <ChoiceStep {...choiceProps} search={search} />
+  return <UnifiedAskFormChoiceStep {...choiceProps} search={search} />
 }

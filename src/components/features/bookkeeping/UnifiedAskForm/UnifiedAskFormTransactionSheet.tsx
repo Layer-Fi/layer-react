@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type AskFormStep } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { FormRowSheet } from '@blocks/FormSteps/FormRowSheet'
+import { UnifiedAskFormRowSheet } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormRowSheet'
 import { UnifiedAskFormStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStep'
 import { UnifiedAskFormTransactionCells } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTransactionCells'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -47,7 +47,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
   const answeredCount = sheetRows.filter(({ isComplete }) => isComplete).length
 
   return (
-    <FormRowSheet
+    <UnifiedAskFormRowSheet
       rows={sheetRows}
       prompt={prompt}
       countLabel={t('bookkeeping:UnifiedAskForm.UnifiedAskFormTransactionSheet.label.categorized_count', '{{answered}} of {{total}} categorized', {

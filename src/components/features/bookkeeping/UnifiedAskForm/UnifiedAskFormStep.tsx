@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { P } from '@ui/Typography/Text'
-import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
-import { TextStep } from '@blocks/FormSteps/TextStep'
-import { UnifiedAskFormSearchChoice } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormSearchChoice'
-import { UnifiedAskFormUpload } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormUpload'
+import { UnifiedAskFormChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormChoiceStep'
+import { UnifiedAskFormSearchChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormSearchChoiceStep'
+import { UnifiedAskFormTextStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTextStep'
+import { UnifiedAskFormUploadStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormUploadStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
 import { type AskFormInputPath, type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
@@ -50,10 +50,10 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
     case AskFormStepType.Action:
       return prompt ? <P size='sm'>{prompt}</P> : null
     case AskFormStepType.Upload:
-      return <UnifiedAskFormUpload form={form} fields={fields} taskId={taskId} prompt={prompt} accept={step.accept} multiple={step.multiple} />
+      return <UnifiedAskFormUploadStep form={form} fields={fields} taskId={taskId} prompt={prompt} accept={step.accept} multiple={step.multiple} />
     case AskFormStepType.Text:
       return (
-        <TextStep
+        <UnifiedAskFormTextStep
           form={form}
           fields={fields}
           label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.answer', 'Answer')}
@@ -79,8 +79,8 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
       const searchConfig = getSearchConfig(step)
 
       return searchConfig
-        ? <UnifiedAskFormSearchChoice {...choiceProps} taskId={taskId} config={searchConfig} />
-        : <ChoiceStep {...choiceProps} />
+        ? <UnifiedAskFormSearchChoiceStep {...choiceProps} taskId={taskId} config={searchConfig} />
+        : <UnifiedAskFormChoiceStep {...choiceProps} />
     }
   }
 }

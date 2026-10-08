@@ -104,9 +104,9 @@ available on `field.` until then.
 
 A wizard keeps one form and gives each step its own `form.FormGroup`: the group's `onDynamic`
 validator gates that step, and `onGroupSubmit` moves to the next one. `useStepNavigation`
-(`@hooks/utils/navigation`) holds the step history for back navigation. Reusable step bodies are
-`withFieldGroup` components in `@blocks/FormSteps`, so one step binds to any path whose value has
-its shape. Reference: `UnifiedAskFormPage` and `useUnifiedAskFormNavigation`.
+(`@hooks/utils/navigation`) holds the step history for back navigation. Step bodies bound to a path chosen at runtime are
+`withFieldGroup` components, so one step binds to any path whose value has its shape. Reference:
+`UnifiedAskFormPage`, `UnifiedAskFormStep` and `useUnifiedAskFormNavigation`.
 
 ## Validation
 
