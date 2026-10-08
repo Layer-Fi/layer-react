@@ -3,8 +3,7 @@ import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
-import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
-import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { AskFormNextKind, type AskFormStaticNext } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
@@ -13,7 +12,6 @@ import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[busine
 import { usePostAskFormNextPage } from '@api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useRawAppForm } from '@blocks/Form/useForm'
-import { isApiOriginUrl } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
 import {
   getPageNext,
   isPageComplete,
@@ -23,9 +21,9 @@ import {
   type UnifiedAskFormValues,
 } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 
-export const FALLBACK_PAGE_ID = '__fallback'
-
 export type UnifiedAskFormView = { kind: 'PAGE', pageId: string } | { kind: 'REVIEW' }
+
+const toPageView = (pageId: string): UnifiedAskFormView => ({ kind: 'PAGE', pageId })
 
 export type UnifiedAskFormRouting = 'idle' | 'loading' | 'error'
 
@@ -50,33 +48,12 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const { trigger: postNextPage } = usePostAskFormNextPage()
   const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
-  const fallbackPage = useMemo<AskFormPage>(() => ({
-    id: FALLBACK_PAGE_ID,
-    next: { kind: AskFormNextKind.Submit, review: false },
-    steps: [{
-      id: FALLBACK_PAGE_ID,
-      type: AskFormStepType.Text,
-      prompt: t(
-        'bookkeeping:UnifiedAskForm.useUnifiedAskForm.prompt.anything_else',
-        'Is there anything else we should know about these transactions?',
-      ),
-      placeholder: null,
-      multiline: true,
-      required: true,
-    }],
-  }), [t])
-
   const { pages, entryPageId } = task.form
-  const allPages = useMemo(() => [...pages, fallbackPage], [fallbackPage, pages])
   const pagesById = useMemo(() => new Map(pages.map(page => [page.id, page])), [pages])
-  const stepsById = useMemo(() => new Map(allPages.flatMap(({ steps }) => steps.map(step => [step.id, step]))), [allPages])
+  const stepsById = useMemo(() => new Map(pages.flatMap(({ steps }) => steps.map(step => [step.id, step]))), [pages])
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
 
-  const getPage = useCallback((pageId: string) => pagesById.get(pageId) ?? fallbackPage, [fallbackPage, pagesById])
-  const toPageView = useCallback((pageId: string): UnifiedAskFormView =>
-    ({ kind: 'PAGE', pageId: pagesById.has(pageId) ? pageId : FALLBACK_PAGE_ID }), [pagesById])
-
-  const entryView = useMemo(() => toPageView(entryPageId), [entryPageId, toPageView])
+  const entryView = useMemo((): UnifiedAskFormView => toPageView(entryPageId), [entryPageId])
   const navigation = useStepNavigation(entryView)
 
   const [routing, setRouting] = useState<UnifiedAskFormRouting>('idle')
@@ -88,8 +65,8 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   }, [])
 
   const defaultValues = useMemo<UnifiedAskFormValues>(
-    () => toFormValues(allPages, task.answers ?? {}, transactionIds),
-    [allPages, task.answers, transactionIds],
+    () => toFormValues(pages, task.answers ?? {}, transactionIds),
+    [pages, task.answers, transactionIds],
   )
 
   const form = useRawAppForm({
@@ -130,13 +107,16 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
 
   // A refetch that links or unlinks transactions changes which sheet rows the API requires.
   useEffect(() => {
-    const synced = syncSheetRows(allPages, form.state.values, task.answers ?? {}, transactionIds)
+    const synced = syncSheetRows(pages, form.state.values, task.answers ?? {}, transactionIds)
     if (synced) form.setFieldValue('pages', synced.pages)
-  }, [allPages, form, task.answers, transactionIds])
+  }, [form, pages, task.answers, transactionIds])
 
   const visitedPages = useMemo(
-    () => navigation.history.flatMap(view => (view.kind === 'PAGE' ? [getPage(view.pageId)] : [])),
-    [getPage, navigation.history],
+    () => navigation.history.flatMap((view) => {
+      const page = view.kind === 'PAGE' ? pagesById.get(view.pageId) : undefined
+      return page ? [page] : []
+    }),
+    [navigation.history, pagesById],
   )
 
   const getPageError = useCallback((page: AskFormPage, values: UnifiedAskFormValues) => {
@@ -144,11 +124,11 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       return t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.validation.answer_every_question', 'Answer every question to continue')
     }
 
-    const submitsNext = getPageNext(page, values).kind === AskFormNextKind.Submit
+    const leavesPages = getPageNext(page, values).kind !== AskFormNextKind.Page
     const hasAnswers = Object.keys(toAnswers([...visitedPages, page], values, transactionIds)).length > 0
 
-    return submitsNext && !hasAnswers
-      ? t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.validation.answer_required', 'Add an answer to submit')
+    return leavesPages && !hasAnswers
+      ? t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.validation.answer_required_to_continue', 'Add an answer to continue')
       : undefined
   }, [t, transactionIds, visitedPages])
 
@@ -161,15 +141,10 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       return
     }
 
-    if (Object.keys(toAnswers(pagesOnPath, form.state.values, transactionIds)).length === 0) {
-      navigation.goForward(toPageView(FALLBACK_PAGE_ID))
-      return
-    }
-
     void form.handleSubmit({ pagesOnPath })
-  }, [form, navigation, toPageView, transactionIds])
+  }, [form, navigation, transactionIds])
 
-  const follow = useCallback((next: AskFormNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
+  const follow = useCallback((next: AskFormStaticNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
     switch (next.kind) {
       case AskFormNextKind.Page:
         navigation.goForward(toPageView(next.pageId))
@@ -177,11 +152,8 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       case AskFormNextKind.Submit:
         if (next.review) navigation.goForward({ kind: 'REVIEW' })
         else submit(pagesOnPath)
-        return
-      case AskFormNextKind.Server:
-        navigation.goForward(toPageView(FALLBACK_PAGE_ID))
     }
-  }, [navigation, submit, toPageView])
+  }, [navigation, submit])
 
   const continueFrom = useCallback((page: AskFormPage) => {
     const values = form.state.values
@@ -190,11 +162,6 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
 
     if (next.kind !== AskFormNextKind.Server) {
       follow(next, pagesOnPath)
-      return
-    }
-
-    if (!isApiOriginUrl(next.url)) {
-      navigation.goForward(toPageView(FALLBACK_PAGE_ID))
       return
     }
 
@@ -220,7 +187,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         if (routingRequestRef.current === requestId) setRouting('error')
       },
     )
-  }, [follow, form, navigation, postNextPage, toPageView, transactionIds, visitedPages])
+  }, [follow, form, postNextPage, transactionIds, visitedPages])
 
   const goBack = useCallback(() => {
     cancelRouting()
@@ -235,7 +202,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const submitReviewed = useCallback(() => submit(visitedPages), [submit, visitedPages])
 
   const { view, direction, canGoBack } = navigation
-  const currentPage = view.kind === 'PAGE' ? getPage(view.pageId) : null
+  const currentPage = view.kind === 'PAGE' ? pagesById.get(view.pageId) ?? null : null
 
   return useMemo(() => ({
     form,
