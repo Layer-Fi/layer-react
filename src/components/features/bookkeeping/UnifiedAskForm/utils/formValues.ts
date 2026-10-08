@@ -4,7 +4,6 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
   isChoiceAnswer,
-  isCompletedAnswer,
   isDocumentsAnswer,
   isTextAnswer,
   isTransactionAnswers,
@@ -29,7 +28,6 @@ export type AskFormRowValues = AskFormAnswerValues & { transactionId: string }
 
 export type AskFormStepValues = AskFormAnswerValues & {
   files: AskFormFile[]
-  completed: boolean
   rows: AskFormRowValues[]
 }
 
@@ -86,7 +84,6 @@ export const toStepValues = (
   return {
     ...toAnswerValues(step, answer),
     files: isDocumentsAnswer(answer) ? answer.documentIds.map(id => ({ id, name: id })) : [],
-    completed: isCompletedAnswer(answer),
     rows,
   }
 }
