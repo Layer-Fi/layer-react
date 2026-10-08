@@ -4,6 +4,10 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
   type AskFormRowAnswer,
+  isChoiceAnswer,
+  isDocumentsAnswer,
+  isTextAnswer,
+  isTransactionAnswers,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
@@ -41,7 +45,7 @@ export type UnifiedAskFormValues = { pages: Record<string, AskFormPageValues> }
 const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | undefined): AskFormInputValues => {
   if (!answer) return { choice: null, selection: null, text: '' }
 
-  if ('text' in answer) {
+  if (isTextAnswer(answer)) {
     return step.type === AskFormStepType.SearchWithFreeform
       ? { choice: null, selection: { value: answer.text, label: answer.text, isCreated: true }, text: '' }
       : { choice: null, selection: null, text: answer.text }
@@ -55,13 +59,13 @@ const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | 
 }
 
 const toAnswerValues = (step: AskFormStepFields, answer: AskFormAnswer | undefined): AskFormAnswerValues => {
-  const isRowShaped = answer && ('choice' in answer || 'text' in answer)
-  const followUpStep = answer && 'choice' in answer ? findOption(step, answer.choice)?.followUp : undefined
+  const choiceAnswer = isChoiceAnswer(answer) ? answer : undefined
+  const followUpStep = choiceAnswer ? findOption(step, choiceAnswer.choice)?.followUp : undefined
 
   return {
-    ...toInputValues(step, isRowShaped ? answer : undefined),
-    followUp: followUpStep && answer && 'choice' in answer
-      ? toInputValues(followUpStep, answer.followUp)
+    ...toInputValues(step, choiceAnswer ?? (isTextAnswer(answer) ? answer : undefined)),
+    followUp: followUpStep && choiceAnswer
+      ? toInputValues(followUpStep, choiceAnswer.followUp)
       : toInputValues(step, undefined),
   }
 }
@@ -73,7 +77,7 @@ export const toStepValues = (
 ): AskFormStepValues => {
   const rows = isSheetStep(step)
     ? transactionIds.map((transactionId) => {
-      const row = answer && 'transactionAnswers' in answer
+      const row = isTransactionAnswers(answer)
         ? answer.transactionAnswers.find(other => other.transactionId === transactionId)
         : undefined
 
@@ -83,7 +87,7 @@ export const toStepValues = (
 
   return {
     ...toAnswerValues(step, answer),
-    files: answer && 'documentIds' in answer ? answer.documentIds.map(id => ({ id, name: id })) : [],
+    files: isDocumentsAnswer(answer) ? answer.documentIds.map(id => ({ id, name: id })) : [],
     completed: Boolean(answer && 'completed' in answer),
     rows,
   }
@@ -110,7 +114,7 @@ const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): AskForm
 const toRowAnswer = (step: AskFormStepFields, values: AskFormAnswerValues): AskFormRowAnswer | null => {
   const answer = toInputAnswer(values)
 
-  if (!answer || !('choice' in answer)) return answer
+  if (!isChoiceAnswer(answer)) return answer
 
   const followUpStep = findOption(step, answer.choice)?.followUp
   const followUp = followUpStep ? toInputAnswer(values.followUp) : null
@@ -162,7 +166,7 @@ const isAnswerComplete = (step: AskFormStepFields, values: AskFormAnswerValues) 
   if (!isInputComplete(step, values)) return false
 
   const answer = toInputAnswer(values)
-  const followUpStep = answer && 'choice' in answer ? findOption(step, answer.choice)?.followUp : undefined
+  const followUpStep = isChoiceAnswer(answer) ? findOption(step, answer.choice)?.followUp : undefined
 
   return !followUpStep || isInputComplete(followUpStep, values.followUp)
 }
