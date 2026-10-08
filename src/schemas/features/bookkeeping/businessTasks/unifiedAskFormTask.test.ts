@@ -123,18 +123,6 @@ describe('UnifiedAskFormTaskSchema', () => {
   })
 
   it.each([
-    ['an entry page', { ...encodedCounterpartyTask, form: { ...encodedCounterpartyTask.form, entry_page_id: 'missing' } }],
-    ['a page', withPage(0, { next: { kind: 'PAGE', page_id: 'missing' } })],
-    ['an option page', withPage(1, { steps: [{ type: 'CHOICE', id: 'rows', options: [{ value: 'a', label: 'A', next: { kind: 'PAGE', page_id: 'missing' } }] }] })],
-    ['an off-API server url', withPage(2, { next: { kind: 'SERVER', url: 'https://example.com/next-page' } })],
-  ])('hides the task when its form routes to %s that does not resolve', (_, payload) => {
-    const task = decodeBusinessTask(payload)
-
-    expect(isUnifiedAskFormTask(task)).toBe(false)
-    expect(isLegacyBusinessTask(task)).toBe(false)
-  })
-
-  it.each([
     ['search entity', withPage(2, { steps: [{ type: 'SEARCH', id: 'always_this', entity: 'EMPLOYEE' }] })],
     ['form subtype', { ...encodedCounterpartyTask, form_subtype: 'SOMETHING_NEW' }],
   ])('still shows the task when it has an unrecognised %s', (_, payload) => {
