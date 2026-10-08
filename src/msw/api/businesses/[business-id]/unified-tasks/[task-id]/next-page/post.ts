@@ -1,14 +1,14 @@
 import { Schema } from 'effect'
 
-import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { isChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import {
   AskFormNextPageRequestSchema,
   type AskFormNextPageResult,
   AskFormNextPageResultSchema,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
 
-import { ACCOUNT_MASK_ENTRY_PAGE_ID } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
-import { ASK_FORM_STEP_IDS } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { ACCOUNT_MASK_ENTRY_PAGE_ID, ACCOUNT_MASK_ROUTES } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
+import { ASK_FORM_STEP_IDS, SUBMIT, toPage } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/unified-tasks/askFormValidation'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -18,7 +18,7 @@ const encodeResult = Schema.encodeSync(AskFormNextPageResultSchema)
 
 const toResponse = (result: AskFormNextPageResult) => apiData(encodeResult(result))
 
-const ACCOUNT_TYPE_ROUTES: Record<string, string> = { owned: 'connect', vendor: 'vendor', customer: 'customer' }
+const routes: Partial<Record<string, string>> = ACCOUNT_MASK_ROUTES
 
 export const post = createMockEndpoint<AskFormNextPageResult, ReturnType<typeof toResponse>>({
   method: 'post',
@@ -30,11 +30,8 @@ export const post = createMockEndpoint<AskFormNextPageResult, ReturnType<typeof 
     assertAskFormRequest(pageHistory.at(-1) === pageId, 'page_id must be the last entry of page_history')
 
     const accountType = answers[ASK_FORM_STEP_IDS.accountType]
-    const choice = accountType && 'choice' in accountType ? accountType.choice : null
-    const nextPageId = pageId === ACCOUNT_MASK_ENTRY_PAGE_ID && choice ? ACCOUNT_TYPE_ROUTES[choice] : undefined
+    const nextPageId = pageId === ACCOUNT_MASK_ENTRY_PAGE_ID && isChoiceAnswer(accountType) ? routes[accountType.choice] : undefined
 
-    return toResponse({
-      next: nextPageId ? { kind: AskFormNextKind.Page, pageId: nextPageId } : { kind: AskFormNextKind.Submit, review: false },
-    })
+    return toResponse({ next: nextPageId ? toPage(nextPageId) : SUBMIT })
   },
 })

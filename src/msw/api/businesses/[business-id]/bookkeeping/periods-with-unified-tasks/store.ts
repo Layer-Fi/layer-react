@@ -1,7 +1,7 @@
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { type BusinessTask, isUnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTask'
-import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
 import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
@@ -11,7 +11,7 @@ export const bookkeepingPeriodStore = createMockStore(
   () => makeBookkeepingPeriods(PROFIT_AND_LOSS_FIXTURE_START_YEAR),
 )
 
-const isComplete = (tasks: readonly BusinessTask[]) => tasks.every(task => task.status !== BusinessTaskStatus.Todo)
+const isComplete = (tasks: readonly BusinessTask[]) => getIncompleteTasks(tasks).length === 0
 
 export const findUnifiedAskFormTaskInStore = (taskId: string): UnifiedAskFormTask | undefined =>
   bookkeepingPeriodStore.all()

@@ -35,6 +35,8 @@ const serverNext = (taskId: string): AskFormNext => ({ kind: AskFormNextKind.Ser
 
 export const ACCOUNT_MASK_ENTRY_PAGE_ID = 'account_type'
 
+export const ACCOUNT_MASK_ROUTES = { owned: 'connect', vendor: 'vendor', customer: 'customer' } as const
+
 export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm => ({
   entryPageId: ACCOUNT_MASK_ENTRY_PAGE_ID,
   pages: [
@@ -47,13 +49,13 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
       }),
       { value: 'unsure', label: 'Not sure', followUp: textFollowUp('Tell us anything you know about this account.') },
     ])], serverNext(taskId)),
-    page('connect', [{
+    page(ACCOUNT_MASK_ROUTES.owned, [{
       id: 'connect',
       type: AskFormStepType.Action,
       action: AskFormAction.ConnectAccount,
       prompt: 'Connect this account so we can pull its transactions for you automatically.',
     }]),
-    page('vendor', [
+    page(ACCOUNT_MASK_ROUTES.vendor, [
       {
         id: 'vendor',
         type: AskFormStepType.SearchWithFreeform,
@@ -68,7 +70,7 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
       scope: AskFormCategoryScope.EachTransaction,
       search: true,
     })]),
-    page('customer', [choiceStep('paid_through', 'Did these payments come through your payments platform?', choiceOptions({
+    page(ACCOUNT_MASK_ROUTES.customer, [choiceStep('paid_through', 'Did these payments come through your payments platform?', choiceOptions({
       platform: 'Yes, through the platform',
       direct: 'No, they paid me directly',
       not_sure: 'Not sure',
