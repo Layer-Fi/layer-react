@@ -1,48 +1,83 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type AskFormAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
 import {
-  type AskFormLabels,
-  type AskFormStepFields,
-  findChosenOption,
-} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+  type AskFormAnswerValues,
+  type AskFormInputValues,
+  type AskFormStepValues,
+} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 
-export const useAskFormAnswerLabel = (labels: AskFormLabels) => {
+const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
+
+const UNANSWERED_PLACEHOLDER = '…'
+
+const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: AskFormInputValues) => {
+  if (selection) return selection.label
+  if (choice) return findOption(step, choice)?.label ?? choice
+  return text.trim() || null
+}
+
+const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
+  const option = values.selection ? undefined : findOption(step, values.choice)
+  const followUpLabel = option?.followUp && !values.followUp.text.trim() ? getInputLabel(option.followUp, values.followUp) : null
+
+  return followUpLabel ?? getInputLabel(step, values)
+}
+
+export const useAskFormAnswerLabel = () => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
 
-  return useCallback(function getAnswerLabel(step: AskFormStepFields, answer: AskFormAnswer | undefined): string | null {
-    if (!answer) return null
+  const getAnswerLabel = useCallback((step: AskFormStepFields, values: AskFormStepValues | AskFormAnswerValues | undefined): string | null => {
+    if (!values) return null
+    if (!('rows' in values)) return getChoiceLabel(step, values)
 
-    if ('choice' in answer) {
-      const option = findChosenOption(step, answer)
-      const isFreeTextFollowUp = answer.followUp !== undefined && 'text' in answer.followUp
-      const followUpLabel = option?.followUp && !isFreeTextFollowUp ? getAnswerLabel(option.followUp, answer.followUp) : null
-
-      return followUpLabel ?? option?.label ?? labels[answer.choice] ?? answer.choice
+    if (step.type === AskFormStepType.Action) {
+      return values.completed ? t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.done', 'Done') : null
     }
 
-    if ('text' in answer) return answer.text.trim() || null
-
-    if ('documentIds' in answer) {
-      return tPlural(t, 'bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.file_count', {
-        count: answer.documentIds.length,
-        displayCount: formatNumber(answer.documentIds.length),
-        one: '{{displayCount}} file',
-        other: '{{displayCount}} files',
-      })
+    if (step.type === AskFormStepType.Upload) {
+      return values.files.length > 0
+        ? tPlural(t, 'bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.file_count', {
+          count: values.files.length,
+          displayCount: formatNumber(values.files.length),
+          one: '{{displayCount}} file',
+          other: '{{displayCount}} files',
+        })
+        : null
     }
 
-    if ('completed' in answer) return t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.done', 'Done')
+    if (!isSheetStep(step)) return getChoiceLabel(step, values)
 
-    const rowLabels = new Set(answer.transactionAnswers.map(row => getAnswerLabel(step, row.answer)))
+    const rowLabels = new Set(values.rows.map(row => getChoiceLabel(step, row)).filter(label => label !== null))
     const [onlyLabel] = rowLabels
+
+    if (rowLabels.size === 0) return null
 
     return rowLabels.size === 1 && onlyLabel
       ? onlyLabel
       : t('bookkeeping:UnifiedAskForm.useAskFormAnswerLabel.label.varies_by_transaction', 'Varies by transaction')
-  }, [formatNumber, labels, t])
+  }, [formatNumber, t])
+
+  const fillPromptTemplate = useCallback((
+    text: string | null | undefined,
+    stepsById: ReadonlyMap<string, AskFormStepFields>,
+    stepValues: Readonly<Record<string, AskFormStepValues>>,
+  ) => text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) => {
+    const step = stepsById.get(stepId)
+    const values = stepValues[stepId]
+
+    if (!step || !values) return UNANSWERED_PLACEHOLDER
+    if (!followUp) return getAnswerLabel(step, values) ?? UNANSWERED_PLACEHOLDER
+
+    const followUpStep = values.selection ? undefined : findOption(step, values.choice)?.followUp
+
+    return followUpStep ? getInputLabel(followUpStep, values.followUp) ?? UNANSWERED_PLACEHOLDER : UNANSWERED_PLACEHOLDER
+  }) ?? null, [getAnswerLabel])
+
+  return useMemo(() => ({ getAnswerLabel, fillPromptTemplate }), [fillPromptTemplate, getAnswerLabel])
 }

@@ -1,44 +1,32 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { useStore } from '@tanstack/react-form'
+import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
-import { type AskFormAnswer, type AskFormAnswers } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useStepNavigation } from '@hooks/utils/navigation/useStepNavigation'
 import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostAskFormNextPage } from '@api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
-import { type SlidingPanesDirection } from '@components/utility/SlidingPanes/SlidingPanes'
-import { useForm } from '@blocks/Form/useForm'
+import { useRawAppForm } from '@blocks/Form/useForm'
+import { isApiOriginUrl } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
 import {
-  type AskFormLabels,
   getPageNext,
-  hasAnswersToPost,
-  isApiOriginUrl,
   isPageComplete,
-  pickAnswersForPages,
-} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+  toAnswers,
+  toFormValues,
+  type UnifiedAskFormValues,
+} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 
 export const FALLBACK_PAGE_ID = '__fallback'
 
 export type UnifiedAskFormView = { kind: 'PAGE', pageId: string } | { kind: 'REVIEW' }
 
-type NavigationState = {
-  view: UnifiedAskFormView
-  history: ReadonlyArray<string>
-  direction: SlidingPanesDirection
-}
-
 export type UnifiedAskFormRouting = 'idle' | 'loading' | 'error'
-
-type UnifiedAskFormValues = {
-  answers: AskFormAnswers
-  labels: AskFormLabels
-}
 
 export type UnifiedAskFormSaved = {
   answerSummary: string | null
@@ -74,20 +62,18 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   }), [t])
 
   const { pages, entryPageId } = task.form
+  const allPages = useMemo(() => [...pages, fallbackPage], [fallbackPage, pages])
   const pagesById = useMemo(() => new Map(pages.map(page => [page.id, page])), [pages])
-  const stepsById = useMemo(() => new Map(pages.flatMap(({ steps }) => steps.map(step => [step.id, step]))), [pages])
-
-  const getPage = useCallback((pageId: string) => pagesById.get(pageId) ?? fallbackPage, [fallbackPage, pagesById])
-
-  const atEntry = useMemo<NavigationState>(() => ({
-    view: { kind: 'PAGE', pageId: pagesById.has(entryPageId) ? entryPageId : FALLBACK_PAGE_ID },
-    history: [],
-    direction: 'back',
-  }), [entryPageId, pagesById])
-
+  const stepsById = useMemo(() => new Map(allPages.flatMap(({ steps }) => steps.map(step => [step.id, step]))), [allPages])
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
 
-  const [navigation, setNavigation] = useState<NavigationState>(atEntry)
+  const getPage = useCallback((pageId: string) => pagesById.get(pageId) ?? fallbackPage, [fallbackPage, pagesById])
+  const toPageView = useCallback((pageId: string): UnifiedAskFormView =>
+    ({ kind: 'PAGE', pageId: pagesById.has(pageId) ? pageId : FALLBACK_PAGE_ID }), [pagesById])
+
+  const entryView = useMemo(() => toPageView(entryPageId), [entryPageId, toPageView])
+  const navigation = useStepNavigation(entryView)
+
   const [routing, setRouting] = useState<UnifiedAskFormRouting>('idle')
   const submitPathRef = useRef<ReadonlyArray<AskFormPage>>([])
   const routingRequestRef = useRef(0)
@@ -97,17 +83,24 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     setRouting('idle')
   }, [])
 
-  const form = useForm<UnifiedAskFormValues>({
-    defaultValues: { answers: task.answers ?? {}, labels: {} },
+  const defaultValues = useMemo<UnifiedAskFormValues>(
+    () => toFormValues(allPages, task.answers ?? {}, transactionIds),
+    [allPages, task.answers, transactionIds],
+  )
+
+  const form = useRawAppForm({
+    defaultValues,
+    validationLogic: revalidateLogic(),
+    listeners: { onChange: cancelRouting },
     onSubmit: async ({ value }) => {
       try {
         const saved = await submitResponse({
           taskId: task.id,
-          answers: pickAnswersForPages(submitPathRef.current, value.answers, transactionIds),
+          answers: toAnswers(submitPathRef.current, value, transactionIds),
         })
 
-        form.reset({ answers: saved.task.answers ?? value.answers, labels: value.labels })
-        setNavigation(atEntry)
+        form.reset(value)
+        navigation.reset()
         onSaved({ answerSummary: saved.task.answerSummary ?? null, categorized: saved.categorized })
       }
       catch (error) {
@@ -128,88 +121,57 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     },
   })
 
-  const answers = useStore(form.store, state => state.values.answers)
-  const labels = useStore(form.store, state => state.values.labels)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
-  const setAnswer = useCallback((stepId: string, answer: AskFormAnswer) => {
-    cancelRouting()
-    form.setFieldValue('answers', current => ({ ...current, [stepId]: answer }))
-  }, [cancelRouting, form])
+  const visitedPages = useMemo(
+    () => navigation.history.flatMap(view => (view.kind === 'PAGE' ? [getPage(view.pageId)] : [])),
+    [getPage, navigation.history],
+  )
 
-  const setLabel = useCallback((id: string, label: string) => {
-    form.setFieldValue('labels', current => ({ ...current, [id]: label }))
-  }, [form])
+  const getPageError = useCallback((page: AskFormPage, values: UnifiedAskFormValues) => {
+    if (!isPageComplete(page, values, transactionIds)) {
+      return t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.validation.answer_every_question', 'Answer every question to continue')
+    }
 
-  const goForward = useCallback((view: UnifiedAskFormView) => {
-    setNavigation(current => ({
-      view,
-      history: current.view.kind === 'PAGE' ? [...current.history, current.view.pageId] : current.history,
-      direction: 'forward',
-    }))
-  }, [])
+    const submitsNext = getPageNext(page, values).kind === AskFormNextKind.Submit
+    const hasAnswers = Object.keys(toAnswers([...visitedPages, page], values, transactionIds)).length > 0
 
-  const goBack = useCallback(() => {
-    cancelRouting()
-    setNavigation((current) => {
-      const previous = current.history.at(-1)
-
-      return previous
-        ? { view: { kind: 'PAGE', pageId: previous }, history: current.history.slice(0, -1), direction: 'back' }
-        : current
-    })
-  }, [cancelRouting])
-
-  const reset = useCallback(() => {
-    cancelRouting()
-    setNavigation(atEntry)
-  }, [atEntry, cancelRouting])
+    return submitsNext && !hasAnswers
+      ? t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.validation.answer_required', 'Add an answer to submit')
+      : undefined
+  }, [t, transactionIds, visitedPages])
 
   const submit = useCallback((pagesOnPath: ReadonlyArray<AskFormPage>) => {
-    const incompletePage = pagesOnPath.find(page => !isPageComplete(page, form.state.values.answers, transactionIds))
+    const incompletePage = pagesOnPath.find(page => !isPageComplete(page, form.state.values, transactionIds))
 
     if (incompletePage) {
-      setNavigation({
-        view: { kind: 'PAGE', pageId: incompletePage.id },
-        history: pagesOnPath.slice(0, pagesOnPath.indexOf(incompletePage)).map(({ id }) => id),
-        direction: 'back',
-      })
+      const history = pagesOnPath.slice(0, pagesOnPath.indexOf(incompletePage)).map(({ id }) => toPageView(id))
+      navigation.goTo(toPageView(incompletePage.id), history)
       return
     }
 
     submitPathRef.current = pagesOnPath
     void form.handleSubmit()
-  }, [form, transactionIds])
+  }, [form, navigation, toPageView, transactionIds])
 
   const follow = useCallback((next: AskFormNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
     switch (next.kind) {
       case AskFormNextKind.Page:
-        goForward({ kind: 'PAGE', pageId: pagesById.has(next.pageId) ? next.pageId : FALLBACK_PAGE_ID })
+        navigation.goForward(toPageView(next.pageId))
         return
       case AskFormNextKind.Submit:
-        if (next.review) goForward({ kind: 'REVIEW' })
+        if (next.review) navigation.goForward({ kind: 'REVIEW' })
         else submit(pagesOnPath)
         return
       case AskFormNextKind.Server:
-        goForward({ kind: 'PAGE', pageId: FALLBACK_PAGE_ID })
+        navigation.goForward(toPageView(FALLBACK_PAGE_ID))
     }
-  }, [goForward, pagesById, submit])
+  }, [navigation, submit, toPageView])
 
-  const visitedPages = useMemo(() => navigation.history.map(getPage), [getPage, navigation.history])
-
-  const canContinueFrom = useCallback((page: AskFormPage, currentAnswers: AskFormAnswers) => {
-    if (!isPageComplete(page, currentAnswers, transactionIds)) return false
-
-    const next = getPageNext(page, currentAnswers)
-
-    return next.kind !== AskFormNextKind.Submit || hasAnswersToPost([...visitedPages, page], currentAnswers, transactionIds)
-  }, [transactionIds, visitedPages])
-
-  const continueFrom = useCallback((page: AskFormPage, currentAnswers: AskFormAnswers) => {
-    if (!canContinueFrom(page, currentAnswers)) return
-
+  const continueFrom = useCallback((page: AskFormPage) => {
+    const values = form.state.values
     const pagesOnPath = [...visitedPages, page]
-    const next = getPageNext(page, currentAnswers)
+    const next = getPageNext(page, values)
 
     if (next.kind !== AskFormNextKind.Server) {
       follow(next, pagesOnPath)
@@ -217,7 +179,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     }
 
     if (!isApiOriginUrl(next.url)) {
-      goForward({ kind: 'PAGE', pageId: FALLBACK_PAGE_ID })
+      navigation.goForward(toPageView(FALLBACK_PAGE_ID))
       return
     }
 
@@ -230,7 +192,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       request: {
         pageId: page.id,
         pageHistory: pagesOnPath.map(({ id }) => id),
-        answers: pickAnswersForPages(pagesOnPath, currentAnswers, transactionIds),
+        answers: toAnswers(pagesOnPath, values, transactionIds),
       },
     }).then(
       ({ next: serverNext }) => {
@@ -243,53 +205,58 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         if (routingRequestRef.current === requestId) setRouting('error')
       },
     )
-  }, [canContinueFrom, follow, goForward, postNextPage, transactionIds, visitedPages])
+  }, [follow, form, navigation, postNextPage, toPageView, transactionIds, visitedPages])
 
-  const submitReviewed = useCallback(() => {
-    submit(visitedPages)
-  }, [submit, visitedPages])
+  const goBack = useCallback(() => {
+    cancelRouting()
+    navigation.goBack()
+  }, [cancelRouting, navigation])
 
-  const currentPage = navigation.view.kind === 'PAGE' ? getPage(navigation.view.pageId) : null
+  const reset = useCallback(() => {
+    cancelRouting()
+    navigation.reset()
+  }, [cancelRouting, navigation])
+
+  const submitReviewed = useCallback(() => submit(visitedPages), [submit, visitedPages])
+
+  const { view, direction, canGoBack } = navigation
+  const currentPage = view.kind === 'PAGE' ? getPage(view.pageId) : null
 
   return useMemo(() => ({
     form,
-    answers,
-    labels,
-    setAnswer,
-    setLabel,
-    stepsById,
-    view: navigation.view,
-    direction: navigation.direction,
+    view,
+    direction,
     currentPage,
     visitedPages,
-    canGoBack: navigation.history.length > 0,
+    canGoBack,
     goBack,
     reset,
     routing,
     isSubmitting,
-    canContinueFrom,
+    stepsById,
+    transactionIds,
+    getPageError,
     continueFrom,
     submitReviewed,
   }), [
-    answers,
-    canContinueFrom,
+    canGoBack,
     continueFrom,
     currentPage,
+    direction,
     form,
+    getPageError,
     goBack,
     isSubmitting,
-    labels,
-    navigation.direction,
-    navigation.history.length,
-    navigation.view,
     reset,
     routing,
-    setAnswer,
-    setLabel,
     stepsById,
     submitReviewed,
+    transactionIds,
+    view,
     visitedPages,
   ])
 }
 
 export type UnifiedAskFormState = ReturnType<typeof useUnifiedAskForm>
+
+export type UnifiedAskFormApi = UnifiedAskFormState['form']
