@@ -21,8 +21,11 @@ const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: Ask
   return text.trim() || null
 }
 
+const getPickedFollowUp = (step: AskFormStepFields, { choice, selection }: AskFormAnswerValues) =>
+  findFollowUp(step, choice ?? (selection && !selection.isCreated ? selection.value : null))
+
 const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
-  const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
+  const followUpStep = getPickedFollowUp(step, values)
   const followUpLabel = followUpStep && !values.followUp.text.trim() ? getInputLabel(followUpStep, values.followUp) : null
 
   return followUpLabel ?? getInputLabel(step, values)
@@ -74,7 +77,7 @@ export const useAskFormAnswerLabel = () => {
     if (!step || !values) return UNANSWERED_PLACEHOLDER
     if (!followUp) return getAnswerLabel(step, values) ?? UNANSWERED_PLACEHOLDER
 
-    const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
+    const followUpStep = getPickedFollowUp(step, values)
 
     return followUpStep ? getInputLabel(followUpStep, values.followUp) ?? UNANSWERED_PLACEHOLDER : UNANSWERED_PLACEHOLDER
   }) ?? null, [getAnswerLabel])
