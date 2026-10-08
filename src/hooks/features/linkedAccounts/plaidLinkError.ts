@@ -19,7 +19,6 @@ export class PlaidLinkError extends Error {
     this.name = 'PlaidLinkError'
     this.errorType = error.error_type
     this.errorCode = error.error_code
-    // Typed as string, but Plaid sends null when there is nothing to show the user.
     this.displayMessage = error.display_message ?? null
     this.linkSessionId = metadata.link_session_id
     this.requestId = metadata.request_id
