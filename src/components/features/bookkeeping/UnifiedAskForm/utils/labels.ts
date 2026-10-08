@@ -1,7 +1,19 @@
-import { type AskFormAnswerValues, type AskFormInputValues, getFollowUpStep } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormStepFields, findOption } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import type { TFunction } from 'i18next'
+
+import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { tPlural } from '@utils/shared/i18n/plural'
+import {
+  type AskFormAnswerValues,
+  type AskFormInputValues,
+  type AskFormRowValues,
+  type AskFormStepValues,
+  getFollowUpStep,
+} from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
+
+type FormatNumber = (value: number) => string
 
 export const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: AskFormInputValues) => {
   if (selection) return selection.label
@@ -22,10 +34,57 @@ export const getFollowUpLabel = (step: AskFormStepFields, values: AskFormAnswerV
   return followUpStep ? getInputLabel(followUpStep, values.followUp) : null
 }
 
-/** Fills `{{answer.<step>.label}}` and `{{answer.<step>.follow_up.label}}` placeholders in a prompt. */
+const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArray<AskFormRowValues>) => {
+  const rowLabels = new Set(rows.flatMap((row) => {
+    const label = getChoiceLabel(step, row)
+    return label === null ? [] : [label]
+  }))
+
+  if (rowLabels.size > 1) return t('bookkeeping:UnifiedAskForm.labels.varies_by_transaction', 'Varies by transaction')
+
+  const [onlyLabel] = rowLabels
+  return onlyLabel ?? null
+}
+
+/** The short label a whole step's answer shows in the review and in prompt templates. */
+export const getStepLabel = (
+  t: TFunction,
+  formatNumber: FormatNumber,
+  step: AskFormStepFields,
+  values: AskFormStepValues | undefined,
+): string | null => {
+  if (!values) return null
+
+  switch (step.type) {
+    case AskFormStepType.Action:
+      return values.completed ? t('bookkeeping:UnifiedAskForm.labels.done', 'Done') : null
+    case AskFormStepType.Upload:
+      return values.files.length > 0
+        ? tPlural(t, 'bookkeeping:UnifiedAskForm.labels.file_count', {
+          count: values.files.length,
+          displayCount: formatNumber(values.files.length),
+          one: '{{displayCount}} file',
+          other: '{{displayCount}} files',
+        })
+        : null
+    default:
+      return isSheetStep(step) ? getSheetLabel(t, step, values.rows) : getChoiceLabel(step, values)
+  }
+}
+
+/** Fills `{{answer.<step>.label}}` and `{{answer.<step>.follow_up.label}}` placeholders with the answers given so far. */
 export const fillPromptTemplate = (
+  t: TFunction,
+  formatNumber: FormatNumber,
   text: string | null | undefined,
-  getLabel: (stepId: string, isFollowUp: boolean) => string | null,
-  unansweredLabel: string,
-) => text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) =>
-  getLabel(stepId, followUp !== undefined) ?? unansweredLabel) ?? null
+  stepsById: ReadonlyMap<string, AskFormStepFields>,
+  stepValues: Readonly<Record<string, AskFormStepValues>>,
+) => text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) => {
+  const step = stepsById.get(stepId)
+  const values = stepValues[stepId]
+  const label = step && values
+    ? (followUp ? getFollowUpLabel(step, values) : getStepLabel(t, formatNumber, step, values))
+    : null
+
+  return label ?? t('bookkeeping:UnifiedAskForm.labels.unanswered', '…')
+}) ?? null
