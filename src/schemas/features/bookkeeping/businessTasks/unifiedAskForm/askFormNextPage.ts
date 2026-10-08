@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { AskFormAnswersSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormAnswersRequestSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormStaticNextSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 
 export const AskFormNextPageRequestSchema = Schema.Struct({
@@ -12,7 +12,7 @@ export const AskFormNextPageRequestSchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(Schema.String)),
     Schema.fromKey('page_history'),
   ),
-  answers: AskFormAnswersSchema,
+  answers: AskFormAnswersRequestSchema,
 })
 
 export type AskFormNextPageRequest = typeof AskFormNextPageRequestSchema.Type

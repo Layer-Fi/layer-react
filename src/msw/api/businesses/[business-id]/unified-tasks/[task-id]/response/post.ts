@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 import { HttpResponse } from 'msw'
 
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type AskFormAnswers } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { type AskFormAnswers, isDocumentsAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { UnifiedAskFormSubmissionSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmission'
 import {
   type UnifiedAskFormSubmissionResult,
@@ -16,7 +16,7 @@ import {
 import { unifiedTaskDocumentStore } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/store'
 import { isCategorizedByAskFormAnswers, summarizeAskFormAnswers } from '@msw/api/businesses/[business-id]/unified-tasks/askFormAnswers'
 import { assertAskFormRequest, decodeAskFormRequest } from '@msw/api/businesses/[business-id]/unified-tasks/askFormValidation'
-import { apiData } from '@msw/utils/apiResponse'
+import { apiData, apiError } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
@@ -25,10 +25,10 @@ const encodeResult = Schema.encodeSync(UnifiedAskFormSubmissionResultSchema)
 const toResponse = (result: UnifiedAskFormSubmissionResult) => apiData(encodeResult(result))
 
 const notFound = (description: string) =>
-  HttpResponse.json({ errors: [{ type: 'ResourceNotFound', description, error_enum: 'SpecifiedIdNotFound' }] }, { status: 404 })
+  HttpResponse.json(apiError(description, { type: 'ResourceNotFound', errorEnum: 'SpecifiedIdNotFound' }), { status: 404 })
 
 const collectDocumentIds = (answers: AskFormAnswers) =>
-  Object.values(answers).flatMap(answer => 'documentIds' in answer ? answer.documentIds : [])
+  Object.values(answers).flatMap(answer => isDocumentsAnswer(answer) ? answer.documentIds : [])
 
 export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnType<typeof toResponse>>({
   method: 'post',
@@ -37,6 +37,7 @@ export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnTyp
     if (override) return toResponse(override)
 
     const { answers } = decodeAskFormRequest(UnifiedAskFormSubmissionSchema, await readRequestJson(request))
+    assertAskFormRequest(Object.keys(answers).length > 0, 'answers must not be empty')
     const taskId = String(params.taskId)
     const existing = findUnifiedAskFormTaskInStore(taskId)
 
@@ -61,6 +62,6 @@ export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnTyp
 
     if (submittedDocumentIds.length > 0) unifiedTaskDocumentStore.save({ id: taskId, documentIds: submittedDocumentIds })
 
-    return toResponse({ task, categorized: isCategorizedByAskFormAnswers(answers) })
+    return toResponse({ task, categorized: isCategorizedByAskFormAnswers(task.form, answers) })
   },
 })

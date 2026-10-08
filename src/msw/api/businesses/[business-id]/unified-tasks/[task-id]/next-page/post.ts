@@ -26,11 +26,7 @@ export const post = createMockEndpoint<AskFormNextPageResult, ReturnType<typeof 
   resolve: async ({ override, request }) => {
     if (override) return toResponse(override)
 
-    const { pageId, pageHistory, answers } = decodeAskFormRequest(
-      AskFormNextPageRequestSchema,
-      await readRequestJson(request),
-      { allowEmptyAnswers: true },
-    )
+    const { pageId, pageHistory, answers } = decodeAskFormRequest(AskFormNextPageRequestSchema, await readRequestJson(request))
     assertAskFormRequest(pageHistory.at(-1) === pageId, 'page_id must be the last entry of page_history')
 
     const accountType = answers[ASK_FORM_STEP_IDS.accountType]

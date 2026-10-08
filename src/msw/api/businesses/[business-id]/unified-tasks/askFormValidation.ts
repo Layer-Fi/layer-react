@@ -1,73 +1,23 @@
-import { Schema } from 'effect'
+import { Either, ParseResult, Schema } from 'effect'
 import { HttpResponse } from 'msw'
 
-import {
-  type AskFormAnswer,
-  type AskFormAnswers,
-  type AskFormFollowUpAnswer,
-} from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
-import { AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
-
-import { SEARCH_ID_PREFIXES } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
-
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-const ACCOUNT_PREFIX = SEARCH_ID_PREFIXES[AskFormSearchEntity.Category]
+import { apiError } from '@msw/utils/apiResponse'
 
 const badRequest = (description: string) =>
-  HttpResponse.json({ errors: [{ type: 'Bad Request', description }] }, { status: 400 })
+  HttpResponse.json(apiError(description, { type: 'Bad Request' }), { status: 400 })
 
-const findAnswerProblem = (answer: AskFormAnswer | AskFormFollowUpAnswer): string | null => {
-  if ('choice' in answer) {
-    if (answer.choice.startsWith(ACCOUNT_PREFIX) && !UUID_PATTERN.test(answer.choice.slice(ACCOUNT_PREFIX.length))) {
-      return `Invalid acct id: ${answer.choice}`
-    }
+export const decodeAskFormRequest = <A, I>(schema: Schema.Schema<A, I>, body: unknown): A => {
+  const decoded = Schema.decodeUnknownEither(schema, { onExcessProperty: 'error' })(body)
 
-    if (!('followUp' in answer) || !answer.followUp) return null
+  if (Either.isRight(decoded)) return decoded.right
 
-    return findAnswerProblem(answer.followUp)
-  }
+  const description = ParseResult.ArrayFormatter.formatErrorSync(decoded.left)
+    .map(({ path, message }) => (path.length > 0 ? `${path.map(String).join('.')}: ${message}` : message))
+    .join('; ')
 
-  if ('text' in answer) return answer.text.trim() ? null : 'text must not be blank'
-
-  if ('documentIds' in answer) return answer.documentIds.length > 0 ? null : 'document_ids must not be empty'
-
-  if ('transactionAnswers' in answer) {
-    const ids = answer.transactionAnswers.map(({ transactionId }) => transactionId)
-
-    if (ids.length === 0) return 'transaction_answers must not be empty'
-    if (new Set(ids).size !== ids.length) return 'Duplicate transaction answers'
-
-    return answer.transactionAnswers.map(row => findAnswerProblem(row.answer)).find(problem => problem !== null) ?? null
-  }
-
-  return null
-}
-
-export const decodeAskFormRequest = <A extends { answers: AskFormAnswers }, I>(
-  schema: Schema.Schema<A, I>,
-  body: unknown,
-  { allowEmptyAnswers = false }: { allowEmptyAnswers?: boolean } = {},
-): A => {
-  let decoded: A
-
-  try {
-    decoded = Schema.decodeUnknownSync(schema, { onExcessProperty: 'error' })(body)
-  }
-  catch (error) {
-    // MSW sends a thrown Response as the mocked response.
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
-    throw badRequest(error instanceof Error ? error.message : 'Malformed ask form request')
-  }
-
-  const answers = Object.values(decoded.answers)
-  const problem = !allowEmptyAnswers && answers.length === 0
-    ? 'answers must not be empty'
-    : answers.map(findAnswerProblem).find(found => found !== null)
-
+  // MSW sends a thrown Response as the mocked response.
   // eslint-disable-next-line @typescript-eslint/only-throw-error
-  if (problem) throw badRequest(problem)
-
-  return decoded
+  throw badRequest(description)
 }
 
 export const assertAskFormRequest = (condition: boolean, description: string) => {

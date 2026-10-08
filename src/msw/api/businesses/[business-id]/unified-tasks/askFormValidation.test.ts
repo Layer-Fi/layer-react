@@ -38,7 +38,6 @@ const INVALID_SUBMISSIONS: Record<string, unknown> = {
       },
     },
   },
-  'empty answers': { answers: {} },
   'documents follow_up': { answers: { category: { choice: 'a', follow_up: { document_ids: [TRANSACTION_ID] } } } },
   'empty document ids': { answers: { response: { document_ids: [] } } },
   'transaction row with documents': {
@@ -65,7 +64,6 @@ describe('decodeAskFormRequest', () => {
     expect(statusOf(() => decodeAskFormRequest(
       AskFormNextPageRequestSchema,
       { page_id: 'how_paid', page_history: ['how_paid'], answers: {} },
-      { allowEmptyAnswers: true },
     ))).toBe(200)
   })
 })

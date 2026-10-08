@@ -6,6 +6,7 @@ import { unifiedTaskDocumentStore } from '@msw/api/businesses/[business-id]/unif
 import { assertAskFormRequest } from '@msw/api/businesses/[business-id]/unified-tasks/askFormValidation'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
+import { readRequestFiles } from '@msw/utils/request'
 
 const MAX_FILES_PER_UPLOAD = 10
 
@@ -19,8 +20,7 @@ export const post = createMockEndpoint<AskFormUploadResult, ReturnType<typeof to
   resolve: async ({ override, request, params }) => {
     if (override) return toResponse(override)
 
-    const formData = await request.formData()
-    const files = formData.getAll('file').filter((entry): entry is File => typeof entry !== 'string')
+    const files = await readRequestFiles(request)
     assertAskFormRequest(files.length <= MAX_FILES_PER_UPLOAD, `Too many files uploaded. Only ${MAX_FILES_PER_UPLOAD} allowed`)
 
     const taskId = String(params.taskId)
