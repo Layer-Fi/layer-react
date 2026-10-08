@@ -14,7 +14,6 @@ import {
   makeUnifiedAskFormTask,
   page,
   seedsInFixtureYear,
-  SUBMIT,
   textFollowUp,
   toPage,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
@@ -36,21 +35,20 @@ export const makeCounterpartyAskForm = (
   suggestions: ReadonlyArray<AskFormOption>,
   { pickPrompt, rememberPrompt, noun }: CounterpartyAskFormCopy,
 ): AskForm => {
-  const notSure = (submits: boolean): AskFormOption => ({
+  const notSure: AskFormOption = {
     value: COUNTERPARTY_ASK_FORM_VALUES.notSure,
     label: 'Something else',
-    next: submits ? SUBMIT : null,
     followUp: textFollowUp(null, `Tell us anything you remember about these ${noun}s`),
-  })
+  }
 
   return {
     entryPageId: 'pick',
     pages: [
-      page('pick', [categoryStep(ASK_FORM_STEP_IDS.category, pickPrompt, [...suggestions, mixOption('itemise'), notSure(true)])], toPage('remember')),
+      page('pick', [categoryStep(ASK_FORM_STEP_IDS.category, pickPrompt, [...suggestions, mixOption('itemise'), notSure])], toPage('remember')),
       page('itemise', [categoryStep(
         ASK_FORM_STEP_IDS.rows,
         'Can you share more about what each transaction was for below?',
-        [...suggestions, notSure(false)],
+        [...suggestions, notSure],
         { scope: AskFormCategoryScope.EachTransaction },
       )]),
       page('remember', [choiceStep(ASK_FORM_STEP_IDS.alwaysThis, rememberPrompt, [

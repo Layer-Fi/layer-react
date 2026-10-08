@@ -46,7 +46,7 @@ const { useAppForm: useRawAppForm, withForm } = createFormHook({
 
 export { useRawAppForm, withForm }
 
-export function useAppForm<T extends Record<string, unknown>>(props: FormOptions<
+export function useAppForm<T extends Record<string, unknown>, TSubmitMeta = unknown>(props: FormOptions<
   T,
   FormValidateOrFn<T>,
   FormValidateOrFn<T>,
@@ -58,7 +58,7 @@ export function useAppForm<T extends Record<string, unknown>>(props: FormOptions
   FormValidateOrFn<T>,
   FormAsyncValidateOrFn<T>,
   FormAsyncValidateOrFn<T>,
-  unknown
+  TSubmitMeta
 >) {
   return useRawAppForm(props)
 }
