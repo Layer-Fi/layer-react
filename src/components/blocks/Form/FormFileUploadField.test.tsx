@@ -21,8 +21,9 @@ const Harness = ({ initialFiles = [], accept = [], upload = toUploaded, ...props
   )
 }
 
+// A user can pick any file through the picker's "All files" option, so the `accept` hint is not applied.
 const renderUploadField = (props: HarnessProps = {}) => ({
-  user: userEvent.setup(),
+  user: userEvent.setup({ applyAccept: false }),
   ...render(<Harness {...props} />, { wrapper: LayerTestProvider }),
 })
 

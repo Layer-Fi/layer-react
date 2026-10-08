@@ -1,4 +1,5 @@
 import { type AskFormStep, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { P } from '@ui/Typography/Text'
 import { UnifiedAskFormInput } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { UnifiedAskFormUpload } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormUpload'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -17,7 +18,7 @@ export const UnifiedAskFormStep = ({ form, pageId, taskId, step, prompt, onSelec
 
   switch (step.type) {
     case AskFormStepType.Action:
-      return null
+      return prompt ? <P size='sm'>{prompt}</P> : null
     case AskFormStepType.Upload:
       return <UnifiedAskFormUpload form={form} fields={fields} taskId={taskId} prompt={prompt} accept={step.accept} multiple={step.multiple} />
     default:

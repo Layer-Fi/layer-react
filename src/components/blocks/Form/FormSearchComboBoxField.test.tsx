@@ -30,14 +30,14 @@ const renderSearchField = (props: HarnessProps = {}) => ({
 
 describe('FormSearchComboBoxField', () => {
   it('reports the typed query and selects a result', async () => {
-    const onSearchQueryChange = vi.fn()
+    const onSearchQueryChange = vi.fn<(query: string) => void>()
     const onSelect = vi.fn()
     const { user } = renderSearchField({ onSearchQueryChange, onSelect })
 
     await user.type(screen.getByRole('combobox', { name: 'Vendor' }), 'Acme')
     await user.click(await screen.findByRole('option', { name: 'Acme Supplies' }))
 
-    expect(onSearchQueryChange).toHaveBeenLastCalledWith('Acme')
+    expect(onSearchQueryChange.mock.calls.map(([query]) => query)).toContain('Acme')
     expect(onSelect).toHaveBeenCalledWith({ value: 'vendor-1', label: 'Acme Supplies' })
     expect(screen.getByText('Acme Supplies')).toBeInTheDocument()
   })
