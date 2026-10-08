@@ -2,8 +2,9 @@ import { type EnumWithUnknownValues } from '@internal-types/utility/enumWithUnkn
 import { UnifiedSearchResultsSchema } from '@schemas/common/unifiedSearch'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type AskFormSearchEntity } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { getAsMutation } from '@utils/shared/api/getAsMutation'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
-import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UNIFIED_SEARCH_TAG_KEY = '#unified-search'
 
@@ -25,11 +26,16 @@ const getUnifiedSearch = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/search`,
 )
 
-export const useGetUnifiedSearch = createQueryHook({
+const requestUnifiedSearch = getAsMutation(getUnifiedSearch)
+
+type GetUnifiedSearchArg = Pick<GetUnifiedSearchParams, 'entity' | 'q' | 'taskId'>
+
+export const useGetUnifiedSearch = createMutationHook({
   tags: [UNIFIED_SEARCH_TAG_KEY],
-  request: getUnifiedSearch,
+  request: requestUnifiedSearch,
   schema: UnifiedSearchResponseSchema,
-  keyDefaults: { limit: 20 },
+  argToParams: ({ entity, q, taskId }: GetUnifiedSearchArg) => ({ entity, q, taskId, limit: 20 }),
+  argToBody: (_arg: GetUnifiedSearchArg) => undefined,
   select: ({ results }) => results,
-  swrOptions: { keepPreviousData: true },
+  swrOptions: { throwOnError: true },
 })
