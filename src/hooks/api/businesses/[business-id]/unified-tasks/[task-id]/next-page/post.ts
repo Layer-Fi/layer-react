@@ -16,12 +16,19 @@ const PostAskFormNextPageReturnSchema = UnwrappedDataResponseSchema(AskFormNextP
 
 const encodeNextPageRequest = Schema.encodeSync(AskFormNextPageRequestSchema)
 
+const NEXT_PAGE_PATH = /^\/v1\/businesses\/[A-Za-z0-9-]+\/unified-tasks\/[A-Za-z0-9-]+\/next-page(\?.*)?$/
+
 // The form's SERVER route carries the url (the API's next-page endpoint), so it is posted to as given.
+// The request carries the user's bearer token, so only a next-page endpoint is accepted.
 const postAskFormNextPage = post<
   typeof PostAskFormNextPageReturnSchema.Encoded,
   AskFormNextPageRequestEncoded,
   { businessId: string, url: string }
->(({ url }) => url)
+>(({ url }) => {
+  if (!NEXT_PAGE_PATH.test(url)) throw new Error(`Refusing to post an ask form next page to ${url}`)
+
+  return url
+})
 
 type UsePostAskFormNextPageArg = {
   url: string

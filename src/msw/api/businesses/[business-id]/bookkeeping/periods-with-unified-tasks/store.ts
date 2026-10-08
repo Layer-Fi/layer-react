@@ -13,6 +13,12 @@ export const bookkeepingPeriodStore = createMockStore(
 
 const isComplete = (tasks: readonly BusinessTask[]) => tasks.every(task => task.status !== BusinessTaskStatus.Todo)
 
+export const findUnifiedAskFormTaskInStore = (taskId: string): UnifiedAskFormTask | undefined =>
+  bookkeepingPeriodStore.all()
+    .flatMap(({ tasks }) => tasks)
+    .filter(isUnifiedAskFormTask)
+    .find(task => task.id === taskId)
+
 export const patchUnifiedAskFormTaskInStore = (
   taskId: string,
   applyPatch: (task: UnifiedAskFormTask) => UnifiedAskFormTask,
