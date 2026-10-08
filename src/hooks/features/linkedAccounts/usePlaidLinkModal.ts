@@ -35,6 +35,8 @@ type UsePlaidLinkModalOptions = {
  * the widget, exchanging the public token (add) or refreshing connection status
  * (repair) on completion, and notifying the caller to refresh accounts.
  */
+const PLAID_ERROR_SCREEN_VIEWS = new Set(['ERROR', 'EXIT'])
+
 export function usePlaidLinkModal({
   linkToken,
   linkMode,
@@ -63,6 +65,12 @@ export function usePlaidLinkModal({
   const lastSessionErrorRef = useRef<PlaidLinkExitError | null>(null)
 
   const handlePlaidLinkEvent: PlaidLinkOnEvent = (eventName, metadata) => {
+    // Moving to any view but the error or exit-confirmation screen means the user recovered from the error.
+    if (eventName === 'TRANSITION_VIEW' && !PLAID_ERROR_SCREEN_VIEWS.has(metadata.view_name ?? '')) {
+      lastSessionErrorRef.current = null
+      return
+    }
+
     if (eventName === 'ERROR' && metadata.error_code) {
       lastSessionErrorRef.current = {
         error_type: metadata.error_type ?? '',

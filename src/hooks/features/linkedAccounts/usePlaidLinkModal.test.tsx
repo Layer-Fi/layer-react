@@ -73,6 +73,18 @@ const emitPlaidLinkErrorEvent = () =>
     return Promise.resolve()
   })
 
+const emitPlaidLinkTransitionViewEvent = (viewName: string) =>
+  act(() => {
+    lastPlaidLinkOptions().onEvent?.('TRANSITION_VIEW', {
+      ...ERROR_EVENT_METADATA,
+      error_type: null,
+      error_code: null,
+      error_message: null,
+      view_name: viewName,
+    })
+    return Promise.resolve()
+  })
+
 type RenderModalOptions = {
   linkMode?: LinkMode
   setLinkMode?: (mode: LinkMode) => void
@@ -285,6 +297,40 @@ describe('usePlaidLinkModal Link outcomes', () => {
       displayMessage: null,
       linkSessionId: 'link-session-1',
     })
+  })
+
+  it('reports the last Link error when the user exits through the exit confirmation screen', async () => {
+    const reportOutcome = spyOnEndpoint(postPlaidLinkOutcome)
+    const onError = vi.fn()
+
+    await renderModal({ onError })
+
+    await emitPlaidLinkErrorEvent()
+    await emitPlaidLinkTransitionViewEvent('ERROR')
+    await emitPlaidLinkTransitionViewEvent('EXIT')
+    await exitPlaidLink(null)
+
+    await waitFor(() => expect(reportOutcome).toHaveBeenCalledWith(
+      expect.objectContaining({ body: { outcome: 'ERROR', error_code: 'INSTITUTION_NOT_RESPONDING' } }),
+    ))
+    expect(onError).toHaveBeenCalledOnce()
+  })
+
+  it('reports an exit without an error when the user recovers from a Link error before closing', async () => {
+    const reportOutcome = spyOnEndpoint(postPlaidLinkOutcome)
+    const onError = vi.fn()
+
+    await renderModal({ onError })
+
+    await emitPlaidLinkErrorEvent()
+    await emitPlaidLinkTransitionViewEvent('CREDENTIAL')
+    await exitPlaidLink(null)
+
+    await waitFor(() => expect(reportOutcome).toHaveBeenCalledWith(
+      expect.objectContaining({ body: { outcome: 'EXITED' } }),
+    ))
+    expect(reportOutcome).toHaveBeenCalledOnce()
+    expect(onError).not.toHaveBeenCalled()
   })
 
   it('does not carry a Link error over to a later session', async () => {
