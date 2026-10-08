@@ -49,8 +49,10 @@ export const usePostUnifiedAskFormResponse = createMutationHook({
     const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
     const onBankTransactionChange = useBankTransactionTriggerSuccess()
 
-    return async ({ task }: UnifiedAskFormSubmissionResult) => {
+    return async ({ task, categorized }: UnifiedAskFormSubmissionResult) => {
       await patchBookkeepingPeriods(replaceTaskInPeriods(task))
+      if (!categorized) return
+
       onBankTransactionChange()
       void forceReloadCategorizationRules()
     }
