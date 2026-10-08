@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
 import { TextStep } from '@blocks/FormSteps/TextStep'
-import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
-import { type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { useUnifiedAskFormSearch } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
+import { type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '' }
 

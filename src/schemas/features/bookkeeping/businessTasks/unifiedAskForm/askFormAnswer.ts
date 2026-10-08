@@ -67,6 +67,7 @@ export const isChoiceAnswer = Schema.is(AskFormChoiceAnswerSchema)
 export const isTextAnswer = Schema.is(AskFormTextAnswerSchema)
 export const isDocumentsAnswer = Schema.is(AskFormDocumentsAnswerSchema)
 export const isTransactionAnswers = Schema.is(AskFormTransactionAnswersSchema)
+export const isCompletedAnswer = Schema.is(AskFormCompletedAnswerSchema)
 
 export const AskFormAnswerSchema = Schema.Union(
   AskFormChoiceAnswerSchema,

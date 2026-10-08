@@ -7,10 +7,10 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { FormRowSheet } from '@blocks/FormSteps/FormRowSheet'
 import { UnifiedAskFormInput } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { UnifiedAskFormTransactionCells } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTransactionCells'
-import { findFollowUp } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
-import { isRowComplete } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
-import { useAskFormAnswerLabel } from '@features/bookkeeping/UnifiedAskForm/useAskFormAnswerLabel'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
+import { isRowComplete } from '@features/bookkeeping/UnifiedAskForm/utils/completion'
+import { getChoiceLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { findFollowUp } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 type UnifiedAskFormTransactionSheetProps = {
   form: UnifiedAskFormApi
@@ -24,7 +24,6 @@ type UnifiedAskFormTransactionSheetProps = {
 export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, prompt, transactions }: UnifiedAskFormTransactionSheetProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { getAnswerLabel } = useAskFormAnswerLabel()
   const fields = `pages.${pageId}.${step.id}` as const
   const rows = useStore(form.store, state => state.values.pages[pageId]?.[step.id]?.rows ?? [])
 
@@ -37,7 +36,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
     return [{
       id: transaction.id,
       summary: <UnifiedAskFormTransactionCells transaction={transaction} />,
-      answerLabel: isComplete ? getAnswerLabel(step, row) : null,
+      answerLabel: isComplete ? getChoiceLabel(step, row) : null,
       isComplete,
     }]
   })

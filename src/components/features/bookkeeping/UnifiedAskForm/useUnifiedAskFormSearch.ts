@@ -8,7 +8,7 @@ import { useGetUnifiedSearch } from '@api/businesses/[business-id]/search/get'
 import { useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { type ChoiceStepSearch } from '@blocks/FormSteps/ChoiceStep'
-import { type AskFormStepFields } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { type AskFormStepFields } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const toComboBoxOption = ({ id, label }: UnifiedSearchResult): ComboBoxOption => ({ value: id, label })
 
