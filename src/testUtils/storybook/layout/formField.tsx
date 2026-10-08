@@ -1,8 +1,8 @@
-import { type PropsWithChildren, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
 import type { CommonFormFieldProps } from '@blocks/Form/types'
-import { useAppForm } from '@blocks/Form/useForm'
 
+import { FormFieldHarness } from '@testUtils/forms/FormFieldHarness'
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
@@ -14,29 +14,6 @@ const INLINE_FIELD_STYLE = {
   '--form-field-label-inline-size': '7rem',
   '--form-field-inline-column-gap': 'var(--spacing-xs)',
 } as React.CSSProperties
-
-type FormFieldHarnessProps = {
-  // Typed as `unknown` on purpose: a generic value type makes useAppForm hit TS2589.
-  defaultValue: unknown
-  errorText?: string
-}
-
-function FormFieldHarness({
-  defaultValue,
-  errorText,
-  children,
-}: PropsWithChildren<FormFieldHarnessProps>) {
-  const form = useAppForm({ defaultValues: { field: defaultValue } })
-
-  return (
-    <form.AppField
-      name='field'
-      validators={errorText ? { onMount: () => errorText } : {}}
-    >
-      {() => children}
-    </form.AppField>
-  )
-}
 
 export type FormFieldVariant<TValue, TProps> = {
   label: string

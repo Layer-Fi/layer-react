@@ -1,31 +1,21 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { screen, waitFor } from '@testing-library/react'
+import type userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
-import { useAppForm } from '@blocks/Form/useForm'
+import { FormFileUploadField, type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
 
-import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
-
-type HarnessProps = Partial<Omit<FormFileUploadFieldProps, 'label'>> & { initialFiles?: UploadedFile[] }
+import { renderFormField } from '@testUtils/render/renderFormField'
 
 const toUploaded = (files: ReadonlyArray<File>) => Promise.resolve(files.map(({ name }) => ({ id: `id-${name}`, name })))
 
-const Harness = ({ initialFiles = [], accept = [], upload = toUploaded, ...props }: HarnessProps) => {
-  const form = useAppForm({ defaultValues: { files: initialFiles } })
-
-  return (
-    <form.AppField name='files'>
-      {field => <field.FormFileUploadField label='Receipts' accept={accept} upload={upload} {...props} />}
-    </form.AppField>
-  )
-}
+type UploadFieldProps = Partial<Omit<FormFileUploadFieldProps, 'label'>> & { initialFiles?: UploadedFile[] }
 
 // A user can pick any file through the picker's "All files" option, so the `accept` hint is not applied.
-const renderUploadField = (props: HarnessProps = {}) => ({
-  user: userEvent.setup({ applyAccept: false }),
-  ...render(<Harness {...props} />, { wrapper: LayerTestProvider }),
-})
+const renderUploadField = ({ initialFiles = [], ...props }: UploadFieldProps = {}) =>
+  renderFormField(
+    <FormFileUploadField label='Receipts' accept={[]} upload={toUploaded} {...props} />,
+    { defaultValue: initialFiles, userOptions: { applyAccept: false } },
+  )
 
 const selectFiles = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, ...names: string[]) => {
   const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]')
