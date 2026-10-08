@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
@@ -19,15 +20,17 @@ export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> &
   /** File extensions without the dot; empty accepts any file. */
   accept: ReadonlyArray<string>
   multiple?: boolean
+  /** The most files one upload may carry; a larger selection is rejected before uploading. */
+  maxFiles?: number
   /** Resolves with the files the server stored, or null when the upload failed. */
   upload: (files: ReadonlyArray<File>) => Promise<ReadonlyArray<UploadedFile> | null>
 }
 
 const getExtension = (fileName: string) => fileName.split('.').pop()?.toLowerCase() ?? ''
 
-export function FormFileUploadField({ accept, multiple = false, upload, ...props }: FormFileUploadFieldProps) {
+export function FormFileUploadField({ accept, multiple = false, maxFiles, upload, ...props }: FormFileUploadFieldProps) {
   const { t } = useTranslation()
-  const { formatList } = useIntlFormatter()
+  const { formatList, formatNumber } = useIntlFormatter()
   const field = useFieldContext<UploadedFile[]>()
   const [error, setError] = useState<string | undefined>(undefined)
   const [isUploading, setIsUploading] = useState(false)
@@ -41,25 +44,34 @@ export function FormFileUploadField({ accept, multiple = false, upload, ...props
 
   const onUpload = async (selected: ReadonlyArray<File>) => {
     const rejected = selected.filter(({ name }) => !isAccepted(name))
-    const toUpload = selected.filter(file => !rejected.includes(file))
+    const accepted = selected.filter(file => !rejected.includes(file))
+    const isOverLimit = maxFiles !== undefined && accepted.length > maxFiles
+    const toUpload = isOverLimit ? [] : accepted
 
     setIsUploading(true)
     const uploaded = toUpload.length > 0 ? await upload(toUpload).catch(() => null) : []
     setIsUploading(false)
 
-    if (rejected.length > 0) {
-      setError(t(
-        'blocks:Form.FormFileUploadField.error.files_not_added',
-        'Some files couldn’t be added. Upload a {{fileTypes}} file instead.',
-        { fileTypes: formatList(extensions.map(extension => extension.toUpperCase()), { type: 'disjunction' }) },
-      ))
-    }
-    else if (uploaded === null) {
-      setError(t('blocks:Form.FormFileUploadField.error.upload_failed', 'Some files couldn’t be uploaded. Try again.'))
-    }
-    else {
-      setError(undefined)
-    }
+    const errors = [
+      rejected.length > 0
+        ? t(
+          'blocks:Form.FormFileUploadField.error.files_not_added',
+          'Some files couldn’t be added. Upload a {{fileTypes}} file instead.',
+          { fileTypes: formatList(extensions.map(extension => extension.toUpperCase()), { type: 'disjunction' }) },
+        )
+        : null,
+      isOverLimit
+        ? tPlural(t, 'blocks:Form.FormFileUploadField.error.too_many_files', {
+          count: maxFiles,
+          displayCount: formatNumber(maxFiles),
+          one: 'Upload {{displayCount}} file at a time.',
+          other: 'Upload up to {{displayCount}} files at a time.',
+        })
+        : null,
+      uploaded === null ? t('blocks:Form.FormFileUploadField.error.upload_failed', 'Some files couldn’t be uploaded. Try again.') : null,
+    ].filter(message => message !== null)
+
+    setError(errors.length > 0 ? errors.join(' ') : undefined)
 
     if (!uploaded || uploaded.length === 0) return
 

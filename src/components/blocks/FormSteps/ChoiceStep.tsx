@@ -1,6 +1,8 @@
 import { Fragment, type ReactNode } from 'react'
 import { useStore } from '@tanstack/react-form'
 
+import { asMutable } from '@utils/shared/array/asMutable'
+import { getPickedValue } from '@utils/shared/form/pickedValue'
 import { type ChipSize } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { VStack } from '@ui/Stack/Stack'
@@ -17,6 +19,7 @@ export type ChoiceStepValues = {
 export type ChoiceStepSearch = {
   options: ReadonlyArray<ComboBoxOption>
   isLoading: boolean
+  errorMessage?: string
   onSearchQueryChange: (query: string) => void
   placeholder?: string
   allowCreate?: boolean
@@ -41,8 +44,6 @@ type ChoiceStepProps = {
 
 const DEFAULT_VALUES: ChoiceStepValues = { choice: null, selection: null }
 
-const getPick = ({ choice, selection }: ChoiceStepValues) => choice ?? (selection && !selection.isCreated ? selection.value : null)
-
 const DEFAULT_PROPS: ChoiceStepProps = { label: '', options: [] }
 
 /** Chips and an optional search over one answer; picking from one clears the other. */
@@ -51,7 +52,7 @@ export const ChoiceStep = withFieldGroup({
   props: DEFAULT_PROPS,
   render: function Render({ group, label, prompt, options, size, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
     const accessibleLabel = prompt ?? label
-    const pick = useStore(group.store, state => getPick(state.values))
+    const pick = useStore(group.store, state => getPickedValue(state.values))
 
     const notifyPick = (value: string | null) => {
       if (value !== pick) onPickChange?.(value)
@@ -69,7 +70,7 @@ export const ChoiceStep = withFieldGroup({
                   showLabel={false}
                   size={size}
                   isDisabled={isDisabled}
-                  options={[...options]}
+                  options={asMutable(options)}
                   onSelect={(value) => {
                     group.setFieldValue('selection', null)
                     notifyPick(value)

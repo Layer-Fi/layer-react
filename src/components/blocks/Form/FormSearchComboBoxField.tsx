@@ -19,6 +19,8 @@ export type FormSearchComboBoxFieldProps = Pick<CommonFormFieldProps, 'label' | 
   placeholder?: string
   allowCreate?: boolean
   formatCreateLabel?: (text: string) => ReactNode
+  /** Shown under the field when the search itself failed. */
+  errorMessage?: string
   onSelect?: (selection: SearchComboBoxSelection) => void
 }
 
@@ -29,6 +31,7 @@ export function FormSearchComboBoxField({
   placeholder,
   allowCreate = false,
   formatCreateLabel,
+  errorMessage,
   onSelect,
   isDisabled,
   showFieldError = true,
@@ -91,7 +94,8 @@ export function FormSearchComboBoxField({
             />
           ))}
       </ComboBoxField>
-      {showFieldError ? <FieldErrors errors={meta.errors} /> : null}
+      {errorMessage ? <FieldErrors errors={[errorMessage]} /> : null}
+      {!errorMessage && showFieldError ? <FieldErrors errors={meta.errors} /> : null}
     </>
   )
 }

@@ -5,7 +5,7 @@ import { withFieldGroup } from '@blocks/Form/useForm'
 
 export type UploadStepValues = { files: UploadedFile[] }
 
-type UploadStepProps = Pick<FormFileUploadFieldProps, 'accept' | 'multiple' | 'upload' | 'isDisabled'> & {
+type UploadStepProps = Pick<FormFileUploadFieldProps, 'accept' | 'multiple' | 'maxFiles' | 'upload' | 'isDisabled'> & {
   /** The accessible name; shown only when there is no prompt. */
   label: string
   prompt?: string | null
@@ -18,7 +18,7 @@ const DEFAULT_PROPS: UploadStepProps = { label: '', accept: [], upload: () => Pr
 export const UploadStep = withFieldGroup({
   defaultValues: DEFAULT_VALUES,
   props: DEFAULT_PROPS,
-  render: function Render({ group, label, prompt, accept, multiple, upload, isDisabled }) {
+  render: function Render({ group, label, prompt, accept, multiple, maxFiles, upload, isDisabled }) {
     return (
       <VStack gap='xs'>
         {prompt ? <P size='sm'>{prompt}</P> : null}
@@ -29,6 +29,7 @@ export const UploadStep = withFieldGroup({
               showLabel={false}
               accept={accept}
               multiple={multiple}
+              maxFiles={maxFiles}
               upload={upload}
               isDisabled={isDisabled}
             />

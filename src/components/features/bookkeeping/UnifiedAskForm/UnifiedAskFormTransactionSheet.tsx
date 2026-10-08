@@ -27,8 +27,11 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
   const fields = `pages.${pageId}.${step.id}` as const
   const rows = useStore(form.store, state => state.values.pages[pageId]?.[step.id]?.rows ?? [])
 
+  const rowIndexById = new Map(rows.map(({ transactionId }, index) => [transactionId, index]))
+
   const sheetRows = transactions.flatMap((transaction) => {
-    const row = rows.find(({ transactionId }) => transactionId === transaction.id)
+    const index = rowIndexById.get(transaction.id)
+    const row = index === undefined ? undefined : rows[index]
     if (!row) return []
 
     const isComplete = isRowComplete(step, row)
@@ -52,7 +55,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
         total: formatNumber(sheetRows.length),
       })}
       renderEditor={(transactionId, { advance }) => {
-        const index = rows.findIndex(row => row.transactionId === transactionId)
+        const index = rowIndexById.get(transactionId) ?? -1
 
         return (
           <UnifiedAskFormInput

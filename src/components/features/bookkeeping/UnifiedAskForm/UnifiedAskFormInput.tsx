@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
 import { TextStep } from '@blocks/FormSteps/TextStep'
+import { UnifiedAskFormSearchChoice } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormSearchChoice'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
-import { useUnifiedAskFormSearch } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
+import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
 import { type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
@@ -33,38 +34,40 @@ type UnifiedAskFormInputProps = {
 /** A choice, search or text answer; the parts of a step that a follow-up or a sheet row can also hold. */
 export const UnifiedAskFormInput = ({ form, fields, followUpFields, taskId, step, prompt, onSelect }: UnifiedAskFormInputProps) => {
   const { t } = useTranslation()
-  const search = useUnifiedAskFormSearch(taskId, step)
   const options = getStepOptions(step)
+  const searchConfig = getSearchConfig(step)
+  // Hooks can't be conditional, so without a follow-up path this binds to the step itself and is never used.
   const followUp = useFieldGroup({ form, fields: followUpFields ?? fields, defaultValues: EMPTY_FOLLOW_UP, formComponents: {} })
 
-  if (options.length > 0 || search) {
-    return (
-      <ChoiceStep
-        form={form}
-        fields={fields}
-        label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormInput.label.options', 'Options')}
-        prompt={prompt}
-        options={options.map(({ value, label }) => ({ value, label }))}
-        search={search}
-        onSelect={onSelect}
-        onPickChange={followUpFields
-          ? () => {
-            followUp.setFieldValue('choice', null)
-            followUp.setFieldValue('selection', null)
-            followUp.setFieldValue('text', '')
-          }
-          : undefined}
-        renderFollowUp={followUpFields
-          ? (value) => {
-            const followUpStep = findFollowUp(step, value)
+  if (options.length > 0 || searchConfig) {
+    const choiceProps = {
+      form,
+      fields,
+      label: t('bookkeeping:UnifiedAskForm.UnifiedAskFormInput.label.options', 'Options'),
+      prompt,
+      options: options.map(({ value, label }) => ({ value, label })),
+      onSelect,
+      onPickChange: followUpFields
+        ? () => {
+          followUp.setFieldValue('choice', null, { dontValidate: true })
+          followUp.setFieldValue('selection', null, { dontValidate: true })
+          followUp.setFieldValue('text', '')
+        }
+        : undefined,
+      renderFollowUp: followUpFields
+        ? (value: string) => {
+          const followUpStep = findFollowUp(step, value)
 
-            return followUpStep
-              ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} />
-              : null
-          }
-          : undefined}
-      />
-    )
+          return followUpStep
+            ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} />
+            : null
+        }
+        : undefined,
+    }
+
+    return searchConfig
+      ? <UnifiedAskFormSearchChoice {...choiceProps} taskId={taskId} config={searchConfig} />
+      : <ChoiceStep {...choiceProps} />
   }
 
   const isText = step.type === AskFormStepType.Text

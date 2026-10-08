@@ -6,6 +6,9 @@ import { UploadStep } from '@blocks/FormSteps/UploadStep'
 import { type AskFormStepPath } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 
+// The API stores at most this many files per upload request.
+const MAX_FILES_PER_UPLOAD = 10
+
 type UnifiedAskFormUploadProps = {
   form: UnifiedAskFormApi
   fields: AskFormStepPath
@@ -32,6 +35,7 @@ export const UnifiedAskFormUpload = ({ form, fields, taskId, prompt, accept, mul
       prompt={prompt}
       accept={accept}
       multiple={multiple}
+      maxFiles={MAX_FILES_PER_UPLOAD}
       upload={upload}
     />
   )

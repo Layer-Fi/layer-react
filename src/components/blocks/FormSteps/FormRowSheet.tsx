@@ -26,6 +26,10 @@ type FormRowSheetProps = {
 /** One editor open at a time over a list of rows, each answered on its own. */
 export const FormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEditor }: FormRowSheetProps) => {
   const [openId, setOpenId] = useState(() => rows.find(({ isComplete }) => !isComplete)?.id ?? null)
+  // A refetch can drop the open row; fall back to the first unanswered one rather than leaving every row closed.
+  const currentOpenId = openId !== null && rows.some(({ id }) => id === openId)
+    ? openId
+    : rows.find(({ isComplete }) => !isComplete)?.id ?? null
 
   // The row just answered may not have re-rendered as complete yet, so it is skipped explicitly.
   const advanceFrom = (rowId: string) =>
@@ -36,7 +40,7 @@ export const FormRowSheet = ({ rows, prompt, countLabel, isDisabled, renderEdito
       {prompt ? <P size='sm' pi='md'>{prompt}</P> : null}
       <VStack className='Layer__FormRowSheet'>
         {rows.map(({ id, summary, answerLabel }) => {
-          const isOpen = openId === id
+          const isOpen = currentOpenId === id
 
           return (
             <VStack key={id} className='Layer__FormRowSheet__Row' {...toDataProperties({ open: isOpen })} pi='md'>

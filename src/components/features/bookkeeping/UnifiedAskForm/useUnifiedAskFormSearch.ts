@@ -12,15 +12,17 @@ import { type AskFormStepFields } from '@features/bookkeeping/UnifiedAskForm/uti
 
 const toComboBoxOption = ({ id, label }: UnifiedSearchResult): ComboBoxOption => ({ value: id, label })
 
-const KNOWN_ENTITIES: Partial<Record<string, AskFormSearchEntity>> = {
-  [AskFormSearchEntity.Category]: AskFormSearchEntity.Category,
-  [AskFormSearchEntity.Vendor]: AskFormSearchEntity.Vendor,
-  [AskFormSearchEntity.Customer]: AskFormSearchEntity.Customer,
+const isKnownEntity = (entity: string): entity is AskFormSearchEntity =>
+  Object.values<string>(AskFormSearchEntity).includes(entity)
+
+export type AskFormSearchConfig = {
+  entity: string
+  allowCreate: boolean
+  placeholder: string | null
 }
 
-const toEntityCondition = (entity: string) => KNOWN_ENTITIES[entity] ?? 'other'
-
-const getSearchConfig = (step: AskFormStepFields) => {
+/** How a step searches, or null when it has no search. */
+export const getSearchConfig = (step: AskFormStepFields): AskFormSearchConfig | null => {
   switch (step.type) {
     case AskFormStepType.Search:
     case AskFormStepType.SearchWithFreeform:
@@ -38,33 +40,30 @@ const getSearchConfig = (step: AskFormStepFields) => {
   }
 }
 
-/** Search props for the step's `ChoiceStep`, or undefined when the step has no search. */
-export const useUnifiedAskFormSearch = (taskId: string, step: AskFormStepFields): ChoiceStepSearch | undefined => {
+/** Search props for a searchable step's `ChoiceStep`. */
+export const useUnifiedAskFormSearch = (taskId: string, { entity, allowCreate, placeholder }: AskFormSearchConfig): ChoiceStepSearch => {
   const { t } = useTranslation()
-  const config = getSearchConfig(step)
-  const entity = config?.entity ?? AskFormSearchEntity.Category
-
   const { searchQuery, isSearchEnabled, searchComboBoxProps } = useSearchComboBox()
-  const { trigger: search, data: results, isMutating } = useGetUnifiedSearch()
-  const shouldSearch = config !== null && isSearchEnabled
+  const { trigger: search, data: results, isMutating, isError } = useGetUnifiedSearch()
 
   useEffect(() => {
-    if (shouldSearch) search({ entity, q: searchQuery, taskId }).catch(() => undefined)
-  }, [entity, search, searchQuery, shouldSearch, taskId])
+    if (isSearchEnabled) search({ entity, q: searchQuery, taskId }).catch(() => undefined)
+  }, [entity, isSearchEnabled, search, searchQuery, taskId])
 
   const options = useMemo(() => (isSearchEnabled ? (results ?? []).map(toComboBoxOption) : []), [isSearchEnabled, results])
-
-  if (!config) return undefined
 
   return {
     options,
     isLoading: isMutating,
+    errorMessage: isError
+      ? t('bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.error.search_failed', 'Search didn’t work. Try again.')
+      : undefined,
     onSearchQueryChange: searchComboBoxProps.onSearchQueryChange,
-    allowCreate: config.allowCreate,
+    allowCreate,
     formatCreateLabel: text =>
       t('bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.action.use_typed_value', 'Use “{{text}}”', { text }),
-    placeholder: config.placeholder ?? tConditional(t, 'bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.placeholder.search_entity', {
-      condition: toEntityCondition(entity),
+    placeholder: placeholder ?? tConditional(t, 'bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.placeholder.search_entity', {
+      condition: isKnownEntity(entity) ? entity : 'other',
       cases: {
         [AskFormSearchEntity.Category]: 'Search categories…',
         [AskFormSearchEntity.Vendor]: 'Search vendors…',
