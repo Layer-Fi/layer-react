@@ -5,11 +5,18 @@ import { describe, expect, it } from 'vitest'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
-import { makeCounterpartyAskTask } from '@fixtures/bookkeeping/counterpartyAskTasks'
+import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
+import { makeCounterpartyTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
+import { askTransactions, fixtureId } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const renderItem = () => {
-  const task = makeCounterpartyAskTask() as UserVisibleTask
+  const task = makeCounterpartyTask({
+    id: fixtureId('901'),
+    counterparty: 'Costco',
+    suggestions: [bankTransactionCategories.officeExpenses, bankTransactionCategories.meals],
+    transactions: askTransactions(1, [{ id: 'a01', day: 14, amount: -30774, description: 'COSTCO WHSE #1042' }]),
+  }) as UserVisibleTask
 
   return {
     user: userEvent.setup(),
@@ -17,19 +24,15 @@ const renderItem = () => {
   }
 }
 
-const expandedBody = () => document.querySelector('.Layer__tasks-list-item__body--expanded')
-
 describe('TasksListItem', () => {
   it('keeps the card expanded when the header back button is pressed', async () => {
     const { user } = renderItem()
 
-    expect(expandedBody()).not.toBeNull()
-
     await user.click(screen.getByRole('radio', { name: 'Business Meals' }))
+    await user.click(screen.getByRole('button', { name: 'Next' }))
     await user.click(screen.getByRole('button', { name: 'Back' }))
 
     expect(screen.getByRole('radio', { name: /Something else/ })).toBeInTheDocument()
-    expect(expandedBody()).not.toBeNull()
   })
 
   it('still collapses when the header itself is clicked', async () => {
@@ -37,6 +40,6 @@ describe('TasksListItem', () => {
 
     await user.click(screen.getByText('Costco purchases'))
 
-    expect(expandedBody()).toBeNull()
+    expect(screen.queryByRole('radio', { name: 'Business Meals' })).not.toBeInTheDocument()
   })
 })
