@@ -7,7 +7,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { FormRowSheet } from '@blocks/FormSteps/FormRowSheet'
 import { UnifiedAskFormInput } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormInput'
 import { UnifiedAskFormTransactionCells } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTransactionCells'
-import { findOption } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { findFollowUp } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
 import { isRowComplete } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 import { useAskFormAnswerLabel } from '@features/bookkeeping/UnifiedAskForm/useAskFormAnswerLabel'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -64,7 +64,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
             step={step}
             prompt={null}
             onSelect={(value) => {
-              if (!findOption(step, value)?.followUp) advance()
+              if (!findFollowUp(step, value)) advance()
             }}
           />
         )
