@@ -1,7 +1,7 @@
 import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
 import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
-import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import { totalRowLabel } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import {

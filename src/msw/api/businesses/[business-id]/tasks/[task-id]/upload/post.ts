@@ -2,6 +2,7 @@ import { type FileMetadata } from '@internal-types/shared/fileUpload'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
+import { readRequestFiles } from '@msw/utils/request'
 
 const toFileMetadata = (file: File): FileMetadata => ({
   type: 'File_Metadata',
@@ -17,10 +18,7 @@ export const post = createMockEndpoint({
   resolve: async ({ override, request }: { override?: FileMetadata, request: Request }) => {
     if (override) return apiData(override)
 
-    const formData = await request.formData()
-    const files = formData.getAll('file').filter((entry): entry is File => entry instanceof File)
-
-    const [firstFile] = files
+    const [firstFile] = await readRequestFiles(request)
 
     return apiData(toFileMetadata(firstFile ?? new File([], 'upload')))
   },

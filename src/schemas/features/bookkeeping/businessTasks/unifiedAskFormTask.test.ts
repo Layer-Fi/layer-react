@@ -177,7 +177,7 @@ describe('UnifiedAskFormSubmissionSchema', () => {
         category: { choice: 'mix' },
         rows: {
           transactionAnswers: [
-            { transactionId: 'txn-1', answer: { choice: 'acct_office' } },
+            { transactionId: 'txn-1', answer: { choice: 'acct_00000000-0000-4000-8000-0000000000a1' } },
             { transactionId: 'txn-2', answer: { choice: 'not_sure', followUp: { text: 'Gas' } } },
           ],
         },
@@ -189,7 +189,7 @@ describe('UnifiedAskFormSubmissionSchema', () => {
         category: { choice: 'mix' },
         rows: {
           transaction_answers: [
-            { transaction_id: 'txn-1', answer: { choice: 'acct_office' } },
+            { transaction_id: 'txn-1', answer: { choice: 'acct_00000000-0000-4000-8000-0000000000a1' } },
             { transaction_id: 'txn-2', answer: { choice: 'not_sure', follow_up: { text: 'Gas' } } },
           ],
         },

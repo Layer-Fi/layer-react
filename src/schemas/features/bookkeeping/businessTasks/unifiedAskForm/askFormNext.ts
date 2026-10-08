@@ -33,4 +33,5 @@ export const AskFormNextSchema = Schema.Union(
 export const AskFormStaticNextSchema = Schema.Union(AskFormNextPageSchema, AskFormNextSubmitSchema)
 
 export type AskFormNext = typeof AskFormNextSchema.Type
+export type AskFormStaticNext = typeof AskFormStaticNextSchema.Type
 export type AskFormNextServer = typeof AskFormNextServerSchema.Type

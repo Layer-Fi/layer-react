@@ -1,10 +1,12 @@
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type AskForm, type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
-import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { ACCOUNT_OPTION_PREFIX } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { type AskFormNext, AskFormNextKind, type AskFormStaticNext } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import {
   AskFormCategoryScope,
   type AskFormFollowUp,
   type AskFormOption,
+  AskFormSearchEntity,
   type AskFormStep,
   AskFormStepType,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
@@ -36,11 +38,19 @@ export const COUNTERPARTY_ASK_FORM_VALUES = {
   ask: 'ask',
 } as const
 
+export const SEARCH_ID_PREFIXES: Record<AskFormSearchEntity, string> = {
+  [AskFormSearchEntity.Category]: ACCOUNT_OPTION_PREFIX,
+  [AskFormSearchEntity.Vendor]: 'vend_',
+  [AskFormSearchEntity.Customer]: 'cust_',
+}
+
+export const toSearchId = (entity: AskFormSearchEntity, id: string) => `${SEARCH_ID_PREFIXES[entity]}${id}`
+
 export const fixtureId = (suffix: string) => `00000000-0000-4000-8000-${suffix.padStart(12, '0')}`
 
-export const SUBMIT: AskFormNext = { kind: AskFormNextKind.Submit, review: false }
+export const SUBMIT: AskFormStaticNext = { kind: AskFormNextKind.Submit, review: false }
 
-export const toPage = (pageId: string): AskFormNext => ({ kind: AskFormNextKind.Page, pageId })
+export const toPage = (pageId: string): AskFormStaticNext => ({ kind: AskFormNextKind.Page, pageId })
 
 export const askFormNextPageUrl = (taskId: string) =>
   `/v1/businesses/${makeBusiness().id}/unified-tasks/${taskId}/next-page?form_version=${UNIFIED_ASK_FORM_VERSION}`
@@ -53,7 +63,7 @@ export const choiceOptions = (labelsByValue: Record<string, string>): AskFormOpt
   Object.entries(labelsByValue).map(([value, label]) => ({ value, label }))
 
 export const categoryOption = ({ id, displayName }: BankTransactionCategory): AskFormOption => ({
-  value: `acct_${id}`,
+  value: toSearchId(AskFormSearchEntity.Category, id),
   label: displayName,
 })
 

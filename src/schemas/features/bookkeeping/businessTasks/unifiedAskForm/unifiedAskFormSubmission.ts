@@ -1,9 +1,11 @@
 import { Schema } from 'effect'
 
-import { AskFormAnswersSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormAnswersRequestSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 
 export const UnifiedAskFormSubmissionSchema = Schema.Struct({
-  answers: AskFormAnswersSchema,
+  answers: AskFormAnswersRequestSchema.pipe(
+    Schema.filter(answers => Object.keys(answers).length > 0 || 'answers must not be empty'),
+  ),
 })
 
 export type UnifiedAskFormSubmission = typeof UnifiedAskFormSubmissionSchema.Type

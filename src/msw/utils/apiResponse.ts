@@ -3,6 +3,10 @@ import { Schema } from 'effect'
 /** Layer API responses wrap their payload in a top-level `data` envelope. */
 export const apiData = <T>(data: T) => ({ data })
 
+/** Layer API errors wrap a single error in a top-level `errors` array. */
+export const apiError = (description: string, { type, errorEnum }: { type: string, errorEnum?: string }) =>
+  ({ errors: [{ type, description, error_enum: errorEnum }] })
+
 const DEFAULT_PAGE_SIZE = 100
 
 // Opaque wire cursor <-> the page offset it represents. Any string that
@@ -32,6 +36,12 @@ const encodeCursor = Schema.encodeSync(CursorSchema)
 
 const decodeCursor = (cursor: string | null) => cursor == null ? 0 : decodeCursorParam(cursor)
 
+export const readLimit = (request: Request, defaultLimit: number) => {
+  const requestedLimit = Number(new URL(request.url).searchParams.get('limit'))
+
+  return Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : defaultLimit
+}
+
 export const paginatedApiData = <T>(
   items: readonly T[],
   request: Request,
@@ -39,8 +49,7 @@ export const paginatedApiData = <T>(
 ) => {
   const params = new URL(request.url).searchParams
 
-  const requestedLimit = Number(params.get('limit'))
-  const pageSize = Number.isFinite(requestedLimit) && requestedLimit > 0 ? requestedLimit : defaultPageSize
+  const pageSize = readLimit(request, defaultPageSize)
 
   const start = decodeCursor(params.get('cursor'))
   const page = items.slice(start, start + pageSize)

@@ -138,6 +138,30 @@ const requestWithFormData = (method: 'POST' | 'PATCH') =>
 export const postWithFormData = requestWithFormData('POST')
 export const patchWithFormData = requestWithFormData('PATCH')
 
+export const postFormData =
+  <
+    Return extends Record<string, unknown>,
+    Body extends Record<string, unknown>,
+    Params extends Record<string, string | undefined>,
+  >(
+    url: (params: Params) => string,
+    toFormData: (body: Body) => FormData,
+  ) =>
+    (
+      baseUrl: string,
+      accessToken: string | undefined,
+      options?: {
+        params?: Params
+        body?: Body
+      },
+    ): Promise<Return> =>
+      postWithFormData<Return>(
+        url(options?.params || ({} as Params)),
+        toFormData(options?.body || ({} as Body)),
+        baseUrl,
+        accessToken,
+      )
+
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {
     const errors = await tryToReadErrorsFromResponse(res)
