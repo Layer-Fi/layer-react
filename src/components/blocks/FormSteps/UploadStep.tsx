@@ -1,7 +1,6 @@
-import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
 import { type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
 import { withFieldGroup } from '@blocks/Form/useForm'
+import { FormStepShell } from '@blocks/FormSteps/FormStepShell'
 
 export type UploadStepValues = { files: UploadedFile[] }
 
@@ -20,8 +19,7 @@ export const UploadStep = withFieldGroup({
   props: DEFAULT_PROPS,
   render: function Render({ group, label, prompt, accept, multiple, maxFiles, upload, isDisabled }) {
     return (
-      <VStack gap='xs'>
-        {prompt ? <P size='sm'>{prompt}</P> : null}
+      <FormStepShell prompt={prompt}>
         <group.AppField name='files'>
           {field => (
             <field.FormFileUploadField
@@ -35,7 +33,7 @@ export const UploadStep = withFieldGroup({
             />
           )}
         </group.AppField>
-      </VStack>
+      </FormStepShell>
     )
   },
 })

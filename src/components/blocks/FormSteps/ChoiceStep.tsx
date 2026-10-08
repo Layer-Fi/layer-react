@@ -5,11 +5,10 @@ import { asMutable } from '@utils/shared/array/asMutable'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
 import { type ChipSize } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
-import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
 import { type SearchComboBoxSelection } from '@blocks/Form/FormSearchComboBoxField'
 import { withFieldGroup } from '@blocks/Form/useForm'
+import { FormStepShell } from '@blocks/FormSteps/FormStepShell'
 
 export type ChoiceStepValues = {
   choice: string | null
@@ -59,8 +58,7 @@ export const ChoiceStep = withFieldGroup({
     }
 
     return (
-      <VStack gap='xs'>
-        {prompt ? <P size='sm'>{prompt}</P> : null}
+      <FormStepShell prompt={prompt}>
         {options.length > 0
           ? (
             <group.AppField name='choice'>
@@ -101,7 +99,7 @@ export const ChoiceStep = withFieldGroup({
           )
           : null}
         {renderFollowUp && pick ? <Fragment key={pick}>{renderFollowUp(pick)}</Fragment> : null}
-      </VStack>
+      </FormStepShell>
     )
   },
 })

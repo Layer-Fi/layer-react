@@ -1,6 +1,5 @@
-import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
 import { withFieldGroup } from '@blocks/Form/useForm'
+import { FormStepShell } from '@blocks/FormSteps/FormStepShell'
 
 export type TextStepValues = { text: string }
 
@@ -24,14 +23,13 @@ export const TextStep = withFieldGroup({
     const accessibleLabel = prompt ?? label
 
     return (
-      <VStack gap='xs'>
-        {prompt ? <P size='sm'>{prompt}</P> : null}
+      <FormStepShell prompt={prompt}>
         <group.AppField name='text'>
           {field => (multiline
             ? <field.FormTextAreaField label={accessibleLabel} showLabel={false} placeholder={placeholder} isDisabled={isDisabled} />
             : <field.FormTextField label={accessibleLabel} showLabel={false} placeholder={placeholder} isDisabled={isDisabled} />)}
         </group.AppField>
-      </VStack>
+      </FormStepShell>
     )
   },
 })
