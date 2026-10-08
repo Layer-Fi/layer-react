@@ -55,9 +55,8 @@ export const useUnifiedAskFormSearch = (taskId: string, { entity, allowCreate, p
   return {
     options,
     isLoading: isMutating,
-    errorMessage: isError
-      ? t('bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.error.search_failed', 'Search didn’t work. Try again.')
-      : undefined,
+    isSearchError: isError,
+    searchErrorMessage: t('bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.error.search_failed', 'Search didn’t work. Try again.'),
     onSearchQueryChange: searchComboBoxProps.onSearchQueryChange,
     allowCreate,
     formatCreateLabel: text =>

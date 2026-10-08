@@ -18,7 +18,8 @@ export type ChoiceStepValues = {
 export type ChoiceStepSearch = {
   options: ReadonlyArray<ComboBoxOption>
   isLoading: boolean
-  errorMessage?: string
+  isSearchError?: boolean
+  searchErrorMessage?: string
   onSearchQueryChange: (query: string) => void
   placeholder?: string
   allowCreate?: boolean

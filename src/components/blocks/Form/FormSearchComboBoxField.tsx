@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
-import { SearchComboBox } from '@ui/ComboBox/SearchComboBox'
+import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { FieldErrors } from '@blocks/Form/FieldErrors'
@@ -19,8 +18,9 @@ export type FormSearchComboBoxFieldProps = Pick<CommonFormFieldProps, 'label' | 
   placeholder?: string
   allowCreate?: boolean
   formatCreateLabel?: (text: string) => ReactNode
-  /** Shown under the field when the search itself failed. */
-  errorMessage?: string
+  /** The search request failed; `searchErrorMessage` shows in the dropdown. */
+  isSearchError?: boolean
+  searchErrorMessage?: string
   onSelect?: (selection: SearchComboBoxSelection) => void
 }
 
@@ -31,7 +31,8 @@ export function FormSearchComboBoxField({
   placeholder,
   allowCreate = false,
   formatCreateLabel,
-  errorMessage,
+  isSearchError = false,
+  searchErrorMessage,
   onSelect,
   isDisabled,
   showFieldError = true,
@@ -45,57 +46,47 @@ export function FormSearchComboBoxField({
     onSelect?.(selection)
   }
 
-  const onSelectedValueChange = (option: ComboBoxOption | null) => {
-    if (option) select({ value: option.value, label: option.label })
-  }
-
-  const selectedValue = value ? { value: value.value, label: value.label } : null
-
   const isValidNewOption = (text: string) => {
     const typed = text.trim().toLocaleLowerCase()
     return !isLoading && typed.length > 0 && !options.some(({ label }) => label.trim().toLocaleLowerCase() === typed)
   }
 
+  const creatableProps = allowCreate
+    ? {
+      isCreatable: true as const,
+      onCreateOption: (text: string) => select({ value: text, label: text, isCreated: true }),
+      isValidNewOption,
+      formatCreateLabel,
+      createOptionPosition: 'last' as const,
+    }
+    : { isCreatable: false as const }
+
   return (
     <>
       <ComboBoxField {...props}>
-        {controlProps => (allowCreate
-          ? (
-            <CreatableComboBox
-              {...controlProps}
-              placeholder={placeholder}
-              options={options}
-              selectedValue={selectedValue}
-              onSelectedValueChange={onSelectedValueChange}
-              isClearable={false}
-              isDisabled={isDisabled}
-              isError={!meta.isValid}
-              isLoading={isLoading}
-              filterOption={null}
-              onInputValueChange={onSearchQueryChange}
-              onCreateOption={text => select({ value: text, label: text, isCreated: true })}
-              isValidNewOption={isValidNewOption}
-              formatCreateLabel={formatCreateLabel}
-              createOptionPosition='last'
-            />
-          )
-          : (
-            <SearchComboBox
-              {...controlProps}
-              placeholder={placeholder}
-              options={options}
-              selectedValue={selectedValue}
-              onSelectedValueChange={onSelectedValueChange}
-              isClearable={false}
-              isDisabled={isDisabled}
-              isError={!meta.isValid}
-              isLoading={isLoading}
-              onSearchQueryChange={onSearchQueryChange}
-            />
-          ))}
+        {controlProps => (
+          <MaybeCreatableComboBox
+            {...controlProps}
+            {...creatableProps}
+            placeholder={placeholder}
+            options={options}
+            selectedValue={value ? { value: value.value, label: value.label } : null}
+            onSelectedValueChange={(option) => {
+              if (option) select({ value: option.value, label: option.label })
+            }}
+            onInputValueChange={onSearchQueryChange}
+            // Results come from the server, so the default label filter would hide matches on other fields.
+            filterOption={null}
+            isClearable={false}
+            isDisabled={isDisabled}
+            isInvalid={!meta.isValid}
+            isError={isSearchError}
+            isLoading={isLoading}
+            slots={searchErrorMessage ? { ErrorMessage: searchErrorMessage } : undefined}
+          />
+        )}
       </ComboBoxField>
-      {errorMessage ? <FieldErrors errors={[errorMessage]} /> : null}
-      {!errorMessage && showFieldError ? <FieldErrors errors={meta.errors} /> : null}
+      {showFieldError ? <FieldErrors errors={meta.errors} /> : null}
     </>
   )
 }
