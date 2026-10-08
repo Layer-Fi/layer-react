@@ -12,14 +12,10 @@ import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[busine
 import { usePostAskFormNextPage } from '@api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useRawAppForm } from '@blocks/Form/useForm'
-import {
-  getPageNext,
-  isPageComplete,
-  syncSheetRows,
-  toAnswers,
-  toFormValues,
-  type UnifiedAskFormValues,
-} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
+import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
+import { isPageComplete } from '@features/bookkeeping/UnifiedAskForm/utils/completion'
+import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { getPageNext } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 export type UnifiedAskFormView = { kind: 'PAGE', pageId: string } | { kind: 'REVIEW' }
 

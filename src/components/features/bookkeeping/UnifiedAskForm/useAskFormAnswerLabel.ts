@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
-import {
-  type AskFormAnswerValues,
-  type AskFormInputValues,
-  type AskFormStepValues,
-} from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
+import { type AskFormAnswerValues, type AskFormInputValues, type AskFormStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
 
