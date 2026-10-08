@@ -10,6 +10,7 @@ import {
   isTransactionAnswers,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { getPickedValue } from '@utils/shared/form/pickedValue'
 import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 export type AskFormSelection = { value: string, label: string, isCreated?: boolean }
@@ -36,12 +37,6 @@ export type AskFormPageValues = Record<string, AskFormStepValues>
 
 /** Grouped by page so each page validates and continues through its own `FormGroup`. */
 export type UnifiedAskFormValues = { pages: Record<string, AskFormPageValues> }
-
-/** The option or search result the customer picked, in the same order `toInputAnswer` posts it; a typed-in search answer is not a pick. */
-export const getPickedValue = ({ choice, selection }: AskFormInputValues) => {
-  if (selection) return selection.isCreated ? null : selection.value
-  return choice
-}
 
 export const getFollowUpStep = (step: AskFormStepFields, values: AskFormInputValues) => findFollowUp(step, getPickedValue(values))
 
