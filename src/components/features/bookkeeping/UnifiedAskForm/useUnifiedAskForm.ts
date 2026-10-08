@@ -157,6 +157,11 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       return
     }
 
+    if (Object.keys(toAnswers(pagesOnPath, form.state.values, transactionIds)).length === 0) {
+      navigation.goForward(toPageView(FALLBACK_PAGE_ID))
+      return
+    }
+
     submitPathRef.current = pagesOnPath
     void form.handleSubmit()
   }, [form, navigation, toPageView, transactionIds])
