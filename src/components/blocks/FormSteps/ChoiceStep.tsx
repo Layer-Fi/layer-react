@@ -1,4 +1,5 @@
-import { type ReactNode } from 'react'
+import { Fragment, type ReactNode } from 'react'
+import { useStore } from '@tanstack/react-form'
 
 import { type ChipSize } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
@@ -32,11 +33,15 @@ type ChoiceStepProps = {
   isDisabled?: boolean
   /** Fires for every chip press and search pick, including a repeat of the current answer. */
   onSelect?: (value: string) => void
-  /** Rendered under the step for the current chip choice, such as that option's follow-up. */
-  renderFollowUp?: (choice: string) => ReactNode
+  /** Fires when the picked value changes, such as to clear the previous option's follow-up. */
+  onPickChange?: (value: string | null) => void
+  /** Rendered under the step for the picked chip or search result, such as that option's follow-up. */
+  renderFollowUp?: (value: string) => ReactNode
 }
 
 const DEFAULT_VALUES: ChoiceStepValues = { choice: null, selection: null }
+
+const getPick = ({ choice, selection }: ChoiceStepValues) => choice ?? (selection && !selection.isCreated ? selection.value : null)
 
 const DEFAULT_PROPS: ChoiceStepProps = { label: '', options: [] }
 
@@ -44,8 +49,13 @@ const DEFAULT_PROPS: ChoiceStepProps = { label: '', options: [] }
 export const ChoiceStep = withFieldGroup({
   defaultValues: DEFAULT_VALUES,
   props: DEFAULT_PROPS,
-  render: function Render({ group, label, prompt, options, size, search, isDisabled, onSelect, renderFollowUp }) {
+  render: function Render({ group, label, prompt, options, size, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
     const accessibleLabel = prompt ?? label
+    const pick = useStore(group.store, state => getPick(state.values))
+
+    const notifyPick = (value: string | null) => {
+      if (value !== pick) onPickChange?.(value)
+    }
 
     return (
       <VStack gap='xs'>
@@ -62,6 +72,7 @@ export const ChoiceStep = withFieldGroup({
                   options={[...options]}
                   onSelect={(value) => {
                     group.setFieldValue('selection', null)
+                    notifyPick(value)
                     onSelect?.(value)
                   }}
                 />
@@ -80,6 +91,7 @@ export const ChoiceStep = withFieldGroup({
                   isDisabled={isDisabled}
                   onSelect={(selection) => {
                     group.setFieldValue('choice', null)
+                    notifyPick(selection.isCreated ? null : selection.value)
                     onSelect?.(selection.value)
                   }}
                 />
@@ -87,13 +99,7 @@ export const ChoiceStep = withFieldGroup({
             </group.AppField>
           )
           : null}
-        {renderFollowUp
-          ? (
-            <group.Subscribe selector={state => state.values.choice}>
-              {choice => (choice ? renderFollowUp(choice) : null)}
-            </group.Subscribe>
-          )
-          : null}
+        {renderFollowUp && pick ? <Fragment key={pick}>{renderFollowUp(pick)}</Fragment> : null}
       </VStack>
     )
   },

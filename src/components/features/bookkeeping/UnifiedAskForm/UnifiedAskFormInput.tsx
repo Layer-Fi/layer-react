@@ -1,11 +1,15 @@
+import { useFieldGroup } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { ChoiceStep } from '@blocks/FormSteps/ChoiceStep'
 import { TextStep } from '@blocks/FormSteps/TextStep'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormValues'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { useUnifiedAskFormSearch } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
+
+const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '' }
 
 export type AskFormStepPath = `pages.${string}.${string}`
 
@@ -31,6 +35,7 @@ export const UnifiedAskFormInput = ({ form, fields, followUpFields, taskId, step
   const { t } = useTranslation()
   const search = useUnifiedAskFormSearch(taskId, step)
   const options = getStepOptions(step)
+  const followUp = useFieldGroup({ form, fields: followUpFields ?? fields, defaultValues: EMPTY_FOLLOW_UP, formComponents: {} })
 
   if (options.length > 0 || search) {
     return (
@@ -42,12 +47,19 @@ export const UnifiedAskFormInput = ({ form, fields, followUpFields, taskId, step
         options={options.map(({ value, label }) => ({ value, label }))}
         search={search}
         onSelect={onSelect}
+        onPickChange={followUpFields
+          ? () => {
+            followUp.setFieldValue('choice', null)
+            followUp.setFieldValue('selection', null)
+            followUp.setFieldValue('text', '')
+          }
+          : undefined}
         renderFollowUp={followUpFields
-          ? (choice) => {
-            const followUp = findFollowUp(step, choice)
+          ? (value) => {
+            const followUpStep = findFollowUp(step, value)
 
-            return followUp
-              ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUp} prompt={followUp.prompt ?? null} />
+            return followUpStep
+              ? <UnifiedAskFormInput form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} />
               : null
           }
           : undefined}
