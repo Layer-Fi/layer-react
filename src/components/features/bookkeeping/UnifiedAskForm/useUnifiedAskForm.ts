@@ -8,7 +8,7 @@ import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
-import { useRawAppForm } from '@blocks/Form/useForm'
+import { useAppForm } from '@blocks/Form/useForm'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
@@ -43,7 +43,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     [pages, task.answers, transactionIds],
   )
 
-  const form = useRawAppForm({
+  const form = useAppForm<UnifiedAskFormValues, UnifiedAskFormSubmitMeta>({
     defaultValues,
     onSubmitMeta: NO_SUBMIT_PATH,
     validationLogic: revalidateLogic(),
