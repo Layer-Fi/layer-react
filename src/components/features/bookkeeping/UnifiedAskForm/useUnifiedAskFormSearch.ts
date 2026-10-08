@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedSearchResult } from '@schemas/common/unifiedSearch'
@@ -45,12 +45,12 @@ export const useUnifiedAskFormSearch = (taskId: string, step: AskFormStepFields)
   const entity = config?.entity ?? AskFormSearchEntity.Category
 
   const { searchQuery, isSearchEnabled, searchComboBoxProps } = useSearchComboBox()
-  const { data: results, isLoading } = useGetUnifiedSearch({
-    entity,
-    q: searchQuery,
-    taskId,
-    isEnabled: config !== null && isSearchEnabled,
-  })
+  const { trigger: search, data: results, isMutating } = useGetUnifiedSearch()
+  const shouldSearch = config !== null && isSearchEnabled
+
+  useEffect(() => {
+    if (shouldSearch) search({ entity, q: searchQuery, taskId }).catch(() => undefined)
+  }, [entity, search, searchQuery, shouldSearch, taskId])
 
   const options = useMemo(() => (isSearchEnabled ? (results ?? []).map(toComboBoxOption) : []), [isSearchEnabled, results])
 
@@ -58,7 +58,7 @@ export const useUnifiedAskFormSearch = (taskId: string, step: AskFormStepFields)
 
   return {
     options,
-    isLoading,
+    isLoading: isMutating,
     onSearchQueryChange: searchComboBoxProps.onSearchQueryChange,
     allowCreate: config.allowCreate,
     formatCreateLabel: text =>
