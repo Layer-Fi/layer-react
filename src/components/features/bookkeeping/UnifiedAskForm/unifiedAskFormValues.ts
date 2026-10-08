@@ -13,6 +13,7 @@ import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import {
   type AskFormStepFields,
+  findFollowUp,
   findOption,
   isSheetStep,
 } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
@@ -60,7 +61,7 @@ const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | 
 
 const toAnswerValues = (step: AskFormStepFields, answer: AskFormAnswer | undefined): AskFormAnswerValues => {
   const choiceAnswer = isChoiceAnswer(answer) ? answer : undefined
-  const followUpStep = choiceAnswer ? findOption(step, choiceAnswer.choice)?.followUp : undefined
+  const followUpStep = choiceAnswer ? findFollowUp(step, choiceAnswer.choice) : undefined
 
   return {
     ...toInputValues(step, choiceAnswer ?? (isTextAnswer(answer) ? answer : undefined)),
@@ -116,7 +117,7 @@ const toRowAnswer = (step: AskFormStepFields, values: AskFormAnswerValues): AskF
 
   if (!isChoiceAnswer(answer)) return answer
 
-  const followUpStep = findOption(step, answer.choice)?.followUp
+  const followUpStep = findFollowUp(step, answer.choice)
   const followUp = followUpStep ? toInputAnswer(values.followUp) : null
 
   return followUp ? { ...answer, followUp } : answer
@@ -166,7 +167,7 @@ const isAnswerComplete = (step: AskFormStepFields, values: AskFormAnswerValues) 
   if (!isInputComplete(step, values)) return false
 
   const answer = toInputAnswer(values)
-  const followUpStep = isChoiceAnswer(answer) ? findOption(step, answer.choice)?.followUp : undefined
+  const followUpStep = isChoiceAnswer(answer) ? findFollowUp(step, answer.choice) : undefined
 
   return !followUpStep || isInputComplete(followUpStep, values.followUp)
 }

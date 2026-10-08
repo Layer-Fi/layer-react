@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
+import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/unifiedAskFormUtils'
 import {
   type AskFormAnswerValues,
   type AskFormInputValues,
@@ -22,8 +22,8 @@ const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: Ask
 }
 
 const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
-  const option = values.selection ? undefined : findOption(step, values.choice)
-  const followUpLabel = option?.followUp && !values.followUp.text.trim() ? getInputLabel(option.followUp, values.followUp) : null
+  const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
+  const followUpLabel = followUpStep && !values.followUp.text.trim() ? getInputLabel(followUpStep, values.followUp) : null
 
   return followUpLabel ?? getInputLabel(step, values)
 }
@@ -74,7 +74,7 @@ export const useAskFormAnswerLabel = () => {
     if (!step || !values) return UNANSWERED_PLACEHOLDER
     if (!followUp) return getAnswerLabel(step, values) ?? UNANSWERED_PLACEHOLDER
 
-    const followUpStep = values.selection ? undefined : findOption(step, values.choice)?.followUp
+    const followUpStep = values.selection ? undefined : findFollowUp(step, values.choice)
 
     return followUpStep ? getInputLabel(followUpStep, values.followUp) ?? UNANSWERED_PLACEHOLDER : UNANSWERED_PLACEHOLDER
   }) ?? null, [getAnswerLabel])
