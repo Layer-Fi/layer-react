@@ -37,6 +37,8 @@ export const useThingForm = ({ onSuccess }: { onSuccess?: (thing: Thing) => void
 - `useAppForm` from `@blocks/Form/useForm` is the one to use — it's `useRawAppForm` with
   the field components pre-bound. Plain `useForm` from the same module exists for forms that need
   no field components; prefer `useAppForm`.
+- To pass data from `handleSubmit` into `onSubmit`, type it with `onSubmitMeta` and
+  `useAppForm<Values, SubmitMeta>` rather than dropping to `useRawAppForm`.
 - **Read form state with `useStore(form.store, selector)`**, selecting the narrowest slice
   (`isValid`, `isSubmitting`). Don't subscribe to the whole store.
 - Return `{ form, …derived }` from the hook; the component stays presentational.
@@ -102,20 +104,9 @@ available on `field.` until then.
 
 A wizard keeps one form and gives each step its own `form.FormGroup`: the group's `onDynamic`
 validator gates that step, and `onGroupSubmit` moves to the next one. `useStepNavigation`
-(`@hooks/utils/navigation`) holds the step history for back navigation, and `SlidingPanes` animates
-between steps.
-
-Reusable step bodies live in `@blocks/FormSteps` as `withFieldGroup` components, so one step binds
-to any form at any path whose value has its shape:
-
-| Step | Binds to |
-| --- | --- |
-| `ChoiceStep` | `{ choice, selection }` — chips, an optional search, and a follow-up slot |
-| `TextStep` | `{ text }` |
-| `UploadStep` | `{ files }` |
-
-`FormRowSheet` lays out one editor per row, such as a step answered per transaction. Reference:
-`UnifiedAskForm` and `useUnifiedAskForm`.
+(`@hooks/utils/navigation`) holds the step history for back navigation. Reusable step bodies are
+`withFieldGroup` components in `@blocks/FormSteps`, so one step binds to any path whose value has
+its shape. Reference: `UnifiedAskFormPage` and `useUnifiedAskFormNavigation`.
 
 ## Validation
 
