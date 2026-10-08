@@ -37,6 +37,8 @@ export const useThingForm = ({ onSuccess }: { onSuccess?: (thing: Thing) => void
 - `useAppForm` from `@blocks/Form/useForm` is the one to use — it's `useRawAppForm` with
   the field components pre-bound. Plain `useForm` from the same module exists for forms that need
   no field components; prefer `useAppForm`.
+- To pass data from `handleSubmit` into `onSubmit`, type it with `onSubmitMeta` and
+  `useAppForm<Values, SubmitMeta>` rather than dropping to `useRawAppForm`.
 - **Read form state with `useStore(form.store, selector)`**, selecting the narrowest slice
   (`isValid`, `isSubmitting`). Don't subscribe to the whole store.
 - Return `{ form, …derived }` from the hook; the component stays presentational.
@@ -83,6 +85,9 @@ Use `form.Field` (not `AppField`) only when rendering a control that has no `For
 | `FormSwitchField` | a boolean rendered as a toggle |
 | `FormRadioGroupField` | one of N options (`RadioOption<T>[]`) |
 | `FormRadioGroupYesNoField` | the common yes/no pair |
+| `FormChipGroupField` | one of N options as chips; `onSelect` fires on every press, for auto-advance |
+| `FormSearchComboBoxField` | a server-searched pick (`{ value, label }`), optionally keeping typed text (`allowCreate`) |
+| `FormFileUploadField` | uploaded files (`{ id, name }[]`); the caller injects `upload` |
 | `BaseFormTextField` | building a new text-like field — wrap your own control as the `slot='input'` child |
 
 All of them accept `CommonFormFieldProps`:
@@ -94,6 +99,14 @@ All of them accept `CommonFormFieldProps`:
 Adding a new field type means adding the component to `src/components/blocks/Form/` **and** registering
 it in the `createFormHook` `fieldComponents` map in `@blocks/Form/useForm` — it isn't
 available on `field.` until then.
+
+## Multi-step forms
+
+A wizard keeps one form and gives each step its own `form.FormGroup`: the group's `onDynamic`
+validator gates that step, and `onGroupSubmit` moves to the next one. `useStepNavigation`
+(`@hooks/utils/navigation`) holds the step history for back navigation. Step bodies bound to a path chosen at runtime are
+`withFieldGroup` components, so one step binds to any path whose value has its shape. Reference:
+`UnifiedAskFormPage`, `UnifiedAskFormStep` and `useUnifiedAskFormNavigation`.
 
 ## Validation
 

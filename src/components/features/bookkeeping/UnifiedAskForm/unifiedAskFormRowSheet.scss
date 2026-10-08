@@ -1,0 +1,40 @@
+.Layer__UnifiedAskFormRowSheet {
+  overflow: hidden auto;
+  max-block-size: 24rem;
+
+  border-block: 1px solid var(--border-color);
+
+  background-color: var(--color-base-0);
+}
+
+.Layer__UnifiedAskFormRowSheet__Row {
+  border-block-start: 1px solid var(--border-color);
+
+  &:first-child {
+    border-block-start: none;
+  }
+
+  &:hover:not([data-open]) {
+    background: var(--color-base-50);
+  }
+
+  &[data-open] {
+    background: var(--color-base-100);
+  }
+}
+
+.Layer__UnifiedAskFormRowSheet:has(.Layer__UnifiedAskFormRowSheet__Row[data-open]) .Layer__UnifiedAskFormRowSheet__Row:not([data-open]) {
+  opacity: 0.6;
+}
+
+.Layer__UnifiedAskFormRowSheet__RowSummary {
+  padding-block: var(--spacing-2xs);
+}
+
+.Layer__UnifiedAskFormRowSheet__RowSummary .Layer__UI__TooltipTrigger {
+  flex: 1 1 16ch;
+}
+
+.Layer__UnifiedAskFormRowSheet__RowAnswer {
+  flex: 0 1 auto;
+}

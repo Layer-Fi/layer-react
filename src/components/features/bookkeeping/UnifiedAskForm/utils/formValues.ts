@@ -36,6 +36,16 @@ export type AskFormPageValues = Record<string, AskFormStepValues>
 /** Grouped by page so each page validates and continues through its own `FormGroup`. */
 export type UnifiedAskFormValues = { pages: Record<string, AskFormPageValues> }
 
+/** Where a step's answer lives in `UnifiedAskFormValues`. */
+type AskFormStepPath = `pages.${string}.${string}`
+
+/** Where a step, its follow-up, a sheet row or a row's follow-up is answered. */
+export type AskFormInputPath =
+  | AskFormStepPath
+  | `${AskFormStepPath}.followUp`
+  | `${AskFormStepPath}.rows[${number}]`
+  | `${AskFormStepPath}.rows[${number}].followUp`
+
 export const getFollowUpStep = (step: AskFormStepFields, values: AskFormInputValues) => findFollowUp(step, getPickedValue(values))
 
 const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | undefined): AskFormInputValues => {

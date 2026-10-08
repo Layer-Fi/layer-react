@@ -39,11 +39,11 @@ Helpers live under `src/testUtils` (`@testUtils/*`), one directory per concern �
 where they belong instead of at the root:
 
 ```
-render/       LayerTestProvider, renderHookWithAuth
+render/       LayerTestProvider, renderHookWithAuth, renderFormField (one Form*Field in a one-field form)
 dates/        fakeSystemTime, fixedDates
 requests/     getRequestOptions
 mocks/        getCallArgs
-forms/        fillForm + the per-kind fillers behind it
+forms/        fillForm + the per-kind fillers behind it, FormFieldHarness
 storybook/    layout/ · controls/ · decorators/ · data/ · interactions/
 ```
 
