@@ -3,6 +3,7 @@ import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
+import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
@@ -11,11 +12,6 @@ import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/uni
 import { useAppForm } from '@blocks/Form/useForm'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-
-export type UnifiedAskFormSaved = {
-  answerSummary: string | null
-  categorized: boolean
-}
 
 export type UnifiedAskFormSubmitMeta = {
   pagesOnPath: ReadonlyArray<AskFormPage>
@@ -26,7 +22,7 @@ const NO_SUBMIT_PATH: UnifiedAskFormSubmitMeta = { pagesOnPath: [] }
 
 type UseUnifiedAskFormProps = {
   task: UnifiedAskFormTask
-  onSaved: (saved: UnifiedAskFormSaved) => void
+  onSaved: (saved: UnifiedAskFormSubmissionResult) => void
 }
 
 export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => {
@@ -56,7 +52,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
 
         form.reset(value)
         onSubmitted?.()
-        onSaved({ answerSummary: saved.task.answerSummary ?? null, categorized: saved.categorized })
+        onSaved(saved)
       }
       catch (error) {
         if (isAPIErrorOfType(error, ApiEnumErrorType.BusinessTaskAlreadyCompleted)) {

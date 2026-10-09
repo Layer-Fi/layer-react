@@ -1,7 +1,5 @@
-import { type BusinessTask, isRenderableBusinessTask } from '@schemas/features/bookkeeping/businessTask'
+import { type BusinessTask, isUnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type CounterpartyAskTask } from '@schemas/features/bookkeeping/businessTasks/counterpartyAskTask'
-import { type LegacyBusinessTask } from '@schemas/features/bookkeeping/businessTasks/legacyBusinessTask'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 
 export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
@@ -19,15 +17,14 @@ export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
 }
 
 type UserVisibleTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Completed | BusinessTaskStatus.Archived>
-type RenderableBusinessTask = UnifiedAskFormTask | CounterpartyAskTask | LegacyBusinessTask
-export type UserVisibleTask = RenderableBusinessTask & { status: UserVisibleTaskStatus }
+export type UserVisibleTask = UnifiedAskFormTask & { status: UserVisibleTaskStatus }
 
 function isUserVisibleTask<T extends BusinessTask>(
   task: T,
-): task is T & RenderableBusinessTask & { status: UserVisibleTaskStatus } {
+): task is T & UnifiedAskFormTask & { status: UserVisibleTaskStatus } {
   const { status } = task
 
-  return isRenderableBusinessTask(task)
+  return isUnifiedAskFormTask(task)
     && status !== BusinessTaskStatus.Completed
     && status !== BusinessTaskStatus.Archived
 }

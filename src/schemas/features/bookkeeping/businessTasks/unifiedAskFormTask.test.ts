@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 
 import {
   BusinessTaskSchema,
-  isLegacyBusinessTask,
   isUnifiedAskFormTask,
 } from '@schemas/features/bookkeeping/businessTask'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
@@ -101,11 +100,10 @@ describe('UnifiedAskFormTaskSchema', () => {
     expect(notSure?.followUp).toMatchObject({ type: AskFormStepType.Text, multiline: true, required: true })
   })
 
-  it('is matched by the business task union ahead of the legacy arm', () => {
+  it('is matched by the business task union', () => {
     const task = decodeBusinessTask(encodedCounterpartyTask)
 
     expect(isUnifiedAskFormTask(task)).toBe(true)
-    expect(isLegacyBusinessTask(task)).toBe(false)
   })
 
   it.each([
@@ -119,7 +117,6 @@ describe('UnifiedAskFormTaskSchema', () => {
     const task = decodeBusinessTask(payload)
 
     expect(isUnifiedAskFormTask(task)).toBe(false)
-    expect(isLegacyBusinessTask(task)).toBe(false)
   })
 
   it.each([

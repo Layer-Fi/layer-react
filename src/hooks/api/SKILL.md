@@ -41,14 +41,13 @@ or cache effects on one endpoint (`bank-transactions/[bank-transaction-id]/metad
 `createInfiniteQueryHook`, and `usePost…` / `usePatch…` / `usePut…` / `useDelete…`. Action endpoints
 keep the route's verb after the prefix — `usePostVoidInvoice`, `usePutMatchBankTransaction`.
 
-Never let the prefix contradict what the call does. Four endpoints keep their domain verb:
+Never let the prefix contradict what the call does. Three endpoints keep their domain verb:
 
 | Endpoint | Hook |
 | --- | --- |
 | `DELETE /bank-transactions/{id}` | `useArchiveBankTransaction` — archives; stays queryable |
 | `DELETE /bank-accounts/{id}` | `useUnlinkBankAccount` — the account is not destroyed |
 | `DELETE /categorization-rules/suggestions/{id}` | `useRejectCategorizationRuleSuggestion` |
-| `POST /tasks/{id}/upload/delete` | `useDeleteTaskUploads` — POST, but it deletes |
 
 `useDeleteBankAccount` would invite a destructive confirmation in front of an unlink.
 

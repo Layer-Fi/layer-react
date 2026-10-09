@@ -7,7 +7,7 @@ import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/uni
 import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import { UnifiedAskFormTaskItem } from '@features/bookkeeping/TasksListItem/UnifiedAskFormTaskItem'
+import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
@@ -44,7 +44,7 @@ const counterpartyTask = () => makeUnifiedAskFormTask({
 
 const renderItem = (task: UnifiedAskFormTask) => ({
   user: userEvent.setup(),
-  ...render(<UnifiedAskFormTaskItem task={task as UserVisibleTask & UnifiedAskFormTask} defaultOpen />, { wrapper: LayerTestProvider }),
+  ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
 })
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {
@@ -290,7 +290,7 @@ describe('UnifiedAskForm', () => {
       respond = resolve
     })
     server.use(postUnifiedAskFormResponse.mock(
-      { task: { ...task, answerSummary: 'Office supplies' }, categorized: false },
+      { task, categorized: false },
       {
         onRequest: async () => {
           onSubmit()
@@ -305,7 +305,7 @@ describe('UnifiedAskForm', () => {
     await user.click(screen.getByRole('radio', { name: 'Supplies' }))
     respond()
 
-    expect(await screen.findByText('Office supplies')).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('radio', { name: 'Supplies' })).not.toBeInTheDocument())
     expect(onSubmit).toHaveBeenCalledTimes(1)
     expect(screen.queryByText('This task has already been answered.')).not.toBeInTheDocument()
   })

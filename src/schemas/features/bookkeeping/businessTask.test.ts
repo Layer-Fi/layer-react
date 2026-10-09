@@ -1,12 +1,7 @@
 import { Schema } from 'effect'
 import { describe, expect, it } from 'vitest'
 
-import {
-  BusinessTaskSchema,
-  isCounterpartyAskTask,
-  isLegacyBusinessTask,
-  isRenderableBusinessTask,
-} from '@schemas/features/bookkeeping/businessTask'
+import { BusinessTaskSchema, isUnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 
 const decode = Schema.decodeUnknownSync(BusinessTaskSchema)
@@ -51,73 +46,19 @@ const encodedAutomatedTransactionReviewTask = {
 }
 
 describe('BusinessTaskSchema', () => {
-  it('decodes a legacy human task', () => {
-    const task = decode(encodedHumanTask)
-
-    expect(isLegacyBusinessTask(task)).toBe(true)
-    expect(isRenderableBusinessTask(task)).toBe(true)
-  })
-
-  it('decodes a counterparty ask task', () => {
-    const task = decode(encodedCounterpartyAskTask)
-
-    expect(isCounterpartyAskTask(task)).toBe(true)
-  })
-
-  it('treats a counterparty ask task as renderable now that it has a body', () => {
-    const task = decode(encodedCounterpartyAskTask)
-
-    expect(isCounterpartyAskTask(task)).toBe(true)
-    expect(isRenderableBusinessTask(task)).toBe(true)
-  })
-
-  it('decodes an automated rule-suggestion task as unrenderable instead of throwing', () => {
-    const task = decode(encodedAutomatedRuleSuggestionTask)
-
-    expect(isCounterpartyAskTask(task)).toBe(false)
-    expect(isLegacyBusinessTask(task)).toBe(false)
-    expect(isRenderableBusinessTask(task)).toBe(false)
-  })
-
-  it('decodes an automated transaction-review task as unrenderable instead of throwing', () => {
-    const task = decode(encodedAutomatedTransactionReviewTask)
-
-    expect(isCounterpartyAskTask(task)).toBe(false)
-    expect(isLegacyBusinessTask(task)).toBe(false)
-    expect(isRenderableBusinessTask(task)).toBe(false)
+  it.each([
+    ['a legacy human task', encodedHumanTask],
+    ['a counterparty ask task', encodedCounterpartyAskTask],
+    ['an automated rule-suggestion task', encodedAutomatedRuleSuggestionTask],
+    ['an automated transaction-review task', encodedAutomatedTransactionReviewTask],
+  ])('decodes %s as an unknown task instead of throwing', (_, encoded) => {
+    expect(isUnifiedAskFormTask(decode(encoded))).toBe(false)
   })
 
   it('decodes a task whose id and status are missing or unrecognized', () => {
     const task = decode({ id: 'not-a-uuid', task_type: 'SOME_FUTURE_TASK' })
 
-    expect(isRenderableBusinessTask(task)).toBe(false)
+    expect(isUnifiedAskFormTask(task)).toBe(false)
     expect(task.status).toBe(BusinessTaskStatus.Todo)
-  })
-
-  // A well-formed ask matches the ask arm first, so this is the only shape that
-  // reaches the legacy arm's task_type exclusion.
-  it('does not fall back to the legacy arm when an ask payload is malformed', () => {
-    const task = decode({
-      ...encodedCounterpartyAskTask,
-      id: '00000000-0000-4000-8000-000000000902',
-      counterparty: { unexpected: true },
-      user_response_type: 'FREE_RESPONSE',
-      documents: null,
-    })
-
-    expect(isCounterpartyAskTask(task)).toBe(false)
-    expect(isLegacyBusinessTask(task)).toBe(false)
-  })
-
-  it('does not treat a malformed ask as renderable', () => {
-    const malformedAsk = Schema.decodeUnknownSync(BusinessTaskSchema)({
-      id: '00000000-0000-4000-8000-0000000009f1',
-      status: 'TODO',
-      title: 'Costco purchases',
-      task_type: 'ASK_ABOUT_COUNTERPARTY_FOR_PERIOD',
-    })
-
-    expect(isCounterpartyAskTask(malformedAsk)).toBe(false)
-    expect(isRenderableBusinessTask(malformedAsk)).toBe(false)
   })
 })
