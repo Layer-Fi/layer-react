@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 
+import { type ChipVariant } from '@ui/Chip/Chip'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
 import { UnifiedAskFormChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormChoiceStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -14,6 +15,8 @@ type UnifiedAskFormSearchChoiceStepProps = {
   label: string
   prompt: string | null
   options: ReadonlyArray<ChipOption<string>>
+  variant?: ChipVariant
+  isDisabled?: boolean
   onSelect?: (value: string) => void
   onPickChange?: (value: string | null) => void
   renderFollowUp?: (value: string) => ReactNode

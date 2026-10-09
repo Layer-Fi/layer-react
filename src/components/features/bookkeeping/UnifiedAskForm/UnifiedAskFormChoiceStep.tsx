@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-form'
 
 import { asMutable } from '@utils/shared/array/asMutable'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
-import { type ChipSize } from '@ui/Chip/Chip'
+import { type ChipSize, type ChipVariant } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
 import { type SearchComboBoxSelection } from '@blocks/Form/FormSearchComboBoxField'
@@ -32,6 +32,7 @@ type UnifiedAskFormChoiceStepProps = {
   prompt?: string | null
   options: ReadonlyArray<ChipOption<string>>
   size?: ChipSize
+  variant?: ChipVariant
   search?: UnifiedAskFormChoiceStepSearch
   isDisabled?: boolean
   /** Fires for every chip press and search pick, including a repeat of the current answer. */
@@ -50,7 +51,7 @@ const DEFAULT_PROPS: UnifiedAskFormChoiceStepProps = { label: '', options: [] }
 export const UnifiedAskFormChoiceStep = withFieldGroup({
   defaultValues: DEFAULT_VALUES,
   props: DEFAULT_PROPS,
-  render: function Render({ group, label, prompt, options, size, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
+  render: function Render({ group, label, prompt, options, size, variant, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
     const accessibleLabel = prompt ?? label
     const pick = useStore(group.store, state => getPickedValue(state.values))
 
@@ -68,6 +69,7 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
                   label={accessibleLabel}
                   showLabel={false}
                   size={size}
+                  variant={variant}
                   isDisabled={isDisabled}
                   options={asMutable(options)}
                   onSelect={(value) => {

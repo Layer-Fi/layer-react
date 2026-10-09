@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { Chip, ChipGroup, type ChipSize } from '@ui/Chip/Chip'
+import { Chip, ChipGroup, type ChipSize, type ChipVariant } from '@ui/Chip/Chip'
 import { formFieldLayoutProps, FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
@@ -14,6 +14,7 @@ export type ChipOption<T extends string> = {
 export type FormChipGroupFieldProps<T extends string> = CommonFormFieldProps & {
   options: ChipOption<T>[]
   size?: ChipSize
+  variant?: ChipVariant
   /** Fires on every press, including the chip that is already selected. */
   onSelect?: (value: T) => void
 }
@@ -21,6 +22,7 @@ export type FormChipGroupFieldProps<T extends string> = CommonFormFieldProps & {
 export function FormChipGroupField<T extends string>({
   options,
   size,
+  variant,
   onSelect,
   ...props
 }: FormChipGroupFieldProps<T>) {
@@ -35,11 +37,12 @@ export function FormChipGroupField<T extends string>({
   return (
     <div {...formFieldLayoutProps({ className, inline, align, showLabel })}>
       <FormFieldShell {...shellProps} labelId={labelId}>
-        <ChipGroup<T> ariaLabel={label} value={value} isDisabled={isDisabled}>
+        <ChipGroup<T> ariaLabel={label} value={value} isDisabled={isDisabled} variant={variant}>
           {options.map(option => (
             <Chip<T>
               key={option.value}
               size={size}
+              variant={variant}
               value={option.value}
               onPress={() => {
                 handleChange(option.value)

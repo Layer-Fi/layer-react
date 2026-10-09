@@ -11,6 +11,7 @@ import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/use
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { fillPromptTemplate } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 import { findFollowUp, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 type UnifiedAskFormPageStepsProps = {
@@ -18,11 +19,13 @@ type UnifiedAskFormPageStepsProps = {
   page: AskFormPage
   form: UnifiedAskFormApi
   stepsById: UnifiedAskFormNavigation['stepsById']
+  presentation: UnifiedAskFormPresentation
+  isDisabled: boolean
   /** Set when a pick should continue straight away, unless the picked option has a follow-up. */
   onAutoAdvance?: () => void
 }
 
-export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, onAutoAdvance }: UnifiedAskFormPageStepsProps) => {
+export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, presentation, isDisabled, onAutoAdvance }: UnifiedAskFormPageStepsProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const stepValues = useStore(form.store, ({ values }) => flattenStepValues(values))
@@ -52,6 +55,8 @@ export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, onAutoAdv
           taskId={task.id}
           step={step}
           prompt={prompt}
+          presentation={presentation}
+          isDisabled={isDisabled}
           onSelect={onAutoAdvance
             ? (value) => {
               if (!findFollowUp(step, value)) onAutoAdvance()
