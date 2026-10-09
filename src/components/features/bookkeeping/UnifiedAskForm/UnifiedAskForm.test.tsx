@@ -173,6 +173,7 @@ describe('UnifiedAskForm', () => {
           next: { kind: AskFormNextKind.Submit, review: true },
           steps: [{
             id: 'kind',
+            editable: true,
             type: AskFormStepType.Choice,
             prompt: 'What was it?',
             autoAdvance: false,
@@ -209,6 +210,7 @@ describe('UnifiedAskForm', () => {
             next: { kind: AskFormNextKind.Page, pageId: 'second' },
             steps: [{
               id: 'kind',
+              editable: true,
               type: AskFormStepType.Choice,
               prompt: 'What was it?',
               autoAdvance: false,
@@ -224,6 +226,7 @@ describe('UnifiedAskForm', () => {
             next: { kind: AskFormNextKind.Submit, review: false },
             steps: [{
               id: 'confirm',
+              editable: true,
               type: AskFormStepType.Text,
               prompt: 'You said {{answer.kind.label}}: {{answer.kind.follow_up.label}}. Anything else?',
               placeholder: null,
@@ -276,6 +279,7 @@ describe('UnifiedAskForm', () => {
           next: { kind: AskFormNextKind.Submit, review: false },
           steps: [{
             id: 'kind',
+            editable: true,
             type: AskFormStepType.Choice,
             prompt: 'What was it?',
             autoAdvance: true,
@@ -353,7 +357,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'connect',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
+          steps: [{ id: 'connect', editable: true, type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
         }],
       },
     })
@@ -373,7 +377,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [{ id: 'response', editable: true, type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
         }],
       },
     })
@@ -402,7 +406,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [{ id: 'response', editable: true, type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
         }],
       },
     })
@@ -449,7 +453,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false }],
+          steps: [{ id: 'notes', editable: true, type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false }],
         }],
       },
     }))
@@ -471,12 +475,13 @@ describe('UnifiedAskForm', () => {
           steps: [
             {
               id: 'kind',
+              editable: true,
               type: AskFormStepType.Choice,
               prompt: 'What was it?',
               autoAdvance: false,
               options: [{ value: 'supplies', label: 'Supplies' }],
             },
-            { id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false },
+            { id: 'notes', editable: true, type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false },
           ],
         }],
       },

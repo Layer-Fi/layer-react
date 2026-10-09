@@ -77,6 +77,7 @@ export const textFollowUp = (prompt: string | null, placeholder: string | null =
 
 export const choiceStep = (id: string, prompt: string, options: AskFormOption[]): AskFormStep => ({
   id,
+  editable: true,
   type: AskFormStepType.Choice,
   prompt,
   options,
@@ -90,10 +91,11 @@ export const categoryStep = (
   prompt: string,
   options: AskFormOption[],
   { scope = AskFormCategoryScope.Task, search = false }: CategoryStepOptions = {},
-): AskFormStep => ({ id, type: AskFormStepType.Category, prompt, options, scope, search })
+): AskFormStep => ({ id, editable: true, type: AskFormStepType.Category, prompt, options, scope, search })
 
 export const textStep = (id: string, prompt: string): AskFormStep => ({
   id,
+  editable: true,
   type: AskFormStepType.Text,
   prompt,
   placeholder: null,
