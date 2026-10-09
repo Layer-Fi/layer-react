@@ -19,9 +19,10 @@ type UnifiedAskFormTransactionSheetProps = {
   step: AskFormStep
   prompt: string | null
   transactions: ReadonlyArray<AskFormTransaction>
+  isDisabled: boolean
 }
 
-export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, prompt, transactions }: UnifiedAskFormTransactionSheetProps) => {
+export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, prompt, transactions, isDisabled }: UnifiedAskFormTransactionSheetProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const fields = `pages.${pageId}.${step.id}` as const
@@ -64,6 +65,7 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
             taskId={taskId}
             step={step}
             prompt={null}
+            isDisabled={isDisabled}
             onSelect={(value) => {
               if (!findFollowUp(step, value)) advance()
             }}

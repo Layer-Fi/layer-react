@@ -6,14 +6,14 @@ import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepi
 import { tPlural } from '@utils/shared/i18n/plural'
 import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import type { TextStyleProps } from '@ui/Typography/Text'
-
-type TextStatus = NonNullable<TextStyleProps['status']>
+import { DataStateStatus } from '@ui/DataState/DataState'
+import { type TextStatus } from '@ui/Typography/Text'
 
 type InternalStatusConfig = {
   label: string
   description: string
   color: TextStatus
+  dataStateStatus: DataStateStatus
   icon: ReactNode
 }
 
@@ -56,6 +56,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_in_progress', 'Books in progress'),
         description: inProgressDescription,
         color: 'info',
+        dataStateStatus: DataStateStatus.inProgress,
         icon: <Clock size={12} />,
       }
     }
@@ -65,6 +66,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.action_required', 'Action required'),
         description: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
         color: 'warning',
+        dataStateStatus: DataStateStatus.warning,
         icon: <CircleAlert size={12} />,
       }
     }
@@ -73,6 +75,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_completed', 'Books completed'),
         description: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.month_name_books_complete', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
         color: 'success',
+        dataStateStatus: DataStateStatus.success,
         icon: <CircleCheckBig size={12} />,
       }
     }

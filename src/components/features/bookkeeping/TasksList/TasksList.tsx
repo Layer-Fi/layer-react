@@ -1,34 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Smile } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { isCompletedTask, isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
 import { TasksListMobile } from '@features/bookkeeping/TasksList/TasksListMobile'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import './tasksList.scss'
-
-const TasksEmptyState = () => {
-  const { t } = useTranslation()
-  return (
-    <div className='Layer__tasks-empty-state'>
-      <div className='Layer__tasks-icon'>
-        <Smile size={12} color='#3B9C63' />
-      </div>
-      <P size='sm' variant='subtle'>
-        {t('bookkeeping:TasksList.label.pending_tasks', 'There are no pending tasks!')}
-        <br />
-        {' '}
-        {t('bookkeeping:TasksList.label.great_job', 'Great job!')}
-      </P>
-    </div>
-  )
-}
 
 type TasksListProps = {
   pageSize?: number
@@ -93,46 +73,29 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
 
   const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
 
-  if (mobile) {
-    return (
-      <TasksListMobile
-        tasksCount={sortedTasks.length}
-        sortedTasks={pageItems}
-        indexFirstIncomplete={indexFirstIncomplete}
-        currentPage={pageIndex + 1}
-        pageSize={pageSize}
-        setCurrentPage={onPageChange}
-      />
-    )
-  }
+  if (sortedTasks.length === 0) return null
+
+  if (mobile) return <TasksListMobile tasks={sortedTasks} />
 
   return (
     <VStack className='Layer__tasks-list'>
-      {sortedTasks && sortedTasks.length > 0
-        ? (
-          <>
-            {pageItems.map((task, index) => (
-              <TasksListItem
-                ref={setItemRef(task.id)}
-                key={task.id}
-                task={task}
-                defaultOpen={index === indexFirstIncomplete}
-                onExpandTask={onExpandTask(task.id)}
-              />
-            ))}
-            {sortedTasks.length > pageSize && (
-              <Pagination
-                currentPage={pageIndex + 1}
-                totalCount={sortedTasks.length}
-                pageSize={pageSize}
-                onPageChange={onPageChange}
-              />
-            )}
-          </>
-        )
-        : (
-          <TasksEmptyState />
-        )}
+      {pageItems.map((task, index) => (
+        <TasksListItem
+          ref={setItemRef(task.id)}
+          key={task.id}
+          task={task}
+          defaultOpen={index === indexFirstIncomplete}
+          onExpandTask={onExpandTask(task.id)}
+        />
+      ))}
+      {sortedTasks.length > pageSize && (
+        <Pagination
+          currentPage={pageIndex + 1}
+          totalCount={sortedTasks.length}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+        />
+      )}
     </VStack>
   )
 }

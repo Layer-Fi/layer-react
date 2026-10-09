@@ -46,6 +46,16 @@ const VARIATIONS: { label: string, props: Partial<DataStateProps> }[] = [
       onRefresh: noop,
     },
   },
+  {
+    label: 'inline, coloured title',
+    props: {
+      status: DataStateStatus.warning,
+      inline: true,
+      title: 'Action required',
+      description: 'Rendered inline with the title in the status colour.',
+      slotProps: { Title: { status: 'warning' } },
+    },
+  },
   { label: 'spacing', props: { status: DataStateStatus.info, spacing: true } },
   { label: 'custom icon', props: { status: DataStateStatus.failed, icon: <Wifi size={12} /> } },
   { label: 'title only', props: { status: DataStateStatus.allDone, description: undefined } },

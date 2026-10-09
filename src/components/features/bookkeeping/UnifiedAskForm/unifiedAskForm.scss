@@ -47,12 +47,12 @@
 
 .Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__UnifiedAskForm__Footer {
   position: sticky;
-  inset-block-end: 0;
   padding-block: var(--spacing-sm);
 
-  border-block-start: 1px solid var(--border-color);
-
   background-color: var(--color-base-0);
+  inset-block-end: 0;
+
+  border-block-start: 1px solid var(--border-color);
 }
 
 .Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes {

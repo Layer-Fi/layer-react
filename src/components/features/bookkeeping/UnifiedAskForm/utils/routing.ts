@@ -52,7 +52,7 @@ const isPickStep = (step: AskFormStepFields) => {
  */
 export const canAutoAdvance = (page: AskFormPage, presentation: UnifiedAskFormPresentation) => {
   const [onlyStep, ...otherSteps] = page.steps
-  if (!onlyStep || otherSteps.length > 0) return false
+  if (!onlyStep || otherSteps.length > 0 || !onlyStep.editable) return false
 
   if (presentation === 'takeover') return isPickStep(onlyStep)
 
