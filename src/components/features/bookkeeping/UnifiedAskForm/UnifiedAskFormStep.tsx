@@ -53,6 +53,7 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
           step={followUpStep}
           prompt={followUpStep.prompt ?? null}
           presentation={presentation}
+          isDisabled={isDisabled}
           isFollowUp
         />
       )
@@ -63,7 +64,17 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
     case AskFormStepType.Action:
       return prompt ? <P size='sm'>{prompt}</P> : null
     case AskFormStepType.Upload:
-      return <UnifiedAskFormUploadStep form={form} fields={fields} taskId={taskId} prompt={prompt} accept={step.accept} multiple={step.multiple} />
+      return (
+        <UnifiedAskFormUploadStep
+          form={form}
+          fields={fields}
+          taskId={taskId}
+          prompt={prompt}
+          accept={step.accept}
+          multiple={step.multiple}
+          isDisabled={isDisabled}
+        />
+      )
     case AskFormStepType.Text:
       return (
         <UnifiedAskFormTextStep
@@ -73,6 +84,7 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
           prompt={prompt}
           placeholder={step.placeholder ?? t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.placeholder.answer_in_your_words', 'Answer in your own words')}
           multiline={step.multiline}
+          isDisabled={isDisabled}
         />
       )
     case AskFormStepType.Choice:

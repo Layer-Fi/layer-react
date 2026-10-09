@@ -52,6 +52,7 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
     ])], serverNext(taskId)),
     page(ACCOUNT_MASK_ROUTES.owned, [{
       id: 'connect',
+      editable: true,
       type: AskFormStepType.Action,
       action: AskFormAction.ConnectAccount,
       prompt: 'Connect this account so we can pull its transactions for you automatically.',
@@ -59,6 +60,7 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
     page(ACCOUNT_MASK_ROUTES.vendor, [
       {
         id: 'vendor',
+        editable: true,
         type: AskFormStepType.SearchWithFreeform,
         entity: AskFormSearchEntity.Vendor,
         prompt: 'Who is the vendor?',
