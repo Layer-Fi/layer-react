@@ -31,7 +31,7 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
       onGroupSubmit={() => continueFrom(page)}
     >
       {group => (
-        <VStack className='Layer__UnifiedAskForm__Page' gap='lg' pb='md'>
+        <VStack gap='lg' pb='md'>
           <UnifiedAskFormPageSteps
             task={task}
             page={page}

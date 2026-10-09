@@ -51,7 +51,6 @@ export const UnifiedAskFormTransactionSheet = ({ form, pageId, taskId, step, pro
     <UnifiedAskFormRowSheet
       rows={sheetRows}
       prompt={prompt}
-      isDisabled={isDisabled}
       countLabel={t('bookkeeping:UnifiedAskForm.UnifiedAskFormTransactionSheet.label.categorized_count', '{{answered}} of {{total}} categorized', {
         answered: formatNumber(answeredCount),
         total: formatNumber(sheetRows.length),
