@@ -145,7 +145,7 @@ describe('TasksTakeover', () => {
     expect(screen.getByRole('radio', { name: 'Office Expenses' })).toBeChecked()
   })
 
-  it('shows Next instead of continuing on a tap when the step is not editable', () => {
+  it('shows Submit instead of continuing on a tap when the step is not editable', () => {
     const locked = makeUnifiedAskFormTask({
       id: '00000000-0000-4000-8000-000000000f05',
       title: 'Locked answer',
