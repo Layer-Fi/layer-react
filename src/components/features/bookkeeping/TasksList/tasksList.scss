@@ -91,27 +91,6 @@
       }
     }
   }
-
-  .Layer__tasks-empty-state {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-md);
-    text-align: center;
-  }
-}
-
-.Layer__tasks-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  width: 32px;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px var(--color-base-300);
-  background-color: var(--color-base-50);
 }
 
 .Layer__tasks__expand-icon {
