@@ -54,3 +54,7 @@
 
   background-color: var(--color-base-0);
 }
+
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes {
+  overflow: clip;
+}

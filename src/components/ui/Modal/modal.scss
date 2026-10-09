@@ -28,6 +28,7 @@
   }
 
   &[data-variant='mobile-fullscreen'] {
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
     place-items: stretch;
   }
 }
@@ -166,6 +167,13 @@
   &__Content {
     overflow: auto;
     block-size: auto;
+  }
+
+  &[data-variant='mobile-fullscreen'] &__Content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-block-size: 0;
   }
 
   &__KeyboardSpacer {
