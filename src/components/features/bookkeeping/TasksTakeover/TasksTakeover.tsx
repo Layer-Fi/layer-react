@@ -18,15 +18,11 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
   const { t } = useTranslation()
   const task = tasks.find(({ id }) => id === taskId)
 
-  const onOpenChange = (isOpen: boolean) => {
-    if (!isOpen) onTaskChange(null)
-  }
-
   return (
     <Modal
       isOpen={task !== undefined}
-      onOpenChange={onOpenChange}
       variant='mobile-fullscreen'
+      isKeyboardDismissDisabled
       aria-label={t('bookkeeping:TasksTakeover.label.bookkeeping_tasks', 'Bookkeeping tasks')}
     >
       {task ? <TasksTakeoverTask key={task.id} task={task} tasks={tasks} onTaskChange={onTaskChange} /> : null}

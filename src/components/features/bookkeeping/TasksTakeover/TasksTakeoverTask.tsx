@@ -34,23 +34,24 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
 
   const { form, isSubmitting } = useUnifiedAskForm({ task, onSaved })
   const navigation = useUnifiedAskFormNavigation({ task, form })
+  const isPending = isSubmitting || navigation.routing === 'loading'
 
   const slots = useMemo(() => ({
     FooterAction: nextTaskId
       ? (
-        <Button variant='outlined' isDisabled={isSubmitting} onPress={() => onTaskChange(nextTaskId)}>
+        <Button variant='outlined' isDisabled={isPending} onPress={() => onTaskChange(nextTaskId)}>
           {t('bookkeeping:TasksTakeover.TasksTakeoverTask.action.skip', 'Skip')}
         </Button>
       )
       : null,
-  }), [isSubmitting, nextTaskId, onTaskChange, t])
+  }), [isPending, nextTaskId, onTaskChange, t])
 
   return (
     <VStack className='Layer__TasksTakeover'>
       <HStack className='Layer__TasksTakeover__Header' align='center' justify='space-between' gap='xs' pi='md'>
         <HStack className='Layer__TasksTakeover__HeaderSide'>
           {navigation.canGoBack
-            ? <BackButton isDisabled={isSubmitting || navigation.routing === 'loading'} onPress={navigation.goBack} />
+            ? <BackButton isDisabled={isPending} onPress={navigation.goBack} />
             : null}
         </HStack>
         <Span size='md' weight='bold'>
@@ -60,7 +61,7 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
           })}
         </Span>
         <HStack className='Layer__TasksTakeover__HeaderSide' justify='end'>
-          <CloseButton onPress={() => onTaskChange(null)} />
+          <CloseButton isDisabled={isPending} onPress={() => onTaskChange(null)} />
         </HStack>
       </HStack>
       <VStack className='Layer__TasksTakeover__Body' gap='md' pbs='lg'>
