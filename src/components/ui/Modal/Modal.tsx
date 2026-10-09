@@ -16,7 +16,7 @@ import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHe
 import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl' | '2xl'
-type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
+type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover' | 'mobile-fullscreen'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'
 const MODAL_OVERLAY_CLASS_NAME = `Layer__Portal ${BASE_MODAL_OVERLAY_CLASS_NAME}`
@@ -113,7 +113,7 @@ const Dialog = forwardRef<HTMLElement, DialogComponentProps>(
               )}
               <div className='Layer__Dialog__Content'>
                 {content}
-                {variant === 'mobile-drawer' && <MobileDrawerKeyboardSpacer />}
+                {(variant === 'mobile-drawer' || variant === 'mobile-fullscreen') && <MobileDrawerKeyboardSpacer />}
               </div>
             </>
           )
@@ -126,7 +126,7 @@ Dialog.displayName = 'Dialog'
 
 type AllowedModalOverlayProps = Pick<
   ComponentProps<typeof ModalOverlay>,
-  'isOpen' | 'onOpenChange' | 'isDismissable'
+  'isOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled'
 >
 
 type AllowedInternalModalProps = Pick<
@@ -152,9 +152,16 @@ export function Modal({
   role,
   variant = 'center',
   isDismissable = false,
+  isKeyboardDismissDisabled,
 }: ModalProps) {
   return (
-    <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
+    <ModalOverlay
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      variant={variant}
+      isDismissable={isDismissable}
+      isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+    >
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
         {({ isEntering, isExiting }) => (
           <Dialog

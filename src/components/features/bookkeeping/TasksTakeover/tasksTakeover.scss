@@ -1,0 +1,25 @@
+.Layer__TasksTakeover {
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+.Layer__TasksTakeover__Header {
+  flex: 0 0 auto;
+  min-block-size: 3.5rem;
+
+  border-block-end: 1px solid var(--border-color);
+}
+
+.Layer__TasksTakeover__HeaderSide {
+  flex: 0 0 2.5rem;
+}
+
+.Layer__TasksTakeover__Body {
+  flex: 1 1 auto;
+  overflow: hidden auto;
+  min-block-size: 0;
+}
+
+.Layer__TasksTakeover__Body .Layer__UnifiedAskForm {
+  flex: 1 1 auto;
+}
