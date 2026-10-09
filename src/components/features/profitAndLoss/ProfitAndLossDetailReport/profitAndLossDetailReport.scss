@@ -10,8 +10,8 @@
   .Layer__UI__Table__ProfitAndLossDetailReport {
     table-layout: fixed;
 
-    .Layer__UI__VirtualizedTable__row,
-    .Layer__UI__VirtualizedTable__header > tr {
+    .Layer__UI__VirtualizedTable__Row,
+    .Layer__UI__VirtualizedTable__Header > tr {
       display: grid;
       grid-template-columns: var(--pnl-detail-table-cols);
     }
@@ -55,8 +55,8 @@
       minmax(8rem, 55%) /* description */
       minmax(4rem, 20%); /* amount */
 
-    .Layer__UI__VirtualizedTable__row,
-    .Layer__UI__VirtualizedTable__header > tr {
+    .Layer__UI__VirtualizedTable__Row,
+    .Layer__UI__VirtualizedTable__Header > tr {
       grid-template-columns: var(--pnl-detail-table-cols);
     }
 
@@ -85,7 +85,7 @@
 }
 
 .Layer__ProfitAndLossReport__Modal--drawer .Layer__ProfitAndLossDetailReport {
-  .Layer__UI__VirtualizedTable__container {
+  .Layer__UI__VirtualizedTable__Container {
     /* 4.75rem = header height from .Layer__BaseDetailView__Header,
        42px = Table total row in VirtualizedDataTable
      */

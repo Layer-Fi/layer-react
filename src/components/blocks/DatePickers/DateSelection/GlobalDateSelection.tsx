@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useGlobalDatePreset, useGlobalDatePresetActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'
@@ -9,9 +10,10 @@ import { GlobalDatePicker } from '@blocks/DatePickers/GlobalDatePicker/GlobalDat
 import './globalDateSelection.scss'
 
 const legacyClassNames = createLegacyClassNames({
+  'state:compact': 'Layer__GlobalDateSelection--compact',
   /* Briefly a size-derived modifier, unrelated to the compact prop that replaced it in layout. */
-  'selection:mobile': 'Layer__GlobalDateSelection--mobile',
-})
+  'state:mobile': 'Layer__GlobalDateSelection--mobile',
+} satisfies LegacyClassNameMapFor<'Layer__GlobalDateSelection', `state:${string}`>)
 
 type GlobalDateSelectionProps = {
   showLabels?: boolean
@@ -25,10 +27,12 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: G
 
   return (
     <div
-      className={classNames('Layer__GlobalDateSelection Layer__variables', {
-        'Layer__GlobalDateSelection--compact': isCompact,
-        [legacyClassNames('selection:mobile')]: isMobile,
-      })}
+      className={classNames(
+        'Layer__GlobalDateSelection',
+        'Layer__variables',
+        legacyClassNames(isCompact && 'state:compact', isMobile && 'state:mobile'),
+      )}
+      {...toDataProperties({ compact: isCompact })}
     >
       <DateSelectionComboBox
         datePreset={datePreset}

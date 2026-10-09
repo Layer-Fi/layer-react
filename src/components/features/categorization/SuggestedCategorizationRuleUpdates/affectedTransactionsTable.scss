@@ -7,8 +7,8 @@
   .Layer__UI__Table__AffectedTransactionsTable {
     table-layout: fixed;
 
-    .Layer__UI__VirtualizedTable__row,
-    .Layer__UI__VirtualizedTable__header > tr {
+    .Layer__UI__VirtualizedTable__Row,
+    .Layer__UI__VirtualizedTable__Header > tr {
       display: grid;
       grid-template-columns: var(--affected-transactions-table-cols);
     }

@@ -55,35 +55,35 @@
 
   .Layer__upload-transactions__preview_table {
     // Base: row | date | description | amount
-    .Layer__UI__VirtualizedTable__header > tr,
-    .Layer__UI__VirtualizedTable__row {
+    .Layer__UI__VirtualizedTable__Header > tr,
+    .Layer__UI__VirtualizedTable__Row {
       grid-template-columns: 68px 108px minmax(0, 3fr) minmax(0, 1fr);
     }
 
     // One optional column: row | (ext_id or ref_no) | date | description | amount
     &--has-external-id,
     &--has-reference-number {
-      .Layer__UI__VirtualizedTable__header > tr,
-      .Layer__UI__VirtualizedTable__row {
+      .Layer__UI__VirtualizedTable__Header > tr,
+      .Layer__UI__VirtualizedTable__Row {
         grid-template-columns: 68px 100px 108px minmax(0, 3fr) minmax(0, 1fr);
       }
     }
 
     // Both optional columns: row | ext_id | ref_no | date | description | amount
     &--has-external-id.Layer__upload-transactions__preview_table--has-reference-number {
-      .Layer__UI__VirtualizedTable__header > tr,
-      .Layer__UI__VirtualizedTable__row {
+      .Layer__UI__VirtualizedTable__Header > tr,
+      .Layer__UI__VirtualizedTable__Row {
         grid-template-columns: 68px 100px 100px 108px minmax(0, 3fr) minmax(0, 1fr);
       }
     }
 
     .Layer__UI__Table-Cell__ValidateCsvTable--amount,
     .Layer__UI__Table-Column__ValidateCsvTable--amount {
-      .Layer__CsvUpload__Table__header-cell-content {
+      .Layer__ValidateCsvTable__HeaderCellContent {
         margin-left: auto;
       }
 
-      .Layer__CsvUpload__Table__cell-content {
+      .Layer__ValidateCsvTable__CellContent {
         text-align: right;
       }
     }

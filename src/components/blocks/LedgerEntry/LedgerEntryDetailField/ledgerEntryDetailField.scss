@@ -1,17 +1,17 @@
 .Layer__LedgerEntryDetailField {
   min-width: 0;
 
-  &--fullWidth {
+  &[data-full-width] {
     grid-column: 1 / -1;
   }
+}
 
-  &__Value {
-    display: flex;
-    align-items: center;
-    min-height: 1.25rem;
-    margin: 0;
-    color: var(--color-base-900);
-    font-variant-numeric: tabular-nums;
-    overflow-wrap: anywhere;
-  }
+.Layer__LedgerEntryDetailField__Value {
+  display: flex;
+  align-items: center;
+  min-height: 1.25rem;
+  margin: 0;
+  color: var(--color-base-900);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }

@@ -1,4 +1,4 @@
-.Layer__UI__VirtualizedTable__container {
+.Layer__UI__VirtualizedTable__Container {
   position: relative;
   overflow: auto;
 }
@@ -7,29 +7,29 @@
   display: grid;
 }
 
-.Layer__UI__VirtualizedTable__header {
+.Layer__UI__VirtualizedTable__Header {
   position: sticky;
   z-index: 1;
   top: 0;
   display: grid;
 }
 
-.Layer__UI__VirtualizedTable__header-cell {
+.Layer__UI__VirtualizedTable__HeaderCell {
   background-color: var(--color-base-0);
 }
 
-.Layer__UI__VirtualizedTable__row {
+.Layer__UI__VirtualizedTable__Row {
   position: absolute;
   display: grid;
   width: 100%;
+}
 
-  // Skeleton rows aren't virtualized, so they stack in the body instead of being positioned
-  &--static {
-    position: static;
-  }
+// Skeleton rows aren't virtualized, so they stack in the body instead of being positioned
+.Layer__UI__VirtualizedTable__Row--Static {
+  position: static;
 }
 
 // react-aria needs a cell per column; only the first one carries the fallback state.
-.Layer__UI__VirtualizedTable__fallback-placeholder-cell {
+.Layer__UI__VirtualizedTable__FallbackPlaceholderCell {
   display: none;
 }

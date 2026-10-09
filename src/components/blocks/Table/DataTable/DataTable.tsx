@@ -2,7 +2,8 @@ import { Fragment, type MouseEvent, type PropsWithChildren, useCallback, useMemo
 import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 import classNames from 'classnames'
 
-import { createLegacyClassNames } from '@utils/shared/styles/legacyClassNames'
+import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { ConditionalList } from '@components/utility/ConditionalList'
@@ -20,7 +21,8 @@ import { useColumnPinningStyles } from '@blocks/Table/DataTable/useColumnPinning
 
 const legacyClassNames = createLegacyClassNames({
   'state:hasHorizontalOverflow': 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
-})
+  'state:expanded': 'Layer__DataTable__ExpandedRowCell--expanded',
+} satisfies LegacyClassNameMapFor<'Layer__UI__Table-ScrollContainer', `state:${string}`>)
 
 import './dataTable.scss'
 
@@ -213,8 +215,9 @@ export const DataTable = <TData extends object>({
                         nonAria={nonAria}
                         className={classNames(
                           'Layer__DataTable__ExpandedRowCell',
-                          row.getIsExpanded() && 'Layer__DataTable__ExpandedRowCell--expanded',
+                          legacyClassNames(row.getIsExpanded() && 'state:expanded'),
                         )}
+                        {...toDataProperties({ expanded: row.getIsExpanded() })}
                       >
                         <AnimatedPresenceElement
                           variant='expand'

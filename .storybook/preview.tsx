@@ -10,6 +10,7 @@ import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { setDateRangePinning } from '../src/testUtils/storybook/decorators/PinnedGlobalDateRange'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
+import { COMPONENT_ROOT_CLASS_NAME } from '../src/utils/shared/styles/componentClassNames'
 import { installSystemDateMock } from './mocks/systemDate'
 import { usesRealBackend } from './realBackend'
 import { StorybookLayerProvider } from './StorybookLayerProvider'
@@ -70,7 +71,7 @@ const preview: Preview = {
       // (variables, font, reset) onto them. Feature stories supply their own.
       const isPrimitive = context.title?.startsWith('UI/') || context.title?.startsWith('Blocks/')
       const story = isPrimitive
-        ? <div className='Layer__component'><Story /></div>
+        ? <div className={COMPONENT_ROOT_CLASS_NAME}><Story /></div>
         : <Story />
 
       return (

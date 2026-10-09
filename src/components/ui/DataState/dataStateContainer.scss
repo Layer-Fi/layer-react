@@ -4,6 +4,6 @@
   width: 100%;
 }
 
-.Layer__component--as-widget .Layer__DataStateContainer {
+.Layer__ComponentRoot[data-as-widget] .Layer__DataStateContainer {
   height: calc(100% - 160px);
 }

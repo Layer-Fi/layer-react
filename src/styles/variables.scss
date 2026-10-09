@@ -1,8 +1,8 @@
-.Layer__component,
+.Layer__ComponentRoot,
 .Layer__Portal,
-.Layer__view,
+.Layer__ViewRoot,
 .Layer__UI__Tooltip,
-.Layer__toasts-container,
+.Layer__ToastsContainer,
 .Layer__drawer,
 .Layer__variables,
 .Layer__tasks-component {
@@ -201,11 +201,11 @@
 }
 
 @media (width <= 768px) {
-  .Layer__component,
+  .Layer__ComponentRoot,
   .Layer__Portal,
-  .Layer__view,
+  .Layer__ViewRoot,
   .Layer__UI__Tooltip,
-  .Layer__toasts-container,
+  .Layer__ToastsContainer,
   .Layer__drawer,
   .Layer__variables,
   .Layer__tasks-component {

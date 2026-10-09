@@ -14,24 +14,24 @@
   width: 100%;
 }
 
-.Layer__DetailedChart__container {
+.Layer__DetailedChart__Container {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
 }
 
-.Layer__DetailedChart__centerLabelTitle,
-.Layer__DetailedChart__centerLabelShare {
+.Layer__DetailedChart__CenterLabelTitle,
+.Layer__DetailedChart__CenterLabelShare {
   fill: var(--color-base-600);
   font-size: 12px;
 }
 
-.Layer__DetailedChart__centerLabelValue {
+.Layer__DetailedChart__CenterLabelValue {
   fill: var(--text-color-primary);
   font-size: var(--text-md);
 }
 
-.Layer__DetailedChart__centerLabelLoading {
+.Layer__DetailedChart__CenterLabelLoading {
   fill: var(--color-base-600);
   font-size: 14px;
 }
@@ -40,6 +40,6 @@
   transition: fill 1000ms ease-out;
 }
 
-.Layer__DetailedChart__Slice--inactive {
+.Layer__DetailedChart__Slice--Inactive {
   fill: var(--color-base-300);
 }
