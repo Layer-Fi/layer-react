@@ -16,7 +16,7 @@ import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHe
 import './modal.scss'
 
 type ModalSize = 'md' | 'lg' | 'xl' | '2xl'
-type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover'
+type ModalVariant = 'center' | 'drawer' | 'mobile-drawer' | 'mobile-popover' | 'mobile-fullscreen'
 
 const BASE_MODAL_OVERLAY_CLASS_NAME = 'Layer__ModalOverlay'
 const MODAL_OVERLAY_CLASS_NAME = `Layer__Portal ${BASE_MODAL_OVERLAY_CLASS_NAME}`
