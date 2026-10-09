@@ -92,7 +92,7 @@
     color: var(--color-base-500);
   }
 
-  &[data-disabled][data-selected] {
+  &[data-disabled][data-selected]:not([data-variant='row']) {
     border-color: var(--color-base-300);
 
     background-color: var(--color-base-300);

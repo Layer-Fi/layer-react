@@ -30,6 +30,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const canContinue = getPageError(page, values) === undefined
   const isTakeover = presentation === 'takeover'
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
+  const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
@@ -57,30 +58,34 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
           </HStack>
         )
         : null}
-      <HStack
-        className='Layer__UnifiedAskForm__Footer'
-        justify={isTakeover ? 'end' : 'space-between'}
-        align='center'
-        gap='xs'
-        pi='md'
-      >
-        {isTakeover
-          ? action
-          : (
-            <Span size='xs' variant='subtle'>
-              {canGoBack
-                ? t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.label.page_number', 'Page {{number}}', { number: formatNumber(visitedPages.length + 1) })
-                : null}
-            </Span>
-          )}
-        {showsPrimary
-          ? (
-            <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
-              {getPrimaryLabel()}
-            </Button>
-          )
-          : null}
-      </HStack>
+      {showsFooterRow
+        ? (
+          <HStack
+            className='Layer__UnifiedAskForm__Footer'
+            justify={isTakeover ? 'end' : 'space-between'}
+            align='center'
+            gap='xs'
+            pi='md'
+          >
+            {isTakeover
+              ? action
+              : (
+                <Span size='xs' variant='subtle'>
+                  {canGoBack
+                    ? t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.label.page_number', 'Page {{number}}', { number: formatNumber(visitedPages.length + 1) })
+                    : null}
+                </Span>
+              )}
+            {showsPrimary
+              ? (
+                <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
+                  {getPrimaryLabel()}
+                </Button>
+              )
+              : null}
+          </HStack>
+        )
+        : null}
     </>
   )
 }
