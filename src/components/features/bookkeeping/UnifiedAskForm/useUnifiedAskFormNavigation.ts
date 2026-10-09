@@ -52,6 +52,9 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
   }, [t, transactionIds, visitedPages])
 
   const submit = useCallback((pagesOnPath: ReadonlyArray<AskFormPage>) => {
+    // TanStack starts a second submit while the first is in flight, so a repeat press would post twice.
+    if (form.state.isSubmitting) return
+
     // A refetch can add sheet rows to a page that was complete when the customer left it.
     const incompletePage = findFirstIncompletePage(pagesOnPath, form.state.values, transactionIds)
 
@@ -65,8 +68,10 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
   }, [form, reset, steps, transactionIds])
 
   const follow = useCallback((next: AskFormStaticNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
-    if (next.kind === AskFormNextKind.Page) steps.goForward(toPageView(next.pageId))
-    else if (next.review) steps.goForward({ kind: 'REVIEW' })
+    const fromDepth = pagesOnPath.length - 1
+
+    if (next.kind === AskFormNextKind.Page) steps.goForward(toPageView(next.pageId), fromDepth)
+    else if (next.review) steps.goForward({ kind: 'REVIEW' }, fromDepth)
     else submit(pagesOnPath)
   }, [steps, submit])
 

@@ -1,0 +1,42 @@
+.Layer__UnifiedAskForm .Layer__UI__TextArea {
+  min-block-size: 5lh;
+}
+
+.Layer__UnifiedAskForm__Rows {
+  overflow: hidden auto;
+  max-block-size: 10rem;
+
+  border-block: 1px solid var(--border-color);
+
+  background-color: var(--color-base-0);
+}
+
+.Layer__UnifiedAskForm__Row {
+  border-block-start: 1px solid var(--border-color);
+
+  &:first-child {
+    border-block-start: none;
+  }
+}
+
+.Layer__UnifiedAskForm__RowSummary {
+  padding-block: var(--spacing-2xs);
+}
+
+.Layer__UnifiedAskForm__RowAmount {
+  flex: 0 0 auto;
+  min-inline-size: 8ch;
+}
+
+.Layer__UnifiedAskForm__RowDate {
+  flex: 0 0 auto;
+  min-inline-size: 6ch;
+}
+
+.Layer__UnifiedAskForm__RowDescription {
+  min-inline-size: 0;
+}
+
+.Layer__UnifiedAskForm__RowSummary .Layer__UI__TooltipTrigger {
+  flex: 1 1 16ch;
+}

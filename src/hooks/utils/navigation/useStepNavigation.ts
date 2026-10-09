@@ -14,8 +14,13 @@ export const useStepNavigation = <View>(initialView: View) => {
     { view: initialView, history: [], direction: 'back' },
   )
 
-  const goForward = useCallback((next: View) => {
-    setState(current => ({ view: next, history: [...current.history, current.view], direction: 'forward' }))
+  /** With `fromDepth`, a repeat press that lands after the first one already moved on is ignored. */
+  const goForward = useCallback((next: View, fromDepth?: number) => {
+    setState((current) => {
+      if (fromDepth !== undefined && current.history.length !== fromDepth) return current
+
+      return { view: next, history: [...current.history, current.view], direction: 'forward' }
+    })
   }, [])
 
   const goBack = useCallback(() => {
