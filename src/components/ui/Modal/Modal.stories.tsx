@@ -18,7 +18,7 @@ const meta: Meta<typeof Modal> = {
   },
   argTypes: {
     size: { control: 'select', options: ['md', 'lg', 'xl', '2xl'] },
-    variant: { control: 'select', options: ['center', 'drawer', 'mobile-drawer', 'mobile-popover'] },
+    variant: { control: 'select', options: ['center', 'drawer', 'mobile-drawer', 'mobile-popover', 'mobile-fullscreen'] },
     isDismissable: { control: 'boolean' },
   },
 }

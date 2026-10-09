@@ -10,6 +10,17 @@ export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
   return status === BusinessTaskStatus.Todo
 }
 
+/** The first incomplete task after `currentId`, wrapping round to the start; never `currentId` itself. */
+export function findNextIncompleteTask<T extends Pick<BusinessTask, 'id' | 'status'>>(
+  tasks: ReadonlyArray<T>,
+  currentId: string,
+) {
+  const index = tasks.findIndex(({ id }) => id === currentId)
+  const wrapped = [...tasks.slice(index + 1), ...tasks.slice(0, Math.max(index, 0))]
+
+  return wrapped.find(task => isIncompleteTask(task))
+}
+
 export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
   tasks: ReadonlyArray<T>,
 ) {
