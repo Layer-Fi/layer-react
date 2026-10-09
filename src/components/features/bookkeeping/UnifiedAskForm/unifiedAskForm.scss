@@ -63,3 +63,7 @@
 
   border-block-start: 1px solid var(--border-color);
 }
+
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes {
+  overflow: clip;
+}

@@ -1,5 +1,6 @@
 .Layer__TasksTakeover {
-  block-size: 100dvh;
+  flex: 1 1 auto;
+  min-block-size: 0;
 }
 
 .Layer__TasksTakeover__Header {
