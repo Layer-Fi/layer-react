@@ -1,0 +1,29 @@
+.Layer__BookkeepingStatusSummary__Icon {
+  flex: 0 0 auto;
+  block-size: 2rem;
+  inline-size: 2rem;
+
+  border-radius: var(--spacing-3xs);
+
+  background: var(--color-info-bg);
+
+  color: var(--color-info-fg);
+}
+
+.Layer__BookkeepingStatusSummary[data-status='warning'] .Layer__BookkeepingStatusSummary__Icon {
+  background: var(--color-info-warning-bg);
+
+  color: var(--color-info-warning-fg);
+}
+
+.Layer__BookkeepingStatusSummary[data-status='success'] .Layer__BookkeepingStatusSummary__Icon {
+  background: var(--color-info-success-bg);
+
+  color: var(--color-info-success-fg);
+}
+
+.Layer__BookkeepingStatusSummary[data-status='error'] .Layer__BookkeepingStatusSummary__Icon {
+  background: var(--color-info-error-bg);
+
+  color: var(--color-info-error-fg);
+}

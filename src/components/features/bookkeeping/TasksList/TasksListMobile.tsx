@@ -7,12 +7,11 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { MobileList } from '@blocks/MobileList/MobileList'
-import { TasksEmptyState } from '@features/bookkeeping/TasksList/TasksEmptyState'
 import { TasksListMobileItem } from '@features/bookkeeping/TasksList/TasksListMobileItem'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
-// The period is loaded before the list renders, so the list itself never errors.
-const LIST_SLOTS = { EmptyState: TasksEmptyState, ErrorState: () => null }
+// The list renders only once the period has loaded with at least one task.
+const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
 
 type TasksListMobileProps = {
   /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */

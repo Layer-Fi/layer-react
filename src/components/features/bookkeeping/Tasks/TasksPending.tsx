@@ -9,8 +9,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
-import { BookkeepingStatusDescription } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatusDescription'
+import { BookkeepingStatusSummary } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatusSummary'
 
 import './tasksPending.scss'
 
@@ -104,14 +103,11 @@ export const TasksPending = () => {
       </div>
       <div className='Layer__tasks-pending-main'>
         {activePeriod && (
-          <>
-            <BookkeepingStatus status={activePeriod.status} monthNumber={activePeriod.month} />
-            <BookkeepingStatusDescription
-              status={activePeriod.status}
-              monthNumber={activePeriod.month}
-              incompleteTasksCount={incompleteTaskCount}
-            />
-          </>
+          <BookkeepingStatusSummary
+            status={activePeriod.status}
+            monthNumber={activePeriod.month}
+            incompleteTasksCount={incompleteTaskCount}
+          />
         )}
       </div>
     </div>
