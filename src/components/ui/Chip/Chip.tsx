@@ -37,6 +37,7 @@ function ChipGroupWithRef<T extends string>(
       {...restProps}
       {...dataProperties}
       aria-label={ariaLabel}
+      orientation={variant === 'row' ? 'vertical' : 'horizontal'}
       selectionMode='single'
       disallowEmptySelection
       selectedKeys={value == null ? [] : [value]}

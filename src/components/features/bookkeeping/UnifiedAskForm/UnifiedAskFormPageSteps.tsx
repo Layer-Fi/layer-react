@@ -11,8 +11,8 @@ import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/use
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { fillPromptTemplate } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
-import { type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
-import { findFollowUp, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import { hasPickedFollowUp, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
+import { isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 type UnifiedAskFormPageStepsProps = {
   task: UnifiedAskFormTask
@@ -58,8 +58,8 @@ export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, presentat
           presentation={presentation}
           isDisabled={isDisabled}
           onSelect={onAutoAdvance
-            ? (value) => {
-              if (!findFollowUp(step, value)) onAutoAdvance()
+            ? () => {
+              if (!hasPickedFollowUp(page, form.state.values)) onAutoAdvance()
             }
             : undefined}
         />
