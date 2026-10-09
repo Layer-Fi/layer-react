@@ -30,7 +30,7 @@ export const TasksListMobileItem = ({ task }: { task: UserVisibleTask }) => {
   const detail = getDetail()
 
   return (
-    <HStack align='center' gap='sm' fluid>
+    <HStack align='center' gap='sm' pi='md' fluid>
       <Span status={isCompleted ? 'success' : 'warning'}>{getIconForTask(task)}</Span>
       <HStack fluid overflow='hidden'>
         <MobileListItemContent title={task.title}>

@@ -33,6 +33,8 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
         data={tasks}
         isLoading={false}
         isError={false}
+        variant='compact'
+        itemClassName='Layer__TasksListMobile__Row'
         slots={LIST_SLOTS}
         renderItem={task => <TasksListMobileItem task={task} />}
         onClickItem={task => setOpenTaskId(task.id)}

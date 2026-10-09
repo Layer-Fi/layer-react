@@ -131,3 +131,7 @@
     }
   }
 }
+
+.Layer__MobileList[data-variant='compact'] .Layer__TasksListMobile__Row {
+  border-block-start: 1px solid var(--border-color);
+}
