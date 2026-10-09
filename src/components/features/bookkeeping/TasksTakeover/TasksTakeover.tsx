@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { findNextIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
@@ -14,22 +14,33 @@ type TasksTakeoverProps = {
   onTaskChange: (taskId: string | null) => void
 }
 
+type ShownTask = {
+  task?: UserVisibleTask
+  tasks: ReadonlyArray<UserVisibleTask>
+}
+
+// When the open task leaves `tasks`, move on from where it sat in the list it was shown in, not from the top.
+const findOpenTask = (tasks: ReadonlyArray<UserVisibleTask>, taskId: string, lastShown: ShownTask) =>
+  tasks.find(({ id }) => id === taskId)
+  ?? tasks.find(({ id }) => id === lastShown.task?.id)
+  ?? findNextIncompleteTask(
+    lastShown.tasks.flatMap((shown) => {
+      if (shown.id === taskId) return [shown]
+      const current = tasks.find(({ id }) => id === shown.id)
+      return current ? [current] : []
+    }),
+    taskId,
+  )
+
 /** Answers tasks one per screen on mobile, moving on to the next incomplete task after each. */
 export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProps) => {
   const { t } = useTranslation()
-  const task = taskId === null
-    ? undefined
-    : tasks.find(({ id }) => id === taskId) ?? findNextIncompleteTask(tasks, taskId)
-  const resolvedTaskId = task?.id ?? null
 
-  // Keeps the last task on screen while the modal plays its exit animation.
-  const lastTaskRef = useRef(task)
-  if (task) lastTaskRef.current = task
-  const renderedTask = task ?? lastTaskRef.current
-
-  useEffect(() => {
-    if (taskId !== null && resolvedTaskId !== taskId) onTaskChange(resolvedTaskId)
-  }, [onTaskChange, resolvedTaskId, taskId])
+  // Also keeps the last task and its list on screen while the modal plays its exit animation.
+  const lastShownRef = useRef<ShownTask>({ tasks })
+  const task = taskId === null ? undefined : findOpenTask(tasks, taskId, lastShownRef.current)
+  if (task) lastShownRef.current = { task, tasks }
+  const shown = task ? { task, tasks } : lastShownRef.current
 
   return (
     <Modal
@@ -38,7 +49,7 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
       isKeyboardDismissDisabled
       aria-label={t('bookkeeping:TasksTakeover.label.bookkeeping_tasks', 'Bookkeeping tasks')}
     >
-      {renderedTask ? <TasksTakeoverTask key={renderedTask.id} task={renderedTask} tasks={tasks} onTaskChange={onTaskChange} /> : null}
+      {shown.task ? <TasksTakeoverTask key={shown.task.id} task={shown.task} tasks={shown.tasks} onTaskChange={onTaskChange} /> : null}
     </Modal>
   )
 }
