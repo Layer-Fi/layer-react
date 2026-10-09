@@ -58,6 +58,19 @@ export const AllVariants: Story = {
           <Chip value='mix'>A mix of the above</Chip>
         </ChipGroup>
       </Col>
+      <Col label='row' inlineSize={320}>
+        <ChipGroup ariaLabel='row' variant='row' value='office'>
+          <Chip variant='row' value='meals'>Business Meals</Chip>
+          <Chip variant='row' value='office'>Office Expenses</Chip>
+          <Chip variant='row' value='other'>Something else</Chip>
+        </ChipGroup>
+      </Col>
+      <Col label='row disabled' inlineSize={320}>
+        <ChipGroup ariaLabel='row disabled' variant='row' value='office' isDisabled>
+          <Chip variant='row' value='meals'>Business Meals</Chip>
+          <Chip variant='row' value='office'>Office Expenses</Chip>
+        </ChipGroup>
+      </Col>
       <Col label='disabled'>
         <ChipGroup ariaLabel='disabled' value='meals' isDisabled>
           <Chip value='meals'>Business Meals</Chip>

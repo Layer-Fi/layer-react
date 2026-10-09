@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -8,22 +9,28 @@ import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
-import { getPagePrimaryAction } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
+import { getPagePrimaryAction, hasPickedFollowUp, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UnifiedAskFormPageFooterProps = {
   page: AskFormPage
   form: UnifiedAskFormApi
   navigation: UnifiedAskFormNavigation
+  presentation: UnifiedAskFormPresentation
+  autoAdvances: boolean
+  action?: ReactNode
   onContinue: () => void
 }
 
-export const UnifiedAskFormPageFooter = ({ page, form, navigation, onContinue }: UnifiedAskFormPageFooterProps) => {
+export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError } = navigation
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
   const canContinue = getPageError(page, values) === undefined
+  const isTakeover = presentation === 'takeover'
+  const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
+  const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
@@ -51,16 +58,34 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, onContinue }:
           </HStack>
         )
         : null}
-      <HStack justify='space-between' align='center' pi='md'>
-        <Span size='xs' variant='subtle'>
-          {canGoBack
-            ? t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.label.page_number', 'Page {{number}}', { number: formatNumber(visitedPages.length + 1) })
-            : null}
-        </Span>
-        <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
-          {getPrimaryLabel()}
-        </Button>
-      </HStack>
+      {showsFooterRow
+        ? (
+          <HStack
+            className='Layer__UnifiedAskForm__Footer'
+            justify={isTakeover ? 'end' : 'space-between'}
+            align='center'
+            gap='xs'
+            pi='md'
+          >
+            {isTakeover
+              ? action
+              : (
+                <Span size='xs' variant='subtle'>
+                  {canGoBack
+                    ? t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.label.page_number', 'Page {{number}}', { number: formatNumber(visitedPages.length + 1) })
+                    : null}
+                </Span>
+              )}
+            {showsPrimary
+              ? (
+                <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
+                  {getPrimaryLabel()}
+                </Button>
+              )
+              : null}
+          </HStack>
+        )
+        : null}
     </>
   )
 }

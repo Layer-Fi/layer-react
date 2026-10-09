@@ -10,6 +10,7 @@ import { UnifiedAskFormUploadStep } from '@features/bookkeeping/UnifiedAskForm/U
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
 import { type AskFormInputPath, type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '' }
@@ -22,11 +23,13 @@ export type UnifiedAskFormStepProps = {
   prompt: string | null
   /** A follow-up has no follow-up of its own. */
   isFollowUp?: boolean
+  presentation?: UnifiedAskFormPresentation
+  isDisabled?: boolean
   onSelect?: (value: string) => void
 }
 
 /** Renders any step by its type; a page step, a follow-up and a sheet row all come through here. */
-export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollowUp = false, onSelect }: UnifiedAskFormStepProps) => {
+export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollowUp = false, presentation = 'inline', isDisabled, onSelect }: UnifiedAskFormStepProps) => {
   const { t } = useTranslation()
   const followUpFields = `${fields}.followUp` as const
   // Hooks can't be conditional, so a follow-up binds this to its own fields and never uses it.
@@ -42,7 +45,17 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
     const followUpStep = findFollowUp(step, value)
 
     return followUpStep
-      ? <UnifiedAskFormStep form={form} fields={followUpFields} taskId={taskId} step={followUpStep} prompt={followUpStep.prompt ?? null} isFollowUp />
+      ? (
+        <UnifiedAskFormStep
+          form={form}
+          fields={followUpFields}
+          taskId={taskId}
+          step={followUpStep}
+          prompt={followUpStep.prompt ?? null}
+          presentation={presentation}
+          isFollowUp
+        />
+      )
       : null
   }
 
@@ -72,6 +85,8 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
         label: t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.options', 'Options'),
         prompt,
         options: getStepOptions(step),
+        variant: presentation === 'takeover' ? 'row' as const : undefined,
+        isDisabled,
         onSelect,
         onPickChange: isFollowUp ? undefined : clearFollowUp,
         renderFollowUp: isFollowUp ? undefined : renderFollowUp,

@@ -2,6 +2,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-2xs);
+
+  &[data-variant='row'] {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: var(--spacing-xs);
+  }
 }
 
 .Layer__UI__Chip {
@@ -40,7 +46,26 @@
     font-size: var(--text-xs);
   }
 
-  &[data-selected] {
+  &[data-variant='row'] {
+    gap: var(--spacing-xs);
+    justify-content: space-between;
+    min-block-size: 3.25rem;
+    inline-size: 100%;
+    padding-inline: var(--spacing-md) var(--spacing-sm);
+
+    font-size: var(--text-md);
+    text-align: start;
+  }
+
+  &[data-variant='row'][data-selected] {
+    border-color: var(--color-base-1000);
+
+    background-color: var(--color-base-50);
+
+    color: var(--text-color-primary);
+  }
+
+  &[data-selected]:not([data-variant='row']) {
     border-color: var(--color-base-1000);
 
     background-color: var(--color-base-1000);
@@ -67,7 +92,7 @@
     color: var(--color-base-500);
   }
 
-  &[data-disabled][data-selected] {
+  &[data-disabled][data-selected]:not([data-variant='row']) {
     border-color: var(--color-base-300);
 
     background-color: var(--color-base-300);

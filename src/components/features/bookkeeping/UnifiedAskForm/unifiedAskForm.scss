@@ -1,3 +1,7 @@
+.Layer__UnifiedAskForm {
+  --input-placeholder-color: var(--color-base-400);
+}
+
 .Layer__UnifiedAskForm .Layer__UI__TextArea {
   min-block-size: 5lh;
 }
@@ -39,4 +43,18 @@
 
 .Layer__UnifiedAskForm__RowSummary .Layer__UI__TooltipTrigger {
   flex: 1 1 16ch;
+}
+
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__UnifiedAskForm__Footer {
+  position: sticky;
+  inset-block-end: 0;
+  padding-block: var(--spacing-sm);
+
+  border-block-start: 1px solid var(--border-color);
+
+  background-color: var(--color-base-0);
+}
+
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes {
+  overflow: clip;
 }
