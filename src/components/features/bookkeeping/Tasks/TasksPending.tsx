@@ -7,9 +7,10 @@ import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useGlobalDate } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
+import { DataState } from '@ui/DataState/DataState'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import { BookkeepingStatusSummary } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatusSummary'
+import { useBookkeepingStatusConfig } from '@features/bookkeeping/BookkeepingStatus/useBookkeepingStatusConfig'
 
 import './tasksPending.scss'
 
@@ -28,6 +29,11 @@ export const TasksPending = () => {
   const incompleteTaskCount = getIncompleteTasks(activePeriod?.tasks ?? []).length
   const displayCompletedTaskCount = formatNumber(completedTaskCount)
   const displayTotalTaskCount = formatNumber(totalTaskCount)
+  const statusConfig = useBookkeepingStatusConfig({
+    status: activePeriod?.status,
+    monthNumber: activePeriod?.month,
+    incompleteTasksCount: incompleteTaskCount,
+  })
 
   const chartData = [
     {
@@ -102,11 +108,14 @@ export const TasksPending = () => {
           : null}
       </div>
       <div className='Layer__tasks-pending-main'>
-        {activePeriod && (
-          <BookkeepingStatusSummary
-            status={activePeriod.status}
-            monthNumber={activePeriod.month}
-            incompleteTasksCount={incompleteTaskCount}
+        {statusConfig && (
+          <DataState
+            inline
+            status={statusConfig.dataStateStatus}
+            icon={statusConfig.icon}
+            title={statusConfig.label}
+            description={statusConfig.description}
+            slotProps={{ Title: { status: statusConfig.color } }}
           />
         )}
       </div>

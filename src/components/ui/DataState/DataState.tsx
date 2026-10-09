@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
-import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, Clock, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
-import { Span } from '@ui/Typography/Text'
+import { Span, type TextStatus } from '@ui/Typography/Text'
 
 import './dataState.scss'
 
@@ -24,6 +24,8 @@ const legacyClassNames = createLegacyClassNames({
   'status:neutral': 'Layer__data-state__icon--neutral',
   'status:success': 'Layer__data-state__icon--success',
   'status:error': 'Layer__data-state__icon--error',
+  'status:warning': [],
+  'status:info': [],
 } satisfies LegacyClassNameMapFor<
   | 'Layer__UI__DataState'
   | 'Layer__UI__DataState__Icon'
@@ -34,7 +36,7 @@ const legacyClassNames = createLegacyClassNames({
   `state:${string}` | `status:${string}`
 >)
 
-type IconStatus = 'neutral' | 'success' | 'error'
+type IconStatus = 'neutral' | 'success' | 'error' | 'warning' | 'info'
 
 const DataStateIcon = ({ status, children }: { status: IconStatus, children: ReactNode }) => (
   <span
@@ -50,6 +52,8 @@ export enum DataStateStatus {
   success = 'success',
   failed = 'failed',
   info = 'info',
+  warning = 'warning',
+  inProgress = 'inProgress',
 }
 
 export interface DataStateProps {
@@ -66,6 +70,7 @@ export interface DataStateProps {
     Title?: {
       size?: 'sm' | 'md' | 'lg'
       ellipsis?: boolean
+      status?: TextStatus
     }
   }
   className?: string
@@ -81,6 +86,10 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
       return <DataStateIcon status='success'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
     case DataStateStatus.allDone:
       return <DataStateIcon status='neutral'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
+    case DataStateStatus.warning:
+      return <DataStateIcon status='warning'>{icon ?? <CircleAlert size={12} />}</DataStateIcon>
+    case DataStateStatus.inProgress:
+      return <DataStateIcon status='info'>{icon ?? <Clock size={12} />}</DataStateIcon>
     default:
       unsafeAssertUnreachable({
         value: status,
@@ -103,7 +112,7 @@ export const DataState = ({
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
-  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis } = slotProps?.Title ?? {}
+  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis, status: titleStatus } = slotProps?.Title ?? {}
   const baseClassName = classNames(
     legacyClassNames(
       'Layer__UI__DataState',
@@ -123,6 +132,7 @@ export const DataState = ({
           size={titleSize}
           weight='bold'
           variant='placeholder'
+          status={titleStatus}
           align={inline ? undefined : 'center'}
           withTooltip={titleEllipsis}
         >
