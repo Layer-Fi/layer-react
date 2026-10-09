@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnEvent, type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { PlaidLinkClientOutcome, type ReportPlaidLinkOutcomeParams } from '@schemas/features/linkedAccounts/plaidLinkOutcome'
+import { reportError } from '@utils/shared/api/errorHandler'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
+import { usePostPlaidLinkOutcome } from '@api/businesses/[business-id]/plaid/link/outcome/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
+import { PlaidLinkError, type PlaidLinkExitError } from '@hooks/features/linkedAccounts/plaidLinkError'
 
 export type LinkMode = 'update' | 'add'
 
@@ -31,6 +35,8 @@ type UsePlaidLinkModalOptions = {
  * the widget, exchanging the public token (add) or refreshing connection status
  * (repair) on completion, and notifying the caller to refresh accounts.
  */
+const PLAID_ERROR_SCREEN_VIEWS = new Set(['ERROR', 'EXIT'])
+
 export function usePlaidLinkModal({
   linkToken,
   linkMode,
@@ -49,6 +55,47 @@ export function usePlaidLinkModal({
 
   const { trigger: triggerExchangePlaidPublicToken } = usePostExchangePlaidPublicToken()
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
+  const { trigger: triggerPlaidLinkOutcome } = usePostPlaidLinkOutcome()
+
+  const reportPlaidLinkOutcome = (params: ReportPlaidLinkOutcomeParams) => {
+    // Diagnostics only: a failed report must not interrupt the link flow.
+    void triggerPlaidLinkOutcome(params).catch(() => undefined)
+  }
+
+  const lastSessionErrorRef = useRef<PlaidLinkExitError | null>(null)
+
+  const handlePlaidLinkEvent: PlaidLinkOnEvent = (eventName, metadata) => {
+    // Moving to any view but the error or exit-confirmation screen means the user recovered from the error.
+    if (eventName === 'TRANSITION_VIEW' && !PLAID_ERROR_SCREEN_VIEWS.has(metadata.view_name ?? '')) {
+      lastSessionErrorRef.current = null
+      return
+    }
+
+    if (eventName === 'ERROR' && metadata.error_code) {
+      lastSessionErrorRef.current = {
+        error_type: metadata.error_type ?? '',
+        error_code: metadata.error_code,
+        error_message: metadata.error_message ?? '',
+        display_message: '',
+      }
+    }
+  }
+
+  const handlePlaidLinkExit: PlaidLinkOnExit = (exitError, metadata) => {
+    // Plaid passes a null error when the user backs out of its error screen before closing Link.
+    const error = exitError ?? lastSessionErrorRef.current
+    lastSessionErrorRef.current = null
+
+    if (error) {
+      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code })
+      reportError({ type: 'plaid_link', scope: 'LinkedAccounts', payload: new PlaidLinkError(error, metadata, linkMode) })
+    }
+    else {
+      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Exited })
+    }
+
+    setLinkMode('add')
+  }
 
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
@@ -105,6 +152,9 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      lastSessionErrorRef.current = null
+      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
+
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
         void exchangePlaidPublicToken(publicToken, metadata)
@@ -118,7 +168,8 @@ export function usePlaidLinkModal({
         })
       }
     },
-    onExit: () => setLinkMode('add'),
+    onExit: handlePlaidLinkExit,
+    onEvent: handlePlaidLinkEvent,
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 

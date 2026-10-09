@@ -1,7 +1,7 @@
 import { type APIError } from '@utils/shared/api/apiError'
 
-type LayerErrorType = 'unauthenticated' | 'api' | 'render'
-type LayerErrorScope = 'BankTransaction' | 'ChartOfAccounts'
+type LayerErrorType = 'unauthenticated' | 'api' | 'render' | 'plaid_link'
+type LayerErrorScope = 'BankTransaction' | 'ChartOfAccounts' | 'LinkedAccounts'
 
 export interface LayerError {
   type?: LayerErrorType
