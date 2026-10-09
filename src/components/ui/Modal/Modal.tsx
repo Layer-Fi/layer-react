@@ -51,7 +51,6 @@ type InternalModalProps = {
   children: React.ReactNode | ((renderProps: ModalRenderProps) => React.ReactNode)
 }
 
-const MODAL_CLASS_NAME = 'Layer__Modal'
 const InternalModal = forwardRef<HTMLElementTagNameMap['div'], InternalModalProps>(
   ({ children, flexBlock, flexInline, size, variant = 'center' }, ref) => {
     const dataProperties = toDataProperties({ size, 'flex-block': flexBlock, 'flex-inline': flexInline, variant })
@@ -59,7 +58,7 @@ const InternalModal = forwardRef<HTMLElementTagNameMap['div'], InternalModalProp
     return (
       <ReactAriaModal
         {...dataProperties}
-        className={MODAL_CLASS_NAME}
+        className='Layer__Modal'
         ref={ref}
       >
         {({ isEntering, isExiting }) => {
@@ -77,8 +76,6 @@ const MobileDrawerKeyboardSpacer = () => {
 
   return <div className='Layer__Dialog__KeyboardSpacer' style={{ height: keyboardHeight }} />
 }
-
-const DIALOG_CLASS_NAME = 'Layer__Dialog'
 
 type DialogSlots = {
   Header?: React.FC<DialogRenderProps>
@@ -99,7 +96,7 @@ const Dialog = forwardRef<HTMLElement, DialogComponentProps>(
       <ReactAriaDialog
         {...dataProperties}
         {...restProps}
-        className={DIALOG_CLASS_NAME}
+        className='Layer__Dialog'
         ref={ref}
       >
         {(renderProps) => {
