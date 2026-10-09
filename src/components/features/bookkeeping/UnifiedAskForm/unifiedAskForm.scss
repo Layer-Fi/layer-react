@@ -45,12 +45,21 @@
   flex: 1 1 16ch;
 }
 
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes,
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__SlidingPanes > *,
+.Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__UnifiedAskForm__Page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
 .Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__UnifiedAskForm__Footer {
   position: sticky;
-  inset-block-end: 0;
   padding-block: var(--spacing-sm);
-
-  border-block-start: 1px solid var(--border-color);
+  margin-block-start: auto;
 
   background-color: var(--color-base-0);
+  inset-block-end: 0;
+
+  border-block-start: 1px solid var(--border-color);
 }
