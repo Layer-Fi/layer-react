@@ -42,7 +42,6 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
           isOpen={isOpen}
           onClick={toggle}
           backAction={navigation.canGoBack ? { isDisabled: isSubmitting || navigation.routing === 'loading', onBack: navigation.goBack } : null}
-          answerSummary={task.answerSummary ?? null}
         />
         <div className={bodyClassName} aria-hidden={!isOpen}>
           <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded={isOpen} />
