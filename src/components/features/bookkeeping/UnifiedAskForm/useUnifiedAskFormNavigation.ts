@@ -24,6 +24,7 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
 
   const { pages, entryPageId } = task.form
   const { pagesById, stepsById } = useMemo(() => indexPages(pages), [pages])
+  const isReadOnly = useMemo(() => [...stepsById.values()].every(step => !step.editable), [stepsById])
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
 
   const entryView = useMemo(() => toPageView(entryPageId), [entryPageId])
@@ -112,6 +113,7 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
     reset,
     routing,
     stepsById,
+    isReadOnly,
     transactionIds,
     getPageError,
     continueFrom,
@@ -123,6 +125,7 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
     direction,
     getPageError,
     goBack,
+    isReadOnly,
     reset,
     routing,
     stepsById,

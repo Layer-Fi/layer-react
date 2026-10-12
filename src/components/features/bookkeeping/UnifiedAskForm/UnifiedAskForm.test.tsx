@@ -110,13 +110,13 @@ describe('UnifiedAskForm', () => {
     expect(screen.getByRole('textbox')).toBeDisabled()
   })
 
-  it('lets the takeover page past a locked pick instead of waiting for a new one', async () => {
+  it('shows a fully locked task in the takeover without Submit', async () => {
     const task = lockedKindTask({ choice: 'supplies' })
     render(<TasksTakeover tasks={[task]} taskId={task.id} onTaskChange={vi.fn()} />, { wrapper: LayerTestProvider })
 
     expect(await screen.findByRole('radio', { name: 'Supplies' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
   })
 
   it('fills the remember question from the picked category and posts only the path taken', async () => {

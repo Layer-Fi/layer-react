@@ -43,7 +43,7 @@ export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, presentat
           step={step}
           prompt={prompt}
           transactions={task.transactions}
-          isDisabled={!step.editable}
+          isDisabled={isDisabled || !step.editable}
         />
       )
     }

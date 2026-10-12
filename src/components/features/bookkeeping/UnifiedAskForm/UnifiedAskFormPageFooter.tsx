@@ -24,18 +24,20 @@ type UnifiedAskFormPageFooterProps = {
 export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { visitedPages, canGoBack, routing, getPageError } = navigation
+  const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
   const canContinue = getPageError(page, values) === undefined
   const isTakeover = presentation === 'takeover'
-  const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
+  const primaryAction = getPagePrimaryAction(page, values)
+  const isReadOnlyEnd = isReadOnly && (primaryAction === 'SUBMIT' || primaryAction === 'REVIEW')
+  const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
 
-    switch (getPagePrimaryAction(page, values)) {
+    switch (primaryAction) {
       case 'CONNECT_ACCOUNT':
         return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.connect_account', 'Connect account')
       case 'REVIEW':
