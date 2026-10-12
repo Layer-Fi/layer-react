@@ -70,14 +70,14 @@ const spyOnSubmit = (task: UnifiedAskFormTask, response?: Promise<void>) => {
 }
 
 describe('TasksTakeover', () => {
-  it('shows the task position and skips to the next incomplete task, past an answered one', async () => {
+  it('counts only open tasks and skips to the next incomplete task, past an answered one', async () => {
     const { user } = renderTakeover({ taskId: STAPLES.id })
 
-    expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Skip' }))
     expect(await screen.findByRole('heading', { name: 'Uber rides' })).toBeInTheDocument()
-    expect(screen.getByText('Task 4 of 4')).toBeInTheDocument()
+    expect(screen.getByText('Task 3 of 3')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Skip' }))
     expect(await screen.findByRole('heading', { name: 'Costco purchases' })).toBeInTheDocument()
@@ -142,10 +142,11 @@ describe('TasksTakeover', () => {
     renderTakeover({ taskId: AMAZON.id })
 
     expect(screen.getByRole('heading', { name: 'Amazon purchases' })).toBeInTheDocument()
+    expect(screen.getByText('Answered task')).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: 'Office Expenses' })).toBeChecked()
   })
 
-  it('shows Submit instead of continuing on a tap when the step is not editable', () => {
+  it('shows a fully locked task read-only, with Skip but no Submit', () => {
     const locked = makeUnifiedAskFormTask({
       id: '00000000-0000-4000-8000-000000000f05',
       title: 'Locked answer',
@@ -171,6 +172,7 @@ describe('TasksTakeover', () => {
 
     expect(screen.getByRole('radio', { name: 'Supplies' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Travel' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Skip' })).toBeEnabled()
   })
 })
