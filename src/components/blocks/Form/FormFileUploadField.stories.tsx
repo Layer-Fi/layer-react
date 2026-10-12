@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { FormFileUploadField, type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
 
 import {
@@ -48,6 +49,22 @@ export const AllVariants: Story = {
       defaultValue={[]}
       variants={VARIANTS}
       inlineSize={420}
+      renderField={props => <FormFileUploadField label={LABEL} accept={ACCEPT} upload={upload} {...props} />}
+    />
+  ),
+}
+
+const MOBILE_VARIANTS: ReadonlyArray<Variant> = [
+  { label: 'default' },
+  { label: 'multiple, uploaded', value: UPLOADED, props: { multiple: true, maxFiles: 3 } },
+]
+
+export const Mobile: Story = {
+  parameters: { chromatic: { viewports: [BREAKPOINTS.MOBILE - 1] } },
+  render: () => (
+    <FormFieldVariantGallery
+      defaultValue={[]}
+      variants={MOBILE_VARIANTS}
       renderField={props => <FormFileUploadField label={LABEL} accept={ACCEPT} upload={upload} {...props} />}
     />
   ),

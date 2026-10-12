@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen } from '@testing-library/react'
 import type userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -24,13 +24,12 @@ const selectFiles = async (user: ReturnType<typeof userEvent.setup>, container: 
   await user.upload(fileInput, names.map(name => new File(['content'], name)))
 }
 
-const dropFiles = (container: HTMLElement, ...names: string[]) => {
-  const dropZone = container.querySelector('.Layer__FormFileUploadField__DropZone')
-  if (!dropZone) throw new Error('No drop zone rendered')
-
+const dropFiles = (...names: string[]) => {
   const files = names.map(name => new File(['content'], name))
-  fireEvent.drop(dropZone, { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
+  return fireEvent.drop(screen.getByText(/drag and drop/), { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
 }
+
+const flushDrop = () => act(() => new Promise(resolve => setTimeout(resolve, 0)))
 
 describe('FormFileUploadField', () => {
   it('lists every uploaded file and offers to add more', async () => {
@@ -74,9 +73,9 @@ describe('FormFileUploadField', () => {
   })
 
   it('uploads files dropped onto the field', async () => {
-    const { container } = renderUploadField({ accept: ['pdf'], multiple: true })
+    renderUploadField({ accept: ['pdf'], multiple: true })
 
-    dropFiles(container, 'one.pdf', 'two.pdf')
+    dropFiles('one.pdf', 'two.pdf')
 
     expect(await screen.findByText('one.pdf')).toBeInTheDocument()
     expect(screen.getByText('two.pdf')).toBeInTheDocument()
@@ -84,11 +83,23 @@ describe('FormFileUploadField', () => {
 
   it('rejects a drop of several files when only one is allowed', async () => {
     const upload = vi.fn(toUploaded)
-    const { container } = renderUploadField({ upload })
+    renderUploadField({ upload })
 
-    dropFiles(container, 'one.pdf', 'two.pdf')
+    dropFiles('one.pdf', 'two.pdf')
 
     expect(await screen.findByText('Upload 1 file at a time.')).toBeInTheDocument()
+    expect(upload).not.toHaveBeenCalled()
+  })
+
+  it('ignores a drop while the field is disabled', async () => {
+    const upload = vi.fn(toUploaded)
+    renderUploadField({ upload, isDisabled: true })
+
+    const isDefaultAllowed = dropFiles('one.pdf')
+    await flushDrop()
+
+    expect(isDefaultAllowed).toBe(false)
+    expect(screen.queryByText('one.pdf')).not.toBeInTheDocument()
     expect(upload).not.toHaveBeenCalled()
   })
 })

@@ -23,7 +23,7 @@ export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> &
   /** File extensions without the dot; empty accepts any file. */
   accept: ReadonlyArray<string>
   multiple?: boolean
-  /** The most files one upload may carry; a larger selection is rejected before uploading. */
+  /** The most files one upload may carry; only applies with `multiple`. A larger selection is rejected before uploading. */
   maxFiles?: number
   /** Resolves with the files the server stored, or null when the upload failed. */
   upload: (files: ReadonlyArray<File>) => Promise<ReadonlyArray<UploadedFile> | null>
@@ -45,7 +45,6 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
   const files = field.state.value
   const extensions = accept.map(extension => extension.toLowerCase())
   const isAccepted = (name: string) => extensions.length === 0 || extensions.includes(getExtension(name))
-  // A drop can carry several files even when the picker allows one.
   const fileLimit = multiple ? maxFiles : 1
   const isInputDisabled = isDisabled || isUploading
 
@@ -86,10 +85,11 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
   }
 
   const { getRootProps, isDragActive } = useDropzone({
-    onDrop: dropped => void onUpload(dropped),
+    onDrop: (dropped) => {
+      if (!isInputDisabled) void onUpload(dropped)
+    },
     noClick: true,
     noKeyboard: true,
-    disabled: isInputDisabled || isMobile,
   })
 
   const getUploadLabel = () => {
@@ -131,7 +131,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
                 gap='sm'
                 align='center'
                 className='Layer__FormFileUploadField__DropZone'
-                {...toDataProperties({ 'drag-active': isDragActive, 'disabled': isInputDisabled })}
+                {...toDataProperties({ 'drag-active': isDragActive && !isInputDisabled, 'disabled': isInputDisabled })}
                 {...getRootProps()}
               >
                 {fileInput}
