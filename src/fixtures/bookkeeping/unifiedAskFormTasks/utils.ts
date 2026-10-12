@@ -3,6 +3,7 @@ import { type AskForm, type AskFormPage } from '@schemas/features/bookkeeping/bu
 import { ACCOUNT_OPTION_PREFIX } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { type AskFormNext, AskFormNextKind, type AskFormStaticNext } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import {
+  AskFormAction,
   AskFormCategoryScope,
   type AskFormFollowUp,
   type AskFormOption,
@@ -75,13 +76,20 @@ export const textFollowUp = (prompt: string | null, placeholder: string | null =
   required: true,
 })
 
-export const choiceStep = (id: string, prompt: string, options: AskFormOption[]): AskFormStep => ({
+type AskFormStepOf<Type extends AskFormStepType> = Extract<AskFormStep, { type: Type }>
+
+export const choiceStep = (
+  id: string,
+  prompt: string,
+  options: AskFormOption[],
+  { autoAdvance = false }: Partial<Pick<AskFormStepOf<AskFormStepType.Choice>, 'autoAdvance'>> = {},
+): AskFormStep => ({
   id,
   editable: true,
   type: AskFormStepType.Choice,
   prompt,
   options,
-  autoAdvance: false,
+  autoAdvance,
 })
 
 type CategoryStepOptions = { scope?: AskFormCategoryScope, search?: boolean }
@@ -93,14 +101,26 @@ export const categoryStep = (
   { scope = AskFormCategoryScope.Task, search = false }: CategoryStepOptions = {},
 ): AskFormStep => ({ id, editable: true, type: AskFormStepType.Category, prompt, options, scope, search })
 
-export const textStep = (id: string, prompt: string): AskFormStep => ({
+export const textStep = (
+  id: string,
+  prompt: string,
+  { multiline = true, required = true }: Partial<Pick<AskFormStepOf<AskFormStepType.Text>, 'multiline' | 'required'>> = {},
+): AskFormStep => ({
   id,
   editable: true,
   type: AskFormStepType.Text,
   prompt,
   placeholder: null,
-  multiline: true,
-  required: true,
+  multiline,
+  required,
+})
+
+export const connectAccountStep = (id: string, prompt: string): AskFormStep => ({
+  id,
+  editable: true,
+  type: AskFormStepType.Action,
+  action: AskFormAction.ConnectAccount,
+  prompt,
 })
 
 type AskTransactionSeed = { id: string, day: number, amount: number, description: string }
