@@ -112,7 +112,6 @@ export const TasksPending = () => {
           <DataState
             inline
             status={statusConfig.dataStateStatus}
-            icon={statusConfig.icon}
             title={statusConfig.label}
             description={statusConfig.description}
             slotProps={{ Title: { status: statusConfig.color } }}
