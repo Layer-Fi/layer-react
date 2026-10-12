@@ -1,7 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
 import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
-import { type LayerError } from '@utils/shared/api/errorHandler'
 import { type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { type EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'
 import { type EventCallbacks, LayerProvider } from '@providers/global/LayerProvider/LayerProvider'
@@ -35,7 +34,6 @@ type LayerTestProviderProps = PropsWithChildren<{
   locale?: SupportedLocale
   theme?: LayerThemeConfig
   eventCallbacks?: EventCallbacks
-  onError?: (error: LayerError) => void
   usePlaidSandbox?: boolean
 }>
 
@@ -44,7 +42,6 @@ export const LayerTestProvider = ({
   locale,
   theme = TEST_LAYER_THEME,
   eventCallbacks,
-  onError,
   usePlaidSandbox,
 }: LayerTestProviderProps) => (
   <LayerProvider
@@ -55,7 +52,6 @@ export const LayerTestProvider = ({
     locale={locale}
     theme={theme}
     eventCallbacks={eventCallbacks}
-    onError={onError}
     usePlaidSandbox={usePlaidSandbox}
   >
     {children}

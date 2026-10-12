@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidLinkOnEvent, type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import { type PlaidInstitution, type PlaidLinkError, type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
+import { LayerEventComponent, LayerEventType, type LinkedAccountsLinkFinishedEventV1 } from '@schemas/common/layerEvents'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { PlaidLinkClientOutcome, type ReportPlaidLinkOutcomeParams } from '@schemas/features/linkedAccounts/plaidLinkOutcome'
-import { reportError } from '@utils/shared/api/errorHandler'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
 import { usePostPlaidLinkOutcome } from '@api/businesses/[business-id]/plaid/link/outcome/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
-import { PlaidLinkError, type PlaidLinkExitError } from '@hooks/features/linkedAccounts/plaidLinkError'
 
 export type LinkMode = 'update' | 'add'
 
@@ -30,7 +30,20 @@ type UsePlaidLinkModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-const PLAID_ERROR_SCREEN_VIEWS = new Set(['ERROR', 'EXIT'])
+type LinkFinishedPayload = typeof LinkedAccountsLinkFinishedEventV1.Type['payload']
+
+const toLinkFinishedInstitution = (institution: PlaidInstitution | null) =>
+  institution ? { id: institution.institution_id, name: institution.name } : null
+
+const toLinkFinishedError = (error: PlaidLinkError | null) =>
+  error
+    ? {
+      type: error.error_type,
+      code: error.error_code,
+      message: error.error_message,
+      displayMessage: error.display_message || null,
+    }
+    : null
 
 /**
  * Drives the embedded Plaid Link modal for a token owned by the caller: opening
@@ -61,38 +74,29 @@ export function usePlaidLinkModal({
     void triggerPlaidLinkOutcome(params).catch(() => undefined)
   }
 
-  const lastSessionErrorRef = useRef<PlaidLinkExitError | null>(null)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
 
-  const handlePlaidLinkEvent: PlaidLinkOnEvent = (eventName, metadata) => {
-    const hasLeftErrorScreen = eventName === 'TRANSITION_VIEW' && !PLAID_ERROR_SCREEN_VIEWS.has(metadata.view_name ?? '')
-
-    if (hasLeftErrorScreen) {
-      lastSessionErrorRef.current = null
-      return
-    }
-
-    if (eventName === 'ERROR' && metadata.error_code) {
-      lastSessionErrorRef.current = {
-        error_type: metadata.error_type ?? '',
-        error_code: metadata.error_code,
-        error_message: metadata.error_message ?? '',
-        display_message: '',
-      }
-    }
+  const emitLinkFinished = (payload: Omit<LinkFinishedPayload, 'provider' | 'linkMode'>) => {
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsLinkFinished,
+      version: 1,
+      payload: { provider: 'PLAID', linkMode, ...payload },
+    })
   }
 
-  const handlePlaidLinkExit: PlaidLinkOnExit = (exitError, metadata) => {
-    // Plaid passes a null error when the user backs out of its error screen before closing Link.
-    const error = exitError ?? lastSessionErrorRef.current
-    lastSessionErrorRef.current = null
-
-    if (error) {
-      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code })
-      reportError({ type: 'plaid_link', scope: 'LinkedAccounts', payload: new PlaidLinkError(error, metadata, linkMode) })
-    }
-    else {
-      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Exited })
-    }
+  const handlePlaidLinkExit: PlaidLinkOnExit = (error, metadata) => {
+    reportPlaidLinkOutcome(
+      error
+        ? { outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code }
+        : { outcome: PlaidLinkClientOutcome.Exited },
+    )
+    emitLinkFinished({
+      outcome: error ? 'error' : 'exited',
+      linkSessionId: metadata.link_session_id,
+      institution: toLinkFinishedInstitution(metadata.institution),
+      exitStatus: metadata.status,
+      error: toLinkFinishedError(error),
+    })
 
     setLinkMode('add')
   }
@@ -152,8 +156,14 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
-      lastSessionErrorRef.current = null
       reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
+      emitLinkFinished({
+        outcome: 'completed',
+        linkSessionId: metadata.link_session_id,
+        institution: toLinkFinishedInstitution(metadata.institution),
+        exitStatus: null,
+        error: null,
+      })
 
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
@@ -169,7 +179,6 @@ export function usePlaidLinkModal({
       }
     },
     onExit: handlePlaidLinkExit,
-    onEvent: handlePlaidLinkEvent,
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 
