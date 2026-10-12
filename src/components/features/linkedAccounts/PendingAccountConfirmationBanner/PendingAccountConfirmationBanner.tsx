@@ -42,11 +42,10 @@ const PendingAccountConfirmationBannerContent = ({ pendingCount }: { pendingCoun
   )
 }
 
-/** Shown while new accounts await confirmation; the dialog opens only from Review accounts. */
 export const PendingAccountConfirmationBanner = () => {
   const { data } = useBankAccountsContext()
   const pendingCount = getAccountsNeedingConfirmation(data ?? []).length
 
-  // Unmounting the content once nothing is pending resets the dialog, so new accounts never reopen it by themselves.
+  // Unmounting resets isConfirming, so later accounts don't reopen the dialog.
   return pendingCount > 0 ? <PendingAccountConfirmationBannerContent pendingCount={pendingCount} /> : null
 }

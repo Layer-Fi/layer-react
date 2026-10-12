@@ -220,7 +220,6 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
 }
 
 type LinkedAccountsConfirmationModalProps = {
-  /** When set, the caller opens the modal, and it never opens by itself. */
   isOpen?: boolean
   onOpenChange?: (isOpen: boolean) => void
 }

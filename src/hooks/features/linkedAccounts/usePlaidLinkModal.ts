@@ -20,7 +20,6 @@ type UsePlaidLinkModalOptions = {
   /** Called after the connection set changes, so the caller can refresh accounts. */
   onSuccess: () => Awaitable<void>
   onAddConnectionSuccess?: () => Awaitable<void>
-  /** Called when an add flow ends without a new connection: Link closed, or the token exchange failed. */
   onAddConnectionExit?: () => void
   /** Updates the active link mode; reset to 'add' when a flow completes or the modal exits. */
   setLinkMode: (mode: LinkMode) => void
@@ -54,7 +53,7 @@ export function usePlaidLinkModal({
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
 
   const [isLinking, setIsLinking] = useState(false)
-  // react-plaid-link force-exits a finished session when the token changes, so only an open session reports an exit.
+  // react-plaid-link force-exits a finished session when the token changes; only an open session may report an exit.
   const isLinkOpenRef = useRef(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 

@@ -36,8 +36,6 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const [isConnecting, setIsConnecting] = useState(false)
   const [hasConnected, setHasConnected] = useState(false)
 
-  // Connect account continues only once the account connects; closing Link keeps the customer on the page.
-  // After a connection, pressing it again only retries the save.
   const onPrimary = () => {
     if (routing === 'error' || getPagePrimaryAction(page, values) !== 'CONNECT_ACCOUNT' || !connectAccount || hasConnected) {
       onContinue()

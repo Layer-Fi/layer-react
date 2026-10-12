@@ -25,7 +25,6 @@ const LinkedAccountsConnectAccountProvider = ({ children }: PropsWithChildren) =
   )
 }
 
-/** Connects accounts through the host's linked-accounts providers, mounting Layer's own when the host has none. */
 export const ConnectAccountProvider = ({ children }: PropsWithChildren) => {
   const hasAccountConfirmationStoreProvider = useHasAccountConfirmationStoreProvider()
   const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()

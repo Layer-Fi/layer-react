@@ -25,7 +25,6 @@ type UseLinkedAccountsOptions = {
 }
 
 export type AddConnectionOptions = {
-  /** Called once when this add flow ends: true after the new connection is saved, false otherwise, including when another add flow is still running. */
   onComplete?: (isConnected: boolean) => void
 }
 
@@ -244,7 +243,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
         t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
       )
 
-      // Hosted Link leaves the page, so the flow can't wait for it; the API closes the task once the account connects.
+      // Hosted Link reloads the page on return, so the flow can't wait for it.
       if (!isOpened) completeAddConnection(false)
     },
     [completeAddConnection, fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
