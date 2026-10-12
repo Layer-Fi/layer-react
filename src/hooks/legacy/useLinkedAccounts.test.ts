@@ -53,9 +53,9 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-    await result.current.repairConnection('PLAID', PROCESSOR_TOKEN)
+    void result.current.repairConnection('PLAID', PROCESSOR_TOKEN)
 
-    expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith(PROCESSOR_TOKEN)
+    await waitFor(() => expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith(PROCESSOR_TOKEN))
     expect(createPlaidUpdateModeLink).not.toHaveBeenCalled()
   })
 
@@ -112,11 +112,11 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await result.current.repairConnection('PLAID', PLAID_ITEM_ID)
+    void result.current.repairConnection('PLAID', PLAID_ITEM_ID)
 
-    expect(createPlaidUpdateModeLink).toHaveBeenCalledWith(
+    await waitFor(() => expect(createPlaidUpdateModeLink).toHaveBeenCalledWith(
       expect.objectContaining({ body: { plaid_item_id: PLAID_ITEM_ID } }),
-    )
+    ))
   })
 
   it('still unlinks the item through Layer', async () => {

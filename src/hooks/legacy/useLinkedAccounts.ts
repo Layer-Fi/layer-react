@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
@@ -94,18 +94,6 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
-  const [linkToken, setLinkToken] = useState<string | null>(null)
-  const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const pendingAddConnectionRef = useRef<((isConnected: boolean) => void) | null>(null)
-
-  const settleAddConnection = useCallback((isConnected: boolean) => {
-    const resolve = pendingAddConnectionRef.current
-    pendingAddConnectionRef.current = null
-    resolve?.(isConnected)
-  }, [])
-
-  const exitAddConnection = useCallback(() => settleAddConnection(false), [settleAddConnection])
-
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
@@ -128,22 +116,13 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   }, [refetch, forceReloadBankTransactions])
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
-    try {
-      await refetchAccountsAndTransactions().catch(() => undefined)
-      await onPlaidConnectionSuccess?.()
-    }
-    finally {
-      settleAddConnection(true)
-    }
-  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess, settleAddConnection])
+    await refetchAccountsAndTransactions().catch(() => undefined)
+    await onPlaidConnectionSuccess?.()
+  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
 
-  const { isLinking } = usePlaidLinkModal({
-    linkToken,
-    linkMode,
-    setLinkMode,
+  const { isLinking, openLink } = usePlaidLinkModal({
     onSuccess: refetchAccountsAndTransactions,
     onAddConnectionSuccess: handlePlaidConnectionSuccess,
-    onAddConnectionExit: exitAddConnection,
     customerManagedPlaidConfig,
   })
 
@@ -170,9 +149,9 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   )
 
   /**
-   * Requests a Plaid link token, opening the embedded modal on success and
-   * surfacing an error toast on failure. A request resolving `undefined` is
-   * treated as already handled and opens nothing. Resolves whether the modal was opened.
+   * Requests a Plaid link token and opens the embedded modal with it, resolving whether the
+   * session ended with a connection. A request resolving `undefined` is treated as already
+   * handled (Hosted Link navigates away) and resolves false; a failed request shows a toast.
    */
   const fetchLinkToken = useCallback(
     (
@@ -181,19 +160,13 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
       errorMessage: string,
     ) =>
       requestToken().then(
-        (result) => {
-          if (!result) return false
-
-          setLinkMode(mode)
-          setLinkToken(result.linkToken)
-          return true
-        },
+        result => (result ? openLink(result.linkToken, mode) : false),
         () => {
           addToast({ content: errorMessage, type: 'error' })
           return false
         },
       ),
-    [addToast],
+    [addToast, openLink],
   )
 
   // The config is snapshotted with the request so the response is handled with the same
@@ -221,30 +194,17 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = useCallback(
-    () => new Promise<boolean>((resolve) => {
-      // One add flow at a time, so a late result can't settle the wrong one.
-      if (pendingAddConnectionRef.current) {
-        resolve(false)
-        return
-      }
-
-      pendingAddConnectionRef.current = resolve
-
-      void fetchLinkToken(
-        'add',
-        customerManagedPlaidConfig
-          ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
-          : withHostedLinkRedirect(
-            () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
-            plaidHostedLinkConfig,
-          ),
-        t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
-      ).then((isOpened) => {
-        // Hosted Link reloads the page on return, so the flow can't wait for it.
-        if (!isOpened) settleAddConnection(false)
-      })
-    }),
-    [settleAddConnection, fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
+    () => fetchLinkToken(
+      'add',
+      customerManagedPlaidConfig
+        ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
+        : withHostedLinkRedirect(
+          () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+          plaidHostedLinkConfig,
+        ),
+      t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+    ),
+    [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
   /**

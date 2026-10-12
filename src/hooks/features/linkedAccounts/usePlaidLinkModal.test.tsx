@@ -33,26 +33,22 @@ const closePlaidLink = () =>
     lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
   })
 
+const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null } = {}) =>
+  mockedUsePlaidLink.mockReturnValue(
+    { open: vi.fn(), ready: false, error: null, ...state } as unknown as ReturnType<typeof usePlaidLink>,
+  )
+
 type RenderAddModeModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   usePlaidSandbox?: boolean
-  onAddConnectionExit?: () => void
 }
 
-const renderAddModeModal = ({
+const renderAddModeModal = async ({
   customerManagedPlaidConfig,
   usePlaidSandbox = false,
-  onAddConnectionExit,
-}: RenderAddModeModalOptions = {}) =>
-  renderHookWithAuth(
-    () => usePlaidLinkModal({
-      linkToken: 'a-link-token',
-      linkMode: 'add',
-      setLinkMode: vi.fn(),
-      onSuccess: vi.fn(),
-      onAddConnectionExit,
-      customerManagedPlaidConfig,
-    }),
+}: RenderAddModeModalOptions = {}) => {
+  const rendered = await renderHookWithAuth(
+    () => usePlaidLinkModal({ onSuccess: vi.fn(), customerManagedPlaidConfig }),
     {
       wrapper: ({ children }: PropsWithChildren) => (
         <LayerTestProvider usePlaidSandbox={usePlaidSandbox}>{children}</LayerTestProvider>
@@ -60,11 +56,17 @@ const renderAddModeModal = ({
     },
   )
 
+  let session: Promise<boolean> = Promise.resolve(false)
+  act(() => {
+    session = rendered.result.current.openLink('a-link-token', 'add')
+  })
+
+  return { ...rendered, session }
+}
+
 beforeEach(() => {
   mockedUsePlaidLink.mockReset()
-  mockedUsePlaidLink.mockReturnValue(
-    { open: vi.fn(), ready: false } as unknown as ReturnType<typeof usePlaidLink>,
-  )
+  mockPlaidLink()
 })
 
 afterEach(() => vi.restoreAllMocks())
@@ -148,42 +150,44 @@ describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
   })
 })
 
-const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null }) =>
-  mockedUsePlaidLink.mockReturnValue(
-    { open: vi.fn(), ready: false, error: null, ...state } as unknown as ReturnType<typeof usePlaidLink>,
-  )
-
-describe('usePlaidLinkModal when an add flow ends without a connection', () => {
-  it('does not report the exit Plaid sends after a successful session', async () => {
-    const onAddConnectionExit = vi.fn()
-    mockPlaidLink({ ready: true })
-    await renderAddModeModal({ onAddConnectionExit })
+describe('usePlaidLinkModal sessions', () => {
+  it('resolves true once the connection is saved and clears the token', async () => {
+    const { session } = await renderAddModeModal()
+    expect(lastPlaidLinkOptions().token).toBe('a-link-token')
 
     await completePlaidLink()
+
+    await expect(session).resolves.toBe(true)
+    expect(lastPlaidLinkOptions().token).toBeNull()
+  })
+
+  it('resolves false when Link closes', async () => {
+    mockPlaidLink({ ready: true })
+    const { session } = await renderAddModeModal()
+
     closePlaidLink()
 
-    expect(onAddConnectionExit).not.toHaveBeenCalled()
+    await expect(session).resolves.toBe(false)
+    expect(lastPlaidLinkOptions().token).toBeNull()
   })
 
-  it('reports Plaid failing to load', async () => {
-    const onAddConnectionExit = vi.fn()
-    mockPlaidLink({ error: new ErrorEvent('error') })
-    await renderAddModeModal({ onAddConnectionExit })
-
-    expect(onAddConnectionExit).toHaveBeenCalledOnce()
-  })
-
-  it('reports a public token that couldn’t be saved', async () => {
-    const onAddConnectionExit = vi.fn()
-    await renderAddModeModal({
+  it('resolves false when the public token couldn’t be saved', async () => {
+    const { session } = await renderAddModeModal({
       customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
         onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
       }),
-      onAddConnectionExit,
     })
 
     await completePlaidLink()
 
-    await waitFor(() => expect(onAddConnectionExit).toHaveBeenCalledOnce())
+    await expect(session).resolves.toBe(false)
+  })
+
+  it('resolves false when Plaid failed to load, without opening a session', async () => {
+    mockPlaidLink({ error: new ErrorEvent('error') })
+    const { session } = await renderAddModeModal()
+
+    await expect(session).resolves.toBe(false)
+    expect(lastPlaidLinkOptions().token).toBeNull()
   })
 })
