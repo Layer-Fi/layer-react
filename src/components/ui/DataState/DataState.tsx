@@ -7,7 +7,7 @@ import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/share
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
-import { Span, type TextStatus } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 
 import './dataState.scss'
 
@@ -69,7 +69,6 @@ export interface DataStateProps {
     Title?: {
       size?: 'sm' | 'md' | 'lg'
       ellipsis?: boolean
-      status?: TextStatus
     }
   }
   className?: string
@@ -109,7 +108,7 @@ export const DataState = ({
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
-  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis, status: titleStatus } = slotProps?.Title ?? {}
+  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis } = slotProps?.Title ?? {}
   const baseClassName = classNames(
     legacyClassNames(
       'Layer__UI__DataState',
@@ -129,7 +128,6 @@ export const DataState = ({
           size={titleSize}
           weight='bold'
           variant='placeholder'
-          status={titleStatus}
           align={inline ? undefined : 'center'}
           withTooltip={titleEllipsis}
         >

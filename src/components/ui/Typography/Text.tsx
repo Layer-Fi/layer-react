@@ -34,8 +34,6 @@ const legacyClassNames = createLegacyClassNames({
 >)
 
 type TextSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
-export type TextStatus = 'error' | 'success' | 'warning' | 'disabled' | 'info'
 type TextWeight = 'normal' | 'bold'
 
 export type TextStyleProps = {
@@ -50,7 +48,7 @@ export type TextStyleProps = {
   pie?: Spacing
   pis?: Spacing
   size?: TextSize
-  status?: TextStatus
+  status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
   invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'

@@ -7,7 +7,9 @@ import { tPlural } from '@utils/shared/i18n/plural'
 import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DataStateStatus } from '@ui/DataState/DataState'
-import { type TextStatus } from '@ui/Typography/Text'
+import type { TextStyleProps } from '@ui/Typography/Text'
+
+type TextStatus = NonNullable<TextStyleProps['status']>
 
 type InternalStatusConfig = {
   label: string
