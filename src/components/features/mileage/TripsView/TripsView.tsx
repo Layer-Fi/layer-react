@@ -24,7 +24,7 @@ const TripsViewEmptyState = () => {
   const { t } = useTranslation()
   return (
     <DataState
-      status={DataStateStatus.allDone}
+      status={DataStateStatus.neutral}
       title={t('mileage:TripsView.empty.no_trips_yet', 'No trips yet')}
       description={t('mileage:TripsView.empty.add_first_trip', 'Add your first trip to start tracking mileage.')}
       icon={<Car />}

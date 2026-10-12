@@ -126,7 +126,7 @@ export const LedgerEntryDetailsLineItemsTable = ({
   const slots = useMemo(() => ({
     EmptyState: () => (
       <DataState
-        status={DataStateStatus.info}
+        status={DataStateStatus.neutral}
         title={t('generalLedger:LedgerEntryDetails.LedgerEntryDetailsLineItemsTable.empty.line_items', 'No line items')}
         description={t('generalLedger:LedgerEntryDetails.LedgerEntryDetailsLineItemsTable.empty.line_items_description', 'This entry has no line items.')}
         spacing

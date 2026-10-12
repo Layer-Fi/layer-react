@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
-import { findNextIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { findNextIncompleteTask, getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { BackButton } from '@ui/Button/BackButton'
@@ -26,6 +26,8 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
   const { formatNumber } = useIntlFormatter()
   const { eventCallbacks } = useLayerContext()
   const nextTaskId = findNextIncompleteTask(tasks, task.id)?.id ?? null
+  const incompleteTasks = getIncompleteTasks(tasks)
+  const incompletePosition = incompleteTasks.findIndex(({ id }) => id === task.id)
 
   const onSaved = useCallback(({ categorized }: UnifiedAskFormSubmissionResult) => {
     if (categorized) eventCallbacks?.onTransactionCategorized?.()
@@ -55,10 +57,12 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
             : null}
         </HStack>
         <Span size='md' weight='bold'>
-          {t('bookkeeping:TasksTakeover.TasksTakeoverTask.label.task_position', 'Task {{number}} of {{total}}', {
-            number: formatNumber(tasks.indexOf(task) + 1),
-            total: formatNumber(tasks.length),
-          })}
+          {incompletePosition === -1
+            ? t('bookkeeping:TasksTakeover.TasksTakeoverTask.label.answered_task', 'Answered task')
+            : t('bookkeeping:TasksTakeover.TasksTakeoverTask.label.task_position', 'Task {{number}} of {{total}}', {
+              number: formatNumber(incompletePosition + 1),
+              total: formatNumber(incompleteTasks.length),
+            })}
         </Span>
         <HStack className='Layer__TasksTakeover__HeaderSide' justify='end'>
           <CloseButton isDisabled={isPending} onPress={() => onTaskChange(null)} />

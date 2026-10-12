@@ -2,88 +2,57 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { Pagination } from '@ui/Pagination/Pagination'
-import { TasksMobilePanel } from '@features/bookkeeping/TasksList/TasksMobilePanel'
-import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
+import { VStack } from '@ui/Stack/Stack'
+import { MobileList } from '@blocks/MobileList/MobileList'
+import { TasksListMobileItem } from '@features/bookkeeping/TasksList/TasksListMobileItem'
+import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
-const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
+// The list renders only once the period has loaded with at least one task.
+const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
 
 type TasksListMobileProps = {
-  tasksCount: number
-  sortedTasks: ReadonlyArray<UserVisibleTask>
-  indexFirstIncomplete: number
-  currentPage: number
-  pageSize: number
-  setCurrentPage: (page: number) => void
+  /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */
+  tasks: ReadonlyArray<UserVisibleTask>
 }
 
-export const TasksListMobile = ({
-  tasksCount,
-  sortedTasks,
-  indexFirstIncomplete,
-  currentPage,
-  pageSize,
-  setCurrentPage,
-}: TasksListMobileProps) => {
+export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const [showMobilePanel, setShowMobilePanel] = useState(false)
-
-  const unresolvedTasks = getIncompleteTasks(sortedTasks).slice(0, MOBILE_SHOW_UNRESOLVED_TASKS_COUNT)
+  const [openTaskId, setOpenTaskId] = useState<string | null>(null)
+  const incompleteTasks = getIncompleteTasks(tasks)
+  const [firstIncompleteTask] = incompleteTasks
 
   return (
-    <div className='Layer__tasks-list'>
-      {unresolvedTasks.map((task, index) => (
-        <TasksListItem
-          key={task.id}
-          task={task}
-          defaultOpen={index === indexFirstIncomplete}
-        />
-      ))}
-      {unresolvedTasks.length === 0 && tasksCount > 0
+    <VStack gap='md' pbe='md'>
+      <MobileList
+        ariaLabel={t('bookkeeping:TasksList.TasksListMobile.label.tasks', 'Tasks')}
+        data={tasks}
+        isLoading={false}
+        isError={false}
+        variant='compact'
+        itemClassName='Layer__TasksListMobile__Row'
+        slots={LIST_SLOTS}
+        renderItem={task => <TasksListMobileItem task={task} />}
+        onClickItem={task => setOpenTaskId(task.id)}
+      />
+      {firstIncompleteTask
         ? (
-          <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button variant='text' underline onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:TasksList.TasksListMobile.action.show_completed_tasks', 'Show completed tasks')}</Button>
-          </div>
-        )
-        : null}
-      {unresolvedTasks.length !== 0 && tasksCount > unresolvedTasks.length
-        ? (
-          <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button onPress={() => setShowMobilePanel(true)} fullWidth>
-              {t('bookkeeping:TasksList.TasksListMobile.action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })}
+          <VStack pi='md'>
+            <Button fullWidth onPress={() => setOpenTaskId(firstIncompleteTask.id)}>
+              {tPlural(t, 'bookkeeping:TasksList.TasksListMobile.action.answer_tasks', {
+                count: incompleteTasks.length,
+                displayCount: formatNumber(incompleteTasks.length),
+                one: 'Answer task',
+                other: 'Answer {{displayCount}} tasks',
+              })}
             </Button>
-          </div>
+          </VStack>
         )
         : null}
-      <TasksMobilePanel
-        open={showMobilePanel}
-        onClose={() => setShowMobilePanel(false)}
-        header={<p>{t('bookkeeping:TasksList.TasksListMobile.label.tasks', 'Tasks')}</p>}
-      >
-        {sortedTasks && sortedTasks.length > 0
-          && (
-            <div className='Layer__tasks-list'>
-              {sortedTasks.map((task, index) => (
-                <TasksListItem
-                  key={task.id}
-                  task={task}
-                  defaultOpen={index === indexFirstIncomplete}
-                />
-              ))}
-              {tasksCount > pageSize && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalCount={tasksCount}
-                  pageSize={pageSize}
-                  onPageChange={page => setCurrentPage(page)}
-                />
-              )}
-            </div>
-          )}
-      </TasksMobilePanel>
-    </div>
+      <TasksTakeover tasks={tasks} taskId={openTaskId} onTaskChange={setOpenTaskId} />
+    </VStack>
   )
 }

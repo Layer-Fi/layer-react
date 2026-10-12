@@ -73,7 +73,7 @@ const ChartOfAccountsEmptyState = () => {
 
   return (
     <DataState
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('generalLedger:ChartOfAccountsTable.empty.accounts', 'No accounts found')}
       description={t('generalLedger:ChartOfAccountsTable.empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
       spacing

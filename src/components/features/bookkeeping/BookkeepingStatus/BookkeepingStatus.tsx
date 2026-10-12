@@ -22,15 +22,15 @@ export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly, classNa
     return
   }
 
-  const dataProperties = toDataProperties({ status: statusConfig.color })
+  const dataProperties = toDataProperties({ status: statusConfig.status })
 
   return (
     <HStack className={classNames('Layer__bookkeeping-status', className)} gap='3xs' align='center' {...dataProperties}>
-      <span className='Layer__bookkeeping-status__icon-wrapper' data-status={statusConfig.color}>
+      <span className='Layer__bookkeeping-status__icon-wrapper' data-status={statusConfig.status}>
         {statusConfig.icon}
       </span>
       {!iconOnly && (
-        <Span size='sm' status={statusConfig.color}>
+        <Span size='sm' status={statusConfig.status}>
           {text ?? statusConfig.label}
         </Span>
       )}

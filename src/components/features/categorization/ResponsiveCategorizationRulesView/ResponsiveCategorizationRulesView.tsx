@@ -38,7 +38,7 @@ const CategorizationRulesEmptyState = ({ isFiltered }: { isFiltered: boolean }) 
   const { t } = useTranslation()
   return (
     <DataState
-      status={DataStateStatus.allDone}
+      status={DataStateStatus.neutral}
       title={isFiltered
         ? t('common:empty.results', 'No results found')
         : t('categorization:ResponsiveCategorizationRulesView.empty.no_rules_found', 'No rules found')}
