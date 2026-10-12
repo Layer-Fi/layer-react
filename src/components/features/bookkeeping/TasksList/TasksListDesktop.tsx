@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { isIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
@@ -8,7 +9,7 @@ import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem
 
 type TasksListDesktopProps = {
   /** Every task in the period, incomplete first. */
-  tasks: ReadonlyArray<UserVisibleTask>
+  tasks: ReadonlyArray<UnifiedAskFormTask>
   pageSize: number
 }
 

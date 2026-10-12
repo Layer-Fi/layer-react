@@ -2,7 +2,8 @@ import classNames from 'classnames'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
@@ -15,7 +16,7 @@ export type TasksListItemBackAction = {
 }
 
 type TasksListItemHeaderProps = {
-  task: UserVisibleTask
+  task: UnifiedAskFormTask
   isOpen: boolean
   backAction: TasksListItemBackAction | null
   answerSummary: string | null

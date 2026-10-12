@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
@@ -16,7 +15,7 @@ const renderItem = () => {
     counterparty: 'Costco',
     suggestions: [bankTransactionCategories.officeExpenses, bankTransactionCategories.meals],
     transactions: askTransactions(1, [{ id: 'a01', day: 14, amount: -30774, description: 'COSTCO WHSE #1042' }]),
-  }) as UserVisibleTask
+  })
 
   return {
     user: userEvent.setup(),

@@ -1,6 +1,5 @@
 import { type BusinessTask, isUnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTask'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 
 export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
   task: T,
@@ -27,23 +26,11 @@ export function getIncompleteTasks<T extends Pick<BusinessTask, 'status'>>(
   return tasks.filter(task => isIncompleteTask(task))
 }
 
-type UserVisibleTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Completed | BusinessTaskStatus.Archived>
-export type UserVisibleTask = UnifiedAskFormTask & { status: UserVisibleTaskStatus }
-
-function isUserVisibleTask<T extends BusinessTask>(
-  task: T,
-): task is T & UnifiedAskFormTask & { status: UserVisibleTaskStatus } {
-  const { status } = task
-
-  return isUnifiedAskFormTask(task)
-    && status !== BusinessTaskStatus.Completed
-    && status !== BusinessTaskStatus.Archived
-}
-
-export function getUserVisibleTasks<T extends BusinessTask>(
+/** The unified ask form tasks among `tasks`. Which statuses to show is the API's decision, so this filters by type only. */
+export function getUnifiedAskFormTasks<T extends BusinessTask>(
   tasks: ReadonlyArray<T>,
 ) {
-  return tasks.filter(task => isUserVisibleTask(task))
+  return tasks.filter(task => isUnifiedAskFormTask(task))
 }
 
 type CompletedTaskStatus = Exclude<BusinessTaskStatus, BusinessTaskStatus.Todo>

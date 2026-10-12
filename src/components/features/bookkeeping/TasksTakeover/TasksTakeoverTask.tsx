@@ -2,7 +2,8 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
-import { findNextIncompleteTask, getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { findNextIncompleteTask, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { BackButton } from '@ui/Button/BackButton'
@@ -16,8 +17,8 @@ import { useUnifiedAskForm } from '@features/bookkeeping/UnifiedAskForm/useUnifi
 import { useUnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 
 type TasksTakeoverTaskProps = {
-  task: UserVisibleTask
-  tasks: ReadonlyArray<UserVisibleTask>
+  task: UnifiedAskFormTask
+  tasks: ReadonlyArray<UnifiedAskFormTask>
   onTaskChange: (taskId: string | null) => void
 }
 

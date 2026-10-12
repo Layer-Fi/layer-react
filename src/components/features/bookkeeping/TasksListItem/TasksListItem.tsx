@@ -2,7 +2,8 @@ import { forwardRef, useCallback } from 'react'
 import classNames from 'classnames'
 
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
-import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { TasksListItemHeader } from '@features/bookkeeping/TasksListItem/TasksListItemHeader'
 import { useTasksListItemOpenState } from '@features/bookkeeping/TasksListItem/useTasksListItemOpenState'
@@ -11,7 +12,7 @@ import { useUnifiedAskForm } from '@features/bookkeeping/UnifiedAskForm/useUnifi
 import { useUnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 
 type TasksListItemProps = {
-  task: UserVisibleTask
+  task: UnifiedAskFormTask
   defaultOpen: boolean
   onExpandTask?: (isOpen: boolean) => void
 }

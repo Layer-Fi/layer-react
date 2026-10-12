@@ -7,7 +7,6 @@ import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
@@ -41,15 +40,15 @@ const AMAZON = makeUnifiedAskFormTask({
 })
 const UBER = makeUnifiedAskFormTask({ id: '00000000-0000-4000-8000-000000000f04', title: 'Uber rides' })
 
-const TASKS = [COSTCO, STAPLES, AMAZON, UBER] as UserVisibleTask[]
+const TASKS = [COSTCO, STAPLES, AMAZON, UBER] as UnifiedAskFormTask[]
 
-const TakeoverHarness = ({ tasks, initialTaskId }: { tasks: ReadonlyArray<UserVisibleTask>, initialTaskId: string }) => {
+const TakeoverHarness = ({ tasks, initialTaskId }: { tasks: ReadonlyArray<UnifiedAskFormTask>, initialTaskId: string }) => {
   const [taskId, setTaskId] = useState<string | null>(initialTaskId)
 
   return <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
 }
 
-const renderTakeover = ({ tasks = TASKS, taskId = COSTCO.id }: { tasks?: ReadonlyArray<UserVisibleTask>, taskId?: string } = {}) => ({
+const renderTakeover = ({ tasks = TASKS, taskId = COSTCO.id }: { tasks?: ReadonlyArray<UnifiedAskFormTask>, taskId?: string } = {}) => ({
   user: userEvent.setup(),
   ...render(<TakeoverHarness tasks={tasks} initialTaskId={taskId} />, { wrapper: LayerTestProvider }),
 })
@@ -127,7 +126,7 @@ describe('TasksTakeover', () => {
 
   it('closes once the last incomplete task is saved', async () => {
     const onSubmit = spyOnSubmit(STAPLES)
-    const { user } = renderTakeover({ tasks: [STAPLES, AMAZON] as UserVisibleTask[], taskId: STAPLES.id })
+    const { user } = renderTakeover({ tasks: [STAPLES, AMAZON] as UnifiedAskFormTask[], taskId: STAPLES.id })
 
     expect(screen.queryByRole('button', { name: 'Skip' })).not.toBeInTheDocument()
 
@@ -167,8 +166,8 @@ describe('TasksTakeover', () => {
           }],
         }],
       },
-    }) as UserVisibleTask
-    renderTakeover({ tasks: [locked, UBER] as UserVisibleTask[], taskId: locked.id })
+    })
+    renderTakeover({ tasks: [locked, UBER] as UnifiedAskFormTask[], taskId: locked.id })
 
     expect(screen.getByRole('radio', { name: 'Supplies' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Travel' })).toBeDisabled()

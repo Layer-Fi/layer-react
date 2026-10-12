@@ -1,5 +1,5 @@
 import { type BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
-import type { UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 
 export type MonthData = {
   monthStr: string
@@ -10,5 +10,5 @@ export type MonthData = {
   completed: number
   status?: BookkeepingPeriodStatus
   disabled?: boolean
-  tasks: ReadonlyArray<UserVisibleTask>
+  tasks: ReadonlyArray<UnifiedAskFormTask>
 }

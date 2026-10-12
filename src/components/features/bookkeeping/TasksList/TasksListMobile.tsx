@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
@@ -15,7 +16,7 @@ const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
 
 type TasksListMobileProps = {
   /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */
-  tasks: ReadonlyArray<UserVisibleTask>
+  tasks: ReadonlyArray<UnifiedAskFormTask>
 }
 
 export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
