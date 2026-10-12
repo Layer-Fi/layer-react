@@ -70,19 +70,19 @@ export function usePlaidLinkModal({
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
   const { trigger: triggerPlaidLinkOutcome } = usePostPlaidLinkOutcome()
 
-  const reportPlaidLinkOutcome = (params: ReportPlaidLinkOutcomeParams) => {
+  const reportPlaidLinkOutcome = useCallback((params: ReportPlaidLinkOutcomeParams) => {
     void triggerPlaidLinkOutcome(params).catch(() => undefined)
-  }
+  }, [triggerPlaidLinkOutcome])
 
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
 
-  const emitLinkFinished = (payload: Omit<LinkFinishedPayload, 'provider' | 'linkMode'>) => {
+  const emitLinkFinished = useCallback((payload: Omit<LinkFinishedPayload, 'provider' | 'linkMode'>) => {
     emitLayerEvent({
       type: LayerEventType.LinkedAccountsLinkFinished,
       version: 1,
       payload: { provider: 'PLAID', linkMode, ...payload },
     })
-  }
+  }, [emitLayerEvent, linkMode])
 
   const handlePlaidLinkExit: PlaidLinkOnExit = (error, metadata) => {
     reportPlaidLinkOutcome(
@@ -147,15 +147,10 @@ export function usePlaidLinkModal({
     ],
   )
 
-  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
-    token: linkToken,
-
-    // If in update mode, we don't need to exchange the public token for an access token.
-    // The existing access token will automatically become valid again
-    onSuccess: (
-      publicToken: string,
-      metadata: PlaidLinkOnSuccessMetadata,
-    ) => {
+  // If in update mode, we don't need to exchange the public token for an access token.
+  // The existing access token will automatically become valid again
+  const handlePlaidLinkSuccess = useCallback(
+    (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
       reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
       emitLinkFinished({
         outcome: 'completed',
@@ -178,6 +173,20 @@ export function usePlaidLinkModal({
         })
       }
     },
+    [
+      reportPlaidLinkOutcome,
+      emitLinkFinished,
+      linkMode,
+      exchangePlaidPublicToken,
+      triggerUpdateConnectionStatus,
+      onSuccess,
+      setLinkMode,
+    ],
+  )
+
+  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
+    token: linkToken,
+    onSuccess: handlePlaidLinkSuccess,
     onExit: handlePlaidLinkExit,
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
