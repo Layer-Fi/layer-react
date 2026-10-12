@@ -1,51 +1,56 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { useAccountsNeedingConfirmation } from '@hooks/features/bankAccounts/useAccountsNeedingConfirmation'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { Modal } from '@ui/Modal/Modal'
 import { LinkedAccountsConfirmationModalContent } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
-export const PendingAccountConfirmationBanner = () => {
+type PendingAccountsBannerProps = {
+  accounts: ReturnType<typeof useAccountsNeedingConfirmation>
+  onReview: () => void
+}
+
+const PendingAccountsBanner = ({ accounts, onReview }: PendingAccountsBannerProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { data } = useBankAccountsContext()
-  const [isConfirming, setIsConfirming] = useState(false)
-  const pendingCount = getAccountsNeedingConfirmation(data ?? []).length
 
-  // The dialog outlives the banner: confirming refetches accounts, which empties the count before the dialog has closed itself.
-  if (pendingCount === 0 && !isConfirming) return null
+  if (accounts.length === 0) return null
+
+  return (
+    <Banner
+      variant='info'
+      title={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.title', {
+        count: accounts.length,
+        one: 'Confirm your new account',
+        other: 'Confirm your new accounts',
+      })}
+      description={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.description', {
+        count: accounts.length,
+        displayCount: formatNumber(accounts.length),
+        one: 'We found {{displayCount}} new account. Confirm it belongs to your business so we can bring in its transactions.',
+        other: 'We found {{displayCount}} new accounts. Confirm which belong to your business so we can bring in their transactions.',
+      })}
+      slots={{
+        Button: (
+          <BannerButton onPress={onReview}>
+            {t('linkedAccounts:PendingAccountConfirmationBanner.action.review_accounts', 'Review accounts')}
+          </BannerButton>
+        ),
+      }}
+    />
+  )
+}
+
+export const PendingAccountConfirmationBanner = () => {
+  const accounts = useAccountsNeedingConfirmation()
+  const [isConfirming, setIsConfirming] = useState(false)
 
   return (
     <>
-      {pendingCount > 0
-        ? (
-          <Banner
-            variant='info'
-            title={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.title', {
-              count: pendingCount,
-              one: 'Confirm your new account',
-              other: 'Confirm your new accounts',
-            })}
-            description={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.description', {
-              count: pendingCount,
-              displayCount: formatNumber(pendingCount),
-              one: 'We found {{displayCount}} new account. Confirm it belongs to your business so we can bring in its transactions.',
-              other: 'We found {{displayCount}} new accounts. Confirm which belong to your business so we can bring in their transactions.',
-            })}
-            slots={{
-              Button: (
-                <BannerButton onPress={() => setIsConfirming(true)}>
-                  {t('linkedAccounts:PendingAccountConfirmationBanner.action.review_accounts', 'Review accounts')}
-                </BannerButton>
-              ),
-            }}
-          />
-        )
-        : null}
+      <PendingAccountsBanner accounts={accounts} onReview={() => setIsConfirming(true)} />
       <Modal isOpen={isConfirming} onOpenChange={setIsConfirming}>
         {({ close }) => <LinkedAccountsConfirmationModalContent onClose={close} />}
       </Modal>
