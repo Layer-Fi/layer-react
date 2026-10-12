@@ -1,8 +1,11 @@
 import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/shared/i18n/plural'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -34,6 +37,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
   const field = useFieldContext<UploadedFile[]>()
   const [error, setError] = useState<string | undefined>(undefined)
   const [isUploading, setIsUploading] = useState(false)
+  const { isMobile } = useSizeClass()
 
   const { labelId, shellProps } = useFormField({ ...props, errorText: error })
   const { className, inline, align, showLabel, isDisabled } = props
@@ -41,11 +45,14 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
   const files = field.state.value
   const extensions = accept.map(extension => extension.toLowerCase())
   const isAccepted = (name: string) => extensions.length === 0 || extensions.includes(getExtension(name))
+  // A drop can carry several files even when the picker allows one.
+  const fileLimit = multiple ? maxFiles : 1
+  const isInputDisabled = isDisabled || isUploading
 
   const onUpload = async (selected: ReadonlyArray<File>) => {
     const rejected = selected.filter(({ name }) => !isAccepted(name))
     const accepted = selected.filter(file => !rejected.includes(file))
-    const isOverLimit = maxFiles !== undefined && accepted.length > maxFiles
+    const isOverLimit = fileLimit !== undefined && accepted.length > fileLimit
     const toUpload = isOverLimit ? [] : accepted
 
     setIsUploading(true)
@@ -62,8 +69,8 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
         : null,
       isOverLimit
         ? tPlural(t, 'blocks:Form.FormFileUploadField.error.too_many_files', {
-          count: maxFiles,
-          displayCount: formatNumber(maxFiles),
+          count: fileLimit,
+          displayCount: formatNumber(fileLimit),
           one: 'Upload {{displayCount}} file at a time.',
           other: 'Upload up to {{displayCount}} files at a time.',
         })
@@ -78,11 +85,28 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
     field.handleChange([...(multiple ? files : []), ...uploaded])
   }
 
+  const { getRootProps, isDragActive } = useDropzone({
+    onDrop: dropped => void onUpload(dropped),
+    noClick: true,
+    noKeyboard: true,
+    disabled: isInputDisabled || isMobile,
+  })
+
   const getUploadLabel = () => {
     if (files.length === 0) return t('blocks:Form.FormFileUploadField.action.upload_files', 'Upload files')
     if (multiple) return t('blocks:Form.FormFileUploadField.action.add_more_files', 'Add more files')
     return t('blocks:Form.FormFileUploadField.action.replace_file', 'Replace file')
   }
+
+  const fileInput = (
+    <FileInput
+      text={getUploadLabel()}
+      accept={extensions.map(extension => `.${extension}`).join(',')}
+      allowMultipleUploads={multiple}
+      isDisabled={isInputDisabled}
+      onUpload={selected => void onUpload(selected)}
+    />
+  )
 
   return (
     <div {...formFieldLayoutProps({ className, inline, align, showLabel })}>
@@ -93,22 +117,31 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, upload
               <Span size='sm' ellipsis noWrap>{name}</Span>
               <Button
                 variant='text'
-                isDisabled={isDisabled || isUploading}
+                isDisabled={isInputDisabled}
                 onPress={() => field.handleChange(files.filter(file => file.id !== id))}
               >
                 {t('blocks:Form.FormFileUploadField.action.remove_file', 'Remove')}
               </Button>
             </HStack>
           ))}
-          <HStack>
-            <FileInput
-              text={getUploadLabel()}
-              accept={extensions.map(extension => `.${extension}`).join(',')}
-              allowMultipleUploads={multiple}
-              isDisabled={isDisabled || isUploading}
-              onUpload={selected => void onUpload(selected)}
-            />
-          </HStack>
+          {isMobile
+            ? <HStack>{fileInput}</HStack>
+            : (
+              <HStack
+                gap='sm'
+                align='center'
+                className='Layer__FormFileUploadField__DropZone'
+                {...toDataProperties({ 'drag-active': isDragActive, 'disabled': isInputDisabled })}
+                {...getRootProps()}
+              >
+                {fileInput}
+                <Span size='sm' variant='subtle'>
+                  {multiple
+                    ? t('blocks:Form.FormFileUploadField.label.drop_files', 'or drag and drop files here')
+                    : t('blocks:Form.FormFileUploadField.label.drop_file', 'or drag and drop a file here')}
+                </Span>
+              </HStack>
+            )}
         </VStack>
       </FormFieldShell>
     </div>
