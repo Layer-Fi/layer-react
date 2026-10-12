@@ -87,7 +87,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
   )
 }
 
-function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
+export function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { accounts, onFinish, refetchAccountsAndTransactions } = useLinkedAccountsConfirmationModal()
@@ -219,34 +219,20 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
   )
 }
 
-type LinkedAccountsConfirmationModalProps = {
-  isOpen?: boolean
-  onOpenChange?: (isOpen: boolean) => void
-}
-
-export function LinkedAccountsConfirmationModal({ isOpen, onOpenChange }: LinkedAccountsConfirmationModalProps = {}) {
-  const { preloadIsOpen, mainIsOpen, accounts, onDismiss } = useLinkedAccountsConfirmationModal()
-
-  const isControlled = isOpen !== undefined
-  const showsPreload = !isControlled && preloadIsOpen
-  const showsMain = isControlled ? isOpen && accounts.length > 0 : mainIsOpen
+export function LinkedAccountsConfirmationModal() {
+  const { preloadIsOpen, mainIsOpen, onDismiss } = useLinkedAccountsConfirmationModal()
 
   return (
     <Modal
-      isOpen={showsPreload || showsMain}
-      onOpenChange={(nextIsOpen) => {
-        if (isControlled) {
-          onOpenChange?.(nextIsOpen)
-          return
-        }
-
-        if (!nextIsOpen) {
+      isOpen={preloadIsOpen || mainIsOpen}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
           onDismiss()
         }
       }}
     >
       {({ close }) =>
-        showsPreload
+        preloadIsOpen
           ? <LinkedAccountsConfirmationModalPreloadedContent onClose={close} />
           : <LinkedAccountsConfirmationModalContent onClose={close} />}
     </Modal>

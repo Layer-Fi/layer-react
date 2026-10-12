@@ -5,9 +5,9 @@ import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/ban
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { Banner } from '@ui/Banner/Banner'
-import { Button } from '@ui/Button/Button'
-import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
+import { Banner, BannerButton } from '@ui/Banner/Banner'
+import { Modal } from '@ui/Modal/Modal'
+import { LinkedAccountsConfirmationModalContent } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
 const PendingAccountConfirmationBannerContent = ({ pendingCount }: { pendingCount: number }) => {
   const { t } = useTranslation()
@@ -31,13 +31,15 @@ const PendingAccountConfirmationBannerContent = ({ pendingCount }: { pendingCoun
         })}
         slots={{
           Button: (
-            <Button variant='outlined' onPress={() => setIsConfirming(true)}>
+            <BannerButton onPress={() => setIsConfirming(true)}>
               {t('linkedAccounts:PendingAccountConfirmationBanner.action.review_accounts', 'Review accounts')}
-            </Button>
+            </BannerButton>
           ),
         }}
       />
-      <LinkedAccountsConfirmationModal isOpen={isConfirming} onOpenChange={setIsConfirming} />
+      <Modal isOpen={isConfirming} onOpenChange={setIsConfirming}>
+        {({ close }) => <LinkedAccountsConfirmationModalContent onClose={close} />}
+      </Modal>
     </>
   )
 }

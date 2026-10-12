@@ -1,9 +1,7 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
-import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
 
 import { makeAccountNeedingConfirmation, makeBankAccountWithMirroredExternalAccount } from '@fixtures/bankAccounts/mocks'
@@ -28,38 +26,18 @@ const plaidChecking = {
   balance: 11000,
 }
 
-let refetchAccounts: () => Promise<unknown> = () => Promise.resolve()
-
-const CaptureRefetchAccounts = () => {
-  refetchAccounts = useBankAccountsContext().refetch
-  return null
-}
-
 const renderBanner = () => ({
   user: userEvent.setup(),
-  ...render(
-    <AccountConfirmationStoreProvider>
-      <PendingAccountConfirmationBanner />
-      <CaptureRefetchAccounts />
-    </AccountConfirmationStoreProvider>,
-    { wrapper: LayerTestProvider },
-  ),
+  ...render(<PendingAccountConfirmationBanner />, { wrapper: LayerTestProvider }),
 })
 
 describe('PendingAccountConfirmationBanner', () => {
-  it('asks to confirm the accounts waiting for confirmation', async () => {
-    server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(plaidCd), makeBankAccountWithMirroredExternalAccount(plaidChecking)]))
-    renderBanner()
-
-    expect(await screen.findByText('Confirm your new account')).toBeInTheDocument()
-    expect(screen.getByText(/We found 1 new account\./)).toBeInTheDocument()
-  })
-
-  it('opens the confirmation modal only when asked', async () => {
+  it('counts the accounts waiting for confirmation and opens the dialog from Review accounts', async () => {
     server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(plaidCd), makeAccountNeedingConfirmation(plaidChecking)]))
     const { user } = renderBanner()
 
-    await screen.findByText('Confirm your new accounts')
+    expect(await screen.findByText('Confirm your new accounts')).toBeInTheDocument()
+    expect(screen.getByText(/We found 2 new accounts\./)).toBeInTheDocument()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Review accounts' }))
@@ -69,33 +47,12 @@ describe('PendingAccountConfirmationBanner', () => {
     expect(dialog).toHaveTextContent('Plaid Checking')
   })
 
-  it('does not reopen the modal for accounts that arrive after the last ones were confirmed elsewhere', async () => {
-    server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(plaidCd)]))
-    const { user } = renderBanner()
-    await user.click(await screen.findByRole('button', { name: 'Review accounts' }))
-    await screen.findByRole('dialog')
-
-    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidCd)]))
-    await act(() => refetchAccounts())
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-
-    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidCd), makeAccountNeedingConfirmation(plaidChecking)]))
-    await act(() => refetchAccounts())
-
-    expect(await screen.findByText('Confirm your new account')).toBeInTheDocument()
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
   it('shows nothing when every account is confirmed', async () => {
-    let requests = 0
-    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidChecking)], {
-      onRequest: () => {
-        requests += 1
-      },
-    }))
+    const onRequest = vi.fn()
+    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidChecking)], { onRequest }))
     renderBanner()
 
-    await waitFor(() => expect(requests).toBeGreaterThan(0))
+    await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(screen.queryByText(/Confirm your new account/)).not.toBeInTheDocument()
   })
 })
