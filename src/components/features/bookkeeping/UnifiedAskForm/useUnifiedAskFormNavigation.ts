@@ -54,7 +54,8 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
 
   const submit = useCallback((pagesOnPath: ReadonlyArray<AskFormPage>) => {
     // TanStack starts a second submit while the first is in flight, so a repeat press would post twice.
-    if (form.state.isSubmitting) return
+    // A read-only form has nothing the customer could change, so a server route ending in SUBMIT posts nothing.
+    if (form.state.isSubmitting || isReadOnly) return
 
     // A refetch can add sheet rows to a page that was complete when the customer left it.
     const incompletePage = findFirstIncompletePage(pagesOnPath, form.state.values, transactionIds)
@@ -66,7 +67,7 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
     }
 
     void form.handleSubmit({ pagesOnPath, onSubmitted: reset })
-  }, [form, reset, steps, transactionIds])
+  }, [form, isReadOnly, reset, steps, transactionIds])
 
   const follow = useCallback((next: AskFormStaticNext, pagesOnPath: ReadonlyArray<AskFormPage>) => {
     const fromDepth = pagesOnPath.length - 1

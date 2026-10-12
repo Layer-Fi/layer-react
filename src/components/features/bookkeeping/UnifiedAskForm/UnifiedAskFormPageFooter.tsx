@@ -30,7 +30,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const canContinue = getPageError(page, values) === undefined
   const isTakeover = presentation === 'takeover'
   const primaryAction = getPagePrimaryAction(page, values)
-  const isReadOnlyEnd = isReadOnly && (primaryAction === 'SUBMIT' || primaryAction === 'REVIEW')
+  const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
   const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
 
