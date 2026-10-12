@@ -7,6 +7,8 @@ import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookk
 
 export type UnifiedAskFormPresentation = 'inline' | 'takeover'
 
+export type NextPageRouting = 'idle' | 'loading' | 'error'
+
 /** An option's `next` beats the page's on a static page; at most one step per page routes. */
 export const getPageNext = (page: AskFormPage, values: UnifiedAskFormValues): AskFormNext => {
   if (page.next.kind === AskFormNextKind.Server) return page.next
@@ -66,3 +68,28 @@ export const hasPickedFollowUp = (page: AskFormPage, values: UnifiedAskFormValue
     const stepValues = values.pages[page.id]?.[step.id]
     return stepValues ? getFollowUpStep(step, stepValues) !== undefined : false
   })
+
+type PageFooterLayoutOptions = {
+  page: AskFormPage
+  values: UnifiedAskFormValues
+  presentation: UnifiedAskFormPresentation
+  autoAdvances: boolean
+  routing: NextPageRouting
+  isReadOnly: boolean
+  hasAction: boolean
+}
+
+/** A takeover hides the primary while a choice auto-advances; a read-only task can only page forward. */
+export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, routing, isReadOnly, hasAction }: PageFooterLayoutOptions) => {
+  const primaryAction = getPagePrimaryAction(page, values)
+  const isTakeover = presentation === 'takeover'
+  const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
+  const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
+
+  return {
+    primaryAction,
+    showsPrimary,
+    showsFooterRow: !isTakeover || showsPrimary || hasAction,
+    connectsBeforeContinuing: routing !== 'error' && primaryAction === 'CONNECT_ACCOUNT',
+  }
+}

@@ -7,6 +7,7 @@ import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/business
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
@@ -28,6 +29,7 @@ import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[busines
 import { post as postUnifiedAskFormUpload } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
+import { makeLinkedAccountsContext } from '@testUtils/mocks/linkedAccountsContext'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
 const TRANSACTIONS = [
@@ -64,9 +66,18 @@ const lockedKindTask = (answer: AskFormChoiceAnswer) => makeUnifiedAskFormTask({
   }])),
 }) as UserVisibleTask
 
-const renderItem = (task: UnifiedAskFormTask) => ({
+const renderItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<LinkedAccountsContextType>) => ({
   user: userEvent.setup(),
-  ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
+  ...render(
+    <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
+      <TasksListItem task={task as UserVisibleTask} defaultOpen />
+    </LinkedAccountsContext.Provider>,
+    { wrapper: LayerTestProvider },
+  ),
+})
+
+const connectOnlyTask = () => makeUnifiedAskFormTask({
+  form: singlePageForm(page('connect', [connectAccountStep('connect', 'Connect this account.')])),
 })
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {
@@ -359,7 +370,7 @@ describe('UnifiedAskForm', () => {
       }),
     )
     const onSubmit = spyOnSubmit(task)
-    const { user } = renderItem(task)
+    const { user } = renderItem(task, { addConnection: vi.fn(() => Promise.resolve(true)) })
 
     await user.click(screen.getByRole('radio', { name: 'Another account my business owns' }))
     await user.click(screen.getByRole('button', { name: 'Next' }))
@@ -379,24 +390,46 @@ describe('UnifiedAskForm', () => {
     })
   })
 
-  it('submits a page whose only step is Connect account', async () => {
-    const task = makeUnifiedAskFormTask({
-      form: {
-        entryPageId: 'connect',
-        pages: [{
-          id: 'connect',
-          next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [connectAccountStep('connect', 'Connect this account.')],
-        }],
-      },
-    })
+  it('submits Connect account once the account connects', async () => {
+    const task = connectOnlyTask()
     const onSubmit = spyOnSubmit(task)
-    const { user } = renderItem(task)
+    const addConnection = vi.fn(() => Promise.resolve(true))
+    const { user } = renderItem(task, { addConnection })
 
     await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(addConnection).toHaveBeenCalledExactlyOnceWith('PLAID')
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+  })
+
+  it('stays on the connect page when the account isn’t connected', async () => {
+    const task = connectOnlyTask()
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task, { addConnection: vi.fn(() => Promise.resolve(false)) })
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Connect account' })).toBeEnabled())
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('retries only the save after a connection whose save failed', async () => {
+    const task = connectOnlyTask()
+    const addConnection = vi.fn(() => Promise.resolve(true))
+    server.use(
+      postUnifiedAskFormResponse.mockError({ errors: [{ type: 'BadRequest', description: 'nope', error_enum: 'SpecifiedBadRequest' }] }, { status: 400 }),
+    )
+    const { user } = renderItem(task, { addConnection })
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+    expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
+
+    const onSubmit = spyOnSubmit(task)
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(addConnection).toHaveBeenCalledOnce()
   })
 
   it('says the task was already answered when the API rejects a changed answer', async () => {

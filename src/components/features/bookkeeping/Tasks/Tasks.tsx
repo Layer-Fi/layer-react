@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
@@ -45,7 +47,22 @@ type TasksProps = {
   onClickReconnectAccounts?: () => void
 }
 
-export function Tasks({
+// Connect account tasks open Plaid through the host's linked-accounts provider, or Layer's own when the host has none.
+export function Tasks(props: TasksProps) {
+  const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()
+
+  if (hasLinkedAccountsProvider) {
+    return <TasksContent {...props} />
+  }
+
+  return (
+    <LinkedAccountsProvider>
+      <TasksContent {...props} />
+    </LinkedAccountsProvider>
+  )
+}
+
+function TasksContent({
   mobile = false,
   tasksHeader,
   onClickReconnectAccounts,

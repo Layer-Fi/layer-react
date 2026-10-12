@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useConnectAccount } from '@hooks/features/linkedAccounts/useConnectAccount'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
-import { getPagePrimaryAction, hasPickedFollowUp, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
+import { getPageFooterLayout, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UnifiedAskFormPageFooterProps = {
   page: AskFormPage
@@ -25,14 +26,33 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
+  const { isConnecting, connect } = useConnectAccount()
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
-  const canContinue = getPageError(page, values) === undefined
+
   const isTakeover = presentation === 'takeover'
-  const primaryAction = getPagePrimaryAction(page, values)
-  const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
-  const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
-  const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
+  const { primaryAction, showsPrimary, showsFooterRow, connectsBeforeContinuing } = getPageFooterLayout({
+    page,
+    values,
+    presentation,
+    autoAdvances,
+    routing,
+    isReadOnly,
+    hasAction: action !== undefined && action !== null,
+  })
+  const canContinue = getPageError(page, values) === undefined
+  const isBusy = isSubmitting || isConnecting
+
+  const onPrimary = () => {
+    if (!connectsBeforeContinuing) {
+      onContinue()
+      return
+    }
+
+    void connect().then((isConnected) => {
+      if (isConnected) onContinue()
+    })
+  }
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
@@ -80,7 +100,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
               )}
             {showsPrimary
               ? (
-                <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
+                <Button isDisabled={!canContinue || isBusy} isPending={routing === 'loading' || isBusy} onPress={onPrimary}>
                   {getPrimaryLabel()}
                 </Button>
               )
