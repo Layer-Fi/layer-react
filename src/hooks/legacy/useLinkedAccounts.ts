@@ -25,7 +25,7 @@ type UseLinkedAccountsOptions = {
 }
 
 export type AddConnectionOptions = {
-  /** Called once when this add flow ends: true after the new connection is saved, false otherwise. */
+  /** Called once when this add flow ends: true after the new connection is saved, false otherwise, including when another add flow is still running. */
   onComplete?: (isConnected: boolean) => void
 }
 
@@ -100,12 +100,12 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const onAddConnectionCompleteRef = useRef<AddConnectionOptions['onComplete']>(undefined)
+  const activeAddFlowRef = useRef<AddConnectionOptions | null>(null)
 
   const completeAddConnection = useCallback((isConnected: boolean) => {
-    const onComplete = onAddConnectionCompleteRef.current
-    onAddConnectionCompleteRef.current = undefined
-    onComplete?.(isConnected)
+    const activeAddFlow = activeAddFlowRef.current
+    activeAddFlowRef.current = null
+    activeAddFlow?.onComplete?.(isConnected)
   }, [])
 
   const exitAddConnection = useCallback(() => completeAddConnection(false), [completeAddConnection])
@@ -226,8 +226,12 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
    */
   const fetchPlaidLinkToken = useCallback(
     async ({ onComplete }: AddConnectionOptions = {}) => {
-      completeAddConnection(false)
-      onAddConnectionCompleteRef.current = onComplete
+      if (activeAddFlowRef.current) {
+        onComplete?.(false)
+        return
+      }
+
+      activeAddFlowRef.current = { onComplete }
 
       const isOpened = await fetchLinkToken(
         'add',
@@ -240,6 +244,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
         t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
       )
 
+      // Hosted Link leaves the page, so the flow can't wait for it; the API closes the task once the account connects.
       if (!isOpened) completeAddConnection(false)
     },
     [completeAddConnection, fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],

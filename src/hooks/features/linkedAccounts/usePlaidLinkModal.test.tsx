@@ -150,9 +150,15 @@ describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
   })
 })
 
+const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null }) =>
+  mockedUsePlaidLink.mockReturnValue(
+    { open: vi.fn(), ready: false, error: null, ...state } as unknown as ReturnType<typeof usePlaidLink>,
+  )
+
 describe('usePlaidLinkModal when an add flow ends without a connection', () => {
   it('reports closing Link', async () => {
     const onAddConnectionExit = vi.fn()
+    mockPlaidLink({ ready: true })
     await renderAddModeModal({ onAddConnectionExit })
 
     closePlaidLink()
@@ -162,11 +168,33 @@ describe('usePlaidLinkModal when an add flow ends without a connection', () => {
 
   it('does not report closing Link during a repair', async () => {
     const onAddConnectionExit = vi.fn()
+    mockPlaidLink({ ready: true })
     await renderAddModeModal({ linkMode: 'update', onAddConnectionExit })
 
     closePlaidLink()
 
     expect(onAddConnectionExit).not.toHaveBeenCalled()
+  })
+
+  it('does not report the exit Plaid sends after a successful session', async () => {
+    const onAddConnectionExit = vi.fn()
+    mockPlaidLink({ ready: true })
+    await renderAddModeModal({ onAddConnectionExit })
+
+    await completePlaidLink()
+    closePlaidLink()
+
+    expect(onAddConnectionExit).not.toHaveBeenCalled()
+  })
+
+  it('reports Plaid failing to load, once', async () => {
+    const onAddConnectionExit = vi.fn()
+    mockPlaidLink({ error: new ErrorEvent('error') })
+    const { rerender } = await renderAddModeModal({ onAddConnectionExit })
+
+    rerender()
+
+    expect(onAddConnectionExit).toHaveBeenCalledOnce()
   })
 
   it('reports a public token that couldn’t be saved', async () => {

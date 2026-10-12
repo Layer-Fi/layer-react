@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
@@ -54,6 +54,8 @@ export function usePlaidLinkModal({
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
 
   const [isLinking, setIsLinking] = useState(false)
+  // react-plaid-link force-exits a finished session when the token changes, so only an open session reports an exit.
+  const isLinkOpenRef = useRef(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
   /**
@@ -103,7 +105,7 @@ export function usePlaidLinkModal({
     ],
   )
 
-  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
+  const { open: plaidLinkStart, ready: plaidLinkReady, error: plaidLinkError } = usePlaidLink({
     token: linkToken,
 
     // If in update mode, we don't need to exchange the public token for an access token.
@@ -112,6 +114,7 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
+      isLinkOpenRef.current = false
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
         void exchangePlaidPublicToken(publicToken, metadata)
@@ -126,7 +129,9 @@ export function usePlaidLinkModal({
       }
     },
     onExit: () => {
-      if (linkMode === 'add') onAddConnectionExit?.()
+      const wasOpen = isLinkOpenRef.current
+      isLinkOpenRef.current = false
+      if (wasOpen && linkMode === 'add') onAddConnectionExit?.()
       setLinkMode('add')
     },
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
@@ -134,10 +139,24 @@ export function usePlaidLinkModal({
 
   useEffect(() => {
     if (plaidLinkReady) {
+      isLinkOpenRef.current = true
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       plaidLinkStart()
     }
   }, [plaidLinkStart, plaidLinkReady])
+
+  const failedLinkTokenRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!plaidLinkError || !linkToken || linkMode !== 'add' || failedLinkTokenRef.current === linkToken) return
+
+    failedLinkTokenRef.current = linkToken
+    addToast({
+      content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
+      type: 'error',
+    })
+    onAddConnectionExit?.()
+  }, [plaidLinkError, linkToken, linkMode, addToast, t, onAddConnectionExit])
 
   return { isLinking }
 }

@@ -29,7 +29,10 @@ const PROCESSOR_TOKEN = 'processor-sandbox-0a1b2c3d-4e5f'
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))
 
-afterEach(() => vi.restoreAllMocks())
+afterEach(() => {
+  vi.restoreAllMocks()
+  vi.mocked(usePlaidLink).mockImplementation(() => ({ open: vi.fn(), ready: false }) as unknown as ReturnType<typeof usePlaidLink>)
+})
 
 describe('useLinkedAccounts with a customer-managed Plaid config', () => {
   it('mints the add-flow link token through the customer, not Layer', async () => {
@@ -143,6 +146,7 @@ describe('useLinkedAccounts addConnection completion', () => {
 
   it('reports no connection when Link is closed', async () => {
     const onComplete = vi.fn()
+    vi.mocked(usePlaidLink).mockReturnValue({ open: vi.fn(), ready: true } as unknown as ReturnType<typeof usePlaidLink>)
     const { result } = await renderLinkedAccounts()
 
     await result.current.addConnection('PLAID', { onComplete })
@@ -163,15 +167,30 @@ describe('useLinkedAccounts addConnection completion', () => {
     expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
   })
 
-  it('ends an earlier add flow when another one starts', async () => {
+  it('turns away a second add flow while the first is still running', async () => {
     const first = vi.fn()
     const second = vi.fn()
     const { result } = await renderLinkedAccounts()
 
     await result.current.addConnection('PLAID', { onComplete: first })
     await result.current.addConnection('PLAID', { onComplete: second })
+    act(() => {
+      lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
+    })
 
-    expect(first).toHaveBeenCalledExactlyOnceWith(false)
-    expect(second).not.toHaveBeenCalled()
+    expect(second).toHaveBeenCalledExactlyOnceWith(false)
+    await waitFor(() => expect(first).toHaveBeenCalledExactlyOnceWith(true))
+  })
+
+  it('hands off to hosted Link without waiting for it', async () => {
+    const onComplete = vi.fn()
+    const navigateToHostedLink = vi.fn()
+    server.use(postPlaidLink.mock({ hostedLink: 'https://hosted.plaid.com/link/abc' }))
+    const { result } = await renderHookWithAuth(() => useLinkedAccounts({ plaidHostedLinkConfig: { navigateToHostedLink } }))
+
+    await result.current.addConnection('PLAID', { onComplete })
+
+    expect(navigateToHostedLink).toHaveBeenCalledWith('https://hosted.plaid.com/link/abc')
+    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
   })
 })
