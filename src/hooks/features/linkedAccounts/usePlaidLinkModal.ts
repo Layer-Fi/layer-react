@@ -16,7 +16,7 @@ export type LinkMode = 'update' | 'add'
 type LinkSession = {
   token: string
   mode: LinkMode
-  onEnd: (isConnected: boolean) => void
+  resolve: (isConnected: boolean) => void
 }
 
 type UsePlaidLinkModalOptions = {
@@ -29,9 +29,9 @@ type UsePlaidLinkModalOptions = {
 
 /**
  * Drives the embedded Plaid Link modal. `openLink` starts a session with a caller-minted token and
- * resolves once it ends: true when the connection was saved (add) or refreshed (repair), false when
- * Link closed, the exchange failed, or Plaid didn't load. Ending a session clears the token, which
- * makes react-plaid-link destroy the handler.
+ * resolves once the outcome is known: true when the connection was saved (add) or refreshed
+ * (repair), false when Link closed, the exchange failed, or Plaid didn't load. Link is released as
+ * soon as it succeeds or exits, which clears the token so react-plaid-link destroys the handler.
  */
 export function usePlaidLinkModal({
   onSuccess,
@@ -54,12 +54,14 @@ export function usePlaidLinkModal({
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
-  // Only the active session may end itself: react-plaid-link force-exits a handler whose token changed.
-  const endSession = useCallback((ended: LinkSession, isConnected: boolean) => {
-    if (sessionRef.current !== ended) return
+  // Link is done with the session. A stale handler (react-plaid-link force-exits one whose token
+  // changed) finds its session already released and does nothing.
+  const releaseLink = useCallback((current: LinkSession) => {
+    if (sessionRef.current !== current) return false
 
+    sessionRef.current = null
     setSession(null)
-    ended.onEnd(isConnected)
+    return true
   }, [sessionRef])
 
   const notifySessionFailed = useCallback((mode: LinkMode) => {
@@ -97,12 +99,12 @@ export function usePlaidLinkModal({
               await handleAddConnectionSuccess()
             }
             finally {
-              endSession(current, true)
+              current.resolve(true)
             }
           },
           () => {
             notifySessionFailed('add')
-            endSession(current, false)
+            current.resolve(false)
           },
         )
         .finally(() => {
@@ -115,7 +117,6 @@ export function usePlaidLinkModal({
       customerManagedPlaidConfig,
       handleAddConnectionSuccess,
       notifySessionFailed,
-      endSession,
       preloadAccountConfirmation,
       resetAccountConfirmation,
     ],
@@ -130,7 +131,7 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
-      if (!session) return
+      if (!session || !releaseLink(session)) return
 
       if (session.mode === 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
@@ -142,16 +143,16 @@ export function usePlaidLinkModal({
         void triggerUpdateConnectionStatus()
           .then(() => onSuccess())
           .then(
-            () => endSession(session, true),
+            () => session.resolve(true),
             () => {
               notifySessionFailed('update')
-              endSession(session, false)
+              session.resolve(false)
             },
           )
       }
     },
     onExit: () => {
-      if (session) endSession(session, false)
+      if (session && releaseLink(session)) session.resolve(false)
     },
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
@@ -163,13 +164,13 @@ export function usePlaidLinkModal({
     }
   }, [plaidLinkStart, plaidLinkReady])
 
-  // A Plaid script that fails to load can never open Link, so the session ends as a failure.
+  // A Plaid script that fails to load can never open Link.
   useEffect(() => {
-    if (!plaidLinkError || !session) return
+    if (!plaidLinkError || !session || !releaseLink(session)) return
 
     notifySessionFailed(session.mode)
-    endSession(session, false)
-  }, [plaidLinkError, session, notifySessionFailed, endSession])
+    session.resolve(false)
+  }, [plaidLinkError, session, notifySessionFailed, releaseLink])
 
   const openLink = useCallback(
     (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
@@ -178,7 +179,7 @@ export function usePlaidLinkModal({
         return
       }
 
-      const nextSession = { token, mode, onEnd: resolve }
+      const nextSession = { token, mode, resolve }
       // Set the ref now rather than on the next render, so two calls in one tick can't both start a session.
       sessionRef.current = nextSession
       setSession(nextSession)
