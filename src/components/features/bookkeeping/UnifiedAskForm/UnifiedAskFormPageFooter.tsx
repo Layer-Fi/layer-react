@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useConnectAccount } from '@hooks/features/linkedAccounts/useConnectAccount'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { useConnectAccount } from '@features/bookkeeping/UnifiedAskForm/useConnectAccount'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
-import { getPagePrimaryAction, hasPickedFollowUp, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
+import { getPageFooterLayout, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UnifiedAskFormPageFooterProps = {
   page: AskFormPage
@@ -31,12 +31,16 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const values = useStore(form.store, state => state.values)
 
   const isTakeover = presentation === 'takeover'
-  const primaryAction = getPagePrimaryAction(page, values)
+  const { primaryAction, showsPrimary, showsFooterRow, connectsBeforeContinuing } = getPageFooterLayout({
+    page,
+    values,
+    presentation,
+    autoAdvances,
+    routing,
+    hasAction: action !== undefined && action !== null,
+  })
   const canContinue = getPageError(page, values) === undefined
-  const isPending = routing === 'loading' || isSubmitting || isConnecting
-  const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
-  const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
-  const connectsBeforeContinuing = routing !== 'error' && primaryAction === 'CONNECT_ACCOUNT'
+  const isBusy = isSubmitting || isConnecting
 
   const onPrimary = () => {
     if (!connectsBeforeContinuing) {
@@ -95,7 +99,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
               )}
             {showsPrimary
               ? (
-                <Button isDisabled={!canContinue || isSubmitting || isConnecting} isPending={isPending} onPress={onPrimary}>
+                <Button isDisabled={!canContinue || isBusy} isPending={routing === 'loading' || isBusy} onPress={onPrimary}>
                   {getPrimaryLabel()}
                 </Button>
               )
