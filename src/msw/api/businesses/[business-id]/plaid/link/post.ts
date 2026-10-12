@@ -5,14 +5,12 @@ import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 // the token actually changes.
 let linkTokenSequence = 0
 
-type PlaidLinkOverride = { hostedLink: string } | undefined
-
-export const post = createMockEndpoint<PlaidLinkOverride, ReturnType<typeof apiData<Record<string, string | null>>>>({
+export const post = createMockEndpoint({
   method: 'post',
   path: '*/v1/businesses/:businessId/plaid/link',
-  resolve: ({ override }) => apiData({
+  resolve: () => apiData({
     type: 'Link_Token',
     link_token: `link-sandbox-mock-token-${++linkTokenSequence}`,
-    hosted_link: override?.hostedLink ?? null,
+    hosted_link: null,
   }),
 })

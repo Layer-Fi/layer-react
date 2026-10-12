@@ -6,6 +6,7 @@ import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
@@ -57,6 +58,14 @@ export function usePlaidLinkModal({
   const isLinkOpenRef = useRef(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
+  const failAddConnection = useCallback(() => {
+    addToast({
+      content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
+      type: 'error',
+    })
+    onAddConnectionExit?.()
+  }, [addToast, t, onAddConnectionExit])
+
   /**
    * When the user has finished entering credentials, send the resulting token to the backend
    * where it will fetch and save the Plaid access token and item id. For a customer-managed
@@ -79,13 +88,7 @@ export function usePlaidLinkModal({
         .then(
           // Only refresh once the link has actually persisted.
           () => handleAddConnectionSuccess(),
-          () => {
-            addToast({
-              content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
-              type: 'error',
-            })
-            onAddConnectionExit?.()
-          },
+          failAddConnection,
         )
         .finally(() => {
           setIsLinking(false)
@@ -96,9 +99,7 @@ export function usePlaidLinkModal({
       triggerExchangePlaidPublicToken,
       customerManagedPlaidConfig,
       handleAddConnectionSuccess,
-      onAddConnectionExit,
-      addToast,
-      t,
+      failAddConnection,
       preloadAccountConfirmation,
       resetAccountConfirmation,
     ],
@@ -144,18 +145,13 @@ export function usePlaidLinkModal({
     }
   }, [plaidLinkStart, plaidLinkReady])
 
-  const failedLinkTokenRef = useRef<string | null>(null)
+  const linkModeRef = useLatestRef(linkMode)
+  const failAddConnectionRef = useLatestRef(failAddConnection)
 
+  // A Plaid script that fails to load never opens Link; each add flow mints a new token, so this fires once per flow.
   useEffect(() => {
-    if (!plaidLinkError || !linkToken || linkMode !== 'add' || failedLinkTokenRef.current === linkToken) return
-
-    failedLinkTokenRef.current = linkToken
-    addToast({
-      content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
-      type: 'error',
-    })
-    onAddConnectionExit?.()
-  }, [plaidLinkError, linkToken, linkMode, addToast, t, onAddConnectionExit])
+    if (plaidLinkError && linkToken && linkModeRef.current === 'add') failAddConnectionRef.current()
+  }, [plaidLinkError, linkToken, linkModeRef, failAddConnectionRef])
 
   return { isLinking }
 }

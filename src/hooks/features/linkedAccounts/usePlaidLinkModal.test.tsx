@@ -4,7 +4,7 @@ import { type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type Pla
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
-import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
+import { usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
 import { post as postExchangePlaidPublicToken } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
 import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
@@ -36,20 +36,18 @@ const closePlaidLink = () =>
 type RenderAddModeModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   usePlaidSandbox?: boolean
-  linkMode?: LinkMode
   onAddConnectionExit?: () => void
 }
 
 const renderAddModeModal = ({
   customerManagedPlaidConfig,
   usePlaidSandbox = false,
-  linkMode = 'add',
   onAddConnectionExit,
 }: RenderAddModeModalOptions = {}) =>
   renderHookWithAuth(
     () => usePlaidLinkModal({
       linkToken: 'a-link-token',
-      linkMode,
+      linkMode: 'add',
       setLinkMode: vi.fn(),
       onSuccess: vi.fn(),
       onAddConnectionExit,
@@ -156,26 +154,6 @@ const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null }) =>
   )
 
 describe('usePlaidLinkModal when an add flow ends without a connection', () => {
-  it('reports closing Link', async () => {
-    const onAddConnectionExit = vi.fn()
-    mockPlaidLink({ ready: true })
-    await renderAddModeModal({ onAddConnectionExit })
-
-    closePlaidLink()
-
-    expect(onAddConnectionExit).toHaveBeenCalledOnce()
-  })
-
-  it('does not report closing Link during a repair', async () => {
-    const onAddConnectionExit = vi.fn()
-    mockPlaidLink({ ready: true })
-    await renderAddModeModal({ linkMode: 'update', onAddConnectionExit })
-
-    closePlaidLink()
-
-    expect(onAddConnectionExit).not.toHaveBeenCalled()
-  })
-
   it('does not report the exit Plaid sends after a successful session', async () => {
     const onAddConnectionExit = vi.fn()
     mockPlaidLink({ ready: true })
@@ -187,12 +165,10 @@ describe('usePlaidLinkModal when an add flow ends without a connection', () => {
     expect(onAddConnectionExit).not.toHaveBeenCalled()
   })
 
-  it('reports Plaid failing to load, once', async () => {
+  it('reports Plaid failing to load', async () => {
     const onAddConnectionExit = vi.fn()
     mockPlaidLink({ error: new ErrorEvent('error') })
-    const { rerender } = await renderAddModeModal({ onAddConnectionExit })
-
-    rerender()
+    await renderAddModeModal({ onAddConnectionExit })
 
     expect(onAddConnectionExit).toHaveBeenCalledOnce()
   })

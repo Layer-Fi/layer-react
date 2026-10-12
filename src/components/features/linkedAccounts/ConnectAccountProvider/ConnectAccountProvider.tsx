@@ -11,12 +11,7 @@ import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/Linke
 const LinkedAccountsConnectAccountProvider = ({ children }: PropsWithChildren) => {
   const { addConnection } = useContext(LinkedAccountsContext)
 
-  const connectAccount = useCallback(
-    () => new Promise<boolean>((resolve) => {
-      void addConnection('PLAID', { onComplete: resolve })
-    }),
-    [addConnection],
-  )
+  const connectAccount = useCallback(() => addConnection('PLAID'), [addConnection])
 
   return (
     <ConnectAccountContext.Provider value={connectAccount}>

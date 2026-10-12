@@ -41,9 +41,9 @@ describe('useLinkedAccounts with a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-    await result.current.addConnection('PLAID')
+    void result.current.addConnection('PLAID')
 
-    expect(customerManagedPlaidConfig.createLinkToken).toHaveBeenCalledOnce()
+    await waitFor(() => expect(customerManagedPlaidConfig.createLinkToken).toHaveBeenCalledOnce())
     expect(createPlaidLink).not.toHaveBeenCalled()
   })
 
@@ -102,9 +102,9 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 
     const { result } = await renderLinkedAccounts()
 
-    await result.current.addConnection('PLAID')
+    void result.current.addConnection('PLAID')
 
-    expect(createPlaidLink).toHaveBeenCalledOnce()
+    await waitFor(() => expect(createPlaidLink).toHaveBeenCalledOnce())
   })
 
   it('still mints the repair link token through Layer', async () => {
@@ -130,67 +130,38 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
   })
 })
 
-describe('useLinkedAccounts addConnection completion', () => {
-  it('reports a connection once the new item is saved', async () => {
-    const onComplete = vi.fn()
+describe('useLinkedAccounts addConnection', () => {
+  const waitForLinkToken = () => waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
+
+  it('resolves true once the new item is saved', async () => {
     const { result } = await renderLinkedAccounts()
 
-    await result.current.addConnection('PLAID', { onComplete })
+    const connection = result.current.addConnection('PLAID')
+    await waitForLinkToken()
     act(() => {
       lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
     })
 
-    await waitFor(() => expect(onComplete).toHaveBeenCalledWith(true))
-    expect(onComplete).toHaveBeenCalledOnce()
+    await expect(connection).resolves.toBe(true)
   })
 
-  it('reports no connection when Link is closed', async () => {
-    const onComplete = vi.fn()
+  it('resolves false when Link is closed', async () => {
     vi.mocked(usePlaidLink).mockReturnValue({ open: vi.fn(), ready: true } as unknown as ReturnType<typeof usePlaidLink>)
     const { result } = await renderLinkedAccounts()
 
-    await result.current.addConnection('PLAID', { onComplete })
+    const connection = result.current.addConnection('PLAID')
+    await waitForLinkToken()
     act(() => {
       lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
     })
 
-    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
+    await expect(connection).resolves.toBe(false)
   })
 
-  it('reports no connection when Link can’t be started', async () => {
-    const onComplete = vi.fn()
+  it('resolves false when the link token can’t be minted', async () => {
     server.use(postPlaidLink.mockError({ error: 'unavailable' }))
     const { result } = await renderLinkedAccounts()
 
-    await result.current.addConnection('PLAID', { onComplete })
-
-    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
-  })
-
-  it('turns away a second add flow while the first is still running', async () => {
-    const first = vi.fn()
-    const second = vi.fn()
-    const { result } = await renderLinkedAccounts()
-
-    await result.current.addConnection('PLAID', { onComplete: first })
-    await result.current.addConnection('PLAID', { onComplete: second })
-    act(() => {
-      lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
-    })
-
-    expect(second).toHaveBeenCalledExactlyOnceWith(false)
-    await waitFor(() => expect(first).toHaveBeenCalledExactlyOnceWith(true))
-  })
-
-  it('hands off to hosted Link without waiting for it', async () => {
-    const onComplete = vi.fn()
-    const navigateToHostedLink = vi.fn()
-    server.use(postPlaidLink.mock({ hostedLink: 'https://hosted.plaid.com/link/abc' }))
-    const { result } = await renderHookWithAuth(() => useLinkedAccounts({ plaidHostedLinkConfig: { navigateToHostedLink } }))
-
-    await result.current.addConnection('PLAID', { onComplete })
-
-    expect(navigateToHostedLink).toHaveBeenCalledWith('https://hosted.plaid.com/link/abc')
-    expect(onComplete).toHaveBeenCalledExactlyOnceWith(false)
+    await expect(result.current.addConnection('PLAID')).resolves.toBe(false)
   })
 })

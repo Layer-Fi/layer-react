@@ -24,14 +24,11 @@ type UseLinkedAccountsOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export type AddConnectionOptions = {
-  onComplete?: (isConnected: boolean) => void
-}
-
 type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   isLinking: boolean
   isHostedLinkError: boolean
-  addConnection: (source: AccountSource, options?: AddConnectionOptions) => Promise<void>
+  /** Resolves once the add flow ends: true after the new connection is saved, false otherwise. */
+  addConnection: (source: AccountSource) => Promise<boolean>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
   refetchAccountsAndTransactions: () => Promise<void>
@@ -99,15 +96,15 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const activeAddFlowRef = useRef<AddConnectionOptions | null>(null)
+  const pendingAddConnectionRef = useRef<((isConnected: boolean) => void) | null>(null)
 
-  const completeAddConnection = useCallback((isConnected: boolean) => {
-    const activeAddFlow = activeAddFlowRef.current
-    activeAddFlowRef.current = null
-    activeAddFlow?.onComplete?.(isConnected)
+  const settleAddConnection = useCallback((isConnected: boolean) => {
+    const resolve = pendingAddConnectionRef.current
+    pendingAddConnectionRef.current = null
+    resolve?.(isConnected)
   }, [])
 
-  const exitAddConnection = useCallback(() => completeAddConnection(false), [completeAddConnection])
+  const exitAddConnection = useCallback(() => settleAddConnection(false), [settleAddConnection])
 
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
@@ -136,9 +133,9 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
       await onPlaidConnectionSuccess?.()
     }
     finally {
-      completeAddConnection(true)
+      settleAddConnection(true)
     }
-  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess, completeAddConnection])
+  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess, settleAddConnection])
 
   const { isLinking } = usePlaidLinkModal({
     linkToken,
@@ -224,15 +221,16 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = useCallback(
-    async ({ onComplete }: AddConnectionOptions = {}) => {
-      if (activeAddFlowRef.current) {
-        onComplete?.(false)
+    () => new Promise<boolean>((resolve) => {
+      // One add flow at a time, so a late result can't settle the wrong one.
+      if (pendingAddConnectionRef.current) {
+        resolve(false)
         return
       }
 
-      activeAddFlowRef.current = { onComplete }
+      pendingAddConnectionRef.current = resolve
 
-      const isOpened = await fetchLinkToken(
+      void fetchLinkToken(
         'add',
         customerManagedPlaidConfig
           ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
@@ -241,12 +239,12 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
             plaidHostedLinkConfig,
           ),
         t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
-      )
-
-      // Hosted Link reloads the page on return, so the flow can't wait for it.
-      if (!isOpened) completeAddConnection(false)
-    },
-    [completeAddConnection, fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
+      ).then((isOpened) => {
+        // Hosted Link reloads the page on return, so the flow can't wait for it.
+        if (!isOpened) settleAddConnection(false)
+      })
+    }),
+    [settleAddConnection, fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
   /**
@@ -266,7 +264,17 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
-  const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
+  const addConnection = useCallback(
+    async (source: AccountSource) => {
+      if (source !== 'PLAID') {
+        console.error(`Adding a connection with source ${source} not yet supported`)
+        return false
+      }
+
+      return fetchPlaidLinkToken()
+    },
+    [fetchPlaidLinkToken],
+  )
 
   const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken)
 
