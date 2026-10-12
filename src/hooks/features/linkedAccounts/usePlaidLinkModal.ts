@@ -6,37 +6,36 @@ import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 
 export type LinkMode = 'update' | 'add'
 
+type LinkSession = {
+  token: string
+  mode: LinkMode
+  onEnd: (isConnected: boolean) => void
+}
+
 type UsePlaidLinkModalOptions = {
-  /** Link token to open the Plaid modal with, or null when idle. */
-  linkToken: string | null
-  /** Whether the open token is for adding a connection or repairing one. */
-  linkMode: LinkMode
   /** Called after the connection set changes, so the caller can refresh accounts. */
   onSuccess: () => Awaitable<void>
   onAddConnectionSuccess?: () => Awaitable<void>
-  /** Updates the active link mode; reset to 'add' when a flow completes or the modal exits. */
-  setLinkMode: (mode: LinkMode) => void
   /** When set, the customer owns the Plaid item and handles the public token themselves. */
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 /**
- * Drives the embedded Plaid Link modal for a token owned by the caller: opening
- * the widget, exchanging the public token (add) or refreshing connection status
- * (repair) on completion, and notifying the caller to refresh accounts.
+ * Drives the embedded Plaid Link modal. `openLink` starts a session with a caller-minted token and
+ * resolves once it ends: true when the connection was saved (add) or refreshed (repair), false when
+ * Link closed, the exchange failed, or Plaid didn't load. Ending a session clears the token, which
+ * makes react-plaid-link destroy the handler.
  */
 export function usePlaidLinkModal({
-  linkToken,
-  linkMode,
   onSuccess,
   onAddConnectionSuccess,
-  setLinkMode,
   customerManagedPlaidConfig,
 }: UsePlaidLinkModalOptions) {
   const { usePlaidSandbox } = useEnvironment()
@@ -50,8 +49,25 @@ export function usePlaidLinkModal({
   const { trigger: triggerExchangePlaidPublicToken } = usePostExchangePlaidPublicToken()
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
 
+  const [session, setSession] = useState<LinkSession | null>(null)
+  const sessionRef = useLatestRef(session)
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
+
+  // Only the active session may end itself: react-plaid-link force-exits a handler whose token changed.
+  const endSession = useCallback((ended: LinkSession, isConnected: boolean) => {
+    if (sessionRef.current !== ended) return
+
+    setSession(null)
+    ended.onEnd(isConnected)
+  }, [sessionRef])
+
+  const notifyConnectFailed = useCallback(() => {
+    addToast({
+      content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
+      type: 'error',
+    })
+  }, [addToast, t])
 
   /**
    * When the user has finished entering credentials, send the resulting token to the backend
@@ -60,7 +76,7 @@ export function usePlaidLinkModal({
    * Layer, and post it to Layer's API before resolving.
    */
   const exchangePlaidPublicToken = useCallback(
-    async (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
+    async (current: LinkSession, publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
       setIsLinking(true)
       preloadAccountConfirmation()
 
@@ -74,11 +90,18 @@ export function usePlaidLinkModal({
       await exchange
         .then(
           // Only refresh once the link has actually persisted.
-          () => handleAddConnectionSuccess(),
-          () => addToast({
-            content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
-            type: 'error',
-          }),
+          async () => {
+            try {
+              await handleAddConnectionSuccess()
+            }
+            finally {
+              endSession(current, true)
+            }
+          },
+          () => {
+            notifyConnectFailed()
+            endSession(current, false)
+          },
         )
         .finally(() => {
           setIsLinking(false)
@@ -89,15 +112,15 @@ export function usePlaidLinkModal({
       triggerExchangePlaidPublicToken,
       customerManagedPlaidConfig,
       handleAddConnectionSuccess,
-      addToast,
-      t,
+      notifyConnectFailed,
+      endSession,
       preloadAccountConfirmation,
       resetAccountConfirmation,
     ],
   )
 
-  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
-    token: linkToken,
+  const { open: plaidLinkStart, ready: plaidLinkReady, error: plaidLinkError } = usePlaidLink({
+    token: session?.token ?? null,
 
     // If in update mode, we don't need to exchange the public token for an access token.
     // The existing access token will automatically become valid again
@@ -105,20 +128,23 @@ export function usePlaidLinkModal({
       publicToken: string,
       metadata: PlaidLinkOnSuccessMetadata,
     ) => {
-      if (linkMode == 'add') {
+      if (!session) return
+
+      if (session.mode === 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
-        void exchangePlaidPublicToken(publicToken, metadata)
+        void exchangePlaidPublicToken(session, publicToken, metadata)
       }
       else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
-        void triggerUpdateConnectionStatus().then(() => {
-          void onSuccess()
-          setLinkMode('add')
-        })
+        void triggerUpdateConnectionStatus()
+          .then(() => onSuccess())
+          .then(() => endSession(session, true), () => endSession(session, false))
       }
     },
-    onExit: () => setLinkMode('add'),
+    onExit: () => {
+      if (session) endSession(session, false)
+    },
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 
@@ -129,5 +155,24 @@ export function usePlaidLinkModal({
     }
   }, [plaidLinkStart, plaidLinkReady])
 
-  return { isLinking }
+  const openLink = useCallback(
+    (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
+      // One session at a time, and a Plaid script that failed to load can never open Link.
+      if (sessionRef.current) {
+        resolve(false)
+        return
+      }
+
+      if (plaidLinkError) {
+        if (mode === 'add') notifyConnectFailed()
+        resolve(false)
+        return
+      }
+
+      setSession({ token, mode, onEnd: resolve })
+    }),
+    [sessionRef, plaidLinkError, notifyConnectFailed],
+  )
+
+  return { isLinking, openLink }
 }

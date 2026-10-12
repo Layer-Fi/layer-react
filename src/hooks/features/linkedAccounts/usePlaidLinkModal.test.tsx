@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 import { act, waitFor } from '@testing-library/react'
-import { type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -28,23 +28,27 @@ const completePlaidLink = () =>
     return Promise.resolve()
   })
 
+const closePlaidLink = () =>
+  act(() => {
+    lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
+  })
+
+const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null } = {}) =>
+  mockedUsePlaidLink.mockReturnValue(
+    { open: vi.fn(), ready: false, error: null, ...state } as unknown as ReturnType<typeof usePlaidLink>,
+  )
+
 type RenderAddModeModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   usePlaidSandbox?: boolean
 }
 
-const renderAddModeModal = ({
+const renderAddModeModal = async ({
   customerManagedPlaidConfig,
   usePlaidSandbox = false,
-}: RenderAddModeModalOptions = {}) =>
-  renderHookWithAuth(
-    () => usePlaidLinkModal({
-      linkToken: 'a-link-token',
-      linkMode: 'add',
-      setLinkMode: vi.fn(),
-      onSuccess: vi.fn(),
-      customerManagedPlaidConfig,
-    }),
+}: RenderAddModeModalOptions = {}) => {
+  const rendered = await renderHookWithAuth(
+    () => usePlaidLinkModal({ onSuccess: vi.fn(), customerManagedPlaidConfig }),
     {
       wrapper: ({ children }: PropsWithChildren) => (
         <LayerTestProvider usePlaidSandbox={usePlaidSandbox}>{children}</LayerTestProvider>
@@ -52,11 +56,17 @@ const renderAddModeModal = ({
     },
   )
 
+  let session: Promise<boolean> = Promise.resolve(false)
+  act(() => {
+    session = rendered.result.current.openLink('a-link-token', 'add')
+  })
+
+  return { ...rendered, session }
+}
+
 beforeEach(() => {
   mockedUsePlaidLink.mockReset()
-  mockedUsePlaidLink.mockReturnValue(
-    { open: vi.fn(), ready: false } as unknown as ReturnType<typeof usePlaidLink>,
-  )
+  mockPlaidLink()
 })
 
 afterEach(() => vi.restoreAllMocks())
@@ -137,5 +147,47 @@ describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
     await renderAddModeModal({ usePlaidSandbox: true })
 
     expect(lastPlaidLinkOptions().env).toBe('sandbox')
+  })
+})
+
+describe('usePlaidLinkModal sessions', () => {
+  it('resolves true once the connection is saved and clears the token', async () => {
+    const { session } = await renderAddModeModal()
+    expect(lastPlaidLinkOptions().token).toBe('a-link-token')
+
+    await completePlaidLink()
+
+    await expect(session).resolves.toBe(true)
+    expect(lastPlaidLinkOptions().token).toBeNull()
+  })
+
+  it('resolves false when Link closes', async () => {
+    mockPlaidLink({ ready: true })
+    const { session } = await renderAddModeModal()
+
+    closePlaidLink()
+
+    await expect(session).resolves.toBe(false)
+    expect(lastPlaidLinkOptions().token).toBeNull()
+  })
+
+  it('resolves false when the public token couldn’t be saved', async () => {
+    const { session } = await renderAddModeModal({
+      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+        onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
+      }),
+    })
+
+    await completePlaidLink()
+
+    await expect(session).resolves.toBe(false)
+  })
+
+  it('resolves false when Plaid failed to load, without opening a session', async () => {
+    mockPlaidLink({ error: new ErrorEvent('error') })
+    const { session } = await renderAddModeModal()
+
+    await expect(session).resolves.toBe(false)
+    expect(lastPlaidLinkOptions().token).toBeNull()
   })
 })

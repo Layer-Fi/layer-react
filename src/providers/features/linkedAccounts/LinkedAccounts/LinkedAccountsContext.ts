@@ -7,7 +7,7 @@ export type LinkedAccountsContextType = ReturnType<typeof useLinkedAccounts>
 const UNPROVIDED_LINKED_ACCOUNTS_CONTEXT: LinkedAccountsContextType = {
   isLinking: false,
   isHostedLinkError: false,
-  addConnection: () => Promise.resolve(),
+  addConnection: () => Promise.resolve(false),
   removeConnection: () => Promise.resolve(),
   repairConnection: () => Promise.resolve(),
   refetchAccountsAndTransactions: () => Promise.resolve(),
