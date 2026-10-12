@@ -1,13 +1,13 @@
-import { type ReactNode, useContext, useState } from 'react'
+import { type ReactNode } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { useConnectAccount } from '@features/bookkeeping/UnifiedAskForm/useConnectAccount'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { getPagePrimaryAction, hasPickedFollowUp, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
@@ -26,26 +26,25 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError } = navigation
+  const { isConnecting, connect } = useConnectAccount()
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
-  const canContinue = getPageError(page, values) === undefined
+
   const isTakeover = presentation === 'takeover'
   const primaryAction = getPagePrimaryAction(page, values)
+  const canContinue = getPageError(page, values) === undefined
+  const isPending = routing === 'loading' || isSubmitting || isConnecting
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
-  const { addConnection } = useContext(LinkedAccountsContext)
-  const [connection, setConnection] = useState<'idle' | 'connecting' | 'connected'>('idle')
-  const isConnecting = connection === 'connecting'
+  const connectsBeforeContinuing = routing !== 'error' && primaryAction === 'CONNECT_ACCOUNT'
 
   const onPrimary = () => {
-    if (routing === 'error' || primaryAction !== 'CONNECT_ACCOUNT' || connection === 'connected') {
+    if (!connectsBeforeContinuing) {
       onContinue()
       return
     }
 
-    setConnection('connecting')
-    void addConnection('PLAID').then((isConnected) => {
-      setConnection(isConnected ? 'connected' : 'idle')
+    void connect().then((isConnected) => {
       if (isConnected) onContinue()
     })
   }
@@ -96,11 +95,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
               )}
             {showsPrimary
               ? (
-                <Button
-                  isDisabled={!canContinue || isSubmitting || isConnecting}
-                  isPending={routing === 'loading' || isSubmitting || isConnecting}
-                  onPress={onPrimary}
-                >
+                <Button isDisabled={!canContinue || isSubmitting || isConnecting} isPending={isPending} onPress={onPrimary}>
                   {getPrimaryLabel()}
                 </Button>
               )
