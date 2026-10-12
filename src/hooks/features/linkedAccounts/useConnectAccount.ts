@@ -14,18 +14,22 @@ export const useConnectAccount = () => {
   const [status, setStatus] = useState<ConnectAccountStatus>('idle')
   const isMountedRef = useRef(true)
 
-  useEffect(() => () => {
-    isMountedRef.current = false
+  useEffect(() => {
+    isMountedRef.current = true
+    return () => {
+      isMountedRef.current = false
+    }
   }, [])
 
   const connect = useCallback(async () => {
     if (status === 'connected') return true
 
     setStatus('connecting')
-    const isConnected = await addConnection('PLAID') && isMountedRef.current
-    setStatus(isConnected ? 'connected' : 'idle')
+    const isConnected = await addConnection('PLAID')
+    const continues = isConnected && isMountedRef.current
+    setStatus(continues ? 'connected' : 'idle')
 
-    return isConnected
+    return continues
   }, [addConnection, status])
 
   return useMemo(() => ({ isConnecting: status === 'connecting', connect }), [status, connect])
