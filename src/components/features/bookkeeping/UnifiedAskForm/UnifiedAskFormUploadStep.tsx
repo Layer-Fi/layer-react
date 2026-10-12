@@ -44,7 +44,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         if (!isAPIErrorOfType(error, ApiEnumErrorType.BusinessTaskAlreadyCompleted)) throw error
 
         addToast({
-          content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.already_answered', 'This task has already been answered.'),
+          content: t('bookkeeping:UnifiedAskForm.UnifiedAskFormUploadStep.error.already_answered', 'This task has already been answered.'),
           type: 'error',
         })
         void invalidateBookkeepingPeriods()
