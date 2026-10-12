@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidInstitution, type PlaidLinkError, type PlaidLinkOnExit, type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import {
+  type PlaidInstitution,
+  type PlaidLinkError,
+  type PlaidLinkOnExit,
+  type PlaidLinkOnExitMetadata,
+  type PlaidLinkOnSuccessMetadata,
+  usePlaidLink,
+} from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
-import { LayerEventComponent, LayerEventType, type LinkedAccountsLinkFinishedEventV1 } from '@schemas/common/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { PlaidLinkClientOutcome, type ReportPlaidLinkOutcomeParams } from '@schemas/features/linkedAccounts/plaidLinkOutcome'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
@@ -29,8 +36,6 @@ type UsePlaidLinkModalOptions = {
   /** When set, the customer owns the Plaid item and handles the public token themselves. */
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
-
-type LinkFinishedPayload = typeof LinkedAccountsLinkFinishedEventV1.Type['payload']
 
 const toLinkFinishedInstitution = (institution: PlaidInstitution | null) =>
   institution ? { id: institution.institution_id, name: institution.name } : null
@@ -76,13 +81,27 @@ export function usePlaidLinkModal({
 
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
 
-  const emitLinkFinished = useCallback((payload: Omit<LinkFinishedPayload, 'provider' | 'linkMode'>) => {
-    emitLayerEvent({
-      type: LayerEventType.LinkedAccountsLinkFinished,
-      version: 1,
-      payload: { provider: 'PLAID', linkMode, ...payload },
-    })
-  }, [emitLayerEvent, linkMode])
+  const emitPlaidLinkFinished = useCallback(
+    (metadata: PlaidLinkOnSuccessMetadata | PlaidLinkOnExitMetadata, error: PlaidLinkError | null = null) => {
+      const isExit = 'status' in metadata
+      const exitOutcome = error ? 'error' : 'exited'
+
+      emitLayerEvent({
+        type: LayerEventType.LinkedAccountsLinkFinished,
+        version: 1,
+        payload: {
+          provider: 'PLAID',
+          outcome: isExit ? exitOutcome : 'completed',
+          linkMode,
+          linkSessionId: metadata.link_session_id,
+          institution: toLinkFinishedInstitution(metadata.institution),
+          exitStatus: isExit ? metadata.status : null,
+          error: toLinkFinishedError(error),
+        },
+      })
+    },
+    [emitLayerEvent, linkMode],
+  )
 
   const handlePlaidLinkExit: PlaidLinkOnExit = (error, metadata) => {
     reportPlaidLinkOutcome(
@@ -90,13 +109,7 @@ export function usePlaidLinkModal({
         ? { outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code }
         : { outcome: PlaidLinkClientOutcome.Exited },
     )
-    emitLinkFinished({
-      outcome: error ? 'error' : 'exited',
-      linkSessionId: metadata.link_session_id,
-      institution: toLinkFinishedInstitution(metadata.institution),
-      exitStatus: metadata.status,
-      error: toLinkFinishedError(error),
-    })
+    emitPlaidLinkFinished(metadata, error)
 
     setLinkMode('add')
   }
@@ -152,13 +165,7 @@ export function usePlaidLinkModal({
   const handlePlaidLinkSuccess = useCallback(
     (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
       reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
-      emitLinkFinished({
-        outcome: 'completed',
-        linkSessionId: metadata.link_session_id,
-        institution: toLinkFinishedInstitution(metadata.institution),
-        exitStatus: null,
-        error: null,
-      })
+      emitPlaidLinkFinished(metadata)
 
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
@@ -175,7 +182,7 @@ export function usePlaidLinkModal({
     },
     [
       reportPlaidLinkOutcome,
-      emitLinkFinished,
+      emitPlaidLinkFinished,
       linkMode,
       exchangePlaidPublicToken,
       triggerUpdateConnectionStatus,
