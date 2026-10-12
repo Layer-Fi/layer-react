@@ -16,6 +16,7 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
+import { ConnectAccountProvider } from '@features/linkedAccounts/ConnectAccountProvider/ConnectAccountProvider'
 import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
@@ -26,7 +27,6 @@ import {
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { BookkeepingOverviewConnectAccountProvider } from '@views/BookkeepingOverview/BookkeepingOverviewConnectAccountProvider'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 import './bookkeepingOverview.scss'
@@ -249,7 +249,7 @@ const BookkeepingOverviewContent = ({
 }
 
 export const BookkeepingOverview = (props: BookkeepingOverviewProps) => (
-  <BookkeepingOverviewConnectAccountProvider>
+  <ConnectAccountProvider>
     <BookkeepingOverviewContent {...props} />
-  </BookkeepingOverviewConnectAccountProvider>
+  </ConnectAccountProvider>
 )

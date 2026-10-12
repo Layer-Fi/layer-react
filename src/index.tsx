@@ -27,7 +27,7 @@ export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAcco
 export { Journal } from './components/features/generalLedger/Journal/Journal'
 
 /* ------------------ Account Operations ------------------ */
-export { Tasks } from './components/features/bookkeeping/Tasks/Tasks'
+export { Tasks } from './views/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/LinkAccounts'
