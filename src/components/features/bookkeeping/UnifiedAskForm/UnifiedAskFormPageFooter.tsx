@@ -1,9 +1,10 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useContext } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -31,6 +32,8 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const isTakeover = presentation === 'takeover'
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
+  const { addConnection, isLinking } = useContext(LinkedAccountsContext)
+  const isConnectPage = routing !== 'error' && getPagePrimaryAction(page, values) === 'CONNECT_ACCOUNT'
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
@@ -78,9 +81,22 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
               )}
             {showsPrimary
               ? (
-                <Button isDisabled={!canContinue || isSubmitting} isPending={routing === 'loading' || isSubmitting} onPress={onContinue}>
-                  {getPrimaryLabel()}
-                </Button>
+                <HStack gap='xs'>
+                  <Button
+                    isDisabled={!canContinue || isSubmitting}
+                    isPending={routing === 'loading' || isSubmitting || (isConnectPage && isLinking)}
+                    onPress={isConnectPage ? () => void addConnection('PLAID', onContinue) : onContinue}
+                  >
+                    {getPrimaryLabel()}
+                  </Button>
+                  {isConnectPage
+                    ? (
+                      <Button variant='outlined' isDisabled={isSubmitting || isLinking} onPress={onContinue}>
+                        {t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.already_connected', 'I already connected this')}
+                      </Button>
+                    )
+                    : null}
+                </HStack>
               )
               : null}
           </HStack>

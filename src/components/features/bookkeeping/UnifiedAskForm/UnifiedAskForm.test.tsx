@@ -7,6 +7,7 @@ import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/uni
 import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
@@ -46,6 +47,36 @@ const renderItem = (task: UnifiedAskFormTask) => ({
   user: userEvent.setup(),
   ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
 })
+
+const renderItemWithPlaid = (task: UnifiedAskFormTask) => {
+  const noop = () => Promise.resolve()
+  const addConnection = vi.fn<LinkedAccountsContextType['addConnection']>(async (_source, onSuccess) => {
+    await onSuccess?.()
+  })
+  const linkedAccounts: LinkedAccountsContextType = {
+    isLinking: false,
+    isHostedLinkError: false,
+    addConnection,
+    removeConnection: noop,
+    repairConnection: noop,
+    refetchAccountsAndTransactions: noop,
+    unlinkBankAccount: noop,
+    confirmAccount: noop,
+    excludeAccount: noop,
+    breakConnection: noop,
+  }
+
+  return {
+    addConnection,
+    user: userEvent.setup(),
+    ...render(
+      <LinkedAccountsContext.Provider value={linkedAccounts}>
+        <TasksListItem task={task as UserVisibleTask} defaultOpen />
+      </LinkedAccountsContext.Provider>,
+      { wrapper: LayerTestProvider },
+    ),
+  }
+}
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {
   const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]')
@@ -338,7 +369,7 @@ describe('UnifiedAskForm', () => {
       answers: { account_type: { choice: 'owned' } },
     })
 
-    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({
@@ -346,23 +377,38 @@ describe('UnifiedAskForm', () => {
     })
   })
 
-  it('submits a page whose only step is Connect account', async () => {
-    const task = makeUnifiedAskFormTask({
-      form: {
-        entryPageId: 'connect',
-        pages: [{
-          id: 'connect',
-          next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
-        }],
-      },
-    })
+  const connectAccountTask = () => makeUnifiedAskFormTask({
+    form: {
+      entryPageId: 'connect',
+      pages: [{
+        id: 'connect',
+        next: { kind: AskFormNextKind.Submit, review: false },
+        steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
+      }],
+    },
+  })
+
+  it('submits a Connect account page after Plaid connects the account', async () => {
+    const task = connectAccountTask()
     const onSubmit = spyOnSubmit(task)
-    const { user } = renderItem(task)
+    const { user, addConnection } = renderItemWithPlaid(task)
 
     await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
+    expect(addConnection).toHaveBeenCalledWith('PLAID', expect.any(Function))
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+  })
+
+  it('submits a Connect account page when the user already connected the account', async () => {
+    const task = connectAccountTask()
+    const onSubmit = spyOnSubmit(task)
+    const { user, addConnection } = renderItemWithPlaid(task)
+
+    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(addConnection).not.toHaveBeenCalled()
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
   })
 

@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
@@ -43,6 +46,8 @@ type TasksProps = {
   mobile?: boolean
   stringOverrides?: TasksStringOverrides
   onClickReconnectAccounts?: () => void
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 export function Tasks({
@@ -50,6 +55,8 @@ export function Tasks({
   tasksHeader,
   onClickReconnectAccounts,
   stringOverrides,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: TasksProps) {
   const { t } = useTranslation()
   const { data, isLoading } = useGetBookkeepingPeriods()
@@ -110,12 +117,12 @@ export function Tasks({
             )}
           >
             {() => (
-              <>
+              <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig} customerManagedPlaidConfig={customerManagedPlaidConfig}>
                 <TasksYearsTabs isMobile={isMobile} />
                 <TasksMonthSelector isMobile={isMobile} />
                 <TasksPending />
                 <TasksList mobile={mobile} />
-              </>
+              </LinkedAccountsProvider>
             )}
           </ConditionalBlock>
         )}

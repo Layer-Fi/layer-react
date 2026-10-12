@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
@@ -27,7 +27,7 @@ type UseLinkedAccountsOptions = {
 type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   isLinking: boolean
   isHostedLinkError: boolean
-  addConnection: (source: AccountSource) => Promise<void>
+  addConnection: (source: AccountSource, onSuccess?: () => Awaitable<void>) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
   refetchAccountsAndTransactions: () => Promise<void>
@@ -95,6 +95,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
+  const addConnectionSuccessRef = useRef<() => Awaitable<void>>()
 
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
@@ -118,6 +119,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   }, [refetch, forceReloadBankTransactions])
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
+    await addConnectionSuccessRef.current?.()
     await refetchAccountsAndTransactions().catch(() => undefined)
     await onPlaidConnectionSuccess?.()
   }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
@@ -201,16 +203,20 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = useCallback(
-    () => fetchLinkToken(
-      'add',
-      customerManagedPlaidConfig
-        ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
-        : withHostedLinkRedirect(
-          () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
-          plaidHostedLinkConfig,
-        ),
-      t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
-    ),
+    (onSuccess?: () => Awaitable<void>) => {
+      addConnectionSuccessRef.current = onSuccess
+
+      return fetchLinkToken(
+        'add',
+        customerManagedPlaidConfig
+          ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
+          : withHostedLinkRedirect(
+            () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+            plaidHostedLinkConfig,
+          ),
+        t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+      )
+    },
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 

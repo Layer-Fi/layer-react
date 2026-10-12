@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { VStack } from '@ui/Stack/Stack'
@@ -37,6 +39,8 @@ type BookkeepingOverviewTasksContentProps = {
   callBookingStringOverrides?: CallBookingStringOverrides
   onBookCall: () => void
   onClickReconnectAccounts?: () => void
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 const BookkeepingOverviewTasksContent = ({
@@ -47,6 +51,8 @@ const BookkeepingOverviewTasksContent = ({
   callBookingStringOverrides,
   onBookCall,
   onClickReconnectAccounts,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BookkeepingOverviewTasksContentProps) => {
   return (
     <>
@@ -61,6 +67,8 @@ const BookkeepingOverviewTasksContent = ({
         mobile={tasksMobile}
         stringOverrides={tasksStringOverrides}
         onClickReconnectAccounts={onClickReconnectAccounts}
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
       />
     </>
   )
@@ -90,6 +98,8 @@ export interface BookkeepingOverviewProps {
 
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -101,6 +111,8 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
@@ -160,6 +172,8 @@ export const BookkeepingOverview = ({
               callBookingStringOverrides={callBookingStringOverrides}
               onBookCall={handleBookCall}
               onClickReconnectAccounts={onClickReconnectAccounts}
+              plaidHostedLinkConfig={plaidHostedLinkConfig}
+              customerManagedPlaidConfig={customerManagedPlaidConfig}
             />
           </VStack>
         )}
@@ -179,6 +193,8 @@ export const BookkeepingOverview = ({
                 callBookingStringOverrides={callBookingStringOverrides}
                 onBookCall={handleBookCall}
                 onClickReconnectAccounts={onClickReconnectAccounts}
+                plaidHostedLinkConfig={plaidHostedLinkConfig}
+                customerManagedPlaidConfig={customerManagedPlaidConfig}
               />
             </VStack>
           </div>
