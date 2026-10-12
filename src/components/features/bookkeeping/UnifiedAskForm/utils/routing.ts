@@ -85,6 +85,7 @@ export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, 
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
 
   return {
+    isTakeover,
     primaryAction,
     showsPrimary,
     showsFooterRow: !isTakeover || showsPrimary || hasAction,

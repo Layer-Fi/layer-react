@@ -30,8 +30,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
 
-  const isTakeover = presentation === 'takeover'
-  const { primaryAction, showsPrimary, showsFooterRow, connectsBeforeContinuing } = getPageFooterLayout({
+  const { isTakeover, primaryAction, showsPrimary, showsFooterRow, connectsBeforeContinuing } = getPageFooterLayout({
     page,
     values,
     presentation,
