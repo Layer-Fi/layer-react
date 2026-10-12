@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
@@ -7,7 +7,7 @@ import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useGlobalDate } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
-import { DataState } from '@ui/DataState/DataState'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@features/bookkeeping/BookkeepingStatus/useBookkeepingStatusConfig'
@@ -20,6 +20,7 @@ const TASKS_CHARTS_COLORS = {
 }
 
 export const TasksPending = () => {
+  const { t } = useTranslation()
   const { date } = useGlobalDate()
   const { formatDate, formatNumber } = useIntlFormatter()
   const { activePeriod } = useActiveBookkeepingPeriod()
@@ -115,6 +116,13 @@ export const TasksPending = () => {
             icon={statusConfig.icon}
             title={statusConfig.label}
             description={statusConfig.description}
+          />
+        )}
+        {!statusConfig && totalTaskCount === 0 && (
+          <DataState
+            inline
+            status={DataStateStatus.neutral}
+            title={t('bookkeeping:Tasks.TasksPending.empty.no_tasks', 'No tasks for this month')}
           />
         )}
       </div>
