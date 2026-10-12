@@ -30,13 +30,13 @@ type UsePlaidLinkModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
+const PLAID_ERROR_SCREEN_VIEWS = new Set(['ERROR', 'EXIT'])
+
 /**
  * Drives the embedded Plaid Link modal for a token owned by the caller: opening
  * the widget, exchanging the public token (add) or refreshing connection status
  * (repair) on completion, and notifying the caller to refresh accounts.
  */
-const PLAID_ERROR_SCREEN_VIEWS = new Set(['ERROR', 'EXIT'])
-
 export function usePlaidLinkModal({
   linkToken,
   linkMode,
@@ -58,15 +58,15 @@ export function usePlaidLinkModal({
   const { trigger: triggerPlaidLinkOutcome } = usePostPlaidLinkOutcome()
 
   const reportPlaidLinkOutcome = (params: ReportPlaidLinkOutcomeParams) => {
-    // Diagnostics only: a failed report must not interrupt the link flow.
     void triggerPlaidLinkOutcome(params).catch(() => undefined)
   }
 
   const lastSessionErrorRef = useRef<PlaidLinkExitError | null>(null)
 
   const handlePlaidLinkEvent: PlaidLinkOnEvent = (eventName, metadata) => {
-    // Moving to any view but the error or exit-confirmation screen means the user recovered from the error.
-    if (eventName === 'TRANSITION_VIEW' && !PLAID_ERROR_SCREEN_VIEWS.has(metadata.view_name ?? '')) {
+    const hasLeftErrorScreen = eventName === 'TRANSITION_VIEW' && !PLAID_ERROR_SCREEN_VIEWS.has(metadata.view_name ?? '')
+
+    if (hasLeftErrorScreen) {
       lastSessionErrorRef.current = null
       return
     }
