@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { TasksListMobile } from '@features/bookkeeping/TasksList/TasksListMobile'
 
 import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
@@ -26,9 +26,9 @@ const AMAZON = makeUnifiedAskFormTask({
   answerSummary: 'Office chairs',
 })
 
-const TASKS = [STAPLES, UBER, AMAZON] as UserVisibleTask[]
+const TASKS = [STAPLES, UBER, AMAZON] as UnifiedAskFormTask[]
 
-const renderList = (tasks: ReadonlyArray<UserVisibleTask> = TASKS) => ({
+const renderList = (tasks: ReadonlyArray<UnifiedAskFormTask> = TASKS) => ({
   user: userEvent.setup(),
   ...render(<TasksListMobile tasks={tasks} />, { wrapper: LayerTestProvider }),
 })
@@ -60,7 +60,7 @@ describe('TasksListMobile', () => {
   })
 
   it('leaves out "Answer N tasks" once every task is answered', () => {
-    renderList([AMAZON] as UserVisibleTask[])
+    renderList([AMAZON] as UnifiedAskFormTask[])
 
     expect(screen.getByRole('row', { name: /Amazon purchases/ })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /^Answer/ })).not.toBeInTheDocument()

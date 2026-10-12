@@ -6,7 +6,6 @@ import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/
 import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
@@ -62,11 +61,11 @@ const lockedKindTask = (answer: AskFormChoiceAnswer) => makeUnifiedAskFormTask({
     ]),
     editable: false,
   }])),
-}) as UserVisibleTask
+})
 
 const renderItem = (task: UnifiedAskFormTask) => ({
   user: userEvent.setup(),
-  ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
+  ...render(<TasksListItem task={task} defaultOpen />, { wrapper: LayerTestProvider }),
 })
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {

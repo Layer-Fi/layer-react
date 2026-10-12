@@ -1,14 +1,15 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { findNextIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { findNextIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { Modal } from '@ui/Modal/Modal'
 import { TasksTakeoverTask } from '@features/bookkeeping/TasksTakeover/TasksTakeoverTask'
 
 import './tasksTakeover.scss'
 
 type TasksTakeoverProps = {
-  tasks: ReadonlyArray<UserVisibleTask>
+  tasks: ReadonlyArray<UnifiedAskFormTask>
   /** The task on screen; `null` closes the takeover. */
   taskId: string | null
   onTaskChange: (taskId: string | null) => void
@@ -19,7 +20,7 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
   const { t } = useTranslation()
 
   // The last task on screen and the list it was in. Keeps it showing through the exit animation.
-  const shownRef = useRef<{ task?: UserVisibleTask, tasks: ReadonlyArray<UserVisibleTask> }>({ tasks })
+  const shownRef = useRef<{ task?: UnifiedAskFormTask, tasks: ReadonlyArray<UnifiedAskFormTask> }>({ tasks })
   const last = shownRef.current
 
   const findTask = (id?: string) => tasks.find(task => task.id === id)

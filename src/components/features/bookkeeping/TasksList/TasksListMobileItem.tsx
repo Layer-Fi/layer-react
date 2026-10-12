@@ -1,7 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
@@ -9,7 +10,7 @@ import { Span } from '@ui/Typography/Text'
 import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
 
-export const TasksListMobileItem = ({ task }: { task: UserVisibleTask }) => {
+export const TasksListMobileItem = ({ task }: { task: UnifiedAskFormTask }) => {
   const { t } = useTranslation()
   const { formatNumber, formatCurrencyFromCents } = useIntlFormatter()
   const isCompleted = isCompletedTask(task)
