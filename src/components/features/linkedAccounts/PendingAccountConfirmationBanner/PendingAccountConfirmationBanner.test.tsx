@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
 
@@ -27,11 +28,19 @@ const plaidChecking = {
   balance: 11000,
 }
 
+let refetchAccounts: () => Promise<unknown> = () => Promise.resolve()
+
+const CaptureRefetchAccounts = () => {
+  refetchAccounts = useBankAccountsContext().refetch
+  return null
+}
+
 const renderBanner = () => ({
   user: userEvent.setup(),
   ...render(
     <AccountConfirmationStoreProvider>
       <PendingAccountConfirmationBanner />
+      <CaptureRefetchAccounts />
     </AccountConfirmationStoreProvider>,
     { wrapper: LayerTestProvider },
   ),
@@ -58,6 +67,23 @@ describe('PendingAccountConfirmationBanner', () => {
     const dialog = await screen.findByRole('dialog')
     expect(dialog).toHaveTextContent('Plaid CD')
     expect(dialog).toHaveTextContent('Plaid Checking')
+  })
+
+  it('does not reopen the modal for accounts that arrive after the last ones were confirmed elsewhere', async () => {
+    server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(plaidCd)]))
+    const { user } = renderBanner()
+    await user.click(await screen.findByRole('button', { name: 'Review accounts' }))
+    await screen.findByRole('dialog')
+
+    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidCd)]))
+    await act(() => refetchAccounts())
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidCd), makeAccountNeedingConfirmation(plaidChecking)]))
+    await act(() => refetchAccounts())
+
+    expect(await screen.findByText('Confirm your new account')).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('shows nothing when every account is confirmed', async () => {
