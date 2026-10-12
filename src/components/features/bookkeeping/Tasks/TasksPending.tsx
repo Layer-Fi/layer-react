@@ -112,10 +112,11 @@ export const TasksPending = () => {
         {statusConfig && (
           <DataState
             inline
-            status={statusConfig.dataStateStatus}
+            status={statusConfig.status}
             icon={statusConfig.icon}
             title={statusConfig.label}
             description={statusConfig.description}
+            slotProps={{ Title: { status: statusConfig.status } }}
           />
         )}
         {!statusConfig && totalTaskCount === 0 && (
