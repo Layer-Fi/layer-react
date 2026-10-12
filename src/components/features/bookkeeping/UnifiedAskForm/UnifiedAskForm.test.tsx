@@ -14,6 +14,7 @@ import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTask
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { makeUploadDocumentAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/uploadDocument'
 import {
+  askFormNextPageUrl,
   choiceStep,
   connectAccountStep,
   makeUnifiedAskFormTask,
@@ -117,6 +118,28 @@ describe('UnifiedAskForm', () => {
     expect(await screen.findByRole('radio', { name: 'Supplies' })).toBeChecked()
     expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+  })
+
+  it('shows a fully locked task\'s review without Submit when the server routes to it', async () => {
+    const taskId = '00000000-0000-4000-8000-000000000f03'
+    const task = makeUnifiedAskFormTask({
+      id: taskId,
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      answers: { kind: { choice: 'supplies' } },
+      form: singlePageForm(page('only', [{
+        ...choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }]),
+        editable: false,
+      }], { kind: AskFormNextKind.Server, url: askFormNextPageUrl(taskId) })),
+    })
+    server.use(postAskFormNextPage.mock({ next: { kind: AskFormNextKind.Submit, review: true } }))
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    expect(await screen.findByText('Here’s what you told us:')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
   it('fills the remember question from the picked category and posts only the path taken', async () => {
