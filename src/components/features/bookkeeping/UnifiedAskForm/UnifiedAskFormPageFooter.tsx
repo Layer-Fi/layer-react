@@ -34,10 +34,12 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
   const connectAccount = useConnectAccount()
   const [isConnecting, setIsConnecting] = useState(false)
+  const [hasConnected, setHasConnected] = useState(false)
 
   // Connect account continues only once the account connects; closing Link keeps the customer on the page.
+  // After a connection, pressing it again only retries the save.
   const onPrimary = () => {
-    if (routing === 'error' || getPagePrimaryAction(page, values) !== 'CONNECT_ACCOUNT' || !connectAccount) {
+    if (routing === 'error' || getPagePrimaryAction(page, values) !== 'CONNECT_ACCOUNT' || !connectAccount || hasConnected) {
       onContinue()
       return
     }
@@ -45,7 +47,10 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
     setIsConnecting(true)
     void connectAccount().then((isConnected) => {
       setIsConnecting(false)
-      if (isConnected) onContinue()
+      if (!isConnected) return
+
+      setHasConnected(true)
+      onContinue()
     })
   }
 

@@ -413,6 +413,24 @@ describe('UnifiedAskForm', () => {
     expect(onSubmit).not.toHaveBeenCalled()
   })
 
+  it('retries only the save after a connection whose save failed', async () => {
+    const task = connectOnlyTask()
+    const connectAccount = vi.fn(() => Promise.resolve(true))
+    server.use(
+      postUnifiedAskFormResponse.mockError({ errors: [{ type: 'BadRequest', description: 'nope', error_enum: 'SpecifiedBadRequest' }] }, { status: 400 }),
+    )
+    const { user } = renderItem(task, connectAccount)
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+    expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
+
+    const onSubmit = spyOnSubmit(task)
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(connectAccount).toHaveBeenCalledOnce()
+  })
+
   it('says the task was already answered when the API rejects a changed answer', async () => {
     const task = makeUnifiedAskFormTask({
       form: {
