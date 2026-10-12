@@ -87,7 +87,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
   )
 }
 
-function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
+export function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { accounts, onFinish, refetchAccountsAndTransactions } = useLinkedAccountsConfirmationModal()
