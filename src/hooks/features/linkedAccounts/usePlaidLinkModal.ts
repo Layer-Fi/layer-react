@@ -62,9 +62,11 @@ export function usePlaidLinkModal({
     ended.onEnd(isConnected)
   }, [sessionRef])
 
-  const notifyConnectFailed = useCallback(() => {
+  const notifySessionFailed = useCallback((mode: LinkMode) => {
     addToast({
-      content: t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.'),
+      content: mode === 'add'
+        ? t('linkedAccounts:usePlaidLinkModal.error.connect_account', 'We couldn’t connect your account. Please try again.')
+        : t('linkedAccounts:usePlaidLinkModal.error.repair_connection', 'We couldn’t repair the connection to your account. Please try again.'),
       type: 'error',
     })
   }, [addToast, t])
@@ -99,7 +101,7 @@ export function usePlaidLinkModal({
             }
           },
           () => {
-            notifyConnectFailed()
+            notifySessionFailed('add')
             endSession(current, false)
           },
         )
@@ -112,7 +114,7 @@ export function usePlaidLinkModal({
       triggerExchangePlaidPublicToken,
       customerManagedPlaidConfig,
       handleAddConnectionSuccess,
-      notifyConnectFailed,
+      notifySessionFailed,
       endSession,
       preloadAccountConfirmation,
       resetAccountConfirmation,
@@ -139,7 +141,13 @@ export function usePlaidLinkModal({
         // pills from any broken accounts
         void triggerUpdateConnectionStatus()
           .then(() => onSuccess())
-          .then(() => endSession(session, true), () => endSession(session, false))
+          .then(
+            () => endSession(session, true),
+            () => {
+              notifySessionFailed('update')
+              endSession(session, false)
+            },
+          )
       }
     },
     onExit: () => {
@@ -155,23 +163,27 @@ export function usePlaidLinkModal({
     }
   }, [plaidLinkStart, plaidLinkReady])
 
+  // A Plaid script that fails to load can never open Link, so the session ends as a failure.
+  useEffect(() => {
+    if (!plaidLinkError || !session) return
+
+    notifySessionFailed(session.mode)
+    endSession(session, false)
+  }, [plaidLinkError, session, notifySessionFailed, endSession])
+
   const openLink = useCallback(
     (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
-      // One session at a time, and a Plaid script that failed to load can never open Link.
       if (sessionRef.current) {
         resolve(false)
         return
       }
 
-      if (plaidLinkError) {
-        if (mode === 'add') notifyConnectFailed()
-        resolve(false)
-        return
-      }
-
-      setSession({ token, mode, onEnd: resolve })
+      const nextSession = { token, mode, onEnd: resolve }
+      // Set the ref now rather than on the next render, so two calls in one tick can't both start a session.
+      sessionRef.current = nextSession
+      setSession(nextSession)
     }),
-    [sessionRef, plaidLinkError, notifyConnectFailed],
+    [sessionRef],
   )
 
   return { isLinking, openLink }

@@ -183,11 +183,20 @@ describe('usePlaidLinkModal sessions', () => {
     await expect(session).resolves.toBe(false)
   })
 
-  it('resolves false when Plaid failed to load, without opening a session', async () => {
+  it('resolves false when Plaid fails to load after the session started', async () => {
+    const { session, rerender } = await renderAddModeModal()
+
     mockPlaidLink({ error: new ErrorEvent('error') })
-    const { session } = await renderAddModeModal()
+    rerender()
 
     await expect(session).resolves.toBe(false)
     expect(lastPlaidLinkOptions().token).toBeNull()
+  })
+
+  it('turns away a second session while one is open', async () => {
+    const { result } = await renderAddModeModal()
+
+    await expect(result.current.openLink('another-token', 'add')).resolves.toBe(false)
+    expect(lastPlaidLinkOptions().token).toBe('a-link-token')
   })
 })

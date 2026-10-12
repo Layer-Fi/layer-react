@@ -9,7 +9,7 @@ export const makeLinkedAccountsContext = (
   isHostedLinkError: false,
   addConnection: vi.fn(() => Promise.resolve(false)),
   removeConnection: vi.fn(() => Promise.resolve()),
-  repairConnection: vi.fn(() => Promise.resolve()),
+  repairConnection: vi.fn(() => Promise.resolve(false)),
   refetchAccountsAndTransactions: vi.fn(() => Promise.resolve()),
   unlinkBankAccount: vi.fn(() => Promise.resolve()),
   confirmAccount: vi.fn(() => Promise.resolve()),

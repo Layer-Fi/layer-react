@@ -9,45 +9,46 @@ import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { Modal } from '@ui/Modal/Modal'
 import { LinkedAccountsConfirmationModalContent } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
-const PendingAccountConfirmationBannerContent = ({ pendingCount }: { pendingCount: number }) => {
+export const PendingAccountConfirmationBanner = () => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
+  const { data } = useBankAccountsContext()
   const [isConfirming, setIsConfirming] = useState(false)
+  const pendingCount = getAccountsNeedingConfirmation(data ?? []).length
+
+  // The dialog outlives the banner: confirming refetches accounts, which empties the count before the dialog has closed itself.
+  if (pendingCount === 0 && !isConfirming) return null
 
   return (
     <>
-      <Banner
-        variant='info'
-        title={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.title', {
-          count: pendingCount,
-          one: 'Confirm your new account',
-          other: 'Confirm your new accounts',
-        })}
-        description={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.description', {
-          count: pendingCount,
-          displayCount: formatNumber(pendingCount),
-          one: 'We found {{displayCount}} new account. Confirm it belongs to your business so we can bring in its transactions.',
-          other: 'We found {{displayCount}} new accounts. Confirm which belong to your business so we can bring in their transactions.',
-        })}
-        slots={{
-          Button: (
-            <BannerButton onPress={() => setIsConfirming(true)}>
-              {t('linkedAccounts:PendingAccountConfirmationBanner.action.review_accounts', 'Review accounts')}
-            </BannerButton>
-          ),
-        }}
-      />
+      {pendingCount > 0
+        ? (
+          <Banner
+            variant='info'
+            title={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.title', {
+              count: pendingCount,
+              one: 'Confirm your new account',
+              other: 'Confirm your new accounts',
+            })}
+            description={tPlural(t, 'linkedAccounts:PendingAccountConfirmationBanner.label.description', {
+              count: pendingCount,
+              displayCount: formatNumber(pendingCount),
+              one: 'We found {{displayCount}} new account. Confirm it belongs to your business so we can bring in its transactions.',
+              other: 'We found {{displayCount}} new accounts. Confirm which belong to your business so we can bring in their transactions.',
+            })}
+            slots={{
+              Button: (
+                <BannerButton onPress={() => setIsConfirming(true)}>
+                  {t('linkedAccounts:PendingAccountConfirmationBanner.action.review_accounts', 'Review accounts')}
+                </BannerButton>
+              ),
+            }}
+          />
+        )
+        : null}
       <Modal isOpen={isConfirming} onOpenChange={setIsConfirming}>
         {({ close }) => <LinkedAccountsConfirmationModalContent onClose={close} />}
       </Modal>
     </>
   )
-}
-
-export const PendingAccountConfirmationBanner = () => {
-  const { data } = useBankAccountsContext()
-  const pendingCount = getAccountsNeedingConfirmation(data ?? []).length
-
-  // Unmounting resets isConfirming, so later accounts don't reopen the dialog.
-  return pendingCount > 0 ? <PendingAccountConfirmationBannerContent pendingCount={pendingCount} /> : null
 }

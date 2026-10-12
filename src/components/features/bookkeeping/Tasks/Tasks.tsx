@@ -47,7 +47,6 @@ type TasksProps = {
   onClickReconnectAccounts?: () => void
 }
 
-// Connect account tasks open Plaid through the host's linked-accounts provider, or Layer's own when the host has none.
 export function Tasks(props: TasksProps) {
   const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()
 
