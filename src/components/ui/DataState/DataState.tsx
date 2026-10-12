@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
-import { CircleAlert, CircleCheckBig, Clock, OctagonAlert, RefreshCcw } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, Info, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
@@ -48,12 +48,11 @@ const DataStateIcon = ({ status, children }: { status: IconStatus, children: Rea
 )
 
 export enum DataStateStatus {
-  allDone = 'allDone',
-  success = 'success',
-  failed = 'failed',
+  neutral = 'neutral',
   info = 'info',
   warning = 'warning',
-  inProgress = 'inProgress',
+  success = 'success',
+  failed = 'failed',
 }
 
 export interface DataStateProps {
@@ -80,16 +79,14 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
   switch (status) {
     case DataStateStatus.failed:
       return <DataStateIcon status='error'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
-    case DataStateStatus.info:
+    case DataStateStatus.neutral:
       return <DataStateIcon status='neutral'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
+    case DataStateStatus.info:
+      return <DataStateIcon status='info'>{icon ?? <Info size={12} />}</DataStateIcon>
     case DataStateStatus.success:
       return <DataStateIcon status='success'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
-    case DataStateStatus.allDone:
-      return <DataStateIcon status='neutral'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
     case DataStateStatus.warning:
       return <DataStateIcon status='warning'>{icon ?? <CircleAlert size={12} />}</DataStateIcon>
-    case DataStateStatus.inProgress:
-      return <DataStateIcon status='info'>{icon ?? <Clock size={12} />}</DataStateIcon>
     default:
       unsafeAssertUnreachable({
         value: status,

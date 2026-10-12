@@ -56,7 +56,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_in_progress', 'Books in progress'),
         description: inProgressDescription,
         color: 'info',
-        dataStateStatus: DataStateStatus.inProgress,
+        dataStateStatus: DataStateStatus.info,
         icon: <Clock size={12} />,
       }
     }

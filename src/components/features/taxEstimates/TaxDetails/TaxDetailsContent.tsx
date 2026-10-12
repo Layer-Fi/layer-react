@@ -1,5 +1,6 @@
 import { type ReactNode, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import { CircleCheckBig } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxDetailsRow } from '@schemas/features/taxEstimates/details'
@@ -42,7 +43,8 @@ const EmptyState = () => {
   const { t } = useTranslation()
   return (
     <DataState
-      status={DataStateStatus.allDone}
+      status={DataStateStatus.neutral}
+      icon={<CircleCheckBig size={12} />}
       title={t('taxEstimates:TaxDetails.TaxDetailsContent.empty.no_tax_details', 'No tax details')}
       description={t('taxEstimates:TaxDetails.TaxDetailsContent.empty.no_tax_details_description', 'No tax details found')}
       spacing

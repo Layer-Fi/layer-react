@@ -44,7 +44,7 @@ export const VehiclesGrid = ({ onEditVehicle, showArchived }: VehiclesGridProps)
   if (!vehicles || vehicles.length === 0) {
     return (
       <DataState
-        status={DataStateStatus.allDone}
+        status={DataStateStatus.neutral}
         title={t('mileage:VehiclesGrid.empty.vehicles', 'No vehicles yet')}
         description={t('mileage:VehiclesGrid.empty.add_first_vehicle', 'Add your first vehicle to start tracking trips.')}
         icon={<Car />}

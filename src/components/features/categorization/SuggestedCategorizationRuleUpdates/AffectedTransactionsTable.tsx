@@ -45,7 +45,7 @@ const EmptyState = () => {
   return (
     <DataState
       spacing
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.empty.no_transactions_found', 'No transactions found')}
       description={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.label.affected_transaction_display', 'There are no affected transactions to display')}
     />

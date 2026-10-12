@@ -30,7 +30,7 @@ const VARIATIONS: { label: string, props: Partial<DataStateProps> }[] = [
   {
     label: 'inline',
     props: {
-      status: DataStateStatus.info,
+      status: DataStateStatus.neutral,
       inline: true,
       title: 'Inline state',
       description: 'Rendered inline with smaller text.',
@@ -56,17 +56,17 @@ const VARIATIONS: { label: string, props: Partial<DataStateProps> }[] = [
       slotProps: { Title: { status: 'warning' } },
     },
   },
-  { label: 'spacing', props: { status: DataStateStatus.info, spacing: true } },
+  { label: 'spacing', props: { status: DataStateStatus.neutral, spacing: true } },
   { label: 'custom icon', props: { status: DataStateStatus.failed, icon: <Wifi size={12} /> } },
-  { label: 'title only', props: { status: DataStateStatus.allDone, description: undefined } },
-  { label: 'description only', props: { status: DataStateStatus.info, title: undefined } },
+  { label: 'title only', props: { status: DataStateStatus.neutral, description: undefined } },
+  { label: 'description only', props: { status: DataStateStatus.neutral, title: undefined } },
 ]
 
 const meta: Meta<typeof DataState> = {
   title: 'UI/DataState',
   component: DataState,
   args: {
-    status: DataStateStatus.info,
+    status: DataStateStatus.neutral,
     ...BASE,
   },
   argTypes: {
@@ -103,7 +103,7 @@ export const AllVariants: Story = {
           {VARIATIONS.map(({ label, props }) => (
             <Col key={label} label={label}>
               <Frame inlineSize={CELL_SIZE} padding={16}>
-                <DataState status={DataStateStatus.info} {...BASE} {...props} />
+                <DataState status={DataStateStatus.neutral} {...BASE} {...props} />
               </Frame>
             </Col>
           ))}

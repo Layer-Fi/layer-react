@@ -24,7 +24,7 @@ const TimeEntriesEmptyState = () => {
   if (isFiltered) {
     return (
       <DataState
-        status={DataStateStatus.info}
+        status={DataStateStatus.neutral}
         title={t('timeTracking:TimeEntries.empty.no_matching_entries', 'No time entries found')}
         description={t('timeTracking:TimeEntries.empty.try_adjusting_filters', 'Try adjusting your filters.')}
         icon={<SearchX />}
@@ -35,7 +35,7 @@ const TimeEntriesEmptyState = () => {
 
   return (
     <DataState
-      status={DataStateStatus.allDone}
+      status={DataStateStatus.neutral}
       title={t('timeTracking:TimeEntries.empty.no_entries_yet', 'No time entries yet')}
       description={t('timeTracking:TimeEntries.empty.add_first_entry', 'Add your first time entry to start tracking.')}
       icon={<Clock />}
