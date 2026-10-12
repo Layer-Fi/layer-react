@@ -1,10 +1,10 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useContext, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useConnectAccount } from '@providers/features/bookkeeping/ConnectAccountContext/ConnectAccountContext'
+import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -30,32 +30,30 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
   const values = useStore(form.store, state => state.values)
   const canContinue = getPageError(page, values) === undefined
   const isTakeover = presentation === 'takeover'
+  const primaryAction = getPagePrimaryAction(page, values)
   const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
   const showsFooterRow = !isTakeover || showsPrimary || (action !== undefined && action !== null)
-  const connectAccount = useConnectAccount()
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [hasConnected, setHasConnected] = useState(false)
+  const { addConnection } = useContext(LinkedAccountsContext)
+  const [connection, setConnection] = useState<'idle' | 'connecting' | 'connected'>('idle')
+  const isConnecting = connection === 'connecting'
 
   const onPrimary = () => {
-    if (routing === 'error' || getPagePrimaryAction(page, values) !== 'CONNECT_ACCOUNT' || !connectAccount || hasConnected) {
+    if (routing === 'error' || primaryAction !== 'CONNECT_ACCOUNT' || connection === 'connected') {
       onContinue()
       return
     }
 
-    setIsConnecting(true)
-    void connectAccount().then((isConnected) => {
-      setIsConnecting(false)
-      if (!isConnected) return
-
-      setHasConnected(true)
-      onContinue()
+    setConnection('connecting')
+    void addConnection('PLAID').then((isConnected) => {
+      setConnection(isConnected ? 'connected' : 'idle')
+      if (isConnected) onContinue()
     })
   }
 
   const getPrimaryLabel = () => {
     if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
 
-    switch (getPagePrimaryAction(page, values)) {
+    switch (primaryAction) {
       case 'CONNECT_ACCOUNT':
         return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.connect_account', 'Connect account')
       case 'REVIEW':
