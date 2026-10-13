@@ -1,7 +1,8 @@
 import { type ReactNode } from 'react'
 import { AnimatePresence } from 'motion/react'
 
-/** Plays the exit animation of an `AnimatedElement` child whose key leaves the list. */
+// popLayout takes an exiting child out of the flow at once, so siblings with `layout` slide into its space
+// instead of jumping when it unmounts. The parent must be positioned.
 export const AnimatedPresenceList = ({ children }: { children: ReactNode }) => (
-  <AnimatePresence initial={false}>{children}</AnimatePresence>
+  <AnimatePresence initial={false} mode='popLayout'>{children}</AnimatePresence>
 )
