@@ -48,6 +48,17 @@ const TakeoverHarness = ({ tasks, initialTaskId }: { tasks: ReadonlyArray<Unifie
   return <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
 }
 
+const ReopenHarness = ({ tasks, reopenId }: { tasks: ReadonlyArray<UnifiedAskFormTask>, reopenId: string }) => {
+  const [taskId, setTaskId] = useState<string | null>(COSTCO.id)
+
+  return (
+    <>
+      <button type='button' onClick={() => setTaskId(reopenId)}>Reopen</button>
+      <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
+    </>
+  )
+}
+
 const renderTakeover = ({ tasks = TASKS, taskId = COSTCO.id }: { tasks?: ReadonlyArray<UnifiedAskFormTask>, taskId?: string } = {}) => ({
   user: userEvent.setup(),
   ...render(<TakeoverHarness tasks={tasks} initialTaskId={taskId} />, { wrapper: LayerTestProvider }),
@@ -80,6 +91,46 @@ describe('TasksTakeover', () => {
 
     await user.click(screen.getByRole('button', { name: 'Skip' }))
     expect(await screen.findByRole('heading', { name: 'Costco purchases' })).toBeInTheDocument()
+  })
+
+  it('keeps counting forward as answered tasks leave the open list', async () => {
+    const { user, rerender } = renderTakeover()
+
+    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+    rerender(<TakeoverHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
+
+    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
+  })
+
+  it('counts a task that arrives while open as one to answer', async () => {
+    const ADOBE = makeUnifiedAskFormTask({ id: '00000000-0000-4000-8000-000000000f05', title: 'Adobe subscription' })
+    const { user, rerender } = renderTakeover()
+
+    rerender(<TakeoverHarness tasks={[COSTCO, ADOBE, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
+    expect(screen.getByText('Task 1 of 4')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+
+    expect(await screen.findByRole('heading', { name: 'Adobe subscription' })).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
+  })
+
+  it('keeps the count through close and starts a fresh list on reopen', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(<ReopenHarness tasks={TASKS} reopenId={STAPLES.id} />, { wrapper: LayerTestProvider })
+
+    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    rerender(<ReopenHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} reopenId={STAPLES.id} />)
+    await user.click(screen.getByRole('button', { name: 'Reopen' }))
+
+    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
+    expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
   })
 
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
