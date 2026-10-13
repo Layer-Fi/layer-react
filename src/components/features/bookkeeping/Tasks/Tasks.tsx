@@ -1,6 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
@@ -45,9 +47,14 @@ type TasksProps = {
   mobile?: boolean
   stringOverrides?: TasksStringOverrides
   onClickReconnectAccounts?: () => void
+  /** The Plaid settings given to `LinkedAccounts`, used when a task connects an account. A linked-accounts setup around `Tasks` takes precedence. */
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export function Tasks(props: TasksProps) {
+type TasksContentProps = Omit<TasksProps, 'plaidHostedLinkConfig' | 'customerManagedPlaidConfig'>
+
+export function Tasks({ plaidHostedLinkConfig, customerManagedPlaidConfig, ...props }: TasksProps) {
   const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()
 
   if (hasLinkedAccountsProvider) {
@@ -55,7 +62,7 @@ export function Tasks(props: TasksProps) {
   }
 
   return (
-    <LinkedAccountsProvider>
+    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig} customerManagedPlaidConfig={customerManagedPlaidConfig}>
       <TasksContent {...props} />
     </LinkedAccountsProvider>
   )
@@ -66,7 +73,7 @@ function TasksContent({
   tasksHeader,
   onClickReconnectAccounts,
   stringOverrides,
-}: TasksProps) {
+}: TasksContentProps) {
   const { t } = useTranslation()
   const { data, isLoading } = useGetBookkeepingPeriods()
   const { flattenedData: callBookings, isLoading: isLoadingCallBookings } = useGetListCallBookings()
