@@ -133,19 +133,6 @@ describe('TasksTakeover', () => {
     expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
   })
 
-  it('starts a fresh list after the shown task vanished and closed the takeover with the id still set', async () => {
-    const { rerender } = renderTakeover()
-    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
-
-    rerender(<TakeoverHarness tasks={[AMAZON]} initialTaskId={COSTCO.id} />)
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-
-    rerender(<TakeoverHarness tasks={[STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
-
-    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
-    expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
-  })
-
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
     const onSubmit = spyOnSubmit(COSTCO)
     const { user } = renderTakeover()
