@@ -178,15 +178,33 @@ export const BusinessProvider = ({
     dispatch({ type: Action.setToastExit, payload: { toast: toast } })
   }
 
+  const toastTimeoutsRef = useRef(new Set<ReturnType<typeof setTimeout>>())
+
+  useEffect(() => {
+    const toastTimeouts = toastTimeoutsRef.current
+    return () => {
+      toastTimeouts.forEach(clearTimeout)
+      toastTimeouts.clear()
+    }
+  }, [])
+
+  const scheduleToastTimeout = (callback: () => void, delay: number) => {
+    const timeout = setTimeout(() => {
+      toastTimeoutsRef.current.delete(timeout)
+      callback()
+    }, delay)
+    toastTimeoutsRef.current.add(timeout)
+  }
+
   const addToast = (toast: ToastData) => {
     const id = `${Date.now()}-${Math.random()}`
     const newToast = { id, isExiting: false, ...toast }
 
     setToast(newToast)
 
-    setTimeout(() => {
+    scheduleToastTimeout(() => {
       setToastExit(newToast)
-      setTimeout(() => {
+      scheduleToastTimeout(() => {
         removeToast(newToast)
       }, 1000)
     }, toast.duration || 3000)
