@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
 
-import { isIncompleteTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { getActivationDate } from '@utils/features/business/business'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
@@ -21,7 +22,7 @@ export const useBookkeepingYearsStatus = () => {
       .map(({ year }) => {
         const tasks = data
           ?.filter(period => period.year === year)
-          .reduce((acc, period) => acc.concat(period.tasks), [] as Array<UserVisibleTask>)
+          .reduce((acc, period) => acc.concat(period.tasks), [] as Array<UnifiedAskFormTask>)
 
         const unresolvedTaskCount = tasks?.filter(task => isIncompleteTask(task)).length
 

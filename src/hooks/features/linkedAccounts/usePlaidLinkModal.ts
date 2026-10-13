@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
+import {
+  type PlaidInstitution,
+  type PlaidLinkError,
+  type PlaidLinkOnExit,
+  type PlaidLinkOnExitMetadata,
+  type PlaidLinkOnSuccessMetadata,
+  usePlaidLink,
+} from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { PlaidLinkClientOutcome, type ReportPlaidLinkOutcomeParams } from '@schemas/features/linkedAccounts/plaidLinkOutcome'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
+import { usePostPlaidLinkOutcome } from '@api/businesses/[business-id]/plaid/link/outcome/post'
 import { useAccountConfirmationStoreActions } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 
 export type LinkMode = 'update' | 'add'
@@ -25,6 +36,19 @@ type UsePlaidLinkModalOptions = {
   /** When set, the customer owns the Plaid item and handles the public token themselves. */
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
+
+const toLinkFinishedInstitution = (institution: PlaidInstitution | null) =>
+  institution ? { id: institution.institution_id, name: institution.name } : null
+
+const toLinkFinishedError = (error: PlaidLinkError | null) =>
+  error
+    ? {
+      type: error.error_type,
+      code: error.error_code,
+      message: error.error_message,
+      displayMessage: error.display_message || null,
+    }
+    : null
 
 /**
  * Drives the embedded Plaid Link modal for a token owned by the caller: opening
@@ -49,6 +73,46 @@ export function usePlaidLinkModal({
 
   const { trigger: triggerExchangePlaidPublicToken } = usePostExchangePlaidPublicToken()
   const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
+  const { trigger: triggerPlaidLinkOutcome } = usePostPlaidLinkOutcome()
+
+  const reportPlaidLinkOutcome = useCallback((params: ReportPlaidLinkOutcomeParams) => {
+    void triggerPlaidLinkOutcome(params).catch(() => undefined)
+  }, [triggerPlaidLinkOutcome])
+
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
+
+  const emitPlaidLinkFinished = useCallback(
+    (metadata: PlaidLinkOnSuccessMetadata | PlaidLinkOnExitMetadata, error: PlaidLinkError | null = null) => {
+      const isExit = 'status' in metadata
+      const exitOutcome = error ? 'error' : 'exited'
+
+      emitLayerEvent({
+        type: LayerEventType.LinkedAccountsLinkFinished,
+        version: 1,
+        payload: {
+          provider: 'PLAID',
+          outcome: isExit ? exitOutcome : 'completed',
+          linkMode,
+          linkSessionId: metadata.link_session_id,
+          institution: toLinkFinishedInstitution(metadata.institution),
+          exitStatus: isExit ? metadata.status : null,
+          error: toLinkFinishedError(error),
+        },
+      })
+    },
+    [emitLayerEvent, linkMode],
+  )
+
+  const handlePlaidLinkExit: PlaidLinkOnExit = (error, metadata) => {
+    reportPlaidLinkOutcome(
+      error
+        ? { outcome: PlaidLinkClientOutcome.Error, errorCode: error.error_code }
+        : { outcome: PlaidLinkClientOutcome.Exited },
+    )
+    emitPlaidLinkFinished(metadata, error)
+
+    setLinkMode('add')
+  }
 
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
@@ -96,15 +160,13 @@ export function usePlaidLinkModal({
     ],
   )
 
-  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
-    token: linkToken,
+  // If in update mode, we don't need to exchange the public token for an access token.
+  // The existing access token will automatically become valid again
+  const handlePlaidLinkSuccess = useCallback(
+    (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
+      reportPlaidLinkOutcome({ outcome: PlaidLinkClientOutcome.Completed })
+      emitPlaidLinkFinished(metadata)
 
-    // If in update mode, we don't need to exchange the public token for an access token.
-    // The existing access token will automatically become valid again
-    onSuccess: (
-      publicToken: string,
-      metadata: PlaidLinkOnSuccessMetadata,
-    ) => {
       if (linkMode == 'add') {
         // Note: a sync is kicked off in the backend in this endpoint
         void exchangePlaidPublicToken(publicToken, metadata)
@@ -118,7 +180,21 @@ export function usePlaidLinkModal({
         })
       }
     },
-    onExit: () => setLinkMode('add'),
+    [
+      reportPlaidLinkOutcome,
+      emitPlaidLinkFinished,
+      linkMode,
+      exchangePlaidPublicToken,
+      triggerUpdateConnectionStatus,
+      onSuccess,
+      setLinkMode,
+    ],
+  )
+
+  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
+    token: linkToken,
+    onSuccess: handlePlaidLinkSuccess,
+    onExit: handlePlaidLinkExit,
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
 

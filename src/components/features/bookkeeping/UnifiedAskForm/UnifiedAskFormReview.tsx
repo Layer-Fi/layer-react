@@ -19,7 +19,7 @@ type UnifiedAskFormReviewProps = {
 export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { stepsById, visitedPages, submitReviewed } = navigation
+  const { stepsById, visitedPages, submitReviewed, isReadOnly } = navigation
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const stepValues = useStore(form.store, ({ values }) => flattenStepValues(values))
 
@@ -40,11 +40,13 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
           <Span size='sm'>{label}</Span>
         </VStack>
       ))}
-      <HStack justify='end'>
-        <Button isPending={isSubmitting} isDisabled={isSubmitting} onPress={submitReviewed}>
-          {t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.action.submit', 'Submit')}
-        </Button>
-      </HStack>
+      {!isReadOnly && (
+        <HStack justify='end'>
+          <Button isPending={isSubmitting} isDisabled={isSubmitting} onPress={submitReviewed}>
+            {t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.action.submit', 'Submit')}
+          </Button>
+        </HStack>
+      )}
     </VStack>
   )
 }

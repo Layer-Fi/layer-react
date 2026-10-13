@@ -170,7 +170,7 @@ export const LedgerAccountLineItemsTable = ({
 
   const EmptyState = useCallback(() => (
     <DataState
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('generalLedger:LedgerAccountLineItemsTable.empty.ledger_activity', 'No ledger activity')}
       description={t('generalLedger:LedgerAccountLineItemsTable.empty.entry_journal_message', 'There are no ledger entries in this account.')}
       spacing

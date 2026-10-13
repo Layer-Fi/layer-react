@@ -1,34 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Smile } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
+import { useMemo } from 'react'
 
-import { isCompletedTask, isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
-import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
+import { getCompletedTasks, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
-import { Pagination } from '@ui/Pagination/Pagination'
-import { VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
+import { TasksListDesktop } from '@features/bookkeeping/TasksList/TasksListDesktop'
 import { TasksListMobile } from '@features/bookkeeping/TasksList/TasksListMobile'
-import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 import './tasksList.scss'
-
-const TasksEmptyState = () => {
-  const { t } = useTranslation()
-  return (
-    <div className='Layer__tasks-empty-state'>
-      <div className='Layer__tasks-icon'>
-        <Smile size={12} color='#3B9C63' />
-      </div>
-      <P size='sm' variant='subtle'>
-        {t('bookkeeping:TasksList.label.pending_tasks', 'There are no pending tasks!')}
-        <br />
-        {' '}
-        {t('bookkeeping:TasksList.label.great_job', 'Great job!')}
-      </P>
-    </div>
-  )
-}
 
 type TasksListProps = {
   pageSize?: number
@@ -37,102 +14,16 @@ type TasksListProps = {
 
 export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
   const { activePeriod } = useActiveBookkeepingPeriod()
-  const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const requestAnimationFrameRef = useRef<number | null>(null)
-
-  const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
-    taskListItemRefs.current[id] = el
-  }, [])
-
-  const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
-    if (!isOpen) return
-
-    if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
-
-    const scrollNow = () => {
-      const item = taskListItemRefs.current[taskId]
-
-      if (!item) return
-
-      item.scrollIntoView({
-        block: 'nearest',
-        inline: 'nearest',
-        behavior: 'smooth',
-      })
-
-      requestAnimationFrameRef.current = null
-    }
-
-    requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
-    }
-  }, [])
 
   const sortedTasks = useMemo(() => {
     const tasksInPeriod = activePeriod?.tasks ?? []
 
-    return tasksInPeriod
-      .sort((taskA, taskB) => {
-        if (isCompletedTask(taskA) && isIncompleteTask(taskB)) {
-          return 1
-        }
-
-        if (isIncompleteTask(taskA) && isCompletedTask(taskB)) {
-          return -1
-        }
-
-        return 0
-      })
+    return [...getIncompleteTasks(tasksInPeriod), ...getCompletedTasks(tasksInPeriod)]
   }, [activePeriod?.tasks])
 
-  const { onPageChange, pageItems, pageIndex } = usePaginatedList({ data: sortedTasks, pageSize })
+  if (sortedTasks.length === 0) return null
 
-  const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
-
-  if (mobile) {
-    return (
-      <TasksListMobile
-        tasksCount={sortedTasks.length}
-        sortedTasks={pageItems}
-        indexFirstIncomplete={indexFirstIncomplete}
-        currentPage={pageIndex + 1}
-        pageSize={pageSize}
-        setCurrentPage={onPageChange}
-      />
-    )
-  }
-
-  return (
-    <VStack className='Layer__tasks-list'>
-      {sortedTasks && sortedTasks.length > 0
-        ? (
-          <>
-            {pageItems.map((task, index) => (
-              <TasksListItem
-                ref={setItemRef(task.id)}
-                key={task.id}
-                task={task}
-                defaultOpen={index === indexFirstIncomplete}
-                onExpandTask={onExpandTask(task.id)}
-              />
-            ))}
-            {sortedTasks.length > pageSize && (
-              <Pagination
-                currentPage={pageIndex + 1}
-                totalCount={sortedTasks.length}
-                pageSize={pageSize}
-                onPageChange={onPageChange}
-              />
-            )}
-          </>
-        )
-        : (
-          <TasksEmptyState />
-        )}
-    </VStack>
-  )
+  return mobile
+    ? <TasksListMobile tasks={sortedTasks} />
+    : <TasksListDesktop tasks={sortedTasks} pageSize={pageSize} />
 }

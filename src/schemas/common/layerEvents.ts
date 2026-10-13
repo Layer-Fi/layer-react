@@ -23,6 +23,7 @@ export const LayerEventType = {
 
   LinkedAccountsAddAccountClicked: 'linked_accounts.add_account_clicked',
   LinkedAccountsUnlinkAccountClicked: 'linked_accounts.unlink_account_clicked',
+  LinkedAccountsLinkFinished: 'linked_accounts.link_finished',
 } as const
 
 export type LayerEventType = (typeof LayerEventType)[keyof typeof LayerEventType]
@@ -137,6 +138,24 @@ export const LinkedAccountsUnlinkAccountClickedEventV1 = LayerEventEnvelope(
   LayerEventType.LinkedAccountsUnlinkAccountClicked, 1,
   { accountId: Schema.String },
 )
+export const LinkedAccountsLinkFinishedEventV1 = LayerEventEnvelope(
+  LayerEventType.LinkedAccountsLinkFinished, 1,
+  {
+    provider: Schema.Literal('PLAID'),
+    outcome: Schema.Literal('completed', 'exited', 'error'),
+    linkMode: Schema.Literal('add', 'update'),
+    linkSessionId: Schema.NullOr(Schema.String),
+    institution: Schema.NullOr(Schema.Struct({ id: Schema.String, name: Schema.String })),
+    // Plaid's onExit `metadata.status`, e.g. 'requires_credentials'.
+    exitStatus: Schema.NullOr(Schema.String),
+    error: Schema.NullOr(Schema.Struct({
+      type: Schema.String,
+      code: Schema.String,
+      message: Schema.String,
+      displayMessage: Schema.NullOr(Schema.String),
+    })),
+  },
+)
 
 export const LayerEventSchema = Schema.Union(
   TaskMonthSelectedEventV1,
@@ -155,6 +174,7 @@ export const LayerEventSchema = Schema.Union(
   ReportsSectionExpandedEventV1,
   LinkedAccountsAddAccountClickedEventV1,
   LinkedAccountsUnlinkAccountClickedEventV1,
+  LinkedAccountsLinkFinishedEventV1,
 )
 
 export type LayerEvent = typeof LayerEventSchema.Type

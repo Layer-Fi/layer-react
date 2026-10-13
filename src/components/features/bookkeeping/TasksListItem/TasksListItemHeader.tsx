@@ -2,9 +2,9 @@ import classNames from 'classnames'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { isCompletedTask, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
-import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
@@ -15,14 +15,13 @@ export type TasksListItemBackAction = {
 }
 
 type TasksListItemHeaderProps = {
-  task: UserVisibleTask
+  task: UnifiedAskFormTask
   isOpen: boolean
   backAction: TasksListItemBackAction | null
-  answerSummary: string | null
   onClick: () => void
 }
 
-export const TasksListItemHeader = ({ task, isOpen, backAction, answerSummary, onClick }: TasksListItemHeaderProps) => {
+export const TasksListItemHeader = ({ task, isOpen, backAction, onClick }: TasksListItemHeaderProps) => {
   const { t } = useTranslation()
 
   const infoClassName = classNames(
@@ -48,7 +47,6 @@ export const TasksListItemHeader = ({ task, isOpen, backAction, answerSummary, o
           )
           : <div className='Layer__tasks-list-item__head-info__status'>{getIconForTask(task)}</div>}
         <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
-        {answerSummary && !isOpen ? <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{answerSummary}</Badge> : null}
       </div>
       <ChevronDownFill
         size={16}

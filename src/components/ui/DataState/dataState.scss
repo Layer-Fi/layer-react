@@ -50,6 +50,18 @@
     background: var(--color-info-error-bg);
     color: var(--color-info-error-fg);
   }
+
+  &[data-status='warning'] {
+    box-shadow: none;
+    background: var(--color-info-warning-bg);
+    color: var(--color-info-warning-fg);
+  }
+
+  &[data-status='info'] {
+    box-shadow: none;
+    background: var(--color-info-bg);
+    color: var(--color-info-fg);
+  }
 }
 
 .Layer__UI__DataState[data-reset] .Layer__UI__DataState__Icon,

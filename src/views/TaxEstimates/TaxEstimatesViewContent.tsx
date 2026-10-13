@@ -16,7 +16,7 @@ export const TaxEstimatesViewContent = () => {
     return (
       <Container name='tax-estimates'>
         <DataState
-          status={DataStateStatus.info}
+          status={DataStateStatus.neutral}
           title={t('common:state.feature_not_enabled', 'Feature not enabled')}
           description={t(
             'views:TaxEstimates.TaxEstimatesViewContent.error.feature_not_enabled',

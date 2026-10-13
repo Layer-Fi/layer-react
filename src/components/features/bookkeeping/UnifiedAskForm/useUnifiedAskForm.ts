@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useAppForm } from '@blocks/Form/useForm'
+import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
@@ -29,7 +28,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { trigger: submitResponse } = usePostUnifiedAskFormResponse()
-  const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+  const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
   const { pages } = task.form
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
@@ -55,14 +54,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         onSaved(saved)
       }
       catch (error) {
-        if (isAPIErrorOfType(error, ApiEnumErrorType.BusinessTaskAlreadyCompleted)) {
-          addToast({
-            content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.already_answered', 'This task has already been answered.'),
-            type: 'error',
-          })
-          void invalidateBookkeepingPeriods()
-          return
-        }
+        if (handleTaskAlreadyAnsweredError(error)) return
 
         addToast({
           content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.submit_answer', 'We couldn’t save that answer. Please try again.'),
