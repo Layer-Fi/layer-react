@@ -4,7 +4,6 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
   isChoiceAnswer,
-  isDocumentsAnswer,
   isTextAnswer,
   isTransactionAnswers,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
@@ -93,7 +92,7 @@ export const toStepValues = (
 
   return {
     ...toAnswerValues(step, answer),
-    files: isDocumentsAnswer(answer) ? answer.documentIds.map(id => ({ id, name: id })) : [],
+    files: step.type === AskFormStepType.Upload ? step.documents.map(({ id, fileName }) => ({ id, name: fileName })) : [],
     rows,
   }
 }

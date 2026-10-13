@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-const AskFormDocumentSchema = Schema.Struct({
+export const AskFormDocumentSchema = Schema.Struct({
   id: Schema.UUID,
   fileName: pipe(
     Schema.propertySignature(Schema.String),

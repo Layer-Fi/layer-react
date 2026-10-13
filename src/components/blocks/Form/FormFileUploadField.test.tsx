@@ -160,6 +160,26 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
+  it('asks before dropping a file and keeps it listed when that fails', async () => {
+    const remove = vi.fn(() => Promise.reject(new Error('offline')))
+    const { user } = renderUploadField({ remove, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
+
+    await user.click(screen.getByRole('button', { name: 'Remove receipt.pdf' }))
+
+    expect(await screen.findByText('The file couldn’t be removed. Try again.')).toBeInTheDocument()
+    expect(remove).toHaveBeenCalledWith({ id: 'kept', name: 'receipt.pdf' })
+    expect(screen.getByRole('button', { name: 'Remove receipt.pdf' })).toBeInTheDocument()
+  })
+
+  it('drops the file once removal resolves', async () => {
+    const { user } = renderUploadField({ remove: () => Promise.resolve(), multiple: true, initialFiles: [{ id: 'gone', name: 'one.pdf' }] })
+
+    await user.click(screen.getByRole('button', { name: 'Remove one.pdf' }))
+
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove one.pdf' })).not.toBeInTheDocument())
+    expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
+  })
+
   it('lists files without a drop area or remove action when read only', () => {
     renderUploadField({ isReadOnly: true, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
 

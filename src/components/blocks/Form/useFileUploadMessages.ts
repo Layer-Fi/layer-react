@@ -127,6 +127,7 @@ export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, he
     prompt: getPrompt(),
     limitNotice,
     uploadFailed: t('blocks:Form.useFileUploadMessages.error.upload_failed', 'Some files couldn’t be uploaded. Try again.'),
+    removeFailed: t('blocks:Form.useFileUploadMessages.error.remove_failed', 'The file couldn’t be removed. Try again.'),
     noFiles: t('blocks:Form.useFileUploadMessages.label.no_files', 'No files uploaded'),
   }
 }

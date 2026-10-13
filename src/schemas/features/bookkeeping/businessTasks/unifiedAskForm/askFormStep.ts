@@ -2,6 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { createOpenEnumSchema } from '@schemas/common/utils'
 import { AskFormNextSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { AskFormDocumentSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
 
 export enum AskFormStepType {
   Choice = 'CHOICE',
@@ -91,6 +92,7 @@ const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Sch
       prompt,
       accept: Schema.optionalWith(Schema.Array(Schema.String), { default: () => [], nullable: true }),
       multiple: optionalBoolean,
+      documents: Schema.optionalWith(Schema.Array(AskFormDocumentSchema), { default: () => [], nullable: true }),
     }),
   )
 }

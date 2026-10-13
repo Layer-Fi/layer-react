@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useDeleteUnifiedAskFormDocument } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
 import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { type UploadedFile } from '@blocks/Form/types'
 import { withFieldGroup } from '@blocks/Form/useForm'
@@ -31,6 +32,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
   render: function Render({ group, taskId, prompt, accept, multiple, isDisabled }) {
     const { t } = useTranslation()
     const { trigger: uploadDocuments } = usePostUnifiedAskFormUpload()
+    const { trigger: deleteDocument } = useDeleteUnifiedAskFormDocument()
     const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
     const upload = useCallback(async (files: ReadonlyArray<File>) => {
@@ -45,6 +47,15 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
       }
     }, [taskId, uploadDocuments, handleTaskAlreadyAnsweredError])
 
+    const remove = useCallback(async ({ id }: UploadedFile) => {
+      try {
+        await deleteDocument({ taskId, documentId: id })
+      }
+      catch (error) {
+        if (!handleTaskAlreadyAnsweredError(error)) throw error
+      }
+    }, [taskId, deleteDocument, handleTaskAlreadyAnsweredError])
+
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
         <group.AppField name='files'>
@@ -58,6 +69,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
               maxFiles={MAX_FILES}
               maxFileSizeInBytes={MAX_FILE_SIZE_IN_BYTES}
               upload={upload}
+              remove={remove}
             />
           )}
         </group.AppField>
