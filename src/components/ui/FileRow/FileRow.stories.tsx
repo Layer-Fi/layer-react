@@ -13,7 +13,7 @@ const VARIANTS: ReadonlyArray<{ label: string, props: FileRowProps }> = [
   { label: 'uploading', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isUploading: true } },
   { label: 'read only', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000 } },
   { label: 'disabled', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isDisabled: true, onRemove: noop } },
-  { label: 'long name keeps its extension', props: { name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000, onRemove: noop } },
+  { label: 'long name truncates', props: { name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000, onRemove: noop } },
 ]
 
 const meta: Meta<typeof FileRow> = {
