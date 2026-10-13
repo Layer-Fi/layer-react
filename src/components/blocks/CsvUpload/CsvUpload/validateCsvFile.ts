@@ -1,10 +1,18 @@
 import type { TFunction } from 'i18next'
 
+import { type FileSizeFormatFn } from '@utils/shared/i18n/number/formatters'
+
 const VALID_EXTENSIONS = ['.csv']
 const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
-const MAX_FILE_SIZE = 2 * 1024 * 1024
+export const CSV_MAX_FILE_SIZE_IN_BYTES = 2_000_000
 
-export const validateCsvFile = (file: File, t: TFunction) => {
+type ValidateCsvFileOptions = {
+  file: File
+  t: TFunction
+  formatFileSize: FileSizeFormatFn
+}
+
+export const validateCsvFile = ({ file, t, formatFileSize }: ValidateCsvFileOptions) => {
   const isValidExtension = VALID_EXTENSIONS.some(ext =>
     file.name.toLowerCase().endsWith(ext),
   )
@@ -17,8 +25,8 @@ export const validateCsvFile = (file: File, t: TFunction) => {
     return t('upload:validation.file_type_invalid', 'Invalid file type: {{type}}', { type: file.type })
   }
 
-  if (file.size > MAX_FILE_SIZE) {
-    return t('upload:validation.file_exceeds_size_limit', 'File exceeds the size limit of 2MB')
+  if (file.size > CSV_MAX_FILE_SIZE_IN_BYTES) {
+    return t('upload:validation.file_exceeds_size_limit', 'File exceeds the size limit of {{maxSize}}', { maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES) })
   }
 
   return null

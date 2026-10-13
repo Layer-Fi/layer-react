@@ -27,7 +27,7 @@ is memoized and each formatter is stable, so they're safe in dependency arrays.
 | `formatMinutesAsDuration(totalMinutes, options?)` | minutes → human duration | `compact` (digital vs short style) |
 | `formatSecondsAsDuration(totalSeconds)` | seconds → digital duration | — |
 | `formatList(labels, options?)` | joins labels via `Intl.ListFormat` | `style`, `type` |
-| `formatFileSize(bytes)` | bytes → `248 KB` / `1.2 MB`, decimal units like the API's limits | — |
+| `formatFileSize(bytes)` | bytes → `248 kB` / `1.2 MB`, decimal units like the API's limits | — |
 
 Implementations live in `src/utils/i18n/{number,date,duration,list}/formatters.ts`. The hook is
 the only entry point components should use — don't import the raw `format*` functions, which

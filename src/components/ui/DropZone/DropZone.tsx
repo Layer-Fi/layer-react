@@ -50,7 +50,7 @@ export const DropZone = ({
       if (!isDisabled) onDrop(files)
     },
     noClick: true,
-    noKeyboard: !isPressable,
+    noKeyboard: !isPressable || isDisabled,
   })
 
   const isDragging = isDragActive && !isDisabled

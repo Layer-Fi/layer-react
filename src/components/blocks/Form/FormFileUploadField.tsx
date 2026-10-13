@@ -26,7 +26,7 @@ export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> &
   /** The most files the field holds; only applies with `multiple`. */
   maxFiles?: number
   maxFileSizeInBytes?: number
-  /** Resolves with the files the server stored, in the order sent, or null when the upload failed. */
+  /** Resolves with the files the server stored, or null when the upload failed. */
   upload: (files: ReadonlyArray<File>) => Promise<ReadonlyArray<UploadedFile> | null>
 }
 
@@ -70,8 +70,26 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
       return
     }
 
-    const withSizes = uploaded.map((stored, index) => ({ sizeInBytes: toUpload[index]?.file.size, ...stored }))
+    const sizeByName = new Map(toUpload.map(({ file }) => [file.name, file.size]))
+    const withSizes = uploaded.map(stored => ({ sizeInBytes: sizeByName.get(stored.name), ...stored }))
     field.handleChange(multiple ? [...field.state.value, ...withSizes] : withSizes)
+  }
+
+  const getOverLimitError = (limit: number, capacity: number) => {
+    if (capacity < limit) {
+      return tPlural(t, 'blocks:Form.FormFileUploadField.error.over_remaining_capacity', {
+        count: capacity,
+        displayCount: formatNumber(capacity),
+        one: 'You can add {{displayCount}} more file.',
+        other: 'You can add {{displayCount}} more files.',
+      })
+    }
+    return tPlural(t, 'blocks:Form.FormFileUploadField.error.too_many_files', {
+      count: limit,
+      displayCount: formatNumber(limit),
+      one: 'Upload {{displayCount}} file at a time.',
+      other: 'Upload up to {{displayCount}} files at a time.',
+    })
   }
 
   const onSelect = (selected: ReadonlyArray<File>) => {
@@ -100,12 +118,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
         })
         : null,
       isOverLimit && fileLimit !== undefined
-        ? tPlural(t, 'blocks:Form.FormFileUploadField.error.too_many_files', {
-          count: fileLimit,
-          displayCount: formatNumber(fileLimit),
-          one: 'Upload {{displayCount}} file at a time.',
-          other: 'Upload up to {{displayCount}} files at a time.',
-        })
+        ? getOverLimitError(fileLimit, capacity)
         : null,
     ].filter(message => message !== null)
 
@@ -150,41 +163,40 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
   const dropZoneProps = { accept: extensions, multiple, isDisabled: isInputDisabled, isInvalid, onDrop: onSelect }
 
-  const emptyDropZone = (isEmbedded: boolean) => (
+  const emptyDropZone = ({ isEmbedded }: { isEmbedded: boolean }) => (
     <DropZone {...dropZoneProps} isEmbedded={isEmbedded} title={getTitle()} description={getDescription()} actionLabel={getActionLabel()} />
   )
 
-  const fileRows = (isGrouped: boolean) => (
-    <>
-      {files.map(({ id, name, sizeInBytes }) => (
-        <FileRow
-          key={id}
-          name={name}
-          sizeInBytes={sizeInBytes}
-          isGrouped={isGrouped}
-          isDisabled={isInputDisabled}
-          onRemove={() => removeFile(id)}
-        />
-      ))}
-      {pending.map(({ key, file }) => (
-        <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading isGrouped={isGrouped} />
-      ))}
-    </>
-  )
+  const pendingRows = ({ isGrouped }: { isGrouped: boolean }) => pending.map(({ key, file }) => (
+    <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading isGrouped={isGrouped} />
+  ))
 
-  const readOnlyRows = files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} isGrouped />)
+  const uploadedRows = ({ isGrouped }: { isGrouped: boolean }) => files.map(({ id, name, sizeInBytes }) => (
+    <FileRow
+      key={id}
+      name={name}
+      sizeInBytes={sizeInBytes}
+      isGrouped={isGrouped}
+      isDisabled={isInputDisabled}
+      onRemove={() => removeFile(id)}
+    />
+  ))
 
   const renderControl = () => {
     if (isReadOnly) {
-      return files.length === 0
-        ? <Span variant='subtle'>{t('blocks:Form.FormFileUploadField.label.no_files', 'No files uploaded')}</Span>
-        : <VStack className='Layer__FormFileUploadField__List'>{readOnlyRows}</VStack>
+      if (files.length === 0) return <Span variant='subtle'>{t('blocks:Form.FormFileUploadField.label.no_files', 'No files uploaded')}</Span>
+
+      return (
+        <VStack className='Layer__FormFileUploadField__List'>
+          {files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} isGrouped />)}
+        </VStack>
+      )
     }
 
     if (!multiple) {
       const [file] = files
-      if (pending.length > 0) return fileRows(false)
-      if (!file) return emptyDropZone(false)
+      if (pending.length > 0) return pendingRows({ isGrouped: false })
+      if (!file) return emptyDropZone({ isEmbedded: false })
 
       return (
         <DropZone {...dropZoneProps} title={getTitle()}>
@@ -202,11 +214,12 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
       )
     }
 
-    if (heldCount === 0) return emptyDropZone(false)
+    if (heldCount === 0) return emptyDropZone({ isEmbedded: false })
 
     return (
       <VStack className='Layer__FormFileUploadField__List' {...toDataProperties({ invalid: isInvalid })}>
-        {fileRows(true)}
+        {uploadedRows({ isGrouped: true })}
+        {pendingRows({ isGrouped: true })}
         {isAtLimit && fileLimit !== undefined
           ? (
             <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
@@ -216,7 +229,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
               })}
             </Span>
           )
-          : emptyDropZone(true)}
+          : emptyDropZone({ isEmbedded: true })}
       </VStack>
     )
   }

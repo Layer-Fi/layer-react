@@ -20,8 +20,8 @@ export type FileRowProps = {
   onRemove?: () => void
 }
 
-const IMAGE_EXTENSIONS = new Set(['png', 'jpg'])
-const SPREADSHEET_EXTENSIONS = new Set(['csv', 'xlsx'])
+const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'heic'])
+const SPREADSHEET_EXTENSIONS = new Set(['csv', 'xls', 'xlsx'])
 
 const FileTypeIcon = ({ extension }: { extension: string }) => {
   if (IMAGE_EXTENSIONS.has(extension)) return <Image size={16} />
