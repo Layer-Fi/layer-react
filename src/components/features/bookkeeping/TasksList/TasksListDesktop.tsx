@@ -60,7 +60,7 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
         {pageItems.map((task, index) => (
           <TasksListItem
             ref={setItemRef(task.id)}
-            // Completing a task moves it to the bottom; a new key collapses it out here and back in there.
+            // Completion changes the key, so the row collapses out here and back in at the bottom.
             key={`${task.id}:${isCompletedTask(task)}`}
             task={task}
             defaultOpen={index === indexFirstIncomplete}

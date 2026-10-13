@@ -1,7 +1,6 @@
 const COLLAPSE_FADE_S = 0.2
 const COLLAPSE_HEIGHT_S = 0.25
 
-/** How long a `collapse` exit takes to fade and give back its space. */
 export const COLLAPSE_EXIT_MS = (COLLAPSE_FADE_S + COLLAPSE_HEIGHT_S) * 1000
 
 export const variants = {
@@ -26,7 +25,6 @@ export const variants = {
       opacity: { duration: 0.15, ease: [0, 0, 0.58, 1] as const },
     },
   },
-  // Fades in place, then gives its space back, so content below glides instead of jumping.
   collapse: {
     initial: { height: 0, opacity: 0 },
     animate: {

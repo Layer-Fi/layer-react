@@ -14,8 +14,7 @@ export const useTasksListItemOpenState = ({ taskId, defaultOpen, onExpandTask }:
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
-  // A task becomes the default once the one above it completes; opening it only after that row
-  // finishes collapsing keeps the two from moving the list at the same time.
+  // Waits for the completed row above to finish collapsing, so the list never moves twice at once.
   useEffect(() => {
     if (!defaultOpen) {
       setIsOpen(false)
