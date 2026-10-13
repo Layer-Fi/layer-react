@@ -1,3 +1,4 @@
+import { type ComponentProps } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +31,9 @@ import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMob
 
 import './bookkeepingOverview.scss'
 
-type BookkeepingOverviewTasksContentProps = {
+type TasksPlaidSettings = Pick<ComponentProps<typeof Tasks>, 'plaidHostedLinkConfig' | 'customerManagedPlaidConfig'>
+
+type BookkeepingOverviewTasksContentProps = TasksPlaidSettings & {
   callBooking?: CallBookingData
   showCallBookingCard: boolean
   tasksMobile: boolean
@@ -48,6 +51,8 @@ const BookkeepingOverviewTasksContent = ({
   callBookingStringOverrides,
   onBookCall,
   onClickReconnectAccounts,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BookkeepingOverviewTasksContentProps) => {
   return (
     <>
@@ -62,12 +67,14 @@ const BookkeepingOverviewTasksContent = ({
         mobile={tasksMobile}
         stringOverrides={tasksStringOverrides}
         onClickReconnectAccounts={onClickReconnectAccounts}
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+        customerManagedPlaidConfig={customerManagedPlaidConfig}
       />
     </>
   )
 }
 
-export interface BookkeepingOverviewProps {
+export interface BookkeepingOverviewProps extends TasksPlaidSettings {
   showTitle?: boolean
   stringOverrides?: {
     title?: string
@@ -106,6 +113,8 @@ export const BookkeepingOverview = ({
   stringOverrides,
   slotProps,
   tagFilter = undefined,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
   const [width] = useWindowSize()
@@ -161,6 +170,8 @@ export const BookkeepingOverview = ({
               callBookingStringOverrides={callBookingStringOverrides}
               onBookCall={handleBookCall}
               onClickReconnectAccounts={onClickReconnectAccounts}
+              plaidHostedLinkConfig={plaidHostedLinkConfig}
+              customerManagedPlaidConfig={customerManagedPlaidConfig}
             />
           </VStack>
         )}
@@ -181,6 +192,8 @@ export const BookkeepingOverview = ({
                 callBookingStringOverrides={callBookingStringOverrides}
                 onBookCall={handleBookCall}
                 onClickReconnectAccounts={onClickReconnectAccounts}
+                plaidHostedLinkConfig={plaidHostedLinkConfig}
+                customerManagedPlaidConfig={customerManagedPlaidConfig}
               />
             </VStack>
           </div>
