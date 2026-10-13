@@ -82,6 +82,18 @@ describe('TasksTakeover', () => {
     expect(await screen.findByRole('heading', { name: 'Costco purchases' })).toBeInTheDocument()
   })
 
+  it('keeps counting forward as answered tasks leave the open list', async () => {
+    const { user, rerender } = renderTakeover()
+
+    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+    rerender(<TakeoverHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
+
+    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
+  })
+
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
     const onSubmit = spyOnSubmit(COSTCO)
     const { user } = renderTakeover()

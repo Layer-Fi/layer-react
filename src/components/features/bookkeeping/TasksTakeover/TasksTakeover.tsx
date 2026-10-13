@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { findNextIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { findNextIncompleteTask, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { Modal } from '@ui/Modal/Modal'
 import { TasksTakeoverTask } from '@features/bookkeeping/TasksTakeover/TasksTakeoverTask'
 
@@ -34,6 +34,12 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
   if (task) shownRef.current = { task, tasks }
   const shown = shownRef.current
 
+  // The tasks left to answer when the takeover opened; answering one keeps it counted, so progress moves forward.
+  const sessionTaskIdsRef = useRef<ReadonlyArray<string> | null>(null)
+  if (taskId === null) sessionTaskIdsRef.current = null
+  else sessionTaskIdsRef.current ??= getIncompleteTasks(tasks).map(({ id }) => id)
+  const sessionTaskIds = sessionTaskIdsRef.current ?? []
+
   return (
     <Modal
       isOpen={task !== undefined}
@@ -41,7 +47,17 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
       isKeyboardDismissDisabled
       aria-label={t('bookkeeping:TasksTakeover.label.bookkeeping_tasks', 'Bookkeeping tasks')}
     >
-      {shown.task ? <TasksTakeoverTask key={shown.task.id} task={shown.task} tasks={shown.tasks} onTaskChange={onTaskChange} /> : null}
+      {shown.task
+        ? (
+          <TasksTakeoverTask
+            key={shown.task.id}
+            task={shown.task}
+            tasks={shown.tasks}
+            sessionTaskIds={sessionTaskIds}
+            onTaskChange={onTaskChange}
+          />
+        )
+        : null}
     </Modal>
   )
 }
