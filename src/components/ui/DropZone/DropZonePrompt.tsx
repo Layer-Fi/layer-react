@@ -69,7 +69,7 @@ export const DropZonePrompt = ({ title, description, actionLabel, size, isDraggi
       </HStack>
       <VStack fluid align={textAlign} gap='4xs'>
         <Span weight={isDragging || isLarge ? 'bold' : undefined} status={textStatus} align={textAlign}>
-          {isDragging ? t('ui:DropZone.label.drop_to_upload', 'Drop to upload') : title}
+          {isDragging ? t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload') : title}
         </Span>
         {description && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={textAlign}>{description}</Span>}
       </VStack>
