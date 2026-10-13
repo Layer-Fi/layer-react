@@ -236,7 +236,8 @@ export function usePlaidLinkModal({
 
   const openLink = useCallback(
     (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
-      if (sessionRef.current) {
+      // One flow at a time: while Link is open, and while a finished Link's token is still being saved.
+      if (sessionRef.current || isLinking) {
         resolve(false)
         return
       }
@@ -246,7 +247,7 @@ export function usePlaidLinkModal({
       sessionRef.current = nextSession
       setSession(nextSession)
     }),
-    [sessionRef],
+    [sessionRef, isLinking],
   )
 
   return { isLinking, openLink }

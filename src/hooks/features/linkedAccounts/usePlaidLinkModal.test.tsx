@@ -235,6 +235,19 @@ describe('usePlaidLinkModal', () => {
       await expect(result.current.openLink('another-token', 'add')).resolves.toBe(false)
       expect(lastPlaidLinkOptions().token).toBe('a-link-token')
     })
+
+    it('turns away a second session while the first connection is still being saved', async () => {
+      const { result } = await renderPlaidLinkModal({
+        customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+          onPublicTokenReceived: vi.fn(() => new Promise<void>(() => undefined)),
+        }),
+      })
+
+      await completePlaidLink()
+
+      await expect(result.current.openLink('another-token', 'add')).resolves.toBe(false)
+      expect(lastPlaidLinkOptions().token).toBeNull()
+    })
   })
 
   describe('Link outcomes reported to the API and emitted as events', () => {
