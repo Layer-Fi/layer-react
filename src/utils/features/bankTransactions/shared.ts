@@ -13,6 +13,7 @@ import { makeTagKeyValueFromTag } from '@schemas/features/tags/tagKeyValue'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import { CategorizedCategories, ReviewCategories } from '@utils/features/bankTransactions/constants'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/features/bankTransactions/taxCode'
+import { notEmpty } from '@utils/shared/string/notEmpty'
 
 export const filterVisibility = (
   scope: DisplayState,
@@ -55,6 +56,12 @@ export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 
 export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
   source === TransactionSource.CUSTOM
+
+export const getBankTransactionDisplayName = (bankTransaction: Pick<BankTransaction, 'source' | 'counterpartyName' | 'description'>) => {
+  const { counterpartyName, description } = bankTransaction
+  const [preferred, fallback] = isCustomTransaction(bankTransaction) ? [description, counterpartyName] : [counterpartyName, description]
+  return notEmpty(preferred) ? preferred : fallback
+}
 
 export const isEditableCustomTransaction = (
   bankTransaction: BankTransaction,

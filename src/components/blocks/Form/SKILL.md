@@ -114,7 +114,8 @@ Per-field validators go in the `validators` prop, keyed by trigger (`onChange`, 
 `onSubmit`). A validator returns a **translated message** on failure and `undefined` on success.
 
 Shared validators live in `@utils/shared/form/validators`: `required`, `dateNotBefore`, `dateNotAfter`,
-`dateNotInFuture`, `positiveAmount`, `amountRangeInOrder`, and `notEmpty` for string emptiness.
+`dateNotInFuture`, `positiveAmount` and `amountRangeInOrder`. For string emptiness, use `notEmpty` from
+`@utils/shared/string/notEmpty`.
 Add new reusable rules there rather than inlining a second copy.
 
 Because validators take the message as an argument, call them with `t()` at the call site —
