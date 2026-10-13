@@ -12,7 +12,6 @@ const BASE: DropZoneProps = {
   description: 'PDF, PNG, or JPG · Up to 10 MB',
   accept: ['pdf', 'png', 'jpg'],
   actionLabel: 'Choose file',
-  rejectDescription: 'Use a PDF, PNG, or JPG',
   onDrop: () => {},
 }
 
@@ -44,9 +43,9 @@ export default meta
 
 type Story = StoryObj<typeof DropZone>
 
-const dragFileOver = (element: HTMLElement, mimeType: string) => {
+const dragFileOver = (element: HTMLElement) => {
   const dataTransfer = new DataTransfer()
-  dataTransfer.items.add(new File(['content'], 'office-supplies-receipt', { type: mimeType }))
+  dataTransfer.items.add(new File(['content'], 'office-supplies-receipt.pdf', { type: 'application/pdf' }))
   element.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer }))
 }
 
@@ -68,25 +67,18 @@ export const AllVariants: Story = {
   ),
 }
 
-export const DragStates: Story = {
+export const DragOver: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const [acceptZone, rejectZone] = canvas.getAllByText('Drag a file here')
-    if (!acceptZone || !rejectZone) throw new Error('Expected two drop zones')
 
-    dragFileOver(acceptZone, 'application/pdf')
-    dragFileOver(rejectZone, 'application/zip')
+    dragFileOver(canvas.getByText('Drag a file here'))
 
     await canvas.findByText('Drop to upload')
-    await canvas.findByText('This file type isn’t supported')
   },
   render: args => (
-    <Gallery direction='row' wrap gap={32}>
+    <Gallery>
       <Col label='drag over' inlineSize={420}>
-        <DropZone {...args} />
-      </Col>
-      <Col label='drag reject' inlineSize={420}>
         <DropZone {...args} />
       </Col>
     </Gallery>

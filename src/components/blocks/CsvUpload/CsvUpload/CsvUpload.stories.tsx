@@ -10,8 +10,7 @@ const CSV_FILE = new File(['date,description,amount\n'.repeat(1200)], 'transacti
 
 const VARIANTS: ReadonlyArray<{ label: string, props: Partial<ComponentProps<typeof CsvUpload>> }> = [
   { label: 'default', props: {} },
-  { label: 'file chosen, zone collapses into the row', props: { file: CSV_FILE, replaceDropTarget: true } },
-  { label: 'file chosen, listed below the zone', props: { file: CSV_FILE } },
+  { label: 'file chosen', props: { file: CSV_FILE } },
 ]
 
 const meta: Meta<typeof CsvUpload> = {

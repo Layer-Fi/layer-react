@@ -1,5 +1,5 @@
 import { type MouseEvent, type ReactNode } from 'react'
-import { AlertCircle, CloudUpload } from 'lucide-react'
+import { CloudUpload } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { useTranslation } from 'react-i18next'
 
@@ -10,49 +10,20 @@ import { Span } from '@ui/Typography/Text'
 
 import './dropZone.scss'
 
-type DragState = 'accept' | 'reject' | undefined
-
 export type DropZoneProps = {
   title: string
   description?: string
-  /** File extensions without the dot, used only to flag a wrong type while it is dragged. */
+  /** File extensions without the dot, offered as the file picker's filter. */
   accept?: ReadonlyArray<string>
   multiple?: boolean
   size?: 'md' | 'lg'
   isDisabled?: boolean
   isInvalid?: boolean
   actionLabel?: string
-  rejectDescription?: string
   /** Receives every dropped or chosen file; validating count, type and size is left to the caller. */
   onDrop: (files: File[]) => void
   isEmbedded?: boolean
   children?: (renderProps: { open: () => void }) => ReactNode
-}
-
-const MIME_TYPES_BY_EXTENSION: Record<string, ReadonlyArray<string>> = {
-  pdf: ['application/pdf'],
-  png: ['image/png'],
-  jpg: ['image/jpeg'],
-  csv: ['text/csv', 'application/vnd.ms-excel'],
-  txt: ['text/plain'],
-  xlsx: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
-  docx: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-}
-
-// Undefined when any extension has no known MIME type, so an unfamiliar type is never flagged as rejected mid-drag.
-const toDropzoneAccept = (extensions: ReadonlyArray<string>) => {
-  if (extensions.length === 0) return undefined
-
-  const accept: Record<string, string[]> = {}
-  for (const extension of extensions) {
-    const mimeTypes = MIME_TYPES_BY_EXTENSION[extension]
-    if (!mimeTypes) return undefined
-
-    for (const mimeType of mimeTypes) {
-      accept[mimeType] = [...(accept[mimeType] ?? []), `.${extension}`]
-    }
-  }
-  return accept
 }
 
 const isFromButton = (event: MouseEvent<HTMLElement>) => event.target instanceof Element && event.target.closest('button') !== null
@@ -66,7 +37,6 @@ export const DropZone = ({
   isDisabled = false,
   isInvalid = false,
   actionLabel,
-  rejectDescription,
   onDrop,
   isEmbedded = false,
   children,
@@ -75,33 +45,19 @@ export const DropZone = ({
   const isPressable = actionLabel === undefined && children === undefined
 
   // Keeps its drop handlers while disabled so the browser doesn't open a dropped file in the tab.
-  const { getRootProps, getInputProps, open, isDragActive, isDragReject } = useDropzone({
-    accept: toDropzoneAccept(accept),
-    onDrop: (accepted, rejected) => {
-      if (!isDisabled) onDrop([...accepted, ...rejected.map(({ file }) => file)])
+  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
+    onDrop: (files) => {
+      if (!isDisabled) onDrop(files)
     },
     noClick: true,
     noKeyboard: !isPressable,
   })
 
-  const dragState: DragState = isDragActive && !isDisabled ? (isDragReject ? 'reject' : 'accept') : undefined
+  const isDragging = isDragActive && !isDisabled
 
   const openIfEnabled = () => {
     if (!isDisabled) open()
   }
-
-  const getHeading = () => {
-    switch (dragState) {
-      case 'accept':
-        return t('ui:DropZone.label.drop_to_upload', 'Drop to upload')
-      case 'reject':
-        return t('ui:DropZone.error.unsupported_file_type', 'This file type isn’t supported')
-      case undefined:
-        return title
-    }
-  }
-
-  const detail = dragState === 'reject' ? rejectDescription : description
 
   const rootProps = getRootProps({
     onClick: (event: MouseEvent<HTMLElement>) => {
@@ -117,30 +73,32 @@ export const DropZone = ({
     : isLarge ? { pi: 'lg', pb: 'xl' } : { pi: 'md', pb: 'md' }
   const dataProperties = toDataProperties({
     size,
-    drag: dragState,
+    dragging: isDragging,
     invalid: isInvalid,
     disabled: isDisabled,
     pressable: isPressable,
     embedded: isEmbedded,
     custom: children !== undefined,
   })
-  const textStatus = dragState === 'reject' ? 'error' : isDisabled ? 'disabled' : undefined
+  const textStatus = isDisabled ? 'disabled' : undefined
 
   return (
     <VStack className='Layer__UI__DropZone' {...dataProperties} {...rootProps}>
-      <input {...getInputProps()} multiple={multiple} disabled={isDisabled} />
+      <input {...getInputProps()} accept={accept.map(extension => `.${extension}`).join(',')} multiple={multiple} disabled={isDisabled} />
       {children
         ? children({ open: openIfEnabled })
         : (
           <Layout className='Layer__UI__DropZone__Body' {...dataProperties} {...bodyPadding} align='center' gap='sm'>
             <HStack className='Layer__UI__DropZone__Icon' {...dataProperties} align='center' justify='center'>
-              {dragState === 'reject' ? <AlertCircle size={16} /> : <CloudUpload size={isLarge ? 20 : 16} />}
+              <CloudUpload size={isLarge ? 20 : 16} />
             </HStack>
             <VStack className='Layer__UI__DropZone__Text' fluid align={isLarge ? 'center' : undefined} gap='4xs'>
-              <Span weight={dragState || isLarge ? 'bold' : undefined} status={textStatus} align={isLarge ? 'center' : undefined}>{getHeading()}</Span>
-              {detail && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={isLarge ? 'center' : undefined}>{detail}</Span>}
+              <Span weight={isDragging || isLarge ? 'bold' : undefined} status={textStatus} align={isLarge ? 'center' : undefined}>
+                {isDragging ? t('ui:DropZone.label.drop_to_upload', 'Drop to upload') : title}
+              </Span>
+              {description && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={isLarge ? 'center' : undefined}>{description}</Span>}
             </VStack>
-            {!dragState && actionLabel && (
+            {!isDragging && actionLabel && (
               <Button variant='outlined' isDisabled={isDisabled} onPress={openIfEnabled}>
                 {actionLabel}
               </Button>

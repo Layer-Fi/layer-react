@@ -30,9 +30,9 @@ export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> &
   upload: (files: ReadonlyArray<File>) => Promise<ReadonlyArray<UploadedFile> | null>
 }
 
-type PendingFile = { key: string, file: File, status: 'uploading' | 'failed' }
+type PendingFile = { key: string, file: File }
 
-const toPending = (file: File): PendingFile => ({ key: crypto.randomUUID(), file, status: 'uploading' })
+const toPending = (file: File): PendingFile => ({ key: crypto.randomUUID(), file })
 
 export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFileSizeInBytes, upload, ...props }: FormFileUploadFieldProps) {
   const { t } = useTranslation()
@@ -47,7 +47,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
   const files = field.state.value
   const extensions = accept.map(extension => extension.toLowerCase())
-  const isUploading = pending.some(({ status }) => status === 'uploading')
+  const isUploading = pending.length > 0
   const isInputDisabled = isDisabled || isUploading
   const fileLimit = multiple ? maxFiles : 1
   const heldCount = files.length + pending.length
@@ -59,19 +59,17 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
   const uploadPending = async (toUpload: ReadonlyArray<PendingFile>) => {
     const keys = new Set(toUpload.map(({ key }) => key))
-    setPending(current => [
-      ...current.filter(({ key }) => !keys.has(key)),
-      ...toUpload.map(item => ({ ...item, status: 'uploading' as const })),
-    ])
+    setPending(current => [...current, ...toUpload])
 
     const uploaded = await upload(toUpload.map(({ file }) => file)).catch(() => null)
+    setPending(current => current.filter(({ key }) => !keys.has(key)))
 
     if (!uploaded) {
-      setPending(current => current.map(item => (keys.has(item.key) ? { ...item, status: 'failed' } : item)))
+      const uploadFailed = t('blocks:Form.FormFileUploadField.error.upload_failed', 'Some files couldn’t be uploaded. Try again.')
+      setError(current => (current ? `${current} ${uploadFailed}` : uploadFailed))
       return
     }
 
-    setPending(current => current.filter(({ key }) => !keys.has(key)))
     const withSizes = uploaded.map((stored, index) => ({ sizeInBytes: toUpload[index]?.file.size, ...stored }))
     field.handleChange(multiple ? [...field.state.value, ...withSizes] : withSizes)
   }
@@ -114,12 +112,10 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     setError(errors.length > 0 ? errors.join(' ') : undefined)
 
     if (isOverLimit || valid.length === 0) return
-    if (!multiple) setPending([])
     void uploadPending(valid.map(toPending))
   }
 
   const removeFile = (id: string) => field.handleChange(files.filter(file => file.id !== id))
-  const removePending = (key: string) => setPending(current => current.filter(item => item.key !== key))
 
   const getDescription = () => {
     const addedCount = multiple && fileLimit !== undefined && heldCount > 0
@@ -152,16 +148,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     return t('blocks:Form.FormFileUploadField.action.choose_files', 'Choose files')
   }
 
-  const dropZoneProps = {
-    accept: extensions,
-    multiple,
-    isDisabled: isInputDisabled,
-    isInvalid,
-    rejectDescription: fileTypes
-      ? t('blocks:Form.FormFileUploadField.label.use_file_types', 'Use a {{fileTypes}}', { fileTypes })
-      : undefined,
-    onDrop: onSelect,
-  }
+  const dropZoneProps = { accept: extensions, multiple, isDisabled: isInputDisabled, isInvalid, onDrop: onSelect }
 
   const emptyDropZone = (isEmbedded: boolean) => (
     <DropZone {...dropZoneProps} isEmbedded={isEmbedded} title={getTitle()} description={getDescription()} actionLabel={getActionLabel()} />
@@ -179,17 +166,8 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
           onRemove={() => removeFile(id)}
         />
       ))}
-      {pending.map(({ key, file, status }) => (
-        <FileRow
-          key={key}
-          name={file.name}
-          sizeInBytes={file.size}
-          status={status}
-          isGrouped={isGrouped}
-          isDisabled={isDisabled}
-          onRetry={() => void uploadPending(pending.filter(item => item.key === key))}
-          onRemove={() => removePending(key)}
-        />
+      {pending.map(({ key, file }) => (
+        <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading isGrouped={isGrouped} />
       ))}
     </>
   )

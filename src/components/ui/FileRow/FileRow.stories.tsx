@@ -10,8 +10,7 @@ const noop = () => {}
 const VARIANTS: ReadonlyArray<{ label: string, props: FileRowProps }> = [
   { label: 'uploaded', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, onRemove: noop } },
   { label: 'uploaded, replaceable', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, onReplace: noop, onRemove: noop } },
-  { label: 'uploading', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, status: 'uploading', onRemove: noop } },
-  { label: 'upload failed', props: { name: 'office-supplies-receipt.pdf', status: 'failed', onRetry: noop, onRemove: noop } },
+  { label: 'uploading', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isUploading: true } },
   { label: 'read only', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000 } },
   { label: 'disabled', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isDisabled: true, onRemove: noop } },
   { label: 'long name keeps its extension', props: { name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000, onRemove: noop } },

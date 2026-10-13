@@ -87,21 +87,13 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
-  it('marks a failed upload on its row and retries it', async () => {
-    const upload = vi.fn<FormFileUploadFieldProps['upload']>()
-      .mockResolvedValueOnce(null)
-      .mockImplementation(toUploaded)
-    const { user, container } = renderUploadField({ upload })
+  it('says so when the upload fails', async () => {
+    const { user, container } = renderUploadField({ upload: () => Promise.resolve(null) })
 
     await selectFiles(user, container, 'receipt.pdf')
 
-    expect(await screen.findByText('Upload failed. Check your connection.')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Retry' }))
-
-    await waitFor(() => expect(screen.queryByText('Upload failed. Check your connection.')).not.toBeInTheDocument())
-    expect(upload).toHaveBeenCalledTimes(2)
-    expect(screen.getByRole('button', { name: 'Replace' })).toBeInTheDocument()
+    expect(await screen.findByText('Some files couldn’t be uploaded. Try again.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument()
   })
 
   it('uploads files dropped onto the field', async () => {
@@ -137,7 +129,7 @@ describe('FormFileUploadField', () => {
   it('lists files without a drop area or remove action when read only', () => {
     renderUploadField({ isReadOnly: true, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
 
-    expect(screen.getByText('receipt')).toBeInTheDocument()
+    expect(screen.getByText('receipt.pdf')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument()
     expect(screen.queryByText(/^Drag .* here$/)).not.toBeInTheDocument()
   })

@@ -23,18 +23,11 @@
     border-color: var(--color-info-error);
   }
 
-  &[data-drag='accept'] {
+  &[data-dragging] {
     box-shadow: 0 0 0 3px rgb(26 26 26 / 8%);
     background: var(--color-base-50);
     border-style: solid;
     border-color: var(--color-dark);
-  }
-
-  &[data-drag='reject'] {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-info-error) 12%, transparent);
-    background: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
-    border-style: solid;
-    border-color: var(--color-info-error);
   }
 
   &[data-embedded] {
@@ -75,14 +68,9 @@
     inline-size: 44px;
   }
 
-  &[data-drag='accept'] {
+  &[data-dragging] {
     background: var(--color-dark);
     color: var(--color-base-0);
-  }
-
-  &[data-drag='reject'] {
-    background: var(--color-info-error-bg);
-    color: var(--color-info-error-fg);
   }
 
   &[data-disabled] {

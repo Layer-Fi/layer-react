@@ -74,7 +74,7 @@ export function BankTransactionsUploadCsvStep(
       </VStack>
       {!isCreatingNewAccount && (
         <>
-          <CsvUpload file={selectedFile} onFileSelected={onFileSelected} replaceDropTarget />
+          <CsvUpload file={selectedFile} onFileSelected={onFileSelected} />
           <Separator />
           <VStack gap='xs' className='Layer__upload-transactions__template-section'>
             <P size='sm'>{t('upload:action.click_copy_required', 'Click to copy the required column headers')}</P>

@@ -10,12 +10,9 @@ import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
 type CsvUploadProps = {
   file: File | null
   onFileSelected: (file: File | null) => void
-  replaceDropTarget?: boolean
 }
 
-const CSV_EXTENSIONS = ['csv']
-
-export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: CsvUploadProps) => {
+export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   const { t } = useTranslation()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
@@ -43,29 +40,18 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
   const clearFile = () => onFileSelected(null)
 
   const dropZoneProps = {
-    accept: CSV_EXTENSIONS,
+    accept: ['csv'],
     size: 'lg' as const,
     isInvalid: errorMessage !== undefined,
-    rejectDescription: t('upload:validation.file_must_be_csv', 'File must be in CSV format'),
     onDrop,
   }
 
-  const fileRow = (isGrouped: boolean, onReplace?: () => void) => file && (
-    <FileRow
-      name={file.name}
-      sizeInBytes={file.size}
-      isGrouped={isGrouped}
-      onReplace={onReplace}
-      onRemove={clearFile}
-    />
-  )
-
   return (
     <VStack gap='xs'>
-      {file && replaceDropTarget
+      {file
         ? (
           <DropZone {...dropZoneProps} title={t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')}>
-            {({ open }) => fileRow(true, open)}
+            {({ open }) => <FileRow name={file.name} sizeInBytes={file.size} isGrouped onReplace={open} onRemove={clearFile} />}
           </DropZone>
         )
         : (
@@ -77,7 +63,6 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
           />
         )}
       {errorMessage && <Span size='sm' status='error'>{errorMessage}</Span>}
-      {file && !replaceDropTarget && fileRow(false)}
     </VStack>
   )
 }
