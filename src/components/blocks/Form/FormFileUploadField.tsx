@@ -58,7 +58,10 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     if (accepted.length > 0) void uploadFiles(accepted)
   }
 
-  const removeFile = (id: string) => field.handleChange(files.filter(file => file.id !== id))
+  const removeFile = (id: string) => {
+    setError(undefined)
+    field.handleChange(files.filter(file => file.id !== id))
+  }
 
   const renderRows = ({ open }: { open: () => void }) => {
     // A single file's row gives way to its replacement's while that uploads.

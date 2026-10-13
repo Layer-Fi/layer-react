@@ -133,14 +133,18 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
-  it('says how many more files fit when some are already held', async () => {
+  it('says how many more files fit when some are already held, until one is removed', async () => {
     const upload = vi.fn(toUploaded)
-    renderUploadField({ upload, multiple: true, maxFiles: 3, initialFiles: [{ id: 'held', name: 'held.pdf' }, { id: 'also', name: 'also.pdf' }] })
+    const { user } = renderUploadField({ upload, multiple: true, maxFiles: 3, initialFiles: [{ id: 'held', name: 'held.pdf' }, { id: 'also', name: 'also.pdf' }] })
 
     dropFiles('one.pdf', 'two.pdf')
 
     expect(await screen.findByText('You can add 1 more file.')).toBeInTheDocument()
     expect(upload).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: 'Remove held.pdf' }))
+
+    expect(screen.queryByText('You can add 1 more file.')).not.toBeInTheDocument()
   })
 
   it('keeps catching drops once the limit is reached', async () => {
