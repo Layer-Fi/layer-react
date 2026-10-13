@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { getFileExtension } from '@utils/shared/file/fileName'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
@@ -49,7 +50,7 @@ export const FileRow = ({
   return (
     <HStack className='Layer__UI__FileRow' pi='xs' pb='xs' align='center' gap='sm'>
       <HStack className='Layer__UI__FileRow__Icon' align='center' justify='center'>
-        <FileTypeIcon extension={extension} />
+        {isUploading ? <LoadingSpinner size={16} /> : <FileTypeIcon extension={extension} />}
       </HStack>
       <VStack className='Layer__UI__FileRow__Text' fluid gap='4xs'>
         <Span ellipsis noWrap>{name}</Span>
@@ -73,7 +74,6 @@ export const FileRow = ({
           </Button>
         )}
       </HStack>
-      {isUploading && <HStack className='Layer__UI__FileRow__Progress' />}
     </HStack>
   )
 }
