@@ -76,7 +76,7 @@ const EmptyState = () => {
   return (
     <DataState
       spacing
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('profitAndLoss:ProfitAndLossDetailReport.empty.no_detail_lines_found', 'No detail lines found')}
       description={t('profitAndLoss:ProfitAndLossDetailReport.empty.no_detail_lines_pnl_item', 'There are no detail lines for this profit and loss item')}
     />

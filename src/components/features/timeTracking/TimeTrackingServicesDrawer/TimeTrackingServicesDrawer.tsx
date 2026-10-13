@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ArchiveRestore, Loader, Plus } from 'lucide-react'
+import { ArchiveRestore, CircleCheckBig, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
@@ -72,7 +72,7 @@ const LoadingState = () => {
   const { t } = useTranslation()
   return (
     <DataState
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('common:label.loading', 'Loading...')}
       icon={<Loader className={ROTATING_CLASS_NAME} size={18} />}
       spacing
@@ -129,7 +129,8 @@ function ActiveServicesContent({
     : (
       <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
         <DataState
-          status={DataStateStatus.allDone}
+          status={DataStateStatus.neutral}
+          icon={<CircleCheckBig size={12} />}
           title={t('timeTracking:TimeTrackingServicesDrawer.services.no_active', 'No services yet')}
           spacing
         />
@@ -220,7 +221,8 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
           Empty={(
             <VStack className='Layer__TimeTrackingServicesDrawer__EmptyState'>
               <DataState
-                status={DataStateStatus.allDone}
+                status={DataStateStatus.neutral}
+                icon={<CircleCheckBig size={12} />}
                 title={t('timeTracking:TimeTrackingServicesDrawer.services.no_archived', 'No archived services')}
                 spacing
               />

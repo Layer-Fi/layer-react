@@ -3,17 +3,26 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
-import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
+import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { makeUploadDocumentAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/uploadDocument'
-import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import {
+  askFormNextPageUrl,
+  choiceStep,
+  connectAccountStep,
+  makeUnifiedAskFormTask,
+  page,
+  singlePageForm,
+  textFollowUp,
+  textStep,
+} from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { post as postAskFormNextPage } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { post as postUnifiedAskFormUpload } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
@@ -44,11 +53,23 @@ const counterpartyTask = () => makeUnifiedAskFormTask({
   ),
 })
 
+const lockedKindTask = (answer: AskFormChoiceAnswer) => makeUnifiedAskFormTask({
+  status: BusinessTaskStatus.UserMarkedCompleted,
+  answers: { kind: answer },
+  form: singlePageForm(page('only', [{
+    ...choiceStep('kind', 'What was it?', [
+      { value: 'supplies', label: 'Supplies' },
+      { value: 'other', label: 'Something else', followUp: textFollowUp(null) },
+    ]),
+    editable: false,
+  }])),
+})
+
 const renderItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<LinkedAccountsContextType>) => ({
   user: userEvent.setup(),
   ...render(
     <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
-      <TasksListItem task={task as UserVisibleTask} defaultOpen />
+      <TasksListItem task={task} defaultOpen />
     </LinkedAccountsContext.Provider>,
     { wrapper: LayerTestProvider },
   ),
@@ -57,14 +78,7 @@ const renderItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<LinkedAcc
 const connectAccountResolving = (isConnected: boolean) => ({ addConnection: vi.fn(() => Promise.resolve(isConnected)) })
 
 const connectOnlyTask = () => makeUnifiedAskFormTask({
-  form: {
-    entryPageId: 'connect',
-    pages: [{
-      id: 'connect',
-      next: { kind: AskFormNextKind.Submit, review: false },
-      steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
-    }],
-  },
+  form: singlePageForm(page('connect', [connectAccountStep('connect', 'Connect this account.')])),
 })
 
 const uploadFile = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, fileName: string) => {
@@ -98,6 +112,46 @@ describe('UnifiedAskForm', () => {
     expect(screen.getByText('You answered this for every period, so we’ve applied it here too.')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+  })
+
+  it('shows a locked answer without letting the customer change it or its follow-up', () => {
+    renderItem(lockedKindTask({ choice: 'other', followUp: { text: 'Paper towels' } }))
+
+    expect(screen.getByRole('radio', { name: 'Something else' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
+    expect(screen.getByRole('textbox')).toHaveValue('Paper towels')
+    expect(screen.getByRole('textbox')).toBeDisabled()
+  })
+
+  it('shows a fully locked task in the takeover without Submit', async () => {
+    const task = lockedKindTask({ choice: 'supplies' })
+    render(<TasksTakeover tasks={[task]} taskId={task.id} onTaskChange={vi.fn()} />, { wrapper: LayerTestProvider })
+
+    expect(await screen.findByRole('radio', { name: 'Supplies' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+  })
+
+  it('shows a fully locked task\'s review without Submit when the server routes to it', async () => {
+    const taskId = '00000000-0000-4000-8000-000000000f03'
+    const task = makeUnifiedAskFormTask({
+      id: taskId,
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      answers: { kind: { choice: 'supplies' } },
+      form: singlePageForm(page('only', [{
+        ...choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }]),
+        editable: false,
+      }], { kind: AskFormNextKind.Server, url: askFormNextPageUrl(taskId) })),
+    })
+    server.use(postAskFormNextPage.mock({ next: { kind: AskFormNextKind.Submit, review: true } }))
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    expect(await screen.findByText('Here’s what you told us:')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
   it('fills the remember question from the picked category and posts only the path taken', async () => {
@@ -191,20 +245,10 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: true },
-          steps: [{
-            id: 'kind',
-            type: AskFormStepType.Choice,
-            prompt: 'What was it?',
-            autoAdvance: false,
-            options: [
-              { value: 'supplies', label: 'Supplies' },
-              {
-                value: 'other',
-                label: 'Something else',
-                followUp: { type: AskFormStepType.Text, prompt: null, placeholder: null, multiline: true, required: true },
-              },
-            ],
-          }],
+          steps: [choiceStep('kind', 'What was it?', [
+            { value: 'supplies', label: 'Supplies' },
+            { value: 'other', label: 'Something else', followUp: textFollowUp(null) },
+          ])],
         }],
       },
     })
@@ -227,29 +271,16 @@ describe('UnifiedAskForm', () => {
           {
             id: 'first',
             next: { kind: AskFormNextKind.Page, pageId: 'second' },
-            steps: [{
-              id: 'kind',
-              type: AskFormStepType.Choice,
-              prompt: 'What was it?',
-              autoAdvance: false,
-              options: [{
-                value: 'other',
-                label: 'Something else',
-                followUp: { type: AskFormStepType.Text, prompt: null, placeholder: null, multiline: true, required: true },
-              }],
-            }],
+            steps: [choiceStep('kind', 'What was it?', [{ value: 'other', label: 'Something else', followUp: textFollowUp(null) }])],
           },
           {
             id: 'second',
             next: { kind: AskFormNextKind.Submit, review: false },
-            steps: [{
-              id: 'confirm',
-              type: AskFormStepType.Text,
-              prompt: 'You said {{answer.kind.label}}: {{answer.kind.follow_up.label}}. Anything else?',
-              placeholder: null,
-              multiline: false,
-              required: false,
-            }],
+            steps: [textStep(
+              'confirm',
+              'You said {{answer.kind.label}}: {{answer.kind.follow_up.label}}. Anything else?',
+              { multiline: false, required: false },
+            )],
           },
         ],
       },
@@ -294,13 +325,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{
-            id: 'kind',
-            type: AskFormStepType.Choice,
-            prompt: 'What was it?',
-            autoAdvance: true,
-            options: [{ value: 'supplies', label: 'Supplies' }],
-          }],
+          steps: [choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }], { autoAdvance: true })],
         }],
       },
     })
@@ -415,7 +440,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [textStep('response', 'What was it for?')],
         }],
       },
     })
@@ -444,7 +469,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [textStep('response', 'What was it for?')],
         }],
       },
     })
@@ -491,7 +516,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false }],
+          steps: [textStep('notes', 'Anything else?', { multiline: false, required: false })],
         }],
       },
     }))
@@ -511,14 +536,8 @@ describe('UnifiedAskForm', () => {
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
           steps: [
-            {
-              id: 'kind',
-              type: AskFormStepType.Choice,
-              prompt: 'What was it?',
-              autoAdvance: false,
-              options: [{ value: 'supplies', label: 'Supplies' }],
-            },
-            { id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false },
+            choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }]),
+            textStep('notes', 'Anything else?', { multiline: false, required: false }),
           ],
         }],
       },

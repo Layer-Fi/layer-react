@@ -54,7 +54,7 @@ const isPickStep = (step: AskFormStepFields) => {
  */
 export const canAutoAdvance = (page: AskFormPage, presentation: UnifiedAskFormPresentation) => {
   const [onlyStep, ...otherSteps] = page.steps
-  if (!onlyStep || otherSteps.length > 0) return false
+  if (!onlyStep || otherSteps.length > 0 || !onlyStep.editable) return false
 
   if (presentation === 'takeover') return isPickStep(onlyStep)
 
@@ -75,13 +75,15 @@ type PageFooterLayoutOptions = {
   presentation: UnifiedAskFormPresentation
   autoAdvances: boolean
   routing: NextPageRouting
+  isReadOnly: boolean
   hasAction: boolean
 }
 
-export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, routing, hasAction }: PageFooterLayoutOptions) => {
+export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, routing, isReadOnly, hasAction }: PageFooterLayoutOptions) => {
   const primaryAction = getPagePrimaryAction(page, values)
   const isTakeover = presentation === 'takeover'
-  const showsPrimary = !isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values)
+  const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
+  const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
 
   return {
     isTakeover,

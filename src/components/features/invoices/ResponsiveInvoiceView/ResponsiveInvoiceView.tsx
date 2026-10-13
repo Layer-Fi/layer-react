@@ -27,7 +27,7 @@ export const ResponsiveInvoiceView = () => {
 
     return (
       <DataState
-        status={DataStateStatus.allDone}
+        status={DataStateStatus.neutral}
         title={isFiltered ? t('common:empty.results', 'No results found') : t('invoices:ResponsiveInvoiceView.empty.invoices', 'No invoices yet')}
         description={
           isFiltered

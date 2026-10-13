@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
-import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, Info, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { createLegacyClassNames, type LegacyClassNameMapFor } from '@utils/shared/styles/legacyClassNames'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
-import { Span } from '@ui/Typography/Text'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
 import './dataState.scss'
 
@@ -24,6 +24,8 @@ const legacyClassNames = createLegacyClassNames({
   'status:neutral': 'Layer__data-state__icon--neutral',
   'status:success': 'Layer__data-state__icon--success',
   'status:error': 'Layer__data-state__icon--error',
+  'status:warning': [],
+  'status:info': [],
 } satisfies LegacyClassNameMapFor<
   | 'Layer__UI__DataState'
   | 'Layer__UI__DataState__Icon'
@@ -34,7 +36,7 @@ const legacyClassNames = createLegacyClassNames({
   `state:${string}` | `status:${string}`
 >)
 
-type IconStatus = 'neutral' | 'success' | 'error'
+type IconStatus = 'neutral' | 'success' | 'error' | 'warning' | 'info'
 
 const DataStateIcon = ({ status, children }: { status: IconStatus, children: ReactNode }) => (
   <span
@@ -46,10 +48,11 @@ const DataStateIcon = ({ status, children }: { status: IconStatus, children: Rea
 )
 
 export enum DataStateStatus {
-  allDone = 'allDone',
+  neutral = 'neutral',
+  info = 'info',
+  warning = 'warning',
   success = 'success',
   failed = 'failed',
-  info = 'info',
 }
 
 export interface DataStateProps {
@@ -66,6 +69,7 @@ export interface DataStateProps {
     Title?: {
       size?: 'sm' | 'md' | 'lg'
       ellipsis?: boolean
+      status?: TextStyleProps['status']
     }
   }
   className?: string
@@ -75,12 +79,14 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
   switch (status) {
     case DataStateStatus.failed:
       return <DataStateIcon status='error'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
-    case DataStateStatus.info:
+    case DataStateStatus.neutral:
       return <DataStateIcon status='neutral'>{icon ?? <OctagonAlert size={12} />}</DataStateIcon>
+    case DataStateStatus.info:
+      return <DataStateIcon status='info'>{icon ?? <Info size={12} />}</DataStateIcon>
     case DataStateStatus.success:
       return <DataStateIcon status='success'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
-    case DataStateStatus.allDone:
-      return <DataStateIcon status='neutral'>{icon ?? <CircleCheckBig size={12} />}</DataStateIcon>
+    case DataStateStatus.warning:
+      return <DataStateIcon status='warning'>{icon ?? <CircleAlert size={12} />}</DataStateIcon>
     default:
       unsafeAssertUnreachable({
         value: status,
@@ -103,7 +109,7 @@ export const DataState = ({
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
-  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis } = slotProps?.Title ?? {}
+  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis, status: titleStatus } = slotProps?.Title ?? {}
   const baseClassName = classNames(
     legacyClassNames(
       'Layer__UI__DataState',
@@ -122,7 +128,7 @@ export const DataState = ({
           className={legacyClassNames('Layer__UI__DataState__Title')}
           size={titleSize}
           weight='bold'
-          variant='placeholder'
+          status={titleStatus}
           align={inline ? undefined : 'center'}
           withTooltip={titleEllipsis}
         >
@@ -131,7 +137,7 @@ export const DataState = ({
         <Span
           className={legacyClassNames('Layer__UI__DataState__Description')}
           size={inline ? 'sm' : 'md'}
-          status='disabled'
+          variant='subtle'
           align={inline ? undefined : 'center'}
         >
           {description}

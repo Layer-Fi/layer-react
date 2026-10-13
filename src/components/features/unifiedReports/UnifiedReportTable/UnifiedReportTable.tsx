@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { CircleCheckBig } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
@@ -38,7 +39,8 @@ export const UnifiedReportTable = () => {
   const UnifiedReportEmptyState = useCallback(() => {
     return (
       <DataState
-        status={DataStateStatus.allDone}
+        status={DataStateStatus.neutral}
+        icon={<CircleCheckBig size={12} />}
         title={t('unifiedReports:UnifiedReportTable.empty.no_rows_found', 'No line items found')}
         description={t('unifiedReports:UnifiedReportTable.empty.report_has_no_rows', 'This report has no line items.')}
         spacing

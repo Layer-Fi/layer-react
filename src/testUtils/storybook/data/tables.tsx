@@ -1,3 +1,5 @@
+import { CircleCheckBig } from 'lucide-react'
+
 import { Alignment } from '@internal-types/utility/table'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
@@ -82,7 +84,8 @@ export const getCustomerColumnConfig = (): ColumnConfig<CustomerRow> => [
 
 const EmptyState = () => (
   <DataState
-    status={DataStateStatus.allDone}
+    status={DataStateStatus.neutral}
+    icon={<CircleCheckBig size={12} />}
     title='No customers yet'
     description='Customers you add will show up here.'
     spacing

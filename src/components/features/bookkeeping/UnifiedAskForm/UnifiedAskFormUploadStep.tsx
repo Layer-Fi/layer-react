@@ -16,6 +16,7 @@ type UnifiedAskFormUploadStepProps = {
   prompt: string | null
   accept: ReadonlyArray<string>
   multiple: boolean
+  isDisabled?: boolean
 }
 
 const DEFAULT_VALUES: UnifiedAskFormUploadStepValues = { files: [] }
@@ -25,7 +26,7 @@ const DEFAULT_PROPS: UnifiedAskFormUploadStepProps = { taskId: '', prompt: null,
 export const UnifiedAskFormUploadStep = withFieldGroup({
   defaultValues: DEFAULT_VALUES,
   props: DEFAULT_PROPS,
-  render: function Render({ group, taskId, prompt, accept, multiple }) {
+  render: function Render({ group, taskId, prompt, accept, multiple, isDisabled }) {
     const { t } = useTranslation()
     const { trigger: uploadDocuments } = usePostUnifiedAskFormUpload()
 
@@ -43,6 +44,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
               showLabel={false}
               accept={accept}
               multiple={multiple}
+              isDisabled={isDisabled}
               maxFiles={MAX_FILES_PER_UPLOAD}
               upload={upload}
             />

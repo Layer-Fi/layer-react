@@ -25,7 +25,7 @@ type UnifiedAskFormPageFooterProps = {
 export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { visitedPages, canGoBack, routing, getPageError } = navigation
+  const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
   const { isConnecting, connect } = useConnectAccount()
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
@@ -36,6 +36,7 @@ export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation,
     presentation,
     autoAdvances,
     routing,
+    isReadOnly,
     hasAction: action !== undefined && action !== null,
   })
   const canContinue = getPageError(page, values) === undefined
