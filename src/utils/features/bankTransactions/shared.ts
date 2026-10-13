@@ -13,7 +13,7 @@ import { makeTagKeyValueFromTag } from '@schemas/features/tags/tagKeyValue'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import { CategorizedCategories, ReviewCategories } from '@utils/features/bankTransactions/constants'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/features/bankTransactions/taxCode'
-import { notEmpty } from '@utils/shared/form/validators'
+import { notEmpty } from '@utils/shared/string/notEmpty'
 
 export const filterVisibility = (
   scope: DisplayState,
