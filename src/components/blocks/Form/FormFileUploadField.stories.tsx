@@ -3,7 +3,6 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { FormFileUploadField, type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
 
-import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import {
   COMMON_FIELD_VARIANTS,
   ERROR_FIELD_VARIANTS,
@@ -13,10 +12,8 @@ import {
 
 const LABEL = 'Receipts'
 const ACCEPT = ['pdf', 'png', 'jpg', 'csv']
-const ADDED_AT = new Date(FIXTURE_YEAR, 9, 9)
-const MAX_FILE_SIZE_IN_BYTES = 10_000_000
 
-const RECEIPT: UploadedFile = { id: 'receipt', name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, addedAt: ADDED_AT, href: '#receipt' }
+const RECEIPT: UploadedFile = { id: 'receipt', name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000 }
 const SCREENSHOT: UploadedFile = { id: 'screenshot', name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000 }
 const GUIDE: UploadedFile = { id: 'guide', name: 'In-Office Guide.pdf', sizeInBytes: 312_000 }
 
@@ -36,16 +33,13 @@ type Variant = FormFieldVariant<UploadedFile[], FormFileUploadFieldProps>
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
-  { label: 'with size limit', props: { maxFileSizeInBytes: MAX_FILE_SIZE_IN_BYTES } },
   { label: 'single, uploaded', value: UPLOADED },
   { label: 'multiple, up to 3', props: { multiple: true, maxFiles: 3 } },
   { label: 'multiple, uploaded', value: TWO_UPLOADED, props: { multiple: true, maxFiles: 3 } },
   { label: 'multiple, at limit', value: THREE_UPLOADED, props: { multiple: true, maxFiles: 3 } },
   { label: 'any file type', props: { accept: [], multiple: true, maxFileSizeInBytes: 25_000_000 } },
   { label: 'read only, uploaded', value: THREE_UPLOADED, props: { isReadOnly: true, multiple: true } },
-  { label: 'read only, single uploaded', value: UPLOADED, props: { isReadOnly: true } },
   { label: 'disabled, uploaded', value: TWO_UPLOADED, props: { isDisabled: true, multiple: true, maxFiles: 3 } },
-  { label: 'disabled, single uploaded', value: UPLOADED, props: { isDisabled: true } },
 ]
 
 const meta: Meta<typeof FormFileUploadField> = {
@@ -73,7 +67,6 @@ export const AllVariants: Story = {
 const MOBILE_VARIANTS: ReadonlyArray<Variant> = [
   { label: 'default' },
   { label: 'multiple, uploaded', value: TWO_UPLOADED, props: { multiple: true, maxFiles: 3 } },
-  { label: 'read only, uploaded', value: TWO_UPLOADED, props: { isReadOnly: true, multiple: true } },
 ]
 
 export const Mobile: Story = {

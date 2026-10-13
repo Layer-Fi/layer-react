@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DropZone } from '@ui/DropZone/DropZone'
@@ -10,14 +10,12 @@ import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
 type CsvUploadProps = {
   file: File | null
   onFileSelected: (file: File | null) => void
-  /** Collapses the zone into the chosen file's row, which still accepts a replacement drop. */
   replaceDropTarget?: boolean
-  slots?: { Actions?: ReactNode, Footer?: ReactNode }
 }
 
 const CSV_EXTENSIONS = ['csv']
 
-export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false, slots }: CsvUploadProps) => {
+export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: CsvUploadProps) => {
   const { t } = useTranslation()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
@@ -50,7 +48,6 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false, slo
     isInvalid: errorMessage !== undefined,
     rejectDescription: t('upload:validation.file_must_be_csv', 'File must be in CSV format'),
     onDrop,
-    slots,
   }
 
   const fileRow = (isGrouped: boolean, onReplace?: () => void) => file && (
@@ -58,7 +55,6 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false, slo
       name={file.name}
       sizeInBytes={file.size}
       isGrouped={isGrouped}
-      replaceLabel={t('upload:action.replace_file', 'Replace')}
       onReplace={onReplace}
       onRemove={clearFile}
     />
@@ -68,7 +64,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false, slo
     <VStack gap='xs'>
       {file && replaceDropTarget
         ? (
-          <DropZone {...dropZoneProps} slots={undefined} title={t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')}>
+          <DropZone {...dropZoneProps} title={t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')}>
             {({ open }) => fileRow(true, open)}
           </DropZone>
         )

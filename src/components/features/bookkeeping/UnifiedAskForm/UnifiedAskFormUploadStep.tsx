@@ -7,8 +7,7 @@ import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
 import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 
-// The upload step carries no limits, so these mirror what the upload endpoint enforces: at most
-// 10 files per request and the default ~10 MB multipart file cap.
+// Mirrors the upload endpoint's limits, which the upload step doesn't send.
 const MAX_FILES = 10
 const MAX_FILE_SIZE_IN_BYTES = 10_000_000
 

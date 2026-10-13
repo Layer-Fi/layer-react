@@ -1,8 +1,6 @@
 import { type ComponentProps } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Button } from '@ui/Button/Button'
-import { Span } from '@ui/Typography/Text'
 import { CsvUpload } from '@blocks/CsvUpload/CsvUpload/CsvUpload'
 
 import { Col } from '@testUtils/storybook/layout/Col'
@@ -12,15 +10,6 @@ const CSV_FILE = new File(['date,description,amount\n'.repeat(1200)], 'transacti
 
 const VARIANTS: ReadonlyArray<{ label: string, props: Partial<ComponentProps<typeof CsvUpload>> }> = [
   { label: 'default', props: {} },
-  {
-    label: 'with template action and required columns',
-    props: {
-      slots: {
-        Actions: <Button variant='ghost'>Download template</Button>,
-        Footer: <Span size='sm' variant='subtle'>Required columns: Date, Description, Amount</Span>,
-      },
-    },
-  },
   { label: 'file chosen, zone collapses into the row', props: { file: CSV_FILE, replaceDropTarget: true } },
   { label: 'file chosen, listed below the zone', props: { file: CSV_FILE } },
 ]

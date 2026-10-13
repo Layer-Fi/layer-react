@@ -3,7 +3,6 @@ import { AlertCircle, CloudUpload } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import { useTranslation } from 'react-i18next'
 
-import { toDropzoneAccept } from '@utils/shared/file/fileName'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -11,11 +10,7 @@ import { Span } from '@ui/Typography/Text'
 
 import './dropZone.scss'
 
-export type DropZoneSize = 'md' | 'lg'
-
-export type DropZoneDragState = 'accept' | 'reject' | undefined
-
-type DropZoneRenderProps = { open: () => void, dragState: DropZoneDragState }
+type DragState = 'accept' | 'reject' | undefined
 
 export type DropZoneProps = {
   title: string
@@ -23,19 +18,41 @@ export type DropZoneProps = {
   /** File extensions without the dot, used only to flag a wrong type while it is dragged. */
   accept?: ReadonlyArray<string>
   multiple?: boolean
-  size?: DropZoneSize
+  size?: 'md' | 'lg'
   isDisabled?: boolean
   isInvalid?: boolean
-  /** Without one, the whole zone is the tap target — the touch layout. */
   actionLabel?: string
   rejectDescription?: string
   /** Receives every dropped or chosen file; validating count, type and size is left to the caller. */
   onDrop: (files: File[]) => void
-  /** Sits inside a shared list container instead of standing alone. */
   isEmbedded?: boolean
-  slots?: { Actions?: ReactNode, Footer?: ReactNode }
-  /** Replaces the default body while keeping the zone a drop target, e.g. a file row that accepts a replacement. */
-  children?: (renderProps: DropZoneRenderProps) => ReactNode
+  children?: (renderProps: { open: () => void }) => ReactNode
+}
+
+const MIME_TYPES_BY_EXTENSION: Record<string, ReadonlyArray<string>> = {
+  pdf: ['application/pdf'],
+  png: ['image/png'],
+  jpg: ['image/jpeg'],
+  csv: ['text/csv', 'application/vnd.ms-excel'],
+  txt: ['text/plain'],
+  xlsx: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  docx: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+}
+
+// Undefined when any extension has no known MIME type, so an unfamiliar type is never flagged as rejected mid-drag.
+const toDropzoneAccept = (extensions: ReadonlyArray<string>) => {
+  if (extensions.length === 0) return undefined
+
+  const accept: Record<string, string[]> = {}
+  for (const extension of extensions) {
+    const mimeTypes = MIME_TYPES_BY_EXTENSION[extension]
+    if (!mimeTypes) return undefined
+
+    for (const mimeType of mimeTypes) {
+      accept[mimeType] = [...(accept[mimeType] ?? []), `.${extension}`]
+    }
+  }
+  return accept
 }
 
 const isFromButton = (event: MouseEvent<HTMLElement>) => event.target instanceof Element && event.target.closest('button') !== null
@@ -52,7 +69,6 @@ export const DropZone = ({
   rejectDescription,
   onDrop,
   isEmbedded = false,
-  slots,
   children,
 }: DropZoneProps) => {
   const { t } = useTranslation()
@@ -68,17 +84,22 @@ export const DropZone = ({
     noKeyboard: !isPressable,
   })
 
-  const dragState: DropZoneDragState = isDragActive && !isDisabled ? (isDragReject ? 'reject' : 'accept') : undefined
+  const dragState: DragState = isDragActive && !isDisabled ? (isDragReject ? 'reject' : 'accept') : undefined
 
   const openIfEnabled = () => {
     if (!isDisabled) open()
   }
 
-  const heading = dragState === 'accept'
-    ? t('ui:DropZone.label.drop_to_upload', 'Drop to upload')
-    : dragState === 'reject'
-      ? t('ui:DropZone.error.unsupported_file_type', 'This file type isn’t supported')
-      : title
+  const getHeading = () => {
+    switch (dragState) {
+      case 'accept':
+        return t('ui:DropZone.label.drop_to_upload', 'Drop to upload')
+      case 'reject':
+        return t('ui:DropZone.error.unsupported_file_type', 'This file type isn’t supported')
+      case undefined:
+        return title
+    }
+  }
 
   const detail = dragState === 'reject' ? rejectDescription : description
 
@@ -105,29 +126,23 @@ export const DropZone = ({
     <VStack className='Layer__UI__DropZone' {...dataProperties} {...rootProps}>
       <input {...getInputProps()} multiple={multiple} disabled={isDisabled} />
       {children
-        ? children({ open: openIfEnabled, dragState })
+        ? children({ open: openIfEnabled })
         : (
           <Layout className='Layer__UI__DropZone__Body' {...dataProperties} align='center' gap='sm'>
             <HStack className='Layer__UI__DropZone__Icon' {...dataProperties} align='center' justify='center'>
               {dragState === 'reject' ? <AlertCircle size={16} /> : <CloudUpload size={size === 'lg' ? 20 : 16} />}
             </HStack>
             <VStack className='Layer__UI__DropZone__Text' {...dataProperties} gap='4xs'>
-              <Span weight={dragState || size === 'lg' ? 'bold' : undefined} status={textStatus}>{heading}</Span>
+              <Span weight={dragState || size === 'lg' ? 'bold' : undefined} status={textStatus}>{getHeading()}</Span>
               {detail && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus}>{detail}</Span>}
             </VStack>
-            {!dragState && (actionLabel || slots?.Actions) && (
-              <HStack gap='xs' align='center' className='Layer__UI__DropZone__Actions'>
-                {actionLabel && (
-                  <Button variant='outlined' isDisabled={isDisabled} onPress={openIfEnabled}>
-                    {actionLabel}
-                  </Button>
-                )}
-                {slots?.Actions}
-              </HStack>
+            {!dragState && actionLabel && (
+              <Button variant='outlined' isDisabled={isDisabled} onPress={openIfEnabled}>
+                {actionLabel}
+              </Button>
             )}
           </Layout>
         )}
-      {slots?.Footer && <HStack className='Layer__UI__DropZone__Footer'>{slots.Footer}</HStack>}
     </VStack>
   )
 }

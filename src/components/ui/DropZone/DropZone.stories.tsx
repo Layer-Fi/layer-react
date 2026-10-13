@@ -1,12 +1,9 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { within } from 'storybook/test'
 
-import { Button } from '@ui/Button/Button'
 import { DropZone, type DropZoneProps } from '@ui/DropZone/DropZone'
 import { FileRow } from '@ui/FileRow/FileRow'
-import { Span } from '@ui/Typography/Text'
 
-import { dragFileOver } from '@testUtils/storybook/interactions/dragFiles'
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
@@ -26,17 +23,13 @@ const VARIANTS: ReadonlyArray<{ label: string, props?: Partial<DropZoneProps> }>
   { label: 'touch — whole zone is the tap target', props: { title: 'Add a receipt', description: 'Photo or PDF · Up to 10 MB', actionLabel: undefined } },
   { label: 'any file type', props: { title: 'Drag files here', description: 'Any file type · Up to 25 MB each', accept: [], actionLabel: 'Choose files' } },
   {
-    label: 'large, with actions and footer',
+    label: 'large',
     props: {
       size: 'lg',
       title: 'Upload a CSV of transactions',
       description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
       accept: ['csv'],
       actionLabel: 'Choose CSV',
-      slots: {
-        Actions: <Button variant='ghost'>Download template</Button>,
-        Footer: <Span size='sm' variant='subtle'>Required columns: Date, Description, Amount</Span>,
-      },
     },
   },
 ]
@@ -50,6 +43,12 @@ const meta: Meta<typeof DropZone> = {
 export default meta
 
 type Story = StoryObj<typeof DropZone>
+
+const dragFileOver = (element: HTMLElement, mimeType: string) => {
+  const dataTransfer = new DataTransfer()
+  dataTransfer.items.add(new File(['content'], 'office-supplies-receipt', { type: mimeType }))
+  element.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer }))
+}
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -69,7 +68,6 @@ export const AllVariants: Story = {
   ),
 }
 
-/** Drag feedback is react-dropzone state, so it is reached by dispatching a drag rather than through props. */
 export const DragStates: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {

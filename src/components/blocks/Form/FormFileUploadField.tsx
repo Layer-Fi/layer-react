@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getFileExtension } from '@utils/shared/file/fileName'
-import { type DateInput } from '@utils/shared/i18n/date/input'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -18,13 +17,7 @@ import './formFileUploadField.scss'
 
 import { useFieldContext } from './formContexts'
 
-export type UploadedFile = {
-  id: string
-  name: string
-  sizeInBytes?: number
-  addedAt?: DateInput
-  href?: string
-}
+export type UploadedFile = { id: string, name: string, sizeInBytes?: number }
 
 export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> & {
   /** File extensions without the dot; empty accepts any file. */
@@ -129,29 +122,16 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
   const removePending = (key: string) => setPending(current => current.filter(item => item.key !== key))
 
   const getDescription = () => {
-    const sizePart = maxFileSizeInBytes === undefined
-      ? null
-      : multiple
-        ? t('blocks:Form.FormFileUploadField.label.max_size_each', 'Up to {{maxSize}} each', { maxSize: formatFileSize(maxFileSizeInBytes) })
-        : t('blocks:Form.FormFileUploadField.label.max_size', 'Up to {{maxSize}}', { maxSize: formatFileSize(maxFileSizeInBytes) })
-
-    const countPart = multiple && fileLimit !== undefined
-      ? (heldCount > 0
-        ? t('blocks:Form.FormFileUploadField.label.added_count', '{{count}} of {{limit}} added', { count: heldCount, limit: formatNumber(fileLimit) })
-        : tPlural(t, 'blocks:Form.FormFileUploadField.label.max_files', {
-          count: fileLimit,
-          displayCount: formatNumber(fileLimit),
-          one: 'Up to {{displayCount}} file',
-          other: 'Up to {{displayCount}} files',
-        }))
+    const addedCount = multiple && fileLimit !== undefined && heldCount > 0
+      ? t('blocks:Form.FormFileUploadField.label.added_count', '{{count}} of {{limit}} added', { count: heldCount, limit: formatNumber(fileLimit) })
       : null
+    const sizeLimit = maxFileSizeInBytes === undefined
+      ? null
+      : t('blocks:Form.FormFileUploadField.label.max_size', 'Up to {{maxSize}}', { maxSize: formatFileSize(maxFileSizeInBytes) })
 
-    return [
-      heldCount > 0 ? countPart : null,
-      fileTypes ?? t('blocks:Form.FormFileUploadField.label.any_file_type', 'Any file type'),
-      sizePart,
-      heldCount === 0 && !sizePart ? countPart : null,
-    ].filter(part => part !== null).join(' · ')
+    return [addedCount, fileTypes ?? t('blocks:Form.FormFileUploadField.label.any_file_type', 'Any file type'), sizeLimit]
+      .filter(part => part !== null)
+      .join(' · ')
   }
 
   const getTitle = () => {
@@ -189,16 +169,14 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
   const fileRows = (isGrouped: boolean) => (
     <>
-      {files.map(({ id, name, sizeInBytes, addedAt, href }) => (
+      {files.map(({ id, name, sizeInBytes }) => (
         <FileRow
           key={id}
           name={name}
           sizeInBytes={sizeInBytes}
-          addedAt={addedAt}
-          href={isReadOnly ? href : undefined}
           isGrouped={isGrouped}
           isDisabled={isInputDisabled}
-          onRemove={isReadOnly ? undefined : () => removeFile(id)}
+          onRemove={() => removeFile(id)}
         />
       ))}
       {pending.map(({ key, file, status }) => (
@@ -216,11 +194,13 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     </>
   )
 
+  const readOnlyRows = files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} isGrouped />)
+
   const renderControl = () => {
     if (isReadOnly) {
       return files.length === 0
         ? <Span variant='subtle'>{t('blocks:Form.FormFileUploadField.label.no_files', 'No files uploaded')}</Span>
-        : <VStack className='Layer__FormFileUploadField__List'>{fileRows(true)}</VStack>
+        : <VStack className='Layer__FormFileUploadField__List'>{readOnlyRows}</VStack>
     }
 
     if (!multiple) {
@@ -234,7 +214,6 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
             <FileRow
               name={file.name}
               sizeInBytes={file.sizeInBytes}
-              addedAt={file.addedAt}
               isGrouped
               isDisabled={isInputDisabled}
               onReplace={open}

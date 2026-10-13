@@ -2,7 +2,6 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { FileRow, type FileRowProps } from '@ui/FileRow/FileRow'
 
-import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
@@ -13,13 +12,9 @@ const VARIANTS: ReadonlyArray<{ label: string, props: FileRowProps }> = [
   { label: 'uploaded, replaceable', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, onReplace: noop, onRemove: noop } },
   { label: 'uploading', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, status: 'uploading', onRemove: noop } },
   { label: 'upload failed', props: { name: 'office-supplies-receipt.pdf', status: 'failed', onRetry: noop, onRemove: noop } },
-  {
-    label: 'read only, downloadable',
-    props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, addedAt: new Date(FIXTURE_YEAR, 9, 9), href: '#receipt' },
-  },
+  { label: 'read only', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000 } },
   { label: 'disabled', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isDisabled: true, onRemove: noop } },
   { label: 'long name keeps its extension', props: { name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000, onRemove: noop } },
-  { label: 'with detail', props: { name: 'transactions-september.csv', sizeInBytes: 38_000, detail: '214 rows', onReplace: noop } },
 ]
 
 const meta: Meta<typeof FileRow> = {
