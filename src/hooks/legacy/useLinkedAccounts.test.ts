@@ -1,5 +1,5 @@
 import { act, waitFor } from '@testing-library/react'
-import { type PlaidLinkOnExitMetadata, type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
+import { type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
@@ -29,10 +29,7 @@ const PROCESSOR_TOKEN = 'processor-sandbox-0a1b2c3d-4e5f'
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))
 
-afterEach(() => {
-  vi.restoreAllMocks()
-  vi.mocked(usePlaidLink).mockImplementation(() => ({ open: vi.fn(), ready: false }) as unknown as ReturnType<typeof usePlaidLink>)
-})
+afterEach(() => vi.restoreAllMocks())
 
 describe('useLinkedAccounts with a customer-managed Plaid config', () => {
   it('mints the add-flow link token through the customer, not Layer', async () => {
@@ -131,31 +128,16 @@ describe('useLinkedAccounts without a customer-managed Plaid config', () => {
 })
 
 describe('useLinkedAccounts addConnection', () => {
-  const waitForLinkToken = () => waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
-
   it('resolves true once the new item is saved', async () => {
     const { result } = await renderLinkedAccounts()
 
     const connection = result.current.addConnection('PLAID')
-    await waitForLinkToken()
+    await waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
     act(() => {
       lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
     })
 
     await expect(connection).resolves.toBe(true)
-  })
-
-  it('resolves false when Link is closed', async () => {
-    vi.mocked(usePlaidLink).mockReturnValue({ open: vi.fn(), ready: true } as unknown as ReturnType<typeof usePlaidLink>)
-    const { result } = await renderLinkedAccounts()
-
-    const connection = result.current.addConnection('PLAID')
-    await waitForLinkToken()
-    act(() => {
-      lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
-    })
-
-    await expect(connection).resolves.toBe(false)
   })
 
   it('resolves false when the link token can’t be minted', async () => {

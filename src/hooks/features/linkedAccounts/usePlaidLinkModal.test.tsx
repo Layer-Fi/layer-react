@@ -28,9 +28,9 @@ const completePlaidLink = () =>
     return Promise.resolve()
   })
 
-const closePlaidLink = () =>
+const closePlaidLink = (onExit = lastPlaidLinkOptions().onExit) =>
   act(() => {
-    lastPlaidLinkOptions().onExit?.(null, {} as PlaidLinkOnExitMetadata)
+    onExit?.(null, {} as PlaidLinkOnExitMetadata)
   })
 
 const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null } = {}) =>
@@ -162,20 +162,16 @@ describe('usePlaidLinkModal sessions', () => {
   })
 
   it('ignores the exit Plaid sends after a successful Link while the token is still being saved', async () => {
-    mockPlaidLink({ ready: true })
     const { session } = await renderAddModeModal()
-    const { onExit } = lastPlaidLinkOptions()
+    const { onExit: exitFinishedLink } = lastPlaidLinkOptions()
 
     await completePlaidLink()
-    act(() => {
-      onExit?.(null, {} as PlaidLinkOnExitMetadata)
-    })
+    closePlaidLink(exitFinishedLink)
 
     await expect(session).resolves.toBe(true)
   })
 
   it('resolves false when Link closes', async () => {
-    mockPlaidLink({ ready: true })
     const { session } = await renderAddModeModal()
 
     closePlaidLink()

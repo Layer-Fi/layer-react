@@ -9,7 +9,7 @@ import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-a
 import { server } from '@msw/node'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 
-const plaidCd = {
+const PLAID_CD = {
   id: '00000000-0000-4000-8000-0000000000c1',
   externalAccountId: '00000000-0000-4000-8000-0000000000e1',
   name: 'Plaid CD',
@@ -17,7 +17,7 @@ const plaidCd = {
   mask: '2222',
   balance: 100000,
 }
-const plaidChecking = {
+const PLAID_CHECKING = {
   id: '00000000-0000-4000-8000-0000000000c2',
   externalAccountId: '00000000-0000-4000-8000-0000000000e2',
   name: 'Plaid Checking',
@@ -33,7 +33,7 @@ const renderBanner = () => ({
 
 describe('PendingAccountConfirmationBanner', () => {
   it('counts the accounts waiting for confirmation and opens the dialog from Review accounts', async () => {
-    server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(plaidCd), makeAccountNeedingConfirmation(plaidChecking)]))
+    server.use(getBankAccounts.mock([makeAccountNeedingConfirmation(PLAID_CD), makeAccountNeedingConfirmation(PLAID_CHECKING)]))
     const { user } = renderBanner()
 
     expect(await screen.findByText('Confirm your new accounts')).toBeInTheDocument()
@@ -49,7 +49,7 @@ describe('PendingAccountConfirmationBanner', () => {
 
   it('shows nothing when every account is confirmed', async () => {
     const onRequest = vi.fn()
-    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(plaidChecking)], { onRequest }))
+    server.use(getBankAccounts.mock([makeBankAccountWithMirroredExternalAccount(PLAID_CHECKING)], { onRequest }))
     renderBanner()
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
