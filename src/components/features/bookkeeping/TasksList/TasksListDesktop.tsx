@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { isCompletedTask, isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
+import { AnimatedPresenceList } from '@components/utility/AnimatedPresenceList/AnimatedPresenceList'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
@@ -55,15 +56,18 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
 
   return (
     <VStack className='Layer__tasks-list'>
-      {pageItems.map((task, index) => (
-        <TasksListItem
-          ref={setItemRef(task.id)}
-          key={task.id}
-          task={task}
-          defaultOpen={index === indexFirstIncomplete}
-          onExpandTask={onExpandTask(task.id)}
-        />
-      ))}
+      <AnimatedPresenceList>
+        {pageItems.map((task, index) => (
+          <TasksListItem
+            ref={setItemRef(task.id)}
+            // Completing a task moves it to the bottom; a new key fades it out here and back in there.
+            key={`${task.id}:${isCompletedTask(task)}`}
+            task={task}
+            defaultOpen={index === indexFirstIncomplete}
+            onExpandTask={onExpandTask(task.id)}
+          />
+        ))}
+      </AnimatedPresenceList>
       {tasks.length > pageSize && (
         <Pagination
           currentPage={pageIndex + 1}

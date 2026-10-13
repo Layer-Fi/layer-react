@@ -32,6 +32,7 @@ function AnimatedElementInner<T extends ValidHTMLElement = 'div'>(
       ref={ref}
       initial={config.initial}
       animate={isVisible ? config.animate : config.exit}
+      exit={config.exit}
       transition={config.transition}
       {...props}
     >

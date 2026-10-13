@@ -5,6 +5,7 @@ import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeepi
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { TasksListItemHeader } from '@features/bookkeeping/TasksListItem/TasksListItemHeader'
 import { useTasksListItemOpenState } from '@features/bookkeeping/TasksListItem/useTasksListItemOpenState'
 import { UnifiedAskForm } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskForm'
@@ -36,7 +37,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
   )
 
   return (
-    <div className='Layer__tasks-list-item-wrapper' ref={ref}>
+    <AnimatedElement variant='fade' className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={classNames('Layer__tasks-list-item', isOpen && 'Layer__tasks-list-item__expanded')}>
         <TasksListItemHeader
           task={task}
@@ -48,7 +49,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
           <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded={isOpen} />
         </div>
       </div>
-    </div>
+    </AnimatedElement>
   )
 })
 

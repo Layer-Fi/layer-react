@@ -1,14 +1,17 @@
-import { Fragment, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { useStore } from '@tanstack/react-form'
 
 import { asMutable } from '@utils/shared/array/asMutable'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
+import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { type ChipSize, type ChipVariant } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
 import { type SearchComboBoxSelection } from '@blocks/Form/FormSearchComboBoxField'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
+
+import './unifiedAskFormChoiceStep.scss'
 
 export type UnifiedAskFormChoiceStepValues = {
   choice: string | null
@@ -101,7 +104,9 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
             </group.AppField>
           )
           : null}
-        {renderFollowUp && pick ? <Fragment key={pick}>{renderFollowUp(pick)}</Fragment> : null}
+        <AnimatedPresenceElement variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp' isPresent={Boolean(renderFollowUp && pick)} motionKey={pick ?? ''}>
+          {pick ? renderFollowUp?.(pick) : null}
+        </AnimatedPresenceElement>
       </UnifiedAskFormStepShell>
     )
   },
