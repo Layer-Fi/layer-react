@@ -48,7 +48,7 @@ export const FileRow = ({
       .join(' · ')
 
   return (
-    <HStack className='Layer__UI__FileRow' pi='xs' pb='xs' align='center' gap='sm'>
+    <HStack className='Layer__UI__FileRow' pi='md' pb='xs' align='center' gap='sm'>
       <HStack className='Layer__UI__FileRow__Icon' align='center' justify='center'>
         {isUploading ? <LoadingSpinner size={16} /> : <FileTypeIcon extension={extension} />}
       </HStack>

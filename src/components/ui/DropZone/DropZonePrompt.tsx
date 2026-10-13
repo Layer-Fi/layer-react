@@ -43,7 +43,7 @@ export const DropZonePrompt = ({ title, description, actionLabel, size, isDraggi
   const isLarge = size === 'lg'
   const Layout = isLarge ? VStack : HStack
   const padding: Pick<StackProps, 'pi' | 'pb'> = isPressable
-    ? { pi: 'sm', pb: 'sm' }
+    ? { pi: 'md', pb: 'sm' }
     : isLarge ? { pi: 'lg', pb: 'xl' } : { pi: 'md', pb: 'md' }
   const textStatus = isDisabled ? 'disabled' : undefined
   const textAlign = isLarge ? 'center' : undefined
