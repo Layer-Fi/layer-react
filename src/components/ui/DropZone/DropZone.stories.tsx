@@ -31,8 +31,8 @@ const VARIANTS: ReadonlyArray<{ label: string, props?: Partial<DropZoneProps> }>
     props: {
       size: 'lg',
       prompt: {
-        title: 'Drag and drop a file',
-        description: 'File must be in CSV format',
+        title: 'Upload a CSV of transactions',
+        description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
         actionLabel: 'Browse',
       },
       accept: ['csv'],
