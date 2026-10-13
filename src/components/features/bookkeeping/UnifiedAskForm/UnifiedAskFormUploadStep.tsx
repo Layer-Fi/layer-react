@@ -1,13 +1,11 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { type UploadedFile } from '@blocks/Form/FormFileUploadField'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
+import { useTaskAlreadyAnswered } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnswered'
 
 // The API stores at most this many files per upload request.
 const MAX_FILES_PER_UPLOAD = 10
@@ -31,9 +29,8 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
   props: DEFAULT_PROPS,
   render: function Render({ group, taskId, prompt, accept, multiple, isDisabled }) {
     const { t } = useTranslation()
-    const { addToast } = useLayerContext()
     const { trigger: uploadDocuments } = usePostUnifiedAskFormUpload()
-    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+    const notifyIfAlreadyAnswered = useTaskAlreadyAnswered()
 
     const upload = useCallback(async (files: ReadonlyArray<File>) => {
       try {
@@ -41,16 +38,11 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         return result ? result.documents.map(({ id, fileName }) => ({ id, name: fileName })) : null
       }
       catch (error) {
-        if (!isAPIErrorOfType(error, ApiEnumErrorType.BusinessTaskAlreadyCompleted)) throw error
-
-        addToast({
-          content: t('bookkeeping:UnifiedAskForm.UnifiedAskFormUploadStep.error.already_answered', 'This task has already been answered.'),
-          type: 'error',
-        })
-        void invalidateBookkeepingPeriods()
+        if (!notifyIfAlreadyAnswered(error)) throw error
+        // An empty list keeps the field quiet; null would show the generic upload error.
         return []
       }
-    }, [taskId, uploadDocuments, addToast, t, invalidateBookkeepingPeriods])
+    }, [taskId, uploadDocuments, notifyIfAlreadyAnswered])
 
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
