@@ -83,7 +83,8 @@ export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, 
   const primaryAction = getPagePrimaryAction(page, values)
   const isTakeover = presentation === 'takeover'
   const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
-  const showsPrimary = !isReadOnlyEnd && (!isTakeover || !autoAdvances || routing === 'error' || hasPickedFollowUp(page, values))
+  const advancesOnPick = isTakeover && autoAdvances && routing !== 'error' && !hasPickedFollowUp(page, values)
+  const showsPrimary = !isReadOnlyEnd && !advancesOnPick
 
   return {
     isTakeover,
