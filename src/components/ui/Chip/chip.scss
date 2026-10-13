@@ -30,11 +30,6 @@
     border-color var(--transition-speed) ease-in-out,
     background-color var(--transition-speed) ease-in-out,
     color var(--transition-speed) ease-in-out;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-
   font-size: var(--text-sm);
 
   font-family: inherit;

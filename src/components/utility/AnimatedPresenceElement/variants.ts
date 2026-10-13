@@ -46,14 +46,3 @@ export const variants = {
     transition: {},
   },
 }
-
-type Variant = (typeof variants)[keyof typeof variants]
-
-const INSTANT = { duration: 0 }
-
-export const toInstantVariant = (variant: Variant) => ({
-  initial: variant.initial,
-  animate: { ...variant.animate, transition: INSTANT },
-  exit: { ...variant.exit, transition: INSTANT },
-  transition: INSTANT,
-})

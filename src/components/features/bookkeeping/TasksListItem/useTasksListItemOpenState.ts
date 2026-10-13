@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useReducedMotion } from 'motion/react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
+import { useDelayedValue } from '@hooks/utils/react/useDelayedValue'
 import { COLLAPSE_EXIT_MS } from '@components/utility/AnimatedPresenceElement/variants'
 
-const PAUSE_BEFORE_OPEN_MS = 200
+// Waits for the completed row above to finish collapsing, then pauses, so the list never moves twice at once.
+const DEFAULT_OPEN_DELAY_MS = COLLAPSE_EXIT_MS + 200
 
 type UseTasksListItemOpenStateProps = {
   taskId: string
@@ -15,34 +16,12 @@ type UseTasksListItemOpenStateProps = {
 
 export const useTasksListItemOpenState = ({ taskId, defaultOpen, onExpandTask }: UseTasksListItemOpenStateProps) => {
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
-  const shouldReduceMotion = useReducedMotion()
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const wasDefaultOpen = useRef(defaultOpen)
-  const pendingOpen = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const cancelPendingOpen = useCallback(() => {
-    if (pendingOpen.current !== null) clearTimeout(pendingOpen.current)
-    pendingOpen.current = null
-  }, [])
+  const delayedDefaultOpen = useDelayedValue(defaultOpen, DEFAULT_OPEN_DELAY_MS)
 
   useEffect(() => {
-    const becameDefault = defaultOpen && !wasDefaultOpen.current
-    wasDefaultOpen.current = defaultOpen
-
-    if (!defaultOpen) {
-      setIsOpen(false)
-      return
-    }
-    if (!becameDefault) return
-    if (shouldReduceMotion) {
-      setIsOpen(true)
-      return
-    }
-
-    // Waits for the completed row above to finish collapsing, then pauses, so the list never moves twice at once.
-    pendingOpen.current = setTimeout(() => setIsOpen(true), COLLAPSE_EXIT_MS + PAUSE_BEFORE_OPEN_MS)
-    return cancelPendingOpen
-  }, [cancelPendingOpen, defaultOpen, shouldReduceMotion])
+    setIsOpen(delayedDefaultOpen)
+  }, [delayedDefaultOpen])
 
   const toggle = useCallback(() => {
     emitLayerEvent({
@@ -50,15 +29,11 @@ export const useTasksListItemOpenState = ({ taskId, defaultOpen, onExpandTask }:
       version: 1,
       payload: { taskId },
     })
-    cancelPendingOpen()
     setIsOpen(!isOpen)
     onExpandTask?.(!isOpen)
-  }, [cancelPendingOpen, emitLayerEvent, isOpen, onExpandTask, taskId])
+  }, [emitLayerEvent, isOpen, onExpandTask, taskId])
 
-  const close = useCallback(() => {
-    cancelPendingOpen()
-    setIsOpen(false)
-  }, [cancelPendingOpen])
+  const close = useCallback(() => setIsOpen(false), [])
 
   return useMemo(() => ({ isOpen, toggle, close }), [close, isOpen, toggle])
 }
