@@ -21,6 +21,7 @@ const lastPlaidLinkOptions = () =>
   mockedUsePlaidLink.mock.lastCall?.[0] as PlaidLinkOptions & { env?: string }
 
 const METADATA = { institution: { name: 'Test Bank', institution_id: 'ins_1' } } as PlaidLinkOnSuccessMetadata
+const EXIT_METADATA = {} as PlaidLinkOnExitMetadata
 
 const completePlaidLink = () =>
   act(() => {
@@ -30,13 +31,11 @@ const completePlaidLink = () =>
 
 const closePlaidLink = (onExit = lastPlaidLinkOptions().onExit) =>
   act(() => {
-    onExit?.(null, {} as PlaidLinkOnExitMetadata)
+    onExit?.(null, EXIT_METADATA)
   })
 
-const mockPlaidLink = (state: { ready?: boolean, error?: ErrorEvent | null } = {}) =>
-  mockedUsePlaidLink.mockReturnValue(
-    { open: vi.fn(), ready: false, error: null, ...state } as unknown as ReturnType<typeof usePlaidLink>,
-  )
+const mockPlaidLink = (error: ErrorEvent | null = null) =>
+  mockedUsePlaidLink.mockReturnValue({ open: vi.fn(), exit: vi.fn(), submit: vi.fn(), ready: false, error })
 
 type RenderAddModeModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
@@ -71,141 +70,143 @@ beforeEach(() => {
 
 afterEach(() => vi.restoreAllMocks())
 
-describe('usePlaidLinkModal with a customer-managed Plaid config', () => {
-  it('hands the public token to the customer instead of exchanging it with Layer', async () => {
-    const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
-    const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig()
+describe('usePlaidLinkModal', () => {
+  describe('with a customer-managed Plaid config', () => {
+    it('hands the public token to the customer instead of exchanging it with Layer', async () => {
+      const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
+      const customerManagedPlaidConfig = makeCustomerManagedPlaidConfig()
 
-    const { result } = await renderAddModeModal({ customerManagedPlaidConfig })
+      const { result } = await renderAddModeModal({ customerManagedPlaidConfig })
 
-    await completePlaidLink()
+      await completePlaidLink()
 
-    await waitFor(() => expect(customerManagedPlaidConfig.onPublicTokenReceived).toHaveBeenCalledWith({
-      publicToken: 'public-token',
-      metadata: METADATA,
-    }))
+      await waitFor(() => expect(customerManagedPlaidConfig.onPublicTokenReceived).toHaveBeenCalledWith({
+        publicToken: 'public-token',
+        metadata: METADATA,
+      }))
 
-    expect(exchangePlaidPublicToken).not.toHaveBeenCalled()
-    await waitFor(() => expect(result.current.isLinking).toBe(false))
-  })
-
-  it('leaves the Plaid environment to the customer-minted token', async () => {
-    await renderAddModeModal({
-      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig(),
-      usePlaidSandbox: true,
+      expect(exchangePlaidPublicToken).not.toHaveBeenCalled()
+      await waitFor(() => expect(result.current.isLinking).toBe(false))
     })
 
-    expect(lastPlaidLinkOptions().env).toBeUndefined()
-  })
+    it('leaves the Plaid environment to the customer-minted token', async () => {
+      await renderAddModeModal({
+        customerManagedPlaidConfig: makeCustomerManagedPlaidConfig(),
+        usePlaidSandbox: true,
+      })
 
-  it('stops linking when the customer callback rejects', async () => {
-    const { result } = await renderAddModeModal({
-      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
-        onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
-      }),
+      expect(lastPlaidLinkOptions().env).toBeUndefined()
     })
 
-    await completePlaidLink()
-
-    await waitFor(() => expect(result.current.isLinking).toBe(false))
-  })
-
-  it('stops linking when the customer callback throws synchronously', async () => {
-    const { result } = await renderAddModeModal({
-      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
-        onPublicTokenReceived: vi.fn(() => {
-          throw new Error('customer backend is down')
+    it('stops linking when the customer callback rejects', async () => {
+      const { result } = await renderAddModeModal({
+        customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+          onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
         }),
-      }),
+      })
+
+      await completePlaidLink()
+
+      await waitFor(() => expect(result.current.isLinking).toBe(false))
     })
 
-    await completePlaidLink()
+    it('stops linking when the customer callback throws synchronously', async () => {
+      const { result } = await renderAddModeModal({
+        customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+          onPublicTokenReceived: vi.fn(() => {
+            throw new Error('customer backend is down')
+          }),
+        }),
+      })
 
-    await waitFor(() => expect(result.current.isLinking).toBe(false))
-  })
-})
+      await completePlaidLink()
 
-describe('usePlaidLinkModal without a customer-managed Plaid config', () => {
-  it('exchanges the public token with Layer', async () => {
-    const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
-
-    await renderAddModeModal()
-
-    await completePlaidLink()
-
-    await waitFor(() => expect(exchangePlaidPublicToken).toHaveBeenCalledWith(
-      expect.objectContaining({
-        body: {
-          public_token: 'public-token',
-          institution: METADATA.institution,
-        },
-      }),
-    ))
+      await waitFor(() => expect(result.current.isLinking).toBe(false))
+    })
   })
 
-  it('opts into the Plaid sandbox environment', async () => {
-    await renderAddModeModal({ usePlaidSandbox: true })
+  describe('without a customer-managed Plaid config', () => {
+    it('exchanges the public token with Layer', async () => {
+      const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)
 
-    expect(lastPlaidLinkOptions().env).toBe('sandbox')
-  })
-})
+      await renderAddModeModal()
 
-describe('usePlaidLinkModal sessions', () => {
-  it('resolves true once the connection is saved and clears the token', async () => {
-    const { session } = await renderAddModeModal()
-    expect(lastPlaidLinkOptions().token).toBe('a-link-token')
+      await completePlaidLink()
 
-    await completePlaidLink()
-
-    await expect(session).resolves.toBe(true)
-    expect(lastPlaidLinkOptions().token).toBeNull()
-  })
-
-  it('ignores the exit Plaid sends after a successful Link while the token is still being saved', async () => {
-    const { session } = await renderAddModeModal()
-    const { onExit: exitFinishedLink } = lastPlaidLinkOptions()
-
-    await completePlaidLink()
-    closePlaidLink(exitFinishedLink)
-
-    await expect(session).resolves.toBe(true)
-  })
-
-  it('resolves false when Link closes', async () => {
-    const { session } = await renderAddModeModal()
-
-    closePlaidLink()
-
-    await expect(session).resolves.toBe(false)
-    expect(lastPlaidLinkOptions().token).toBeNull()
-  })
-
-  it('resolves false when the public token couldn’t be saved', async () => {
-    const { session } = await renderAddModeModal({
-      customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
-        onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
-      }),
+      await waitFor(() => expect(exchangePlaidPublicToken).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: {
+            public_token: 'public-token',
+            institution: METADATA.institution,
+          },
+        }),
+      ))
     })
 
-    await completePlaidLink()
+    it('opts into the Plaid sandbox environment', async () => {
+      await renderAddModeModal({ usePlaidSandbox: true })
 
-    await expect(session).resolves.toBe(false)
+      expect(lastPlaidLinkOptions().env).toBe('sandbox')
+    })
   })
 
-  it('resolves false when Plaid fails to load after the session started', async () => {
-    const { session, rerender } = await renderAddModeModal()
+  describe('the outcome a Link session resolves', () => {
+    it('resolves true once the connection is saved and clears the token', async () => {
+      const { session } = await renderAddModeModal()
+      expect(lastPlaidLinkOptions().token).toBe('a-link-token')
 
-    mockPlaidLink({ error: new ErrorEvent('error') })
-    rerender()
+      await completePlaidLink()
 
-    await expect(session).resolves.toBe(false)
-    expect(lastPlaidLinkOptions().token).toBeNull()
-  })
+      await expect(session).resolves.toBe(true)
+      expect(lastPlaidLinkOptions().token).toBeNull()
+    })
 
-  it('turns away a second session while one is open', async () => {
-    const { result } = await renderAddModeModal()
+    it('ignores the exit Plaid sends after a successful Link while the token is still being saved', async () => {
+      const { session } = await renderAddModeModal()
+      const { onExit: exitFinishedLink } = lastPlaidLinkOptions()
 
-    await expect(result.current.openLink('another-token', 'add')).resolves.toBe(false)
-    expect(lastPlaidLinkOptions().token).toBe('a-link-token')
+      await completePlaidLink()
+      closePlaidLink(exitFinishedLink)
+
+      await expect(session).resolves.toBe(true)
+    })
+
+    it('resolves false when Link closes', async () => {
+      const { session } = await renderAddModeModal()
+
+      closePlaidLink()
+
+      await expect(session).resolves.toBe(false)
+      expect(lastPlaidLinkOptions().token).toBeNull()
+    })
+
+    it('resolves false when the public token couldn’t be saved', async () => {
+      const { session } = await renderAddModeModal({
+        customerManagedPlaidConfig: makeCustomerManagedPlaidConfig({
+          onPublicTokenReceived: vi.fn(() => Promise.reject(new Error('customer backend is down'))),
+        }),
+      })
+
+      await completePlaidLink()
+
+      await expect(session).resolves.toBe(false)
+    })
+
+    it('resolves false when Plaid fails to load after the session started', async () => {
+      const { session, rerender } = await renderAddModeModal()
+
+      mockPlaidLink(new ErrorEvent('error'))
+      rerender()
+
+      await expect(session).resolves.toBe(false)
+      expect(lastPlaidLinkOptions().token).toBeNull()
+    })
+
+    it('turns away a second session while one is open', async () => {
+      const { result } = await renderAddModeModal()
+
+      await expect(result.current.openLink('another-token', 'add')).resolves.toBe(false)
+      expect(lastPlaidLinkOptions().token).toBe('a-link-token')
+    })
   })
 })
