@@ -6,8 +6,7 @@ import { type AskFormNextPageRequest } from '@schemas/features/bookkeeping/busin
 import { usePostAskFormNextPage } from '@api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-
-export type NextPageRouting = 'idle' | 'loading' | 'error'
+import { type NextPageRouting } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type NextPageRequest = {
   id: number

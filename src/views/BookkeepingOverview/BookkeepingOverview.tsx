@@ -16,6 +16,7 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
+import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
@@ -165,6 +166,7 @@ export const BookkeepingOverview = ({
         )}
         showHeader={showTitle}
       >
+        <PendingAccountConfirmationBanner />
         {width <= 1100 && (
           <div
             ref={upperContentRef}
