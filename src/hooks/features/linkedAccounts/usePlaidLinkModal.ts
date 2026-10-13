@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   type PlaidInstitution,
@@ -102,6 +102,8 @@ export function usePlaidLinkModal({
 
   const [session, setSession] = useState<LinkSession | null>(null)
   const sessionRef = useLatestRef(session)
+  // Set by openLink and cleared by the session's own resolve, so one flow runs at a time from open to outcome.
+  const pendingSessionRef = useRef<LinkSession | null>(null)
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
@@ -110,7 +112,6 @@ export function usePlaidLinkModal({
   const releaseLink = useCallback((current: LinkSession) => {
     if (sessionRef.current !== current) return false
 
-    sessionRef.current = null
     setSession(null)
     return true
   }, [sessionRef])
@@ -236,18 +237,23 @@ export function usePlaidLinkModal({
 
   const openLink = useCallback(
     (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
-      // One flow at a time: while Link is open, and while a finished Link's token is still being saved.
-      if (sessionRef.current || isLinking) {
+      if (pendingSessionRef.current) {
         resolve(false)
         return
       }
 
-      const nextSession = { token, mode, resolve }
-      // Set the ref now rather than on the next render, so two calls in one tick can't both start a session.
-      sessionRef.current = nextSession
+      const nextSession: LinkSession = {
+        token,
+        mode,
+        resolve: (isConnected) => {
+          pendingSessionRef.current = null
+          resolve(isConnected)
+        },
+      }
+      pendingSessionRef.current = nextSession
       setSession(nextSession)
     }),
-    [sessionRef, isLinking],
+    [],
   )
 
   return { isLinking, openLink }
