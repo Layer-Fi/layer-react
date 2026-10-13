@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { findNextIncompleteTask, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { findNextIncompleteTask, isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { Modal } from '@ui/Modal/Modal'
 import { TasksTakeoverTask } from '@features/bookkeeping/TasksTakeover/TasksTakeoverTask'
 
@@ -13,6 +13,18 @@ type TasksTakeoverProps = {
   /** The task on screen; `null` closes the takeover. */
   taskId: string | null
   onTaskChange: (taskId: string | null) => void
+}
+
+/** Adds incomplete tasks missing from `taskIds`, each after the nearest task before it in `tasks`. */
+const withNewIncompleteTasks = (taskIds: ReadonlyArray<string>, tasks: ReadonlyArray<UnifiedAskFormTask>) => {
+  const merged = [...taskIds]
+  let insertAt = 0
+  for (const task of tasks) {
+    const index = merged.indexOf(task.id)
+    if (index !== -1) insertAt = index + 1
+    else if (isIncompleteTask(task)) merged.splice(insertAt++, 0, task.id)
+  }
+  return merged.length === taskIds.length ? taskIds : merged
 }
 
 /** Answers tasks one per screen on mobile, moving on to the next incomplete task after each. */
@@ -34,11 +46,19 @@ export const TasksTakeover = ({ tasks, taskId, onTaskChange }: TasksTakeoverProp
   if (task) shownRef.current = { task, tasks }
   const shown = shownRef.current
 
-  // The tasks left to answer when the takeover opened; answering one keeps it counted, so progress moves forward.
-  const sessionTaskIdsRef = useRef<ReadonlyArray<string> | null>(null)
-  if (taskId === null) sessionTaskIdsRef.current = null
-  else sessionTaskIdsRef.current ??= getIncompleteTasks(tasks).map(({ id }) => id)
-  const sessionTaskIds = sessionTaskIdsRef.current ?? []
+  // The tasks left to answer since the takeover opened; answering one keeps it counted, so progress moves forward.
+  // Kept after close so the exit animation keeps its count.
+  const sessionRef = useRef<{ isOpen: boolean, taskIds: ReadonlyArray<string> }>({ isOpen: false, taskIds: [] })
+  if (taskId === null) {
+    sessionRef.current.isOpen = false
+  }
+  else {
+    sessionRef.current = {
+      isOpen: true,
+      taskIds: withNewIncompleteTasks(sessionRef.current.isOpen ? sessionRef.current.taskIds : [], tasks),
+    }
+  }
+  const sessionTaskIds = sessionRef.current.taskIds
 
   return (
     <Modal

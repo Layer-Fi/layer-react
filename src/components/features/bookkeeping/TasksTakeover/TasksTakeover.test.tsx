@@ -94,6 +94,19 @@ describe('TasksTakeover', () => {
     expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
   })
 
+  it('counts a task that arrives while open as one to answer', async () => {
+    const ADOBE = makeUnifiedAskFormTask({ id: '00000000-0000-4000-8000-000000000f05', title: 'Adobe subscription' })
+    const { user, rerender } = renderTakeover()
+
+    rerender(<TakeoverHarness tasks={[COSTCO, ADOBE, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
+    expect(screen.getByText('Task 1 of 4')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Skip' }))
+
+    expect(await screen.findByRole('heading', { name: 'Adobe subscription' })).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
+  })
+
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
     const onSubmit = spyOnSubmit(COSTCO)
     const { user } = renderTakeover()
