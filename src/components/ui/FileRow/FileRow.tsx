@@ -48,17 +48,17 @@ export const FileRow = ({
       .join(' · ')
 
   return (
-    <HStack className='Layer__UI__FileRow' pi='md' pb='xs' align='center' gap='sm'>
+    <HStack className='Layer__UI__FileRow' pi='md' pb='xs' align='center' gap='md'>
       <HStack className='Layer__UI__FileRow__Icon' align='center' justify='center'>
         {isUploading ? <LoadingSpinner size={16} /> : <FileTypeIcon extension={extension} />}
       </HStack>
       <VStack className='Layer__UI__FileRow__Text' fluid gap='4xs'>
-        <Span ellipsis noWrap>{name}</Span>
-        <Span size='sm' variant='subtle' numeric='tabular-nums'>{meta}</Span>
+        <Span size='sm' ellipsis noWrap>{name}</Span>
+        <Span size='xs' variant='subtle' numeric='tabular-nums'>{meta}</Span>
       </VStack>
       <HStack align='center' gap='3xs'>
         {onReplace && (
-          <Button variant='ghost' isDisabled={isDisabled} onPress={onReplace}>
+          <Button variant='ghost' inset isDisabled={isDisabled} onPress={onReplace}>
             {t('ui:FileRow.action.replace', 'Replace')}
           </Button>
         )}
@@ -66,6 +66,7 @@ export const FileRow = ({
           <Button
             variant='ghost'
             icon
+            inset
             isDisabled={isDisabled}
             onPress={onRemove}
             aria-label={t('ui:FileRow.action.remove_file', 'Remove {{fileName}}', { fileName: name })}
