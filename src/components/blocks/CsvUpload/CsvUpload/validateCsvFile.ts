@@ -4,7 +4,7 @@ import { type FileSizeFormatFn } from '@utils/shared/i18n/number/formatters'
 
 const VALID_EXTENSIONS = ['.csv']
 const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
-export const CSV_MAX_FILE_SIZE_IN_BYTES = 2_000_000
+const CSV_MAX_FILE_SIZE_IN_BYTES = 2_000_000
 
 type ValidateCsvFileOptions = {
   file: File

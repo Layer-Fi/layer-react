@@ -8,7 +8,7 @@ import { type DropZoneRejection } from '@ui/DropZone/dropZoneValidation'
 import { FileRow } from '@ui/FileRow/FileRow'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { CSV_MAX_FILE_SIZE_IN_BYTES, validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
+import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
 
 type CsvUploadProps = {
   file: File | null
@@ -38,11 +38,9 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   }
 
   const prompt: DropZonePromptProps = {
-    title: t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions'),
-    description: t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to {{maxSize}}.', {
-      maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES),
-    }),
-    actionLabel: t('upload:action.choose_csv', 'Choose CSV'),
+    title: t('upload:label.drag_drop_file', 'Drag and drop a file'),
+    description: t('upload:validation.file_must_be_csv', 'File must be in CSV format'),
+    actionLabel: t('upload:action.browse', 'Browse'),
   }
 
   return (
