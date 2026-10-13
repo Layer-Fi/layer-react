@@ -88,6 +88,15 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
+  it('shows the error text it is given in place of its own', async () => {
+    const { user, container } = renderUploadField({ accept: ['pdf'], errorText: 'Upload the signed lease' })
+
+    await selectFiles(user, container, 'notes.txt')
+
+    expect(await screen.findByText('Upload the signed lease')).toBeInTheDocument()
+    expect(screen.queryByText(/Upload a PDF file instead/)).not.toBeInTheDocument()
+  })
+
   it('says so when the upload fails', async () => {
     const { user, container } = renderUploadField({ upload: () => Promise.resolve(null) })
 

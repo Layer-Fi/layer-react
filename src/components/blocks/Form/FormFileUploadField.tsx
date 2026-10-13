@@ -14,7 +14,7 @@ import './formFileUploadField.scss'
 
 import { useFieldContext } from './formContexts'
 
-export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> & {
+export type FormFileUploadFieldProps = CommonFormFieldProps & {
   /** File extensions without the dot; empty accepts any file. */
   accept: ReadonlyArray<string>
   multiple?: boolean
@@ -32,7 +32,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
   const [error, setError] = useState<string | undefined>(undefined)
   const { pending, startUpload } = usePendingUploads(upload)
 
-  const { labelId, isInvalid, shellProps } = useFormField({ ...props, errorText: error })
+  const { labelId, isInvalid, shellProps } = useFormField({ ...props, errorText: props.errorText ?? error })
   const { className, inline, align, showLabel, isDisabled = false, isReadOnly = false } = props
 
   const files = field.state.value
