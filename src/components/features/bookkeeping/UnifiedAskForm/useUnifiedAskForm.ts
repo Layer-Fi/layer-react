@@ -8,7 +8,7 @@ import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessT
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useAppForm } from '@blocks/Form/useForm'
-import { useTaskAlreadyAnswered } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnswered'
+import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
@@ -28,7 +28,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { trigger: submitResponse } = usePostUnifiedAskFormResponse()
-  const notifyIfAlreadyAnswered = useTaskAlreadyAnswered()
+  const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
   const { pages } = task.form
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
@@ -54,7 +54,7 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
         onSaved(saved)
       }
       catch (error) {
-        if (notifyIfAlreadyAnswered(error)) return
+        if (handleTaskAlreadyAnsweredError(error)) return
 
         addToast({
           content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.submit_answer', 'We couldn’t save that answer. Please try again.'),

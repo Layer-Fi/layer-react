@@ -5,7 +5,7 @@ import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unifi
 import { type UploadedFile } from '@blocks/Form/FormFileUploadField'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
-import { useTaskAlreadyAnswered } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnswered'
+import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 
 // The API stores at most this many files per upload request.
 const MAX_FILES_PER_UPLOAD = 10
@@ -30,7 +30,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
   render: function Render({ group, taskId, prompt, accept, multiple, isDisabled }) {
     const { t } = useTranslation()
     const { trigger: uploadDocuments } = usePostUnifiedAskFormUpload()
-    const notifyIfAlreadyAnswered = useTaskAlreadyAnswered()
+    const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
     const upload = useCallback(async (files: ReadonlyArray<File>) => {
       try {
@@ -38,11 +38,11 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         return result ? result.documents.map(({ id, fileName }) => ({ id, name: fileName })) : null
       }
       catch (error) {
-        if (!notifyIfAlreadyAnswered(error)) throw error
+        if (!handleTaskAlreadyAnsweredError(error)) throw error
         // An empty list keeps the field quiet; null would show the generic upload error.
         return []
       }
-    }, [taskId, uploadDocuments, notifyIfAlreadyAnswered])
+    }, [taskId, uploadDocuments, handleTaskAlreadyAnsweredError])
 
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
