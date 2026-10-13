@@ -1,8 +1,9 @@
-import { Fragment, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { useStore } from '@tanstack/react-form'
 
 import { asMutable } from '@utils/shared/array/asMutable'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
+import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { type ChipSize, type ChipVariant } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
@@ -54,6 +55,7 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
   render: function Render({ group, label, prompt, options, size, variant, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
     const accessibleLabel = prompt ?? label
     const pick = useStore(group.store, state => getPickedValue(state.values))
+    const followUp = pick ? renderFollowUp?.(pick) : null
 
     const notifyPick = (value: string | null) => {
       if (value !== pick) onPickChange?.(value)
@@ -101,7 +103,12 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
             </group.AppField>
           )
           : null}
-        {renderFollowUp && pick ? <Fragment key={pick}>{renderFollowUp(pick)}</Fragment> : null}
+        {followUp != null && (
+          // No exit animation: changing the pick clears the follow-up's fields at once, so a closing copy would empty first.
+          <AnimatedElement key={pick} variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp'>
+            {followUp}
+          </AnimatedElement>
+        )}
       </UnifiedAskFormStepShell>
     )
   },

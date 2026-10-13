@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { isCompletedTask, isIncompleteTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
+import { AnimatedPresenceList } from '@components/utility/AnimatedPresenceList/AnimatedPresenceList'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
@@ -17,8 +18,9 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
   const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const requestAnimationFrameRef = useRef<number | null>(null)
 
+  // A completing task briefly renders twice under one id; ignoring null keeps the exiting row from erasing the new one.
   const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
-    taskListItemRefs.current[id] = el
+    if (el) taskListItemRefs.current[id] = el
   }, [])
 
   const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
@@ -55,15 +57,18 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
 
   return (
     <VStack className='Layer__tasks-list'>
-      {pageItems.map((task, index) => (
-        <TasksListItem
-          ref={setItemRef(task.id)}
-          key={task.id}
-          task={task}
-          defaultOpen={index === indexFirstIncomplete}
-          onExpandTask={onExpandTask(task.id)}
-        />
-      ))}
+      <AnimatedPresenceList key={pageIndex}>
+        {pageItems.map((task, index) => (
+          <TasksListItem
+            ref={setItemRef(task.id)}
+            // Completion changes the key, so the row collapses out here and back in at the bottom.
+            key={`${task.id}:${isCompletedTask(task)}`}
+            task={task}
+            defaultOpen={index === indexFirstIncomplete}
+            onExpandTask={onExpandTask(task.id)}
+          />
+        ))}
+      </AnimatedPresenceList>
       {tasks.length > pageSize && (
         <Pagination
           currentPage={pageIndex + 1}

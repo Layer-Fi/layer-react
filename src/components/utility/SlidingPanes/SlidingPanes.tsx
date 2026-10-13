@@ -1,6 +1,6 @@
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotionConfig } from 'motion/react'
 
 import './slidingPanes.scss'
 
@@ -31,7 +31,7 @@ export const SlidingPanes = ({
   className,
   children,
 }: SlidingPanesProps) => {
-  const shouldReduceMotion = useReducedMotion()
+  const shouldReduceMotion = useReducedMotionConfig()
   const [paneNode, setPaneNode] = useState<HTMLDivElement | null>(null)
   const [paneHeight, setPaneHeight] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -50,8 +50,6 @@ export const SlidingPanes = ({
     return () => observer.disconnect()
   }, [paneNode])
 
-  const transition = shouldReduceMotion ? { duration: 0 } : PANE_TRANSITION
-
   const onSettled = useCallback(() => {
     if (!keepInView) return
 
@@ -67,7 +65,7 @@ export const SlidingPanes = ({
       className={classNames('Layer__SlidingPanes', className)}
       initial={false}
       animate={paneHeight === null ? undefined : { height: paneHeight }}
-      transition={transition}
+      transition={PANE_TRANSITION}
       onAnimationComplete={onSettled}
     >
       <AnimatePresence initial={false} mode='popLayout' custom={direction}>
@@ -79,7 +77,7 @@ export const SlidingPanes = ({
           initial='enter'
           animate='center'
           exit='exit'
-          transition={transition}
+          transition={PANE_TRANSITION}
         >
           {children}
         </motion.div>

@@ -1,4 +1,5 @@
 import { type PropsWithChildren, useMemo } from 'react'
+import { MotionConfig } from 'motion/react'
 import { SWRConfig } from 'swr'
 
 import { type LayerThemeConfig } from '@internal-types/shared/layerContext'
@@ -79,7 +80,9 @@ export const LayerProvider = ({
             businessAccessToken={businessAccessToken}
           >
             <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} slots={{ Toasts: ToastsContainer }} />
+              <MotionConfig reducedMotion='user'>
+                <BusinessProvider {...restProps} slots={{ Toasts: ToastsContainer }} />
+              </MotionConfig>
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>

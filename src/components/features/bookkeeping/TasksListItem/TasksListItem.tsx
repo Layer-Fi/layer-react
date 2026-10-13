@@ -5,6 +5,7 @@ import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeepi
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { TasksListItemHeader } from '@features/bookkeeping/TasksListItem/TasksListItemHeader'
 import { useTasksListItemOpenState } from '@features/bookkeeping/TasksListItem/useTasksListItemOpenState'
 import { UnifiedAskForm } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskForm'
@@ -31,12 +32,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
 
   const bodyClassName = classNames(
     'Layer__tasks-list-item__body',
-    isOpen && 'Layer__tasks-list-item__body--expanded',
     isCompletedTask(task) && 'Layer__tasks-list-item--completed',
   )
 
   return (
-    <div className='Layer__tasks-list-item-wrapper' ref={ref}>
+    <AnimatedElement variant='collapse' className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={classNames('Layer__tasks-list-item', isOpen && 'Layer__tasks-list-item__expanded')}>
         <TasksListItemHeader
           task={task}
@@ -44,11 +44,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
           onClick={toggle}
           backAction={navigation.canGoBack ? { isDisabled: isSubmitting || navigation.routing === 'loading', onBack: navigation.goBack } : null}
         />
-        <div className={bodyClassName} aria-hidden={!isOpen}>
+        <AnimatedElement variant='expand' isVisible={isOpen} className={bodyClassName} aria-hidden={!isOpen}>
           <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded={isOpen} />
-        </div>
+        </AnimatedElement>
       </div>
-    </div>
+    </AnimatedElement>
   )
 })
 
