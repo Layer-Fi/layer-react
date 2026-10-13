@@ -48,6 +48,17 @@ const TakeoverHarness = ({ tasks, initialTaskId }: { tasks: ReadonlyArray<Unifie
   return <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
 }
 
+const ReopenHarness = ({ tasks, reopenId }: { tasks: ReadonlyArray<UnifiedAskFormTask>, reopenId: string }) => {
+  const [taskId, setTaskId] = useState<string | null>(COSTCO.id)
+
+  return (
+    <>
+      <button type='button' onClick={() => setTaskId(reopenId)}>Reopen</button>
+      <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
+    </>
+  )
+}
+
 const renderTakeover = ({ tasks = TASKS, taskId = COSTCO.id }: { tasks?: ReadonlyArray<UnifiedAskFormTask>, taskId?: string } = {}) => ({
   user: userEvent.setup(),
   ...render(<TakeoverHarness tasks={tasks} initialTaskId={taskId} />, { wrapper: LayerTestProvider }),
@@ -105,6 +116,34 @@ describe('TasksTakeover', () => {
 
     expect(await screen.findByRole('heading', { name: 'Adobe subscription' })).toBeInTheDocument()
     expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
+  })
+
+  it('keeps the count through close and starts a fresh list on reopen', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(<ReopenHarness tasks={TASKS} reopenId={STAPLES.id} />, { wrapper: LayerTestProvider })
+
+    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Close' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    rerender(<ReopenHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} reopenId={STAPLES.id} />)
+    await user.click(screen.getByRole('button', { name: 'Reopen' }))
+
+    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
+    expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
+  })
+
+  it('starts a fresh list after the shown task vanished and closed the takeover with the id still set', async () => {
+    const { rerender } = renderTakeover()
+    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
+
+    rerender(<TakeoverHarness tasks={[AMAZON]} initialTaskId={COSTCO.id} />)
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    rerender(<TakeoverHarness tasks={[STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
+
+    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
+    expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
   })
 
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
