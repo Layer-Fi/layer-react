@@ -6,8 +6,10 @@ import { type UploadedFile } from '@blocks/Form/FormFileUploadField'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
 
-// The API stores at most this many files per upload request.
-const MAX_FILES_PER_UPLOAD = 10
+// The upload step carries no limits, so these mirror what the upload endpoint enforces: at most
+// 10 files per request and the default ~10 MB multipart file cap.
+const MAX_FILES = 10
+const MAX_FILE_SIZE_IN_BYTES = 10_000_000
 
 export type UnifiedAskFormUploadStepValues = { files: UploadedFile[] }
 
@@ -43,7 +45,8 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
               showLabel={false}
               accept={accept}
               multiple={multiple}
-              maxFiles={MAX_FILES_PER_UPLOAD}
+              maxFiles={MAX_FILES}
+              maxFileSizeInBytes={MAX_FILE_SIZE_IN_BYTES}
               upload={upload}
             />
           )}

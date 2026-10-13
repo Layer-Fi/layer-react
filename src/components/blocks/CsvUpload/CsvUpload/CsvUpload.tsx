@@ -1,118 +1,87 @@
-import { useCallback, useRef, useState } from 'react'
-import classNames from 'classnames'
-import { CloudUpload } from 'lucide-react'
-import { type FileRejection, useDropzone } from 'react-dropzone'
-import { Trans, useTranslation } from 'react-i18next'
+import { type ReactNode, useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { DataState, DataStateStatus } from '@ui/DataState/DataState'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
+import { DropZone } from '@ui/DropZone/DropZone'
+import { FileRow } from '@ui/FileRow/FileRow'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
-import { CsvUploadFileRow } from '@blocks/CsvUpload/CsvUploadFileRow/CsvUploadFileRow'
-
-import './csvUpload.scss'
 
 type CsvUploadProps = {
   file: File | null
   onFileSelected: (file: File | null) => void
+  /** Collapses the zone into the chosen file's row, which still accepts a replacement drop. */
   replaceDropTarget?: boolean
+  slots?: { Actions?: ReactNode, Footer?: ReactNode }
 }
 
-export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: CsvUploadProps) => {
+const CSV_EXTENSIONS = ['csv']
+
+export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false, slots }: CsvUploadProps) => {
   const { t } = useTranslation()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  const handleBrowseClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    fileInputRef.current?.click()
-  }, [])
 
   const onDrop = useCallback(
-    ([firstFile, ...restFiles]: File[], rejections: FileRejection[] = []) => {
-      const hasTooManyFiles = rejections.some(r => r.errors.some(e => e.code === 'too-many-files'))
-      if (restFiles.length > 0 || hasTooManyFiles) {
+    ([firstFile, ...restFiles]: File[]) => {
+      if (restFiles.length > 0) {
         onFileSelected(null)
         setErrorMessage(t('upload:validation.too_many_files_selected', 'Too many files selected'))
         return
       }
 
-      if (rejections.length > 0 || !firstFile) {
+      if (!firstFile) {
         onFileSelected(null)
         setErrorMessage(t('upload:error.unknown_upload_error', 'Unknown upload error'))
         return
       }
 
       const maybeErrorMessage = validateCsvFile(firstFile, t)
-      if (!maybeErrorMessage) {
-        onFileSelected(firstFile)
-        setErrorMessage(undefined)
-      }
-      else {
-        onFileSelected(null)
-        setErrorMessage(maybeErrorMessage)
-      }
+      onFileSelected(maybeErrorMessage ? null : firstFile)
+      setErrorMessage(maybeErrorMessage ?? undefined)
     },
     [onFileSelected, t],
   )
 
-  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
+  const clearFile = () => onFileSelected(null)
 
-    const fileArray = Array.from(files)
-    onDrop(fileArray)
-  }, [onDrop])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const dropZoneProps = {
+    accept: CSV_EXTENSIONS,
+    size: 'lg' as const,
+    isInvalid: errorMessage !== undefined,
+    rejectDescription: t('upload:validation.file_must_be_csv', 'File must be in CSV format'),
     onDrop,
-    multiple: false,
-    noClick: true,
-    noKeyboard: true,
-  })
-
-  if (file && replaceDropTarget) {
-    return <CsvUploadFileRow file={file} onClearFile={() => onFileSelected(null)} asDropTarget />
+    slots,
   }
+
+  const fileRow = (isGrouped: boolean, onReplace?: () => void) => file && (
+    <FileRow
+      name={file.name}
+      sizeInBytes={file.size}
+      isGrouped={isGrouped}
+      replaceLabel={t('upload:action.replace_file', 'Replace')}
+      onReplace={onReplace}
+      onRemove={clearFile}
+    />
+  )
 
   return (
     <VStack gap='xs'>
-      <VStack
-        className={classNames(
-          'Layer__csv-upload',
-          { 'Layer__csv-upload--drag-active': isDragActive },
-        )}
-        align='center'
-        justify='center'
-        gap='xs'
-        {...getRootProps()}
-      >
-        <input {...getInputProps()} />
-        <HStack align='center' gap='xs'>
-          <CloudUpload size={12} />
-          <P size='sm'>
-            <Trans
-              i18nKey='upload:label.drag_drop_file_browse'
-              defaults='Drag and drop a file, or <browse>Browse</browse>.'
-              components={{
-                browse: <button type='button' className='Layer__csv-upload__browse-link' onClick={handleBrowseClick} />,
-              }}
-            />
-          </P>
-          <input type='file' ref={fileInputRef} style={{ display: 'none' }} accept='.csv' onChange={handleFileChange} />
-        </HStack>
-        <P size='sm' variant='subtle'>{t('upload:validation.file_must_be_csv', 'File must be in CSV format')}</P>
-        {errorMessage && (
-          <DataState
-            className='Layer__csv-upload__error-message'
-            status={DataStateStatus.failed}
-            title={t('upload:error.cannot_upload_file', 'Cannot upload file')}
-            description={errorMessage}
-            inline
+      {file && replaceDropTarget
+        ? (
+          <DropZone {...dropZoneProps} slots={undefined} title={t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')}>
+            {({ open }) => fileRow(true, open)}
+          </DropZone>
+        )
+        : (
+          <DropZone
+            {...dropZoneProps}
+            title={t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')}
+            description={t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to 2 MB.')}
+            actionLabel={t('upload:action.choose_csv', 'Choose CSV')}
           />
         )}
-      </VStack>
-      {file && <CsvUploadFileRow file={file} onClearFile={() => onFileSelected(null)} />}
+      {errorMessage && <Span size='sm' status='error'>{errorMessage}</Span>}
+      {file && !replaceDropTarget && fileRow(false)}
     </VStack>
   )
 }

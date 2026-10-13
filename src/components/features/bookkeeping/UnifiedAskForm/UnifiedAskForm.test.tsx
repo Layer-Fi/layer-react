@@ -425,16 +425,13 @@ describe('UnifiedAskForm', () => {
 
     server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: keptId, fileName: 'receipt.pdf' }] }))
     await uploadFile(user, container, 'receipt.pdf')
-    expect(await screen.findByText('receipt.pdf')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Remove receipt.pdf' })).toBeInTheDocument()
 
     server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c2', fileName: 'invoice.pdf' }] }))
     await uploadFile(user, container, 'invoice.pdf')
-    expect(await screen.findByText('invoice.pdf')).toBeInTheDocument()
 
-    const [, removeInvoice] = screen.getAllByRole('button', { name: 'Remove' })
-    if (!removeInvoice) throw new Error('Expected a Remove button for each file')
-    await user.click(removeInvoice)
-    await waitFor(() => expect(screen.queryByText('invoice.pdf')).not.toBeInTheDocument())
+    await user.click(await screen.findByRole('button', { name: 'Remove invoice.pdf' }))
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove invoice.pdf' })).not.toBeInTheDocument())
 
     await user.click(screen.getByRole('button', { name: 'Submit' }))
 

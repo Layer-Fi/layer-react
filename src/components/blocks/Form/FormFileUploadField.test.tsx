@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import type userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -17,40 +17,54 @@ const renderUploadField = ({ initialFiles = [], ...props }: UploadFieldProps = {
     { defaultValue: initialFiles, userOptions: { applyAccept: false } },
   )
 
-const selectFiles = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, ...names: string[]) => {
+const selectFiles = async (user: ReturnType<typeof userEvent.setup>, container: HTMLElement, ...files: Array<string | File>) => {
   const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]')
   if (!fileInput) throw new Error('No file input rendered')
 
-  await user.upload(fileInput, names.map(name => new File(['content'], name)))
+  await user.upload(fileInput, files.map(file => (typeof file === 'string' ? new File(['content'], file) : file)))
 }
+
+const expectListed = (...names: string[]) => waitFor(() => {
+  expect(screen.queryByText('Uploading…')).not.toBeInTheDocument()
+  names.forEach(name => expect(screen.getByRole('button', { name: `Remove ${name}` })).toBeInTheDocument())
+})
 
 const dropFiles = (...names: string[]) => {
   const files = names.map(name => new File(['content'], name))
-  return fireEvent.drop(screen.getByText(/drag and drop/), { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
+  return fireEvent.drop(screen.getByText(/^Drag .* here$/), { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
 }
 
 const flushDrop = () => act(() => new Promise(resolve => setTimeout(resolve, 0)))
 
 describe('FormFileUploadField', () => {
-  it('lists every uploaded file and offers to add more', async () => {
-    const { user, container } = renderUploadField({ multiple: true })
+  it('lists every uploaded file in one container with the count and offers to add more', async () => {
+    const { user, container } = renderUploadField({ multiple: true, maxFiles: 3 })
 
     await selectFiles(user, container, 'one.pdf', 'two.pdf')
 
-    expect(await screen.findByText('one.pdf')).toBeInTheDocument()
-    expect(screen.getByText('two.pdf')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Add more files' })).toBeInTheDocument()
+    await expectListed('one.pdf', 'two.pdf')
+    expect(screen.getByText(/^2 of 3 added/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Add files' })).toBeInTheDocument()
+  })
+
+  it('swaps the drop area for a notice once the limit is reached', async () => {
+    const { user, container } = renderUploadField({ multiple: true, maxFiles: 2 })
+
+    await selectFiles(user, container, 'one.pdf', 'two.pdf')
+
+    expect(await screen.findByText('2 of 2 files added. Remove one to add another.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Add files' })).not.toBeInTheDocument()
   })
 
   it('replaces the file when only one is allowed', async () => {
     const { user, container } = renderUploadField({ initialFiles: [{ id: 'old', name: 'old.pdf' }] })
 
-    expect(screen.getByRole('button', { name: 'Replace file' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Replace' })).toBeInTheDocument()
 
     await selectFiles(user, container, 'new.pdf')
 
-    expect(await screen.findByText('new.pdf')).toBeInTheDocument()
-    expect(screen.queryByText('old.pdf')).not.toBeInTheDocument()
+    await expectListed('new.pdf')
+    expect(screen.queryByRole('button', { name: 'Remove old.pdf' })).not.toBeInTheDocument()
   })
 
   it('names the accepted types and skips the upload for a rejected file', async () => {
@@ -63,13 +77,31 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
-  it('says so when the upload fails', async () => {
-    const { user, container } = renderUploadField({ upload: () => Promise.resolve(null) })
+  it('names a file over the size limit and skips its upload', async () => {
+    const upload = vi.fn(toUploaded)
+    const { user, container } = renderUploadField({ upload, maxFileSizeInBytes: 10 })
+
+    await selectFiles(user, container, new File(['more than ten bytes'], 'big.pdf'))
+
+    expect(await screen.findByText('big.pdf is 19 bytes. Files must be under 10 bytes.')).toBeInTheDocument()
+    expect(upload).not.toHaveBeenCalled()
+  })
+
+  it('marks a failed upload on its row and retries it', async () => {
+    const upload = vi.fn<FormFileUploadFieldProps['upload']>()
+      .mockResolvedValueOnce(null)
+      .mockImplementation(toUploaded)
+    const { user, container } = renderUploadField({ upload })
 
     await selectFiles(user, container, 'receipt.pdf')
 
-    expect(await screen.findByText('Some files couldn’t be uploaded. Try again.')).toBeInTheDocument()
-    expect(screen.queryByText('receipt.pdf')).not.toBeInTheDocument()
+    expect(await screen.findByText('Upload failed. Check your connection.')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+
+    await waitFor(() => expect(screen.queryByText('Upload failed. Check your connection.')).not.toBeInTheDocument())
+    expect(upload).toHaveBeenCalledTimes(2)
+    expect(screen.getByRole('button', { name: 'Replace' })).toBeInTheDocument()
   })
 
   it('uploads files dropped onto the field', async () => {
@@ -77,8 +109,7 @@ describe('FormFileUploadField', () => {
 
     dropFiles('one.pdf', 'two.pdf')
 
-    expect(await screen.findByText('one.pdf')).toBeInTheDocument()
-    expect(screen.getByText('two.pdf')).toBeInTheDocument()
+    await expectListed('one.pdf', 'two.pdf')
   })
 
   it('rejects a drop of several files when only one is allowed', async () => {
@@ -99,7 +130,21 @@ describe('FormFileUploadField', () => {
     await flushDrop()
 
     expect(isDefaultAllowed).toBe(false)
-    expect(screen.queryByText('one.pdf')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Remove one.pdf' })).not.toBeInTheDocument()
     expect(upload).not.toHaveBeenCalled()
+  })
+
+  it('lists files without a drop area or remove action when read only', () => {
+    renderUploadField({ isReadOnly: true, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
+
+    expect(screen.getByText('receipt')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument()
+    expect(screen.queryByText(/^Drag .* here$/)).not.toBeInTheDocument()
+  })
+
+  it('says so when a read-only field holds no files', () => {
+    renderUploadField({ isReadOnly: true })
+
+    expect(screen.getByText('No files uploaded')).toBeInTheDocument()
   })
 })
