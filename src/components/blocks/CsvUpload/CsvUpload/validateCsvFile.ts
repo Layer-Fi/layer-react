@@ -26,7 +26,7 @@ export const validateCsvFile = ({ file, t, formatFileSize }: ValidateCsvFileOpti
   }
 
   if (file.size > CSV_MAX_FILE_SIZE_IN_BYTES) {
-    return t('upload:validation.file_exceeds_size_limit', 'File exceeds the size limit of {{maxSize}}', { maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES) })
+    return t('upload:validation.file_exceeds_max_size', 'File exceeds the size limit of {{maxSize}}', { maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES) })
   }
 
   return null

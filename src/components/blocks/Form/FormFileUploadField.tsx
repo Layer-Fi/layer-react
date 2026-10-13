@@ -195,7 +195,14 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
     if (!multiple) {
       const [file] = files
-      if (pending.length > 0) return pendingRows({ isGrouped: false })
+      // Stays mounted while uploading and at the limit so a stray drop never opens the file in the tab.
+      if (pending.length > 0) {
+        return (
+          <DropZone {...dropZoneProps} title={getTitle()}>
+            {() => pendingRows({ isGrouped: true })}
+          </DropZone>
+        )
+      }
       if (!file) return emptyDropZone({ isEmbedded: false })
 
       return (
@@ -222,12 +229,16 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
         {pendingRows({ isGrouped: true })}
         {isAtLimit && fileLimit !== undefined
           ? (
-            <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
-              {t('blocks:Form.FormFileUploadField.label.at_limit', '{{count}} of {{limit}} files added. Remove one to add another.', {
-                count: heldCount,
-                limit: formatNumber(fileLimit),
-              })}
-            </Span>
+            <DropZone {...dropZoneProps} isDisabled isEmbedded title={getTitle()}>
+              {() => (
+                <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
+                  {t('blocks:Form.FormFileUploadField.label.at_limit', '{{count}} of {{limit}} files added. Remove one to add another.', {
+                    count: heldCount,
+                    limit: formatNumber(fileLimit),
+                  })}
+                </Span>
+              )}
+            </DropZone>
           )
           : emptyDropZone({ isEmbedded: true })}
       </VStack>

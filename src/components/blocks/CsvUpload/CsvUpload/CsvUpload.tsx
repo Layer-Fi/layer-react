@@ -18,25 +18,27 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   const { formatFileSize } = useIntlFormatter()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
+  // A rejected drop reports the problem and leaves any already-chosen file in place.
   const onDrop = ([firstFile, ...restFiles]: File[]) => {
     if (restFiles.length > 0) {
-      onFileSelected(null)
       setErrorMessage(t('upload:validation.too_many_files_selected', 'Too many files selected'))
       return
     }
 
     if (!firstFile) {
-      onFileSelected(null)
       setErrorMessage(t('upload:error.unknown_upload_error', 'Unknown upload error'))
       return
     }
 
     const maybeErrorMessage = validateCsvFile({ file: firstFile, t, formatFileSize })
-    onFileSelected(maybeErrorMessage ? null : firstFile)
     setErrorMessage(maybeErrorMessage ?? undefined)
+    if (!maybeErrorMessage) onFileSelected(firstFile)
   }
 
-  const clearFile = () => onFileSelected(null)
+  const clearFile = () => {
+    setErrorMessage(undefined)
+    onFileSelected(null)
+  }
 
   const title = t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')
 

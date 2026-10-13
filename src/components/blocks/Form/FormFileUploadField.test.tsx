@@ -124,6 +124,19 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
+  it('keeps catching drops once the limit is reached', async () => {
+    const upload = vi.fn(toUploaded)
+    renderUploadField({ upload, multiple: true, maxFiles: 1, initialFiles: [{ id: 'held', name: 'held.pdf' }] })
+
+    const notice = screen.getByText('1 of 1 files added. Remove one to add another.')
+    const files = [new File(['content'], 'extra.pdf')]
+    const isDefaultAllowed = fireEvent.drop(notice, { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
+    await flushDrop()
+
+    expect(isDefaultAllowed).toBe(false)
+    expect(upload).not.toHaveBeenCalled()
+  })
+
   it('ignores a drop while the field is disabled', async () => {
     const upload = vi.fn(toUploaded)
     renderUploadField({ upload, isDisabled: true })
