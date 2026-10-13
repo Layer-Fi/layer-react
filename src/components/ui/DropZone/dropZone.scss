@@ -28,18 +28,17 @@
 }
 
 .Layer__UI__DropZone__Prompt {
-  cursor: pointer;
-
   &:not(:first-child) {
     border-block-start: 1px dashed var(--color-base-300);
   }
 
-  &:hover {
-    background: var(--color-base-50);
-  }
-
   &[data-pressable] {
     min-block-size: 44px;
+    cursor: pointer;
+  }
+
+  &[data-pressable]:hover {
+    background: var(--color-base-50);
   }
 
   &[data-pressable]:focus-visible {

@@ -1,4 +1,4 @@
-import { type KeyboardEvent, type MouseEvent } from 'react'
+import { type KeyboardEvent } from 'react'
 import { CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -23,13 +23,12 @@ type PromptProps = DropZonePromptProps & {
   onOpen: () => void
 }
 
-const isFromButton = (event: MouseEvent<HTMLElement>) => event.target instanceof Element && event.target.closest('button') !== null
-
 const getTapTargetProps = (title: string, isDisabled: boolean, onOpen: () => void) => ({
   'role': 'button' as const,
   'tabIndex': isDisabled ? undefined : 0,
   'aria-label': title,
   'aria-disabled': isDisabled || undefined,
+  'onClick': onOpen,
   'onKeyDown': (event: KeyboardEvent<HTMLElement>) => {
     if (event.key !== 'Enter' && event.key !== ' ') return
     event.preventDefault()
@@ -48,19 +47,12 @@ export const DropZonePrompt = ({ title, description, actionLabel, size, isDraggi
   const textStatus = isDisabled ? 'disabled' : undefined
   const textAlign = isLarge ? 'center' : undefined
 
-  const interactionProps = {
-    onClick: (event: MouseEvent<HTMLElement>) => {
-      if (!isFromButton(event)) onOpen()
-    },
-    ...(isPressable && getTapTargetProps(title, isDisabled, onOpen)),
-  }
-
   return (
     <Layout
       className='Layer__UI__DropZone__Prompt'
       {...toDataProperties({ pressable: isPressable, disabled: isDisabled })}
       {...padding}
-      {...interactionProps}
+      {...(isPressable && getTapTargetProps(title, isDisabled, onOpen))}
       align='center'
       gap='sm'
     >
