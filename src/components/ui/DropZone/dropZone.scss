@@ -1,21 +1,17 @@
 .Layer__UI__DropZone {
+  overflow: hidden;
   border-radius: var(--border-radius-sm);
   border: 1px dashed var(--color-base-400);
   background: var(--color-base-0);
-  cursor: pointer;
   transition: border-color 100ms ease-out, background-color 100ms ease-out, box-shadow 100ms ease-out;
 
-  &:hover {
-    border-color: var(--color-base-500);
-    background: var(--color-base-50);
+  &[data-disabled] {
+    border-color: var(--color-base-300);
   }
 
-  &:has(:focus-visible),
-  &[data-pressable]:focus-visible {
-    box-shadow:
-      0 0 0 3px rgb(26 26 26 / 8%),
-      0 0 0 1px var(--color-base-700);
-    outline: none;
+  &[data-filled] {
+    border-style: solid;
+    border-color: var(--color-base-200);
   }
 
   &[data-invalid] {
@@ -24,35 +20,36 @@
   }
 
   &[data-dragging] {
-    box-shadow: 0 0 0 3px rgb(26 26 26 / 8%);
-    background: var(--color-base-50);
+    box-shadow: 0 0 0 3px var(--base-transparent-8);
     border-style: solid;
     border-color: var(--color-dark);
+    background: var(--color-base-50);
   }
+}
 
-  // Width 0, not `none`: `none` leaves the width at `medium`, which [data-custom] would bring back by setting a style.
-  &[data-embedded] {
-    border-radius: 0;
-    border: 0;
+.Layer__UI__DropZone__Prompt {
+  cursor: pointer;
+
+  &:not(:first-child) {
     border-block-start: 1px dashed var(--color-base-300);
   }
 
-  &[data-custom] {
-    border-style: solid;
-    border-color: var(--color-base-200);
-    cursor: default;
+  &:hover {
+    background: var(--color-base-50);
+  }
+
+  &[data-pressable] {
+    min-block-size: 44px;
+  }
+
+  &[data-pressable]:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--color-base-700);
+    outline: none;
   }
 
   &[data-disabled] {
     background: var(--color-base-50);
     cursor: not-allowed;
-    border-color: var(--color-base-300);
-  }
-}
-
-.Layer__UI__DropZone__Body {
-  &[data-pressable] {
-    min-block-size: 44px;
   }
 }
 
@@ -77,8 +74,4 @@
   &[data-disabled] {
     color: var(--color-base-500);
   }
-}
-
-.Layer__UI__DropZone__Text {
-  min-inline-size: 0;
 }

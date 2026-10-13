@@ -2,7 +2,6 @@ import { FileSpreadsheet, FileText, Image, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getFileExtension } from '@utils/shared/file/fileName'
-import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -15,7 +14,6 @@ export type FileRowProps = {
   sizeInBytes?: number
   isUploading?: boolean
   isDisabled?: boolean
-  isGrouped?: boolean
   onReplace?: () => void
   onRemove?: () => void
 }
@@ -34,7 +32,6 @@ export const FileRow = ({
   sizeInBytes,
   isUploading = false,
   isDisabled = false,
-  isGrouped = false,
   onReplace,
   onRemove,
 }: FileRowProps) => {
@@ -50,7 +47,7 @@ export const FileRow = ({
       .join(' · ')
 
   return (
-    <HStack className='Layer__UI__FileRow' {...toDataProperties({ grouped: isGrouped })} pi='xs' pb='xs' align='center' gap='sm'>
+    <HStack className='Layer__UI__FileRow' pi='xs' pb='xs' align='center' gap='sm'>
       <HStack className='Layer__UI__FileRow__Icon' align='center' justify='center'>
         <FileTypeIcon extension={extension} />
       </HStack>
@@ -58,7 +55,7 @@ export const FileRow = ({
         <Span ellipsis noWrap>{name}</Span>
         <Span size='sm' variant='subtle' numeric='tabular-nums'>{meta}</Span>
       </VStack>
-      <HStack className='Layer__UI__FileRow__Actions' align='center' gap='3xs'>
+      <HStack align='center' gap='3xs'>
         {onReplace && (
           <Button variant='ghost' isDisabled={isDisabled} onPress={onReplace}>
             {t('ui:FileRow.action.replace', 'Replace')}

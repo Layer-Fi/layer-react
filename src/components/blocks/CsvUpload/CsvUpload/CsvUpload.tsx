@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { DropZone, type DropZoneProps } from '@ui/DropZone/DropZone'
+import { DropZone, type DropZoneRejection } from '@ui/DropZone/DropZone'
 import { FileRow } from '@ui/FileRow/FileRow'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -18,21 +18,16 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   const { formatFileSize } = useIntlFormatter()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
+  const getRejectionMessage = ({ reason, message }: DropZoneRejection) => {
+    if (reason === 'invalid') return message
+    if (reason === 'count') return t('upload:validation.too_many_files_selected', 'Too many files selected')
+    return t('upload:error.unknown_upload_error', 'Unknown upload error')
+  }
+
   // A rejected drop reports the problem and leaves any already-chosen file in place.
-  const onDrop = ([firstFile, ...restFiles]: File[]) => {
-    if (restFiles.length > 0) {
-      setErrorMessage(t('upload:validation.too_many_files_selected', 'Too many files selected'))
-      return
-    }
-
-    if (!firstFile) {
-      setErrorMessage(t('upload:error.unknown_upload_error', 'Unknown upload error'))
-      return
-    }
-
-    const maybeErrorMessage = validateCsvFile({ file: firstFile, t, formatFileSize })
-    setErrorMessage(maybeErrorMessage ?? undefined)
-    if (!maybeErrorMessage) onFileSelected(firstFile)
+  const onDrop = ([accepted]: ReadonlyArray<File>, [rejection]: ReadonlyArray<DropZoneRejection>) => {
+    setErrorMessage(rejection ? getRejectionMessage(rejection) : undefined)
+    if (!rejection && accepted) onFileSelected(accepted)
   }
 
   const clearFile = () => {
@@ -40,33 +35,26 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
     onFileSelected(null)
   }
 
-  const title = t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions')
-
-  const dropZoneProps: Pick<DropZoneProps, 'accept' | 'size' | 'isInvalid' | 'onDrop' | 'title'> = {
-    accept: ['csv'],
-    size: 'lg',
-    isInvalid: errorMessage !== undefined,
-    onDrop,
-    title,
-  }
-
   return (
     <VStack gap='xs'>
-      {file
-        ? (
-          <DropZone {...dropZoneProps}>
-            {({ open }) => <FileRow name={file.name} sizeInBytes={file.size} isGrouped onReplace={open} onRemove={clearFile} />}
-          </DropZone>
-        )
-        : (
-          <DropZone
-            {...dropZoneProps}
-            description={t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to {{maxSize}}.', {
+      <DropZone
+        accept={['csv']}
+        size='lg'
+        isInvalid={errorMessage !== undefined}
+        validate={csvFile => validateCsvFile({ file: csvFile, t, formatFileSize })}
+        onDrop={onDrop}
+        prompt={file
+          ? undefined
+          : {
+            title: t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions'),
+            description: t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to {{maxSize}}.', {
               maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES),
-            })}
-            actionLabel={t('upload:action.choose_csv', 'Choose CSV')}
-          />
-        )}
+            }),
+            actionLabel: t('upload:action.choose_csv', 'Choose CSV'),
+          }}
+      >
+        {file ? ({ open }) => <FileRow name={file.name} sizeInBytes={file.size} onReplace={open} onRemove={clearFile} /> : undefined}
+      </DropZone>
       {errorMessage && <Span size='sm' status='error'>{errorMessage}</Span>}
     </VStack>
   )

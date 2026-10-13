@@ -1,17 +1,21 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { within } from 'storybook/test'
 
-import { DropZone, type DropZoneProps } from '@ui/DropZone/DropZone'
+import { DropZone, type DropZonePromptProps, type DropZoneProps } from '@ui/DropZone/DropZone'
 import { FileRow } from '@ui/FileRow/FileRow'
 
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
-const BASE: DropZoneProps = {
+const PROMPT: DropZonePromptProps = {
   title: 'Drag a file here',
   description: 'PDF, PNG, or JPG · Up to 10 MB',
-  accept: ['pdf', 'png', 'jpg'],
   actionLabel: 'Choose file',
+}
+
+const BASE: DropZoneProps = {
+  prompt: PROMPT,
+  accept: ['pdf', 'png', 'jpg'],
   onDrop: () => {},
 }
 
@@ -19,16 +23,18 @@ const VARIANTS: ReadonlyArray<{ label: string, props?: Partial<DropZoneProps> }>
   { label: 'default' },
   { label: 'invalid', props: { isInvalid: true } },
   { label: 'disabled', props: { isDisabled: true } },
-  { label: 'touch — whole zone is the tap target', props: { title: 'Add a receipt', description: 'Photo or PDF · Up to 10 MB', actionLabel: undefined } },
-  { label: 'any file type', props: { title: 'Drag files here', description: 'Any file type · Up to 25 MB each', accept: [], actionLabel: 'Choose files' } },
+  { label: 'touch — whole zone is the tap target', props: { prompt: { title: 'Add a receipt', description: 'Photo or PDF · Up to 10 MB' } } },
+  { label: 'any file type', props: { prompt: { title: 'Drag files here', description: 'Any file type · Up to 25 MB each', actionLabel: 'Choose files' }, accept: [] } },
   {
     label: 'large',
     props: {
       size: 'lg',
-      title: 'Upload a CSV of transactions',
-      description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
+      prompt: {
+        title: 'Upload a CSV of transactions',
+        description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
+        actionLabel: 'Choose CSV',
+      },
       accept: ['csv'],
-      actionLabel: 'Choose CSV',
     },
   },
 ]
@@ -58,9 +64,19 @@ export const AllVariants: Story = {
           <DropZone {...args} {...props} />
         </Col>
       ))}
-      <Col label='custom body — a file row that accepts a replacement' inlineSize={420}>
-        <DropZone {...args}>
-          {({ open }) => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} isGrouped onReplace={open} onRemove={() => {}} />}
+      <Col label='filled — a file row that accepts a replacement' inlineSize={420}>
+        <DropZone {...args} prompt={undefined}>
+          {({ open }) => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onReplace={open} onRemove={() => {}} />}
+        </DropZone>
+      </Col>
+      <Col label='filled with room for more' inlineSize={420}>
+        <DropZone {...args} multiple prompt={{ ...PROMPT, title: 'Drag more files here', actionLabel: 'Add files' }}>
+          {() => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onRemove={() => {}} />}
+        </DropZone>
+      </Col>
+      <Col label='filled, invalid' inlineSize={420}>
+        <DropZone {...args} prompt={undefined} isInvalid>
+          {({ open }) => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onReplace={open} onRemove={() => {}} />}
         </DropZone>
       </Col>
     </Gallery>

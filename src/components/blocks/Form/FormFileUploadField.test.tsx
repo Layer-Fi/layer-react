@@ -104,6 +104,23 @@ describe('FormFileUploadField', () => {
     await expectListed('one.pdf', 'two.pdf')
   })
 
+  it('adds files dropped onto a file already in the list', async () => {
+    renderUploadField({ accept: ['pdf'], multiple: true, maxFiles: 3, initialFiles: [{ id: 'held', name: 'held.pdf' }] })
+
+    const files = [new File(['content'], 'more.pdf')]
+    fireEvent.drop(screen.getByText('held.pdf'), { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
+
+    await expectListed('held.pdf', 'more.pdf')
+  })
+
+  it('checks the accepted types only once dragged items are dropped', async () => {
+    renderUploadField({ accept: ['pdf'] })
+
+    fireEvent.dragEnter(screen.getByText('Drag a file here'), { dataTransfer: { items: [{ kind: 'file', type: 'application/pdf' }], types: ['Files'] } })
+
+    expect(await screen.findByText('Drop to upload')).toBeInTheDocument()
+  })
+
   it('rejects a drop of several files when only one is allowed', async () => {
     const upload = vi.fn(toUploaded)
     renderUploadField({ upload })

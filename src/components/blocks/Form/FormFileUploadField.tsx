@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getFileExtension } from '@utils/shared/file/fileName'
 import { tPlural } from '@utils/shared/i18n/plural'
-import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { DropZone } from '@ui/DropZone/DropZone'
+import { DropZone, type DropZonePromptProps, type DropZoneRejection } from '@ui/DropZone/DropZone'
 import { FileRow } from '@ui/FileRow/FileRow'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -46,15 +44,15 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
   const { className, inline, align, showLabel, isDisabled = false, isReadOnly = false } = props
 
   const files = field.state.value
-  const extensions = accept.map(extension => extension.toLowerCase())
   const isUploading = pending.length > 0
   const isInputDisabled = isDisabled || isUploading
   const fileLimit = multiple ? maxFiles : 1
   const heldCount = files.length + pending.length
-  const isAtLimit = multiple && fileLimit !== undefined && heldCount >= fileLimit
+  const remaining = multiple && maxFiles !== undefined ? maxFiles - heldCount : undefined
+  const isAtLimit = remaining !== undefined && remaining <= 0
 
-  const fileTypes = extensions.length > 0
-    ? formatList(extensions.map(extension => extension.toUpperCase()), { type: 'disjunction' })
+  const fileTypes = accept.length > 0
+    ? formatList(accept.map(extension => extension.toUpperCase()), { type: 'disjunction' })
     : null
 
   const uploadPending = async (toUpload: ReadonlyArray<PendingFile>) => {
@@ -75,11 +73,11 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     field.handleChange(multiple ? [...field.state.value, ...withSizes] : withSizes)
   }
 
-  const getOverLimitError = (limit: number, capacity: number) => {
-    if (capacity < limit) {
+  const getOverLimitError = (limit: number) => {
+    if (remaining !== undefined && remaining < limit) {
       return tPlural(t, 'blocks:Form.FormFileUploadField.error.over_remaining_capacity', {
-        count: capacity,
-        displayCount: formatNumber(capacity),
+        count: remaining,
+        displayCount: formatNumber(remaining),
         one: 'You can add {{displayCount}} more file.',
         other: 'You can add {{displayCount}} more files.',
       })
@@ -92,19 +90,13 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
     })
   }
 
-  const onSelect = (selected: ReadonlyArray<File>) => {
-    const isAccepted = (file: File) => extensions.length === 0 || extensions.includes(getFileExtension(file.name))
-    const isWithinSize = (file: File) => maxFileSizeInBytes === undefined || file.size <= maxFileSizeInBytes
-
-    const wrongType = selected.filter(file => !isAccepted(file))
-    const tooLarge = selected.filter(file => isAccepted(file) && !isWithinSize(file))
-    const valid = selected.filter(file => isAccepted(file) && isWithinSize(file))
-    const capacity = fileLimit === undefined ? Infinity : multiple ? fileLimit - heldCount : 1
-    const isOverLimit = valid.length > capacity
+  const getRejectionError = (rejections: ReadonlyArray<DropZoneRejection>) => {
+    const hasReason = (reason: DropZoneRejection['reason']) => rejections.some(rejection => rejection.reason === reason)
+    const tooLarge = rejections.filter(({ reason }) => reason === 'size').map(({ file }) => file)
     const [firstTooLarge] = tooLarge
 
     const errors = [
-      wrongType.length > 0 && fileTypes
+      hasReason('type') && fileTypes
         ? t('blocks:Form.FormFileUploadField.error.files_not_added', 'Some files couldn’t be added. Upload a {{fileTypes}} file instead.', { fileTypes })
         : null,
       firstTooLarge && maxFileSizeInBytes !== undefined
@@ -117,15 +109,17 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
           other: 'Some files are too large. Files must be under {{maxSize}}.',
         })
         : null,
-      isOverLimit && fileLimit !== undefined
-        ? getOverLimitError(fileLimit, capacity)
+      hasReason('count') && fileLimit !== undefined
+        ? getOverLimitError(fileLimit)
         : null,
     ].filter(message => message !== null)
 
-    setError(errors.length > 0 ? errors.join(' ') : undefined)
+    return errors.length > 0 ? errors.join(' ') : undefined
+  }
 
-    if (isOverLimit || valid.length === 0) return
-    void uploadPending(valid.map(toPending))
+  const onDrop = (accepted: ReadonlyArray<File>, rejections: ReadonlyArray<DropZoneRejection>) => {
+    setError(getRejectionError(rejections))
+    if (accepted.length > 0) void uploadPending(accepted.map(toPending))
   }
 
   const removeFile = (id: string) => field.handleChange(files.filter(file => file.id !== id))
@@ -143,44 +137,68 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
       .join(' · ')
   }
 
-  const getTitle = () => {
+  const getPrompt = (): DropZonePromptProps => {
+    const description = getDescription()
+
     if (isMobile) {
-      return multiple
-        ? t('blocks:Form.FormFileUploadField.action.add_files', 'Add files')
-        : t('blocks:Form.FormFileUploadField.action.add_file', 'Add a file')
+      return {
+        title: multiple
+          ? t('blocks:Form.FormFileUploadField.action.add_files', 'Add files')
+          : t('blocks:Form.FormFileUploadField.action.add_file', 'Add a file'),
+        description,
+      }
     }
-    if (!multiple) return t('blocks:Form.FormFileUploadField.label.drop_file', 'Drag a file here')
-    if (heldCount > 0) return t('blocks:Form.FormFileUploadField.label.drop_more_files', 'Drag more files here')
-    return t('blocks:Form.FormFileUploadField.label.drop_files', 'Drag files here')
+    if (!multiple) {
+      return {
+        title: t('blocks:Form.FormFileUploadField.label.drop_file', 'Drag a file here'),
+        description,
+        actionLabel: t('blocks:Form.FormFileUploadField.action.choose_file', 'Choose file'),
+      }
+    }
+    if (heldCount > 0) {
+      return {
+        title: t('blocks:Form.FormFileUploadField.label.drop_more_files', 'Drag more files here'),
+        description,
+        actionLabel: t('blocks:Form.FormFileUploadField.action.add_files', 'Add files'),
+      }
+    }
+    return {
+      title: t('blocks:Form.FormFileUploadField.label.drop_files', 'Drag files here'),
+      description,
+      actionLabel: t('blocks:Form.FormFileUploadField.action.choose_files', 'Choose files'),
+    }
   }
 
-  const getActionLabel = () => {
-    if (isMobile) return undefined
-    if (!multiple) return t('blocks:Form.FormFileUploadField.action.choose_file', 'Choose file')
-    if (heldCount > 0) return t('blocks:Form.FormFileUploadField.action.add_files', 'Add files')
-    return t('blocks:Form.FormFileUploadField.action.choose_files', 'Choose files')
+  const renderRows = ({ open }: { open: () => void }) => {
+    const pendingRows = pending.map(({ key, file }) => <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading />)
+    const uploadedRows = files.map(({ id, name, sizeInBytes }) => (
+      <FileRow
+        key={id}
+        name={name}
+        sizeInBytes={sizeInBytes}
+        isDisabled={isInputDisabled}
+        onReplace={multiple ? undefined : open}
+        onRemove={() => removeFile(id)}
+      />
+    ))
+
+    if (!multiple) return isUploading ? pendingRows : uploadedRows
+
+    return (
+      <>
+        {uploadedRows}
+        {pendingRows}
+        {isAtLimit && fileLimit !== undefined && (
+          <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
+            {t('blocks:Form.FormFileUploadField.label.at_limit', '{{count}} of {{limit}} files added. Remove one to add another.', {
+              count: heldCount,
+              limit: formatNumber(fileLimit),
+            })}
+          </Span>
+        )}
+      </>
+    )
   }
-
-  const dropZoneProps = { accept: extensions, multiple, isDisabled: isInputDisabled, isInvalid, onDrop: onSelect }
-
-  const emptyDropZone = ({ isEmbedded }: { isEmbedded: boolean }) => (
-    <DropZone {...dropZoneProps} isEmbedded={isEmbedded} title={getTitle()} description={getDescription()} actionLabel={getActionLabel()} />
-  )
-
-  const pendingRows = ({ isGrouped }: { isGrouped: boolean }) => pending.map(({ key, file }) => (
-    <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading isGrouped={isGrouped} />
-  ))
-
-  const uploadedRows = ({ isGrouped }: { isGrouped: boolean }) => files.map(({ id, name, sizeInBytes }) => (
-    <FileRow
-      key={id}
-      name={name}
-      sizeInBytes={sizeInBytes}
-      isGrouped={isGrouped}
-      isDisabled={isInputDisabled}
-      onRemove={() => removeFile(id)}
-    />
-  ))
 
   const renderControl = () => {
     if (isReadOnly) {
@@ -188,60 +206,26 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
       return (
         <VStack className='Layer__FormFileUploadField__List'>
-          {files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} isGrouped />)}
+          {files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} />)}
         </VStack>
       )
     }
 
-    if (!multiple) {
-      const [file] = files
-      // Stays mounted while uploading and at the limit so a stray drop never opens the file in the tab.
-      if (pending.length > 0) {
-        return (
-          <DropZone {...dropZoneProps} title={getTitle()}>
-            {() => pendingRows({ isGrouped: true })}
-          </DropZone>
-        )
-      }
-      if (!file) return emptyDropZone({ isEmbedded: false })
-
-      return (
-        <DropZone {...dropZoneProps} title={getTitle()}>
-          {({ open }) => (
-            <FileRow
-              name={file.name}
-              sizeInBytes={file.sizeInBytes}
-              isGrouped
-              isDisabled={isInputDisabled}
-              onReplace={open}
-              onRemove={() => removeFile(file.id)}
-            />
-          )}
-        </DropZone>
-      )
-    }
-
-    if (heldCount === 0) return emptyDropZone({ isEmbedded: false })
+    const showsPrompt = multiple ? !isAtLimit : heldCount === 0
 
     return (
-      <VStack className='Layer__FormFileUploadField__List' {...toDataProperties({ invalid: isInvalid })}>
-        {uploadedRows({ isGrouped: true })}
-        {pendingRows({ isGrouped: true })}
-        {isAtLimit && fileLimit !== undefined
-          ? (
-            <DropZone {...dropZoneProps} isDisabled isEmbedded title={getTitle()}>
-              {() => (
-                <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
-                  {t('blocks:Form.FormFileUploadField.label.at_limit', '{{count}} of {{limit}} files added. Remove one to add another.', {
-                    count: heldCount,
-                    limit: formatNumber(fileLimit),
-                  })}
-                </Span>
-              )}
-            </DropZone>
-          )
-          : emptyDropZone({ isEmbedded: true })}
-      </VStack>
+      <DropZone
+        accept={accept}
+        multiple={multiple}
+        maxFiles={remaining}
+        maxFileSizeInBytes={maxFileSizeInBytes}
+        isDisabled={isInputDisabled || isAtLimit}
+        isInvalid={isInvalid}
+        onDrop={onDrop}
+        prompt={showsPrompt ? getPrompt() : undefined}
+      >
+        {heldCount > 0 ? renderRows : undefined}
+      </DropZone>
     )
   }
 
