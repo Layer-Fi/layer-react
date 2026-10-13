@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
+import { useDelayedValue } from '@hooks/utils/debouncing/useDelayedValue'
 import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
-import { useDelayedValue } from '@hooks/utils/react/useDelayedValue'
 import { COLLAPSE_EXIT_MS } from '@components/utility/AnimatedPresenceElement/variants'
 
 // Waits for the completed row above to finish collapsing, then pauses, so the list never moves twice at once.

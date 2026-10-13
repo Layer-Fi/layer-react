@@ -11,8 +11,6 @@ import { type SearchComboBoxSelection } from '@blocks/Form/FormSearchComboBoxFie
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
 
-import './unifiedAskFormChoiceStep.scss'
-
 export type UnifiedAskFormChoiceStepValues = {
   choice: string | null
   selection: SearchComboBoxSelection | null
