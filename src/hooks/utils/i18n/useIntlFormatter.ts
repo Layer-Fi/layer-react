@@ -21,7 +21,9 @@ import type { IntlFormatter } from '@utils/shared/i18n/intlFormatter'
 import { formatList as formatListFn, type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import {
   type CurrencyFormatFn,
+  type FileSizeFormatFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
+  formatFileSize as formatFileSizeFn,
   formatNumber as formatNumberFn,
   formatPercent as formatPercentFn,
   type NumberFormatFn,
@@ -69,6 +71,10 @@ export function useIntlFormatter(): IntlFormatter {
     return formatListFn(intl, labels, options)
   }, [intl])
 
+  const formatFileSize: FileSizeFormatFn = useCallback((bytes) => {
+    return formatFileSizeFn(intl, bytes)
+  }, [intl])
+
   return useMemo(
     () => ({
       formatCurrencyFromCents,
@@ -80,6 +86,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMinutesAsDuration,
       formatSecondsAsDuration,
       formatList,
+      formatFileSize,
     }),
     [
       formatCurrencyFromCents,
@@ -91,6 +98,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMinutesAsDuration,
       formatSecondsAsDuration,
       formatList,
+      formatFileSize,
     ],
   )
 }

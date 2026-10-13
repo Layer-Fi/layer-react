@@ -1,115 +1,127 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/shared/i18n/plural'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@ui/Button/Button'
-import { FileInput } from '@ui/Input/FileInput'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { DropZone } from '@ui/DropZone/DropZone'
+import { type DropZoneRejection } from '@ui/DropZone/dropZoneValidation'
+import { FileRow } from '@ui/FileRow/FileRow'
+import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { formFieldLayoutProps, FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/Form/types'
+import { type CommonFormFieldProps, type UploadedFile } from '@blocks/Form/types'
+import { useFileUploadMessages } from '@blocks/Form/useFileUploadMessages'
+import { type UploadFiles, usePendingUploads } from '@blocks/Form/usePendingUploads'
 
 import './formFileUploadField.scss'
 
 import { useFieldContext } from './formContexts'
 
-export type UploadedFile = { id: string, name: string }
-
-export type FormFileUploadFieldProps = Omit<CommonFormFieldProps, 'errorText'> & {
+export type FormFileUploadFieldProps = CommonFormFieldProps & {
   /** File extensions without the dot; empty accepts any file. */
   accept: ReadonlyArray<string>
   multiple?: boolean
-  /** The most files one upload may carry; a larger selection is rejected before uploading. */
+  /** The most files the field holds; only applies with `multiple`. */
   maxFiles?: number
+  maxFileSizeInBytes?: number
   /** Resolves with the files the server stored, or null when the upload failed. */
-  upload: (files: ReadonlyArray<File>) => Promise<ReadonlyArray<UploadedFile> | null>
+  upload: UploadFiles
 }
 
-const getExtension = (fileName: string) => fileName.split('.').pop()?.toLowerCase() ?? ''
+const appendSentence = (current: string | undefined, sentence: string) => (current ? `${current} ${sentence}` : sentence)
 
-export function FormFileUploadField({ accept, multiple = false, maxFiles, upload, ...props }: FormFileUploadFieldProps) {
-  const { t } = useTranslation()
-  const { formatList, formatNumber } = useIntlFormatter()
+export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFileSizeInBytes, upload, ...props }: FormFileUploadFieldProps) {
   const field = useFieldContext<UploadedFile[]>()
   const [error, setError] = useState<string | undefined>(undefined)
-  const [isUploading, setIsUploading] = useState(false)
+  const { pending, startUpload } = usePendingUploads(upload)
 
-  const { labelId, shellProps } = useFormField({ ...props, errorText: error })
-  const { className, inline, align, showLabel, isDisabled } = props
+  const { labelId, isInvalid, shellProps } = useFormField({ ...props, errorText: props.errorText ?? error })
+  const { className, inline, align, showLabel, isDisabled = false, isReadOnly = false } = props
 
   const files = field.state.value
-  const extensions = accept.map(extension => extension.toLowerCase())
-  const isAccepted = (name: string) => extensions.length === 0 || extensions.includes(getExtension(name))
+  const heldCount = files.length + pending.length
+  const fileLimit = multiple ? maxFiles : 1
+  const remaining = multiple && fileLimit !== undefined ? fileLimit - heldCount : undefined
+  const isAtLimit = remaining !== undefined && remaining <= 0
+  const isInputDisabled = isDisabled || pending.length > 0
 
-  const onUpload = async (selected: ReadonlyArray<File>) => {
-    const rejected = selected.filter(({ name }) => !isAccepted(name))
-    const accepted = selected.filter(file => !rejected.includes(file))
-    const isOverLimit = maxFiles !== undefined && accepted.length > maxFiles
-    const toUpload = isOverLimit ? [] : accepted
+  const messages = useFileUploadMessages({ accept, multiple, maxFileSizeInBytes, heldCount, fileLimit, remaining })
 
-    setIsUploading(true)
-    const uploaded = toUpload.length > 0 ? await upload(toUpload).catch(() => null) : []
-    setIsUploading(false)
-
-    const errors = [
-      rejected.length > 0
-        ? t(
-          'blocks:Form.FormFileUploadField.error.files_not_added',
-          'Some files couldn’t be added. Upload a {{fileTypes}} file instead.',
-          { fileTypes: formatList(extensions.map(extension => extension.toUpperCase()), { type: 'disjunction' }) },
-        )
-        : null,
-      isOverLimit
-        ? tPlural(t, 'blocks:Form.FormFileUploadField.error.too_many_files', {
-          count: maxFiles,
-          displayCount: formatNumber(maxFiles),
-          one: 'Upload {{displayCount}} file at a time.',
-          other: 'Upload up to {{displayCount}} files at a time.',
-        })
-        : null,
-      uploaded === null ? t('blocks:Form.FormFileUploadField.error.upload_failed', 'Some files couldn’t be uploaded. Try again.') : null,
-    ].filter(message => message !== null)
-
-    setError(errors.length > 0 ? errors.join(' ') : undefined)
-
-    if (!uploaded || uploaded.length === 0) return
-
-    field.handleChange([...(multiple ? files : []), ...uploaded])
+  const uploadFiles = async (accepted: ReadonlyArray<File>) => {
+    const uploaded = await startUpload(accepted)
+    if (!uploaded) {
+      setError(current => appendSentence(current, messages.uploadFailed))
+      return
+    }
+    field.handleChange(multiple ? [...field.state.value, ...uploaded] : uploaded)
   }
 
-  const getUploadLabel = () => {
-    if (files.length === 0) return t('blocks:Form.FormFileUploadField.action.upload_files', 'Upload files')
-    if (multiple) return t('blocks:Form.FormFileUploadField.action.add_more_files', 'Add more files')
-    return t('blocks:Form.FormFileUploadField.action.replace_file', 'Replace file')
+  const onDrop = (accepted: ReadonlyArray<File>, rejections: ReadonlyArray<DropZoneRejection>) => {
+    setError(messages.getRejectionMessage(rejections))
+    if (accepted.length > 0) void uploadFiles(accepted)
+  }
+
+  const removeFile = (id: string) => {
+    setError(undefined)
+    field.handleChange(files.filter(file => file.id !== id))
+  }
+
+  const renderRows = ({ open }: { open: () => void }) => {
+    // A single file's row gives way to its replacement's while that uploads.
+    const shownFiles = !multiple && pending.length > 0 ? [] : files
+
+    return (
+      <>
+        {shownFiles.map(({ id, name, sizeInBytes }) => (
+          <FileRow
+            key={id}
+            name={name}
+            sizeInBytes={sizeInBytes}
+            isDisabled={isInputDisabled}
+            onReplace={multiple ? undefined : open}
+            onRemove={() => removeFile(id)}
+          />
+        ))}
+        {pending.map(({ key, file }) => <FileRow key={key} name={file.name} sizeInBytes={file.size} isUploading />)}
+        {messages.limitNotice && (
+          <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
+            {messages.limitNotice}
+          </Span>
+        )}
+      </>
+    )
+  }
+
+  const renderControl = () => {
+    if (isReadOnly) {
+      if (files.length === 0) return <Span variant='subtle'>{messages.noFiles}</Span>
+
+      return (
+        <VStack className='Layer__FormFileUploadField__List'>
+          {files.map(({ id, name, sizeInBytes }) => <FileRow key={id} name={name} sizeInBytes={sizeInBytes} />)}
+        </VStack>
+      )
+    }
+
+    const showsPrompt = multiple ? !isAtLimit : heldCount === 0
+
+    return (
+      <DropZone
+        accept={accept}
+        multiple={multiple}
+        maxFiles={remaining}
+        maxFileSizeInBytes={maxFileSizeInBytes}
+        isDisabled={isInputDisabled || isAtLimit}
+        isInvalid={isInvalid}
+        onDrop={onDrop}
+        prompt={showsPrompt ? messages.prompt : undefined}
+      >
+        {heldCount > 0 ? renderRows : undefined}
+      </DropZone>
+    )
   }
 
   return (
     <div {...formFieldLayoutProps({ className, inline, align, showLabel })}>
       <FormFieldShell {...shellProps} labelId={labelId}>
-        <VStack gap='xs'>
-          {files.map(({ id, name }) => (
-            <HStack key={id} gap='sm' align='center' justify='space-between' className='Layer__FormFileUploadField__File'>
-              <Span size='sm' ellipsis noWrap>{name}</Span>
-              <Button
-                variant='text'
-                isDisabled={isDisabled || isUploading}
-                onPress={() => field.handleChange(files.filter(file => file.id !== id))}
-              >
-                {t('blocks:Form.FormFileUploadField.action.remove_file', 'Remove')}
-              </Button>
-            </HStack>
-          ))}
-          <HStack>
-            <FileInput
-              text={getUploadLabel()}
-              accept={extensions.map(extension => `.${extension}`).join(',')}
-              allowMultipleUploads={multiple}
-              isDisabled={isDisabled || isUploading}
-              onUpload={selected => void onUpload(selected)}
-            />
-          </HStack>
-        </VStack>
+        {renderControl()}
       </FormFieldShell>
     </div>
   )

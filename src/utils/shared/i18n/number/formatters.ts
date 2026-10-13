@@ -10,6 +10,7 @@ type PercentFormatOptions = Pick<FormatNumberOptions, 'minimumFractionDigits' | 
 export type CurrencyFormatFn = (value: NumberInput, options?: CurrencyFormatOptions) => string
 export type NumberFormatFn = (value: NumberInput, options?: NumberFormatOptions) => string
 export type PercentFormatFn = (value: NumberInput, options?: PercentFormatOptions) => string
+export type FileSizeFormatFn = (bytes: number) => string
 
 export const formatCurrencyFromCents = (
   intl: IntlShape,
@@ -51,5 +52,18 @@ export const formatPercent = (
   return intl.formatNumber(parsed, {
     style: 'percent',
     ...options,
+  })
+}
+
+const FILE_SIZE_UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte'] as const
+
+export const formatFileSize = (intl: IntlShape, bytes: number) => {
+  const exponent = Math.min(Math.max(Math.floor(Math.log10(Math.max(bytes, 1)) / 3), 0), FILE_SIZE_UNITS.length - 1)
+
+  return intl.formatNumber(bytes / 1000 ** exponent, {
+    style: 'unit',
+    unit: FILE_SIZE_UNITS[exponent],
+    unitDisplay: exponent === 0 ? 'long' : 'short',
+    maximumFractionDigits: exponent < 2 ? 0 : 1,
   })
 }
