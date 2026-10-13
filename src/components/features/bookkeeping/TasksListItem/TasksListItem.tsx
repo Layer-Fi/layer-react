@@ -37,7 +37,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
   )
 
   return (
-    <AnimatedElement variant='fade' layout='position' className='Layer__tasks-list-item-wrapper' ref={ref}>
+    <AnimatedElement variant='collapse' className='Layer__tasks-list-item-wrapper' ref={ref}>
       <div className={classNames('Layer__tasks-list-item', isOpen && 'Layer__tasks-list-item__expanded')}>
         <TasksListItemHeader
           task={task}

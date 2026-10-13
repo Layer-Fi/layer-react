@@ -3,7 +3,7 @@ import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react'
 
 import { variants } from '@components/utility/AnimatedPresenceElement/variants'
 
-type AnimationVariant = 'fade' | 'slideUp' | 'expand'
+type AnimationVariant = keyof typeof variants
 type AnimatePresenceMode = 'sync' | 'wait' | 'popLayout'
 
 type ValidHTMLElement = keyof HTMLElementTagNameMap

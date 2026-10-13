@@ -1,9 +1,8 @@
 .Layer__tasks-list {
-  position: relative;
   border-top: 1px solid var(--border-color);
 
   .Layer__tasks-list-item-wrapper {
-    padding: var(--spacing-2xs);
+    overflow: hidden;
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--color-base-300);
@@ -12,6 +11,7 @@
     .Layer__tasks-list-item {
       display: flex;
       flex-direction: column;
+      margin: var(--spacing-2xs);
       transition: all 0.1s ease-in-out;
 
       &:hover,

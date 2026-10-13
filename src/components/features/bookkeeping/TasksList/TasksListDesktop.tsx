@@ -56,11 +56,11 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
 
   return (
     <VStack className='Layer__tasks-list'>
-      <AnimatedPresenceList>
+      <AnimatedPresenceList key={pageIndex}>
         {pageItems.map((task, index) => (
           <TasksListItem
             ref={setItemRef(task.id)}
-            // Completing a task moves it to the bottom; a new key fades it out here and back in there.
+            // Completing a task moves it to the bottom; a new key collapses it out here and back in there.
             key={`${task.id}:${isCompletedTask(task)}`}
             task={task}
             defaultOpen={index === indexFirstIncomplete}
