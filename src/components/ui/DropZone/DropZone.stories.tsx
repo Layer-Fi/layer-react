@@ -1,7 +1,8 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { within } from 'storybook/test'
 
-import { DropZone, type DropZonePromptProps, type DropZoneProps } from '@ui/DropZone/DropZone'
+import { DropZone, type DropZoneProps } from '@ui/DropZone/DropZone'
+import { type DropZonePromptProps } from '@ui/DropZone/DropZonePrompt'
 import { FileRow } from '@ui/FileRow/FileRow'
 
 import { Col } from '@testUtils/storybook/layout/Col'

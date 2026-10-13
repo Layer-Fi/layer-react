@@ -2,7 +2,8 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react'
 import type userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { FormFileUploadField, type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
+import { FormFileUploadField, type FormFileUploadFieldProps } from '@blocks/Form/FormFileUploadField'
+import { type UploadedFile } from '@blocks/Form/types'
 
 import { renderFormField } from '@testUtils/render/renderFormField'
 

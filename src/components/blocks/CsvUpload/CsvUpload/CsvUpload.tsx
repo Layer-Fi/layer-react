@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { DropZone, type DropZoneRejection } from '@ui/DropZone/DropZone'
+import { DropZone } from '@ui/DropZone/DropZone'
+import { type DropZonePromptProps } from '@ui/DropZone/DropZonePrompt'
+import { type DropZoneRejection } from '@ui/DropZone/dropZoneValidation'
 import { FileRow } from '@ui/FileRow/FileRow'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -35,6 +37,14 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
     onFileSelected(null)
   }
 
+  const prompt: DropZonePromptProps = {
+    title: t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions'),
+    description: t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to {{maxSize}}.', {
+      maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES),
+    }),
+    actionLabel: t('upload:action.choose_csv', 'Choose CSV'),
+  }
+
   return (
     <VStack gap='xs'>
       <DropZone
@@ -43,15 +53,7 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
         isInvalid={errorMessage !== undefined}
         validate={csvFile => validateCsvFile({ file: csvFile, t, formatFileSize })}
         onDrop={onDrop}
-        prompt={file
-          ? undefined
-          : {
-            title: t('upload:label.upload_transactions_csv', 'Upload a CSV of transactions'),
-            description: t('upload:label.drag_or_choose_csv', 'Drag a file here or choose one from your computer. Up to {{maxSize}}.', {
-              maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES),
-            }),
-            actionLabel: t('upload:action.choose_csv', 'Choose CSV'),
-          }}
+        prompt={file ? undefined : prompt}
       >
         {file ? ({ open }) => <FileRow name={file.name} sizeInBytes={file.size} onReplace={open} onRemove={clearFile} /> : undefined}
       </DropZone>

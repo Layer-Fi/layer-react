@@ -1,7 +1,8 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
-import { FormFileUploadField, type FormFileUploadFieldProps, type UploadedFile } from '@blocks/Form/FormFileUploadField'
+import { FormFileUploadField, type FormFileUploadFieldProps } from '@blocks/Form/FormFileUploadField'
+import { type UploadedFile } from '@blocks/Form/types'
 
 import {
   COMMON_FIELD_VARIANTS,

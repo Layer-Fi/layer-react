@@ -9,3 +9,5 @@ export interface CommonFormFieldProps {
   isDisabled?: boolean
   errorText?: string
 }
+
+export type UploadedFile = { id: string, name: string, sizeInBytes?: number }
