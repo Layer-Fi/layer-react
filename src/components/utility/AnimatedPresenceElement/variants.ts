@@ -46,14 +46,3 @@ export const variants = {
     transition: {},
   },
 }
-
-const withoutDelay = <T extends object>(target: T) => ('transition' in target && typeof target.transition === 'object' && target.transition
-  ? { ...target, transition: Object.fromEntries(Object.entries(target.transition).map(([key, value]) => [key, { ...value, delay: 0 }])) }
-  : target)
-
-// Reduced motion already makes height and transforms instant; dropping delays keeps a fade from starting after its row is gone.
-export const withoutDelays = (variant: (typeof variants)[keyof typeof variants]) => ({
-  ...variant,
-  animate: withoutDelay(variant.animate),
-  exit: withoutDelay(variant.exit),
-})

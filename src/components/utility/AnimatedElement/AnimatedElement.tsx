@@ -1,7 +1,7 @@
 import { type ElementType, forwardRef, type ReactNode, type Ref } from 'react'
-import { type HTMLMotionProps, motion, useReducedMotionConfig } from 'motion/react'
+import { type HTMLMotionProps, motion } from 'motion/react'
 
-import { variants, withoutDelays } from '@components/utility/AnimatedPresenceElement/variants'
+import { variants } from '@components/utility/AnimatedPresenceElement/variants'
 
 type AnimationVariant = keyof typeof variants
 
@@ -24,8 +24,7 @@ function AnimatedElementInner<T extends ValidHTMLElement = 'div'>(
   }: AnimatedElementProps<T>,
   ref: Ref<HTMLElementTagNameMap[T]>,
 ) {
-  const shouldReduceMotion = useReducedMotionConfig()
-  const config = shouldReduceMotion ? withoutDelays(variants[variant]) : variants[variant]
+  const config = variants[variant]
   const MotionComponent = motion[as ?? 'div'] as ElementType
 
   return (

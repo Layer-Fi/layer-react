@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useReducedMotionConfig } from 'motion/react'
 
 import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { useDelayedValue } from '@hooks/utils/debouncing/useDelayedValue'
@@ -18,8 +17,7 @@ type UseTasksListItemOpenStateProps = {
 export const useTasksListItemOpenState = ({ taskId, defaultOpen, onExpandTask }: UseTasksListItemOpenStateProps) => {
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const shouldReduceMotion = useReducedMotionConfig()
-  const delayedDefaultOpen = useDelayedValue(defaultOpen, shouldReduceMotion ? 0 : DEFAULT_OPEN_DELAY_MS)
+  const delayedDefaultOpen = useDelayedValue(defaultOpen, DEFAULT_OPEN_DELAY_MS)
 
   useEffect(() => {
     setIsOpen(delayedDefaultOpen)
