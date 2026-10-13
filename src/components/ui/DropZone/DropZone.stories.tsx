@@ -31,9 +31,9 @@ const VARIANTS: ReadonlyArray<{ label: string, props?: Partial<DropZoneProps> }>
     props: {
       size: 'lg',
       prompt: {
-        title: 'Upload a CSV of transactions',
-        description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
-        actionLabel: 'Choose CSV',
+        title: 'Drag and drop a file',
+        description: 'File must be in CSV format',
+        actionLabel: 'Browse',
       },
       accept: ['csv'],
     },
@@ -56,8 +56,17 @@ const dragFileOver = (element: HTMLElement) => {
   element.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer }))
 }
 
+const DRAG_OVER_TITLE = 'Drag a receipt here'
+
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    dragFileOver(canvas.getByText(DRAG_OVER_TITLE))
+
+    await canvas.findByText('Drop to upload')
+  },
   render: args => (
     <Gallery direction='row' wrap gap={32}>
       {VARIANTS.map(({ label, props }) => (
@@ -65,6 +74,9 @@ export const AllVariants: Story = {
           <DropZone {...args} {...props} />
         </Col>
       ))}
+      <Col label='drag over' inlineSize={420}>
+        <DropZone {...args} prompt={{ ...PROMPT, title: DRAG_OVER_TITLE }} />
+      </Col>
       <Col label='filled — a file row that accepts a replacement' inlineSize={420}>
         <DropZone {...args} prompt={undefined}>
           {({ open }) => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onReplace={open} onRemove={() => {}} />}
@@ -79,24 +91,6 @@ export const AllVariants: Story = {
         <DropZone {...args} prompt={undefined} isInvalid>
           {({ open }) => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onReplace={open} onRemove={() => {}} />}
         </DropZone>
-      </Col>
-    </Gallery>
-  ),
-}
-
-export const DragOver: Story = {
-  parameters: { chromatic: { viewports: [1280] } },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-
-    dragFileOver(canvas.getByText('Drag a file here'))
-
-    await canvas.findByText('Drop to upload')
-  },
-  render: args => (
-    <Gallery>
-      <Col label='drag over' inlineSize={420}>
-        <DropZone {...args} />
       </Col>
     </Gallery>
   ),

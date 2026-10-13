@@ -54,28 +54,12 @@ export default meta
 type Story = StoryObj<typeof FormFileUploadField>
 
 export const AllVariants: Story = {
-  parameters: { chromatic: { viewports: [1280] } },
+  parameters: { chromatic: { viewports: [BREAKPOINTS.MOBILE - 1, 1280] } },
   render: () => (
     <FormFieldVariantGallery
       defaultValue={[]}
       variants={VARIANTS}
       inlineSize={420}
-      renderField={props => <FormFileUploadField label={LABEL} accept={ACCEPT} upload={upload} {...props} />}
-    />
-  ),
-}
-
-const MOBILE_VARIANTS: ReadonlyArray<Variant> = [
-  { label: 'default' },
-  { label: 'multiple, uploaded', value: TWO_UPLOADED, props: { multiple: true, maxFiles: 3 } },
-]
-
-export const Mobile: Story = {
-  parameters: { chromatic: { viewports: [BREAKPOINTS.MOBILE - 1] } },
-  render: () => (
-    <FormFieldVariantGallery
-      defaultValue={[]}
-      variants={MOBILE_VARIANTS}
       renderField={props => <FormFileUploadField label={LABEL} accept={ACCEPT} upload={upload} {...props} />}
     />
   ),
