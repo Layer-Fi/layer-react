@@ -231,7 +231,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
         {fileRows(true)}
         {isAtLimit && fileLimit !== undefined
           ? (
-            <Span size='sm' variant='subtle' className='Layer__FormFileUploadField__LimitNotice'>
+            <Span size='sm' variant='subtle' pi='md' pb='sm' className='Layer__FormFileUploadField__LimitNotice'>
               {t('blocks:Form.FormFileUploadField.label.at_limit', '{{count}} of {{limit}} files added. Remove one to add another.', {
                 count: heldCount,
                 limit: formatNumber(fileLimit),

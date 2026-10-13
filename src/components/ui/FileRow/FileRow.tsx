@@ -61,11 +61,11 @@ export const FileRow = ({
   const dataProperties = toDataProperties({ status, grouped: isGrouped })
 
   return (
-    <HStack className='Layer__UI__FileRow' {...dataProperties} align='center' gap='sm'>
+    <HStack className='Layer__UI__FileRow' {...dataProperties} pi='xs' pb='xs' align='center' gap='sm'>
       <HStack className='Layer__UI__FileRow__Icon' {...dataProperties} align='center' justify='center'>
         {status === 'failed' ? <AlertCircle size={16} /> : <FileTypeIcon extension={extension} />}
       </HStack>
-      <VStack className='Layer__UI__FileRow__Text' gap='4xs'>
+      <VStack className='Layer__UI__FileRow__Text' fluid gap='4xs'>
         <HStack className='Layer__UI__FileRow__Name'>
           <Span ellipsis noWrap>{stem}</Span>
           <Span noWrap className='Layer__UI__FileRow__Extension'>{dottedExtension}</Span>

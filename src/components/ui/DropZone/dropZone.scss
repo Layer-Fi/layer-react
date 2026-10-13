@@ -52,22 +52,13 @@
   &[data-disabled] {
     background: var(--color-base-50);
     cursor: not-allowed;
-    color: var(--color-base-500);
     border-color: var(--color-base-300);
   }
 }
 
 .Layer__UI__DropZone__Body {
-  padding: var(--spacing-md);
-
-  &[data-size='lg'] {
-    padding: var(--spacing-xl) var(--spacing-lg);
-    text-align: center;
-  }
-
   &[data-pressable] {
     min-block-size: 44px;
-    padding: var(--spacing-sm);
   }
 }
 
@@ -100,10 +91,5 @@
 }
 
 .Layer__UI__DropZone__Text {
-  flex: 1;
   min-inline-size: 0;
-
-  &[data-size='lg'] {
-    align-items: center;
-  }
 }

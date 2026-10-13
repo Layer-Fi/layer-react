@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { HStack, type StackProps, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
 import './dropZone.scss'
@@ -110,7 +110,11 @@ export const DropZone = ({
     ...(isPressable && { 'role': 'button', 'aria-label': title, 'aria-disabled': isDisabled || undefined }),
   })
 
-  const Layout = size === 'lg' ? VStack : HStack
+  const isLarge = size === 'lg'
+  const Layout = isLarge ? VStack : HStack
+  const bodyPadding: Pick<StackProps, 'pi' | 'pb'> = isPressable
+    ? { pi: 'sm', pb: 'sm' }
+    : isLarge ? { pi: 'lg', pb: 'xl' } : { pi: 'md', pb: 'md' }
   const dataProperties = toDataProperties({
     size,
     drag: dragState,
@@ -128,13 +132,13 @@ export const DropZone = ({
       {children
         ? children({ open: openIfEnabled })
         : (
-          <Layout className='Layer__UI__DropZone__Body' {...dataProperties} align='center' gap='sm'>
+          <Layout className='Layer__UI__DropZone__Body' {...dataProperties} {...bodyPadding} align='center' gap='sm'>
             <HStack className='Layer__UI__DropZone__Icon' {...dataProperties} align='center' justify='center'>
-              {dragState === 'reject' ? <AlertCircle size={16} /> : <CloudUpload size={size === 'lg' ? 20 : 16} />}
+              {dragState === 'reject' ? <AlertCircle size={16} /> : <CloudUpload size={isLarge ? 20 : 16} />}
             </HStack>
-            <VStack className='Layer__UI__DropZone__Text' {...dataProperties} gap='4xs'>
-              <Span weight={dragState || size === 'lg' ? 'bold' : undefined} status={textStatus}>{getHeading()}</Span>
-              {detail && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus}>{detail}</Span>}
+            <VStack className='Layer__UI__DropZone__Text' fluid align={isLarge ? 'center' : undefined} gap='4xs'>
+              <Span weight={dragState || isLarge ? 'bold' : undefined} status={textStatus} align={isLarge ? 'center' : undefined}>{getHeading()}</Span>
+              {detail && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={isLarge ? 'center' : undefined}>{detail}</Span>}
             </VStack>
             {!dragState && actionLabel && (
               <Button variant='outlined' isDisabled={isDisabled} onPress={openIfEnabled}>
