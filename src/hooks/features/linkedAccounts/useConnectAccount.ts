@@ -5,11 +5,7 @@ import { LinkedAccountsContext } from '@providers/features/linkedAccounts/Linked
 
 type ConnectAccountStatus = 'idle' | 'connecting' | 'connected'
 
-/**
- * Opens Plaid and resolves whether an account was connected. A connection already made is
- * reused, so a caller retrying its own follow-up work doesn't reopen Plaid. A connection that
- * lands after the caller unmounted resolves false, so it can't continue a page the user left.
- */
+/** A connection already made is reused, so a caller retrying its own follow-up work doesn't reopen Plaid. */
 export const useConnectAccount = () => {
   const { addConnection } = useContext(LinkedAccountsContext)
   const [status, setStatus] = useState<ConnectAccountStatus>('idle')

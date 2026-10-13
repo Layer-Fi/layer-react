@@ -78,7 +78,6 @@ type PageFooterLayoutOptions = {
   hasAction: boolean
 }
 
-/** A takeover hides the primary while a choice auto-advances, unless a follow-up or a routing error needs it. */
 export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, routing, hasAction }: PageFooterLayoutOptions) => {
   const primaryAction = getPagePrimaryAction(page, values)
   const isTakeover = presentation === 'takeover'

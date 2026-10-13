@@ -28,10 +28,9 @@ type UsePlaidLinkModalOptions = {
 }
 
 /**
- * Drives the embedded Plaid Link modal. `openLink` starts a session with a caller-minted token and
- * resolves once the outcome is known: true when the connection was saved (add) or refreshed
- * (repair), false when Link closed, the exchange failed, or Plaid didn't load. Link is released as
- * soon as it succeeds or exits, which clears the token so react-plaid-link destroys the handler.
+ * `openLink` resolves true once the connection is saved (add) or refreshed (repair), false when Link
+ * closed, the exchange failed, or Plaid didn't load. Link is released as soon as it succeeds or
+ * exits, which clears the token so react-plaid-link destroys the handler.
  */
 export function usePlaidLinkModal({
   onSuccess,
