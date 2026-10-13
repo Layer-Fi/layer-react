@@ -11,10 +11,10 @@ const STATUS_TO_ICON_MAP = {
     icon: <Check size={12} />,
   },
   [BusinessTaskStatus.Completed]: {
-    icon: null,
+    icon: <Check size={12} />,
   },
   [BusinessTaskStatus.Archived]: {
-    icon: null,
+    icon: <Check size={12} />,
   },
 } as const
 

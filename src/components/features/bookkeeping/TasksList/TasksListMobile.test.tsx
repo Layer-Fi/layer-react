@@ -59,6 +59,20 @@ describe('TasksListMobile', () => {
     expect(screen.getByDisplayValue('Office chairs')).toBeInTheDocument()
   })
 
+  it('shows an answered task the API archived as done', () => {
+    const archived = makeUnifiedAskFormTask({
+      id: '00000000-0000-4000-8000-000000000f14',
+      title: 'Transfers to ••2222',
+      status: BusinessTaskStatus.Archived,
+      answerSummary: 'A personal account',
+    })
+    renderList([archived] as UnifiedAskFormTask[])
+
+    const row = screen.getByRole('row', { name: /Transfers to ••2222/ })
+    expect(within(row).getByText('A personal account')).toBeInTheDocument()
+    expect(row.querySelector('.lucide-check')).toBeInTheDocument()
+  })
+
   it('leaves out "Answer N tasks" once every task is answered', () => {
     renderList([AMAZON] as UnifiedAskFormTask[])
 
