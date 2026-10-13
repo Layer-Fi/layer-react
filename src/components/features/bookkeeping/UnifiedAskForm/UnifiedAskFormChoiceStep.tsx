@@ -57,6 +57,7 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
   render: function Render({ group, label, prompt, options, size, variant, search, isDisabled, onSelect, onPickChange, renderFollowUp }) {
     const accessibleLabel = prompt ?? label
     const pick = useStore(group.store, state => getPickedValue(state.values))
+    const followUp = pick ? renderFollowUp?.(pick) : null
 
     const notifyPick = (value: string | null) => {
       if (value !== pick) onPickChange?.(value)
@@ -104,8 +105,8 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
             </group.AppField>
           )
           : null}
-        <AnimatedPresenceElement variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp' isPresent={Boolean(renderFollowUp && pick)} motionKey={pick ?? ''}>
-          {pick ? renderFollowUp?.(pick) : null}
+        <AnimatedPresenceElement variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp' isPresent={followUp != null} motionKey={pick ?? ''}>
+          {followUp}
         </AnimatedPresenceElement>
       </UnifiedAskFormStepShell>
     )
