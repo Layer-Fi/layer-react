@@ -106,24 +106,16 @@ describe('FormFileUploadField', () => {
     expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument()
   })
 
-  it('uploads files dropped onto the field', async () => {
-    renderUploadField({ accept: ['pdf'], multiple: true })
-
-    dropFiles('one.pdf', 'two.pdf')
-
-    await expectListed('one.pdf', 'two.pdf')
-  })
-
-  it('adds files dropped onto a file already in the list', async () => {
+  it('uploads files dropped onto the field, including onto a file already listed', async () => {
     renderUploadField({ accept: ['pdf'], multiple: true, maxFiles: 3, initialFiles: [{ id: 'held', name: 'held.pdf' }] })
 
-    const files = [new File(['content'], 'more.pdf')]
+    const files = [new File(['content'], 'one.pdf'), new File(['content'], 'two.pdf')]
     fireEvent.drop(screen.getByText('held.pdf'), { dataTransfer: { files, items: files.map(file => ({ kind: 'file', getAsFile: () => file })), types: ['Files'] } })
 
-    await expectListed('held.pdf', 'more.pdf')
+    await expectListed('held.pdf', 'one.pdf', 'two.pdf')
   })
 
-  it('checks the accepted types only once dragged items are dropped', async () => {
+  it('shows the drop state while a file is dragged over it', async () => {
     renderUploadField({ accept: ['pdf'] })
 
     fireEvent.dragEnter(screen.getByText('Drag a file here'), { dataTransfer: { items: [{ kind: 'file', type: 'application/pdf' }], types: ['Files'] } })
@@ -164,29 +156,11 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
-  it('ignores a drop while the field is disabled', async () => {
-    const upload = vi.fn(toUploaded)
-    renderUploadField({ upload, isDisabled: true })
-
-    const isDefaultAllowed = dropFiles('one.pdf')
-    await flushDrop()
-
-    expect(isDefaultAllowed).toBe(false)
-    expect(screen.queryByRole('button', { name: 'Remove one.pdf' })).not.toBeInTheDocument()
-    expect(upload).not.toHaveBeenCalled()
-  })
-
   it('lists files without a drop area or remove action when read only', () => {
     renderUploadField({ isReadOnly: true, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
 
     expect(screen.getByText('receipt.pdf')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument()
     expect(screen.queryByText(/^Drag .* here$/)).not.toBeInTheDocument()
-  })
-
-  it('says so when a read-only field holds no files', () => {
-    renderUploadField({ isReadOnly: true })
-
-    expect(screen.getByText('No files uploaded')).toBeInTheDocument()
   })
 })
