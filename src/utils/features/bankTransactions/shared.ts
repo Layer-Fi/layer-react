@@ -56,6 +56,11 @@ export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
   source === TransactionSource.CUSTOM
 
+export const getBankTransactionDisplayName = (bankTransaction: Pick<BankTransaction, 'source' | 'counterpartyName' | 'description'>) =>
+  isCustomTransaction(bankTransaction)
+    ? bankTransaction.description
+    : bankTransaction.counterpartyName ?? bankTransaction.description
+
 export const isEditableCustomTransaction = (
   bankTransaction: BankTransaction,
   customAccounts?: readonly CustomAccount[],
