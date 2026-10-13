@@ -76,18 +76,9 @@
 
       .Layer__tasks-list-item__body {
         overflow: hidden;
-        height: 0;
-        padding-bottom: 0;
-        opacity: 0;
-        transition: all 0.2s ease-out;
 
         &.Layer__tasks-list-item--completed {
           color: var(--color-base-500);
-        }
-
-        &.Layer__tasks-list-item__body--expanded {
-          height: auto;
-          opacity: 1;
         }
       }
     }

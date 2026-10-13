@@ -32,7 +32,6 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
 
   const bodyClassName = classNames(
     'Layer__tasks-list-item__body',
-    isOpen && 'Layer__tasks-list-item__body--expanded',
     isCompletedTask(task) && 'Layer__tasks-list-item--completed',
   )
 
@@ -45,9 +44,9 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ t
           onClick={toggle}
           backAction={navigation.canGoBack ? { isDisabled: isSubmitting || navigation.routing === 'loading', onBack: navigation.goBack } : null}
         />
-        <div className={bodyClassName} aria-hidden={!isOpen}>
+        <AnimatedElement variant='expand' isVisible={isOpen} className={bodyClassName} aria-hidden={!isOpen}>
           <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded={isOpen} />
-        </div>
+        </AnimatedElement>
       </div>
     </AnimatedElement>
   )
