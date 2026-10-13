@@ -41,11 +41,7 @@ type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
 }
 
-/**
- * Returns a memoized action that only runs for Plaid-sourced connections, logging a consistent
- * "not yet supported" message and resolving `unsupportedResult` for any other source.
- */
-const usePlaidOnlyAction = <Args extends unknown[], Result>(
+const usePlaidOnly = <Args extends unknown[], Result>(
   operation: string,
   action: (...args: Args) => Promise<Result>,
   unsupportedResult: Result,
@@ -61,6 +57,17 @@ const usePlaidOnlyAction = <Args extends unknown[], Result>(
     },
     [operation, action, unsupportedResult],
   )
+
+/**
+ * Returns a memoized action that only runs for Plaid-sourced connections,
+ * logging a consistent "not yet supported" message for any other source.
+ */
+const usePlaidOnlyAction = <Args extends unknown[]>(operation: string, action: (...args: Args) => Promise<void>) =>
+  usePlaidOnly(operation, action, undefined)
+
+/** As `usePlaidOnlyAction`, for a Link flow that resolves whether it connected; any other source resolves false. */
+const usePlaidOnlyLinkFlow = <Args extends unknown[]>(operation: string, action: (...args: Args) => Promise<boolean>) =>
+  usePlaidOnly(operation, action, false)
 
 /**
  * Returns a memoized action that only runs while Layer owns the Plaid item, logging a consistent
@@ -226,9 +233,9 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
-  const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken, false)
+  const addConnection = usePlaidOnlyLinkFlow('Adding a connection', fetchPlaidLinkToken)
 
-  const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken, false)
+  const repairConnection = usePlaidOnlyLinkFlow('Repairing a connection', fetchPlaidUpdateModeLinkToken)
 
   const handleRemoveConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchWithToast(
@@ -240,7 +247,6 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const removeConnection = usePlaidOnlyAction(
     'Removing a connection',
     useLayerOwnedItemAction('Removing a connection', customerManagedPlaidConfig != null, handleRemoveConnection),
-    undefined,
   )
 
   const handleConfirmAccount = useCallback(
@@ -250,7 +256,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     ),
     [mutateAndRefetchWithToast, triggerConfirmExternalAccount, t],
   )
-  const confirmAccount = usePlaidOnlyAction('Confirming an account', handleConfirmAccount, undefined)
+  const confirmAccount = usePlaidOnlyAction('Confirming an account', handleConfirmAccount)
 
   const handleExcludeAccount = useCallback(
     (accountId: string) => mutateAndRefetchWithToast(
@@ -259,7 +265,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     ),
     [mutateAndRefetchWithToast, triggerExcludeExternalAccount, t],
   )
-  const excludeAccount = usePlaidOnlyAction('Excluding an account', handleExcludeAccount, undefined)
+  const excludeAccount = usePlaidOnlyAction('Excluding an account', handleExcludeAccount)
 
   const handleBreakConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchWithToast(
@@ -275,7 +281,6 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const breakConnection = usePlaidOnlyAction(
     'Breaking a sandbox connection',
     useLayerOwnedItemAction('Breaking a sandbox connection', customerManagedPlaidConfig != null, handleBreakConnection),
-    undefined,
   )
 
   // Not `mutateAndRefetchWithToast`: this backs a BaseConfirmationModal that
