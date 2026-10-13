@@ -95,20 +95,20 @@ export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, he
     }
     if (!multiple) {
       return {
-        title: t('blocks:Form.useFileUploadMessages.label.drop_file', 'Drag a file here'),
+        title: t('blocks:Form.useFileUploadMessages.label.drag_drop_file', 'Drag and drop a file here'),
         description,
         actionLabel: t('blocks:Form.useFileUploadMessages.action.choose_file', 'Choose file'),
       }
     }
     if (heldCount > 0) {
       return {
-        title: t('blocks:Form.useFileUploadMessages.label.drop_more_files', 'Drag more files here'),
+        title: t('blocks:Form.useFileUploadMessages.label.drag_drop_more_files', 'Drag and drop more files here'),
         description,
         actionLabel: t('blocks:Form.useFileUploadMessages.action.add_files', 'Add files'),
       }
     }
     return {
-      title: t('blocks:Form.useFileUploadMessages.label.drop_files', 'Drag files here'),
+      title: t('blocks:Form.useFileUploadMessages.label.drag_drop_files', 'Drag and drop files here'),
       description,
       actionLabel: t('blocks:Form.useFileUploadMessages.action.choose_files', 'Choose files'),
     }

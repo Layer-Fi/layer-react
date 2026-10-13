@@ -118,7 +118,7 @@ describe('FormFileUploadField', () => {
   it('shows the drop state while a file is dragged over it', async () => {
     renderUploadField({ accept: ['pdf'] })
 
-    fireEvent.dragEnter(screen.getByText('Drag a file here'), { dataTransfer: { items: [{ kind: 'file', type: 'application/pdf' }], types: ['Files'] } })
+    fireEvent.dragEnter(screen.getByText('Drag and drop a file here'), { dataTransfer: { items: [{ kind: 'file', type: 'application/pdf' }], types: ['Files'] } })
 
     expect(await screen.findByText('Drop to upload')).toBeInTheDocument()
   })

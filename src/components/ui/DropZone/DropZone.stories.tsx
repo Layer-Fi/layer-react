@@ -9,7 +9,7 @@ import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
 
 const PROMPT: DropZonePromptProps = {
-  title: 'Drag a file here',
+  title: 'Drag and drop a file here',
   description: 'PDF, PNG, or JPG · Up to 10 MB',
   actionLabel: 'Choose file',
 }
@@ -25,14 +25,14 @@ const VARIANTS: ReadonlyArray<{ label: string, props?: Partial<DropZoneProps> }>
   { label: 'invalid', props: { isInvalid: true } },
   { label: 'disabled', props: { isDisabled: true } },
   { label: 'touch — whole zone is the tap target', props: { prompt: { title: 'Add a receipt', description: 'Photo or PDF · Up to 10 MB' } } },
-  { label: 'any file type', props: { prompt: { title: 'Drag files here', description: 'Any file type · Up to 25 MB each', actionLabel: 'Choose files' }, accept: [] } },
+  { label: 'any file type', props: { prompt: { title: 'Drag and drop files here', description: 'Any file type · Up to 25 MB each', actionLabel: 'Choose files' }, accept: [] } },
   {
     label: 'large',
     props: {
       size: 'lg',
       prompt: {
-        title: 'Upload a CSV of transactions',
-        description: 'Drag a file here or choose one from your computer. Up to 2 MB.',
+        title: 'Upload a CSV of your transactions',
+        description: 'Drag and drop a file here or select one from your computer.',
         actionLabel: 'Browse',
       },
       accept: ['csv'],
@@ -56,7 +56,7 @@ const dragFileOver = (element: HTMLElement) => {
   element.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer }))
 }
 
-const DRAG_OVER_TITLE = 'Drag a receipt here'
+const DRAG_OVER_TITLE = 'Drag and drop a receipt here'
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -83,7 +83,7 @@ export const AllVariants: Story = {
         </DropZone>
       </Col>
       <Col label='filled with room for more' inlineSize={420}>
-        <DropZone {...args} multiple prompt={{ ...PROMPT, title: 'Drag more files here', actionLabel: 'Add files' }}>
+        <DropZone {...args} multiple prompt={{ ...PROMPT, title: 'Drag and drop more files here', actionLabel: 'Add files' }}>
           {() => <FileRow name='office-supplies-receipt.pdf' sizeInBytes={248_000} onRemove={() => {}} />}
         </DropZone>
       </Col>
