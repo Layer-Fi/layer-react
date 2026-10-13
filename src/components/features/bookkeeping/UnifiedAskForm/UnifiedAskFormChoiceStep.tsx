@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-form'
 
 import { asMutable } from '@utils/shared/array/asMutable'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
-import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
+import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { type ChipSize, type ChipVariant } from '@ui/Chip/Chip'
 import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { type ChipOption } from '@blocks/Form/FormChipGroupField'
@@ -105,9 +105,12 @@ export const UnifiedAskFormChoiceStep = withFieldGroup({
             </group.AppField>
           )
           : null}
-        <AnimatedPresenceElement variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp' isPresent={followUp != null} motionKey={pick ?? ''}>
-          {followUp}
-        </AnimatedPresenceElement>
+        {followUp != null && (
+          // No exit animation: changing the pick clears the follow-up's fields at once, so a closing copy would empty first.
+          <AnimatedElement key={pick} variant='expand' className='Layer__UnifiedAskFormChoiceStep__FollowUp'>
+            {followUp}
+          </AnimatedElement>
+        )}
       </UnifiedAskFormStepShell>
     )
   },

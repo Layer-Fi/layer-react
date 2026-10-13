@@ -18,8 +18,9 @@ export const TasksListDesktop = ({ tasks, pageSize }: TasksListDesktopProps) => 
   const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const requestAnimationFrameRef = useRef<number | null>(null)
 
+  // A completing task briefly renders twice under one id; ignoring null keeps the exiting row from erasing the new one.
   const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
-    taskListItemRefs.current[id] = el
+    if (el) taskListItemRefs.current[id] = el
   }, [])
 
   const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
