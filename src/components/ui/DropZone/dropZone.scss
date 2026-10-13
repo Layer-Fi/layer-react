@@ -30,9 +30,10 @@
     border-color: var(--color-dark);
   }
 
+  // Width 0, not `none`: `none` leaves the width at `medium`, which [data-custom] would bring back by setting a style.
   &[data-embedded] {
     border-radius: 0;
-    border: none;
+    border: 0;
     border-block-start: 1px dashed var(--color-base-300);
   }
 
