@@ -449,6 +449,25 @@ describe('UnifiedAskForm', () => {
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
   })
 
+  it('says the task was already answered when the API rejects an upload', async () => {
+    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
+    server.use(
+      postUnifiedAskFormUpload.mockError({
+        errors: [{
+          type: 'InvalidState',
+          description: `Task ${task.id} is already resolved`,
+          error_enum: 'BusinessTaskAlreadyCompleted',
+        }],
+      }, { status: 403 }),
+    )
+    const { user, container } = renderItem(task)
+
+    await uploadFile(user, container, 'receipt.pdf')
+
+    expect(await screen.findByText('This task has already been answered.')).toBeInTheDocument()
+    expect(screen.queryByText('Some files couldn’t be uploaded. Try again.')).not.toBeInTheDocument()
+  })
+
   it('submits only the files still listed after one is removed', async () => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     const keptId = '00000000-0000-4000-8000-00000000d0c1'
