@@ -4,17 +4,19 @@ import {
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
   isChoiceAnswer,
-  isDocumentsAnswer,
   isTextAnswer,
   isTransactionAnswers,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { type AskFormDocument } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
 import { getPickedValue } from '@utils/shared/form/pickedValue'
 import { type AskFormStepFields, findFollowUp, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 export type AskFormSelection = { value: string, label: string, isCreated?: boolean }
 
 export type AskFormFile = { id: string, name: string }
+
+export const toUploadedFile = ({ id, fileName }: AskFormDocument): AskFormFile => ({ id, name: fileName })
 
 export type AskFormInputValues = {
   choice: string | null
@@ -93,7 +95,7 @@ export const toStepValues = (
 
   return {
     ...toAnswerValues(step, answer),
-    files: isDocumentsAnswer(answer) ? answer.documentIds.map(id => ({ id, name: id })) : [],
+    files: step.type === AskFormStepType.Upload ? step.documents.map(toUploadedFile) : [],
     rows,
   }
 }

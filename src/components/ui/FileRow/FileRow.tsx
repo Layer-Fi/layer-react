@@ -14,6 +14,7 @@ export type FileRowProps = {
   name: string
   sizeInBytes?: number
   isUploading?: boolean
+  isRemoving?: boolean
   isDisabled?: boolean
   onReplace?: () => void
   onRemove?: () => void
@@ -32,6 +33,7 @@ export const FileRow = ({
   name,
   sizeInBytes,
   isUploading = false,
+  isRemoving = false,
   isDisabled = false,
   onReplace,
   onRemove,
@@ -68,6 +70,7 @@ export const FileRow = ({
             icon
             inset
             isDisabled={isDisabled}
+            isPending={isRemoving}
             onPress={onRemove}
             aria-label={t('ui:FileRow.action.remove_file', 'Remove {{fileName}}', { fileName: name })}
           >

@@ -25,11 +25,13 @@ import {
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { post as postAskFormNextPage } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
+import { del as deleteUnifiedAskFormDocument } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
 import { post as postUnifiedAskFormUpload } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
 import { makeLinkedAccountsContext } from '@testUtils/mocks/linkedAccountsContext'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
+import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 const TRANSACTIONS = [
   { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -61250, description: 'COSTCO WHSE' },
@@ -503,10 +505,53 @@ describe('UnifiedAskForm', () => {
     expect(screen.queryByText('Some files couldn’t be uploaded. Try again.')).not.toBeInTheDocument()
   })
 
-  it('submits only the files still listed after one is removed', async () => {
+  it('lists the files the task already holds by name', () => {
+    const documentId = '00000000-0000-4000-8000-00000000d0c1'
+
+    renderItem(makeUnifiedAskFormTask({
+      form: makeUploadDocumentAskForm('Upload your receipt', [{ id: documentId, fileName: 'receipt.pdf' }]),
+      answers: { response: { documentIds: [documentId] } },
+    }))
+
+    expect(screen.getByText('receipt.pdf')).toBeInTheDocument()
+    expect(screen.queryByText(documentId)).not.toBeInTheDocument()
+  })
+
+  it.each([
+    {
+      reason: 'the task was already answered',
+      status: 403,
+      error: { type: 'InvalidState', description: 'Task is already resolved', error_enum: 'BusinessTaskAlreadyCompleted' },
+      toast: 'This task has already been answered.',
+    },
+    {
+      reason: 'the API no longer holds the file',
+      status: 404,
+      error: { type: 'ResourceNotFound', description: 'Document not found', error_enum: 'SpecifiedIdNotFound' },
+      toast: undefined,
+    },
+  ])('drops the file when its removal is rejected because $reason', async ({ status, error, toast }) => {
+    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
+    server.use(
+      postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c1', fileName: 'receipt.pdf' }] }),
+      deleteUnifiedAskFormDocument.mockError({ errors: [error] }, { status }),
+    )
+    const { user, container } = renderItem(task)
+
+    await uploadFile(user, container, 'receipt.pdf')
+    await user.click(await screen.findByRole('button', { name: 'Remove receipt.pdf' }))
+
+    if (toast) expect(await screen.findByText(toast)).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument())
+    expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
+    if (!toast) expect(screen.queryByText('This task has already been answered.')).not.toBeInTheDocument()
+  })
+
+  it('deletes a removed file from the task and submits only the files still listed', async () => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     const keptId = '00000000-0000-4000-8000-00000000d0c1'
     const onSubmit = spyOnSubmit(task)
+    const onDelete = spyOnEndpoint(deleteUnifiedAskFormDocument)
     const { user, container } = renderItem(task)
 
     server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: keptId, fileName: 'receipt.pdf' }] }))
@@ -518,6 +563,8 @@ describe('UnifiedAskForm', () => {
 
     await user.click(await screen.findByRole('button', { name: 'Remove invoice.pdf' }))
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove invoice.pdf' })).not.toBeInTheDocument())
+    expect(onDelete).toHaveBeenCalledTimes(1)
+    expect(onDelete.mock.calls[0]?.[0].params).toMatchObject({ taskId: task.id, documentId: '00000000-0000-4000-8000-00000000d0c2' })
 
     await user.click(screen.getByRole('button', { name: 'Submit' }))
 

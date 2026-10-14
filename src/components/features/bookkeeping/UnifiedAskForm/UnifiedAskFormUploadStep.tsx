@@ -1,11 +1,13 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
+import { useDeleteUnifiedAskFormDocument } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
 import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { type UploadedFile } from '@blocks/Form/types'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
 import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
+import { toUploadedFile } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
 // Mirrors the upload endpoint's limits, which the upload step doesn't send.
 const MAX_FILES = 10
@@ -31,19 +33,31 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
   render: function Render({ group, taskId, prompt, accept, multiple, isDisabled }) {
     const { t } = useTranslation()
     const { trigger: uploadDocuments } = usePostUnifiedAskFormUpload()
+    const { trigger: deleteDocument } = useDeleteUnifiedAskFormDocument()
     const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
-    const upload = useCallback(async (files: ReadonlyArray<File>) => {
+    const upload = async (files: ReadonlyArray<File>) => {
       try {
         const result = await uploadDocuments({ taskId, files })
-        return result ? result.documents.map(({ id, fileName }) => ({ id, name: fileName })) : null
+        return result ? result.documents.map(toUploadedFile) : null
       }
       catch (error) {
         if (!handleTaskAlreadyAnsweredError(error)) throw error
         // An empty list keeps the field quiet; null would mark the files as failed uploads.
         return []
       }
-    }, [taskId, uploadDocuments, handleTaskAlreadyAnsweredError])
+    }
+
+    const remove = async ({ id }: UploadedFile) => {
+      try {
+        await deleteDocument({ taskId, documentId: id })
+      }
+      catch (error) {
+        // A document the API no longer holds has nothing left to remove.
+        if (isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) return
+        if (!handleTaskAlreadyAnsweredError(error)) throw error
+      }
+    }
 
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
@@ -58,6 +72,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
               maxFiles={MAX_FILES}
               maxFileSizeInBytes={MAX_FILE_SIZE_IN_BYTES}
               upload={upload}
+              remove={remove}
             />
           )}
         </group.AppField>
