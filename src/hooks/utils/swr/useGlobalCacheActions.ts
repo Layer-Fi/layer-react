@@ -6,10 +6,6 @@ import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 
 type CacheKeyPredicateFn<TKey = unknown> = (info: CacheKeyInfo<TKey>) => boolean
 
-export type OptimisticUpdateOptions = {
-  until?: Promise<unknown>
-}
-
 export function useGlobalCacheActions() {
   const { mutate, cache } = useSWRConfig()
 
@@ -40,18 +36,17 @@ export function useGlobalCacheActions() {
     <unsafe_TData, TKey = unknown>(
       predicate: CacheKeyPredicateFn<TKey>,
       optimisticUpdateCallback: (displayedData: unsafe_TData) => unsafe_TData,
-      { until }: OptimisticUpdateOptions = {},
     ) =>
       Promise.all(getRelevantCacheKeys<TKey>({ cache, predicate })
-        .map(key => mutate(key, until, {
+        .map(key => mutate(key, undefined, {
           optimisticData: (_currentData: unknown, displayedData?: unsafe_TData) =>
             displayedData === undefined || displayedData === null
               ? displayedData
               : optimisticUpdateCallback(displayedData),
           populateCache: false,
           revalidate: false,
-          rollbackOnError: true,
-        }).catch(() => undefined)),
+        },
+        )),
       ), [cache, mutate],
   )
 

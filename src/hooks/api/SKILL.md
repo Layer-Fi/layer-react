@@ -201,7 +201,6 @@ Create these next to the query hook and export them; mutations import them by na
 | `forceReload()` | revalidates and populates the cache with the result |
 | `overwriteCache(data, options?)` | replaces the cached value outright |
 | `patchCache(transform, options?)` | maps the cached value through a transform |
-| `optimisticUpdate(transform, { until }?)` | shows a transformed value until a pending write settles, without writing the cache |
 
 `createInfiniteQueryGlobalCacheActions<TItem>(tagKey)` — for a `createInfiniteQueryHook`. **A
 different API**, because it operates on items across pages rather than one value, and it requires
@@ -226,14 +225,8 @@ safe. Rename on destructure when a mutation touches more than one resource
 - **`patchByKey` / `patchCache`** — you already have the authoritative object (a mutation response)
   and want it visible without a round trip. Pass `{ withRevalidate: false }` to skip the
   follow-up refetch when you're confident it matches the server.
-- **`optimisticUpdate` / `optimisticallyUpdate`** — before a write lands. They touch displayed data
-  only. Pass the write's promise as `{ until }` (resource actions): the optimistic value rolls back
-  immediately if it rejects, and SWR discards any fetch that starts while it is pending, so a
-  refetch can't show the stale value mid-write. The mutation's `useOnTriggerSuccess` still writes
-  the server's answer. The limit:
-  a later write to the same key (another caller's `patchCache` or `invalidate`) supersedes it. That
-  write was built from the pre-optimistic snapshot, so the optimistic value can briefly revert and
-  the rollback is skipped. Without `until`, pair with `invalidate({ withPrecedingOptimisticUpdate: true })`
+- **`optimisticallyUpdate`** — before a write lands. It touches displayed data only, so a failure
+  reverts on the next revalidation. Pair with `invalidate({ withPrecedingOptimisticUpdate: true })`
   so the invalidation doesn't clobber the optimistic value.
 
 ### Where invalidation goes

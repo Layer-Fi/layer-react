@@ -13,21 +13,30 @@ import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskF
 import { getPageFooterLayout, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UnifiedAskFormPageFooterProps = {
-  taskId: string
   page: AskFormPage
   form: UnifiedAskFormApi
   navigation: UnifiedAskFormNavigation
   presentation: UnifiedAskFormPresentation
   autoAdvances: boolean
   action?: ReactNode
+  hasContinued: boolean
   onContinue: () => void
 }
 
-export const UnifiedAskFormPageFooter = ({ taskId, page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
+export const UnifiedAskFormPageFooter = ({
+  page,
+  form,
+  navigation,
+  presentation,
+  autoAdvances,
+  action,
+  hasContinued,
+  onContinue,
+}: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
-  const { isConnecting, connect } = useConnectAccount(taskId)
+  const { isConnecting, connect } = useConnectAccount()
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
 
@@ -42,9 +51,10 @@ export const UnifiedAskFormPageFooter = ({ taskId, page, form, navigation, prese
   })
   const canContinue = getPageError(page, values) === undefined
   const isBusy = isSubmitting || isConnecting
+  const hasConnected = connectsBeforeContinuing && hasContinued
 
   const onPrimary = () => {
-    if (!connectsBeforeContinuing) {
+    if (!connectsBeforeContinuing || hasConnected) {
       onContinue()
       return
     }
@@ -55,7 +65,7 @@ export const UnifiedAskFormPageFooter = ({ taskId, page, form, navigation, prese
   }
 
   const getPrimaryLabel = () => {
-    if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
+    if (routing === 'error' || hasConnected) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
 
     switch (primaryAction) {
       case 'CONNECT_ACCOUNT':

@@ -2,18 +2,15 @@ import { useEffect, useMemo } from 'react'
 import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { replaceTaskInPeriods, useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useAppForm } from '@blocks/Form/useForm'
 import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { getPagePrimaryAction } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 export type UnifiedAskFormSubmitMeta = {
   pagesOnPath: ReadonlyArray<AskFormPage>
@@ -21,12 +18,6 @@ export type UnifiedAskFormSubmitMeta = {
 }
 
 const NO_SUBMIT_PATH: UnifiedAskFormSubmitMeta = { pagesOnPath: [] }
-
-const isConnectAccountSubmission = (pagesOnPath: ReadonlyArray<AskFormPage>, values: UnifiedAskFormValues) => {
-  const lastPage = pagesOnPath.at(-1)
-
-  return lastPage !== undefined && getPagePrimaryAction(lastPage, values) === 'CONNECT_ACCOUNT'
-}
 
 type UseUnifiedAskFormProps = {
   task: UnifiedAskFormTask
@@ -38,7 +29,6 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
   const { addToast } = useLayerContext()
   const { trigger: submitResponse } = usePostUnifiedAskFormResponse()
   const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
-  const { optimisticUpdate: optimisticUpdateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
   const { pages } = task.form
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
@@ -53,22 +43,15 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
     onSubmitMeta: NO_SUBMIT_PATH,
     validationLogic: revalidateLogic(),
     onSubmit: async ({ value, meta: { pagesOnPath, onSubmitted } }) => {
-      const answers = toAnswers(pagesOnPath, value, transactionIds)
-      const submission = submitResponse({ taskId: task.id, answers })
-
-      const isOptimistic = isConnectAccountSubmission(pagesOnPath, value)
-      if (isOptimistic) {
-        const optimisticTask = { ...task, status: BusinessTaskStatus.UserMarkedCompleted, answers }
-        void optimisticUpdateBookkeepingPeriods(replaceTaskInPeriods(optimisticTask), { until: submission })
-        onSaved({ task: optimisticTask, categorized: false })
-      }
-
       try {
-        const saved = await submission
+        const saved = await submitResponse({
+          taskId: task.id,
+          answers: toAnswers(pagesOnPath, value, transactionIds),
+        })
 
         form.reset(value)
         onSubmitted?.()
-        if (!isOptimistic) onSaved(saved)
+        onSaved(saved)
       }
       catch (error) {
         if (handleTaskAlreadyAnsweredError(error)) return

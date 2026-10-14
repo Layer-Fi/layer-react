@@ -42,13 +42,13 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
             onAutoAdvance={autoAdvances ? () => void group.handleSubmit() : undefined}
           />
           <UnifiedAskFormPageFooter
-            taskId={task.id}
             page={page}
             form={form}
             navigation={navigation}
             presentation={presentation}
             autoAdvances={autoAdvances}
             action={footerAction}
+            hasContinued={group.state.meta.submissionAttempts > 0}
             onContinue={() => void group.handleSubmit()}
           />
         </VStack>
