@@ -1,10 +1,9 @@
-import { act } from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { useRefreshTasksAfterAccountLinked } from '@providers/features/bookkeeping/BookkeepingPeriodsRefresh/BookkeepingPeriodsRefreshProvider'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
@@ -13,21 +12,23 @@ import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/b
 import { server } from '@msw/node'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
 
-const periodWithTaskIn = (status: BusinessTaskStatus): BookkeepingPeriod => ({
+const periodWithConnectTask = (connectionMatchPending: boolean): BookkeepingPeriod => ({
   id: 'period-1',
   year: 2025,
   month: 2,
   status: BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER,
-  tasks: [makeUnifiedAskFormTask({ status })],
+  tasks: [makeUnifiedAskFormTask({ discoveredAccount: { id: 'discovered-1', connectionMatchPending } })],
 })
 
-const servePeriods = (status: BusinessTaskStatus, onRequest: () => void) => {
-  server.use(getBookkeepingPeriods.mock([periodWithTaskIn(status)], { onRequest }))
+const servePeriods = (connectionMatchPending: boolean, onRequest: () => void) => {
+  server.use(getBookkeepingPeriods.mock([periodWithConnectTask(connectionMatchPending)], { onRequest }))
 }
 
-const renderRefresh = async () => {
+const renderPoller = async (onRequest: () => void) => {
   server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
-  const view = await renderHookWithAuth(() => useRefreshTasksAfterAccountLinked())
+  servePeriods(false, onRequest)
+  const view = await renderHookWithAuth(() => useBookkeepingPeriodsGlobalCacheActions())
+  await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'Date'] })
 
   return view
@@ -38,68 +39,45 @@ afterEach(() => {
 })
 
 describe('BookkeepingPeriodsRefreshProvider', () => {
-  it('fetches nothing until polling starts', async () => {
+  it('fetches the periods once and does not poll while no connection match is pending', async () => {
     const onPeriodsRequest = vi.fn()
-    servePeriods(BusinessTaskStatus.Todo, onPeriodsRequest)
-    await renderRefresh()
+    await renderPoller(onPeriodsRequest)
 
-    await vi.advanceTimersByTimeAsync(30_000)
+    await vi.advanceTimersByTimeAsync(60_000)
 
-    expect(onPeriodsRequest).not.toHaveBeenCalled()
-  })
-
-  it('refetches every 5 seconds while a task is open and stops once none are', async () => {
-    const onPeriodsRequest = vi.fn()
-    servePeriods(BusinessTaskStatus.Todo, onPeriodsRequest)
-    const { result } = await renderRefresh()
-
-    act(() => result.current())
-    await vi.advanceTimersByTimeAsync(0)
     expect(onPeriodsRequest).toHaveBeenCalledTimes(1)
-
-    await vi.advanceTimersByTimeAsync(5_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(2)
-
-    servePeriods(BusinessTaskStatus.UserMarkedCompleted, onPeriodsRequest)
-    await vi.advanceTimersByTimeAsync(5_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(3)
-
-    await vi.advanceTimersByTimeAsync(60_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(3)
   })
 
-  it('stops refetching two minutes after polling starts, and restarts on the next link', async () => {
+  it('polls every 5 seconds once a refetch reports a pending match, and stops when it clears', async () => {
     const onPeriodsRequest = vi.fn()
-    servePeriods(BusinessTaskStatus.Todo, onPeriodsRequest)
-    const { result } = await renderRefresh()
+    const { result } = await renderPoller(onPeriodsRequest)
 
-    act(() => result.current())
+    servePeriods(true, onPeriodsRequest)
+    act(() => void result.current.invalidate())
+    await vi.advanceTimersByTimeAsync(0)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(2)
+
+    await vi.advanceTimersByTimeAsync(5_000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(3)
+
+    servePeriods(false, onPeriodsRequest)
+    await vi.advanceTimersByTimeAsync(5_000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(4)
+
+    await vi.advanceTimersByTimeAsync(60_000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(4)
+  })
+
+  it('stops polling two minutes after a match is first reported pending', async () => {
+    const onPeriodsRequest = vi.fn()
+    const { result } = await renderPoller(onPeriodsRequest)
+
+    servePeriods(true, onPeriodsRequest)
+    act(() => void result.current.invalidate())
     await vi.advanceTimersByTimeAsync(2 * 60 * 1000 + 5_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(24)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(26)
 
     await vi.advanceTimersByTimeAsync(60_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(24)
-
-    act(() => result.current())
-    await vi.advanceTimersByTimeAsync(9_000)
     expect(onPeriodsRequest).toHaveBeenCalledTimes(26)
-  })
-
-  it('keeps refetching when the cached periods had no open task but the server now has one', async () => {
-    const onPeriodsRequest = vi.fn()
-    servePeriods(BusinessTaskStatus.UserMarkedCompleted, onPeriodsRequest)
-    const { result } = await renderRefresh()
-
-    act(() => result.current())
-    await vi.advanceTimersByTimeAsync(3 * 60 * 1000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(2)
-
-    servePeriods(BusinessTaskStatus.Todo, onPeriodsRequest)
-    act(() => result.current())
-    await vi.advanceTimersByTimeAsync(1_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(3)
-
-    await vi.advanceTimersByTimeAsync(10_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(5)
   })
 })

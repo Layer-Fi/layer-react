@@ -144,6 +144,7 @@ const baseUnifiedAskFormTask: UnifiedAskFormTask = {
   answers: null,
   answerSummary: null,
   resolution: null,
+  discoveredAccount: null,
 }
 
 export const { make: makeUnifiedAskFormTask } = createFixtureFactory(baseUnifiedAskFormTask)
