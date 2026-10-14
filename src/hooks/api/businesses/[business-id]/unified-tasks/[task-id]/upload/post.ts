@@ -35,6 +35,14 @@ type UsePostUnifiedAskFormUploadArg = {
   files: ReadonlyArray<File>
 }
 
+export const useUnifiedTaskDocumentTriggerSuccess = () => {
+  const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+
+  return () => {
+    void invalidateBookkeepingPeriods()
+  }
+}
+
 export const usePostUnifiedAskFormUpload = createMutationHook({
   tags: [UNIFIED_ASK_FORM_UPLOAD_TAG_KEY],
   request: uploadToUnifiedTask,
@@ -42,11 +50,5 @@ export const usePostUnifiedAskFormUpload = createMutationHook({
   argToParams: ({ taskId }: UsePostUnifiedAskFormUploadArg) => ({ taskId }),
   argToBody: ({ files }: UsePostUnifiedAskFormUploadArg) => ({ files }),
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: () => {
-    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
-
-    return () => {
-      void invalidateBookkeepingPeriods()
-    }
-  },
+  useOnTriggerSuccess: useUnifiedTaskDocumentTriggerSuccess,
 })

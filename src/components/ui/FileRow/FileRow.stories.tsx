@@ -11,6 +11,7 @@ const VARIANTS: ReadonlyArray<{ label: string, props: FileRowProps }> = [
   { label: 'uploaded', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, onRemove: noop } },
   { label: 'uploaded, replaceable', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, onReplace: noop, onRemove: noop } },
   { label: 'uploading', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isUploading: true } },
+  { label: 'removing', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isRemoving: true, onRemove: noop } },
   { label: 'read only', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000 } },
   { label: 'disabled', props: { name: 'office-supplies-receipt.pdf', sizeInBytes: 248_000, isDisabled: true, onRemove: noop } },
   { label: 'long name truncates', props: { name: 'Screenshot 2026-10-09 at 10.49.39 AM.png', sizeInBytes: 1_200_000, onRemove: noop } },

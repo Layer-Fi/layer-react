@@ -1,6 +1,6 @@
 import { del } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { useUnifiedTaskDocumentTriggerSuccess } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 
 const UNIFIED_ASK_FORM_DOCUMENT_DELETE_TAG_KEY = '#unified-ask-form-document:delete'
 
@@ -25,11 +25,5 @@ export const useDeleteUnifiedAskFormDocument = createMutationHook({
   argToParams: ({ taskId, documentId }: UseDeleteUnifiedAskFormDocumentArg) => ({ taskId, documentId }),
   argToBody: () => undefined,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: () => {
-    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
-
-    return () => {
-      void invalidateBookkeepingPeriods()
-    }
-  },
+  useOnTriggerSuccess: useUnifiedTaskDocumentTriggerSuccess,
 })

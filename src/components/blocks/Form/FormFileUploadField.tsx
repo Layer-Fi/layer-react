@@ -27,12 +27,22 @@ export type FormFileUploadFieldProps = CommonFormFieldProps & {
   remove?: (file: UploadedFile) => Promise<void>
 }
 
+const removeLocally = () => Promise.resolve()
+
 const appendSentence = (current: string | undefined, sentence: string) => (current ? `${current} ${sentence}` : sentence)
 
-export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFileSizeInBytes, upload, remove, ...props }: FormFileUploadFieldProps) {
+export function FormFileUploadField({
+  accept,
+  multiple = false,
+  maxFiles,
+  maxFileSizeInBytes,
+  upload,
+  remove = removeLocally,
+  ...props
+}: FormFileUploadFieldProps) {
   const field = useFieldContext<UploadedFile[]>()
   const [error, setError] = useState<string | undefined>(undefined)
-  const [isRemoving, setIsRemoving] = useState(false)
+  const [removingId, setRemovingId] = useState<string | null>(null)
   const { pending, startUpload } = usePendingUploads(upload)
 
   const { labelId, isInvalid, shellProps } = useFormField({ ...props, errorText: props.errorText ?? error })
@@ -43,7 +53,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
   const fileLimit = multiple ? maxFiles : 1
   const remaining = multiple && fileLimit !== undefined ? fileLimit - heldCount : undefined
   const isAtLimit = remaining !== undefined && remaining <= 0
-  const isInputDisabled = isDisabled || pending.length > 0 || isRemoving
+  const isInputDisabled = isDisabled || pending.length > 0 || removingId !== null
 
   const messages = useFileUploadMessages({ accept, multiple, maxFileSizeInBytes, heldCount, fileLimit, remaining })
 
@@ -63,19 +73,12 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
 
   const removeFile = async (file: UploadedFile) => {
     setError(undefined)
+    setRemovingId(file.id)
+    const isRemoved = await remove(file).then(() => true, () => false)
+    setRemovingId(null)
 
-    if (remove) {
-      setIsRemoving(true)
-      const isRemoved = await remove(file).then(() => true, () => false)
-      setIsRemoving(false)
-
-      if (!isRemoved) {
-        setError(messages.removeFailed)
-        return
-      }
-    }
-
-    field.handleChange(field.state.value.filter(other => other.id !== file.id))
+    if (isRemoved) field.handleChange(field.state.value.filter(({ id }) => id !== file.id))
+    else setError(messages.removeFailed)
   }
 
   const renderRows = ({ open }: { open: () => void }) => {
@@ -89,6 +92,7 @@ export function FormFileUploadField({ accept, multiple = false, maxFiles, maxFil
             key={file.id}
             name={file.name}
             sizeInBytes={file.sizeInBytes}
+            isRemoving={removingId === file.id}
             isDisabled={isInputDisabled}
             onReplace={multiple ? undefined : open}
             onRemove={() => void removeFile(file)}

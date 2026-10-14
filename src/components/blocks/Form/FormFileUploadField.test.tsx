@@ -160,7 +160,7 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
-  it('asks before dropping a file and keeps it listed when that fails', async () => {
+  it('keeps a file listed and shows an error when removal fails', async () => {
     const remove = vi.fn(() => Promise.reject(new Error('offline')))
     const { user } = renderUploadField({ remove, multiple: true, initialFiles: [{ id: 'kept', name: 'receipt.pdf' }] })
 
