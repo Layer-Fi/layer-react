@@ -54,7 +54,6 @@ const spyOnBookkeepingPeriods = () => {
   return onRequest
 }
 
-// BusinessProvider's periods poller fetches once on mount, before any link.
 const waitForInitialPeriodsRequest = (onPeriodsRequest: ReturnType<typeof spyOnBookkeepingPeriods>) =>
   waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledOnce())
 
