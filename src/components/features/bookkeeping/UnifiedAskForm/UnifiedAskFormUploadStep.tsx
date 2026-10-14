@@ -8,6 +8,7 @@ import { type UploadedFile } from '@blocks/Form/types'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
 import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
+import { toUploadedFile } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 
 // Mirrors the upload endpoint's limits, which the upload step doesn't send.
 const MAX_FILES = 10
@@ -39,7 +40,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
     const upload = useCallback(async (files: ReadonlyArray<File>) => {
       try {
         const result = await uploadDocuments({ taskId, files })
-        return result ? result.documents.map(({ id, fileName }) => ({ id, name: fileName })) : null
+        return result ? result.documents.map(toUploadedFile) : null
       }
       catch (error) {
         if (!handleTaskAlreadyAnsweredError(error)) throw error
@@ -54,7 +55,8 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
       }
       catch (error) {
         // A document the API no longer holds has nothing left to remove.
-        if (!handleTaskAlreadyAnsweredError(error) && !isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) throw error
+        if (isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) return
+        if (!handleTaskAlreadyAnsweredError(error)) throw error
       }
     }, [taskId, deleteDocument, handleTaskAlreadyAnsweredError])
 

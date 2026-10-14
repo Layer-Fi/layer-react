@@ -2,9 +2,8 @@ import { Schema } from 'effect'
 import { HttpResponse } from 'msw'
 
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
-import { type AskFormAnswer, type AskFormAnswers, isDocumentsAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
-import { type AskFormStep, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
-import { type AskFormDocument } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
+import { type AskFormAnswers, isDocumentsAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
+import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { UnifiedAskFormSubmissionSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmission'
 import {
   type UnifiedAskFormSubmissionResult,
@@ -28,18 +27,8 @@ const toResponse = (result: UnifiedAskFormSubmissionResult) => apiData(encodeRes
 const notFound = (description: string) =>
   HttpResponse.json(apiError(description, { type: 'ResourceNotFound', errorEnum: 'SpecifiedIdNotFound' }), { status: 404 })
 
-const toDocumentIds = (answer: AskFormAnswer | undefined) => (isDocumentsAnswer(answer) ? answer.documentIds : [])
-
-const collectDocumentIds = (answers: AskFormAnswers) => Object.values(answers).flatMap(toDocumentIds)
-
-/** Lists each UPLOAD step's answered documents on the step, as the API does once a task is answered. */
-const withStepDocuments = (steps: ReadonlyArray<AskFormStep>, answers: AskFormAnswers, documents: ReadonlyArray<AskFormDocument>) =>
-  steps.map((step) => {
-    if (step.type !== AskFormStepType.Upload) return step
-
-    const documentIds = new Set(toDocumentIds(answers[step.id]))
-    return { ...step, documents: documents.filter(({ id }) => documentIds.has(id)) }
-  })
+const collectDocumentIds = (answers: AskFormAnswers) =>
+  Object.values(answers).flatMap(answer => (isDocumentsAnswer(answer) ? answer.documentIds : []))
 
 export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnType<typeof toResponse>>({
   method: 'post',
@@ -61,15 +50,23 @@ export const post = createMockEndpoint<UnifiedAskFormSubmissionResult, ReturnTyp
     const unknownDocumentIds = submittedDocumentIds.filter(id => !knownDocumentIds.has(id))
     assertRequest(unknownDocumentIds.length === 0, `Documents ${unknownDocumentIds.join(',')} are not uploaded to task ${taskId}`)
 
+    const submittedDocuments = storedDocuments.filter(({ id }) => submittedDocumentIds.includes(id))
+
     const task = patchUnifiedAskFormTaskInStore(taskId, task => ({
       ...task,
       status: BusinessTaskStatus.UserMarkedCompleted,
-      form: { ...task.form, pages: task.form.pages.map(page => ({ ...page, steps: withStepDocuments(page.steps, answers, storedDocuments) })) },
+      form: {
+        ...task.form,
+        pages: task.form.pages.map(page => ({
+          ...page,
+          steps: page.steps.map(step => (step.type === AskFormStepType.Upload ? { ...step, documents: submittedDocuments } : step)),
+        })),
+      },
       answers,
       answerSummary: summarizeAskFormAnswers(task.form, answers),
     })) ?? existing
 
-    if (submittedDocumentIds.length > 0) saveUnifiedTaskDocuments(taskId, storedDocuments.filter(({ id }) => submittedDocumentIds.includes(id)))
+    if (submittedDocuments.length > 0) saveUnifiedTaskDocuments(taskId, submittedDocuments)
 
     return toResponse({ task, categorized: isCategorizedByAskFormAnswers(task.form, answers) })
   },
