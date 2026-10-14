@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useDeleteUnifiedAskFormDocument } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
 import { usePostUnifiedAskFormUpload } from '@api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { type UploadedFile } from '@blocks/Form/types'
@@ -52,7 +53,8 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         await deleteDocument({ taskId, documentId: id })
       }
       catch (error) {
-        if (!handleTaskAlreadyAnsweredError(error)) throw error
+        // A document the API no longer holds has nothing left to remove.
+        if (!handleTaskAlreadyAnsweredError(error) && !isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) throw error
       }
     }, [taskId, deleteDocument, handleTaskAlreadyAnsweredError])
 

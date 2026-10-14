@@ -2,6 +2,7 @@ import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { AskFormUploadResultSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
 import { postFormData } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 const UNIFIED_ASK_FORM_UPLOAD_TAG_KEY = '#unified-ask-form-upload'
 
@@ -41,4 +42,11 @@ export const usePostUnifiedAskFormUpload = createMutationHook({
   argToParams: ({ taskId }: UsePostUnifiedAskFormUploadArg) => ({ taskId }),
   argToBody: ({ files }: UsePostUnifiedAskFormUploadArg) => ({ files }),
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+
+    return () => {
+      void invalidateBookkeepingPeriods()
+    }
+  },
 })

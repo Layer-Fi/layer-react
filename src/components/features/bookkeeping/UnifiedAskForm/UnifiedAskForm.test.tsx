@@ -539,6 +539,23 @@ describe('UnifiedAskForm', () => {
     expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
   })
 
+  it('drops a file the API no longer holds when its removal returns 404', async () => {
+    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
+    server.use(
+      postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c1', fileName: 'receipt.pdf' }] }),
+      deleteUnifiedAskFormDocument.mockError({
+        errors: [{ type: 'ResourceNotFound', description: 'Document not found', error_enum: 'SpecifiedIdNotFound' }],
+      }, { status: 404 }),
+    )
+    const { user, container } = renderItem(task)
+
+    await uploadFile(user, container, 'receipt.pdf')
+    await user.click(await screen.findByRole('button', { name: 'Remove receipt.pdf' }))
+
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument())
+    expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
+  })
+
   it('deletes a removed file from the task and submits only the files still listed', async () => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     const keptId = '00000000-0000-4000-8000-00000000d0c1'
