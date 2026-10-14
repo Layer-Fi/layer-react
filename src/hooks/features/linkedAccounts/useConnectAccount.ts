@@ -1,28 +1,33 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
 
 import { useIsMountedRef } from '@hooks/utils/react/useIsMountedRef'
+import { useConnectedAccountKeys } from '@providers/features/linkedAccounts/LinkedAccounts/ConnectedAccountKeys'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 
-type ConnectAccountStatus = 'idle' | 'connecting' | 'connected'
-
 /** A connection already made is reused, so a caller retrying its own follow-up work doesn't reopen Plaid. */
-export const useConnectAccount = () => {
+export const useConnectAccount = (connectionKey: string) => {
   const { addConnection } = useContext(LinkedAccountsContext)
-  const [status, setStatus] = useState<ConnectAccountStatus>('idle')
+  const sharedConnectedKeys = useConnectedAccountKeys()
+  const [localConnectedKeys] = useState(() => new Set<string>())
+  const connectedKeys = sharedConnectedKeys ?? localConnectedKeys
+  const [isConnecting, setIsConnecting] = useState(false)
   const isMountedRef = useIsMountedRef()
 
   const connect = useCallback(async () => {
-    if (status === 'connected') return true
+    if (connectedKeys.has(connectionKey)) return true
 
-    setStatus('connecting')
+    setIsConnecting(true)
     const isConnected = await addConnection('PLAID')
-    // The caller can leave the page while Link is open (Back, Skip, or the task refetched away), so a
-    // connection that lands after that is reported as not connected rather than continuing a page nobody is on.
-    const isConnectedWhileMounted = isConnected && isMountedRef.current
-    setStatus(isConnectedWhileMounted ? 'connected' : 'idle')
+    if (isConnected) connectedKeys.add(connectionKey)
+    if (!isMountedRef.current) {
+      // The caller can leave the page while Link is open (Back, Skip, or the task refetched away), so a
+      // connection that lands after that is reported as not connected rather than continuing a page nobody is on.
+      return false
+    }
 
-    return isConnectedWhileMounted
-  }, [addConnection, status, isMountedRef])
+    setIsConnecting(false)
+    return isConnected
+  }, [addConnection, connectedKeys, connectionKey, isMountedRef])
 
-  return useMemo(() => ({ isConnecting: status === 'connecting', connect }), [status, connect])
+  return useMemo(() => ({ isConnecting, connect }), [isConnecting, connect])
 }

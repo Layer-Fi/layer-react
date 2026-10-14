@@ -35,8 +35,7 @@ export const useTasksListItemOpenState = ({ taskId, defaultOpen, onExpandTask }:
     onExpandTask?.(!isOpen)
   }, [emitLayerEvent, isOpen, onExpandTask, taskId])
 
-  const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  return useMemo(() => ({ isOpen, toggle, open, close }), [open, close, isOpen, toggle])
+  return useMemo(() => ({ isOpen, toggle, close }), [close, isOpen, toggle])
 }

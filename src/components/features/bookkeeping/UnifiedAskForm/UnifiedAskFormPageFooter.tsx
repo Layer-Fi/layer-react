@@ -13,6 +13,7 @@ import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskF
 import { getPageFooterLayout, type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UnifiedAskFormPageFooterProps = {
+  taskId: string
   page: AskFormPage
   form: UnifiedAskFormApi
   navigation: UnifiedAskFormNavigation
@@ -22,11 +23,11 @@ type UnifiedAskFormPageFooterProps = {
   onContinue: () => void
 }
 
-export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
+export const UnifiedAskFormPageFooter = ({ taskId, page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
-  const { isConnecting, connect } = useConnectAccount()
+  const { isConnecting, connect } = useConnectAccount(taskId)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const values = useStore(form.store, state => state.values)
 

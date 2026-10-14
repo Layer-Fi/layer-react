@@ -31,11 +31,9 @@ const isConnectAccountSubmission = (pagesOnPath: ReadonlyArray<AskFormPage>, val
 type UseUnifiedAskFormProps = {
   task: UnifiedAskFormTask
   onSaved: (saved: UnifiedAskFormSubmissionResult) => void
-  /** Runs when an answer already shown as saved fails to save, so the caller can undo what `onSaved` did. */
-  onSaveFailed?: () => void
 }
 
-export const useUnifiedAskForm = ({ task, onSaved, onSaveFailed }: UseUnifiedAskFormProps) => {
+export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => {
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { trigger: submitResponse } = usePostUnifiedAskFormResponse()
@@ -75,7 +73,6 @@ export const useUnifiedAskForm = ({ task, onSaved, onSaveFailed }: UseUnifiedAsk
       catch (error) {
         if (handleTaskAlreadyAnsweredError(error)) return
 
-        if (isOptimistic) onSaveFailed?.()
         addToast({
           content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.submit_answer', 'We couldn’t save that answer. Please try again.'),
           type: 'error',

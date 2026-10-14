@@ -3,6 +3,7 @@ import { type PropsWithChildren } from 'react'
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
+import { ConnectedAccountKeysProvider } from '@providers/features/linkedAccounts/LinkedAccounts/ConnectedAccountKeys'
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
@@ -26,7 +27,9 @@ export function LinkedAccountsProvider({
 
   return (
     <LinkedAccountsContext.Provider value={linkedAccountsContextData}>
-      {children}
+      <ConnectedAccountKeysProvider>
+        {children}
+      </ConnectedAccountKeysProvider>
     </LinkedAccountsContext.Provider>
   )
 }

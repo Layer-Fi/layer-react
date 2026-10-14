@@ -20,14 +20,14 @@ type TasksListItemProps = {
 
 export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>(({ task, defaultOpen, onExpandTask }, ref) => {
   const { eventCallbacks } = useLayerContext()
-  const { isOpen, toggle, open, close } = useTasksListItemOpenState({ taskId: task.id, defaultOpen, onExpandTask })
+  const { isOpen, toggle, close } = useTasksListItemOpenState({ taskId: task.id, defaultOpen, onExpandTask })
 
   const onSaved = useCallback(({ categorized }: UnifiedAskFormSubmissionResult) => {
     if (categorized) eventCallbacks?.onTransactionCategorized?.()
     close()
   }, [close, eventCallbacks])
 
-  const { form, isSubmitting } = useUnifiedAskForm({ task, onSaved, onSaveFailed: open })
+  const { form, isSubmitting } = useUnifiedAskForm({ task, onSaved })
   const navigation = useUnifiedAskFormNavigation({ task, form })
 
   const bodyClassName = classNames(

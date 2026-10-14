@@ -28,7 +28,7 @@ const servePeriods = (status: BusinessTaskStatus, onRequest: () => void) => {
 const renderRefresh = async () => {
   server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
   const view = await renderHookWithAuth(() => useRefreshTasksAfterAccountLinked())
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] })
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'Date'] })
 
   return view
 }
@@ -75,13 +75,31 @@ describe('BookkeepingPeriodsRefreshProvider', () => {
 
     act(() => result.current())
     await vi.advanceTimersByTimeAsync(2 * 60 * 1000 + 5_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(25)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(24)
 
     await vi.advanceTimersByTimeAsync(60_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(25)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(24)
 
     act(() => result.current())
+    await vi.advanceTimersByTimeAsync(9_000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(26)
+  })
+
+  it('keeps refetching when the cached periods had no open task but the server now has one', async () => {
+    const onPeriodsRequest = vi.fn()
+    servePeriods(BusinessTaskStatus.UserMarkedCompleted, onPeriodsRequest)
+    const { result } = await renderRefresh()
+
+    act(() => result.current())
+    await vi.advanceTimersByTimeAsync(3 * 60 * 1000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(2)
+
+    servePeriods(BusinessTaskStatus.Todo, onPeriodsRequest)
+    act(() => result.current())
+    await vi.advanceTimersByTimeAsync(1_000)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(3)
+
     await vi.advanceTimersByTimeAsync(10_000)
-    expect(onPeriodsRequest).toHaveBeenCalledTimes(27)
+    expect(onPeriodsRequest).toHaveBeenCalledTimes(5)
   })
 })

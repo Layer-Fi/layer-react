@@ -9,9 +9,11 @@ import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/
 import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { getCompletedTasks, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { ConnectedAccountKeysProvider } from '@providers/features/linkedAccounts/LinkedAccounts/ConnectedAccountKeys'
 import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { TasksListDesktop } from '@features/bookkeeping/TasksList/TasksListDesktop'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
@@ -118,6 +120,36 @@ const renderListedItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<Lin
       <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
         <OpenTasks />
         <TasksListItem task={task} defaultOpen />
+      </LinkedAccountsContext.Provider>,
+      { wrapper: LayerTestProvider },
+    ),
+  }
+}
+
+const PeriodTasksList = () => {
+  const { data } = useGetBookkeepingPeriods()
+  const tasks = data?.find(({ id }) => id === 'period-with-connect-task')?.tasks ?? []
+
+  return <TasksListDesktop tasks={[...getIncompleteTasks(tasks), ...getCompletedTasks(tasks)]} pageSize={10} />
+}
+
+const renderTasksList = (task: UnifiedAskFormTask, linkedAccounts: Partial<LinkedAccountsContextType>) => {
+  server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
+  bookkeepingPeriodStore.save({
+    id: 'period-with-connect-task',
+    year: 2025,
+    month: 2,
+    status: BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER,
+    tasks: [task],
+  })
+
+  return {
+    user: userEvent.setup(),
+    ...render(
+      <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
+        <ConnectedAccountKeysProvider>
+          <PeriodTasksList />
+        </ConnectedAccountKeysProvider>
       </LinkedAccountsContext.Provider>,
       { wrapper: LayerTestProvider },
     ),
@@ -477,7 +509,7 @@ describe('UnifiedAskForm', () => {
     expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument()
   })
 
-  it('reopens a Connect account task and asks to try again when its answer fails to save', async () => {
+  it('puts a Connect account task back as open and asks to try again when its answer fails to save', async () => {
     const task = { ...connectOnlyTask(), title: 'Connect Chase checking' }
     const { release, onRequest } = holdUntilReleased()
     server.use(
@@ -497,7 +529,33 @@ describe('UnifiedAskForm', () => {
 
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
     expect(within(openTasks).getByText('Connect Chase checking')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Connect account' })).toBeInTheDocument()
+  })
+
+  it('saves a listed Connect account task again without reopening Plaid after its first save fails', async () => {
+    const task = { ...connectOnlyTask(), title: 'Connect Chase checking' }
+    const linkedAccounts = connectAccountResolving(true)
+    const { release, onRequest } = holdUntilReleased()
+    server.use(
+      postUnifiedAskFormResponse.mockError(
+        { errors: [{ type: 'BadRequest', description: 'nope', error_enum: 'SpecifiedBadRequest' }] },
+        { status: 400, onRequest },
+      ),
+    )
+    const { user } = renderTasksList(task, linkedAccounts)
+
+    await user.click(await screen.findByRole('button', { name: 'Connect account' }))
+    await waitFor(() => expect(screen.getAllByText('Connect Chase checking')).toHaveLength(1))
+    expect(screen.queryByRole('button', { name: 'Connect account' })).not.toBeInTheDocument()
+
+    release()
+
+    expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
+    const onSubmit = spyOnSubmit(task)
+    await user.click(await screen.findByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+    expect(linkedAccounts.addConnection).toHaveBeenCalledOnce()
   })
 
   it('stays on the connect page when the account isn’t connected', async () => {
@@ -523,6 +581,7 @@ describe('UnifiedAskForm', () => {
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
 
     const onSubmit = spyOnSubmit(task)
+    await user.click(screen.getByText(task.title))
     await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))

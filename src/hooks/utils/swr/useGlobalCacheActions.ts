@@ -7,7 +7,6 @@ import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 type CacheKeyPredicateFn<TKey = unknown> = (info: CacheKeyInfo<TKey>) => boolean
 
 export type OptimisticUpdateOptions = {
-  /** Holds the optimistic data until this settles, discarding fetches that start meanwhile and rolling back if it rejects. */
   until?: Promise<unknown>
 }
 
@@ -52,9 +51,7 @@ export function useGlobalCacheActions() {
           populateCache: false,
           revalidate: false,
           rollbackOnError: true,
-        },
-        // A rejected `until` is the caller's to handle; here it only rolls the cache back.
-        ).catch(() => undefined)),
+        }).catch(() => undefined)),
       ), [cache, mutate],
   )
 
