@@ -517,43 +517,34 @@ describe('UnifiedAskForm', () => {
     expect(screen.queryByText(documentId)).not.toBeInTheDocument()
   })
 
-  it('says the task was already answered when the API rejects a removal, and drops the file', async () => {
+  it.each([
+    {
+      reason: 'the task was already answered',
+      status: 403,
+      error: { type: 'InvalidState', description: 'Task is already resolved', error_enum: 'BusinessTaskAlreadyCompleted' },
+      toast: 'This task has already been answered.',
+    },
+    {
+      reason: 'the API no longer holds the file',
+      status: 404,
+      error: { type: 'ResourceNotFound', description: 'Document not found', error_enum: 'SpecifiedIdNotFound' },
+      toast: undefined,
+    },
+  ])('drops the file when its removal is rejected because $reason', async ({ status, error, toast }) => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     server.use(
       postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c1', fileName: 'receipt.pdf' }] }),
-      deleteUnifiedAskFormDocument.mockError({
-        errors: [{
-          type: 'InvalidState',
-          description: `Task ${task.id} is already resolved`,
-          error_enum: 'BusinessTaskAlreadyCompleted',
-        }],
-      }, { status: 403 }),
+      deleteUnifiedAskFormDocument.mockError({ errors: [error] }, { status }),
     )
     const { user, container } = renderItem(task)
 
     await uploadFile(user, container, 'receipt.pdf')
     await user.click(await screen.findByRole('button', { name: 'Remove receipt.pdf' }))
 
-    expect(await screen.findByText('This task has already been answered.')).toBeInTheDocument()
+    if (toast) expect(await screen.findByText(toast)).toBeInTheDocument()
     await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument())
     expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
-  })
-
-  it('drops a file the API no longer holds when its removal returns 404', async () => {
-    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
-    server.use(
-      postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c1', fileName: 'receipt.pdf' }] }),
-      deleteUnifiedAskFormDocument.mockError({
-        errors: [{ type: 'ResourceNotFound', description: 'Document not found', error_enum: 'SpecifiedIdNotFound' }],
-      }, { status: 404 }),
-    )
-    const { user, container } = renderItem(task)
-
-    await uploadFile(user, container, 'receipt.pdf')
-    await user.click(await screen.findByRole('button', { name: 'Remove receipt.pdf' }))
-
-    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument())
-    expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
+    if (!toast) expect(screen.queryByText('This task has already been answered.')).not.toBeInTheDocument()
   })
 
   it('deletes a removed file from the task and submits only the files still listed', async () => {
