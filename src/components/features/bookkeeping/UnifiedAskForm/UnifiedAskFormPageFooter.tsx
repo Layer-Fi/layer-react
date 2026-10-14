@@ -19,20 +19,10 @@ type UnifiedAskFormPageFooterProps = {
   presentation: UnifiedAskFormPresentation
   autoAdvances: boolean
   action?: ReactNode
-  hasContinued: boolean
   onContinue: () => void
 }
 
-export const UnifiedAskFormPageFooter = ({
-  page,
-  form,
-  navigation,
-  presentation,
-  autoAdvances,
-  action,
-  hasContinued,
-  onContinue,
-}: UnifiedAskFormPageFooterProps) => {
+export const UnifiedAskFormPageFooter = ({ page, form, navigation, presentation, autoAdvances, action, onContinue }: UnifiedAskFormPageFooterProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { visitedPages, canGoBack, routing, getPageError, isReadOnly } = navigation
@@ -51,10 +41,9 @@ export const UnifiedAskFormPageFooter = ({
   })
   const canContinue = getPageError(page, values) === undefined
   const isBusy = isSubmitting || isConnecting
-  const hasConnected = connectsBeforeContinuing && hasContinued
 
   const onPrimary = () => {
-    if (!connectsBeforeContinuing || hasConnected) {
+    if (!connectsBeforeContinuing) {
       onContinue()
       return
     }
@@ -65,7 +54,7 @@ export const UnifiedAskFormPageFooter = ({
   }
 
   const getPrimaryLabel = () => {
-    if (routing === 'error' || hasConnected) return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
+    if (routing === 'error') return t('bookkeeping:UnifiedAskForm.UnifiedAskFormPageFooter.action.try_again', 'Try again')
 
     switch (primaryAction) {
       case 'CONNECT_ACCOUNT':
