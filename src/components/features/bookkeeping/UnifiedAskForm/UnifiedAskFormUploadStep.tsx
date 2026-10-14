@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
@@ -37,7 +36,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
     const { trigger: deleteDocument } = useDeleteUnifiedAskFormDocument()
     const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
 
-    const upload = useCallback(async (files: ReadonlyArray<File>) => {
+    const upload = async (files: ReadonlyArray<File>) => {
       try {
         const result = await uploadDocuments({ taskId, files })
         return result ? result.documents.map(toUploadedFile) : null
@@ -47,9 +46,9 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         // An empty list keeps the field quiet; null would mark the files as failed uploads.
         return []
       }
-    }, [taskId, uploadDocuments, handleTaskAlreadyAnsweredError])
+    }
 
-    const remove = useCallback(async ({ id }: UploadedFile) => {
+    const remove = async ({ id }: UploadedFile) => {
       try {
         await deleteDocument({ taskId, documentId: id })
       }
@@ -58,7 +57,7 @@ export const UnifiedAskFormUploadStep = withFieldGroup({
         if (isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) return
         if (!handleTaskAlreadyAnsweredError(error)) throw error
       }
-    }, [taskId, deleteDocument, handleTaskAlreadyAnsweredError])
+    }
 
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
