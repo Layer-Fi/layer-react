@@ -1,19 +1,26 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http } from 'msw'
 import { describe, expect, it, vi } from 'vitest'
 
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { makeUploadDocumentAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/uploadDocument'
 import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/store'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { post as postAskFormNextPage } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { post as postUnifiedAskFormUpload } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
@@ -48,7 +55,27 @@ const renderItem = (task: UnifiedAskFormTask) => ({
   ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
 })
 
+const OpenTasks = () => {
+  const { data } = useGetBookkeepingPeriods()
+  const openTasks = getIncompleteTasks(data?.flatMap(({ tasks }) => tasks) ?? [])
+
+  return (
+    <ul aria-label='Open tasks'>
+      {openTasks.map(({ id, title }) => <li key={id}>{title}</li>)}
+    </ul>
+  )
+}
+
 const renderItemWithPlaid = (task: UnifiedAskFormTask) => {
+  server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
+  bookkeepingPeriodStore.save({
+    id: 'period-with-connect-task',
+    year: 2025,
+    month: 2,
+    status: BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER,
+    tasks: [task],
+  })
+
   const noop = () => Promise.resolve()
   const addConnection = vi.fn<LinkedAccountsContextType['addConnection']>(async (_source, onSuccess) => {
     await onSuccess?.()
@@ -71,6 +98,7 @@ const renderItemWithPlaid = (task: UnifiedAskFormTask) => {
     user: userEvent.setup(),
     ...render(
       <LinkedAccountsContext.Provider value={linkedAccounts}>
+        <OpenTasks />
         <TasksListItem task={task as UserVisibleTask} defaultOpen />
       </LinkedAccountsContext.Provider>,
       { wrapper: LayerTestProvider },
@@ -96,6 +124,15 @@ const spyOnSubmit = (task: UnifiedAskFormTask) => {
   )
 
   return onRequest
+}
+
+const holdUntilReleased = () => {
+  let release = () => {}
+  const released = new Promise<void>((resolve) => {
+    release = resolve
+  })
+
+  return { release, onRequest: () => released }
 }
 
 describe('UnifiedAskForm', () => {
@@ -378,6 +415,7 @@ describe('UnifiedAskForm', () => {
   })
 
   const connectAccountTask = () => makeUnifiedAskFormTask({
+    title: 'Connect Chase checking',
     form: {
       entryPageId: 'connect',
       pages: [{
@@ -400,16 +438,47 @@ describe('UnifiedAskForm', () => {
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
   })
 
-  it('submits a Connect account page when the user already connected the account', async () => {
+  it('closes a Connect account task as done before its answer finishes saving', async () => {
     const task = connectAccountTask()
-    const onSubmit = spyOnSubmit(task)
-    const { user, addConnection } = renderItemWithPlaid(task)
+    const { release, onRequest } = holdUntilReleased()
+    const onSubmit = vi.fn(onRequest)
+    server.use(http.post(postUnifiedAskFormResponse.path, onSubmit))
+    const { user } = renderItemWithPlaid(task)
+    const openTasks = screen.getByRole('list', { name: 'Open tasks' })
+    expect(await within(openTasks).findByText('Connect Chase checking')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'I already connected this' }))
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
-    expect(addConnection).not.toHaveBeenCalled()
-    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
+    await waitFor(() => expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument())
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    expect(screen.queryByRole('button', { name: 'I already connected this' })).not.toBeInTheDocument()
+
+    release()
+
+    await waitFor(() => expect(bookkeepingPeriodStore.findById('period-with-connect-task')?.tasks[0]?.status).toBe(BusinessTaskStatus.UserMarkedCompleted))
+    expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument()
+  })
+
+  it('reopens a Connect account task and asks to try again when its answer fails to save', async () => {
+    const task = connectAccountTask()
+    const { release, onRequest } = holdUntilReleased()
+    server.use(
+      postUnifiedAskFormResponse.mockError(
+        { errors: [{ type: 'BadRequest', description: 'nope', error_enum: 'SpecifiedBadRequest' }] },
+        { status: 400, onRequest },
+      ),
+    )
+    const { user } = renderItemWithPlaid(task)
+    const openTasks = screen.getByRole('list', { name: 'Open tasks' })
+    expect(await within(openTasks).findByText('Connect Chase checking')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
+    await waitFor(() => expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument())
+
+    release()
+
+    expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
+    expect(within(openTasks).getByText('Connect Chase checking')).toBeInTheDocument()
   })
 
   it('says the task was already answered when the API rejects a changed answer', async () => {

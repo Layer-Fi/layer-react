@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react'
 
 import { createTagPredicate, type InvalidateOptions, type PatchOptions } from '@hooks/utils/swr/globalCacheActionsShared'
-import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
+import { type OptimisticUpdateOptions, useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
 export function createResourceGlobalCacheActions<TResource>(tagKey: string) {
   const matchesTag = createTagPredicate(tagKey)
 
   return function useResourceGlobalCacheActions() {
-    const { invalidate, patchCache, forceReload } = useGlobalCacheActions()
+    const { invalidate, patchCache, optimisticUpdate, forceReload } = useGlobalCacheActions()
 
     const invalidateResource = useCallback(
       (options?: InvalidateOptions) => invalidate(matchesTag, options),
@@ -31,11 +31,18 @@ export function createResourceGlobalCacheActions<TResource>(tagKey: string) {
       [patchCache],
     )
 
+    const optimisticUpdateResource = useCallback(
+      (transformResource: (resource?: TResource) => TResource | undefined, options?: OptimisticUpdateOptions) =>
+        optimisticUpdate<TResource | undefined>(matchesTag, transformResource, options),
+      [optimisticUpdate],
+    )
+
     return useMemo(() => ({
       invalidate: invalidateResource,
       forceReload: forceReloadResource,
       overwriteCache: overwriteCacheResource,
       patchCache: patchCacheResource,
-    }), [invalidateResource, forceReloadResource, overwriteCacheResource, patchCacheResource])
+      optimisticUpdate: optimisticUpdateResource,
+    }), [invalidateResource, forceReloadResource, overwriteCacheResource, patchCacheResource, optimisticUpdateResource])
   }
 }

@@ -18,6 +18,7 @@ import { type LayerProviderProps } from '@providers/global/LayerContext/layerPro
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
 import { useGetBusiness } from '@api/businesses/[business-id]/get'
 import { BankAccountsProvider } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { BookkeepingPeriodsRefreshProvider } from '@providers/features/bookkeeping/BookkeepingPeriodsRefresh/BookkeepingPeriodsRefreshProvider'
 import { BookkeepingStatusProvider } from '@providers/features/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
@@ -232,9 +233,11 @@ export const BusinessProvider = ({
       }}
     >
       <BookkeepingStatusProvider>
-        <BankAccountsProvider>
-          {children}
-        </BankAccountsProvider>
+        <BookkeepingPeriodsRefreshProvider>
+          <BankAccountsProvider>
+            {children}
+          </BankAccountsProvider>
+        </BookkeepingPeriodsRefreshProvider>
       </BookkeepingStatusProvider>
       <Toasts />
     </LayerContext.Provider>

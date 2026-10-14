@@ -15,6 +15,7 @@ import { usePostUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/item
 import { usePostPlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
 import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { useRefreshTasksAfterAccountLinked } from '@providers/features/bookkeeping/BookkeepingPeriodsRefresh/BookkeepingPeriodsRefreshProvider'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
 
@@ -110,6 +111,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const { trigger: triggerBreakPlaidItemConnection } = usePostSandboxResetPlaidItemLogin()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const refreshTasksAfterAccountLinked = useRefreshTasksAfterAccountLinked()
 
   const refetchAccountsAndTransactions = useCallback(async () => {
     await Promise.all([
@@ -119,10 +121,18 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   }, [refetch, forceReloadBankTransactions])
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
-    await addConnectionSuccessRef.current?.()
+    refreshTasksAfterAccountLinked()
+    const onAddConnectionSuccess = addConnectionSuccessRef.current
+    addConnectionSuccessRef.current = undefined
+    await onAddConnectionSuccess?.()
     await refetchAccountsAndTransactions().catch(() => undefined)
     await onPlaidConnectionSuccess?.()
-  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
+  }, [refreshTasksAfterAccountLinked, refetchAccountsAndTransactions, onPlaidConnectionSuccess])
+
+  const handleHostedLinkSuccess = useCallback(async () => {
+    refreshTasksAfterAccountLinked()
+    await refetchAccountsAndTransactions()
+  }, [refreshTasksAfterAccountLinked, refetchAccountsAndTransactions])
 
   const { isLinking } = usePlaidLinkModal({
     linkToken,
@@ -135,7 +145,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
     enabled: plaidHostedLinkConfig != null,
-    onSuccess: refetchAccountsAndTransactions,
+    onSuccess: handleHostedLinkSuccess,
   })
 
   /**
