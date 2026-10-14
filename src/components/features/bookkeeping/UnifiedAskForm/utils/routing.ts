@@ -7,6 +7,8 @@ import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookk
 
 export type UnifiedAskFormPresentation = 'inline' | 'takeover'
 
+export type NextPageRouting = 'idle' | 'loading' | 'error'
+
 /** An option's `next` beats the page's on a static page; at most one step per page routes. */
 export const getPageNext = (page: AskFormPage, values: UnifiedAskFormValues): AskFormNext => {
   if (page.next.kind === AskFormNextKind.Server) return page.next
@@ -52,7 +54,7 @@ const isPickStep = (step: AskFormStepFields) => {
  */
 export const canAutoAdvance = (page: AskFormPage, presentation: UnifiedAskFormPresentation) => {
   const [onlyStep, ...otherSteps] = page.steps
-  if (!onlyStep || otherSteps.length > 0) return false
+  if (!onlyStep || otherSteps.length > 0 || !onlyStep.editable) return false
 
   if (presentation === 'takeover') return isPickStep(onlyStep)
 
@@ -66,3 +68,29 @@ export const hasPickedFollowUp = (page: AskFormPage, values: UnifiedAskFormValue
     const stepValues = values.pages[page.id]?.[step.id]
     return stepValues ? getFollowUpStep(step, stepValues) !== undefined : false
   })
+
+type PageFooterLayoutOptions = {
+  page: AskFormPage
+  values: UnifiedAskFormValues
+  presentation: UnifiedAskFormPresentation
+  autoAdvances: boolean
+  routing: NextPageRouting
+  isReadOnly: boolean
+  hasAction: boolean
+}
+
+export const getPageFooterLayout = ({ page, values, presentation, autoAdvances, routing, isReadOnly, hasAction }: PageFooterLayoutOptions) => {
+  const primaryAction = getPagePrimaryAction(page, values)
+  const isTakeover = presentation === 'takeover'
+  const isReadOnlyEnd = isReadOnly && primaryAction !== 'NEXT'
+  const advancesOnPick = isTakeover && autoAdvances && routing !== 'error' && !hasPickedFollowUp(page, values)
+  const showsPrimary = !isReadOnlyEnd && !advancesOnPick
+
+  return {
+    isTakeover,
+    primaryAction,
+    showsPrimary,
+    showsFooterRow: !isTakeover || showsPrimary || hasAction,
+    connectsBeforeContinuing: routing !== 'error' && primaryAction === 'CONNECT_ACCOUNT',
+  }
+}

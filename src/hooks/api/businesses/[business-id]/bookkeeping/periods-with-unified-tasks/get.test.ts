@@ -2,9 +2,11 @@ import { waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { fixtureId, makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { get as getBookkeepingPeriods } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/store'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
@@ -40,5 +42,17 @@ describe('useGetBookkeepingPeriods', () => {
 
     await waitFor(() => expect(onRequest).toHaveBeenCalled())
     expect(onRequest.mock.calls[0]?.[0]).toContain('/bookkeeping/periods-with-unified-tasks?form_version=1')
+  })
+
+  it('keeps every unified task the API sends, whatever its status', async () => {
+    mockActiveBookkeeping()
+    const [period, ...otherPeriods] = bookkeepingPeriodStore.all()
+    if (!period) throw new Error('Expected a seeded bookkeeping period')
+    const archivedTask = makeUnifiedAskFormTask({ id: fixtureId('a01'), status: BusinessTaskStatus.Archived })
+    server.use(getBookkeepingPeriods.mock([{ ...period, tasks: [...period.tasks, archivedTask] }, ...otherPeriods]))
+
+    const { result } = await renderHookWithAuth(() => useGetBookkeepingPeriods())
+
+    await waitFor(() => expect(result.current.data?.find(({ id }) => id === period.id)?.tasks).toContainEqual(archivedTask))
   })
 })

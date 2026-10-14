@@ -38,15 +38,6 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
           { ...action.payload.toast, isExiting: false },
         ],
       }
-    case Action.setToastExit:
-      return {
-        ...state,
-        toasts: state.toasts.map(toast =>
-          toast.id === action.payload.toast.id
-            ? { ...toast, isExiting: true }
-            : toast,
-        ),
-      }
     case Action.removeToast:
       return {
         ...state,
@@ -167,30 +158,13 @@ export const BusinessProvider = ({
     })
   }
 
-  const setToast = (toast: ToastData) => {
-    dispatch({ type: Action.setToast, payload: { toast: toast } })
-  }
-
   const removeToast = (toast: ToastData) => {
     dispatch({ type: Action.removeToast, payload: { toast: toast } })
   }
 
-  const setToastExit = (toast: ToastData) => {
-    dispatch({ type: Action.setToastExit, payload: { toast: toast } })
-  }
-
   const addToast = (toast: ToastData) => {
     const id = `${Date.now()}-${Math.random()}`
-    const newToast = { id, isExiting: false, ...toast }
-
-    setToast(newToast)
-
-    setTimeout(() => {
-      setToastExit(newToast)
-      setTimeout(() => {
-        removeToast(newToast)
-      }, 1000)
-    }, toast.duration || 3000)
+    dispatch({ type: Action.setToast, payload: { toast: { id, ...toast } } })
   }
 
   const setColors = (colors?: { dark?: ColorConfig, light?: ColorConfig }) =>

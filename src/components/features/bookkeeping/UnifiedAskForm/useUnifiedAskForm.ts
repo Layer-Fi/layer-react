@@ -6,11 +6,11 @@ import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type UnifiedAskFormSubmissionResult } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmissionResult'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { replaceTaskInPeriods, useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostUnifiedAskFormResponse } from '@api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { useAppForm } from '@blocks/Form/useForm'
+import { useTaskAlreadyAnsweredError } from '@features/bookkeeping/UnifiedAskForm/useTaskAlreadyAnsweredError'
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { syncSheetRows, toFormValues, type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { getPagePrimaryAction } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
@@ -31,16 +31,16 @@ const isConnectAccountSubmission = (pagesOnPath: ReadonlyArray<AskFormPage>, val
 type UseUnifiedAskFormProps = {
   task: UnifiedAskFormTask
   onSaved: (saved: UnifiedAskFormSubmissionResult) => void
+  /** Runs when an answer already shown as saved fails to save, so the caller can undo what `onSaved` did. */
+  onSaveFailed?: () => void
 }
 
-export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => {
+export const useUnifiedAskForm = ({ task, onSaved, onSaveFailed }: UseUnifiedAskFormProps) => {
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const { trigger: submitResponse } = usePostUnifiedAskFormResponse()
-  const {
-    invalidate: invalidateBookkeepingPeriods,
-    optimisticUpdate: optimisticUpdateBookkeepingPeriods,
-  } = useBookkeepingPeriodsGlobalCacheActions()
+  const { handleTaskAlreadyAnsweredError } = useTaskAlreadyAnsweredError()
+  const { optimisticUpdate: optimisticUpdateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
   const { pages } = task.form
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
@@ -58,33 +58,24 @@ export const useUnifiedAskForm = ({ task, onSaved }: UseUnifiedAskFormProps) => 
       const answers = toAnswers(pagesOnPath, value, transactionIds)
       const submission = submitResponse({ taskId: task.id, answers })
 
-      const finish = (result: UnifiedAskFormSubmissionResult) => {
-        form.reset(value)
-        onSubmitted?.()
-        onSaved(result)
-      }
-
       const isOptimistic = isConnectAccountSubmission(pagesOnPath, value)
       if (isOptimistic) {
         const optimisticTask = { ...task, status: BusinessTaskStatus.UserMarkedCompleted, answers }
         void optimisticUpdateBookkeepingPeriods(replaceTaskInPeriods(optimisticTask), { until: submission })
-        finish({ task: optimisticTask, categorized: false })
+        onSaved({ task: optimisticTask, categorized: false })
       }
 
       try {
         const saved = await submission
-        if (!isOptimistic) finish(saved)
+
+        form.reset(value)
+        onSubmitted?.()
+        if (!isOptimistic) onSaved(saved)
       }
       catch (error) {
-        if (isAPIErrorOfType(error, ApiEnumErrorType.BusinessTaskAlreadyCompleted)) {
-          addToast({
-            content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.already_answered', 'This task has already been answered.'),
-            type: 'error',
-          })
-          void invalidateBookkeepingPeriods()
-          return
-        }
+        if (handleTaskAlreadyAnsweredError(error)) return
 
+        if (isOptimistic) onSaveFailed?.()
         addToast({
           content: t('bookkeeping:UnifiedAskForm.useUnifiedAskForm.error.submit_answer', 'We couldn’t save that answer. Please try again.'),
           type: 'error',

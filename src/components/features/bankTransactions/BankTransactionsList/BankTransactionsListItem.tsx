@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { type BankTransactionCategoryComboBoxOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import {
+  getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
   isMoneyIn,
@@ -146,7 +147,7 @@ export const BankTransactionsListItem = ({
           )}
           <HStack gap='4xs' align='center'>
             {isEditable && <EditCustomBankTransactionButton bankTransaction={bankTransaction} />}
-            <Span withTooltip>{bankTransaction.description}</Span>
+            <Span withTooltip>{getBankTransactionDisplayName(bankTransaction)}</Span>
           </HStack>
 
         </HStack>

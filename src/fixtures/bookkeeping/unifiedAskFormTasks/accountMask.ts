@@ -1,7 +1,6 @@
 import { type AskForm } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type AskFormNext, AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import {
-  AskFormAction,
   AskFormCategoryScope,
   AskFormSearchEntity,
   AskFormStepType,
@@ -17,6 +16,7 @@ import {
   categoryStep,
   choiceOptions,
   choiceStep,
+  connectAccountStep,
   fixtureId,
   makeUnifiedAskFormTask,
   page,
@@ -50,15 +50,13 @@ export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm =>
       }),
       { value: 'unsure', label: 'Not sure', followUp: textFollowUp('Tell us anything you know about this account.') },
     ])], serverNext(taskId)),
-    page(ACCOUNT_MASK_ROUTES.owned, [{
-      id: 'connect',
-      type: AskFormStepType.Action,
-      action: AskFormAction.ConnectAccount,
-      prompt: 'Connect this account so we can pull its transactions for you automatically.',
-    }]),
+    page(ACCOUNT_MASK_ROUTES.owned, [
+      connectAccountStep('connect', 'Connect this account so we can pull its transactions for you automatically.'),
+    ]),
     page(ACCOUNT_MASK_ROUTES.vendor, [
       {
         id: 'vendor',
+        editable: true,
         type: AskFormStepType.SearchWithFreeform,
         entity: AskFormSearchEntity.Vendor,
         prompt: 'Who is the vendor?',

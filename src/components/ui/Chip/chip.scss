@@ -26,6 +26,10 @@
 
   cursor: pointer;
   user-select: none;
+  transition:
+    border-color var(--transition-speed) ease-in-out,
+    background-color var(--transition-speed) ease-in-out,
+    color var(--transition-speed) ease-in-out;
   font-size: var(--text-sm);
 
   font-family: inherit;

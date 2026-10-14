@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type AskFormUploadResult, AskFormUploadResultSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
 
-import { unifiedTaskDocumentStore } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/store'
+import { findUnifiedTaskDocuments, saveUnifiedTaskDocuments } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { assertRequest, readRequestFiles } from '@msw/utils/request'
@@ -24,8 +24,7 @@ export const post = createMockEndpoint<AskFormUploadResult, ReturnType<typeof to
 
     const taskId = String(params.taskId)
     const documents = files.map(file => ({ id: crypto.randomUUID(), fileName: file.name }))
-    const uploadedIds = unifiedTaskDocumentStore.findById(taskId)?.documentIds ?? []
-    unifiedTaskDocumentStore.save({ id: taskId, documentIds: [...uploadedIds, ...documents.map(({ id }) => id)] })
+    saveUnifiedTaskDocuments(taskId, [...findUnifiedTaskDocuments(taskId), ...documents])
 
     return toResponse({ documents })
   },

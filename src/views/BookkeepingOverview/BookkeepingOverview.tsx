@@ -1,3 +1,4 @@
+import { type ComponentProps } from 'react'
 import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
@@ -5,8 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
-import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
-import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { VStack } from '@ui/Stack/Stack'
@@ -18,6 +17,7 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
+import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
@@ -31,7 +31,9 @@ import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMob
 
 import './bookkeepingOverview.scss'
 
-type BookkeepingOverviewTasksContentProps = {
+type TasksPlaidSettings = Pick<ComponentProps<typeof Tasks>, 'plaidHostedLinkConfig' | 'customerManagedPlaidConfig'>
+
+type BookkeepingOverviewTasksContentProps = TasksPlaidSettings & {
   callBooking?: CallBookingData
   showCallBookingCard: boolean
   tasksMobile: boolean
@@ -39,8 +41,6 @@ type BookkeepingOverviewTasksContentProps = {
   callBookingStringOverrides?: CallBookingStringOverrides
   onBookCall: () => void
   onClickReconnectAccounts?: () => void
-  plaidHostedLinkConfig?: PlaidHostedLinkConfig
-  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
 const BookkeepingOverviewTasksContent = ({
@@ -74,7 +74,7 @@ const BookkeepingOverviewTasksContent = ({
   )
 }
 
-export interface BookkeepingOverviewProps {
+export interface BookkeepingOverviewProps extends TasksPlaidSettings {
   showTitle?: boolean
   stringOverrides?: {
     title?: string
@@ -98,8 +98,6 @@ export interface BookkeepingOverviewProps {
 
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
-  plaidHostedLinkConfig?: PlaidHostedLinkConfig
-  customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead
@@ -111,12 +109,12 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
-  plaidHostedLinkConfig,
-  customerManagedPlaidConfig,
   chartColorsList,
   stringOverrides,
   slotProps,
   tagFilter = undefined,
+  plaidHostedLinkConfig,
+  customerManagedPlaidConfig,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
   const [width] = useWindowSize()
@@ -179,6 +177,7 @@ export const BookkeepingOverview = ({
         )}
         showHeader={showTitle}
       >
+        <PendingAccountConfirmationBanner />
         {width <= 1100 && (
           <div
             ref={upperContentRef}

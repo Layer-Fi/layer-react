@@ -102,7 +102,6 @@ export enum LayerContextActionName {
   setColors = 'LayerContext.setColors',
   setToast = 'LayerContext.setToast',
   removeToast = 'LayerContext.removeToast',
-  setToastExit = 'LayerContext.setToastExit',
 }
 
 export type LayerContextAction =
@@ -128,9 +127,5 @@ export type LayerContextAction =
   }
   | {
     type: LayerContextActionName.removeToast
-    payload: { toast: ToastData }
-  }
-  | {
-    type: LayerContextActionName.setToastExit
     payload: { toast: ToastData }
   }

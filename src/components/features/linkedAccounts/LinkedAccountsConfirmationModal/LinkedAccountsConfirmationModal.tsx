@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
 import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { useAccountConfirmationStore } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useAccountsNeedingConfirmation } from '@hooks/features/bankAccounts/useAccountsNeedingConfirmation'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { Button } from '@ui/Button/Button'
@@ -20,9 +19,8 @@ import { LinkedAccountToConfirm } from '@features/linkedAccounts/LinkedAccountTo
 import './linkedAccountsConfirmationModal.scss'
 
 function useLinkedAccountsConfirmationModal() {
-  const { data } = useBankAccountsContext()
   const { refetchAccountsAndTransactions } = useLinkedAccounts()
-  const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
+  const accountsNeedingConfirmation = useAccountsNeedingConfirmation()
 
   const {
     visibility,
@@ -87,7 +85,7 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
   )
 }
 
-function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
+export function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { accounts, onFinish, refetchAccountsAndTransactions } = useLinkedAccountsConfirmationModal()

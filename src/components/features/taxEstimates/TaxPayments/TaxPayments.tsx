@@ -28,7 +28,7 @@ const EmptyState = () => {
   return (
     <DataState
       spacing
-      status={DataStateStatus.info}
+      status={DataStateStatus.neutral}
       title={t('taxEstimates:TaxPayments.empty.tax_payments', 'No tax payments found')}
       description={t('taxEstimates:TaxPayments.empty.no_tax_payments_to_display', 'There are no tax payments to display.')}
       className='Layer__TaxPayments__EmptyState'

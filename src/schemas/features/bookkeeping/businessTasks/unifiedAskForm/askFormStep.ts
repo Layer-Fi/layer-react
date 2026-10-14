@@ -2,6 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { createOpenEnumSchema } from '@schemas/common/utils'
 import { AskFormNextSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { AskFormDocumentSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormUpload'
 
 export enum AskFormStepType {
   Choice = 'CHOICE',
@@ -36,6 +37,8 @@ const AskFormActionSchema = Schema.Enums(AskFormAction)
 const AskFormCategoryScopeSchema = Schema.Enums(AskFormCategoryScope)
 
 const optionalBoolean = Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true })
+
+const optionalTrueBoolean = Schema.optionalWith(Schema.Boolean, { default: () => true, nullable: true })
 
 const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Schema.Struct.Fields>(
   optionSchema: Option,
@@ -75,7 +78,7 @@ const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Sch
       prompt,
       placeholder,
       multiline: optionalBoolean,
-      required: Schema.optionalWith(Schema.Boolean, { default: () => true, nullable: true }),
+      required: optionalTrueBoolean,
     }),
     Schema.Struct({
       ...identity,
@@ -89,6 +92,7 @@ const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Sch
       prompt,
       accept: Schema.optionalWith(Schema.Array(Schema.String), { default: () => [], nullable: true }),
       multiple: optionalBoolean,
+      documents: Schema.optionalWith(Schema.Array(AskFormDocumentSchema), { default: () => [], nullable: true }),
     }),
   )
 }
@@ -114,7 +118,11 @@ export const AskFormOptionSchema = Schema.Struct({
 
 export type AskFormOption = typeof AskFormOptionSchema.Type
 
-export const AskFormStepSchema = createStepSchema(AskFormOptionSchema, { id: Schema.String })
+export const AskFormStepSchema = createStepSchema(AskFormOptionSchema, {
+  id: Schema.String,
+  /** `false` shows the answer without letting the customer change it; a follow-up follows its step. */
+  editable: optionalTrueBoolean,
+})
 
 export type AskFormStep = typeof AskFormStepSchema.Type
 export type AskFormStepEncoded = typeof AskFormStepSchema.Encoded

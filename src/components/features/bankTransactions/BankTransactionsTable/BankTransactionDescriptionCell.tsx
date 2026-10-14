@@ -1,6 +1,7 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
+import { getBankTransactionDisplayName } from '@utils/features/bankTransactions/shared'
 import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import { IconBox } from '@ui/IconBox/IconBox'
 import { HStack } from '@ui/Stack/Stack'
@@ -30,7 +31,7 @@ export const BankTransactionDescriptionCell = ({
     >
       <HStack gap='4xs' align='center' overflow='hidden'>
         {isEditable && <EditCustomBankTransactionButton bankTransaction={bankTransaction} />}
-        <Span ellipsis withTooltip>{bankTransaction.description}</Span>
+        <Span ellipsis withTooltip>{getBankTransactionDisplayName(bankTransaction)}</Span>
       </HStack>
       {hasReceipt && (
         <IconBox>

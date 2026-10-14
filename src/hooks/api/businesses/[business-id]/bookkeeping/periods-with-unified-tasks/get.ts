@@ -10,7 +10,7 @@ import {
 import { type BusinessTask } from '@schemas/features/bookkeeping/businessTask'
 import { UNIFIED_ASK_FORM_VERSION } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
-import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { getUnifiedAskFormTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
@@ -60,7 +60,7 @@ export const replaceTaskInPeriods = (updatedTask: BusinessTask) =>
   (periods?: ReadonlyArray<BookkeepingPeriod>) =>
     periods?.map(period => ({
       ...period,
-      tasks: getUserVisibleTasks(period.tasks.map(task => task.id === updatedTask.id ? updatedTask : task)),
+      tasks: getUnifiedAskFormTasks(period.tasks.map(task => task.id === updatedTask.id ? updatedTask : task)),
     }))
 
 const useBookkeepingPeriodsQuery = createQueryHook({
@@ -74,7 +74,7 @@ const useBookkeepingPeriodsQuery = createQueryHook({
       .map(period => ({
         ...period,
         status: constrainToKnownBookkeepingPeriodStatus(period.status),
-        tasks: getUserVisibleTasks(period.tasks),
+        tasks: getUnifiedAskFormTasks(period.tasks),
       }))
       .filter(period => isActiveBookkeepingPeriod(period)),
 })

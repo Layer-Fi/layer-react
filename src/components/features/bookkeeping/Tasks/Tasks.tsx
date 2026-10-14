@@ -6,6 +6,7 @@ import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/pla
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { CallBookingPurpose, useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { Loader } from '@ui/Loader/Loader'
@@ -46,18 +47,33 @@ type TasksProps = {
   mobile?: boolean
   stringOverrides?: TasksStringOverrides
   onClickReconnectAccounts?: () => void
+  /** The Plaid settings given to `LinkedAccounts`, used when a task connects an account. A linked-accounts setup around `Tasks` takes precedence. */
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
-export function Tasks({
+type TasksContentProps = Omit<TasksProps, 'plaidHostedLinkConfig' | 'customerManagedPlaidConfig'>
+
+export function Tasks({ plaidHostedLinkConfig, customerManagedPlaidConfig, ...props }: TasksProps) {
+  const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()
+
+  if (hasLinkedAccountsProvider) {
+    return <TasksContent {...props} />
+  }
+
+  return (
+    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig} customerManagedPlaidConfig={customerManagedPlaidConfig}>
+      <TasksContent {...props} />
+    </LinkedAccountsProvider>
+  )
+}
+
+function TasksContent({
   mobile = false,
   tasksHeader,
   onClickReconnectAccounts,
   stringOverrides,
-  plaidHostedLinkConfig,
-  customerManagedPlaidConfig,
-}: TasksProps) {
+}: TasksContentProps) {
   const { t } = useTranslation()
   const { data, isLoading } = useGetBookkeepingPeriods()
   const { flattenedData: callBookings, isLoading: isLoadingCallBookings } = useGetListCallBookings()
@@ -117,12 +133,12 @@ export function Tasks({
             )}
           >
             {() => (
-              <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig} customerManagedPlaidConfig={customerManagedPlaidConfig}>
+              <>
                 <TasksYearsTabs isMobile={isMobile} />
                 <TasksMonthSelector isMobile={isMobile} />
                 <TasksPending />
                 <TasksList mobile={mobile} />
-              </LinkedAccountsProvider>
+              </>
             )}
           </ConditionalBlock>
         )}

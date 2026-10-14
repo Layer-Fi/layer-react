@@ -6,27 +6,40 @@ import { describe, expect, it, vi } from 'vitest'
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
+import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
-import { AskFormAction, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { getIncompleteTasks, type UserVisibleTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
+import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { makeUploadDocumentAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/uploadDocument'
-import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import {
+  askFormNextPageUrl,
+  choiceStep,
+  connectAccountStep,
+  makeUnifiedAskFormTask,
+  page,
+  singlePageForm,
+  textFollowUp,
+  textStep,
+} from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/store'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { post as postAskFormNextPage } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
+import { del as deleteUnifiedAskFormDocument } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
 import { post as postUnifiedAskFormUpload } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/post'
 import { server } from '@msw/node'
 import { readRequestJson } from '@msw/utils/request'
+import { makeLinkedAccountsContext } from '@testUtils/mocks/linkedAccountsContext'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
+import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 const TRANSACTIONS = [
   { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -61250, description: 'COSTCO WHSE' },
@@ -50,9 +63,32 @@ const counterpartyTask = () => makeUnifiedAskFormTask({
   ),
 })
 
-const renderItem = (task: UnifiedAskFormTask) => ({
+const lockedKindTask = (answer: AskFormChoiceAnswer) => makeUnifiedAskFormTask({
+  status: BusinessTaskStatus.UserMarkedCompleted,
+  answers: { kind: answer },
+  form: singlePageForm(page('only', [{
+    ...choiceStep('kind', 'What was it?', [
+      { value: 'supplies', label: 'Supplies' },
+      { value: 'other', label: 'Something else', followUp: textFollowUp(null) },
+    ]),
+    editable: false,
+  }])),
+})
+
+const renderItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<LinkedAccountsContextType>) => ({
   user: userEvent.setup(),
-  ...render(<TasksListItem task={task as UserVisibleTask} defaultOpen />, { wrapper: LayerTestProvider }),
+  ...render(
+    <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
+      <TasksListItem task={task} defaultOpen />
+    </LinkedAccountsContext.Provider>,
+    { wrapper: LayerTestProvider },
+  ),
+})
+
+const connectAccountResolving = (isConnected: boolean) => ({ addConnection: vi.fn(() => Promise.resolve(isConnected)) })
+
+const connectOnlyTask = () => makeUnifiedAskFormTask({
+  form: singlePageForm(page('connect', [connectAccountStep('connect', 'Connect this account.')])),
 })
 
 const OpenTasks = () => {
@@ -66,7 +102,7 @@ const OpenTasks = () => {
   )
 }
 
-const renderItemWithPlaid = (task: UnifiedAskFormTask) => {
+const renderListedItem = (task: UnifiedAskFormTask, linkedAccounts?: Partial<LinkedAccountsContextType>) => {
   server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
   bookkeepingPeriodStore.save({
     id: 'period-with-connect-task',
@@ -76,30 +112,12 @@ const renderItemWithPlaid = (task: UnifiedAskFormTask) => {
     tasks: [task],
   })
 
-  const noop = () => Promise.resolve()
-  const addConnection = vi.fn<LinkedAccountsContextType['addConnection']>(async (_source, onSuccess) => {
-    await onSuccess?.()
-  })
-  const linkedAccounts: LinkedAccountsContextType = {
-    isLinking: false,
-    isHostedLinkError: false,
-    addConnection,
-    removeConnection: noop,
-    repairConnection: noop,
-    refetchAccountsAndTransactions: noop,
-    unlinkBankAccount: noop,
-    confirmAccount: noop,
-    excludeAccount: noop,
-    breakConnection: noop,
-  }
-
   return {
-    addConnection,
     user: userEvent.setup(),
     ...render(
-      <LinkedAccountsContext.Provider value={linkedAccounts}>
+      <LinkedAccountsContext.Provider value={makeLinkedAccountsContext(linkedAccounts)}>
         <OpenTasks />
-        <TasksListItem task={task as UserVisibleTask} defaultOpen />
+        <TasksListItem task={task} defaultOpen />
       </LinkedAccountsContext.Provider>,
       { wrapper: LayerTestProvider },
     ),
@@ -146,6 +164,46 @@ describe('UnifiedAskForm', () => {
     expect(screen.getByText('You answered this for every period, so we’ve applied it here too.')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+  })
+
+  it('shows a locked answer without letting the customer change it or its follow-up', () => {
+    renderItem(lockedKindTask({ choice: 'other', followUp: { text: 'Paper towels' } }))
+
+    expect(screen.getByRole('radio', { name: 'Something else' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
+    expect(screen.getByRole('textbox')).toHaveValue('Paper towels')
+    expect(screen.getByRole('textbox')).toBeDisabled()
+  })
+
+  it('shows a fully locked task in the takeover without Submit', async () => {
+    const task = lockedKindTask({ choice: 'supplies' })
+    render(<TasksTakeover tasks={[task]} taskId={task.id} onTaskChange={vi.fn()} />, { wrapper: LayerTestProvider })
+
+    expect(await screen.findByRole('radio', { name: 'Supplies' })).toBeChecked()
+    expect(screen.getByRole('radio', { name: 'Supplies' })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+  })
+
+  it('shows a fully locked task\'s review without Submit when the server routes to it', async () => {
+    const taskId = '00000000-0000-4000-8000-000000000f03'
+    const task = makeUnifiedAskFormTask({
+      id: taskId,
+      status: BusinessTaskStatus.UserMarkedCompleted,
+      answers: { kind: { choice: 'supplies' } },
+      form: singlePageForm(page('only', [{
+        ...choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }]),
+        editable: false,
+      }], { kind: AskFormNextKind.Server, url: askFormNextPageUrl(taskId) })),
+    })
+    server.use(postAskFormNextPage.mock({ next: { kind: AskFormNextKind.Submit, review: true } }))
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    expect(await screen.findByText('Here’s what you told us:')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Submit' })).not.toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
   it('fills the remember question from the picked category and posts only the path taken', async () => {
@@ -239,20 +297,10 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: true },
-          steps: [{
-            id: 'kind',
-            type: AskFormStepType.Choice,
-            prompt: 'What was it?',
-            autoAdvance: false,
-            options: [
-              { value: 'supplies', label: 'Supplies' },
-              {
-                value: 'other',
-                label: 'Something else',
-                followUp: { type: AskFormStepType.Text, prompt: null, placeholder: null, multiline: true, required: true },
-              },
-            ],
-          }],
+          steps: [choiceStep('kind', 'What was it?', [
+            { value: 'supplies', label: 'Supplies' },
+            { value: 'other', label: 'Something else', followUp: textFollowUp(null) },
+          ])],
         }],
       },
     })
@@ -275,29 +323,16 @@ describe('UnifiedAskForm', () => {
           {
             id: 'first',
             next: { kind: AskFormNextKind.Page, pageId: 'second' },
-            steps: [{
-              id: 'kind',
-              type: AskFormStepType.Choice,
-              prompt: 'What was it?',
-              autoAdvance: false,
-              options: [{
-                value: 'other',
-                label: 'Something else',
-                followUp: { type: AskFormStepType.Text, prompt: null, placeholder: null, multiline: true, required: true },
-              }],
-            }],
+            steps: [choiceStep('kind', 'What was it?', [{ value: 'other', label: 'Something else', followUp: textFollowUp(null) }])],
           },
           {
             id: 'second',
             next: { kind: AskFormNextKind.Submit, review: false },
-            steps: [{
-              id: 'confirm',
-              type: AskFormStepType.Text,
-              prompt: 'You said {{answer.kind.label}}: {{answer.kind.follow_up.label}}. Anything else?',
-              placeholder: null,
-              multiline: false,
-              required: false,
-            }],
+            steps: [textStep(
+              'confirm',
+              'You said {{answer.kind.label}}: {{answer.kind.follow_up.label}}. Anything else?',
+              { multiline: false, required: false },
+            )],
           },
         ],
       },
@@ -342,13 +377,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{
-            id: 'kind',
-            type: AskFormStepType.Choice,
-            prompt: 'What was it?',
-            autoAdvance: true,
-            options: [{ value: 'supplies', label: 'Supplies' }],
-          }],
+          steps: [choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }], { autoAdvance: true })],
         }],
       },
     })
@@ -394,7 +423,7 @@ describe('UnifiedAskForm', () => {
       }),
     )
     const onSubmit = spyOnSubmit(task)
-    const { user } = renderItem(task)
+    const { user } = renderItem(task, connectAccountResolving(true))
 
     await user.click(screen.getByRole('radio', { name: 'Another account my business owns' }))
     await user.click(screen.getByRole('button', { name: 'Next' }))
@@ -406,7 +435,7 @@ describe('UnifiedAskForm', () => {
       answers: { account_type: { choice: 'owned' } },
     })
 
-    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({
@@ -414,44 +443,33 @@ describe('UnifiedAskForm', () => {
     })
   })
 
-  const connectAccountTask = () => makeUnifiedAskFormTask({
-    title: 'Connect Chase checking',
-    form: {
-      entryPageId: 'connect',
-      pages: [{
-        id: 'connect',
-        next: { kind: AskFormNextKind.Submit, review: false },
-        steps: [{ id: 'connect', type: AskFormStepType.Action, action: AskFormAction.ConnectAccount, prompt: 'Connect this account.' }],
-      }],
-    },
-  })
-
-  it('submits a Connect account page after Plaid connects the account', async () => {
-    const task = connectAccountTask()
+  it('submits Connect account once the account connects', async () => {
+    const task = connectOnlyTask()
     const onSubmit = spyOnSubmit(task)
-    const { user, addConnection } = renderItemWithPlaid(task)
+    const linkedAccounts = connectAccountResolving(true)
+    const { user } = renderItem(task, linkedAccounts)
 
     await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
-    expect(addConnection).toHaveBeenCalledWith('PLAID', expect.any(Function))
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(linkedAccounts.addConnection).toHaveBeenCalledExactlyOnceWith('PLAID')
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { connect: { completed: true } } })
   })
 
   it('closes a Connect account task as done before its answer finishes saving', async () => {
-    const task = connectAccountTask()
+    const task = { ...connectOnlyTask(), title: 'Connect Chase checking' }
     const { release, onRequest } = holdUntilReleased()
     const onSubmit = vi.fn(onRequest)
     server.use(http.post(postUnifiedAskFormResponse.path, onSubmit))
-    const { user } = renderItemWithPlaid(task)
+    const { user } = renderListedItem(task, connectAccountResolving(true))
     const openTasks = screen.getByRole('list', { name: 'Open tasks' })
     expect(await within(openTasks).findByText('Connect Chase checking')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
 
     await waitFor(() => expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument())
     expect(onSubmit).toHaveBeenCalledTimes(1)
-    expect(screen.queryByRole('button', { name: 'I already connected this' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Connect account' })).not.toBeInTheDocument()
 
     release()
 
@@ -460,7 +478,7 @@ describe('UnifiedAskForm', () => {
   })
 
   it('reopens a Connect account task and asks to try again when its answer fails to save', async () => {
-    const task = connectAccountTask()
+    const task = { ...connectOnlyTask(), title: 'Connect Chase checking' }
     const { release, onRequest } = holdUntilReleased()
     server.use(
       postUnifiedAskFormResponse.mockError(
@@ -468,17 +486,47 @@ describe('UnifiedAskForm', () => {
         { status: 400, onRequest },
       ),
     )
-    const { user } = renderItemWithPlaid(task)
+    const { user } = renderListedItem(task, connectAccountResolving(true))
     const openTasks = screen.getByRole('list', { name: 'Open tasks' })
     expect(await within(openTasks).findByText('Connect Chase checking')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'I already connected this' }))
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
     await waitFor(() => expect(within(openTasks).queryByText('Connect Chase checking')).not.toBeInTheDocument())
 
     release()
 
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
     expect(within(openTasks).getByText('Connect Chase checking')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Connect account' })).toBeInTheDocument()
+  })
+
+  it('stays on the connect page when the account isn’t connected', async () => {
+    const task = connectOnlyTask()
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task, connectAccountResolving(false))
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Connect account' })).toBeEnabled())
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('retries only the save after a connection whose save failed', async () => {
+    const task = connectOnlyTask()
+    const linkedAccounts = connectAccountResolving(true)
+    server.use(
+      postUnifiedAskFormResponse.mockError({ errors: [{ type: 'BadRequest', description: 'nope', error_enum: 'SpecifiedBadRequest' }] }, { status: 400 }),
+    )
+    const { user } = renderItem(task, linkedAccounts)
+
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+    expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
+
+    const onSubmit = spyOnSubmit(task)
+    await user.click(screen.getByRole('button', { name: 'Connect account' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(linkedAccounts.addConnection).toHaveBeenCalledOnce()
   })
 
   it('says the task was already answered when the API rejects a changed answer', async () => {
@@ -488,7 +536,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [textStep('response', 'What was it for?')],
         }],
       },
     })
@@ -517,7 +565,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'response', type: AskFormStepType.Text, prompt: 'What was it for?', placeholder: null, multiline: true, required: true }],
+          steps: [textStep('response', 'What was it for?')],
         }],
       },
     })
@@ -532,24 +580,85 @@ describe('UnifiedAskForm', () => {
     expect(await screen.findByText('We couldn’t save that answer. Please try again.')).toBeInTheDocument()
   })
 
-  it('submits only the files still listed after one is removed', async () => {
+  it('says the task was already answered when the API rejects an upload', async () => {
+    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
+    server.use(
+      postUnifiedAskFormUpload.mockError({
+        errors: [{
+          type: 'InvalidState',
+          description: `Task ${task.id} is already resolved`,
+          error_enum: 'BusinessTaskAlreadyCompleted',
+        }],
+      }, { status: 403 }),
+    )
+    const { user, container } = renderItem(task)
+
+    await uploadFile(user, container, 'receipt.pdf')
+
+    expect(await screen.findByText('This task has already been answered.')).toBeInTheDocument()
+    expect(screen.queryByText('Some files couldn’t be uploaded. Try again.')).not.toBeInTheDocument()
+  })
+
+  it('lists the files the task already holds by name', () => {
+    const documentId = '00000000-0000-4000-8000-00000000d0c1'
+
+    renderItem(makeUnifiedAskFormTask({
+      form: makeUploadDocumentAskForm('Upload your receipt', [{ id: documentId, fileName: 'receipt.pdf' }]),
+      answers: { response: { documentIds: [documentId] } },
+    }))
+
+    expect(screen.getByText('receipt.pdf')).toBeInTheDocument()
+    expect(screen.queryByText(documentId)).not.toBeInTheDocument()
+  })
+
+  it.each([
+    {
+      reason: 'the task was already answered',
+      status: 403,
+      error: { type: 'InvalidState', description: 'Task is already resolved', error_enum: 'BusinessTaskAlreadyCompleted' },
+      toast: 'This task has already been answered.',
+    },
+    {
+      reason: 'the API no longer holds the file',
+      status: 404,
+      error: { type: 'ResourceNotFound', description: 'Document not found', error_enum: 'SpecifiedIdNotFound' },
+      toast: undefined,
+    },
+  ])('drops the file when its removal is rejected because $reason', async ({ status, error, toast }) => {
+    const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
+    server.use(
+      postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c1', fileName: 'receipt.pdf' }] }),
+      deleteUnifiedAskFormDocument.mockError({ errors: [error] }, { status }),
+    )
+    const { user, container } = renderItem(task)
+
+    await uploadFile(user, container, 'receipt.pdf')
+    await user.click(await screen.findByRole('button', { name: 'Remove receipt.pdf' }))
+
+    if (toast) expect(await screen.findByText(toast)).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove receipt.pdf' })).not.toBeInTheDocument())
+    expect(screen.queryByText('The file couldn’t be removed. Try again.')).not.toBeInTheDocument()
+    if (!toast) expect(screen.queryByText('This task has already been answered.')).not.toBeInTheDocument()
+  })
+
+  it('deletes a removed file from the task and submits only the files still listed', async () => {
     const task = makeUnifiedAskFormTask({ form: makeUploadDocumentAskForm('Upload your receipt') })
     const keptId = '00000000-0000-4000-8000-00000000d0c1'
     const onSubmit = spyOnSubmit(task)
+    const onDelete = spyOnEndpoint(deleteUnifiedAskFormDocument)
     const { user, container } = renderItem(task)
 
     server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: keptId, fileName: 'receipt.pdf' }] }))
     await uploadFile(user, container, 'receipt.pdf')
-    expect(await screen.findByText('receipt.pdf')).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: 'Remove receipt.pdf' })).toBeInTheDocument()
 
     server.use(postUnifiedAskFormUpload.mock({ documents: [{ id: '00000000-0000-4000-8000-00000000d0c2', fileName: 'invoice.pdf' }] }))
     await uploadFile(user, container, 'invoice.pdf')
-    expect(await screen.findByText('invoice.pdf')).toBeInTheDocument()
 
-    const [, removeInvoice] = screen.getAllByRole('button', { name: 'Remove' })
-    if (!removeInvoice) throw new Error('Expected a Remove button for each file')
-    await user.click(removeInvoice)
-    await waitFor(() => expect(screen.queryByText('invoice.pdf')).not.toBeInTheDocument())
+    await user.click(await screen.findByRole('button', { name: 'Remove invoice.pdf' }))
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Remove invoice.pdf' })).not.toBeInTheDocument())
+    expect(onDelete).toHaveBeenCalledTimes(1)
+    expect(onDelete.mock.calls[0]?.[0].params).toMatchObject({ taskId: task.id, documentId: '00000000-0000-4000-8000-00000000d0c2' })
 
     await user.click(screen.getByRole('button', { name: 'Submit' }))
 
@@ -564,7 +673,7 @@ describe('UnifiedAskForm', () => {
         pages: [{
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
-          steps: [{ id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false }],
+          steps: [textStep('notes', 'Anything else?', { multiline: false, required: false })],
         }],
       },
     }))
@@ -584,14 +693,8 @@ describe('UnifiedAskForm', () => {
           id: 'only',
           next: { kind: AskFormNextKind.Submit, review: false },
           steps: [
-            {
-              id: 'kind',
-              type: AskFormStepType.Choice,
-              prompt: 'What was it?',
-              autoAdvance: false,
-              options: [{ value: 'supplies', label: 'Supplies' }],
-            },
-            { id: 'notes', type: AskFormStepType.Text, prompt: 'Anything else?', placeholder: null, multiline: false, required: false },
+            choiceStep('kind', 'What was it?', [{ value: 'supplies', label: 'Supplies' }]),
+            textStep('notes', 'Anything else?', { multiline: false, required: false }),
           ],
         }],
       },

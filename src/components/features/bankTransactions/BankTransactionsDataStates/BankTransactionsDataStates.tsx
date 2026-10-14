@@ -19,7 +19,7 @@ export const BankTransactionsEmptyState = () => {
     return (
       <DataStateContainer>
         <DataState
-          status={DataStateStatus.info}
+          status={DataStateStatus.neutral}
           title={t('bankTransactions:BankTransactionsDataStates.empty.no_transactions_found', 'No transactions found')}
           description={t('bankTransactions:BankTransactionsDataStates.empty.try_adjusting_search_filters', 'Try adjusting your search filters')}
           icon={<SearchX />}
@@ -32,7 +32,7 @@ export const BankTransactionsEmptyState = () => {
   return (
     <DataStateContainer>
       <DataState
-        status={DataStateStatus.allDone}
+        status={DataStateStatus.neutral}
         title={
           isCategorizationMode
             ? t('bankTransactions:BankTransactionsDataStates.empty.transactions_up_to_date', 'You are up to date with transactions!')

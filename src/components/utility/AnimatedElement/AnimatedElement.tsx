@@ -1,9 +1,8 @@
 import { type ElementType, forwardRef, type ReactNode, type Ref } from 'react'
 import { type HTMLMotionProps, motion } from 'motion/react'
 
-import { variants } from '@components/utility/AnimatedPresenceElement/variants'
-
-type AnimationVariant = 'fade' | 'slideUp' | 'expand'
+import { useAnimationVariant } from '@components/utility/AnimatedPresenceElement/useAnimationVariant'
+import { type AnimationVariant } from '@components/utility/AnimatedPresenceElement/variants'
 
 type ValidHTMLElement = keyof HTMLElementTagNameMap
 
@@ -24,7 +23,7 @@ function AnimatedElementInner<T extends ValidHTMLElement = 'div'>(
   }: AnimatedElementProps<T>,
   ref: Ref<HTMLElementTagNameMap[T]>,
 ) {
-  const config = variants[variant]
+  const config = useAnimationVariant(variant)
   const MotionComponent = motion[as ?? 'div'] as ElementType
 
   return (
@@ -32,6 +31,7 @@ function AnimatedElementInner<T extends ValidHTMLElement = 'div'>(
       ref={ref}
       initial={config.initial}
       animate={isVisible ? config.animate : config.exit}
+      exit={config.exit}
       transition={config.transition}
       {...props}
     >

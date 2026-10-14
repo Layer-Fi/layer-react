@@ -2,7 +2,7 @@
   border-top: 1px solid var(--border-color);
 
   .Layer__tasks-list-item-wrapper {
-    padding: var(--spacing-2xs);
+    overflow: hidden;
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--color-base-300);
@@ -11,6 +11,7 @@
     .Layer__tasks-list-item {
       display: flex;
       flex-direction: column;
+      margin: var(--spacing-2xs);
       transition: all 0.1s ease-in-out;
 
       &:hover,
@@ -75,43 +76,13 @@
 
       .Layer__tasks-list-item__body {
         overflow: hidden;
-        height: 0;
-        padding-bottom: 0;
-        opacity: 0;
-        transition: all 0.2s ease-out;
 
         &.Layer__tasks-list-item--completed {
           color: var(--color-base-500);
         }
-
-        &.Layer__tasks-list-item__body--expanded {
-          height: auto;
-          opacity: 1;
-        }
       }
     }
   }
-
-  .Layer__tasks-empty-state {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-md);
-    text-align: center;
-  }
-}
-
-.Layer__tasks-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  width: 32px;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px var(--color-base-300);
-  background-color: var(--color-base-50);
 }
 
 .Layer__tasks__expand-icon {
@@ -130,4 +101,8 @@
       }
     }
   }
+}
+
+.Layer__MobileList[data-variant='compact'] .Layer__TasksListMobile__Row {
+  border-block-start: 1px solid var(--border-color);
 }

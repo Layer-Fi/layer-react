@@ -4,7 +4,7 @@ import { File } from 'lucide-react'
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@utils/features/bankTransactions/matchLinkingMetadata'
-import { hasReceipts, isCategorized, isMoneyIn } from '@utils/features/bankTransactions/shared'
+import { getBankTransactionDisplayName, hasReceipts, isCategorized, isMoneyIn } from '@utils/features/bankTransactions/shared'
 import { type LinkingMetadata, useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'
 import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -69,7 +69,7 @@ export const BankTransactionsMobileListItem = ({
   return (
     <HStack gap='sm' justify='space-between'>
       <VStack align='start' gap='3xs' overflow='hidden'>
-        <Span ellipsis>{bankTransaction.description}</Span>
+        <Span ellipsis>{getBankTransactionDisplayName(bankTransaction)}</Span>
         {inAppLink}
         <HStack gap='2xs' align='center' overflow='hidden'>
           <Span ellipsis size='sm'>

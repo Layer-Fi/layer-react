@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
@@ -28,9 +28,11 @@ type UseLinkedAccountsOptions = {
 type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   isLinking: boolean
   isHostedLinkError: boolean
-  addConnection: (source: AccountSource, onSuccess?: () => Awaitable<void>) => Promise<void>
+  /** Resolves once the Link session ends: true after the new connection is saved, false otherwise. */
+  addConnection: (source: AccountSource) => Promise<boolean>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
-  repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
+  /** Resolves once the Link session ends: true after the connection is repaired, false otherwise. */
+  repairConnection: (source: AccountSource, sourceId: string) => Promise<boolean>
   refetchAccountsAndTransactions: () => Promise<void>
   unlinkBankAccount: (bankAccountId: string) => Promise<void>
   confirmAccount: (source: AccountSource, accountId: string) => Promise<void>
@@ -40,25 +42,33 @@ type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
 }
 
-/**
- * Returns a memoized action that only runs for Plaid-sourced connections,
- * logging a consistent "not yet supported" message for any other source.
- */
-const usePlaidOnlyAction = <Args extends unknown[]>(
+const usePlaidOnly = <Args extends unknown[], Result>(
   operation: string,
-  action: (...args: Args) => Promise<void>,
+  action: (...args: Args) => Promise<Result>,
+  unsupportedResult: Result,
 ) =>
   useCallback(
     async (source: AccountSource, ...args: Args) => {
       if (source !== 'PLAID') {
         console.error(`${operation} with source ${source} not yet supported`)
-        return
+        return unsupportedResult
       }
 
-      await action(...args)
+      return action(...args)
     },
-    [operation, action],
+    [operation, action, unsupportedResult],
   )
+
+/**
+ * Returns a memoized action that only runs for Plaid-sourced connections,
+ * logging a consistent "not yet supported" message for any other source.
+ */
+const usePlaidOnlyAction = <Args extends unknown[]>(operation: string, action: (...args: Args) => Promise<void>) =>
+  usePlaidOnly(operation, action, undefined)
+
+/** As `usePlaidOnlyAction`, for a Link flow that resolves whether it connected; any other source resolves false. */
+const usePlaidOnlyLinkFlow = <Args extends unknown[]>(operation: string, action: (...args: Args) => Promise<boolean>) =>
+  usePlaidOnly(operation, action, false)
 
 /**
  * Returns a memoized action that only runs while Layer owns the Plaid item, logging a consistent
@@ -94,10 +104,6 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
-  const [linkToken, setLinkToken] = useState<string | null>(null)
-  const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const addConnectionSuccessRef = useRef<() => Awaitable<void>>()
-
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
 
@@ -122,9 +128,6 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
     refreshTasksAfterAccountLinked()
-    const onAddConnectionSuccess = addConnectionSuccessRef.current
-    addConnectionSuccessRef.current = undefined
-    await onAddConnectionSuccess?.()
     await refetchAccountsAndTransactions().catch(() => undefined)
     await onPlaidConnectionSuccess?.()
   }, [refreshTasksAfterAccountLinked, refetchAccountsAndTransactions, onPlaidConnectionSuccess])
@@ -134,10 +137,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     await refetchAccountsAndTransactions()
   }, [refreshTasksAfterAccountLinked, refetchAccountsAndTransactions])
 
-  const { isLinking } = usePlaidLinkModal({
-    linkToken,
-    linkMode,
-    setLinkMode,
+  const { isLinking, openLink } = usePlaidLinkModal({
     onSuccess: refetchAccountsAndTransactions,
     onAddConnectionSuccess: handlePlaidConnectionSuccess,
     customerManagedPlaidConfig,
@@ -166,9 +166,9 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   )
 
   /**
-   * Requests a Plaid link token, opening the embedded modal on success and
-   * surfacing an error toast on failure. A request resolving `undefined` is
-   * treated as already handled and opens nothing.
+   * Requests a Plaid link token and opens the embedded modal with it, resolving whether the
+   * session ended with a connection. A request resolving `undefined` is treated as already
+   * handled (Hosted Link navigates away) and resolves false; a failed request shows a toast.
    */
   const fetchLinkToken = useCallback(
     (
@@ -177,15 +177,13 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
       errorMessage: string,
     ) =>
       requestToken().then(
-        (result) => {
-          if (!result) return
-
-          setLinkMode(mode)
-          setLinkToken(result.linkToken)
+        result => (result ? openLink(result.linkToken, mode) : false),
+        () => {
+          addToast({ content: errorMessage, type: 'error' })
+          return false
         },
-        () => addToast({ content: errorMessage, type: 'error' }),
       ),
-    [addToast],
+    [addToast, openLink],
   )
 
   // The config is snapshotted with the request so the response is handled with the same
@@ -213,20 +211,16 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
    * Initiates an add connection flow with Plaid
    */
   const fetchPlaidLinkToken = useCallback(
-    (onSuccess?: () => Awaitable<void>) => {
-      addConnectionSuccessRef.current = onSuccess
-
-      return fetchLinkToken(
-        'add',
-        customerManagedPlaidConfig
-          ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
-          : withHostedLinkRedirect(
-            () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
-            plaidHostedLinkConfig,
-          ),
-        t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
-      )
-    },
+    () => fetchLinkToken(
+      'add',
+      customerManagedPlaidConfig
+        ? () => Promise.resolve().then(() => customerManagedPlaidConfig.createLinkToken())
+        : withHostedLinkRedirect(
+          () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+          plaidHostedLinkConfig,
+        ),
+      t('linkedAccounts:useLinkedAccounts.error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+    ),
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
@@ -247,9 +241,9 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
 
-  const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
+  const addConnection = usePlaidOnlyLinkFlow('Adding a connection', fetchPlaidLinkToken)
 
-  const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken)
+  const repairConnection = usePlaidOnlyLinkFlow('Repairing a connection', fetchPlaidUpdateModeLinkToken)
 
   const handleRemoveConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchWithToast(

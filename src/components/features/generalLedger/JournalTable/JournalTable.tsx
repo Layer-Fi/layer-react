@@ -1,5 +1,6 @@
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
+import { CircleCheckBig } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Alignment } from '@internal-types/utility/table'
@@ -106,7 +107,8 @@ const JournalTableContent = ({
   const slots = useMemo(() => ({
     EmptyState: () => (
       <DataState
-        status={DataStateStatus.allDone}
+        status={DataStateStatus.neutral}
+        icon={<CircleCheckBig size={12} />}
         title={t('generalLedger:JournalTable.empty.entries', 'No entries found')}
         description={t('generalLedger:JournalTable.label.entry_journal', 'There are no entries in the journal.')}
       />
