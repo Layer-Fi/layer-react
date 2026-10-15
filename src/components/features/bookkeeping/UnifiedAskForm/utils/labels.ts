@@ -32,9 +32,10 @@ const getInputLabel = (t: TFunction, step: AskFormStepFields, values: AskFormInp
 /** A choice follow-up reads as its own pick; a free-text or checklist one reads as the option it explains. */
 export const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
   const followUpStep = getFollowUpStep(step, values)
-  const readsAsFollowUp = followUpStep && followUpStep.type !== AskFormStepType.Checklist && !values.followUp.text.trim()
+  const optionLabel = getPickLabel(step, values)
 
-  return (readsAsFollowUp ? getPickLabel(followUpStep, values.followUp) : null) ?? getPickLabel(step, values)
+  if (!followUpStep || followUpStep.type === AskFormStepType.Checklist || values.followUp.text.trim()) return optionLabel
+  return getPickLabel(followUpStep, values.followUp) ?? optionLabel
 }
 
 const getFollowUpLabel = (t: TFunction, step: AskFormStepFields, values: AskFormAnswerValues, formatList: ListFormatFn) => {
@@ -56,7 +57,7 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
 
 export type ChecklistReviewLine = { value: string, text: string }
 
-export const getChecklistReviewLines = (t: TFunction, step: AskFormChecklistStep, checked: ReadonlyArray<string>): ChecklistReviewLine[] => {
+const getChecklistReviewLines = (t: TFunction, step: AskFormChecklistStep, checked: ReadonlyArray<string>): ChecklistReviewLine[] => {
   if (step.require !== AskFormChecklistRequirement.Items) {
     return getCheckedItems(step, checked).map(({ value, label }) => ({ value, text: label }))
   }
@@ -69,6 +70,9 @@ export const getChecklistReviewLines = (t: TFunction, step: AskFormChecklistStep
     }),
   }))
 }
+
+export const getReviewLines = (t: TFunction, step: AskFormStepFields, values: AskFormStepValues | undefined): ChecklistReviewLine[] =>
+  (step.type === AskFormStepType.Checklist ? getChecklistReviewLines(t, step, values?.checked ?? []) : [])
 
 /** The short label a whole step's answer shows in the review and in prompt templates. */
 type StepLabelOptions = {

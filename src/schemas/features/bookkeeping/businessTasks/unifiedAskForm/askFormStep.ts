@@ -53,7 +53,6 @@ const optionalTrueBoolean = Schema.optionalWith(Schema.Boolean, { default: () =>
 const AskFormChecklistItemSchema = Schema.Struct({
   value: Schema.String,
   label: Schema.String,
-  /** Read only when the checklist requires `ITEMS`. */
   required: optionalBoolean,
 })
 

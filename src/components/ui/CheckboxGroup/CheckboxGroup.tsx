@@ -24,7 +24,7 @@ export function CheckboxGroup<T extends string>({
   return (
     <ReactAriaCheckboxGroup
       {...restProps}
-      // react-aria reports plain strings; every value it reports is one of the `T` checkboxes rendered inside.
+      // Safe: react-aria only reports the values of the `T` checkboxes inside.
       onChange={onChange as ((value: string[]) => void) | undefined}
       className={classNames(CLASS_NAME, className)}
     >

@@ -16,7 +16,6 @@ export type CheckboxOption<T extends string> = {
   isRequired?: boolean
 }
 
-// The "Optional" tag replaces the string label that gives an inline checkbox its gap, so only rows may show it.
 type CheckboxGroupLayoutProps =
   | { layout?: Exclude<CheckboxLayout, 'row'>, markOptional?: never }
   | { layout: 'row', markOptional?: boolean }
@@ -25,8 +24,20 @@ export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps
   options: CheckboxOption<T>[]
 }
 
-export function FormCheckboxGroupField<T extends string>({ options, layout, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {
+const OptionalLabel = ({ label }: { label: string }) => {
   const { t } = useTranslation()
+
+  return (
+    <TextContext.Provider value={null}>
+      <HStack fluid justify='space-between' align='center' gap='xs'>
+        <Span>{label}</Span>
+        <Span size='sm' variant='subtle'>{t('common:label.optional', 'Optional')}</Span>
+      </HStack>
+    </TextContext.Provider>
+  )
+}
+
+export function FormCheckboxGroupField<T extends string>({ options, layout, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {
   const field = useFieldContext<T[]>()
 
   const { state, handleChange, handleBlur } = field
@@ -46,21 +57,15 @@ export function FormCheckboxGroupField<T extends string>({ options, layout, mark
     >
       <FormFieldShell {...shellProps} labelId={labelId}>
         <VStack slot='options' gap='xs'>
-          {options.map(option => (
-            <Checkbox key={option.value} value={option.value} size='lg' layout={layout} isRequired={option.isRequired}>
-              {markOptional && !option.isRequired
-                ? (
-                  // The group hands every `Text` inside it a description or error slot; clearing it keeps these plain text.
-                  <TextContext.Provider value={null}>
-                    <HStack fluid justify='space-between' align='center' gap='xs'>
-                      <Span>{option.label}</Span>
-                      <Span size='sm' variant='subtle'>{t('common:label.optional', 'Optional')}</Span>
-                    </HStack>
-                  </TextContext.Provider>
-                )
-                : option.label}
-            </Checkbox>
-          ))}
+          {options.map(({ value, label, isRequired }) => {
+            const isTagged = markOptional && !isRequired
+
+            return (
+              <Checkbox key={value} value={value} size='lg' layout={layout} isRequired={isRequired}>
+                {isTagged ? <OptionalLabel label={label} /> : label}
+              </Checkbox>
+            )
+          })}
         </VStack>
       </FormFieldShell>
     </CheckboxGroup>

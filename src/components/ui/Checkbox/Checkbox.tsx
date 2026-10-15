@@ -39,7 +39,7 @@ export const Checkbox = forwardRef<ComponentRef<typeof ReactAriaCheckbox>, Check
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
-    layout: layout === 'row' ? layout : undefined,
+    layout,
     labeled: typeof children === 'string' && children.length > 0,
   }), [children, size, variant, layout])
 

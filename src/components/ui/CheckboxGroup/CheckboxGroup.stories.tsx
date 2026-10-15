@@ -13,9 +13,9 @@ const ITEMS = [
 ] as const
 
 const STATES = [
-  { label: 'none checked', value: [] },
-  { label: 'some checked', value: ['figures'] },
-  { label: 'all checked', value: ['figures', 'copy'] },
+  { label: 'none checked', value: [], isDisabled: false },
+  { label: 'some checked', value: ['figures'], isDisabled: false },
+  { label: 'all checked', value: ['figures', 'copy'], isDisabled: false },
   { label: 'disabled', value: ['figures'], isDisabled: true },
 ] as const
 
@@ -38,7 +38,7 @@ export const AllVariants: Story = {
         <Section key={layout} title={`layout: ${layout}`}>
           {STATES.map(state => (
             <Row key={state.label} label={state.label}>
-              <CheckboxGroup aria-label={state.label} value={[...state.value]} isDisabled={'isDisabled' in state ? state.isDisabled : undefined}>
+              <CheckboxGroup aria-label={state.label} value={[...state.value]} isDisabled={state.isDisabled}>
                 {ITEMS.map(item => <Checkbox key={item.value} value={item.value} size='lg' layout={layout}>{item.label}</Checkbox>)}
               </CheckboxGroup>
             </Row>

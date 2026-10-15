@@ -71,12 +71,15 @@ const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | 
     : { ...toEmptyInputValues(), selection: { value: answer.choice, label: answer.choice } }
 }
 
+const isInputAnswer = (answer: AskFormAnswer | undefined): answer is AskFormFollowUpAnswer =>
+  isChoiceAnswer(answer) || isTextAnswer(answer) || isCheckedAnswer(answer)
+
 const toAnswerValues = (step: AskFormStepFields, answer: AskFormAnswer | undefined): AskFormAnswerValues => {
   const choiceAnswer = isChoiceAnswer(answer) ? answer : undefined
   const followUpStep = choiceAnswer ? findFollowUp(step, choiceAnswer.choice) : undefined
 
   return {
-    ...toInputValues(step, choiceAnswer ?? (isTextAnswer(answer) || isCheckedAnswer(answer) ? answer : undefined)),
+    ...toInputValues(step, isInputAnswer(answer) ? answer : undefined),
     followUp: followUpStep && choiceAnswer
       ? toInputValues(followUpStep, choiceAnswer.followUp)
       : toInputValues(step, undefined),

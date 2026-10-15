@@ -24,7 +24,6 @@ const toPickAnswer = ({ choice, selection, text }: AskFormInputValues) => {
   return text.trim() ? { text } : null
 }
 
-// Nothing checked is still an answer: it satisfies a checklist whose items are all optional.
 const toCheckedAnswer = ({ checked }: AskFormInputValues) => ({ checked })
 
 export const toInputAnswer = (step: AskFormStepFields, values: AskFormInputValues): AskFormFollowUpAnswer | null =>

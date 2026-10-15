@@ -9,7 +9,7 @@ import { P, Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type ChecklistReviewLine, fillPromptTemplate, getChecklistReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { type ChecklistReviewLine, fillPromptTemplate, getReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
 
 const UnifiedAskFormReviewList = ({ lines }: { lines: ReadonlyArray<ChecklistReviewLine> }) => (
   <VStack role='list' gap='3xs'>
@@ -39,10 +39,8 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
     .flatMap((step) => {
       const values = stepValues[step.id]
       const label = getStepLabel({ t, formatNumber, formatList, step, values })
-      if (label === null) return []
 
-      const lines = step.type === AskFormStepType.Checklist ? getChecklistReviewLines(t, step, values?.checked ?? []) : []
-      return [{ step, label, lines }]
+      return label === null ? [] : [{ step, label, lines: getReviewLines(t, step, values) }]
     })
 
   return (
