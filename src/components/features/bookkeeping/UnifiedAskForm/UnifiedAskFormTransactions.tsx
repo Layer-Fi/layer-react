@@ -57,7 +57,7 @@ export const UnifiedAskFormTransactions = ({ transactions, title, collapsible = 
   return (
     <VStack gap='xs'>
       <UnifiedAskFormTransactionRows transactions={transactions.slice(0, COLLAPSED_ROW_COUNT)} />
-      <HStack pi='md'>
+      <HStack pi='md' pbe='sm'>
         <Button variant='text' onPress={() => setIsOpen(true)}>{showAllLabel}</Button>
       </HStack>
       <Drawer isOpen={isOpen} onOpenChange={setIsOpen} variant='mobile-drawer' isDismissable aria-label={showAllLabel} slots={slots}>
