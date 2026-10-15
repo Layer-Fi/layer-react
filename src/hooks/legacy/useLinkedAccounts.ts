@@ -8,6 +8,7 @@ import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/fe
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { usePostConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
 import { usePostExcludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
 import { usePostSandboxResetPlaidItemLogin } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
@@ -116,6 +117,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   const { trigger: triggerBreakPlaidItemConnection } = usePostSandboxResetPlaidItemLogin()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
   const refetchAccountsAndTransactions = useCallback(async () => {
     await Promise.all([
@@ -125,9 +127,15 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
   }, [refetch, forceReloadBankTransactions])
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
+    void invalidateBookkeepingPeriods()
     await refetchAccountsAndTransactions().catch(() => undefined)
     await onPlaidConnectionSuccess?.()
-  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
+  }, [invalidateBookkeepingPeriods, refetchAccountsAndTransactions, onPlaidConnectionSuccess])
+
+  const handleHostedLinkSuccess = useCallback(async () => {
+    void invalidateBookkeepingPeriods()
+    await refetchAccountsAndTransactions()
+  }, [invalidateBookkeepingPeriods, refetchAccountsAndTransactions])
 
   const { isLinking, openLink } = usePlaidLinkModal({
     onSuccess: refetchAccountsAndTransactions,
@@ -137,7 +145,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
 
   const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
     enabled: plaidHostedLinkConfig != null,
-    onSuccess: refetchAccountsAndTransactions,
+    onSuccess: handleHostedLinkSuccess,
   })
 
   /**

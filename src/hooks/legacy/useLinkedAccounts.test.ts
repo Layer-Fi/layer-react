@@ -2,11 +2,18 @@ import { act, waitFor } from '@testing-library/react'
 import { type PlaidLinkOnSuccessMetadata, type PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
+import { PlaidHostedLinkState } from '@schemas/features/linkedAccounts/plaidHostedLinkStatus'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { get as getBookkeepingPeriods } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { get as getPlaidHostedLinkStatus } from '@msw/api/businesses/[business-id]/plaid/hosted-link/get'
 import { post as postSandboxResetPlaidItemLogin } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
 import { post as postUnlinkPlaidItem } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
+import { post as postPlaidLinkExchange } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
 import { post as postPlaidLink } from '@msw/api/businesses/[business-id]/plaid/link/post'
 import { post as postPlaidUpdateModeLink } from '@msw/api/businesses/[business-id]/plaid/update-mode-link/post'
 import { server } from '@msw/node'
@@ -29,7 +36,31 @@ const PROCESSOR_TOKEN = 'processor-sandbox-0a1b2c3d-4e5f'
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))
 
-afterEach(() => vi.restoreAllMocks())
+const linkThroughPlaid = async (addConnection: ReturnType<typeof useLinkedAccounts>['addConnection']) => {
+  const connection = addConnection('PLAID')
+  await waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
+  act(() => {
+    lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
+  })
+
+  return connection
+}
+
+const spyOnBookkeepingPeriods = () => {
+  server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
+  const onRequest = vi.fn()
+  server.use(getBookkeepingPeriods.mock([], { onRequest }))
+
+  return onRequest
+}
+
+const waitForInitialPeriodsRequest = (onPeriodsRequest: ReturnType<typeof spyOnBookkeepingPeriods>) =>
+  waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledOnce())
+
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+})
 
 describe('useLinkedAccounts', () => {
   describe('with a customer-managed Plaid config', () => {
@@ -132,13 +163,7 @@ describe('useLinkedAccounts', () => {
     it('resolves true once the new item is saved', async () => {
       const { result } = await renderLinkedAccounts()
 
-      const connection = result.current.addConnection('PLAID')
-      await waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
-      act(() => {
-        lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
-      })
-
-      await expect(connection).resolves.toBe(true)
+      await expect(linkThroughPlaid(result.current.addConnection)).resolves.toBe(true)
     })
 
     it('resolves false when the link token can’t be minted', async () => {
@@ -146,6 +171,62 @@ describe('useLinkedAccounts', () => {
       const { result } = await renderLinkedAccounts()
 
       await expect(result.current.addConnection('PLAID')).resolves.toBe(false)
+    })
+  })
+
+  describe('refreshing tasks after a link', () => {
+    it('refetches bookkeeping periods once a Layer-managed link is saved', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await expect(linkThroughPlaid(result.current.addConnection)).resolves.toBe(true)
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
+    })
+
+    it('refetches bookkeeping periods once a hosted link succeeds', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true })
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      server.use(getPlaidHostedLinkStatus.mock({ state: PlaidHostedLinkState.PROCESSING }))
+      await renderHookWithAuth(() => useLinkedAccounts({ plaidHostedLinkConfig: { navigateToHostedLink: () => undefined } }))
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      server.use(getPlaidHostedLinkStatus.mock({ state: PlaidHostedLinkState.SUCCEEDED }))
+      await vi.advanceTimersByTimeAsync(4_000)
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
+    })
+
+    it('does not refetch bookkeeping periods when the link fails to save', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      server.use(postPlaidLinkExchange.mockError({ error: 'unavailable' }))
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await expect(linkThroughPlaid(result.current.addConnection)).resolves.toBe(false)
+
+      expect(onPeriodsRequest).toHaveBeenCalledOnce()
+    })
+
+    it('refetches bookkeeping periods once an account is confirmed', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await result.current.confirmAccount('PLAID', 'external-account-1')
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
+    })
+
+    it('refetches bookkeeping periods once an account is excluded', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await result.current.excludeAccount('PLAID', 'external-account-1')
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
     })
   })
 })
