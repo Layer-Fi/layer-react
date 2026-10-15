@@ -1,6 +1,7 @@
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 const CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY = '#confirm-external-account'
 
@@ -28,4 +29,11 @@ export const usePostConfirmExternalAccount = createMutationHook({
   request: confirmExternalAccount,
   argToParams: ({ accountId }: ConfirmExternalAccountArg) => ({ accountId }),
   argToBody: ({ body }: ConfirmExternalAccountArg) => body,
+  useOnTriggerSuccess: () => {
+    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+
+    return () => {
+      void invalidateBookkeepingPeriods()
+    }
+  },
 })
