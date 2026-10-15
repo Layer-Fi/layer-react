@@ -22,25 +22,24 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
       apiUrl: auth?.apiUrl,
       businessId,
     })),
-    (
+    async (
       { accessToken, apiUrl, businessId },
       { arg }: { arg: AccountConfirmExcludeFormState },
-    ) =>
-      Promise.all(
-        Object.entries(arg).map(([accountId, isConfirmed]) =>
-          isConfirmed
-            ? confirmExternalAccount(apiUrl, accessToken, {
-              params: { businessId, accountId },
-              body: { is_relevant: true },
-            })
-            : excludeExternalAccount(apiUrl, accessToken, {
-              params: { businessId, accountId },
-              body: { is_irrelevant: true },
-            }),
-        ),
-      )
-        .then(() => Promise.all([onSuccess?.(), invalidateBookkeepingPeriods()]))
-        .then(() => true as const),
+    ) => {
+      for (const [accountId, isConfirmed] of Object.entries(arg)) {
+        await (isConfirmed
+          ? confirmExternalAccount(apiUrl, accessToken, {
+            params: { businessId, accountId },
+            body: { is_relevant: true },
+          })
+          : excludeExternalAccount(apiUrl, accessToken, {
+            params: { businessId, accountId },
+            body: { is_irrelevant: true },
+          }))
+      }
+      await Promise.all([onSuccess?.(), invalidateBookkeepingPeriods()])
+      return true as const
+    },
     {
       revalidate: false,
       throwOnError: false,
