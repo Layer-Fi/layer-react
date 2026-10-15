@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/shared/i18n/plural'
@@ -83,10 +83,6 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
       </ModalContent>
     </VStack>
   )
-}
-
-function LinkedAccountsConfirmationModalList({ children }: PropsWithChildren) {
-  return <VStack gap='md' className='Layer__LinkedAccountsConfirmationModal__Content'>{children}</VStack>
 }
 
 export function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
@@ -177,7 +173,7 @@ export function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: (
               </P>
             </VStack>
           )}
-          Container={LinkedAccountsConfirmationModalList}
+          Container={({ children }) => <VStack gap='md' className='Layer__LinkedAccountsConfirmationModal__Content'>{children}</VStack>}
         >
           {({ item }) => (
             <LinkedAccountToConfirm

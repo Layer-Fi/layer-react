@@ -4,7 +4,7 @@ type ConditionalListProps<T> = {
   list: ReadonlyArray<T>
   Empty: React.ReactNode
   children: React.FC<{ item: T, index: number }>
-  Container?: React.FC<PropsWithChildren>
+  Container?: (props: PropsWithChildren) => React.ReactNode
 } & ({
   isLoading: boolean
   Loading: React.ReactNode
@@ -41,5 +41,5 @@ export function ConditionalList<T>({
 
   const listItems = list.map((item, index) => children({ item, index }))
 
-  return Container ? <Container>{listItems}</Container> : listItems
+  return Container ? Container({ children: listItems }) : listItems
 }
