@@ -36,6 +36,8 @@ const INVALID_SUBMISSIONS: Record<string, unknown> = {
     answers: { rows: { transaction_answers: [{ transaction_id: TRANSACTION_ID, answer: { document_ids: [TRANSACTION_ID] } }] } },
   },
   'acct value without a uuid': { answers: { category: { choice: 'acct_office' } } },
+  'duplicate checked': { answers: { confirmation: { checked: ['completed', 'completed'] } } },
+  'duplicate checked follow_up': { answers: { pick: { choice: 'yes', follow_up: { checked: ['copy', 'copy'] } } } },
 }
 
 describe('UnifiedAskFormSubmissionSchema', () => {
@@ -48,6 +50,16 @@ describe('UnifiedAskFormSubmissionSchema', () => {
       answers: {
         category: { choice: 'not_sure', follow_up: { text: 'Snacks for an offsite, I think' } },
         always_this: { choice: 'always' },
+      },
+    })).not.toThrow()
+  })
+
+  it('accepts checked answers, including none checked, on a step and as a follow-up', () => {
+    expect(() => decodeSubmission({
+      answers: {
+        confirmation: { checked: ['completed'] },
+        optional: { checked: [] },
+        pick: { choice: 'yes', follow_up: { checked: ['figures'] } },
       },
     })).not.toThrow()
   })

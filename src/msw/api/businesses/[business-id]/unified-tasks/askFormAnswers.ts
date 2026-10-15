@@ -4,6 +4,7 @@ import {
   type AskFormAnswers,
   type AskFormRowAnswer,
   isAccountOptionValue,
+  isCheckedAnswer,
   isChoiceAnswer,
   isDocumentsAnswer,
   isTextAnswer,
@@ -22,6 +23,9 @@ const findChosenLabel = (step: AskFormStep, answer: AskFormAnswer): string | nul
     return option?.label ?? null
   }
   if (isTextAnswer(answer)) return answer.text
+  if (isCheckedAnswer(answer) && step.type === AskFormStepType.Checklist) {
+    return step.items.filter(({ value }) => answer.checked.includes(value)).map(({ label }) => label).join(', ') || null
+  }
   if (isDocumentsAnswer(answer)) return `${answer.documentIds.length} ${answer.documentIds.length === 1 ? 'file' : 'files'}`
   if (isTransactionAnswers(answer)) return 'Varies by transaction'
   return null

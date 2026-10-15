@@ -12,6 +12,7 @@ export enum AskFormStepType {
   Text = 'TEXT',
   Action = 'ACTION',
   Upload = 'UPLOAD',
+  Checklist = 'CHECKLIST',
 }
 
 export enum AskFormSearchEntity {
@@ -29,6 +30,13 @@ export enum AskFormAction {
   ConnectAccount = 'CONNECT_ACCOUNT',
 }
 
+export enum AskFormChecklistRequirement {
+  All = 'ALL',
+  AtLeastOne = 'AT_LEAST_ONE',
+  Items = 'ITEMS',
+  None = 'NONE',
+}
+
 // Passed unchanged to GET /search, which accepts any entity the API puts in a form.
 const AskFormSearchEntitySchema = createOpenEnumSchema(AskFormSearchEntity)
 
@@ -36,9 +44,19 @@ const AskFormActionSchema = Schema.Enums(AskFormAction)
 
 const AskFormCategoryScopeSchema = Schema.Enums(AskFormCategoryScope)
 
+const AskFormChecklistRequirementSchema = Schema.Enums(AskFormChecklistRequirement)
+
 const optionalBoolean = Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true })
 
 const optionalTrueBoolean = Schema.optionalWith(Schema.Boolean, { default: () => true, nullable: true })
+
+const AskFormChecklistItemSchema = Schema.Struct({
+  value: Schema.String,
+  label: Schema.String,
+  required: optionalBoolean,
+})
+
+export type AskFormChecklistItem = typeof AskFormChecklistItemSchema.Type
 
 const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Schema.Struct.Fields>(
   optionSchema: Option,
@@ -93,6 +111,13 @@ const createStepSchema = <Option extends Schema.Schema.Any, Identity extends Sch
       accept: Schema.optionalWith(Schema.Array(Schema.String), { default: () => [], nullable: true }),
       multiple: optionalBoolean,
       documents: Schema.optionalWith(Schema.Array(AskFormDocumentSchema), { default: () => [], nullable: true }),
+    }),
+    Schema.Struct({
+      ...identity,
+      type: Schema.Literal(AskFormStepType.Checklist),
+      prompt,
+      items: Schema.NonEmptyArray(AskFormChecklistItemSchema),
+      require: AskFormChecklistRequirementSchema,
     }),
   )
 }
