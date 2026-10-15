@@ -703,11 +703,11 @@ describe('UnifiedAskForm', () => {
     const onSubmit = spyOnSubmit(task)
     const { user } = renderItem(task)
 
-    await user.click(screen.getByRole('checkbox', { name: 'Email me a copy Optional' }))
+    await user.click(screen.getByRole('checkbox', { name: /^Email me a copy/ }))
 
     expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
 
-    await user.click(screen.getByRole('checkbox', { name: 'Email me a copy Optional' }))
+    await user.click(screen.getByRole('checkbox', { name: /^Email me a copy/ }))
     await user.click(screen.getByRole('checkbox', { name: 'The figures are right' }))
     await user.click(screen.getByRole('button', { name: 'Submit' }))
 
