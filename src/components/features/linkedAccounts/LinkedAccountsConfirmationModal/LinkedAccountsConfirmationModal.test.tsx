@@ -2,7 +2,8 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
+import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
+import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
 import { makeAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
@@ -32,9 +33,13 @@ const PLAID_SANDBOX_ACCOUNTS = PLAID_SANDBOX_ACCOUNT_NAMES.map((name, index) => 
 const renderConfirmationModal = async () => {
   server.use(getBankAccounts.mock(PLAID_SANDBOX_ACCOUNTS))
   const user = userEvent.setup()
-  const result = render(<PendingAccountConfirmationBanner />, { wrapper: LayerTestProvider })
+  const result = render(
+    <AccountConfirmationStoreProvider>
+      <LinkedAccountsConfirmationModal />
+    </AccountConfirmationStoreProvider>,
+    { wrapper: LayerTestProvider },
+  )
 
-  await user.click(await screen.findByRole('button', { name: 'Review accounts' }))
   const dialog = await screen.findByRole('dialog')
 
   return { user, dialog, ...result }
