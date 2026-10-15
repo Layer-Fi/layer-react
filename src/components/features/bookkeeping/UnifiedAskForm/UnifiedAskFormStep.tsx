@@ -10,11 +10,11 @@ import { UnifiedAskFormTextStep } from '@features/bookkeeping/UnifiedAskForm/Uni
 import { UnifiedAskFormUploadStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormUploadStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
-import { type AskFormInputPath, type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormInputPath, toEmptyInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
-const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '', checked: [] }
+const EMPTY_FOLLOW_UP = toEmptyInputValues()
 
 export type UnifiedAskFormStepProps = {
   form: UnifiedAskFormApi

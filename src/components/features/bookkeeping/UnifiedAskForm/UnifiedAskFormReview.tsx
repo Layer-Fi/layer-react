@@ -9,7 +9,17 @@ import { P, Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { fillPromptTemplate, getChecklistReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { type ChecklistReviewLine, fillPromptTemplate, getChecklistReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+
+const UnifiedAskFormReviewList = ({ lines }: { lines: ReadonlyArray<ChecklistReviewLine> }) => (
+  <VStack role='list' gap='3xs'>
+    {lines.map(({ value, text }) => (
+      <HStack key={value} role='listitem' align='baseline' className='Layer__UnifiedAskFormReview__ChecklistItem'>
+        <Span size='sm'>{text}</Span>
+      </HStack>
+    ))}
+  </VStack>
+)
 
 type UnifiedAskFormReviewProps = {
   form: UnifiedAskFormApi
@@ -27,35 +37,23 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
     .flatMap(({ steps }) => steps)
     .filter(step => step.type !== AskFormStepType.Action)
     .flatMap((step) => {
-      const label = getStepLabel({ t, formatNumber, formatList, step, values: stepValues[step.id] })
-      return label === null ? [] : [{ step, label }]
+      const values = stepValues[step.id]
+      const label = getStepLabel({ t, formatNumber, formatList, step, values })
+      if (label === null) return []
+
+      const lines = step.type === AskFormStepType.Checklist ? getChecklistReviewLines(t, step, values?.checked ?? []) : []
+      return [{ step, label, lines }]
     })
 
   return (
     <VStack gap='md' pb='md' pi='md'>
       <P size='sm'>{t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.label.what_you_told_us', 'Here’s what you told us:')}</P>
-      {answeredSteps.map(({ step, label }) => {
-        const checklistLines = step.type === AskFormStepType.Checklist
-          ? getChecklistReviewLines(t, step, stepValues[step.id]?.checked ?? [])
-          : []
-
-        return (
-          <VStack key={step.id} gap='3xs'>
-            <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
-            {checklistLines.length > 0
-              ? (
-                <VStack role='list' gap='3xs'>
-                  {checklistLines.map(line => (
-                    <HStack key={line} role='listitem' align='baseline' className='Layer__UnifiedAskFormReview__ChecklistItem'>
-                      <Span size='sm'>{line}</Span>
-                    </HStack>
-                  ))}
-                </VStack>
-              )
-              : <Span size='sm'>{label}</Span>}
-          </VStack>
-        )
-      })}
+      {answeredSteps.map(({ step, label, lines }) => (
+        <VStack key={step.id} gap='3xs'>
+          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
+          {lines.length > 0 ? <UnifiedAskFormReviewList lines={lines} /> : <Span size='sm'>{label}</Span>}
+        </VStack>
+      ))}
       {!isReadOnly && (
         <HStack justify='end'>
           <Button isPending={isSubmitting} isDisabled={isSubmitting} onPress={submitReviewed}>

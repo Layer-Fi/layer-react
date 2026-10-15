@@ -52,7 +52,7 @@ export type AskFormInputPath =
 
 export const getFollowUpStep = (step: AskFormStepFields, values: AskFormInputValues) => findFollowUp(step, getPickedValue(values))
 
-const toEmptyInputValues = (): AskFormInputValues => ({ choice: null, selection: null, text: '', checked: [] })
+export const toEmptyInputValues = (): AskFormInputValues => ({ choice: null, selection: null, text: '', checked: [] })
 
 const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | undefined): AskFormInputValues => {
   if (!answer) return toEmptyInputValues()

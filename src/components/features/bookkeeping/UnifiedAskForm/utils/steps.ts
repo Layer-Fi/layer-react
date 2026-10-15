@@ -1,5 +1,6 @@
 import {
   AskFormCategoryScope,
+  type AskFormChecklistItem,
   AskFormChecklistRequirement,
   type AskFormFollowUp,
   type AskFormOption,
@@ -25,18 +26,22 @@ export const findFollowUp = (step: AskFormStepFields, value: string | null) => {
 
 export type AskFormChecklistStep = Extract<AskFormStepFields, { type: AskFormStepType.Checklist }>
 
+export const isChecklistItemRequired = (require: AskFormChecklistRequirement, { required }: AskFormChecklistItem) =>
+  require === AskFormChecklistRequirement.All || (require === AskFormChecklistRequirement.Items && required)
+
+export const getCheckedItems = ({ items }: AskFormChecklistStep, checked: ReadonlyArray<string>) =>
+  items.filter(({ value }) => checked.includes(value))
+
 export const isChecklistSatisfied = ({ items, require }: AskFormChecklistStep, checked: ReadonlyArray<string>) => {
   const checkedValues = new Set(checked)
 
   switch (require) {
-    case AskFormChecklistRequirement.All:
-      return items.every(({ value }) => checkedValues.has(value))
     case AskFormChecklistRequirement.AtLeastOne:
       return items.some(({ value }) => checkedValues.has(value))
+    case AskFormChecklistRequirement.All:
     case AskFormChecklistRequirement.Items:
-      return items.every(({ value, required }) => !required || checkedValues.has(value))
     case AskFormChecklistRequirement.None:
-      return true
+      return items.every(item => !isChecklistItemRequired(require, item) || checkedValues.has(item.value))
   }
 }
 

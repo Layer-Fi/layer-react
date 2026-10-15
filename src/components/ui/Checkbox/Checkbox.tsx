@@ -28,7 +28,6 @@ type CheckboxProps = Omit<AriaCheckboxProps, 'className'> & {
   className?: string
   variant?: CheckboxVariant
   size?: CheckboxSize
-  /** `row` boxes the checkbox and its label in a full-width bordered row. */
   layout?: CheckboxLayout
 }
 

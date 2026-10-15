@@ -4,11 +4,11 @@ import {
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { withFieldGroup } from '@blocks/Form/useForm'
 import { UnifiedAskFormStepShell } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormStepShell'
+import { isChecklistItemRequired } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 export type UnifiedAskFormChecklistStepValues = { checked: string[] }
 
 type UnifiedAskFormChecklistStepProps = {
-  /** The accessible name; shown only when there is no prompt. */
   label: string
   prompt?: string | null
   items: ReadonlyArray<AskFormChecklistItem>
@@ -20,18 +20,11 @@ const DEFAULT_VALUES: UnifiedAskFormChecklistStepValues = { checked: [] }
 
 const DEFAULT_PROPS: UnifiedAskFormChecklistStepProps = { label: '', items: [], require: AskFormChecklistRequirement.All }
 
-const toOption = (require: AskFormChecklistRequirement) => ({ value, label, required }: AskFormChecklistItem) => ({
-  value,
-  label,
-  isRequired: require === AskFormChecklistRequirement.All || (require === AskFormChecklistRequirement.Items && required),
-})
-
 export const UnifiedAskFormChecklistStep = withFieldGroup({
   defaultValues: DEFAULT_VALUES,
   props: DEFAULT_PROPS,
   render: function Render({ group, label, prompt, items, require, isDisabled }) {
-    const options = items.map(toOption(require))
-    // Only an ITEMS checklist mixes required and optional items, so only it tags the optional ones.
+    const options = items.map(item => ({ value: item.value, label: item.label, isRequired: isChecklistItemRequired(require, item) }))
     const markOptional = require === AskFormChecklistRequirement.Items
 
     return (

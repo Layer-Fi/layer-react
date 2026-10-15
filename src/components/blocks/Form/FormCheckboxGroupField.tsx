@@ -16,11 +16,13 @@ export type CheckboxOption<T extends string> = {
   isRequired?: boolean
 }
 
-export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & {
+// The "Optional" tag replaces the string label that gives an inline checkbox its gap, so only rows may show it.
+type CheckboxGroupLayoutProps =
+  | { layout?: Exclude<CheckboxLayout, 'row'>, markOptional?: never }
+  | { layout: 'row', markOptional?: boolean }
+
+export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & CheckboxGroupLayoutProps & {
   options: CheckboxOption<T>[]
-  layout?: CheckboxLayout
-  /** Tags each option that isn't required as "Optional". */
-  markOptional?: boolean
 }
 
 export function FormCheckboxGroupField<T extends string>({ options, layout, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {

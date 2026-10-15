@@ -10,7 +10,7 @@ import {
   type AskFormStepValues,
   getFollowUpStep,
 } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormChecklistStep, type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import { type AskFormChecklistStep, type AskFormStepFields, findOption, getCheckedItems, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
 
@@ -25,7 +25,7 @@ const getPickLabel = (step: AskFormStepFields, { choice, selection, text }: AskF
 const getInputLabel = (t: TFunction, step: AskFormStepFields, values: AskFormInputValues, formatList: ListFormatFn) => {
   if (step.type !== AskFormStepType.Checklist) return getPickLabel(step, values)
 
-  const labels = step.items.filter(({ value }) => values.checked.includes(value)).map(({ label }) => label)
+  const labels = getCheckedItems(step, values.checked).map(({ label }) => label)
   return labels.length > 0 ? formatList(labels) : t('bookkeeping:utils.labels.label.none', 'None')
 }
 
@@ -54,18 +54,19 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
   return onlyLabel ?? null
 }
 
-/**
- * The review's lines for a checklist. Only an ITEMS checklist has optional items, so only it can hold a
- * declined consent; it lists every item as yes or no, and the others list just the ticked items.
- */
-export const getChecklistReviewLines = (t: TFunction, { items, require }: AskFormChecklistStep, checked: ReadonlyArray<string>) => {
-  if (require !== AskFormChecklistRequirement.Items) {
-    return items.filter(({ value }) => checked.includes(value)).map(({ label }) => label)
+export type ChecklistReviewLine = { value: string, text: string }
+
+export const getChecklistReviewLines = (t: TFunction, step: AskFormChecklistStep, checked: ReadonlyArray<string>): ChecklistReviewLine[] => {
+  if (step.require !== AskFormChecklistRequirement.Items) {
+    return getCheckedItems(step, checked).map(({ value, label }) => ({ value, text: label }))
   }
 
-  return items.map(({ value, label }) => t('bookkeeping:utils.labels.label.checklist_item', '{{label}}: {{answer}}', {
-    label,
-    answer: checked.includes(value) ? t('common:label.yes', 'Yes') : t('common:label.no', 'No'),
+  return step.items.map(({ value, label }) => ({
+    value,
+    text: t('bookkeeping:utils.labels.label.checklist_item', '{{label}}: {{answer}}', {
+      label,
+      answer: checked.includes(value) ? t('common:label.yes', 'Yes') : t('common:label.no', 'No'),
+    }),
   }))
 }
 
