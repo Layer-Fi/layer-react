@@ -123,7 +123,7 @@
     gap: var(--spacing-xs);
   }
 
-  &[data-layout='row'] {
+  &[data-variant='row'] {
     box-sizing: border-box;
     gap: var(--spacing-sm);
     min-block-size: 3.25rem;
@@ -140,13 +140,13 @@
     transition: border-color var(--transition-speed) ease-in-out;
   }
 
-  &[data-layout='row'][data-selected] {
+  &[data-variant='row'][data-selected] {
     border-color: var(--color-base-1000);
 
     background-color: var(--color-base-50);
   }
 
-  &[data-layout='row'][data-focus-visible] {
+  &[data-variant='row'][data-focus-visible] {
     outline: 1px solid var(--outline-active);
     outline-offset: 2px;
   }

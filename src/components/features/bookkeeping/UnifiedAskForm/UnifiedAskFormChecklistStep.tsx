@@ -30,7 +30,7 @@ export const UnifiedAskFormChecklistStep = withFieldGroup({
     return (
       <UnifiedAskFormStepShell prompt={prompt}>
         <group.AppField name='checked'>
-          {field => <field.FormCheckboxGroupField label={prompt ?? label} showLabel={false} options={options} layout='row' markOptional={markOptional} isDisabled={isDisabled} />}
+          {field => <field.FormCheckboxGroupField label={prompt ?? label} showLabel={false} options={options} variant='row' markOptional={markOptional} isDisabled={isDisabled} />}
         </group.AppField>
       </UnifiedAskFormStepShell>
     )

@@ -14,9 +14,8 @@ import './checkbox.scss'
 
 const CLASS_NAME = 'Layer__Checkbox'
 
-type CheckboxVariant = 'default' | 'round' | 'error' | 'branded'
+export type CheckboxVariant = 'default' | 'round' | 'error' | 'branded' | 'row'
 type CheckboxSize = 'sm' | 'md' | 'lg'
-export type CheckboxLayout = 'inline' | 'row'
 
 const CHECK_SIZE = {
   sm: 12,
@@ -28,20 +27,18 @@ type CheckboxProps = Omit<AriaCheckboxProps, 'className'> & {
   className?: string
   variant?: CheckboxVariant
   size?: CheckboxSize
-  layout?: CheckboxLayout
 }
 
 type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export const Checkbox = forwardRef<ComponentRef<typeof ReactAriaCheckbox>, CheckboxProps>(function Checkbox({ children, className, variant = 'default', size = 'sm', layout = 'inline', isIndeterminate, ...props }, ref) {
+export const Checkbox = forwardRef<ComponentRef<typeof ReactAriaCheckbox>, CheckboxProps>(function Checkbox({ children, className, variant = 'default', size = 'sm', isIndeterminate, ...props }, ref) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
-    layout,
     labeled: typeof children === 'string' && children.length > 0,
-  }), [children, size, variant, layout])
+  }), [children, size, variant])
 
   return (
     <ReactAriaCheckbox

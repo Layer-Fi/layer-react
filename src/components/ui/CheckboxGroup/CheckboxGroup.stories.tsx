@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Checkbox, type CheckboxLayout } from '@ui/Checkbox/Checkbox'
+import { Checkbox, type CheckboxVariant } from '@ui/Checkbox/Checkbox'
 import { CheckboxGroup } from '@ui/CheckboxGroup/CheckboxGroup'
 
 import { Gallery } from '@testUtils/storybook/layout/Gallery'
@@ -19,7 +19,7 @@ const STATES = [
   { label: 'disabled', value: ['figures'], isDisabled: true },
 ] as const
 
-const LAYOUTS: CheckboxLayout[] = ['inline', 'row']
+const VARIANTS: CheckboxVariant[] = ['default', 'row']
 
 const meta: Meta<typeof CheckboxGroup> = {
   title: 'UI/CheckboxGroup',
@@ -34,12 +34,12 @@ export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
     <Gallery>
-      {LAYOUTS.map(layout => (
-        <Section key={layout} title={`layout: ${layout}`}>
+      {VARIANTS.map(variant => (
+        <Section key={variant} title={`variant: ${variant}`}>
           {STATES.map(state => (
             <Row key={state.label} label={state.label}>
               <CheckboxGroup aria-label={state.label} value={[...state.value]} isDisabled={state.isDisabled}>
-                {ITEMS.map(item => <Checkbox key={item.value} value={item.value} size='lg' layout={layout}>{item.label}</Checkbox>)}
+                {ITEMS.map(item => <Checkbox key={item.value} value={item.value} size='lg' variant={variant}>{item.label}</Checkbox>)}
               </CheckboxGroup>
             </Row>
           ))}

@@ -1,7 +1,7 @@
 import { TextContext } from 'react-aria-components/Text'
 import { useTranslation } from 'react-i18next'
 
-import { Checkbox, type CheckboxLayout } from '@ui/Checkbox/Checkbox'
+import { Checkbox, type CheckboxVariant } from '@ui/Checkbox/Checkbox'
 import { CheckboxGroup } from '@ui/CheckboxGroup/CheckboxGroup'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -16,11 +16,11 @@ export type CheckboxOption<T extends string> = {
   isRequired?: boolean
 }
 
-type CheckboxGroupLayoutProps =
-  | { layout?: Exclude<CheckboxLayout, 'row'>, markOptional?: never }
-  | { layout: 'row', markOptional?: boolean }
+type CheckboxGroupVariantProps =
+  | { variant?: Exclude<CheckboxVariant, 'row'>, markOptional?: never }
+  | { variant: 'row', markOptional?: boolean }
 
-export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & CheckboxGroupLayoutProps & {
+export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & CheckboxGroupVariantProps & {
   options: CheckboxOption<T>[]
 }
 
@@ -37,7 +37,7 @@ const OptionalLabel = ({ label }: { label: string }) => {
   )
 }
 
-export function FormCheckboxGroupField<T extends string>({ options, layout, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {
+export function FormCheckboxGroupField<T extends string>({ options, variant, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {
   const field = useFieldContext<T[]>()
 
   const { state, handleChange, handleBlur } = field
@@ -61,7 +61,7 @@ export function FormCheckboxGroupField<T extends string>({ options, layout, mark
             const isTagged = markOptional && !isRequired
 
             return (
-              <Checkbox key={value} value={value} size='lg' layout={layout} isRequired={isRequired}>
+              <Checkbox key={value} value={value} size='lg' variant={variant} isRequired={isRequired}>
                 {isTagged ? <OptionalLabel label={label} /> : label}
               </Checkbox>
             )

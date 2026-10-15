@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { type CheckboxLayout } from '@ui/Checkbox/Checkbox'
+import { type CheckboxVariant } from '@ui/Checkbox/Checkbox'
 import { type CheckboxOption, FormCheckboxGroupField } from '@blocks/Form/FormCheckboxGroupField'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
@@ -20,14 +20,14 @@ const OPTIONS: CheckboxOption<Confirmation>[] = [
   { value: 'copy', label: 'Email me a copy' },
 ]
 
-type Variant = FormFieldVariant<Confirmation[], CommonFormFieldProps & { layout?: CheckboxLayout, markOptional?: boolean }>
+type Variant = FormFieldVariant<Confirmation[], CommonFormFieldProps & { variant?: CheckboxVariant, markOptional?: boolean }>
 
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'nothing checked', value: [] },
-  { label: 'row layout', props: { layout: 'row' } },
-  { label: 'optional marked', props: { layout: 'row', markOptional: true } },
+  { label: 'row', props: { variant: 'row' } },
+  { label: 'row, optional marked', props: { variant: 'row', markOptional: true } },
 ]
 
 const meta: Meta<typeof FormCheckboxGroupField<Confirmation>> = {
@@ -46,9 +46,9 @@ export const AllVariants: Story = {
     <FormFieldVariantGallery
       defaultValue={['figures']}
       variants={VARIANTS}
-      renderField={({ layout, markOptional, ...props }) => (layout === 'row'
-        ? <FormCheckboxGroupField<Confirmation> label={LABEL} options={OPTIONS} layout='row' markOptional={markOptional} {...props} />
-        : <FormCheckboxGroupField<Confirmation> label={LABEL} options={OPTIONS} {...props} />)}
+      renderField={({ variant, markOptional, ...props }) => (variant === 'row'
+        ? <FormCheckboxGroupField<Confirmation> label={LABEL} options={OPTIONS} variant='row' markOptional={markOptional} {...props} />
+        : <FormCheckboxGroupField<Confirmation> label={LABEL} options={OPTIONS} variant={variant} {...props} />)}
     />
   ),
 }
