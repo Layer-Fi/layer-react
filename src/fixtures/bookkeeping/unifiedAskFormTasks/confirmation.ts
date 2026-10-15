@@ -2,7 +2,7 @@ import { type AskForm } from '@schemas/features/bookkeeping/businessTasks/unifie
 
 import { ASK_FORM_STEP_IDS, checklistStep, fixtureId, makeUnifiedAskFormTask, page, seedsInFixtureYear, singlePageForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
 
-export const CONFIRMATION_COMPLETED_VALUE = 'completed'
+const CONFIRMATION_COMPLETED_VALUE = 'completed'
 
 export const makeConfirmationAskForm = (prompt: string): AskForm =>
   singlePageForm(page('confirmation', [

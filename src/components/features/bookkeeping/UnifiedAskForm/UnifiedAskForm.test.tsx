@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -673,6 +673,24 @@ describe('UnifiedAskForm', () => {
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { extras: { checked: [] } } })
+  })
+
+  it('reviews a checklist with optional items as yes or no for every item', async () => {
+    const { user } = renderItem(makeUnifiedAskFormTask({
+      form: singlePageForm(page('only', [checklistStep('close', 'Before we close the month', [
+        { value: 'figures', label: 'The figures are right', required: true },
+        { value: 'marketing', label: 'Allow marketing emails', required: false },
+      ], AskFormChecklistRequirement.Items)], { kind: AskFormNextKind.Submit, review: true })),
+    }))
+
+    await user.click(screen.getByRole('checkbox', { name: 'The figures are right' }))
+    await user.click(screen.getByRole('button', { name: 'Review' }))
+
+    const answers = await screen.findByRole('list')
+    expect(within(answers).getAllByRole('listitem').map(item => item.textContent)).toEqual([
+      'The figures are right: Yes',
+      'Allow marketing emails: No',
+    ])
   })
 
   it('submits a checklist once its required items are ticked, leaving optional ones out', async () => {
