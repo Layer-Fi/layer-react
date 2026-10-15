@@ -36,6 +36,14 @@ const AskFormResolutionSchema = Schema.Struct({
   ),
 })
 
+const AskFormDiscoveredAccountSchema = Schema.Struct({
+  id: Schema.String,
+  connectionMatchPending: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('connection_match_pending'),
+  ),
+})
+
 export const UnifiedAskFormTaskSchema = Schema.extend(
   BaseBusinessTaskSchema,
   Schema.Struct({
@@ -54,6 +62,10 @@ export const UnifiedAskFormTaskSchema = Schema.extend(
       Schema.fromKey('answer_summary'),
     ),
     resolution: Schema.NullishOr(AskFormResolutionSchema),
+    discoveredAccount: pipe(
+      Schema.propertySignature(Schema.NullishOr(AskFormDiscoveredAccountSchema)),
+      Schema.fromKey('discovered_account'),
+    ),
   }),
 )
 

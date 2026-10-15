@@ -25,9 +25,14 @@ const AskFormCompletedAnswerSchema = Schema.Struct({
   completed: Schema.Literal(true),
 })
 
+const AskFormCheckedAnswerSchema = Schema.Struct({
+  checked: Schema.Array(Schema.String),
+})
+
 const AskFormFollowUpAnswerSchema = Schema.Union(
   Schema.Struct({ choice: Schema.String }),
   AskFormTextAnswerSchema,
+  AskFormCheckedAnswerSchema,
 )
 
 export type AskFormFollowUpAnswer = typeof AskFormFollowUpAnswerSchema.Type
@@ -66,6 +71,7 @@ const AskFormTransactionAnswersSchema = Schema.Struct({
 export const isChoiceAnswer = Schema.is(AskFormChoiceAnswerSchema)
 export const isTextAnswer = Schema.is(AskFormTextAnswerSchema)
 export const isDocumentsAnswer = Schema.is(AskFormDocumentsAnswerSchema)
+export const isCheckedAnswer = Schema.is(AskFormCheckedAnswerSchema)
 export const isTransactionAnswers = Schema.is(AskFormTransactionAnswersSchema)
 
 export const AskFormAnswerSchema = Schema.Union(
@@ -73,6 +79,7 @@ export const AskFormAnswerSchema = Schema.Union(
   AskFormTextAnswerSchema,
   AskFormCompletedAnswerSchema,
   AskFormDocumentsAnswerSchema,
+  AskFormCheckedAnswerSchema,
   AskFormTransactionAnswersSchema,
 )
 
@@ -90,6 +97,7 @@ const findRequestProblem = (answer: AskFormAnswer | AskFormFollowUpAnswer): stri
   }
   if (isTextAnswer(answer)) return answer.text.trim() ? null : 'text must not be blank'
   if (isDocumentsAnswer(answer)) return answer.documentIds.length > 0 ? null : 'document_ids must not be empty'
+  if (isCheckedAnswer(answer)) return new Set(answer.checked).size === answer.checked.length ? null : 'checked must not have duplicates'
   if (isTransactionAnswers(answer)) {
     const ids = answer.transactionAnswers.map(({ transactionId }) => transactionId)
 

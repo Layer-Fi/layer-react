@@ -33,6 +33,10 @@ npm run coverage:floor -- --write # raise any floor with 2pt+ of slack
 
 Run it after landing a batch of tests, and commit the raise on its own.
 
+Under a coding agent (`AI_AGENT` or `CLAUDECODE` set), Vitest picks a quiet reporter that drops
+console output from passing tests; a failing test still prints it. Add `--reporter=verbose` to see
+`console.debug` while a test passes.
+
 ## Helpers
 
 Helpers live under `src/testUtils` (`@testUtils/*`), one directory per concern — put new ones

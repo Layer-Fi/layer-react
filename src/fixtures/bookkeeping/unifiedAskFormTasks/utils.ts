@@ -5,6 +5,7 @@ import { type AskFormNext, AskFormNextKind, type AskFormStaticNext } from '@sche
 import {
   AskFormAction,
   AskFormCategoryScope,
+  AskFormChecklistRequirement,
   type AskFormFollowUp,
   type AskFormOption,
   AskFormSearchEntity,
@@ -30,6 +31,7 @@ export const ASK_FORM_STEP_IDS = {
   response: 'response',
   accountType: 'account_type',
   vendorCategory: 'vendor_category',
+  confirmation: 'confirmation',
 } as const
 
 export const COUNTERPARTY_ASK_FORM_VALUES = {
@@ -115,6 +117,13 @@ export const textStep = (
   required,
 })
 
+export const checklistStep = (
+  id: string,
+  prompt: string,
+  items: AskFormStepOf<AskFormStepType.Checklist>['items'],
+  require: AskFormChecklistRequirement = AskFormChecklistRequirement.All,
+): AskFormStep => ({ id, editable: true, type: AskFormStepType.Checklist, prompt, items, require })
+
 export const connectAccountStep = (id: string, prompt: string): AskFormStep => ({
   id,
   editable: true,
@@ -144,6 +153,7 @@ const baseUnifiedAskFormTask: UnifiedAskFormTask = {
   answers: null,
   answerSummary: null,
   resolution: null,
+  discoveredAccount: null,
 }
 
 export const { make: makeUnifiedAskFormTask } = createFixtureFactory(baseUnifiedAskFormTask)

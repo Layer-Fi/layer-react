@@ -82,6 +82,7 @@ Use `form.Field` (not `AppField`) only when rendering a control that has no `For
 | `FormDateField` | a date value |
 | `FormDatePickerField` | a date with a picker popover |
 | `FormCheckboxField` | a single boolean |
+| `FormCheckboxGroupField` | any of N options as checkboxes (`CheckboxOption<T>[]`), as a `T[]` |
 | `FormSwitchField` | a boolean rendered as a toggle |
 | `FormRadioGroupField` | one of N options (`RadioOption<T>[]`) |
 | `FormRadioGroupYesNoField` | the common yes/no pair |

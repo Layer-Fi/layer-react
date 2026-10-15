@@ -17,16 +17,22 @@ import {
 import { type AskFormStepFields, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 // The API rejects blank text, so an untouched text input is no answer at all.
-export const toInputAnswer = ({ choice, selection, text }: AskFormInputValues): AskFormFollowUpAnswer | null => {
+const toPickAnswer = ({ choice, selection, text }: AskFormInputValues) => {
   if (selection?.isCreated) return selection.label.trim() ? { text: selection.label } : null
   if (selection) return { choice: selection.value }
   if (choice) return { choice }
   return text.trim() ? { text } : null
 }
 
+const toCheckedAnswer = ({ checked }: AskFormInputValues) => ({ checked })
+
+export const toInputAnswer = (step: AskFormStepFields, values: AskFormInputValues): AskFormFollowUpAnswer | null =>
+  (step.type === AskFormStepType.Checklist ? toCheckedAnswer(values) : toPickAnswer(values))
+
 const toRowAnswer = (step: AskFormStepFields, values: AskFormAnswerValues): AskFormRowAnswer | null => {
-  const answer = toInputAnswer(values)
-  const followUp = getFollowUpStep(step, values) ? toInputAnswer(values.followUp) : null
+  const answer = toPickAnswer(values)
+  const followUpStep = getFollowUpStep(step, values)
+  const followUp = followUpStep ? toInputAnswer(followUpStep, values.followUp) : null
 
   return isChoiceAnswer(answer) && followUp ? { ...answer, followUp } : answer
 }
@@ -41,6 +47,7 @@ export const toStepAnswer = (
   if (step.type === AskFormStepType.Upload) {
     return values.files.length > 0 ? { documentIds: values.files.map(({ id }) => id) } : null
   }
+  if (step.type === AskFormStepType.Checklist) return toCheckedAnswer(values)
 
   if (isSheetStep(step)) {
     const transactionAnswers = values.rows.flatMap(({ transactionId, ...row }) => {

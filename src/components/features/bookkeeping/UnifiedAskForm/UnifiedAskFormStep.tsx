@@ -3,17 +3,18 @@ import { useTranslation } from 'react-i18next'
 
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { P } from '@ui/Typography/Text'
+import { UnifiedAskFormChecklistStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormChecklistStep'
 import { UnifiedAskFormChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormChoiceStep'
 import { UnifiedAskFormSearchChoiceStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormSearchChoiceStep'
 import { UnifiedAskFormTextStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormTextStep'
 import { UnifiedAskFormUploadStep } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormUploadStep'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { getSearchConfig } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormSearch'
-import { type AskFormInputPath, type AskFormInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
+import { type AskFormInputPath, toEmptyInputValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { type UnifiedAskFormPresentation } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 import { type AskFormStepFields, findFollowUp, getStepOptions } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
-const EMPTY_FOLLOW_UP: AskFormInputValues = { choice: null, selection: null, text: '' }
+const EMPTY_FOLLOW_UP = toEmptyInputValues()
 
 export type UnifiedAskFormStepProps = {
   form: UnifiedAskFormApi
@@ -38,6 +39,7 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
   const clearFollowUp = () => {
     followUp.setFieldValue('choice', null, { dontValidate: true })
     followUp.setFieldValue('selection', null, { dontValidate: true })
+    followUp.setFieldValue('checked', [], { dontValidate: true })
     followUp.setFieldValue('text', '')
   }
 
@@ -84,6 +86,18 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
           prompt={prompt}
           placeholder={step.placeholder ?? t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.placeholder.answer_in_your_words', 'Answer in your own words')}
           multiline={step.multiline}
+          isDisabled={isDisabled}
+        />
+      )
+    case AskFormStepType.Checklist:
+      return (
+        <UnifiedAskFormChecklistStep
+          form={form}
+          fields={fields}
+          label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.options', 'Options')}
+          prompt={prompt}
+          items={step.items}
+          require={step.require}
           isDisabled={isDisabled}
         />
       )

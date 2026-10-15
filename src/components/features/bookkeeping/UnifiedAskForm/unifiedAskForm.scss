@@ -67,3 +67,12 @@
 .Layer__UnifiedAskFormChoiceStep__FollowUp {
   overflow: hidden;
 }
+
+.Layer__UnifiedAskFormReview__ChecklistItem {
+  gap: var(--spacing-xs);
+  padding-inline-start: var(--spacing-2xs);
+
+  &::before {
+    content: '•' / '';
+  }
+}

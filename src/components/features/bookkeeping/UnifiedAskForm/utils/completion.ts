@@ -10,10 +10,23 @@ import {
   type UnifiedAskFormValues,
 } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
 import { getPageNext } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
-import { type AskFormStepFields, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import { type AskFormStepFields, isChecklistSatisfied, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
-const isInputComplete = (step: AskFormStepFields, values: AskFormInputValues) =>
-  (step.type === AskFormStepType.Text && !step.required) || toInputAnswer(values) !== null
+const isInputComplete = (step: AskFormStepFields, values: AskFormInputValues) => {
+  switch (step.type) {
+    case AskFormStepType.Checklist:
+      return isChecklistSatisfied(step, values.checked)
+    case AskFormStepType.Text:
+      return !step.required || toInputAnswer(step, values) !== null
+    case AskFormStepType.Choice:
+    case AskFormStepType.Category:
+    case AskFormStepType.Search:
+    case AskFormStepType.SearchWithFreeform:
+    case AskFormStepType.Action:
+    case AskFormStepType.Upload:
+      return toInputAnswer(step, values) !== null
+  }
+}
 
 export const isRowComplete = (step: AskFormStepFields, values: AskFormAnswerValues) => {
   const followUpStep = getFollowUpStep(step, values)

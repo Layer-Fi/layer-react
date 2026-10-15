@@ -9,7 +9,17 @@ import { P, Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { fillPromptTemplate, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { type ChecklistReviewLine, fillPromptTemplate, getReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+
+const UnifiedAskFormReviewList = ({ lines }: { lines: ReadonlyArray<ChecklistReviewLine> }) => (
+  <VStack role='list' gap='3xs'>
+    {lines.map(({ value, text }) => (
+      <HStack key={value} role='listitem' align='baseline' className='Layer__UnifiedAskFormReview__ChecklistItem'>
+        <Span size='sm'>{text}</Span>
+      </HStack>
+    ))}
+  </VStack>
+)
 
 type UnifiedAskFormReviewProps = {
   form: UnifiedAskFormApi
@@ -18,7 +28,7 @@ type UnifiedAskFormReviewProps = {
 
 export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewProps) => {
   const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
+  const { formatNumber, formatList } = useIntlFormatter()
   const { stepsById, visitedPages, submitReviewed, isReadOnly } = navigation
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const stepValues = useStore(form.store, ({ values }) => flattenStepValues(values))
@@ -27,17 +37,19 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
     .flatMap(({ steps }) => steps)
     .filter(step => step.type !== AskFormStepType.Action)
     .flatMap((step) => {
-      const label = getStepLabel({ t, formatNumber, step, values: stepValues[step.id] })
-      return label === null ? [] : [{ step, label }]
+      const values = stepValues[step.id]
+      const label = getStepLabel({ t, formatNumber, formatList, step, values })
+
+      return label === null ? [] : [{ step, label, lines: getReviewLines(t, step, values) }]
     })
 
   return (
     <VStack gap='md' pb='md' pi='md'>
       <P size='sm'>{t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.label.what_you_told_us', 'Here’s what you told us:')}</P>
-      {answeredSteps.map(({ step, label }) => (
+      {answeredSteps.map(({ step, label, lines }) => (
         <VStack key={step.id} gap='3xs'>
-          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
-          <Span size='sm'>{label}</Span>
+          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
+          {lines.length > 0 ? <UnifiedAskFormReviewList lines={lines} /> : <Span size='sm'>{label}</Span>}
         </VStack>
       ))}
       {!isReadOnly && (
