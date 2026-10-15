@@ -34,6 +34,7 @@ export enum AskFormChecklistRequirement {
   All = 'ALL',
   AtLeastOne = 'AT_LEAST_ONE',
   Items = 'ITEMS',
+  None = 'NONE',
 }
 
 // Passed unchanged to GET /search, which accepts any entity the API puts in a form.

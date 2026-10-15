@@ -35,6 +35,8 @@ export const isChecklistSatisfied = ({ items, require }: AskFormChecklistStep, c
       return items.some(({ value }) => checkedValues.has(value))
     case AskFormChecklistRequirement.Items:
       return items.every(({ value, required }) => !required || checkedValues.has(value))
+    case AskFormChecklistRequirement.None:
+      return true
   }
 }
 

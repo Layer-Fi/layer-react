@@ -652,6 +652,29 @@ describe('UnifiedAskForm', () => {
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { extras: { checked: [] } } })
   })
 
+  it('reviews a checklist that requires nothing as None when nothing is ticked', async () => {
+    const task = makeUnifiedAskFormTask({
+      form: singlePageForm(page('only', [checklistStep('extras', 'Anything else we should do?', [
+        { value: 'copy', label: 'Email me a copy', required: false },
+        { value: 'call', label: 'Book a call', required: false },
+      ], AskFormChecklistRequirement.None)], { kind: AskFormNextKind.Submit, review: true })),
+    })
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    expect(screen.queryByText('Optional')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Review' }))
+
+    expect(await screen.findByText('None')).toBeInTheDocument()
+    expect(screen.queryByText(/: No$/)).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { extras: { checked: [] } } })
+  })
+
   it('submits a checklist once its required items are ticked, leaving optional ones out', async () => {
     const task = makeUnifiedAskFormTask({
       form: singlePageForm(page('only', [checklistStep('review', 'Before we close the month', [
