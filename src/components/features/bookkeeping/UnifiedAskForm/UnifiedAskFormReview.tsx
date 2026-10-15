@@ -37,7 +37,16 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
       {answeredSteps.map(({ step, label }) => (
         <VStack key={step.id} gap='3xs'>
           <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
-          <Span size='sm'>{label}</Span>
+          {step.type === AskFormStepType.Checklist
+            ? step.items.map(item => (
+              <HStack key={item.value} justify='space-between' gap='md'>
+                <Span size='sm'>{item.label}</Span>
+                <Span size='sm'>
+                  {stepValues[step.id]?.checked.includes(item.value) ? t('common:label.yes', 'Yes') : t('common:label.no', 'No')}
+                </Span>
+              </HStack>
+            ))
+            : <Span size='sm'>{label}</Span>}
         </VStack>
       ))}
       {!isReadOnly && (

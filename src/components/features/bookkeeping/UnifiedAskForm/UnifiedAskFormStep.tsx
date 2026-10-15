@@ -94,7 +94,7 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
         <UnifiedAskFormChecklistStep
           form={form}
           fields={fields}
-          label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.confirmations', 'Confirmations')}
+          label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.options', 'Options')}
           prompt={prompt}
           items={step.items}
           isDisabled={isDisabled}
