@@ -4,7 +4,9 @@ import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStat
 import { type CallBooking, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { BookkeepingOverview } from '@views/BookkeepingOverview/BookkeepingOverview'
 
+import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
 import { makeBookkeepingConfiguration, makeBookkeepingStatus, makeCallBooking } from '@fixtures/bookkeeping/mocks'
+import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { get as getBookkeepingConfiguration } from '@msw/api/businesses/[business-id]/bookkeeping/config/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { get as getCallBookings } from '@msw/api/businesses/[business-id]/call-bookings/get'
@@ -106,4 +108,14 @@ export const ScheduledOnboardingCallCard: Story = {
       handlers: onboardingCallCardHandlers([scheduledOnboardingCall]),
     },
   },
+}
+
+export const ConfirmingAccounts: Story = {
+  tags: ['public-api', 'real-backend'],
+  name: 'Confirming accounts',
+  loaders: [
+    () => bankAccountStore.all().forEach(
+      account => bankAccountStore.save(markAccountNeedingConfirmation(account)),
+    ),
+  ],
 }
