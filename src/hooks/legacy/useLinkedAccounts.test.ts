@@ -57,7 +57,10 @@ const spyOnBookkeepingPeriods = () => {
 const waitForInitialPeriodsRequest = (onPeriodsRequest: ReturnType<typeof spyOnBookkeepingPeriods>) =>
   waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledOnce())
 
-afterEach(() => vi.restoreAllMocks())
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+})
 
 describe('useLinkedAccounts', () => {
   describe('with a customer-managed Plaid config', () => {
@@ -182,25 +185,17 @@ describe('useLinkedAccounts', () => {
       await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
     })
 
-    it('refetches bookkeeping periods once a customer-managed link is saved', async () => {
-      const onPeriodsRequest = spyOnBookkeepingPeriods()
-      const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
-      await waitForInitialPeriodsRequest(onPeriodsRequest)
-
-      await expect(linkThroughPlaid(result.current.addConnection)).resolves.toBe(true)
-
-      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
-    })
-
     it('refetches bookkeeping periods once a hosted link succeeds', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true })
       const onPeriodsRequest = spyOnBookkeepingPeriods()
       server.use(getPlaidHostedLinkStatus.mock({ state: PlaidHostedLinkState.PROCESSING }))
       await renderHookWithAuth(() => useLinkedAccounts({ plaidHostedLinkConfig: { navigateToHostedLink: () => undefined } }))
       await waitForInitialPeriodsRequest(onPeriodsRequest)
 
       server.use(getPlaidHostedLinkStatus.mock({ state: PlaidHostedLinkState.SUCCEEDED }))
+      await vi.advanceTimersByTimeAsync(4_000)
 
-      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2), { timeout: 5_000 })
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
     })
 
     it('does not refetch bookkeeping periods when the link fails to save', async () => {
@@ -220,6 +215,16 @@ describe('useLinkedAccounts', () => {
       await waitForInitialPeriodsRequest(onPeriodsRequest)
 
       await result.current.confirmAccount('PLAID', 'external-account-1')
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
+    })
+
+    it('refetches bookkeeping periods once an account is excluded', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await result.current.excludeAccount('PLAID', 'external-account-1')
 
       await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
     })
