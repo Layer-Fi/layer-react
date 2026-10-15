@@ -6,8 +6,8 @@ import { getCompletedTasks, getIncompleteTasks } from '@utils/features/bookkeepi
 import './tasksProgressRing.scss'
 
 const COLORS = {
-  done: '#3B9C63',
-  pending: '#DFA000',
+  done: 'var(--color-info-success)',
+  pending: 'var(--color-info-warning)',
 }
 
 /** Done against open tasks as a small ring; it animates as a task completes. */

@@ -66,7 +66,7 @@ export const TasksTakeoverTaskList = ({ tasks, isOpen, onOpenChange, onTaskChang
           isLoading={false}
           isError={false}
           slots={LIST_SLOTS}
-          renderItem={task => <TaskRow task={task} slots={ROW_SLOTS} pi='md' />}
+          renderItem={task => <TaskRow task={task} slots={ROW_SLOTS} />}
           onClickItem={(task) => {
             onTaskChange(task.id)
             onOpenChange(false)
