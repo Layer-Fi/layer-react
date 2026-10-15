@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
@@ -34,11 +34,13 @@ const renderList = (tasks: ReadonlyArray<UnifiedAskFormTask> = TASKS) => ({
 })
 
 describe('TasksListMobile', () => {
-  it('lists open tasks with their transactions and answered tasks with their answer', () => {
+  it('lists every task by title only, open ones flagged and answered ones checked', () => {
     renderList()
 
-    expect(within(screen.getByRole('row', { name: /Staples purchases/ })).getByText('2 transactions · $150.50')).toBeInTheDocument()
-    expect(within(screen.getByRole('row', { name: /Amazon purchases/ })).getByText('Office chairs')).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /Staples purchases/ }).querySelector('.lucide-circle-alert')).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /Amazon purchases/ }).querySelector('.lucide-check')).toBeInTheDocument()
+    expect(screen.queryByText('2 transactions · $150.50')).not.toBeInTheDocument()
+    expect(screen.queryByText('Office chairs')).not.toBeInTheDocument()
   })
 
   it('opens the first incomplete task from "Answer N tasks"', async () => {
@@ -68,9 +70,7 @@ describe('TasksListMobile', () => {
     })
     renderList([archived] as UnifiedAskFormTask[])
 
-    const row = screen.getByRole('row', { name: /Transfers to ••2222/ })
-    expect(within(row).getByText('A personal account')).toBeInTheDocument()
-    expect(row.querySelector('.lucide-check')).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /Transfers to ••2222/ }).querySelector('.lucide-check')).toBeInTheDocument()
   })
 
   it('leaves out "Answer N tasks" once every task is answered', () => {

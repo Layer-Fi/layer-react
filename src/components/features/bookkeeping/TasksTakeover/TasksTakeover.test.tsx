@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -48,17 +48,6 @@ const TakeoverHarness = ({ tasks, initialTaskId }: { tasks: ReadonlyArray<Unifie
   return <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
 }
 
-const ReopenHarness = ({ tasks, reopenId }: { tasks: ReadonlyArray<UnifiedAskFormTask>, reopenId: string }) => {
-  const [taskId, setTaskId] = useState<string | null>(COSTCO.id)
-
-  return (
-    <>
-      <button type='button' onClick={() => setTaskId(reopenId)}>Reopen</button>
-      <TasksTakeover tasks={tasks} taskId={taskId} onTaskChange={setTaskId} />
-    </>
-  )
-}
-
 const renderTakeover = ({ tasks = TASKS, taskId = COSTCO.id }: { tasks?: ReadonlyArray<UnifiedAskFormTask>, taskId?: string } = {}) => ({
   user: userEvent.setup(),
   ...render(<TakeoverHarness tasks={tasks} initialTaskId={taskId} />, { wrapper: LayerTestProvider }),
@@ -80,57 +69,28 @@ const spyOnSubmit = (task: UnifiedAskFormTask, response?: Promise<void>) => {
 }
 
 describe('TasksTakeover', () => {
-  it('counts only open tasks and skips to the next incomplete task, past an answered one', async () => {
+  it('counts position in the month and skips to the next incomplete task, past an answered one', async () => {
     const { user } = renderTakeover({ taskId: STAPLES.id })
 
-    expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
+    expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Skip' }))
     expect(await screen.findByRole('heading', { name: 'Uber rides' })).toBeInTheDocument()
-    expect(screen.getByText('Task 3 of 3')).toBeInTheDocument()
+    expect(screen.getByText('Task 4 of 4')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Skip' }))
     expect(await screen.findByRole('heading', { name: 'Costco purchases' })).toBeInTheDocument()
   })
 
-  it('keeps counting forward as answered tasks leave the open list', async () => {
-    const { user, rerender } = renderTakeover()
-
-    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Skip' }))
-    rerender(<TakeoverHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
-
-    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
-    expect(screen.getByText('Task 2 of 3')).toBeInTheDocument()
-  })
-
-  it('counts a task that arrives while open as one to answer', async () => {
+  it('keeps the month total when a task is answered and when one arrives', () => {
     const ADOBE = makeUnifiedAskFormTask({ id: '00000000-0000-4000-8000-000000000f05', title: 'Adobe subscription' })
-    const { user, rerender } = renderTakeover()
+    const { rerender } = renderTakeover({ taskId: STAPLES.id })
 
-    rerender(<TakeoverHarness tasks={[COSTCO, ADOBE, STAPLES, AMAZON, UBER]} initialTaskId={COSTCO.id} />)
-    expect(screen.getByText('Task 1 of 4')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: 'Skip' }))
-
-    expect(await screen.findByRole('heading', { name: 'Adobe subscription' })).toBeInTheDocument()
+    rerender(<TakeoverHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} initialTaskId={STAPLES.id} />)
     expect(screen.getByText('Task 2 of 4')).toBeInTheDocument()
-  })
 
-  it('keeps the count through close and starts a fresh list on reopen', async () => {
-    const user = userEvent.setup()
-    const { rerender } = render(<ReopenHarness tasks={TASKS} reopenId={STAPLES.id} />, { wrapper: LayerTestProvider })
-
-    expect(screen.getByText('Task 1 of 3')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Close' }))
-    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-
-    rerender(<ReopenHarness tasks={[{ ...COSTCO, status: BusinessTaskStatus.UserMarkedCompleted }, STAPLES, AMAZON, UBER]} reopenId={STAPLES.id} />)
-    await user.click(screen.getByRole('button', { name: 'Reopen' }))
-
-    expect(await screen.findByRole('heading', { name: 'Staples purchase' })).toBeInTheDocument()
-    expect(screen.getByText('Task 1 of 2')).toBeInTheDocument()
+    rerender(<TakeoverHarness tasks={[COSTCO, ADOBE, STAPLES, AMAZON, UBER]} initialTaskId={STAPLES.id} />)
+    expect(screen.getByText('Task 3 of 5')).toBeInTheDocument()
   })
 
   it('continues on a tap and moves to the next incomplete task once the answer saves', async () => {
@@ -188,11 +148,49 @@ describe('TasksTakeover', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1)
   })
 
+  it('opens the task list from the header and moves to the picked task', async () => {
+    const { user } = renderTakeover()
+
+    await user.click(screen.getByRole('button', { name: 'Task 1 of 4' }))
+
+    const list = await screen.findByRole('grid', { name: 'Bookkeeping tasks' })
+    expect(within(list).getByText('Open')).toBeInTheDocument()
+    expect(within(list).getByText('Completed')).toBeInTheDocument()
+    expect(screen.getByText('3 open · 1 done')).toBeInTheDocument()
+
+    await user.click(within(list).getByRole('row', { name: /Uber rides/ }))
+
+    expect(await screen.findByRole('heading', { name: 'Uber rides' })).toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('grid', { name: 'Bookkeeping tasks' })).not.toBeInTheDocument())
+    expect(screen.getByText('Task 4 of 4')).toBeInTheDocument()
+  })
+
+  it('shows three transactions with the rest behind "Show all"', async () => {
+    const withTransactions = {
+      ...STAPLES,
+      transactions: [1, 2, 3, 4].map(n => ({
+        id: `txn-${n}`,
+        date: new Date(Date.UTC(2025, 1, n)),
+        amount: -1000 * n,
+        description: `STAPLES 00${n}`,
+      })),
+    }
+    const { user } = renderTakeover({ tasks: [withTransactions, UBER] as UnifiedAskFormTask[], taskId: STAPLES.id })
+
+    expect(screen.getByText('STAPLES 003')).toBeInTheDocument()
+    expect(screen.queryByText('STAPLES 004')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Show all 4 transactions' }))
+
+    const sheet = await screen.findByRole('dialog', { name: 'Show all 4 transactions' })
+    expect(within(sheet).getByText('STAPLES 004')).toBeInTheDocument()
+  })
+
   it('shows an answered task with its saved answer', () => {
     renderTakeover({ taskId: AMAZON.id })
 
     expect(screen.getByRole('heading', { name: 'Amazon purchases' })).toBeInTheDocument()
-    expect(screen.getByText('Answered task')).toBeInTheDocument()
+    expect(screen.getByText('Task 3 of 4')).toBeInTheDocument()
     expect(screen.getByRole('radio', { name: 'Office Expenses' })).toBeChecked()
   })
 

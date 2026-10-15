@@ -9,7 +9,7 @@ export const UnifiedAskFormTransactionCells = ({ transaction: { date, amount, de
 
   return (
     <>
-      <Span className='Layer__UnifiedAskForm__RowDate' size='xs' variant='subtle' noWrap>
+      <Span className='Layer__UnifiedAskForm__RowDate' size='sm' variant='subtle' noWrap>
         {formatDate(date, DateFormat.MonthDayShort)}
       </Span>
       <Span className='Layer__UnifiedAskForm__RowDescription' size='sm' variant='subtle' noWrap withTooltip>

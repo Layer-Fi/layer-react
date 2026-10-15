@@ -10,6 +10,19 @@
   border-block-end: 1px solid var(--border-color);
 }
 
+.Layer__TasksTakeover__HeaderTitle {
+  flex: 1 1 auto;
+  justify-content: center;
+  min-block-size: 2.75rem;
+  padding-inline: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+
+  &[data-hovered],
+  &[data-pressed] {
+    background-color: var(--color-base-100);
+  }
+}
+
 .Layer__TasksTakeover__HeaderSide {
   flex: 0 0 2.5rem;
 }

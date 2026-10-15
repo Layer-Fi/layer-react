@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button } from '@ui/Button/Button'
 import { HStack, type StackProps, VStack } from '@ui/Stack/Stack'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
 
 export type DropZonePromptProps = {
   title: string
   description?: string
+  /** Shown on hover over the description, for the part it abbreviates. */
+  descriptionTooltip?: string
   /** Without one, the whole prompt is the tap target. */
   actionLabel?: string
 }
@@ -36,7 +39,7 @@ const getTapTargetProps = (title: string, isDisabled: boolean, onOpen: () => voi
   },
 })
 
-export const DropZonePrompt = ({ title, description, actionLabel, size, isDragging, isDisabled, onOpen }: PromptProps) => {
+export const DropZonePrompt = ({ title, description, descriptionTooltip, actionLabel, size, isDragging, isDisabled, onOpen }: PromptProps) => {
   const { t } = useTranslation()
   const isPressable = actionLabel === undefined
   const isLarge = size === 'lg'
@@ -63,7 +66,14 @@ export const DropZonePrompt = ({ title, description, actionLabel, size, isDraggi
         <Span weight={isDragging || isLarge ? 'bold' : undefined} status={textStatus} align={textAlign}>
           {isDragging ? t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload') : title}
         </Span>
-        {description && <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={textAlign}>{description}</Span>}
+        {description && (
+          <Tooltip isDisabled={!descriptionTooltip}>
+            <TooltipTrigger variant='fit-content'>
+              <Span size='sm' variant={textStatus ? undefined : 'subtle'} status={textStatus} align={textAlign}>{description}</Span>
+            </TooltipTrigger>
+            <TooltipContent>{descriptionTooltip}</TooltipContent>
+          </Tooltip>
+        )}
       </VStack>
       {!isDragging && actionLabel && (
         <Button variant='outlined' isDisabled={isDisabled} onPress={onOpen}>

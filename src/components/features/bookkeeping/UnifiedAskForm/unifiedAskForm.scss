@@ -15,6 +15,11 @@
   background-color: var(--color-base-0);
 }
 
+.Layer__UnifiedAskForm__Rows[data-expanded] {
+  max-block-size: none;
+  border-block: none;
+}
+
 .Layer__UnifiedAskForm__Row {
   border-block-start: 1px solid var(--border-color);
 
@@ -24,7 +29,7 @@
 }
 
 .Layer__UnifiedAskForm__RowSummary {
-  padding-block: var(--spacing-2xs);
+  padding-block: var(--spacing-xs);
 }
 
 .Layer__UnifiedAskForm__RowAmount {

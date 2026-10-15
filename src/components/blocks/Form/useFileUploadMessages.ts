@@ -16,14 +16,20 @@ type FileUploadMessagesOptions = {
   remaining?: number
 }
 
+const SHOWN_EXTENSION_COUNT = 3
+
 export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, heldCount, fileLimit, remaining }: FileUploadMessagesOptions) => {
   const { t } = useTranslation()
   const { formatList, formatNumber, formatFileSize } = useIntlFormatter()
   const { isMobile } = useSizeClass()
 
-  const fileTypes = accept.length > 0
-    ? formatList(accept.map(extension => extension.toUpperCase()), { type: 'disjunction' })
-    : null
+  const extensions = accept.map(extension => extension.toUpperCase())
+  const fileTypes = extensions.length > 0 ? formatList(extensions, { type: 'disjunction' }) : null
+  const shownFileTypes = extensions.length > SHOWN_EXTENSION_COUNT
+    ? t('blocks:Form.useFileUploadMessages.label.file_types_and_more', '{{fileTypes}}, and more', {
+      fileTypes: formatList(extensions.slice(0, SHOWN_EXTENSION_COUNT), { type: 'unit' }),
+    })
+    : fileTypes
 
   const getWrongTypeMessage = () => (fileTypes === null
     ? null
@@ -79,11 +85,12 @@ export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, he
       multiple && fileLimit !== undefined && heldCount > 0
         ? t('blocks:Form.useFileUploadMessages.label.added_count', '{{count}} of {{limit}} added', { count: heldCount, limit: formatNumber(fileLimit) })
         : null,
-      fileTypes ?? t('blocks:Form.useFileUploadMessages.label.any_file_type', 'Any file type'),
+      shownFileTypes ?? t('blocks:Form.useFileUploadMessages.label.any_file_type', 'Any file type'),
       maxFileSizeInBytes === undefined
         ? null
         : t('blocks:Form.useFileUploadMessages.label.max_size', 'Up to {{maxSize}}', { maxSize: formatFileSize(maxFileSizeInBytes) }),
     ].filter(part => part !== null).join(' · ')
+    const descriptionTooltip = shownFileTypes !== fileTypes ? fileTypes ?? undefined : undefined
 
     if (isMobile) {
       return {
@@ -91,12 +98,14 @@ export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, he
           ? t('blocks:Form.useFileUploadMessages.action.add_files', 'Add files')
           : t('blocks:Form.useFileUploadMessages.action.add_file', 'Add a file'),
         description,
+        descriptionTooltip,
       }
     }
     if (!multiple) {
       return {
         title: t('blocks:Form.useFileUploadMessages.label.drag_drop_file', 'Drag and drop a file here'),
         description,
+        descriptionTooltip,
         actionLabel: t('blocks:Form.useFileUploadMessages.action.choose_file', 'Choose file'),
       }
     }
@@ -104,12 +113,14 @@ export const useFileUploadMessages = ({ accept, multiple, maxFileSizeInBytes, he
       return {
         title: t('blocks:Form.useFileUploadMessages.label.drag_drop_more_files', 'Drag and drop more files here'),
         description,
+        descriptionTooltip,
         actionLabel: t('blocks:Form.useFileUploadMessages.action.add_files', 'Add files'),
       }
     }
     return {
       title: t('blocks:Form.useFileUploadMessages.label.drag_drop_files', 'Drag and drop files here'),
       description,
+      descriptionTooltip,
       actionLabel: t('blocks:Form.useFileUploadMessages.action.choose_files', 'Choose files'),
     }
   }

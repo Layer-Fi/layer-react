@@ -35,10 +35,6 @@
     border-radius: 8px;
     background-color: var(--color-base-50);
 
-    .mini-chart {
-      transform: rotate(90deg);
-    }
-
     .Layer__tasks-pending-bar__status--done {
       color: var(--color-success);
     }

@@ -1,0 +1,15 @@
+.Layer__TaskStatusIcon {
+  flex: 0 0 auto;
+  padding: var(--spacing-3xs);
+  border-radius: 50%;
+
+  &[data-status='warning'] {
+    background: var(--color-info-warning-bg);
+    color: var(--color-info-warning-fg);
+  }
+
+  &[data-status='success'] {
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
+  }
+}
