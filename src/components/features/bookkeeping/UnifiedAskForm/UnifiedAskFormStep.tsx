@@ -97,6 +97,7 @@ export const UnifiedAskFormStep = ({ form, fields, taskId, step, prompt, isFollo
           label={t('bookkeeping:UnifiedAskForm.UnifiedAskFormStep.label.options', 'Options')}
           prompt={prompt}
           items={step.items}
+          require={step.require}
           isDisabled={isDisabled}
         />
       )

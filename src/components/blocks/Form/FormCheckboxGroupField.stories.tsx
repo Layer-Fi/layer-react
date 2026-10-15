@@ -18,8 +18,8 @@ const LABEL = 'Before we close the month'
 type Confirmation = 'figures' | 'copy'
 
 const OPTIONS: CheckboxOption<Confirmation>[] = [
-  { value: 'figures', label: 'The figures are right' },
-  { value: 'copy', label: 'Email me a copy' },
+  { value: 'figures', label: 'The figures are right', isRequired: true },
+  { value: 'copy', label: 'Email me a copy', isOptional: true },
 ]
 
 type Variant = FormFieldVariant<Confirmation[], FormCheckboxGroupFieldProps<Confirmation>>

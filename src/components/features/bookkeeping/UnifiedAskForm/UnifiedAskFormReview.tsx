@@ -9,7 +9,7 @@ import { P, Span } from '@ui/Typography/Text'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
 import { type UnifiedAskFormNavigation } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskFormNavigation'
 import { flattenStepValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { fillPromptTemplate, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
+import { fillPromptTemplate, getChecklistReviewLines, getStepLabel } from '@features/bookkeeping/UnifiedAskForm/utils/labels'
 
 type UnifiedAskFormReviewProps = {
   form: UnifiedAskFormApi
@@ -34,21 +34,28 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
   return (
     <VStack gap='md' pb='md' pi='md'>
       <P size='sm'>{t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.label.what_you_told_us', 'Here’s what you told us:')}</P>
-      {answeredSteps.map(({ step, label }) => (
-        <VStack key={step.id} gap='3xs'>
-          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
-          {step.type === AskFormStepType.Checklist
-            ? step.items.map(item => (
-              <HStack key={item.value} justify='space-between' gap='md'>
-                <Span size='sm'>{item.label}</Span>
-                <Span size='sm'>
-                  {stepValues[step.id]?.checked.includes(item.value) ? t('common:label.yes', 'Yes') : t('common:label.no', 'No')}
-                </Span>
-              </HStack>
-            ))
-            : <Span size='sm'>{label}</Span>}
-        </VStack>
-      ))}
+      {answeredSteps.map(({ step, label }) => {
+        const checklistLines = step.type === AskFormStepType.Checklist
+          ? getChecklistReviewLines(t, step, stepValues[step.id]?.checked ?? [])
+          : []
+
+        return (
+          <VStack key={step.id} gap='3xs'>
+            <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
+            {checklistLines.length > 0
+              ? (
+                <VStack role='list' gap='3xs'>
+                  {checklistLines.map(line => (
+                    <HStack key={line} role='listitem' align='baseline' className='Layer__UnifiedAskFormReview__ChecklistItem'>
+                      <Span size='sm'>{line}</Span>
+                    </HStack>
+                  ))}
+                </VStack>
+              )
+              : <Span size='sm'>{label}</Span>}
+          </VStack>
+        )
+      })}
       {!isReadOnly && (
         <HStack justify='end'>
           <Button isPending={isSubmitting} isDisabled={isSubmitting} onPress={submitReviewed}>

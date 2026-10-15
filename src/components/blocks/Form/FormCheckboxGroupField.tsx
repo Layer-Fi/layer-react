@@ -1,6 +1,10 @@
+import { TextContext } from 'react-aria-components/Text'
+import { useTranslation } from 'react-i18next'
+
 import { Checkbox, type CheckboxLayout } from '@ui/Checkbox/Checkbox'
 import { CheckboxGroup } from '@ui/CheckboxGroup/CheckboxGroup'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
 
@@ -9,6 +13,9 @@ import { useFieldContext } from './formContexts'
 export type CheckboxOption<T extends string> = {
   value: T
   label: string
+  isRequired?: boolean
+  /** Shows an "Optional" tag beside the label. */
+  isOptional?: boolean
 }
 
 export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & {
@@ -17,6 +24,7 @@ export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps
 }
 
 export function FormCheckboxGroupField<T extends string>({ options, layout, ...props }: FormCheckboxGroupFieldProps<T>) {
+  const { t } = useTranslation()
   const field = useFieldContext<T[]>()
 
   const { state, handleChange, handleBlur } = field
@@ -37,8 +45,18 @@ export function FormCheckboxGroupField<T extends string>({ options, layout, ...p
       <FormFieldShell {...shellProps} labelId={labelId}>
         <VStack slot='options' gap='xs'>
           {options.map(option => (
-            <Checkbox key={option.value} value={option.value} size='lg' layout={layout}>
-              {option.label}
+            <Checkbox key={option.value} value={option.value} size='lg' layout={layout} isRequired={option.isRequired}>
+              {option.isOptional
+                ? (
+                  // The group hands every `Text` inside it a description or error slot; clearing it keeps these plain text.
+                  <TextContext.Provider value={null}>
+                    <HStack fluid justify='space-between' align='center' gap='xs'>
+                      <Span>{option.label}</Span>
+                      <Span size='sm' variant='subtle'>{t('common:label.optional', 'Optional')}</Span>
+                    </HStack>
+                  </TextContext.Provider>
+                )
+                : option.label}
             </Checkbox>
           ))}
         </VStack>

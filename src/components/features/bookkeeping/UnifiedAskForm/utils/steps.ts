@@ -23,7 +23,7 @@ export const findFollowUp = (step: AskFormStepFields, value: string | null) => {
   return followUp && followUp.type !== AskFormStepType.Upload && followUp.type !== AskFormStepType.Action ? followUp : undefined
 }
 
-type AskFormChecklistStep = Extract<AskFormStepFields, { type: AskFormStepType.Checklist }>
+export type AskFormChecklistStep = Extract<AskFormStepFields, { type: AskFormStepType.Checklist }>
 
 export const isChecklistSatisfied = ({ items, require }: AskFormChecklistStep, checked: ReadonlyArray<string>) => {
   const checkedValues = new Set(checked)

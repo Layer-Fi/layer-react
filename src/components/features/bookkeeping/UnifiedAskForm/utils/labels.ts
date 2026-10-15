@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { AskFormChecklistRequirement, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import { tPlural } from '@utils/shared/i18n/plural'
 import {
@@ -10,7 +10,7 @@ import {
   type AskFormStepValues,
   getFollowUpStep,
 } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
+import { type AskFormChecklistStep, type AskFormStepFields, findOption, isSheetStep } from '@features/bookkeeping/UnifiedAskForm/utils/steps'
 
 const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
 
@@ -52,6 +52,21 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
 
   const [onlyLabel] = rowLabels
   return onlyLabel ?? null
+}
+
+/**
+ * The review's lines for a checklist. Only an ITEMS checklist has optional items, so only it can hold a
+ * declined consent; it lists every item as yes or no, and the others list just the ticked items.
+ */
+export const getChecklistReviewLines = (t: TFunction, { items, require }: AskFormChecklistStep, checked: ReadonlyArray<string>) => {
+  if (require !== AskFormChecklistRequirement.Items) {
+    return items.filter(({ value }) => checked.includes(value)).map(({ label }) => label)
+  }
+
+  return items.map(({ value, label }) => t('bookkeeping:utils.labels.label.checklist_item', '{{label}}: {{answer}}', {
+    label,
+    answer: checked.includes(value) ? t('common:label.yes', 'Yes') : t('common:label.no', 'No'),
+  }))
 }
 
 /** The short label a whole step's answer shows in the review and in prompt templates. */
