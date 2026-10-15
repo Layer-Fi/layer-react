@@ -14,16 +14,16 @@ export type CheckboxOption<T extends string> = {
   value: T
   label: string
   isRequired?: boolean
-  /** Shows an "Optional" tag beside the label. */
-  isOptional?: boolean
 }
 
 export type FormCheckboxGroupFieldProps<T extends string> = CommonFormFieldProps & {
   options: CheckboxOption<T>[]
   layout?: CheckboxLayout
+  /** Tags each option that isn't required as "Optional". */
+  markOptional?: boolean
 }
 
-export function FormCheckboxGroupField<T extends string>({ options, layout, ...props }: FormCheckboxGroupFieldProps<T>) {
+export function FormCheckboxGroupField<T extends string>({ options, layout, markOptional = false, ...props }: FormCheckboxGroupFieldProps<T>) {
   const { t } = useTranslation()
   const field = useFieldContext<T[]>()
 
@@ -46,7 +46,7 @@ export function FormCheckboxGroupField<T extends string>({ options, layout, ...p
         <VStack slot='options' gap='xs'>
           {options.map(option => (
             <Checkbox key={option.value} value={option.value} size='lg' layout={layout} isRequired={option.isRequired}>
-              {option.isOptional
+              {markOptional && !option.isRequired
                 ? (
                   // The group hands every `Text` inside it a description or error slot; clearing it keeps these plain text.
                   <TextContext.Provider value={null}>

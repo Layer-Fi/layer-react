@@ -19,7 +19,7 @@ type Confirmation = 'figures' | 'copy'
 
 const OPTIONS: CheckboxOption<Confirmation>[] = [
   { value: 'figures', label: 'The figures are right', isRequired: true },
-  { value: 'copy', label: 'Email me a copy', isOptional: true },
+  { value: 'copy', label: 'Email me a copy' },
 ]
 
 type Variant = FormFieldVariant<Confirmation[], FormCheckboxGroupFieldProps<Confirmation>>
@@ -29,6 +29,7 @@ const VARIANTS: ReadonlyArray<Variant> = [
   ...ERROR_FIELD_VARIANTS,
   { label: 'nothing checked', value: [] },
   { label: 'row layout', props: { layout: 'row' } },
+  { label: 'optional marked', props: { layout: 'row', markOptional: true } },
 ]
 
 const meta: Meta<typeof FormCheckboxGroupField<Confirmation>> = {
