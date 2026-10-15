@@ -9,7 +9,7 @@ import { TaskStatusIcon } from '@features/bookkeeping/TaskStatusIcon/TaskStatusI
 
 import './taskRow.scss'
 
-type TaskRowProps = Pick<StackProps, 'pi'> & {
+type TaskRowProps = {
   task: UnifiedAskFormTask
   slots?: {
     /** Replaces the status icon, such as a back button while a task is open. */
@@ -17,11 +17,14 @@ type TaskRowProps = Pick<StackProps, 'pi'> & {
     /** Rendered after the title, such as an expand or navigate chevron. */
     Trailing?: ReactNode
   }
+  slotProps?: {
+    Stack?: Pick<StackProps, 'pi'>
+  }
 }
 
 /** The one row for a task in every list: status circle, title, and whatever the list puts at the end. */
-export const TaskRow = ({ task, slots, pi }: TaskRowProps) => (
-  <HStack className='Layer__TaskRow' align='center' gap='xs' pi={pi} fluid {...toDataProperties({ completed: isCompletedTask(task) })}>
+export const TaskRow = ({ task, slots, slotProps }: TaskRowProps) => (
+  <HStack className='Layer__TaskRow' align='center' gap='xs' {...slotProps?.Stack} fluid {...toDataProperties({ completed: isCompletedTask(task) })}>
     {slots?.Leading ?? <TaskStatusIcon task={task} />}
     <Span className='Layer__TaskRow__Title' variant='inherit' ellipsis>{task.title}</Span>
     {slots?.Trailing ? <HStack className='Layer__TaskRow__Trailing' align='center'>{slots.Trailing}</HStack> : null}
