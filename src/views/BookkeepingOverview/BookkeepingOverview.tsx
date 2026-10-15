@@ -7,11 +7,7 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
-import {
-  AccountConfirmationStoreProvider,
-  useHasAccountConfirmationStoreProvider,
-} from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
-import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
+import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { VStack } from '@ui/Stack/Stack'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
@@ -110,21 +106,12 @@ export interface BookkeepingOverviewProps extends TasksPlaidSettings {
   title?: string
 }
 
-export const BookkeepingOverview = (props: BookkeepingOverviewProps) => {
-  const hasLinkedAccountsProvider = useHasLinkedAccountsProvider()
-  const hasAccountConfirmationStoreProvider = useHasAccountConfirmationStoreProvider()
-
-  if (hasLinkedAccountsProvider || hasAccountConfirmationStoreProvider) {
-    return <BookkeepingOverviewContent {...props} />
-  }
-
-  return (
-    <AccountConfirmationStoreProvider>
-      <BookkeepingOverviewContent {...props} />
-      <LinkedAccountsConfirmationModal />
-    </AccountConfirmationStoreProvider>
-  )
-}
+export const BookkeepingOverview = (props: BookkeepingOverviewProps) => (
+  <AccountConfirmationStoreProvider>
+    <BookkeepingOverviewContent {...props} />
+    <LinkedAccountsConfirmationModal />
+  </AccountConfirmationStoreProvider>
+)
 
 const BookkeepingOverviewContent = ({
   title,
