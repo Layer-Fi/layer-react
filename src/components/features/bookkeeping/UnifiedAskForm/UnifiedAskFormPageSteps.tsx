@@ -27,11 +27,11 @@ type UnifiedAskFormPageStepsProps = {
 
 export const UnifiedAskFormPageSteps = ({ task, page, form, stepsById, presentation, isDisabled, onAutoAdvance }: UnifiedAskFormPageStepsProps) => {
   const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
+  const { formatNumber, formatList } = useIntlFormatter()
   const stepValues = useStore(form.store, ({ values }) => flattenStepValues(values))
 
   return page.steps.map((step) => {
-    const prompt = fillPromptTemplate({ t, formatNumber, text: step.prompt, stepsById, stepValues })
+    const prompt = fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues })
 
     if (isSheetStep(step)) {
       return (

@@ -18,7 +18,7 @@ type UnifiedAskFormReviewProps = {
 
 export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewProps) => {
   const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
+  const { formatNumber, formatList } = useIntlFormatter()
   const { stepsById, visitedPages, submitReviewed, isReadOnly } = navigation
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
   const stepValues = useStore(form.store, ({ values }) => flattenStepValues(values))
@@ -27,7 +27,7 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
     .flatMap(({ steps }) => steps)
     .filter(step => step.type !== AskFormStepType.Action)
     .flatMap((step) => {
-      const label = getStepLabel({ t, formatNumber, step, values: stepValues[step.id] })
+      const label = getStepLabel({ t, formatNumber, formatList, step, values: stepValues[step.id] })
       return label === null ? [] : [{ step, label }]
     })
 
@@ -36,7 +36,7 @@ export const UnifiedAskFormReview = ({ form, navigation }: UnifiedAskFormReviewP
       <P size='sm'>{t('bookkeeping:UnifiedAskForm.UnifiedAskFormReview.label.what_you_told_us', 'Here’s what you told us:')}</P>
       {answeredSteps.map(({ step, label }) => (
         <VStack key={step.id} gap='3xs'>
-          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
+          <Span size='xs' variant='subtle'>{fillPromptTemplate({ t, formatNumber, formatList, text: step.prompt, stepsById, stepValues }) ?? ''}</Span>
           <Span size='sm'>{label}</Span>
         </VStack>
       ))}

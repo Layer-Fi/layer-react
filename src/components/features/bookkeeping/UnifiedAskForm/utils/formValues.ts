@@ -3,6 +3,7 @@ import {
   type AskFormAnswer,
   type AskFormAnswers,
   type AskFormFollowUpAnswer,
+  isCheckedAnswer,
   isChoiceAnswer,
   isTextAnswer,
   isTransactionAnswers,
@@ -22,6 +23,7 @@ export type AskFormInputValues = {
   choice: string | null
   selection: AskFormSelection | null
   text: string
+  checked: string[]
 }
 
 export type AskFormAnswerValues = AskFormInputValues & { followUp: AskFormInputValues }
@@ -50,20 +52,23 @@ export type AskFormInputPath =
 
 export const getFollowUpStep = (step: AskFormStepFields, values: AskFormInputValues) => findFollowUp(step, getPickedValue(values))
 
+const toEmptyInputValues = (): AskFormInputValues => ({ choice: null, selection: null, text: '', checked: [] })
+
 const toInputValues = (step: AskFormStepFields, answer: AskFormFollowUpAnswer | undefined): AskFormInputValues => {
-  if (!answer) return { choice: null, selection: null, text: '' }
+  if (!answer) return toEmptyInputValues()
+  if (isCheckedAnswer(answer)) return { ...toEmptyInputValues(), checked: [...answer.checked] }
 
   if (isTextAnswer(answer)) {
     return step.type === AskFormStepType.SearchWithFreeform
-      ? { choice: null, selection: { value: answer.text, label: answer.text, isCreated: true }, text: '' }
-      : { choice: null, selection: null, text: answer.text }
+      ? { ...toEmptyInputValues(), selection: { value: answer.text, label: answer.text, isCreated: true } }
+      : { ...toEmptyInputValues(), text: answer.text }
   }
 
   const option = findOption(step, answer.choice)
 
   return option
-    ? { choice: option.value, selection: null, text: '' }
-    : { choice: null, selection: { value: answer.choice, label: answer.choice }, text: '' }
+    ? { ...toEmptyInputValues(), choice: option.value }
+    : { ...toEmptyInputValues(), selection: { value: answer.choice, label: answer.choice } }
 }
 
 const toAnswerValues = (step: AskFormStepFields, answer: AskFormAnswer | undefined): AskFormAnswerValues => {
@@ -71,7 +76,7 @@ const toAnswerValues = (step: AskFormStepFields, answer: AskFormAnswer | undefin
   const followUpStep = choiceAnswer ? findFollowUp(step, choiceAnswer.choice) : undefined
 
   return {
-    ...toInputValues(step, choiceAnswer ?? (isTextAnswer(answer) ? answer : undefined)),
+    ...toInputValues(step, choiceAnswer ?? (isTextAnswer(answer) || isCheckedAnswer(answer) ? answer : undefined)),
     followUp: followUpStep && choiceAnswer
       ? toInputValues(followUpStep, choiceAnswer.followUp)
       : toInputValues(step, undefined),

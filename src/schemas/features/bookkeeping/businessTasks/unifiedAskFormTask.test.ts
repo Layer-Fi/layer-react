@@ -7,7 +7,7 @@ import {
 } from '@schemas/features/bookkeeping/businessTask'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { AskFormNextPageResultSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNextPage'
-import { AskFormCategoryScope, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { AskFormCategoryScope, AskFormChecklistRequirement, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { UnifiedAskFormSubmissionSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/unifiedAskFormSubmission'
 import { UnifiedAskFormTaskSchema } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 
@@ -111,6 +111,7 @@ describe('UnifiedAskFormTaskSchema', () => {
     ['next kind', withPage(2, { next: { kind: 'SOME_FUTURE_KIND' } })],
     ['action', withPage(2, { steps: [{ type: 'ACTION', id: 'always_this', prompt: 'Connect', action: 'CONNECT_PAYROLL' }] })],
     ['category scope', withPage(1, { steps: [{ type: 'CATEGORY', id: 'rows', scope: 'EACH_VENDOR' }] })],
+    ['checklist requirement', withPage(2, { steps: [{ type: 'CHECKLIST', id: 'always_this', items: [{ value: 'a', label: 'A' }], require: 'MOST' }] })],
     ['echoed answer shape', { ...encodedCounterpartyTask, answers: { category: { rating: 5 } } }],
     ['form', { ...encodedCounterpartyTask, form: null, user_response_type: 'FREE_RESPONSE' }],
   ])('hides the task when it has an unrecognised %s', (_, payload) => {
@@ -124,6 +125,65 @@ describe('UnifiedAskFormTaskSchema', () => {
     ['form subtype', { ...encodedCounterpartyTask, form_subtype: 'SOMETHING_NEW' }],
   ])('still shows the task when it has an unrecognised %s', (_, payload) => {
     expect(isUnifiedAskFormTask(decodeBusinessTask(payload))).toBe(true)
+  })
+
+  it('decodes a confirmation checklist and its echoed answer', () => {
+    const task = decodeTask({
+      ...encodedCounterpartyTask,
+      form_subtype: 'CONFIRMATION',
+      transactions: [],
+      form: {
+        entry_page_id: 'confirmation',
+        pages: [{
+          id: 'confirmation',
+          steps: [{
+            type: 'CHECKLIST',
+            id: 'confirmation',
+            editable: true,
+            prompt: 'Add Layer as a user in Gusto',
+            items: [{ value: 'completed', label: 'I have completed this task' }],
+            require: 'ALL',
+          }],
+          next: { kind: 'SUBMIT' },
+        }],
+      },
+      answers: { confirmation: { checked: ['completed'] } },
+      answer_summary: 'I have completed this task',
+    })
+
+    expect(task.form.pages[0]?.steps[0]).toMatchObject({
+      type: AskFormStepType.Checklist,
+      items: [{ value: 'completed', label: 'I have completed this task', required: false }],
+      require: AskFormChecklistRequirement.All,
+    })
+    expect(task.answers?.confirmation).toEqual({ checked: ['completed'] })
+  })
+
+  it('decodes a checklist follow-up and its echoed answer', () => {
+    const task = decodeTask({
+      ...withPage(2, {
+        steps: [{
+          type: 'CHOICE',
+          id: 'always_this',
+          prompt: 'Did you set up payroll?',
+          options: [{
+            value: 'yes',
+            label: 'Yes',
+            follow_up: {
+              type: 'CHECKLIST',
+              items: [{ value: 'figures', label: 'The figures are right', required: true }, { value: 'copy', label: 'Email me a copy' }],
+              require: 'ITEMS',
+            },
+          }],
+        }],
+      }),
+      answers: { always_this: { choice: 'yes', follow_up: { checked: ['figures'] } } },
+    })
+
+    const [step] = task.form.pages[2]?.steps ?? []
+    const followUp = step && 'options' in step ? step.options[0]?.followUp : undefined
+    expect(followUp).toMatchObject({ type: AskFormStepType.Checklist, require: AskFormChecklistRequirement.Items })
+    expect(task.answers?.always_this).toEqual({ choice: 'yes', followUp: { checked: ['figures'] } })
   })
 
   it('decodes answers echoed back on an answered task', () => {

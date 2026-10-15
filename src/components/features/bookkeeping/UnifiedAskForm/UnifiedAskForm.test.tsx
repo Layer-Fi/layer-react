@@ -5,16 +5,19 @@ import { describe, expect, it, vi } from 'vitest'
 import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type AskFormChoiceAnswer } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import { AskFormNextKind } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
+import { AskFormChecklistRequirement, AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { AskFormResolutionKind, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { LinkedAccountsContext, type LinkedAccountsContextType } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
 import { makeAccountMaskAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
+import { makeConfirmationAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/confirmation'
 import { makeCounterpartyAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { makeUploadDocumentAskForm } from '@fixtures/bookkeeping/unifiedAskFormTasks/uploadDocument'
 import {
   askFormNextPageUrl,
+  checklistStep,
   choiceStep,
   connectAccountStep,
   makeUnifiedAskFormTask,
@@ -615,5 +618,89 @@ describe('UnifiedAskForm', () => {
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
     expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { kind: { choice: 'supplies' } } })
+  })
+
+  it('submits a confirmation only once its box is ticked and Submit is pressed', async () => {
+    const task = makeUnifiedAskFormTask({ form: makeConfirmationAskForm('Add Layer as a user in Gusto.') })
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
+
+    await user.click(screen.getByRole('checkbox', { name: 'I have completed this task' }))
+
+    expect(onSubmit).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { confirmation: { checked: ['completed'] } } })
+  })
+
+  it('submits a checklist with no required items with nothing checked', async () => {
+    const task = makeUnifiedAskFormTask({
+      form: singlePageForm(page('only', [checklistStep('extras', 'Anything else?', [
+        { value: 'copy', label: 'Email me a copy', required: false },
+      ], AskFormChecklistRequirement.Items)])),
+    })
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { extras: { checked: [] } } })
+  })
+
+  it('submits a checklist once its required items are ticked, leaving optional ones out', async () => {
+    const task = makeUnifiedAskFormTask({
+      form: singlePageForm(page('only', [checklistStep('review', 'Before we close the month', [
+        { value: 'figures', label: 'The figures are right', required: true },
+        { value: 'copy', label: 'Email me a copy', required: false },
+      ], AskFormChecklistRequirement.Items)])),
+    })
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Email me a copy' }))
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Email me a copy' }))
+    await user.click(screen.getByRole('checkbox', { name: 'The figures are right' }))
+    await user.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { review: { checked: ['figures'] } } })
+  })
+
+  it('asks a checklist follow-up under the option that has one and posts it with the choice', async () => {
+    const task = makeUnifiedAskFormTask({
+      form: singlePageForm(page('only', [choiceStep('payroll', 'Did you set up payroll?', [
+        { value: 'no', label: 'Not yet' },
+        {
+          value: 'yes',
+          label: 'Yes',
+          followUp: {
+            type: AskFormStepType.Checklist,
+            prompt: 'Which did you do?',
+            items: [{ value: 'gusto', label: 'Added Layer to Gusto', required: false }, { value: 'bank', label: 'Linked the payroll account', required: false }],
+            require: AskFormChecklistRequirement.AtLeastOne,
+          },
+        },
+      ])])),
+    })
+    const onSubmit = spyOnSubmit(task)
+    const { user } = renderItem(task)
+
+    await user.click(screen.getByRole('radio', { name: 'Yes' }))
+
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Linked the payroll account' }))
+    await user.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1))
+    expect(onSubmit.mock.calls[0]?.[0]).toEqual({ answers: { payroll: { choice: 'yes', follow_up: { checked: ['bank'] } } } })
   })
 })

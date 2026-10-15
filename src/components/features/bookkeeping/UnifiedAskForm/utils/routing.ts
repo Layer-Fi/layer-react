@@ -43,6 +43,7 @@ const isPickStep = (step: AskFormStepFields) => {
       return !isSheetStep(step)
     case AskFormStepType.Text:
     case AskFormStepType.Action:
+    case AskFormStepType.Checklist:
     case AskFormStepType.Upload:
       return false
   }

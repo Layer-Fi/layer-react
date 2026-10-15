@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next'
 
 import { AskFormStepType } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
+import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import { tPlural } from '@utils/shared/i18n/plural'
 import {
   type AskFormAnswerValues,
@@ -15,23 +16,30 @@ const TEMPLATE = /\{\{\s*answer\.([\w-]+)(\.follow_up)?\.label\s*\}\}/g
 
 type FormatNumber = (value: number) => string
 
-export const getInputLabel = (step: AskFormStepFields, { choice, selection, text }: AskFormInputValues) => {
+const getPickLabel = (step: AskFormStepFields, { choice, selection, text }: AskFormInputValues) => {
   if (selection) return selection.label
   if (choice) return findOption(step, choice)?.label ?? choice
   return text.trim() || null
 }
 
-/** A choice follow-up reads as its own pick; a free-text one reads as the option it explains. */
-export const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
-  const followUpStep = getFollowUpStep(step, values)
-  const followUpPick = followUpStep && !values.followUp.text.trim() ? getInputLabel(followUpStep, values.followUp) : null
+const getInputLabel = (step: AskFormStepFields, values: AskFormInputValues, formatList: ListFormatFn) => {
+  if (step.type !== AskFormStepType.Checklist) return getPickLabel(step, values)
 
-  return followUpPick ?? getInputLabel(step, values)
+  const labels = step.items.filter(({ value }) => values.checked.includes(value)).map(({ label }) => label)
+  return labels.length > 0 ? formatList(labels) : null
 }
 
-export const getFollowUpLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
+/** A choice follow-up reads as its own pick; a free-text or checklist one reads as the option it explains. */
+export const getChoiceLabel = (step: AskFormStepFields, values: AskFormAnswerValues) => {
   const followUpStep = getFollowUpStep(step, values)
-  return followUpStep ? getInputLabel(followUpStep, values.followUp) : null
+  const readsAsFollowUp = followUpStep && followUpStep.type !== AskFormStepType.Checklist && !values.followUp.text.trim()
+
+  return (readsAsFollowUp ? getPickLabel(followUpStep, values.followUp) : null) ?? getPickLabel(step, values)
+}
+
+const getFollowUpLabel = (step: AskFormStepFields, values: AskFormAnswerValues, formatList: ListFormatFn) => {
+  const followUpStep = getFollowUpStep(step, values)
+  return followUpStep ? getInputLabel(followUpStep, values.followUp, formatList) : null
 }
 
 const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArray<AskFormRowValues>) => {
@@ -50,11 +58,12 @@ const getSheetLabel = (t: TFunction, step: AskFormStepFields, rows: ReadonlyArra
 type StepLabelOptions = {
   t: TFunction
   formatNumber: FormatNumber
+  formatList: ListFormatFn
   step: AskFormStepFields
   values: AskFormStepValues | undefined
 }
 
-export const getStepLabel = ({ t, formatNumber, step, values }: StepLabelOptions): string | null => {
+export const getStepLabel = ({ t, formatNumber, formatList, step, values }: StepLabelOptions): string | null => {
   if (!values) return null
 
   switch (step.type) {
@@ -69,6 +78,8 @@ export const getStepLabel = ({ t, formatNumber, step, values }: StepLabelOptions
           other: '{{displayCount}} files',
         })
         : null
+    case AskFormStepType.Checklist:
+      return getInputLabel(step, values, formatList)
     default:
       return isSheetStep(step) ? getSheetLabel(t, step, values.rows) : getChoiceLabel(step, values)
   }
@@ -78,18 +89,19 @@ export const getStepLabel = ({ t, formatNumber, step, values }: StepLabelOptions
 type PromptTemplateOptions = {
   t: TFunction
   formatNumber: FormatNumber
+  formatList: ListFormatFn
   text: string | null | undefined
   stepsById: ReadonlyMap<string, AskFormStepFields>
   stepValues: Readonly<Record<string, AskFormStepValues>>
 }
 
-export const fillPromptTemplate = ({ t, formatNumber, text, stepsById, stepValues }: PromptTemplateOptions) => {
+export const fillPromptTemplate = ({ t, formatNumber, formatList, text, stepsById, stepValues }: PromptTemplateOptions) => {
   const getLabel = (stepId: string, isFollowUp: boolean) => {
     const step = stepsById.get(stepId)
     const values = stepValues[stepId]
 
     if (!step || !values) return null
-    return isFollowUp ? getFollowUpLabel(step, values) : getStepLabel({ t, formatNumber, step, values })
+    return isFollowUp ? getFollowUpLabel(step, values, formatList) : getStepLabel({ t, formatNumber, formatList, step, values })
   }
 
   return text?.replace(TEMPLATE, (_match, stepId: string, followUp: string | undefined) =>
