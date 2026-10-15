@@ -1,13 +1,10 @@
-import classNames from 'classnames'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
-import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button } from '@ui/Button/Button'
-import { P } from '@ui/Typography/Text'
-import { getIconForTask } from '@features/bookkeeping/TasksListItem/getIconForTask'
+import { TaskRow } from '@features/bookkeeping/TaskRow/TaskRow'
 
 export type TasksListItemBackAction = {
   isDisabled: boolean
@@ -24,35 +21,33 @@ type TasksListItemHeaderProps = {
 export const TasksListItemHeader = ({ task, isOpen, backAction, onClick }: TasksListItemHeaderProps) => {
   const { t } = useTranslation()
 
-  const infoClassName = classNames(
-    'Layer__tasks-list-item__head-info',
-    isCompletedTask(task) ? 'Layer__tasks-list-item--completed' : 'Layer__tasks-list-item--pending',
-  )
-
-  return (
-    <div className='Layer__tasks-list-item__head' onClick={onClick}>
-      <div className={infoClassName}>
-        {isOpen && backAction
-          ? (
-            <Button
-              className='Layer__tasks-list-item__head-info__back'
-              variant='text'
-              icon
-              isDisabled={backAction.isDisabled}
-              onPress={backAction.onBack}
-              aria-label={t('common:action.back', 'Back')}
-            >
-              <ChevronLeft size={14} />
-            </Button>
-          )
-          : <div className='Layer__tasks-list-item__head-info__status'>{getIconForTask(task)}</div>}
-        <P className='Layer__tasks-list-item__head-info__title' variant='inherit'>{task.title}</P>
-      </div>
+  const slots = {
+    Leading: isOpen && backAction
+      ? (
+        <Button
+          className='Layer__tasks-list-item__head-info__back'
+          variant='text'
+          icon
+          isDisabled={backAction.isDisabled}
+          onPress={backAction.onBack}
+          aria-label={t('common:action.back', 'Back')}
+        >
+          <ChevronLeft size={14} />
+        </Button>
+      )
+      : undefined,
+    Trailing: (
       <ChevronDownFill
         size={16}
         className='Layer__tasks__expand-icon'
         style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(-180deg)' }}
       />
+    ),
+  }
+
+  return (
+    <div className='Layer__tasks-list-item__head' onClick={onClick}>
+      <TaskRow task={task} slots={slots} />
     </div>
   )
 }

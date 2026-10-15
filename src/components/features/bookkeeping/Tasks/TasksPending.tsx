@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import { Trans } from 'react-i18next'
-import { Cell, Pie, PieChart } from 'recharts'
 
 import { getCompletedTasks, getIncompleteTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
@@ -11,13 +10,9 @@ import { DataState } from '@ui/DataState/DataState'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@features/bookkeeping/BookkeepingStatus/useBookkeepingStatusConfig'
+import { TasksProgressRing } from '@features/bookkeeping/TasksProgressRing/TasksProgressRing'
 
 import './tasksPending.scss'
-
-const TASKS_CHARTS_COLORS = {
-  done: '#3B9C63',
-  pending: '#DFA000',
-}
 
 export const TasksPending = () => {
   const { date } = useGlobalDate()
@@ -34,17 +29,6 @@ export const TasksPending = () => {
     monthNumber: activePeriod?.month,
     incompleteTasksCount: incompleteTaskCount,
   })
-
-  const chartData = [
-    {
-      name: 'done',
-      value: completedTaskCount,
-    },
-    {
-      name: 'pending',
-      value: incompleteTaskCount,
-    },
-  ]
 
   const taskStatusClassName = classNames(
     completedTaskCount > 0
@@ -72,37 +56,7 @@ export const TasksPending = () => {
                   }}
                 />
               </P>
-              <PieChart width={24} height={24} className='mini-chart'>
-                <Pie
-                  data={chartData}
-                  dataKey='value'
-                  nameKey='name'
-                  cx='50%'
-                  cy='50%'
-                  innerRadius={5}
-                  outerRadius={9}
-                  paddingAngle={0.2}
-                  fill={TASKS_CHARTS_COLORS.pending}
-                  width={16}
-                  height={16}
-                  animationDuration={250}
-                  animationEasing='ease-in-out'
-                >
-                  {chartData.map((task, index) => {
-                    return (
-                      <Cell
-                        key={`cell-${index}`}
-                        className='Layer__DetailedChart__Slice'
-                        fill={
-                          TASKS_CHARTS_COLORS[
-                            task.name as keyof typeof TASKS_CHARTS_COLORS
-                          ]
-                        }
-                      />
-                    )
-                  })}
-                </Pie>
-              </PieChart>
+              <TasksProgressRing tasks={activePeriod.tasks} />
             </div>
           )
           : null}

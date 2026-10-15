@@ -78,6 +78,13 @@ describe('FormFileUploadField', () => {
     expect(upload).not.toHaveBeenCalled()
   })
 
+  it('lists three accepted types in the prompt and the rest in a tooltip', () => {
+    renderUploadField({ accept: ['pdf', 'png', 'jpg', 'heic'] })
+
+    expect(screen.getByText('PDF, PNG, JPG, and more')).toBeInTheDocument()
+    expect(screen.queryByText(/HEIC/)).not.toBeInTheDocument()
+  })
+
   it('names a file over the size limit and skips its upload', async () => {
     const upload = vi.fn(toUploaded)
     const { user, container } = renderUploadField({ upload, maxFileSizeInBytes: 10 })

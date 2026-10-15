@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
@@ -8,11 +9,13 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { MobileList } from '@blocks/MobileList/MobileList'
-import { TasksListMobileItem } from '@features/bookkeeping/TasksList/TasksListMobileItem'
+import { TaskRow } from '@features/bookkeeping/TaskRow/TaskRow'
 import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover'
 
 // The list renders only once the period has loaded with at least one task.
 const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
+const ROW_SLOTS = { Trailing: <ChevronRight size={16} aria-hidden /> }
+const ROW_SLOT_PROPS = { Stack: { pi: 'md' } } as const
 
 type TasksListMobileProps = {
   /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */
@@ -36,7 +39,7 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
         variant='compact'
         itemClassName='Layer__TasksListMobile__Row'
         slots={LIST_SLOTS}
-        renderItem={task => <TasksListMobileItem task={task} />}
+        renderItem={task => <TaskRow task={task} slots={ROW_SLOTS} slotProps={ROW_SLOT_PROPS} />}
         onClickItem={task => setOpenTaskId(task.id)}
       />
       {firstIncompleteTask
