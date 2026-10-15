@@ -1,9 +1,9 @@
-import { act, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
+import { useBookkeepingPeriodsGlobalCacheActions, useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { makeUnifiedAskFormTask } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
@@ -24,10 +24,16 @@ const servePeriods = (connectionMatchPending: boolean, onRequest: () => void) =>
   server.use(getBookkeepingPeriods.mock([periodWithConnectTask(connectionMatchPending)], { onRequest }))
 }
 
-const renderPoller = async (onRequest: () => void) => {
+const useCacheActionsWithPeriodsConsumer = () => {
+  useGetBookkeepingPeriods()
+
+  return useBookkeepingPeriodsGlobalCacheActions()
+}
+
+const renderPoller = async (onRequest: () => void, useConsumer = useBookkeepingPeriodsGlobalCacheActions) => {
   server.use(getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })))
   servePeriods(false, onRequest)
-  const view = await renderHookWithAuth(() => useBookkeepingPeriodsGlobalCacheActions())
+  const view = await renderHookWithAuth(() => useConsumer())
   await waitFor(() => expect(onRequest).toHaveBeenCalledTimes(1))
   vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'Date'] })
 
@@ -38,7 +44,7 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-describe('BookkeepingPeriodsRefreshProvider', () => {
+describe('BookkeepingPeriodsPoller', () => {
   it('fetches the periods once and does not poll while no connection match is pending', async () => {
     const onPeriodsRequest = vi.fn()
     await renderPoller(onPeriodsRequest)
@@ -48,12 +54,15 @@ describe('BookkeepingPeriodsRefreshProvider', () => {
     expect(onPeriodsRequest).toHaveBeenCalledTimes(1)
   })
 
-  it('polls every 5 seconds once a refetch reports a pending match, and stops when it clears', async () => {
+  it.each([
+    ['with no other consumer', useBookkeepingPeriodsGlobalCacheActions],
+    ['with a second periods consumer below it', useCacheActionsWithPeriodsConsumer],
+  ])('polls every 5 seconds once a refetch reports a pending match, and stops when it clears, %s', async (_, useConsumer) => {
     const onPeriodsRequest = vi.fn()
-    const { result } = await renderPoller(onPeriodsRequest)
+    const { result } = await renderPoller(onPeriodsRequest, useConsumer)
 
     servePeriods(true, onPeriodsRequest)
-    act(() => void result.current.invalidate())
+    void result.current.invalidate()
     await vi.advanceTimersByTimeAsync(0)
     expect(onPeriodsRequest).toHaveBeenCalledTimes(2)
 
@@ -73,7 +82,7 @@ describe('BookkeepingPeriodsRefreshProvider', () => {
     const { result } = await renderPoller(onPeriodsRequest)
 
     servePeriods(true, onPeriodsRequest)
-    act(() => void result.current.invalidate())
+    void result.current.invalidate()
     await vi.advanceTimersByTimeAsync(2 * 60 * 1000 + 5_000)
     expect(onPeriodsRequest).toHaveBeenCalledTimes(26)
 
