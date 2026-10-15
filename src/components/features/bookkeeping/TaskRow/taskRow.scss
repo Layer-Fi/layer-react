@@ -11,6 +11,10 @@
   min-inline-size: 0;
 }
 
+.Layer__TaskRow__Trailing {
+  flex: 0 0 auto;
+}
+
 .Layer__TaskRow[data-completed] .Layer__TaskRow__Title {
   text-decoration: line-through;
 }

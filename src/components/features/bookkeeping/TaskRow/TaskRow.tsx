@@ -24,6 +24,6 @@ export const TaskRow = ({ task, slots, pi }: TaskRowProps) => (
   <HStack className='Layer__TaskRow' align='center' gap='xs' pi={pi} fluid {...toDataProperties({ completed: isCompletedTask(task) })}>
     {slots?.Leading ?? <TaskStatusIcon task={task} />}
     <Span className='Layer__TaskRow__Title' variant='inherit' ellipsis>{task.title}</Span>
-    {slots?.Trailing}
+    {slots?.Trailing ? <HStack className='Layer__TaskRow__Trailing' align='center'>{slots.Trailing}</HStack> : null}
   </HStack>
 )
