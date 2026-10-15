@@ -15,16 +15,9 @@ const stubResizeObserver = () => {
   })
 }
 
-const stubGetAnimations = () => {
-  if (!('getAnimations' in Element.prototype)) {
-    Element.prototype.getAnimations = () => []
-  }
-}
-
 // Without this React never warns about state updates left outside `act`.
 beforeAll(() => vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true))
 beforeAll(() => stubResizeObserver())
-beforeAll(() => stubGetAnimations())
 beforeAll(() => server.listen(MSW_CONFIG))
 
 afterEach(() => cleanup())

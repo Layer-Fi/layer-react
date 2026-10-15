@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArchiveRestore, CircleCheckBig, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -91,14 +91,6 @@ const LoadServicesErrorState = () => {
   )
 }
 
-function ActiveServicesList({ children }: PropsWithChildren) {
-  return <VStack className='Layer__TimeTrackingServicesDrawer__accordion'>{children}</VStack>
-}
-
-function ArchivedServicesList({ children }: PropsWithChildren) {
-  return <VStack className='Layer__TimeTrackingServicesDrawer__archivedList'>{children}</VStack>
-}
-
 type ActiveServicesContentProps = {
   services: ReadonlyArray<CatalogService>
   showCreateForm: boolean
@@ -150,7 +142,9 @@ function ActiveServicesContent({
       <ConditionalList
         list={services}
         Empty={empty}
-        Container={ActiveServicesList}
+        Container={({ children }) => (
+          <VStack className='Layer__TimeTrackingServicesDrawer__accordion'>{children}</VStack>
+        )}
       >
         {({ item: service }) => (
           <ExpandableCard
@@ -234,7 +228,9 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
               />
             </VStack>
           )}
-          Container={ArchivedServicesList}
+          Container={({ children }) => (
+            <VStack className='Layer__TimeTrackingServicesDrawer__archivedList'>{children}</VStack>
+          )}
         >
           {({ item: service }) => (
             <HStack
