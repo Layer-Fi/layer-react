@@ -8,6 +8,7 @@ import {
 
 import { BaseFormTextField } from './BaseFormTextField'
 import { FormCheckboxField } from './FormCheckboxField'
+import { FormCheckboxGroupField } from './FormCheckboxGroupField'
 import { FormChipGroupField } from './FormChipGroupField'
 import { fieldContext, formContext } from './formContexts'
 import { FormDateField } from './FormDateField'
@@ -28,6 +29,7 @@ const { useAppForm: useRawAppForm, withFieldGroup, withForm } = createFormHook({
   fieldComponents: {
     BaseFormTextField,
     FormCheckboxField,
+    FormCheckboxGroupField,
     FormChipGroupField,
     FormDateField,
     FormDatePickerField,

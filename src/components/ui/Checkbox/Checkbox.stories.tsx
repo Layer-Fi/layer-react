@@ -6,7 +6,7 @@ import { Gallery } from '@testUtils/storybook/layout/Gallery'
 import { Row } from '@testUtils/storybook/layout/Row'
 import { Section } from '@testUtils/storybook/layout/Section'
 
-const VARIANTS = ['default', 'round', 'error', 'branded'] as const
+const VARIANTS = ['default', 'round', 'error', 'branded', 'row'] as const
 const SIZES = ['sm', 'md', 'lg'] as const
 
 // The branded variant reads --bg/fg-brand-accent, which consumers override; the

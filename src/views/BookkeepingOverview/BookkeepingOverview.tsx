@@ -7,6 +7,7 @@ import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAn
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type CallBooking as CallBookingData } from '@schemas/features/bookkeeping/callBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { AccountConfirmationStoreProvider } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { VStack } from '@ui/Stack/Stack'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
@@ -17,7 +18,7 @@ import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { CallBooking, type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 import { Tasks, type TasksStringOverrides } from '@features/bookkeeping/Tasks/Tasks'
-import { PendingAccountConfirmationBanner } from '@features/linkedAccounts/PendingAccountConfirmationBanner/PendingAccountConfirmationBanner'
+import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
@@ -105,7 +106,14 @@ export interface BookkeepingOverviewProps extends TasksPlaidSettings {
   title?: string
 }
 
-export const BookkeepingOverview = ({
+export const BookkeepingOverview = (props: BookkeepingOverviewProps) => (
+  <AccountConfirmationStoreProvider>
+    <BookkeepingOverviewContent {...props} />
+    <LinkedAccountsConfirmationModal />
+  </AccountConfirmationStoreProvider>
+)
+
+const BookkeepingOverviewContent = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
@@ -177,7 +185,6 @@ export const BookkeepingOverview = ({
         )}
         showHeader={showTitle}
       >
-        <PendingAccountConfirmationBanner />
         {width <= 1100 && (
           <div
             ref={upperContentRef}

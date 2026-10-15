@@ -122,4 +122,32 @@
   &[data-labeled] {
     gap: var(--spacing-xs);
   }
+
+  &[data-variant='row'] {
+    box-sizing: border-box;
+    gap: var(--spacing-sm);
+    min-block-size: 3.25rem;
+    inline-size: 100%;
+    padding-block: var(--spacing-sm);
+    padding-inline: var(--spacing-md);
+
+    border-radius: var(--btn-border-radius);
+    border: 1px solid var(--border-color);
+
+    background-color: var(--color-base-0);
+
+    font-size: var(--text-md);
+    transition: border-color var(--transition-speed) ease-in-out;
+  }
+
+  &[data-variant='row'][data-selected] {
+    border-color: var(--color-base-1000);
+
+    background-color: var(--color-base-50);
+  }
+
+  &[data-variant='row'][data-focus-visible] {
+    outline: 1px solid var(--outline-active);
+    outline-offset: 2px;
+  }
 }

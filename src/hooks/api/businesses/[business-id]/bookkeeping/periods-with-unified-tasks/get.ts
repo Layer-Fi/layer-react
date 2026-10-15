@@ -1,3 +1,5 @@
+import { type SWRConfiguration } from 'swr'
+
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import {
@@ -77,11 +79,15 @@ const useBookkeepingPeriodsQuery = createQueryHook({
       .filter(period => isActiveBookkeepingPeriod(period)),
 })
 
-export function useGetBookkeepingPeriods() {
+type UseGetBookkeepingPeriodsOptions = {
+  swrOptions?: SWRConfiguration<ReadonlyArray<BookkeepingPeriod>>
+}
+
+export function useGetBookkeepingPeriods({ swrOptions }: UseGetBookkeepingPeriodsOptions = {}) {
   const { data, isLoading: isLoadingBookkeepingStatus } = useGetBookkeepingStatus()
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
-  const queryResult = useBookkeepingPeriodsQuery({ isEnabled: isActiveOrPaused })
+  const queryResult = useBookkeepingPeriodsQuery({ isEnabled: isActiveOrPaused, swrOptions })
 
   return new Proxy(queryResult, {
     get(target, prop) {
