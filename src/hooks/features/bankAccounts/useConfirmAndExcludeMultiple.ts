@@ -4,6 +4,7 @@ import type { Awaitable } from '@internal-types/utility/awaitable'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { SWRMutationResult } from '@hooks/utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { confirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
 import { excludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
 
@@ -13,6 +14,7 @@ const buildKey = createBuildKey<{ businessId: string }>(['#bulk-confirm', '#bulk
 
 export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => Awaitable<unknown> }) {
   const { withLocale, businessId, auth } = useBuildKeyInputs()
+  const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
@@ -37,7 +39,7 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
             }),
         ),
       )
-        .then(() => onSuccess?.())
+        .then(() => Promise.all([onSuccess?.(), invalidateBookkeepingPeriods()]))
         .then(() => true as const),
     {
       revalidate: false,

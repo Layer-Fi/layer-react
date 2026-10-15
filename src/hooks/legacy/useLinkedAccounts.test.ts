@@ -213,5 +213,15 @@ describe('useLinkedAccounts', () => {
 
       expect(onPeriodsRequest).toHaveBeenCalledOnce()
     })
+
+    it('refetches bookkeeping periods once an account is confirmed', async () => {
+      const onPeriodsRequest = spyOnBookkeepingPeriods()
+      const { result } = await renderLinkedAccounts()
+      await waitForInitialPeriodsRequest(onPeriodsRequest)
+
+      await result.current.confirmAccount('PLAID', 'external-account-1')
+
+      await waitFor(() => expect(onPeriodsRequest).toHaveBeenCalledTimes(2))
+    })
   })
 })
