@@ -78,7 +78,7 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
       </HStack>
       <VStack className='Layer__TasksTakeover__Body' gap='md' pbs='lg'>
         <VStack pi='md' gap='3xs'>
-          <Heading size='sm' ellipsis>{task.title}</Heading>
+          <Heading size='sm'>{task.title}</Heading>
           {task.subtitle ? <P size='md' variant='subtle'>{task.subtitle}</P> : null}
         </VStack>
         <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded presentation='takeover' slots={slots} />
