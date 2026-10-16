@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -30,6 +30,11 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
   const incompleteTasks = getIncompleteTasks(tasks)
   const [firstIncompleteTask] = incompleteTasks
   const visibleTasks = useMemo(() => tasks.slice(0, MAX_VISIBLE_TASKS), [tasks])
+  const renderTaskRow = useCallback(
+    (task: UnifiedAskFormTask) => <TaskRow task={task} slots={ROW_SLOTS} slotProps={ROW_SLOT_PROPS} />,
+    [],
+  )
+  const openTask = useCallback((task: UnifiedAskFormTask) => setOpenTaskId(task.id), [])
 
   return (
     <VStack gap='md' pbe='md'>
@@ -41,8 +46,8 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
         variant='compact'
         itemClassName='Layer__TasksListMobile__Row'
         slots={LIST_SLOTS}
-        renderItem={task => <TaskRow task={task} slots={ROW_SLOTS} slotProps={ROW_SLOT_PROPS} />}
-        onClickItem={task => setOpenTaskId(task.id)}
+        renderItem={renderTaskRow}
+        onClickItem={openTask}
       />
       {firstIncompleteTask
         ? (
