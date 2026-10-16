@@ -147,7 +147,6 @@ const baseUnifiedAskFormTask: UnifiedAskFormTask = {
   status: BusinessTaskStatus.Todo,
   taskType: UNIFIED_ASK_FORM_TASK_TYPE,
   title: 'Tell us about this transaction',
-  subtitle: null,
   question: 'Can you tell us a bit more about what this transaction was for?',
   transactions: [],
   form: singlePageForm(page('respond', [textStep(ASK_FORM_STEP_IDS.response, 'Can you tell us a bit more about what this transaction was for?')])),

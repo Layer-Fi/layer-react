@@ -51,7 +51,7 @@ export const UnifiedAskFormTaskSchema = Schema.extend(
       Schema.propertySignature(Schema.Literal(UNIFIED_ASK_FORM_TASK_TYPE)),
       Schema.fromKey('task_type'),
     ),
-    subtitle: Schema.NullishOr(Schema.String),
+    subtitle: Schema.optionalWith(Schema.String, { nullable: true }),
     transactions: Schema.optionalWith(Schema.Array(AskFormTransactionSchema), {
       default: () => [],
       nullable: true,
