@@ -8,7 +8,9 @@
 
 .Layer__UnifiedAskForm__Rows {
   overflow: hidden auto;
-  max-block-size: 10rem;
+
+  /* Three rows: sm text at 140% line-height plus RowSummary padding and the row border. */
+  max-block-size: calc(3 * (1.4 * var(--text-sm) + 2 * var(--spacing-xs) + 1px));
 
   border-block: 1px solid var(--border-color);
 

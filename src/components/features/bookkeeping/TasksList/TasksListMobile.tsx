@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -16,6 +16,7 @@ import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover
 const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
 const ROW_SLOTS = { Trailing: <ChevronRight size={16} aria-hidden /> }
 const ROW_SLOT_PROPS = { Stack: { pi: 'md' } } as const
+const MAX_VISIBLE_TASKS = 3
 
 type TasksListMobileProps = {
   /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */
@@ -28,19 +29,25 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
   const [openTaskId, setOpenTaskId] = useState<string | null>(null)
   const incompleteTasks = getIncompleteTasks(tasks)
   const [firstIncompleteTask] = incompleteTasks
+  const visibleTasks = useMemo(() => tasks.slice(0, MAX_VISIBLE_TASKS), [tasks])
+  const renderTaskRow = useCallback(
+    (task: UnifiedAskFormTask) => <TaskRow task={task} slots={ROW_SLOTS} slotProps={ROW_SLOT_PROPS} />,
+    [],
+  )
+  const openTask = useCallback((task: UnifiedAskFormTask) => setOpenTaskId(task.id), [])
 
   return (
     <VStack gap='md' pbe='md'>
       <MobileList
         ariaLabel={t('bookkeeping:TasksList.TasksListMobile.label.tasks', 'Tasks')}
-        data={tasks}
+        data={visibleTasks}
         isLoading={false}
         isError={false}
         variant='compact'
         itemClassName='Layer__TasksListMobile__Row'
         slots={LIST_SLOTS}
-        renderItem={task => <TaskRow task={task} slots={ROW_SLOTS} slotProps={ROW_SLOT_PROPS} />}
-        onClickItem={task => setOpenTaskId(task.id)}
+        renderItem={renderTaskRow}
+        onClickItem={openTask}
       />
       {firstIncompleteTask
         ? (
