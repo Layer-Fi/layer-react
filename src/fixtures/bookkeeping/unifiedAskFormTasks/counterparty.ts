@@ -1,6 +1,7 @@
 import { type AskForm } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { AskFormCategoryScope, type AskFormOption } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormStep'
 import { type AskFormTransaction, type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { bankTransactionCategories, type BankTransactionCategory } from '@fixtures/bankTransactions/constants'
 import {
@@ -68,10 +69,12 @@ type CounterpartyTaskSeed = Pick<UnifiedAskFormTask, 'id' | 'transactions'> & {
 }
 
 const spentQuestion = (counterparty: string, transactions: ReadonlyArray<AskFormTransaction>) => {
-  const total = transactions.reduce((sum, { amount }) => sum + Math.abs(amount), 0)
-  const count = `${transactions.length} ${transactions.length === 1 ? 'transaction' : 'transactions'}`
+  const month = pickCyclic(transactions, 0).date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' })
+  const total = formatDollars(transactions.reduce((sum, { amount }) => sum + Math.abs(amount), 0))
 
-  return `You spent ${formatDollars(total)} at ${counterparty} across ${count}. Can you tell us a bit more about what these were for?`
+  return transactions.length === 1
+    ? `In ${month}, you spent ${total} at ${counterparty}. Can you tell us a bit more about what this transaction was for?`
+    : `In ${month}, you spent ${total} at ${counterparty} across ${transactions.length} transactions. Can you tell us a bit more about what these were for?`
 }
 
 export const makeCounterpartyTask = ({
@@ -132,7 +135,7 @@ export const counterpartyTaskSeeds = seedsInFixtureYear({
   11: makeCounterpartyTask({
     id: fixtureId('913'),
     counterparty: 'Costco',
-    question: '3 more Costco transactions came in, totaling $297.48. Can you tell us a bit more about what these were for?',
+    question: '3 more Costco transactions came in for November, totaling $297.48. Can you tell us a bit more about what these were for?',
     suggestions: RETAIL_SUGGESTIONS,
     transactions: askTransactions(11, [
       { id: 'a04', day: 2, amount: -14899, description: 'COSTCO WHSE #1042' },

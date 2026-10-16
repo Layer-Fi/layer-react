@@ -23,6 +23,7 @@ import {
   seedsInFixtureYear,
   textFollowUp,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 
 const VENDOR_CATEGORIES = [
   bankTransactionCategories.software,
@@ -77,8 +78,9 @@ const ACCOUNT_MASK_TASK_ID = fixtureId('c21')
 export const accountMaskTaskSeeds = seedsInFixtureYear({
   10: makeUnifiedAskFormTask({
     id: ACCOUNT_MASK_TASK_ID,
-    title: 'Help us identify account ••2691',
-    question: 'We found transfers to an account ending in 2691 that isn’t connected.',
+    title: 'New account transfer',
+    question: `We noticed a transfer to an account ending in 2691 that we don't recognize ($1,000.00 on October 6, ${FIXTURE_YEAR}, `
+      + `$1,000.00 on October 13, ${FIXTURE_YEAR}, and 1 other). Is this a personal account?`,
     transactions: askTransactions(10, [
       { id: 'b21', day: 6, amount: -100000, description: 'ONLINE TRANSFER TO XXXXXX2691 REF #4810' },
       { id: 'b22', day: 13, amount: -100000, description: 'ONLINE TRANSFER TO XXXXXX2691 REF #4811' },
