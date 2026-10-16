@@ -90,7 +90,7 @@ export function BankTransactionsUploadCsvStep(
               <CopyTemplateHeaders headers={templateHeaders} />
             </HStack>
           </VStack>
-          <HStack align='center' gap='xs' pis='3xs'>
+          <HStack align='center' gap='xs' pis='3xs' pbe='3xs'>
             <DownloadCsvTemplateButton
               fileName='upload_transactions.csv'
               csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
