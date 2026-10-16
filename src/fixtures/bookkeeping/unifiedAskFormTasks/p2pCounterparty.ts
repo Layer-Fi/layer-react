@@ -7,7 +7,7 @@ export const p2pCounterpartyTaskSeeds = seedsInFixtureYear({
     id: fixtureId('c11'),
     counterparty: 'Alex Rivera',
     title: 'Venmo payments to Alex Rivera',
-    question: 'You paid Alex Rivera $525.00 on Venmo across 3 payments. What were these for?',
+    question: 'In September, you paid Alex Rivera $525.00 via Venmo across 3 payments. What were these payments for?',
     noun: 'payment',
     suggestions: [bankTransactionCategories.payrollContractors, bankTransactionCategories.rent],
     transactions: askTransactions(9, [
