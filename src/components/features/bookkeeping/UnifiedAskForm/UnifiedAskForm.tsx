@@ -52,6 +52,11 @@ export const UnifiedAskForm = ({ task, form, navigation, isExpanded, presentatio
 
   return (
     <VStack gap='md' className='Layer__UnifiedAskForm' {...toDataProperties({ presentation })}>
+      {currentPage?.intro && (
+        <VStack pi='md'>
+          <P size='sm' variant='subtle'>{currentPage.intro}</P>
+        </VStack>
+      )}
       {showsTransactions ? <UnifiedAskFormTransactions transactions={task.transactions} title={task.title} collapsible={presentation === 'takeover'} /> : null}
       <SlidingPanes paneKey={paneKey} direction={direction} keepInView={isExpanded}>
         {view.kind === 'REVIEW'
@@ -63,6 +68,7 @@ export const UnifiedAskForm = ({ task, form, navigation, isExpanded, presentatio
               form={form}
               navigation={navigation}
               presentation={presentation}
+              followsTransactions={showsTransactions}
               footerAction={slots?.FooterAction}
             />
           )}

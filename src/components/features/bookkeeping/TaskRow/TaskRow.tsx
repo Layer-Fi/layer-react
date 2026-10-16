@@ -3,7 +3,7 @@ import { type ReactNode } from 'react'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { isCompletedTask } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { HStack, type StackProps } from '@ui/Stack/Stack'
+import { HStack, type StackProps, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { TaskStatusIcon } from '@features/bookkeeping/TaskStatusIcon/TaskStatusIcon'
 
@@ -26,7 +26,10 @@ type TaskRowProps = {
 export const TaskRow = ({ task, slots, slotProps }: TaskRowProps) => (
   <HStack className='Layer__TaskRow' align='center' gap='xs' {...slotProps?.Stack} fluid {...toDataProperties({ completed: isCompletedTask(task) })}>
     {slots?.Leading ?? <TaskStatusIcon task={task} />}
-    <Span className='Layer__TaskRow__Title' variant='inherit' ellipsis>{task.title}</Span>
+    <VStack className='Layer__TaskRow__Text'>
+      <Span className='Layer__TaskRow__Title' variant='inherit' ellipsis>{task.title}</Span>
+      {task.subtitle && <Span className='Layer__TaskRow__Subtitle' size='sm' variant='subtle' ellipsis>{task.subtitle}</Span>}
+    </VStack>
     {slots?.Trailing ? <HStack className='Layer__TaskRow__Trailing' align='center'>{slots.Trailing}</HStack> : null}
   </HStack>
 )

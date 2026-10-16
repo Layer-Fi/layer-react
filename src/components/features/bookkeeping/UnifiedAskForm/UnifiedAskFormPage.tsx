@@ -4,6 +4,7 @@ import { useStore } from '@tanstack/react-form'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { UnifiedAskFormPageFooter } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormPageFooter'
 import { UnifiedAskFormPageSteps } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormPageSteps'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -16,13 +17,15 @@ type UnifiedAskFormPageProps = {
   form: UnifiedAskFormApi
   navigation: UnifiedAskFormNavigation
   presentation: UnifiedAskFormPresentation
+  followsTransactions: boolean
   footerAction?: ReactNode
 }
 
-export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation, footerAction }: UnifiedAskFormPageProps) => {
+export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation, followsTransactions, footerAction }: UnifiedAskFormPageProps) => {
   const { getPageError, continueFrom } = navigation
   const autoAdvances = canAutoAdvance(page, presentation)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
+  const padsTop = presentation === 'inline' && followsTransactions && !page.description
 
   return (
     <form.FormGroup
@@ -31,7 +34,12 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
       onGroupSubmit={() => continueFrom(page)}
     >
       {group => (
-        <VStack gap='lg' pbs={presentation === 'inline' ? 'md' : undefined} pbe='md'>
+        <VStack gap='lg' pbs={padsTop ? 'md' : undefined} pbe='md'>
+          {page.description && (
+            <VStack pi='md'>
+              <P size='sm' variant='subtle'>{page.description}</P>
+            </VStack>
+          )}
           <UnifiedAskFormPageSteps
             task={task}
             page={page}

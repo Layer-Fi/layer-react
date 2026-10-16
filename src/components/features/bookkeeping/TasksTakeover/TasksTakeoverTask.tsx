@@ -12,7 +12,7 @@ import { Button } from '@ui/Button/Button'
 import { CloseButton } from '@ui/Button/CloseButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { Span } from '@ui/Typography/Text'
+import { P, Span } from '@ui/Typography/Text'
 import { TasksProgressRing } from '@features/bookkeeping/TasksProgressRing/TasksProgressRing'
 import { TasksTakeoverTaskList } from '@features/bookkeeping/TasksTakeover/TasksTakeoverTaskList'
 import { UnifiedAskForm } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskForm'
@@ -77,8 +77,9 @@ export const TasksTakeoverTask = ({ task, tasks, onTaskChange }: TasksTakeoverTa
         </HStack>
       </HStack>
       <VStack className='Layer__TasksTakeover__Body' gap='md' pbs='lg'>
-        <VStack pi='md'>
-          <Heading size='sm' ellipsis>{task.title}</Heading>
+        <VStack pi='md' gap='3xs'>
+          <Heading size='sm'>{task.title}</Heading>
+          {task.subtitle && <P size='md' variant='subtle'>{task.subtitle}</P>}
         </VStack>
         <UnifiedAskForm task={task} form={form} navigation={navigation} isExpanded presentation='takeover' slots={slots} />
       </VStack>
