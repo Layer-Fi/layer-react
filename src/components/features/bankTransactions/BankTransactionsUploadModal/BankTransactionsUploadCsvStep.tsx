@@ -87,9 +87,11 @@ export function BankTransactionsUploadCsvStep(
               {t('upload:label.transactions_file', 'Transactions file')}
             </Label>
             <CsvUpload file={selectedFile} onFileSelected={onFileSelected} />
-            <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
-              <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
-              <CopyTemplateHeaders headers={templateHeaders} />
+            <VStack gap='xs' align='start'>
+              <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
+                <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
+                <CopyTemplateHeaders headers={templateHeaders} />
+              </HStack>
               <DownloadCsvTemplateButton
                 variant='text'
                 fileName='upload_transactions.csv'
@@ -97,7 +99,7 @@ export function BankTransactionsUploadCsvStep(
               >
                 {t('upload:action.download_a_template', 'Download a template')}
               </DownloadCsvTemplateButton>
-            </HStack>
+            </VStack>
           </VStack>
           <HStack align='center' gap='xs'>
             <HStack className='Layer__upload-transactions__parse-csv-error-message'>

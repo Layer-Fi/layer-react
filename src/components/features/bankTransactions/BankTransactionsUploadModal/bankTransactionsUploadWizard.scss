@@ -19,10 +19,6 @@
     flex-wrap: wrap;
   }
 
-  .Layer__upload-transactions__requirements > :last-child {
-    margin-inline-start: auto;
-  }
-
   @container (max-width: 30rem) {
     .Layer__upload-transactions__confirmation-step__button-row {
       flex-direction: column;
