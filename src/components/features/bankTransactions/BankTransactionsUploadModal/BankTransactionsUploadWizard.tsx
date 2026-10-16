@@ -118,7 +118,6 @@ export function BankTransactionsUploadWizard({ onComplete }: BankTransactionsUpl
           onSelectFile={onSelectFile}
           selectedFile={file}
           onParseCsv={onParseCsv}
-          onCancel={onComplete}
         />
         <BankTransactionsValidateCsvStep
           selectedAccountId={selectedAccount?.value}

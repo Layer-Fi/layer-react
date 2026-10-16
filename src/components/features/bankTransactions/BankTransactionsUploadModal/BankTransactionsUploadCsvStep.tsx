@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CustomAccountParseCsvResponse, usePostCustomAccountParseCsv } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
-import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Label, P, Span } from '@ui/Typography/Text'
@@ -25,11 +24,10 @@ interface UploadTransactionsUploadCsvStepProps {
   onSelectFile: (file: File | null) => void
 
   onParseCsv: (parseCsvResponse: CustomAccountParseCsvResponse) => void
-  onCancel?: () => void
 }
 
 export function BankTransactionsUploadCsvStep(
-  { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv, onCancel }: UploadTransactionsUploadCsvStepProps,
+  { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
   const { t } = useTranslation()
   const { next } = useWizard()
@@ -87,30 +85,22 @@ export function BankTransactionsUploadCsvStep(
               {t('upload:label.transactions_file', 'Transactions file')}
             </Label>
             <CsvUpload file={selectedFile} onFileSelected={onFileSelected} />
-            <VStack gap='xs' align='start'>
-              <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
-                <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
-                <CopyTemplateHeaders headers={templateHeaders} />
-              </HStack>
-              <DownloadCsvTemplateButton
-                variant='text'
-                fileName='upload_transactions.csv'
-                csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
-              >
-                {t('upload:action.download_a_template', 'Download a template')}
-              </DownloadCsvTemplateButton>
-            </VStack>
+            <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
+              <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
+              <CopyTemplateHeaders headers={templateHeaders} />
+            </HStack>
           </VStack>
           <HStack align='center' gap='xs'>
+            <DownloadCsvTemplateButton
+              fileName='upload_transactions.csv'
+              csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
+            >
+              {t('upload:action.download_template', 'Download template')}
+            </DownloadCsvTemplateButton>
             <HStack className='Layer__upload-transactions__parse-csv-error-message'>
               {hasParseCsvError && <P status='error'>{t('upload:error.could_not_parse_csv', 'We could not parse this CSV. Please review the file and try again.')}</P>}
             </HStack>
             <Spacer />
-            {onCancel && (
-              <Button variant='ghost' onPress={onCancel}>
-                {t('common:action.cancel_label', 'Cancel')}
-              </Button>
-            )}
             <SubmitButton
               tooltip={getContinueTooltip()}
               isDisabled={!hasSelectedAccount || !selectedFile}

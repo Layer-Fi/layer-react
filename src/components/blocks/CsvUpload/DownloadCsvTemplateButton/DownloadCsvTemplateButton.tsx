@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 import { FileDownIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, type ButtonVariant } from '@ui/Button/Button'
+import { Button } from '@ui/Button/Button'
 
 interface DownloadCsvTemplateButtonProps<T> {
   csvProps: {
@@ -10,10 +10,9 @@ interface DownloadCsvTemplateButtonProps<T> {
     rows?: T[]
   }
   fileName?: string
-  variant?: ButtonVariant
 }
 
-export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, csvProps, fileName = 'template.csv', variant = 'outlined' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
+export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
   const { t } = useTranslation()
   const { headers, rows = [] } = csvProps
   const handleDownload = () => {
@@ -40,7 +39,7 @@ export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | n
 
   return (
     <Button
-      variant={variant}
+      variant='outlined'
       onPress={handleDownload}
       tooltip={t('upload:label.need_help_download_example_csv', 'Need help? Download an example CSV')}
     >
