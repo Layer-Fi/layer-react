@@ -2,6 +2,7 @@ import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessT
 
 import { accountMaskTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/accountMask'
 import { confirmationTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/confirmation'
+import { connectAccountTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/connectAccount'
 import { counterpartyTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/counterparty'
 import { freeResponseTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/freeResponse'
 import { p2pCounterpartyTaskSeeds } from '@fixtures/bookkeeping/unifiedAskFormTasks/p2pCounterparty'
@@ -13,6 +14,7 @@ const TASK_SEEDS: TaskSeeds[] = [
   counterpartyTaskSeeds,
   p2pCounterpartyTaskSeeds,
   accountMaskTaskSeeds,
+  connectAccountTaskSeeds,
   uploadDocumentTaskSeeds,
   confirmationTaskSeeds,
 ]
