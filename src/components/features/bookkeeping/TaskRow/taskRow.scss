@@ -8,6 +8,10 @@
 
 .Layer__TaskRow__Text {
   flex: 1 1 auto;
+  justify-content: center;
+
+  // Rows without a subtitle keep the height of rows with one, so a list never ragged-edges by task.
+  min-block-size: calc(1.4 * (var(--text-md) + var(--text-sm)));
   min-inline-size: 0;
 }
 

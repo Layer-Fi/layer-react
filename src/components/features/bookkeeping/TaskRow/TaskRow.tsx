@@ -28,7 +28,7 @@ export const TaskRow = ({ task, slots, slotProps }: TaskRowProps) => (
     {slots?.Leading ?? <TaskStatusIcon task={task} />}
     <VStack className='Layer__TaskRow__Text'>
       <Span className='Layer__TaskRow__Title' variant='inherit' ellipsis>{task.title}</Span>
-      {task.subtitle ? <Span className='Layer__TaskRow__Subtitle' size='xs' variant='subtle' ellipsis>{task.subtitle}</Span> : null}
+      {task.subtitle ? <Span className='Layer__TaskRow__Subtitle' size='sm' variant='subtle' ellipsis>{task.subtitle}</Span> : null}
     </VStack>
     {slots?.Trailing ? <HStack className='Layer__TaskRow__Trailing' align='center'>{slots.Trailing}</HStack> : null}
   </HStack>
