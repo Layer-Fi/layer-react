@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -29,12 +29,13 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
   const [openTaskId, setOpenTaskId] = useState<string | null>(null)
   const incompleteTasks = getIncompleteTasks(tasks)
   const [firstIncompleteTask] = incompleteTasks
+  const visibleTasks = useMemo(() => tasks.slice(0, MAX_VISIBLE_TASKS), [tasks])
 
   return (
     <VStack gap='md' pbe='md'>
       <MobileList
         ariaLabel={t('bookkeeping:TasksList.TasksListMobile.label.tasks', 'Tasks')}
-        data={tasks.slice(0, MAX_VISIBLE_TASKS)}
+        data={visibleTasks}
         isLoading={false}
         isError={false}
         variant='compact'
