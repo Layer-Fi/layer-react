@@ -81,19 +81,22 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
     tags: [],
     metadata: null,
     referenceNumber: '',
-    lineItems: journalEntry.lineItems.map(lineItem => ({
-      externalId: lineItem.externalId || null,
-      accountIdentifier: {
-        type: 'AccountId',
-        id: entryLineItemsById.get(lineItem.id)!.account.accountId,
-      },
-      amount: convertCentsToNonRecursiveBigDecimal(entryLineItemsById.get(lineItem.id)!.amount),
-      direction: entryLineItemsById.get(lineItem.id)!.direction,
-      memo: lineItem.memo ?? null,
-      customer: lineItem.customer ?? null,
-      vendor: lineItem.vendor ?? null,
-      tags: lineItem.transactionTags?.map(makeTagFromTransactionTag) ?? [],
-    })),
+    lineItems: journalEntry.lineItems.map((lineItem) => {
+      const entryLineItem = entryLineItemsById.get(lineItem.lineItemId)!
+      return {
+        externalId: lineItem.externalId || null,
+        accountIdentifier: {
+          type: 'AccountId',
+          id: entryLineItem.account.accountId,
+        },
+        amount: convertCentsToNonRecursiveBigDecimal(entryLineItem.amount),
+        direction: entryLineItem.direction,
+        memo: lineItem.memo ?? null,
+        customer: lineItem.customer ?? null,
+        vendor: lineItem.vendor ?? null,
+        tags: lineItem.transactionTags?.map(makeTagFromTransactionTag) ?? [],
+      }
+    }),
   }
 }
 
