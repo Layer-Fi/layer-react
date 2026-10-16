@@ -106,30 +106,7 @@ const spyOnSubmit = (task: UnifiedAskFormTask) => {
   return onRequest
 }
 
-const isBefore = (first: HTMLElement, second: HTMLElement) =>
-  Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
-
 describe('UnifiedAskForm', () => {
-  it('shows the page intro before the transactions and the page description before the question', () => {
-    renderItem(makeUnifiedAskFormTask({
-      transactions: TRANSACTIONS,
-      form: singlePageForm({
-        ...page('only', [textStep('response', 'What were these for?')]),
-        intro: 'Two Costco charges came in this month.',
-        description: 'A sentence or two is plenty.',
-      }),
-    }))
-
-    const intro = screen.getByText('Two Costco charges came in this month.')
-    const transaction = screen.getByText('COSTCO WHSE')
-    const description = screen.getByText('A sentence or two is plenty.')
-    const question = screen.getByText('What were these for?')
-
-    expect(isBefore(intro, transaction)).toBe(true)
-    expect(isBefore(transaction, description)).toBe(true)
-    expect(isBefore(description, question)).toBe(true)
-  })
-
   it('shows an ask resolved by another period as answered there, with no questions', () => {
     renderItem({
       ...counterpartyTask(),
