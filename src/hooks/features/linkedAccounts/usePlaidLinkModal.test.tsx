@@ -97,7 +97,41 @@ beforeEach(() => {
 
 afterEach(() => vi.restoreAllMocks())
 
+const appendPlaidLinkIframe = () => {
+  const iframe = document.createElement('iframe')
+  iframe.id = 'plaid-link-iframe-1'
+  iframe.setAttribute('inert', '')
+  document.body.appendChild(iframe)
+  return iframe
+}
+
 describe('usePlaidLinkModal', () => {
+  describe('keeping Link interactive under a react-aria modal', () => {
+    afterEach(() => {
+      document.querySelectorAll('iframe[id^="plaid-link-iframe"]').forEach(iframe => iframe.remove())
+    })
+
+    it('marks the Link iframe as top layer and clears inert once it is appended', async () => {
+      await renderPlaidLinkModal()
+
+      const iframe = appendPlaidLinkIframe()
+
+      await waitFor(() => expect(iframe.dataset.reactAriaTopLayer).toBe('true'))
+      expect(iframe.hasAttribute('inert')).toBe(false)
+    })
+
+    it('stops watching once the session ends', async () => {
+      await renderPlaidLinkModal()
+      await exitPlaidLink()
+
+      const iframe = appendPlaidLinkIframe()
+      await act(() => Promise.resolve())
+
+      expect(iframe.dataset.reactAriaTopLayer).toBeUndefined()
+      expect(iframe.hasAttribute('inert')).toBe(true)
+    })
+  })
+
   describe('with a customer-managed Plaid config', () => {
     it('hands the public token to the customer instead of exchanging it with Layer', async () => {
       const exchangePlaidPublicToken = spyOnEndpoint(postExchangePlaidPublicToken)

@@ -37,6 +37,20 @@ type UsePlaidLinkModalOptions = {
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
 }
 
+const PLAID_LINK_IFRAME_SELECTOR = 'iframe[id^="plaid-link-iframe"]'
+
+/**
+ * Plaid appends its Link iframe to `body`, so a react-aria modal open at the time (the mobile tasks
+ * takeover) marks it `inert` and it stops receiving taps. Flag it as top layer, which react-aria
+ * leaves alone, and undo the `inert` it already applied. Can go once adobe/react-spectrum#8796 ships.
+ */
+const keepPlaidLinkInteractive = (root: ParentNode) => {
+  root.querySelectorAll<HTMLIFrameElement>(PLAID_LINK_IFRAME_SELECTOR).forEach((iframe) => {
+    iframe.dataset.reactAriaTopLayer = 'true'
+    iframe.removeAttribute('inert')
+  })
+}
+
 const toLinkFinishedInstitution = (institution: PlaidInstitution | null) =>
   institution ? { id: institution.institution_id, name: institution.name } : null
 
@@ -219,6 +233,17 @@ export function usePlaidLinkModal({
     },
     env: customerManagedPlaidConfig == null && usePlaidSandbox ? 'sandbox' : undefined,
   })
+
+  useEffect(() => {
+    if (!session) return
+
+    keepPlaidLinkInteractive(document.body)
+
+    const observer = new MutationObserver(() => keepPlaidLinkInteractive(document.body))
+    observer.observe(document.body, { childList: true })
+
+    return () => observer.disconnect()
+  }, [session])
 
   useEffect(() => {
     if (plaidLinkReady) {
