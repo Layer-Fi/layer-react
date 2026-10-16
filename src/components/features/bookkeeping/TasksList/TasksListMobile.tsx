@@ -16,6 +16,7 @@ import { TasksTakeover } from '@features/bookkeeping/TasksTakeover/TasksTakeover
 const LIST_SLOTS = { EmptyState: () => null, ErrorState: () => null }
 const ROW_SLOTS = { Trailing: <ChevronRight size={16} aria-hidden /> }
 const ROW_SLOT_PROPS = { Stack: { pi: 'md' } } as const
+const MAX_VISIBLE_TASKS = 3
 
 type TasksListMobileProps = {
   /** Every task in the period, incomplete first; answered tasks stay listed so their answers can be viewed. */
@@ -33,7 +34,7 @@ export const TasksListMobile = ({ tasks }: TasksListMobileProps) => {
     <VStack gap='md' pbe='md'>
       <MobileList
         ariaLabel={t('bookkeeping:TasksList.TasksListMobile.label.tasks', 'Tasks')}
-        data={tasks}
+        data={tasks.slice(0, MAX_VISIBLE_TASKS)}
         isLoading={false}
         isError={false}
         variant='compact'
