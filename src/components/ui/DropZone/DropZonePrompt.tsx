@@ -44,9 +44,9 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
   const isPressable = actionLabel === undefined
   const isLarge = size === 'lg'
   const Layout = isLarge ? VStack : HStack
-  const padding: Pick<StackProps, 'pi' | 'pb'> = isPressable
-    ? { pi: 'md', pb: 'sm' }
-    : isLarge ? { pi: 'lg', pb: 'xl' } : { pi: 'md', pb: 'md' }
+  const padding: Pick<StackProps, 'pi' | 'pb'> = isLarge
+    ? { pi: 'lg', pb: 'xl' }
+    : isPressable ? { pi: 'md', pb: 'sm' } : { pi: 'md', pb: 'md' }
   const textStatus = isDisabled ? 'disabled' : undefined
   const textAlign = isLarge ? 'center' : undefined
 
@@ -75,8 +75,8 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
           </Tooltip>
         )}
       </VStack>
-      {!isDragging && actionLabel && (
-        <Button variant='outlined' isDisabled={isDisabled} onPress={onOpen}>
+      {actionLabel && (
+        <Button variant='outlined' isDisabled={isDisabled || isDragging} onPress={onOpen}>
           {actionLabel}
         </Button>
       )}

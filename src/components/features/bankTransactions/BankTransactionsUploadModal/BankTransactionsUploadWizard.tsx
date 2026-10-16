@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransactionDataOnly } from '@schemas/features/bankTransactions/bankTransactionDataOnly'
 import { type CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
 import { Wizard } from '@blocks/Wizard/Wizard'
 import { BankTransactionsUploadConfirmationStep } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadConfirmationStep'
 import { type AccountOption, BankTransactionsUploadCsvStep } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadCsvStep'
@@ -13,6 +15,8 @@ import { BankTransactionsValidateCsvStep } from '@features/bankTransactions/Bank
 import { BankTransactionsUploadStep } from '@features/bankTransactions/BankTransactionsUploadModal/types'
 
 import './bankTransactionsUploadWizard.scss'
+
+const STEP_COUNT = 3
 
 type UploadTransactionsHeaderProps = {
   currentStep: BankTransactionsUploadStep
@@ -58,10 +62,16 @@ function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTrans
 
   const title = getTitle(currentStep, isValid, t)
   const description = getDescription(currentStep, isValid, t)
+  const stepLabel = t('upload:label.step_of_total', 'Step {{current}} of {{total}}', { current: currentStep + 1, total: STEP_COUNT })
 
   return (
     <ModalTitleWithClose
-      heading={<Heading level={1} size='sm'>{title}</Heading>}
+      heading={(
+        <VStack gap='3xs'>
+          <Span size='xs' variant='subtle'>{stepLabel}</Span>
+          <Heading level={1} size='sm'>{title}</Heading>
+        </VStack>
+      )}
       description={<Heading level={2} size='xs' variant='subtle' weight='normal'>{description}</Heading>}
       onClose={onClose}
       hideBottomPadding
@@ -118,6 +128,7 @@ export function BankTransactionsUploadWizard({ onComplete }: BankTransactionsUpl
           onSelectFile={onSelectFile}
           selectedFile={file}
           onParseCsv={onParseCsv}
+          onCancel={onComplete}
         />
         <BankTransactionsValidateCsvStep
           selectedAccountId={selectedAccount?.value}
