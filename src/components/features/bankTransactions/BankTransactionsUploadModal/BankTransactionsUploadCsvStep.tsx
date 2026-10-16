@@ -90,7 +90,6 @@ export function BankTransactionsUploadCsvStep(
             <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
               <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
               <CopyTemplateHeaders headers={templateHeaders} />
-              <Spacer />
               <DownloadCsvTemplateButton
                 variant='text'
                 fileName='upload_transactions.csv'

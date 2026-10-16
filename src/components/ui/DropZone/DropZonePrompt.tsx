@@ -63,9 +63,14 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
         <CloudUpload size={isLarge ? 20 : 16} />
       </HStack>
       <VStack fluid align={textAlign} gap='4xs'>
-        <Span weight={isDragging || isLarge ? 'bold' : undefined} status={textStatus} align={textAlign}>
-          {isDragging ? t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload') : title}
-        </Span>
+        <VStack className='Layer__UI__DropZone__Title' {...toDataProperties({ dragging: isDragging })} align={textAlign}>
+          <Span weight={isLarge ? 'bold' : undefined} status={textStatus} align={textAlign} aria-hidden={isDragging}>
+            {title}
+          </Span>
+          <Span weight='bold' status={textStatus} align={textAlign} aria-hidden={!isDragging}>
+            {t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload')}
+          </Span>
+        </VStack>
         {description && (
           <Tooltip isDisabled={!descriptionTooltip}>
             <TooltipTrigger variant='fit-content'>
