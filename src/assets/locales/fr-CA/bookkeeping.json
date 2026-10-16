@@ -188,7 +188,10 @@
         "search_failed": ""
       },
       "placeholder": {
-        "search_entity_other": ""
+        "search_entity_other": "",
+        "search_entity_category": "",
+        "search_entity_customer": "",
+        "search_entity_vendor": ""
       }
     }
   },

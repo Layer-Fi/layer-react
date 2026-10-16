@@ -15,6 +15,13 @@ const toComboBoxOption = ({ id, label }: UnifiedSearchResult): ComboBoxOption =>
 const isKnownEntity = (entity: string): entity is AskFormSearchEntity =>
   Object.values<string>(AskFormSearchEntity).includes(entity)
 
+// The key extractor only reads literal property names, so `cases` and `contexts` cannot use enum-computed keys.
+const SEARCH_ENTITY_CONDITIONS = {
+  [AskFormSearchEntity.Category]: 'category',
+  [AskFormSearchEntity.Vendor]: 'vendor',
+  [AskFormSearchEntity.Customer]: 'customer',
+} as const
+
 export type AskFormSearchConfig = {
   entity: string
   allowCreate: boolean
@@ -62,17 +69,17 @@ export const useUnifiedAskFormSearch = (taskId: string, { entity, allowCreate, p
     formatCreateLabel: text =>
       t('bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.action.use_typed_value', 'Use “{{text}}”', { text }),
     placeholder: placeholder ?? tConditional(t, 'bookkeeping:UnifiedAskForm.useUnifiedAskFormSearch.placeholder.search_entity', {
-      condition: isKnownEntity(entity) ? entity : 'other',
+      condition: isKnownEntity(entity) ? SEARCH_ENTITY_CONDITIONS[entity] : 'other',
       cases: {
-        [AskFormSearchEntity.Category]: 'Search categories…',
-        [AskFormSearchEntity.Vendor]: 'Search vendors…',
-        [AskFormSearchEntity.Customer]: 'Search customers…',
+        category: 'Search categories…',
+        vendor: 'Search vendors…',
+        customer: 'Search customers…',
         other: 'Search…',
       },
       contexts: {
-        [AskFormSearchEntity.Category]: 'category',
-        [AskFormSearchEntity.Vendor]: 'vendor',
-        [AskFormSearchEntity.Customer]: 'customer',
+        category: 'category',
+        vendor: 'vendor',
+        customer: 'customer',
         other: 'other',
       },
     }),

@@ -187,7 +187,10 @@
         "search_failed": "Search didn’t work. Try again."
       },
       "placeholder": {
-        "search_entity_other": "Search…"
+        "search_entity_other": "Search…",
+        "search_entity_category": "Search categories…",
+        "search_entity_customer": "Search customers…",
+        "search_entity_vendor": "Search vendors…"
       }
     }
   },
