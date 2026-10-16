@@ -4,6 +4,7 @@ import { useStore } from '@tanstack/react-form'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { UnifiedAskFormPageFooter } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormPageFooter'
 import { UnifiedAskFormPageSteps } from '@features/bookkeeping/UnifiedAskForm/UnifiedAskFormPageSteps'
 import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/useUnifiedAskForm'
@@ -32,6 +33,13 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
     >
       {group => (
         <VStack gap='lg' pbs={presentation === 'inline' ? 'md' : undefined} pbe='md'>
+          {page.description
+            ? (
+              <VStack pi='md'>
+                <P size='sm' variant='subtle'>{page.description}</P>
+              </VStack>
+            )
+            : null}
           <UnifiedAskFormPageSteps
             task={task}
             page={page}

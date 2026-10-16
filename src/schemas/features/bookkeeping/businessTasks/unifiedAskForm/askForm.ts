@@ -5,6 +5,10 @@ import { AskFormStepSchema } from '@schemas/features/bookkeeping/businessTasks/u
 
 export const AskFormPageSchema = Schema.Struct({
   id: Schema.String,
+  /** Shown under the task title, before the transactions. */
+  intro: Schema.optionalWith(Schema.String, { nullable: true }),
+  /** Shown after the transactions, before the page's first question. */
+  description: Schema.optionalWith(Schema.String, { nullable: true }),
   steps: Schema.Array(AskFormStepSchema),
   next: AskFormNextSchema,
 })

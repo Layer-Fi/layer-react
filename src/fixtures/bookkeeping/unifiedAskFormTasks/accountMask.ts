@@ -42,18 +42,25 @@ export const ACCOUNT_MASK_ROUTES = { owned: 'connect', vendor: 'vendor' } as con
 export const makeAccountMaskAskForm = (taskId: string, mask: string): AskForm => ({
   entryPageId: ACCOUNT_MASK_ENTRY_PAGE_ID,
   pages: [
-    page(ACCOUNT_MASK_ENTRY_PAGE_ID, [choiceStep(ASK_FORM_STEP_IDS.accountType, `What kind of account is ••${mask}?`, [
-      ...choiceOptions({
-        personal: 'A personal account',
-        owned: 'Another account my business owns',
-        vendor: 'A vendor I pay',
-        customer: 'A customer who pays me',
-      }),
-      { value: 'unsure', label: 'Not sure', followUp: textFollowUp('Tell us anything you know about this account.') },
-    ])], serverNext(taskId)),
-    page(ACCOUNT_MASK_ROUTES.owned, [
-      connectAccountStep('connect', 'Connect this account so we can pull its transactions for you automatically.'),
-    ]),
+    {
+      ...page(ACCOUNT_MASK_ENTRY_PAGE_ID, [choiceStep(ASK_FORM_STEP_IDS.accountType, `What kind of account is ••${mask}?`, [
+        ...choiceOptions({
+          personal: 'A personal account',
+          owned: 'Another account my business owns',
+          vendor: 'A vendor I pay',
+          customer: 'A customer who pays me',
+        }),
+        { value: 'unsure', label: 'Not sure', followUp: textFollowUp('Tell us anything you know about this account.') },
+      ])], serverNext(taskId)),
+      intro: `Money moved to an account ending in ${mask} that we don’t have on file.`,
+      description: 'Pick whichever fits best. We only ask once per account.',
+    },
+    {
+      ...page(ACCOUNT_MASK_ROUTES.owned, [
+        connectAccountStep('connect', 'Connect this account so we can pull its transactions for you automatically.'),
+      ]),
+      intro: 'Connecting it lets us pull its transactions automatically, so transfers between your accounts stop looking like expenses.',
+    },
     page(ACCOUNT_MASK_ROUTES.vendor, [
       {
         id: 'vendor',
@@ -79,6 +86,7 @@ export const accountMaskTaskSeeds = seedsInFixtureYear({
   10: makeUnifiedAskFormTask({
     id: ACCOUNT_MASK_TASK_ID,
     title: 'New account transfer',
+    subtitle: '3 transactions · $3,000.00',
     question: `We noticed a transfer to an account ending in 2691 that we don't recognize ($1,000.00 on October 6, ${FIXTURE_YEAR}, `
       + `$1,000.00 on October 13, ${FIXTURE_YEAR}, and 1 other). Is this a personal account?`,
     transactions: askTransactions(10, [

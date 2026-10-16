@@ -6,8 +6,13 @@
   }
 }
 
-.Layer__TaskRow__Title {
+.Layer__TaskRow__Text {
   flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.Layer__TaskRow__Title,
+.Layer__TaskRow__Subtitle {
   min-inline-size: 0;
 }
 

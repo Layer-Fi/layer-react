@@ -69,6 +69,18 @@ const spyOnSubmit = (task: UnifiedAskFormTask, response?: Promise<void>) => {
 }
 
 describe('TasksTakeover', () => {
+  it('shows a task subtitle under the title and in the task list', async () => {
+    const costco = { ...COSTCO, subtitle: '2 transactions · $836.45' }
+    const { user } = renderTakeover({ tasks: [costco, STAPLES, AMAZON, UBER], taskId: costco.id })
+
+    expect(screen.getByRole('heading', { name: 'Costco purchases' })).toBeInTheDocument()
+    expect(screen.getByText('2 transactions · $836.45')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Task 1 of 4' }))
+
+    await waitFor(() => expect(screen.getAllByText('2 transactions · $836.45')).toHaveLength(2))
+  })
+
   it('counts position in the month and skips to the next incomplete task, past an answered one', async () => {
     const { user } = renderTakeover({ taskId: STAPLES.id })
 
