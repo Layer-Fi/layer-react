@@ -38,8 +38,9 @@ export const CsvUpload = ({ file, onFileSelected }: CsvUploadProps) => {
   }
 
   const prompt: DropZonePromptProps = {
-    title: t('upload:label.drop_csv_or_browse', 'Drag and drop your CSV here, or click to browse'),
+    title: t('upload:label.drop_csv_here', 'Drag and drop your CSV here'),
     description: t('upload:label.csv_up_to_max_size', 'CSV · Up to {{maxSize}}', { maxSize: formatFileSize(CSV_MAX_FILE_SIZE_IN_BYTES) }),
+    actionLabel: t('upload:action.browse', 'Browse'),
   }
 
   return (
