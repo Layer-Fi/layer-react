@@ -70,6 +70,7 @@ export const UnifiedAskForm = ({ task, form, navigation, isExpanded, presentatio
               form={form}
               navigation={navigation}
               presentation={presentation}
+              followsTransactions={showsTransactions}
               footerAction={slots?.FooterAction}
             />
           )}

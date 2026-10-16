@@ -17,13 +17,17 @@ type UnifiedAskFormPageProps = {
   form: UnifiedAskFormApi
   navigation: UnifiedAskFormNavigation
   presentation: UnifiedAskFormPresentation
+  /** Whether the transaction table renders directly above this page. */
+  followsTransactions: boolean
   footerAction?: ReactNode
 }
 
-export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation, footerAction }: UnifiedAskFormPageProps) => {
+export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation, followsTransactions, footerAction }: UnifiedAskFormPageProps) => {
   const { getPageError, continueFrom } = navigation
   const autoAdvances = canAutoAdvance(page, presentation)
   const isSubmitting = useStore(form.store, state => state.isSubmitting)
+  // Inline, a question straight after the table needs room; a description or no table already gives it.
+  const padsTop = presentation === 'inline' && followsTransactions && !page.description
 
   return (
     <form.FormGroup
@@ -32,7 +36,7 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
       onGroupSubmit={() => continueFrom(page)}
     >
       {group => (
-        <VStack gap='lg' pbs={presentation === 'inline' ? 'md' : undefined} pbe='md'>
+        <VStack gap='lg' pbs={padsTop ? 'md' : undefined} pbe='md'>
           {page.description
             ? (
               <VStack pi='md'>
