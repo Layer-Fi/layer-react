@@ -11,6 +11,42 @@
       }
     }
   },
+  "Form": {
+    "useFileUploadMessages": {
+      "action": {
+        "add_file": "",
+        "add_files": "",
+        "choose_file": "",
+        "choose_files": ""
+      },
+      "error": {
+        "file_too_large_one": "",
+        "file_too_large_other": "",
+        "files_not_added": "",
+        "over_remaining_capacity_one": "",
+        "over_remaining_capacity_other": "",
+        "remove_failed": "",
+        "too_many_files_one": "",
+        "too_many_files_other": "",
+        "upload_failed": ""
+      },
+      "label": {
+        "added_count_one": "",
+        "added_count_many": "",
+        "added_count_other": "",
+        "any_file_type": "",
+        "at_limit_one": "",
+        "at_limit_many": "",
+        "at_limit_other": "",
+        "drag_drop_file": "",
+        "drag_drop_files": "",
+        "drag_drop_more_files": "",
+        "file_types_and_more": "",
+        "max_size": "",
+        "no_files": ""
+      }
+    }
+  },
   "LedgerEntrySourceDetailView": {
     "label": {
       "account_name": "Nom du compte",

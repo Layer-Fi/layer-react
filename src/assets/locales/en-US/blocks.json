@@ -11,6 +11,40 @@
       }
     }
   },
+  "Form": {
+    "useFileUploadMessages": {
+      "action": {
+        "add_file": "Add a file",
+        "add_files": "Add files",
+        "choose_file": "Choose file",
+        "choose_files": "Choose files"
+      },
+      "error": {
+        "file_too_large_one": "{{fileName}} is {{fileSize}}. Files must be under {{maxSize}}.",
+        "file_too_large_other": "Some files are too large. Files must be under {{maxSize}}.",
+        "files_not_added": "Some files couldn’t be added. Upload a {{fileTypes}} file instead.",
+        "over_remaining_capacity_one": "You can add {{displayCount}} more file.",
+        "over_remaining_capacity_other": "You can add {{displayCount}} more files.",
+        "remove_failed": "The file couldn’t be removed. Try again.",
+        "too_many_files_one": "Upload {{displayCount}} file at a time.",
+        "too_many_files_other": "Upload up to {{displayCount}} files at a time.",
+        "upload_failed": "Some files couldn’t be uploaded. Try again."
+      },
+      "label": {
+        "added_count_one": "{{count}} of {{limit}} added",
+        "added_count_other": "{{count}} of {{limit}} added",
+        "any_file_type": "Any file type",
+        "at_limit_one": "{{count}} of {{limit}} files added. Remove one to add another.",
+        "at_limit_other": "{{count}} of {{limit}} files added. Remove one to add another.",
+        "drag_drop_file": "Drag and drop a file here",
+        "drag_drop_files": "Drag and drop files here",
+        "drag_drop_more_files": "Drag and drop more files here",
+        "file_types_and_more": "{{fileTypes}}, and more",
+        "max_size": "Up to {{maxSize}}",
+        "no_files": "No files uploaded"
+      }
+    }
+  },
   "LedgerEntrySourceDetailView": {
     "label": {
       "account_name": "Account name",

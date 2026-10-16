@@ -181,7 +181,8 @@
   },
   "usePlaidLinkModal": {
     "error": {
-      "connect_account": "Nous n’avons pas pu connecter votre compte. Veuillez réessayer."
+      "connect_account": "Nous n’avons pas pu connecter votre compte. Veuillez réessayer.",
+      "repair_connection": ""
     }
   }
 }
