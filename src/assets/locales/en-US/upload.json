@@ -1,14 +1,17 @@
 {
   "action": {
     "browse": "Browse",
-    "click_copy_required": "Click to copy the required column headers",
+    "copy_column_header": "Copy “{{header}}”",
     "create_account": "Create account",
     "create_input_value": "Create \"{{inputValue}}\"",
     "download_template": "Download template",
     "import_file_transaction_bank": "Import a file of transactions from your bank account or credit card",
     "reupload": "Reupload",
     "select_account": "Select account...",
+    "select_account_and_file": "Choose an account and a file to continue",
     "select_account_label": "Select an account",
+    "select_file_label": "Choose a file",
+    "select_or_create_account": "Select or create an account",
     "upload_another_file": "Upload another file",
     "upload_transactions": "Upload transactions"
   },
@@ -20,15 +23,17 @@
   "label": {
     "count_transactions_have_one": "{{displayCount}} transaction has been uploaded to your account.",
     "count_transactions_have_other": "{{displayCount}} transactions have been uploaded to your account.",
+    "csv_up_to_max_size": "CSV · Up to {{maxSize}}",
     "csv_validation_preview": "CSV validation preview",
-    "drag_drop_or_select_file": "Drag and drop a file here or select one from your computer.",
+    "drop_csv_here": "Drag and drop your CSV here",
     "im_done_uploading": "I’m done uploading transactions",
     "need_help_download_example_csv": "Need help? Download an example CSV",
+    "needs_columns": "Needs columns",
     "review_transactions": "Review transactions",
     "total_transactions_count": "Total transactions: {{totalTransactionsCount}}",
+    "transactions_file": "Transactions file",
     "transactions_parsed_successfully_click_upload": "All transactions were parsed successfully. Click “Upload transactions” to finalize the import.",
-    "transactions_uploaded_successfully": "Transactions uploaded successfully",
-    "upload_your_transactions_csv": "Upload a CSV of your transactions"
+    "transactions_uploaded_successfully": "Transactions uploaded successfully"
   },
   "prompt": {
     "which_account_are_transactions_from": "Which account are these transactions from?"
