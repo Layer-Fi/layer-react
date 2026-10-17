@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next'
 
 import { type CustomAccountParseCsvResponse, usePostCustomAccountParseCsv } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { SubmitButton } from '@ui/Button/SubmitButton'
-import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { Label, P } from '@ui/Typography/Text'
-import { CopyTemplateHeadersButtonGroup } from '@blocks/CsvUpload/CopyTemplateHeadersButtonGroup/CopyTemplateHeadersButtonGroup'
+import { Label, P, Span } from '@ui/Typography/Text'
+import { CopyTemplateHeaders } from '@blocks/CsvUpload/CopyTemplateHeaders/CopyTemplateHeaders'
 import { CsvUpload } from '@blocks/CsvUpload/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@blocks/CsvUpload/DownloadCsvTemplateButton/DownloadCsvTemplateButton'
 import { useWizard } from '@blocks/Wizard/Wizard'
@@ -57,6 +56,12 @@ export function BankTransactionsUploadCsvStep(
   }, [selectedAccount, isCreatingNewAccount, selectedFile, parseCsv, onParseCsv, next])
 
   const hasSelectedAccount = selectedAccount && !isCreatingNewAccount
+  const getContinueTooltip = () => {
+    if (!hasSelectedAccount && !selectedFile) return t('upload:action.select_account_and_file', 'Choose an account and a file to continue')
+    if (!hasSelectedAccount) return t('upload:action.select_account_label', 'Select an account')
+    if (!selectedFile) return t('upload:action.select_file_label', 'Choose a file')
+    return null
+  }
   return (
     <VStack gap='lg'>
       <VStack pis='3xs' gap='xs'>
@@ -67,6 +72,7 @@ export function BankTransactionsUploadCsvStep(
           inputId='account_name'
           label={t('upload:prompt.which_account_are_transactions_from', 'Which account are these transactions from?')}
           showLabel={false}
+          placeholder={t('upload:action.select_or_create_account', 'Select or create an account')}
           selectedAccount={selectedAccount}
           onSelectAccount={onSelectAccount}
           className='Layer__upload-transactions__select-account-name-input'
@@ -74,30 +80,29 @@ export function BankTransactionsUploadCsvStep(
       </VStack>
       {!isCreatingNewAccount && (
         <>
-          <CsvUpload file={selectedFile} onFileSelected={onFileSelected} />
-          <Separator />
-          <VStack gap='xs' className='Layer__upload-transactions__template-section'>
-            <P size='sm'>{t('upload:action.click_copy_required', 'Click to copy the required column headers')}</P>
-            <HStack align='center' gap='xs' className='Layer__upload-transactions__template-section__button-row'>
-              <CopyTemplateHeadersButtonGroup
-                headers={templateHeaders}
-                className='Layer__upload-transactions__template-section__button-row-item'
-              />
-              <DownloadCsvTemplateButton
-                fileName='upload_transactions.csv'
-                csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
-              >
-                {t('upload:action.download_template', 'Download template')}
-              </DownloadCsvTemplateButton>
+          <VStack gap='xs'>
+            <Label size='md'>
+              {t('upload:label.transactions_file', 'Transactions file')}
+            </Label>
+            <CsvUpload file={selectedFile} onFileSelected={onFileSelected} />
+            <HStack align='center' gap='xs' className='Layer__upload-transactions__requirements'>
+              <Span size='sm' variant='subtle'>{t('upload:label.needs_columns', 'Needs columns')}</Span>
+              <CopyTemplateHeaders headers={templateHeaders} />
             </HStack>
           </VStack>
-          <HStack align='center' gap='xs'>
+          <HStack align='center' gap='xs' pis='3xs' pbe='3xs'>
+            <DownloadCsvTemplateButton
+              fileName='upload_transactions.csv'
+              csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
+            >
+              {t('upload:action.download_template', 'Download template')}
+            </DownloadCsvTemplateButton>
             <HStack className='Layer__upload-transactions__parse-csv-error-message'>
               {hasParseCsvError && <P status='error'>{t('upload:error.could_not_parse_csv', 'We could not parse this CSV. Please review the file and try again.')}</P>}
             </HStack>
             <Spacer />
             <SubmitButton
-              tooltip={(selectedFile && !hasSelectedAccount) ? t('upload:action.select_account_label', 'Select an account') : null}
+              tooltip={getContinueTooltip()}
               isDisabled={!hasSelectedAccount || !selectedFile}
               isPending={isParsingCsv}
               isError={hasParseCsvError}

@@ -65,7 +65,7 @@ export const AllVariants: Story = {
 
     dragFileOver(canvas.getByText(DRAG_OVER_TITLE))
 
-    await canvas.findByText('Drop to upload')
+    await canvas.findByText('Drop to upload', { ignore: '[aria-hidden="true"]' })
   },
   render: args => (
     <Gallery direction='row' wrap gap={32}>

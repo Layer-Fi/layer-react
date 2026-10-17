@@ -44,9 +44,9 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
   const isPressable = actionLabel === undefined
   const isLarge = size === 'lg'
   const Layout = isLarge ? VStack : HStack
-  const padding: Pick<StackProps, 'pi' | 'pb'> = isPressable
-    ? { pi: 'md', pb: 'sm' }
-    : isLarge ? { pi: 'lg', pb: 'xl' } : { pi: 'md', pb: 'md' }
+  const padding: Pick<StackProps, 'pi' | 'pb'> = isLarge
+    ? { pi: 'lg', pb: 'xl' }
+    : isPressable ? { pi: 'md', pb: 'sm' } : { pi: 'md', pb: 'md' }
   const textStatus = isDisabled ? 'disabled' : undefined
   const textAlign = isLarge ? 'center' : undefined
 
@@ -63,9 +63,14 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
         <CloudUpload size={isLarge ? 20 : 16} />
       </HStack>
       <VStack fluid align={textAlign} gap='4xs'>
-        <Span weight={isDragging || isLarge ? 'bold' : undefined} status={textStatus} align={textAlign}>
-          {isDragging ? t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload') : title}
-        </Span>
+        <VStack className='Layer__UI__DropZone__Title' {...toDataProperties({ dragging: isDragging })} align={textAlign}>
+          <Span weight={isLarge ? 'bold' : undefined} status={textStatus} align={textAlign} aria-hidden={isDragging}>
+            {title}
+          </Span>
+          <Span weight='bold' status={textStatus} align={textAlign} aria-hidden={!isDragging}>
+            {t('ui:DropZone.DropZonePrompt.label.drop_to_upload', 'Drop to upload')}
+          </Span>
+        </VStack>
         {description && (
           <Tooltip isDisabled={!descriptionTooltip}>
             <TooltipTrigger variant='fit-content'>
@@ -75,8 +80,8 @@ export const DropZonePrompt = ({ title, description, descriptionTooltip, actionL
           </Tooltip>
         )}
       </VStack>
-      {!isDragging && actionLabel && (
-        <Button variant='outlined' isDisabled={isDisabled} onPress={onOpen}>
+      {actionLabel && (
+        <Button variant='outlined' isDisabled={isDisabled || isDragging} onPress={onOpen}>
           {actionLabel}
         </Button>
       )}

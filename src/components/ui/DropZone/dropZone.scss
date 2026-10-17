@@ -52,6 +52,20 @@
   }
 }
 
+// Both labels share one grid cell so the taller reserves the height and a drag never shrinks the zone.
+.Layer__UI__DropZone__Title {
+  display: grid;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+
+  &[data-dragging] > :first-child,
+  &:not([data-dragging]) > :last-child {
+    visibility: hidden;
+  }
+}
+
 .Layer__UI__DropZone__Icon {
   flex: none;
   block-size: 36px;
