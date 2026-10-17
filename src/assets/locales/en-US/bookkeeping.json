@@ -75,111 +75,34 @@
     }
   },
   "TasksList": {
-    "label": {
-      "great_job": "Great job!",
-      "pending_tasks": "There are no pending tasks!"
-    },
     "TasksListMobile": {
       "action": {
-        "show_all_tasks_count": "Show all tasks ({{tasksCount}})",
-        "show_completed_tasks": "Show completed tasks"
+        "answer_tasks_one": "Answer task",
+        "answer_tasks_other": "Answer {{displayCount}} tasks"
       },
       "label": {
         "tasks": "Tasks"
       }
     }
   },
-  "TasksListItem": {
-    "CounterpartyAskAnswerBadge": {
-      "label": {
-        "answer_kind_itemised": "Several categories",
-        "answer_kind_text": "Answered in your words"
-      }
+  "TasksTakeover": {
+    "label": {
+      "bookkeeping_tasks": "Bookkeeping tasks"
     },
-    "CounterpartyAskFreeTextPane": {
-      "placeholder": {
-        "own_words": "Tell us in your own words"
-      },
-      "prompt": {
-        "what_were_these_for": "What were these purchases for?"
-      },
-      "validation": {
-        "text_required": "Tell us what these were for"
-      }
-    },
-    "CounterpartyAskItemisedPane": {
-      "label": {
-        "all_rows_answered": "All {{total}} answered",
-        "rows_answered": "{{answered}} of {{total}} answered"
-      },
-      "prompt": {
-        "answer_each_transaction": "Can you share more about what each transaction was for below?"
-      },
-      "validation": {
-        "answer_every_row": "Answer every transaction to continue"
-      }
-    },
-    "CounterpartyAskPickerPane": {
+    "TasksTakeoverTask": {
       "action": {
-        "multiple_different_things": "Multiple different things",
-        "something_else": "Something else"
+        "skip": "Skip"
       },
       "label": {
-        "answer": "What these were for"
+        "task_position": "Task {{number}} of {{total}}"
       }
     },
-    "CounterpartyAskRememberPane": {
-      "action": {
-        "no_keep_asking": "No, keep asking me about them",
-        "yes_categorize_automatically": "Yes, automatically categorize them"
-      },
+    "TasksTakeoverTaskList": {
       "label": {
-        "assume_going_forward": "Whether to assume this going forward"
-      },
-      "prompt": {
-        "assume_going_forward": "Should we assume your future {{counterparty}} purchases are {{answer}} going forward?"
-      },
-      "validation": {
-        "choice_required": "Choose whether to remember this"
-      }
-    },
-    "CounterpartyAskTaskBody": {
-      "label": {
-        "answered_elsewhere_detail": "You answered this for every period, so we’ve applied it here too."
-      }
-    },
-    "CounterpartyAskTransactionRow": {
-      "action": {
-        "something_else": "Something else"
-      },
-      "label": {
-        "answer_for_transaction": "What this one was for",
-        "select_category": "Select category"
-      },
-      "placeholder": {
-        "what_was_this_for": "What was this one for?"
-      }
-    },
-    "LegacyTaskBody": {
-      "label": {
-        "optional_description": "Optional description"
-      }
-    },
-    "LegacyTaskFileList": {
-      "label": {
-        "selected_files": "Selected Files:",
-        "uploaded_files": "Uploaded Files:"
-      }
-    },
-    "LegacyTaskUploadActions": {
-      "action": {
-        "delete_uploads": "Delete Uploads",
-        "select_files": "Select files"
-      }
-    },
-    "useCounterpartyAskForm": {
-      "error": {
-        "submit_answer": "We couldn’t save that answer. Please try again."
+        "bookkeeping_tasks": "Bookkeeping tasks",
+        "completed": "Completed",
+        "open": "Open",
+        "progress": "{{openCount}} open · {{completedCount}} done"
       }
     }
   },
@@ -187,6 +110,101 @@
     "label": {
       "count_tasks_one": "{{displayCount}} task",
       "count_tasks_other": "{{displayCount}} tasks"
+    }
+  },
+  "UnifiedAskForm": {
+    "label": {
+      "answered_elsewhere_detail": "You answered this for every period, so we’ve applied it here too."
+    },
+    "UnifiedAskFormPageFooter": {
+      "action": {
+        "connect_account": "Connect account",
+        "next": "Next",
+        "review": "Review",
+        "submit": "Submit",
+        "try_again": "Try again"
+      },
+      "error": {
+        "load_next_question": "We couldn’t load the next question. Try again."
+      },
+      "label": {
+        "page_number": "Page {{number}}"
+      }
+    },
+    "UnifiedAskFormReview": {
+      "action": {
+        "submit": "Submit"
+      },
+      "label": {
+        "what_you_told_us": "Here’s what you told us:"
+      }
+    },
+    "UnifiedAskFormStep": {
+      "label": {
+        "answer": "Answer",
+        "options": "Options"
+      },
+      "placeholder": {
+        "answer_in_your_words": "Answer in your own words"
+      }
+    },
+    "UnifiedAskFormTransactions": {
+      "action": {
+        "show_all_transactions": "Show all {{displayCount}} transactions"
+      }
+    },
+    "UnifiedAskFormTransactionSheet": {
+      "label": {
+        "categorized_count": "{{answered}} of {{total}} categorized"
+      }
+    },
+    "UnifiedAskFormUploadStep": {
+      "label": {
+        "files": "Files"
+      }
+    },
+    "useTaskAlreadyAnsweredError": {
+      "error": {
+        "already_answered": "This task has already been answered."
+      }
+    },
+    "useUnifiedAskForm": {
+      "error": {
+        "submit_answer": "We couldn’t save that answer. Please try again."
+      }
+    },
+    "useUnifiedAskFormNavigation": {
+      "validation": {
+        "answer_every_question": "Answer every question to continue",
+        "answer_required_to_continue": "Add an answer to continue"
+      }
+    },
+    "useUnifiedAskFormSearch": {
+      "action": {
+        "use_typed_value": "Use “{{text}}”"
+      },
+      "error": {
+        "search_failed": "Search didn’t work. Try again."
+      },
+      "placeholder": {
+        "search_entity_other": "Search…",
+        "search_entity_category": "Search categories…",
+        "search_entity_customer": "Search customers…",
+        "search_entity_vendor": "Search vendors…"
+      }
+    }
+  },
+  "utils": {
+    "labels": {
+      "label": {
+        "checklist_item": "{{label}}: {{answer}}",
+        "done": "Done",
+        "file_count_one": "{{displayCount}} file",
+        "file_count_other": "{{displayCount}} files",
+        "none": "None",
+        "unanswered": "…",
+        "varies_by_transaction": "Varies by transaction"
+      }
     }
   }
 }

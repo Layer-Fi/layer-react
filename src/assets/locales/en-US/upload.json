@@ -1,5 +1,6 @@
 {
   "action": {
+    "browse": "Browse",
     "click_copy_required": "Click to copy the required column headers",
     "create_account": "Create account",
     "create_input_value": "Create \"{{inputValue}}\"",
@@ -12,7 +13,6 @@
     "upload_transactions": "Upload transactions"
   },
   "error": {
-    "cannot_upload_file": "Cannot upload file",
     "could_not_parse_csv": "We could not parse this CSV. Please review the file and try again.",
     "could_not_parse_transactions": "Some transactions couldn’t be parsed",
     "unknown_upload_error": "Unknown upload error"
@@ -21,21 +21,21 @@
     "count_transactions_have_one": "{{displayCount}} transaction has been uploaded to your account.",
     "count_transactions_have_other": "{{displayCount}} transactions have been uploaded to your account.",
     "csv_validation_preview": "CSV validation preview",
-    "drag_drop_file_browse": "Drag and drop a file, or <browse>Browse</browse>.",
+    "drag_drop_or_select_file": "Drag and drop a file here or select one from your computer.",
     "im_done_uploading": "I’m done uploading transactions",
     "need_help_download_example_csv": "Need help? Download an example CSV",
     "review_transactions": "Review transactions",
     "total_transactions_count": "Total transactions: {{totalTransactionsCount}}",
     "transactions_parsed_successfully_click_upload": "All transactions were parsed successfully. Click “Upload transactions” to finalize the import.",
-    "transactions_uploaded_successfully": "Transactions uploaded successfully"
+    "transactions_uploaded_successfully": "Transactions uploaded successfully",
+    "upload_your_transactions_csv": "Upload a CSV of your transactions"
   },
   "prompt": {
     "which_account_are_transactions_from": "Which account are these transactions from?"
   },
   "validation": {
-    "file_exceeds_size_limit": "File exceeds the size limit of 2MB",
+    "file_exceeds_max_size": "File exceeds the size limit of {{maxSize}}",
     "file_extension_must_end_in_csv": "File extension must end in .csv",
-    "file_must_be_csv": "File must be in CSV format",
     "file_type_invalid": "Invalid file type: {{type}}",
     "too_many_files_selected": "Too many files selected",
     "transactions_formatting_errors": "We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.",

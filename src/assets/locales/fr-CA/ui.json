@@ -16,6 +16,22 @@
       "menu": "Menu"
     }
   },
+  "DropZone": {
+    "DropZonePrompt": {
+      "label": {
+        "drop_to_upload": ""
+      }
+    }
+  },
+  "FileRow": {
+    "action": {
+      "remove_file": "",
+      "replace": ""
+    },
+    "state": {
+      "uploading": ""
+    }
+  },
   "Modal": {
     "ModalSlots": {
       "action": {
