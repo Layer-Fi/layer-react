@@ -14,36 +14,36 @@
   "Form": {
     "useFileUploadMessages": {
       "action": {
-        "add_file": "",
-        "add_files": "",
-        "choose_file": "",
-        "choose_files": ""
+        "add_file": "Ajouter un fichier",
+        "add_files": "Ajouter des fichiers",
+        "choose_file": "Choisir un fichier",
+        "choose_files": "Choisir des fichiers"
       },
       "error": {
-        "file_too_large_one": "",
-        "file_too_large_other": "",
-        "files_not_added": "",
-        "over_remaining_capacity_one": "",
-        "over_remaining_capacity_other": "",
-        "remove_failed": "",
-        "too_many_files_one": "",
-        "too_many_files_other": "",
-        "upload_failed": ""
+        "file_too_large_one": "{{fileName}} fait {{fileSize}}. Les fichiers doivent être de moins de {{maxSize}}.",
+        "file_too_large_other": "Certains fichiers sont trop volumineux. Les fichiers doivent être de moins de {{maxSize}}.",
+        "files_not_added": "Certains fichiers n’ont pas pu être ajoutés. Téléversez plutôt un fichier {{fileTypes}}.",
+        "over_remaining_capacity_one": "Vous pouvez ajouter encore {{displayCount}} fichier.",
+        "over_remaining_capacity_other": "Vous pouvez ajouter encore {{displayCount}} fichiers.",
+        "remove_failed": "Le fichier n’a pas pu être supprimé. Réessayez.",
+        "too_many_files_one": "Téléversez {{displayCount}} fichier à la fois.",
+        "too_many_files_other": "Téléversez jusqu’à {{displayCount}} fichiers à la fois.",
+        "upload_failed": "Certains fichiers n’ont pas pu être téléversés. Réessayez."
       },
       "label": {
-        "added_count_one": "",
+        "added_count_one": "{{count}} sur {{limit}} ajoutés",
+        "added_count_other": "{{count}} sur {{limit}} ajoutés",
+        "any_file_type": "Tout type de fichier",
+        "at_limit_one": "{{count}} sur {{limit}} fichiers ajoutés. Supprimez-en un pour en ajouter un autre.",
+        "at_limit_other": "{{count}} sur {{limit}} fichiers ajoutés. Supprimez-en un pour en ajouter un autre.",
+        "drag_drop_file": "Glissez-déposez un fichier ici",
+        "drag_drop_files": "Glissez-déposez des fichiers ici",
+        "drag_drop_more_files": "Glissez-déposez d’autres fichiers ici",
+        "file_types_and_more": "{{fileTypes}}, et plus encore",
+        "max_size": "Jusqu’à {{maxSize}}",
+        "no_files": "Aucun fichier téléversé",
         "added_count_many": "",
-        "added_count_other": "",
-        "any_file_type": "",
-        "at_limit_one": "",
-        "at_limit_many": "",
-        "at_limit_other": "",
-        "drag_drop_file": "",
-        "drag_drop_files": "",
-        "drag_drop_more_files": "",
-        "file_types_and_more": "",
-        "max_size": "",
-        "no_files": ""
+        "at_limit_many": ""
       }
     }
   },

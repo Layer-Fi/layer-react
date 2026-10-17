@@ -70,16 +70,16 @@
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_many": "",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
+        "completed_over_total_done_many": ""
       }
     }
   },
   "TasksList": {
     "TasksListMobile": {
       "action": {
-        "answer_tasks_one": "",
-        "answer_tasks_other": ""
+        "answer_tasks_one": "Répondre à la tâche",
+        "answer_tasks_other": "Répondre à {{displayCount}} tâches"
       },
       "label": {
         "tasks": "Tâches"
@@ -88,22 +88,22 @@
   },
   "TasksTakeover": {
     "label": {
-      "bookkeeping_tasks": ""
+      "bookkeeping_tasks": "Tâches de tenue de livres"
     },
     "TasksTakeoverTask": {
       "action": {
-        "skip": ""
+        "skip": "Passer"
       },
       "label": {
-        "task_position": ""
+        "task_position": "Tâche {{number}} sur {{total}}"
       }
     },
     "TasksTakeoverTaskList": {
       "label": {
-        "bookkeeping_tasks": "",
-        "completed": "",
-        "open": "",
-        "progress": ""
+        "bookkeeping_tasks": "Tâches de tenue de livres",
+        "completed": "Terminées",
+        "open": "Ouvertes",
+        "progress": "{{openCount}} ouvertes · {{completedCount}} terminées"
       }
     }
   },
@@ -115,96 +115,96 @@
   },
   "UnifiedAskForm": {
     "label": {
-      "answered_elsewhere_detail": ""
+      "answered_elsewhere_detail": "Vous avez donné cette réponse pour chaque période. Nous l’avons donc aussi appliquée ici."
     },
     "UnifiedAskFormPageFooter": {
       "action": {
-        "connect_account": "",
-        "next": "",
-        "review": "",
-        "submit": "",
-        "try_again": ""
+        "connect_account": "Connecter le compte",
+        "next": "Suivant",
+        "review": "Vérifier",
+        "submit": "Soumettre",
+        "try_again": "Réessayer"
       },
       "error": {
-        "load_next_question": ""
+        "load_next_question": "Nous n’avons pas pu charger la question suivante. Réessayez."
       },
       "label": {
-        "page_number": ""
+        "page_number": "Page {{number}}"
       }
     },
     "UnifiedAskFormReview": {
       "action": {
-        "submit": ""
+        "submit": "Soumettre"
       },
       "label": {
-        "what_you_told_us": ""
+        "what_you_told_us": "Voici ce que vous nous avez dit :"
       }
     },
     "UnifiedAskFormStep": {
       "label": {
-        "answer": "",
-        "options": ""
+        "answer": "Réponse",
+        "options": "Choix"
       },
       "placeholder": {
-        "answer_in_your_words": ""
+        "answer_in_your_words": "Répondez dans vos propres mots"
       }
     },
     "UnifiedAskFormTransactions": {
       "action": {
-        "show_all_transactions": ""
+        "show_all_transactions": "Afficher les {{displayCount}} transactions"
       }
     },
     "UnifiedAskFormTransactionSheet": {
       "label": {
-        "categorized_count": ""
+        "categorized_count": "{{answered}} sur {{total}} catégorisées"
       }
     },
     "UnifiedAskFormUploadStep": {
       "label": {
-        "files": ""
+        "files": "Fichiers"
       }
     },
     "useTaskAlreadyAnsweredError": {
       "error": {
-        "already_answered": ""
+        "already_answered": "Cette tâche a déjà une réponse."
       }
     },
     "useUnifiedAskForm": {
       "error": {
-        "submit_answer": ""
+        "submit_answer": "Nous n’avons pas pu enregistrer cette réponse. Veuillez réessayer."
       }
     },
     "useUnifiedAskFormNavigation": {
       "validation": {
-        "answer_every_question": "",
-        "answer_required_to_continue": ""
+        "answer_every_question": "Répondez à chaque question pour continuer",
+        "answer_required_to_continue": "Ajoutez une réponse pour continuer"
       }
     },
     "useUnifiedAskFormSearch": {
       "action": {
-        "use_typed_value": ""
+        "use_typed_value": "Utiliser « {{text}} »"
       },
       "error": {
-        "search_failed": ""
+        "search_failed": "La recherche n’a pas fonctionné. Réessayez."
       },
       "placeholder": {
-        "search_entity_other": "",
-        "search_entity_category": "",
-        "search_entity_customer": "",
-        "search_entity_vendor": ""
+        "search_entity_other": "Rechercher…",
+        "search_entity_category": "Rechercher des catégories…",
+        "search_entity_customer": "Rechercher des clients…",
+        "search_entity_vendor": "Rechercher des fournisseurs…"
       }
     }
   },
   "utils": {
     "labels": {
       "label": {
-        "checklist_item": "",
-        "done": "",
-        "file_count_one": "",
-        "file_count_other": "",
-        "none": "",
-        "unanswered": "",
-        "varies_by_transaction": ""
+        "checklist_item": "{{label}} : {{answer}}",
+        "done": "Terminé",
+        "file_count_one": "{{displayCount}} fichier",
+        "file_count_other": "{{displayCount}} fichiers",
+        "none": "Aucun",
+        "unanswered": "Sans réponse",
+        "varies_by_transaction": "Varie selon la transaction"
       }
     }
   }

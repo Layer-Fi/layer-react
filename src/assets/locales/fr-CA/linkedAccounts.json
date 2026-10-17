@@ -182,7 +182,7 @@
   "usePlaidLinkModal": {
     "error": {
       "connect_account": "Nous n’avons pas pu connecter votre compte. Veuillez réessayer.",
-      "repair_connection": ""
+      "repair_connection": "Nous n’avons pas pu réparer la connexion à votre compte. Veuillez réessayer."
     }
   }
 }

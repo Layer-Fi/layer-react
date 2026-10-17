@@ -19,17 +19,17 @@
   "DropZone": {
     "DropZonePrompt": {
       "label": {
-        "drop_to_upload": ""
+        "drop_to_upload": "Déposez pour téléverser"
       }
     }
   },
   "FileRow": {
     "action": {
-      "remove_file": "",
-      "replace": ""
+      "remove_file": "Supprimer {{fileName}}",
+      "replace": "Remplacer"
     },
     "state": {
-      "uploading": ""
+      "uploading": "Téléversement…"
     }
   },
   "Modal": {
