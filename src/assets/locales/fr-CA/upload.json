@@ -1,17 +1,17 @@
 {
   "action": {
-    "browse": "",
-    "copy_column_header": "",
+    "browse": "Parcourir",
+    "copy_column_header": "Copier « {{header}} »",
     "create_account": "Créer un compte",
     "create_input_value": "Créer \"{{inputValue}}\"",
     "download_template": "Télécharger le modèle",
     "import_file_transaction_bank": "Importer un fichier de transactions à partir de votre compte bancaire ou de votre carte de crédit",
     "reupload": "Téléverser de nouveau",
     "select_account": "Sélectionner un compte...",
-    "select_account_and_file": "",
+    "select_account_and_file": "Choisissez un compte et un fichier pour continuer",
     "select_account_label": "Sélectionner un compte",
-    "select_file_label": "",
-    "select_or_create_account": "",
+    "select_file_label": "Choisissez un fichier",
+    "select_or_create_account": "Sélectionnez ou créez un compte",
     "upload_another_file": "Téléverser un autre fichier",
     "upload_transactions": "Téléverser les transactions"
   },
@@ -23,15 +23,15 @@
   "label": {
     "count_transactions_have_one": "{{displayCount}} transaction a été téléversée vers votre compte.",
     "count_transactions_have_other": "{{displayCount}} transactions ont été téléversées vers votre compte.",
-    "csv_up_to_max_size": "",
+    "csv_up_to_max_size": "CSV · Jusqu’à {{maxSize}}",
     "csv_validation_preview": "Aperçu de la validation du fichier CSV",
-    "drop_csv_here": "",
+    "drop_csv_here": "Glissez-déposez votre CSV ici",
     "im_done_uploading": "J’ai terminé de téléverser les transactions",
     "need_help_download_example_csv": "Besoin d’aide? Téléchargez un exemple de fichier CSV",
-    "needs_columns": "",
+    "needs_columns": "Colonnes requises",
     "review_transactions": "Vérifier les transactions",
     "total_transactions_count": "Nombre total de transactions : {{totalTransactionsCount}}",
-    "transactions_file": "",
+    "transactions_file": "Fichier de transactions",
     "transactions_parsed_successfully_click_upload": "Toutes les transactions ont été analysées avec succès. Cliquez sur « Téléverser les transactions » pour finaliser l’importation.",
     "transactions_uploaded_successfully": "Transactions téléversées avec succès"
   },
@@ -39,7 +39,7 @@
     "which_account_are_transactions_from": "De quel compte proviennent ces transactions?"
   },
   "validation": {
-    "file_exceeds_max_size": "",
+    "file_exceeds_max_size": "Le fichier dépasse la taille maximale de {{maxSize}}",
     "file_extension_must_end_in_csv": "L’extension du fichier doit se terminer par .csv",
     "file_type_invalid": "Type de fichier invalide : {{type}}",
     "too_many_files_selected": "Trop de fichiers sélectionnés",
