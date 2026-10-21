@@ -12,11 +12,11 @@ import { AccountConfirmationStoreProvider } from '@providers/features/linkedAcco
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { View } from '@blocks/Layout/View/View'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
-import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
+import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
-  linkedAccounts?: BankTransactionsWithLinkedAccountsStringOverrides
+  linkedAccounts?: LinkedAccountsProps['stringOverrides']
   bankTransactions?: BankTransactionsStringOverrides
 }
 
@@ -26,6 +26,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   elevatedLinkedAccounts?: boolean
 
   showBreakConnection?: boolean
+  showConnectionRepairAlert?: boolean
   showCustomerVendor?: boolean
   /**
    * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
@@ -46,6 +47,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
+  slotProps?: LinkedAccountsProps['slotProps']
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
@@ -65,6 +67,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   mode,
 
   showBreakConnection = false,
+  showConnectionRepairAlert,
   showCustomerVendor = false,
   showLedgerBalance = true,
   showTags = false,
@@ -74,6 +77,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
 
   mobileComponent,
   stringOverrides,
+  slotProps,
   renderInAppLink,
   showCategorizationRules,
   plaidHostedLinkConfig,
@@ -104,10 +108,12 @@ const BankTransactionsWithLinkedAccountsContent = ({
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
             stringOverrides={stringOverrides?.linkedAccounts}
+            slotProps={slotProps}
           />
           <BankTransactions
             asWidget
             filters={filters}
+            showConnectionRepairAlert={showConnectionRepairAlert}
             showCustomerVendor={showCustomerVendor}
             showTags={showTags}
             showTooltips={showTooltips}

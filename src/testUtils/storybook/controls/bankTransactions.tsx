@@ -7,6 +7,7 @@ import { DEFAULT_FEATURE_VISIBILITY } from '@providers/features/bankTransactions
 // transactions table (BankTransactions, BankTransactionsWithLinkedAccounts).
 export type BankTransactionsStoryArgs = {
   showCategorizationRules: boolean
+  showConnectionRepairAlert: boolean
   showCustomerVendor: boolean
   showTags: boolean
   showTooltips: boolean
@@ -16,6 +17,7 @@ export type BankTransactionsStoryArgs = {
 
 const FEATURE_TOGGLES = [
   'showCategorizationRules',
+  'showConnectionRepairAlert',
   'showCustomerVendor',
   'showTags',
   'showTooltips',

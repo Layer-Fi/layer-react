@@ -150,6 +150,46 @@ describe('refresh', () => {
     expect(getBankAccountRefreshConnections([account], NOW)).toEqual([])
   })
 
+  it('optionally includes broken Plaid connections without a sync-age requirement or duplicate connections', () => {
+    const account = makeBankAccount({
+      externalAccounts: [{
+        ...makeBankAccount().externalAccounts[0]!,
+        updateType: 'BACKGROUND',
+        lastSyncedAt: NOW,
+        connectionNeedsRepairAsOf: NOW,
+      }],
+    })
+    const accounts = [
+      account,
+      makeBankAccount({
+        ...account,
+        externalAccounts: [{ ...account.externalAccounts[0]!, updateType: 'USER_PRESENT_REQUIRED', lastSyncedAt: null }],
+      }),
+      makeBankAccount({
+        externalAccounts: [{ ...account.externalAccounts[0]!, connectionExternalId: null }],
+      }),
+      makeBankAccount({
+        externalAccounts: [{ ...account.externalAccounts[0]!, externalAccountSource: 'CUSTOM', connectionExternalId: 'custom' }],
+      }),
+      makeBankAccount({
+        externalAccounts: [{ ...account.externalAccounts[0]!, connectionNeedsRepairAsOf: null, connectionExternalId: 'healthy' }],
+      }),
+    ]
+    const expected = [
+      {
+        connectionExternalId: 'plaid_connection_4821',
+        source: 'PLAID',
+        reconnectWithNewCredentials: false,
+        institutionName: 'Chase',
+        accounts: [{ accountName: 'Chase Business Complete Checking', mask: '4821' }],
+      },
+    ]
+
+    expect(getBankAccountRefreshConnections([account], NOW)).toEqual([])
+    expect(getBankAccountRefreshConnections([account], NOW, true)).toEqual(expected)
+    expect(getBankAccountRefreshConnections(accounts, NOW, true)).toEqual(expected)
+  })
+
   it('finds the first account needing reconnection, for a single-account surface', () => {
     const healthyAccount = makeBankAccountWithMirroredExternalAccount({
       id: '00000000-0000-4000-8000-000000000501',

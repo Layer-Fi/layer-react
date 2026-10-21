@@ -33,6 +33,7 @@ export interface BankTransactionsProps {
   mode?: BankTransactionsMode
 
   showCategorizationRules?: boolean
+  showConnectionRepairAlert?: boolean
   showCustomerVendor?: boolean
   /**
    * @deprecated This prop is no longer honored; transaction descriptions are always enabled.

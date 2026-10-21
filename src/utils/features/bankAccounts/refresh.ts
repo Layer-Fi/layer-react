@@ -60,10 +60,12 @@ function isExternalAccountDueForRefresh(
 function getRefreshableAccounts(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now: Date,
+  includeRepairConnections = false,
 ): RefreshableAccount[] {
   return (bankAccounts ?? []).flatMap(bankAccount =>
     bankAccount.externalAccounts
-      .filter((ea): ea is RepairableExternalAccount => isExternalAccountDueForRefresh(ea, now))
+      .filter((ea): ea is RepairableExternalAccount => isExternalAccountDueForRefresh(ea, now)
+        || (includeRepairConnections && ea.externalAccountSource === 'PLAID' && isExternalAccountNeedingRepair(ea)))
       .map(externalAccount => ({ bankAccount, externalAccount })),
   )
 }
@@ -98,10 +100,11 @@ export function getBankAccountsReadyForRefresh(
 export function getBankAccountRefreshConnections(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now = new Date(),
+  includeRepairConnections = false,
 ): BankAccountRefreshConnection[] {
   const groups = new Map<string, { identity: RefreshConnectionIdentity, members: RefreshableAccount[] }>()
 
-  for (const refreshable of getRefreshableAccounts(bankAccounts, now)) {
+  for (const refreshable of getRefreshableAccounts(bankAccounts, now, includeRepairConnections)) {
     const identity = getRefreshConnectionIdentity(refreshable.externalAccount)
     const key = getRefreshConnectionKey(identity)
     const group = groups.get(key) ?? { identity, members: [] }

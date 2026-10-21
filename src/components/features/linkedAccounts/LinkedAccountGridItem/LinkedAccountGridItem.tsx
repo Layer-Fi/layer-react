@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { type ComponentProps, useContext, useState } from 'react'
 import { RefreshCcw } from 'lucide-react'
 import { GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
@@ -44,6 +44,14 @@ export interface LinkedAccountGridItemProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  stringOverrides?: {
+    fixAccountButtonText?: string
+    refreshNowButtonText?: string
+  }
+  slotProps?: {
+    FixAccountButton?: Pick<ComponentProps<typeof LinkedAccountPill>, 'status'>
+    RefreshNowButton?: Pick<ComponentProps<typeof LinkedAccountPill>, 'status'>
+  }
 }
 
 export const LinkedAccountGridItem = ({
@@ -52,6 +60,8 @@ export const LinkedAccountGridItem = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
+  stringOverrides,
+  slotProps,
 }: LinkedAccountGridItemProps) => {
   const { t } = useTranslation()
   const {
@@ -98,7 +108,8 @@ export const LinkedAccountGridItem = ({
   }
   else if (repairInfo) {
     pillConfig = {
-      text: t('linkedAccounts:LinkedAccountGridItem.action.fix_account', 'Fix account'),
+      text: stringOverrides?.fixAccountButtonText ?? t('linkedAccounts:LinkedAccountGridItem.action.fix_account', 'Fix account'),
+      status: slotProps?.FixAccountButton?.status ?? 'error',
       config: [
         {
           name: t('linkedAccounts:LinkedAccountGridItem.action.repair_connection', 'Repair connection'),
@@ -109,8 +120,8 @@ export const LinkedAccountGridItem = ({
   }
   else if (refreshInfo) {
     pillConfig = {
-      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
-      status: 'success' as const,
+      text: stringOverrides?.refreshNowButtonText ?? t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
+      status: slotProps?.RefreshNowButton?.status ?? 'success',
       icon: <RefreshCcw size={14} />,
       config: [
         {
