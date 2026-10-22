@@ -28,17 +28,25 @@ done
 TARGET="${TARGET:-$PWD}"
 TARGET="$(cd "$TARGET" && pwd)"
 
-AUTH_HTTP="$TARGET/src/utils/api/authenticatedHttp.ts"
-INDEX_TSX="$TARGET/src/index.tsx"
-VITE_CFG="$TARGET/vite/vite.config.ts"
-VITE_DTS="$TARGET/src/types/vite.d.ts"
-MOCK_REG="$TARGET/src/utils/api/mockRegistry.ts"
-MOCKS_DIR="$TARGET/src/mocks"
-GIT_EXCLUDE="$TARGET/.git/info/exclude"
+AUTH_HTTP_REL="src/utils/shared/api/authenticatedHttp.ts"
+INDEX_TSX_REL="src/index.tsx"
+VITE_CFG_REL="vite.config.ts"
+VITE_DTS_REL="src/types/vite.d.ts"
+MOCK_REG_REL="src/utils/shared/api/mockRegistry.ts"
+MOCKS_DIR_REL="src/mocks"
+
+AUTH_HTTP="$TARGET/$AUTH_HTTP_REL"
+INDEX_TSX="$TARGET/$INDEX_TSX_REL"
+VITE_CFG="$TARGET/$VITE_CFG_REL"
+VITE_DTS="$TARGET/$VITE_DTS_REL"
+MOCK_REG="$TARGET/$MOCK_REG_REL"
+MOCKS_DIR="$TARGET/$MOCKS_DIR_REL"
+# Resolved via git so linked worktrees (where .git is a file) work too.
+GIT_EXCLUDE=""
 
 # Trailing sentinel marker for the import line — survives auto-sort because it
 # stays attached to the import statement itself.
-IMPORT_LINE="import { findMockResponse } from '@utils/api/mockRegistry' // install-dev-mocks:import"
+IMPORT_LINE="import { findMockResponse } from '@utils/shared/api/mockRegistry' // install-dev-mocks:import"
 
 # --- Markers keep edits locatable for reversal --------------------------------
 BEGIN_INTERCEPT="        // <<< install-dev-mocks:intercept"
@@ -49,9 +57,9 @@ BEGIN_DEFINE="    // <<< install-dev-mocks:define"
 END_DEFINE="    // install-dev-mocks:define >>>"
 
 EXCLUDE_PATHS=(
-  "src/types/vite.d.ts"
-  "src/utils/api/mockRegistry.ts"
-  "src/mocks/"
+  "$VITE_DTS_REL"
+  "$MOCK_REG_REL"
+  "$MOCKS_DIR_REL/"
 )
 
 # ----------------------------------------------------------------------------
@@ -61,10 +69,12 @@ require_layer_react() {
     echo "  missing: $AUTH_HTTP or $INDEX_TSX" >&2
     exit 1
   fi
-  if [[ ! -d "$TARGET/.git" ]]; then
+  if ! git -C "$TARGET" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "error: $TARGET is not a git repo" >&2
     exit 1
   fi
+  GIT_EXCLUDE="$(git -C "$TARGET" rev-parse --git-path info/exclude)"
+  [[ "$GIT_EXCLUDE" == /* ]] || GIT_EXCLUDE="$TARGET/$GIT_EXCLUDE"
 }
 
 write_vite_dts() {
@@ -115,7 +125,7 @@ scaffold_mocks_dir() {
     cat >"$MOCKS_DIR/README.md" <<'EOF'
 Dev-only mock payloads. Add one file per feature, e.g.:
 
-    import { registerMock } from '@utils/api/mockRegistry'
+    import { registerMock } from '@utils/shared/api/mockRegistry'
 
     registerMock(
       url => url.includes('/tax-estimates/summary'),
@@ -207,13 +217,12 @@ with open(path, 'r', encoding='utf-8') as fh:
     src = fh.read()
 if "install-dev-mocks:import" in src:
     sys.exit(0)
-# Insert after the first existing top-level import block.
-anchor = "import { APIError, type APIErrorMessage } from '@utils/api/apiError'"
-idx = src.find(anchor)
-if idx == -1:
-    raise SystemExit(f"error: anchor import not found in {path}")
-eol = src.find('\n', idx)
-eol = len(src) if eol == -1 else eol + 1
+# Insert after the apiError import (first line of the top-level import block).
+import re
+m = re.search(r"^import .* from '@utils/shared/api/apiError'$", src, re.M)
+if m is None:
+    raise SystemExit(f"error: anchor import (apiError) not found in {path}")
+eol = m.end() + 1
 src = src[:eol] + line + "\n" + src[eol:]
 with open(path, 'w', encoding='utf-8') as fh:
     fh.write(src)
@@ -237,12 +246,12 @@ before = (
 )
 after = (
     "      (): Promise<Return> => {\n"
-    "        " + begin + "\n"
+    + begin + "\n"
     "        if (import.meta.env.DEV) {\n"
     "          const mocked = findMockResponse(`${baseUrl}${url(options?.params || ({} as Params))}`)\n"
     "          if (mocked !== undefined) return Promise.resolve(mocked as Return)\n"
     "        }\n"
-    "        " + end + "\n"
+    + end + "\n"
     "        return fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {\n"
 )
 if before not in src:
@@ -291,7 +300,7 @@ patch_auth_http_revert() {
   python3 - "$AUTH_HTTP" <<'PY'
 import sys
 path = sys.argv[1]
-bare_import = "import { findMockResponse } from '@utils/api/mockRegistry'"
+bare_import = "import { findMockResponse } from '@utils/shared/api/mockRegistry'"
 with open(path, 'r', encoding='utf-8') as fh:
     lines = fh.readlines()
 lines = [
@@ -391,51 +400,52 @@ do_install() {
   patch_vite_config_inject
 
   add_exclude
-  git_skip "src/utils/api/authenticatedHttp.ts"
-  git_skip "src/index.tsx"
-  [[ -f "$VITE_CFG" ]] && git_skip "vite/vite.config.ts"
+  git_skip "$AUTH_HTTP_REL"
+  git_skip "$INDEX_TSX_REL"
+  [[ -f "$VITE_CFG" ]] && git_skip "$VITE_CFG_REL"
 
   echo "installed dev mocks at $TARGET"
-  echo "  new (git-ignored): src/types/vite.d.ts, src/utils/api/mockRegistry.ts, src/mocks/"
-  echo "  patched (skip-worktree): src/utils/api/authenticatedHttp.ts, src/index.tsx, vite/vite.config.ts"
+  echo "  new (git-ignored): $VITE_DTS_REL, $MOCK_REG_REL, $MOCKS_DIR_REL/"
+  echo "  patched (skip-worktree): $AUTH_HTTP_REL, $INDEX_TSX_REL, $VITE_CFG_REL"
   echo "next: create src/mocks/<feature>.ts and register it in src/index.tsx"
 }
 
 do_uninstall() {
   require_layer_react
 
-  git_unskip "src/utils/api/authenticatedHttp.ts"
-  git_unskip "src/index.tsx"
-  [[ -f "$VITE_CFG" ]] && git_unskip "vite/vite.config.ts"
+  git_unskip "$AUTH_HTTP_REL"
+  git_unskip "$INDEX_TSX_REL"
+  [[ -f "$VITE_CFG" ]] && git_unskip "$VITE_CFG_REL"
 
   patch_auth_http_revert
   patch_index_tsx_revert
   patch_vite_config_revert
 
   rm -f "$VITE_DTS" "$MOCK_REG"
-  # Archive user-authored mock files to a timestamped location before
-  # removing the directory, so nothing valuable is lost on uninstall.
+  # Archive user-authored mock files (at any depth, keeping their relative
+  # paths) to a timestamped location before removing the directory, so
+  # nothing valuable is lost on uninstall.
   if [[ -d "$MOCKS_DIR" ]]; then
     archive_root="/tmp/layer-react/mocks"
-    stamp="$(date +%Y-%m-%d)"
+    archive_dir="${archive_root}/$(date +%Y-%m-%d)"
+    # If an archive for today already exists, append a counter.
+    n=2
+    while [[ -e "$archive_dir" ]]; do
+      archive_dir="${archive_root}/$(date +%Y-%m-%d)-${n}"
+      n=$((n + 1))
+    done
     archived=0
-    mkdir -p "$archive_root"
     while IFS= read -r -d '' src; do
-      name="$(basename "$src")"
-      [[ "$name" == "README.md" ]] && continue
-      dest="${archive_root}/${stamp}-${name}"
-      # If a file with the same timestamped name already exists, append a counter.
-      n=2
-      while [[ -e "$dest" ]]; do
-        dest="${archive_root}/${stamp}-${name%.*}-${n}.${name##*.}"
-        n=$((n + 1))
-      done
+      rel="${src#$MOCKS_DIR/}"
+      [[ "$rel" == "README.md" ]] && continue
+      dest="${archive_dir}/${rel}"
+      mkdir -p "$(dirname "$dest")"
       mv "$src" "$dest"
       echo "  archived: $dest"
       archived=$((archived + 1))
-    done < <(find "$MOCKS_DIR" -maxdepth 1 -type f -print0)
+    done < <(find "$MOCKS_DIR" -type f -print0)
     rm -rf "$MOCKS_DIR"
-    [[ "$archived" -gt 0 ]] && echo "  archived $archived mock file(s) to $archive_root"
+    [[ "$archived" -gt 0 ]] && echo "  archived $archived mock file(s) to $archive_dir"
   fi
   rmdir "$(dirname "$VITE_DTS")" 2>/dev/null || true
 

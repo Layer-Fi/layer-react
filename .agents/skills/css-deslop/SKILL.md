@@ -22,7 +22,7 @@ Also ensure all style rules below are followed:
 
 ## CSS Selectors
 
-- Nest selectors that share a block prefix under one `&__` root; do not nest more than one level (excluding pseudo-classes, pseudo-elements, and media queries): `.Layer__<ComponentName> { &__Element { … } }`
+- Write each block and element as its own flat, top-level selector (`.Layer__ComponentName__Element { … }`); never build class names with `&__`, so the full name stays greppable. Nest only modifiers of the selector you are already in: attribute selectors, pseudo-classes, pseudo-elements, and media queries. See `src/styles/SKILL.md`.
 - Only use descendant combinator selectors when the element can't own a class.
 - Do not target another component's internal classes. Instead, add a prop or exposed class to that component
 ```

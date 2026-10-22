@@ -8,7 +8,7 @@ Layer-react is a published component library with SWR-based API hooks. Feature w
 
 ### 1. A registry gated by `import.meta.env.DEV`
 
-`src/utils/api/mockRegistry.ts` exposes `registerMock(urlMatcher, responseFactory)` and `findMockResponse(url)`. Both early-return when `import.meta.env.DEV` is false. Vite replaces `import.meta.env.DEV` statically at build time, so the registry body and every caller become dead code that Rollup eliminates from the production bundle.
+`src/utils/shared/api/mockRegistry.ts` exposes `registerMock(urlMatcher, responseFactory)` and `findMockResponse(url)`. Both early-return when `import.meta.env.DEV` is false. Vite replaces `import.meta.env.DEV` statically at build time, so the registry body and every caller become dead code that Rollup eliminates from the production bundle.
 
 ### 2. Interception inside `authenticatedHttp.get()`
 
@@ -36,11 +36,11 @@ The dynamic import is inside the `DEV` guard, so production builds never emit th
 
 ## The vite.config.ts wrinkle
 
-`npm run dev` runs `vite build --watch`, which Vite treats as production (`DEV=false`). Without an override the mock branch would be eliminated from the dev bundle too. Install patches `vite/vite.config.ts` with `define: isWatch ? { 'import.meta.env.DEV': 'true' } : undefined` — watch mode flips `DEV=true`, regular `npm run build` is unaffected.
+`npm run dev` runs `vite build --watch`, which Vite treats as production (`DEV=false`). Without an override the mock branch would be eliminated from the dev bundle too. Install patches `vite.config.ts` with `define: isWatch ? { 'import.meta.env.DEV': 'true' } : undefined` — watch mode flips `DEV=true`, regular `npm run build` is unaffected.
 
 ## Keeping changes out of git
 
-New files (`mockRegistry.ts`, `vite.d.ts`, `src/mocks/`) go into `.git/info/exclude` — a local-only ignore list. Tracked-file edits (`authenticatedHttp.ts`, `index.tsx`, `vite/vite.config.ts`) get `git update-index --skip-worktree`, which tells git to pretend they're unchanged. Trade-off: `git pull` may fail when upstream changes a skipped file. Workflow: `uninstall` → `pull` → `install`.
+New files (`mockRegistry.ts`, `vite.d.ts`, `src/mocks/`) go into `.git/info/exclude` — a local-only ignore list. Tracked-file edits (`authenticatedHttp.ts`, `index.tsx`, `vite.config.ts`) get `git update-index --skip-worktree`, which tells git to pretend they're unchanged. Trade-off: `git pull` may fail when upstream changes a skipped file. Workflow: `uninstall` → `pull` → `install`.
 
 ## Why the install script does some surgery
 
