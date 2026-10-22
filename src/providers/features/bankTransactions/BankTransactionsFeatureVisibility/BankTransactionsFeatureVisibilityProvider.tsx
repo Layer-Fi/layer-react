@@ -2,6 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useRef } from 'react
 
 export enum BankTransactionsFeature {
   CategorizationRules = 'showCategorizationRules',
+  ConnectionRepairAlert = 'showConnectionRepairAlert',
   CustomerVendor = 'showCustomerVendor',
   StatusToggle = 'showStatusToggle',
   Tags = 'showTags',
@@ -13,6 +14,7 @@ type BankTransactionsFeatureVisibility = Record<BankTransactionsFeature, boolean
 
 export const DEFAULT_FEATURE_VISIBILITY: BankTransactionsFeatureVisibility = {
   [BankTransactionsFeature.CategorizationRules]: false,
+  [BankTransactionsFeature.ConnectionRepairAlert]: false,
   [BankTransactionsFeature.CustomerVendor]: false,
   [BankTransactionsFeature.StatusToggle]: true,
   [BankTransactionsFeature.Tags]: false,
