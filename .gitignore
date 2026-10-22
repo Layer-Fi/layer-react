@@ -8,7 +8,8 @@ node_modules/
 .env.*
 !.env.example
 .codex/
-.agents/
+.agents/*
+!.agents/skills/
 .claude/
 .vercel
 storybook-static

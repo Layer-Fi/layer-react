@@ -1,0 +1,529 @@
+#!/usr/bin/env bash
+# Install / uninstall the dev-only mock-registry infrastructure in a
+# layer-react checkout, keeping the changes out of `git status`.
+#
+# Usage:
+#   install.sh install   [--path <dir>]
+#   install.sh uninstall [--path <dir>]
+#   install.sh status    [--path <dir>]
+set -euo pipefail
+
+MODE="${1:-install}"
+shift || true
+
+TARGET=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --path)
+      TARGET="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 2
+      ;;
+  esac
+done
+
+TARGET="${TARGET:-$PWD}"
+TARGET="$(cd "$TARGET" && pwd)"
+
+AUTH_HTTP_REL="src/utils/shared/api/authenticatedHttp.ts"
+INDEX_TSX_REL="src/index.tsx"
+VITE_CFG_REL="vite.config.ts"
+VITE_DTS_REL="src/types/vite.d.ts"
+MOCK_REG_REL="src/utils/shared/api/mockRegistry.ts"
+MOCKS_DIR_REL="src/mocks"
+
+AUTH_HTTP="$TARGET/$AUTH_HTTP_REL"
+INDEX_TSX="$TARGET/$INDEX_TSX_REL"
+VITE_CFG="$TARGET/$VITE_CFG_REL"
+VITE_DTS="$TARGET/$VITE_DTS_REL"
+MOCK_REG="$TARGET/$MOCK_REG_REL"
+MOCKS_DIR="$TARGET/$MOCKS_DIR_REL"
+# Resolved via git so linked worktrees (where .git is a file) work too.
+GIT_EXCLUDE=""
+
+# Trailing sentinel marker for the import line — survives auto-sort because it
+# stays attached to the import statement itself.
+IMPORT_LINE="import { findMockResponse } from '@utils/shared/api/mockRegistry' // install-dev-mocks:import"
+
+# --- Markers keep edits locatable for reversal --------------------------------
+BEGIN_INTERCEPT="        // <<< install-dev-mocks:intercept"
+END_INTERCEPT="        // install-dev-mocks:intercept >>>"
+BEGIN_LOADER="// <<< install-dev-mocks:loader"
+END_LOADER="// install-dev-mocks:loader >>>"
+BEGIN_DEFINE="    // <<< install-dev-mocks:define"
+END_DEFINE="    // install-dev-mocks:define >>>"
+# First line of every file this script creates; install refuses to overwrite a
+# file that lacks it, and uninstall refuses to delete one.
+GENERATED_MARKER="// install-dev-mocks:generated"
+
+EXCLUDE_PATHS=(
+  "$VITE_DTS_REL"
+  "$MOCK_REG_REL"
+  "$MOCKS_DIR_REL/"
+)
+
+# ----------------------------------------------------------------------------
+require_layer_react() {
+  if [[ ! -f "$AUTH_HTTP" || ! -f "$INDEX_TSX" ]]; then
+    echo "error: $TARGET does not look like a layer-react checkout" >&2
+    echo "  missing: $AUTH_HTTP or $INDEX_TSX" >&2
+    exit 1
+  fi
+  if ! git -C "$TARGET" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "error: $TARGET is not a git repo" >&2
+    exit 1
+  fi
+  GIT_EXCLUDE="$(git -C "$TARGET" rev-parse --git-path info/exclude)"
+  [[ "$GIT_EXCLUDE" == /* ]] || GIT_EXCLUDE="$TARGET/$GIT_EXCLUDE"
+}
+
+write_vite_dts() {
+  mkdir -p "$(dirname "$VITE_DTS")"
+  {
+    echo "$GENERATED_MARKER"
+    cat <<'EOF'
+interface ImportMetaEnv {
+  readonly DEV: boolean
+  readonly PROD: boolean
+  readonly MODE: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+EOF
+  } >"$VITE_DTS"
+}
+
+write_mock_registry() {
+  mkdir -p "$(dirname "$MOCK_REG")"
+  {
+    echo "$GENERATED_MARKER"
+    cat <<'EOF'
+type MockResponse = Record<string, unknown>
+type MockEntry = {
+  match: (url: string) => boolean
+  response: () => MockResponse
+}
+
+const mocks: MockEntry[] = []
+
+export function registerMock(match: MockEntry['match'], response: MockEntry['response']) {
+  if (!import.meta.env.DEV) {
+    return
+  }
+  mocks.push({ match, response })
+}
+
+export function findMockResponse(url: string): MockResponse | undefined {
+  if (!import.meta.env.DEV) {
+    return undefined
+  }
+  return mocks.find(entry => entry.match(url))?.response()
+}
+EOF
+  } >"$MOCK_REG"
+}
+
+scaffold_mocks_dir() {
+  mkdir -p "$MOCKS_DIR"
+  if [[ ! -f "$MOCKS_DIR/README.md" ]]; then
+    cat >"$MOCKS_DIR/README.md" <<'EOF'
+Dev-only mock payloads. Add one file per feature, e.g.:
+
+    import { registerMock } from '@utils/shared/api/mockRegistry'
+
+    registerMock(
+      url => url.includes('/tax-estimates/summary'),
+      () => ({ data: { /* raw API shape, snake_case, ISO date strings */ } }),
+    )
+
+Then register it for loading in src/index.tsx:
+
+    if (import.meta.env.DEV) {
+      void import('./mocks/<feature>')
+    }
+
+Mocks must be in raw API shape — the Effect Schema decode runs over them.
+EOF
+  fi
+}
+
+# Python-based in-place editor — avoids sed's cross-platform quirks.
+patch_file() {
+  local file="$1"
+  local action="$2"   # inject | revert
+  local begin="$3"
+  local end="$4"
+  local payload="${5:-}"   # inject: text to insert (may be empty); revert: ignored
+  local anchor="${6:-}"    # inject: insert AFTER this exact line (optional); appends to EOF if empty
+
+  python3 - "$file" "$action" "$begin" "$end" "$payload" "$anchor" <<'PY'
+import sys, io, os
+path, action, begin, end, payload, anchor = sys.argv[1:7]
+with open(path, 'r', encoding='utf-8') as fh:
+    src = fh.read()
+
+def strip_block(text):
+    b = text.find(begin)
+    if b == -1:
+        return text, False
+    e = text.find(end, b)
+    if e == -1:
+        raise SystemExit(f"error: found begin marker but no end marker in {path}")
+    e_end = text.find('\n', e)
+    e_end = len(text) if e_end == -1 else e_end + 1
+    b_start = text.rfind('\n', 0, b)
+    b_start = 0 if b_start == -1 else b_start + 1
+    before = text[:b_start]
+    after = text[e_end:]
+    # Collapse blank-line pile-up at the splice. If the original file already
+    # had a blank line adjacent to the inserted block, strip leaves two blanks.
+    while before.endswith('\n\n') and after.startswith('\n'):
+        after = after[1:]
+    return before + after, True
+
+if action == 'revert':
+    new, removed = strip_block(src)
+    if removed:
+        with open(path, 'w', encoding='utf-8') as fh:
+            fh.write(new)
+    sys.exit(0)
+
+# inject: bail if already present
+if begin in src:
+    sys.exit(0)
+
+block = f"{begin}\n{payload}\n{end}\n"
+
+if anchor:
+    idx = src.find(anchor)
+    if idx == -1:
+        raise SystemExit(f"error: anchor not found in {path}:\n  {anchor!r}")
+    line_end = src.find('\n', idx)
+    if line_end == -1:
+        line_end = len(src)
+    new = src[:line_end+1] + block + src[line_end+1:]
+else:
+    sep = '' if src.endswith('\n') else '\n'
+    new = src + sep + block
+
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.write(new)
+PY
+}
+
+patch_auth_http_inject() {
+  # Add the import as a self-tagged line. An inline trailing comment survives
+  # eslint import/order auto-fix (which would scramble wrapper markers).
+  python3 - "$AUTH_HTTP" "$IMPORT_LINE" <<'PY'
+import sys
+path, line = sys.argv[1], sys.argv[2]
+with open(path, 'r', encoding='utf-8') as fh:
+    src = fh.read()
+if "install-dev-mocks:import" in src:
+    sys.exit(0)
+# Insert after the apiError import (first line of the top-level import block).
+import re
+m = re.search(r"^import .* from '@utils/shared/api/apiError'$", src, re.M)
+if m is None:
+    raise SystemExit(f"error: anchor import (apiError) not found in {path}")
+eol = m.end() + 1
+src = src[:eol] + line + "\n" + src[eol:]
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.write(src)
+PY
+
+  # The get() thunk is an expression-body arrow (`(): Promise<Return> =>\n fetch(...)`).
+  # Inserting an if-statement before `fetch(...)` is a syntax error, so we
+  # rewrite the thunk wholesale to a block body with the mock check + `return`.
+  python3 - "$AUTH_HTTP" "$BEGIN_INTERCEPT" "$END_INTERCEPT" <<'PY'
+import sys, re
+path, begin, end = sys.argv[1:4]
+with open(path, 'r', encoding='utf-8') as fh:
+    src = fh.read()
+
+if begin in src:
+    sys.exit(0)   # already patched
+
+before = (
+    "      (): Promise<Return> =>\n"
+    "        fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {\n"
+)
+after = (
+    "      (): Promise<Return> => {\n"
+    + begin + "\n"
+    "        if (import.meta.env.DEV) {\n"
+    "          const mocked = findMockResponse(`${baseUrl}${url(options?.params || ({} as Params))}`)\n"
+    "          if (mocked !== undefined) return Promise.resolve(mocked as Return)\n"
+    "        }\n"
+    + end + "\n"
+    "        return fetch(`${baseUrl}${url(options?.params || ({} as Params))}`, {\n"
+)
+if before not in src:
+    raise SystemExit(f"error: expected thunk header not found in {path} — upstream changed")
+src = src.replace(before, after, 1)
+
+# Close the block: the thunk used to end with `.catch(...)` at indent 10. Add a closing `}`
+# on the line after that catch, at the thunk's indent (6 spaces).
+tail_before = "          .catch((error: Error | APIError) => handleException(error))\n"
+# We need to close only the FIRST arrow's body (get), not getText — they share this tail.
+# Locate the first occurrence after our patched section and append `      }\n` after it.
+idx = src.find(tail_before)
+if idx == -1:
+    raise SystemExit("error: expected thunk tail not found — upstream changed")
+insert_at = idx + len(tail_before)
+src = src[:insert_at] + "      }\n" + src[insert_at:]
+
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.write(src)
+PY
+}
+
+patch_index_tsx_inject() {
+  patch_file "$INDEX_TSX" inject \
+    "$BEGIN_LOADER" "$END_LOADER" \
+    "if (import.meta.env.DEV) {
+  // Add mock loaders here: void import('./mocks/<feature>')
+}" \
+    ""   # no anchor → append to EOF
+}
+
+# Vite replaces `import.meta.env.DEV` to `false` for all `vite build` invocations
+# — including `vite build --watch`, which is what `npm run dev` runs. Force DEV
+# to true during watch so the mock branch survives the dev bundle.
+patch_vite_config_inject() {
+  [[ -f "$VITE_CFG" ]] || return 0
+  patch_file "$VITE_CFG" inject \
+    "$BEGIN_DEFINE" "$END_DEFINE" \
+    "    define: isWatch ? { 'import.meta.env.DEV': 'true' } : undefined," \
+    "    publicDir: false,"
+}
+
+patch_auth_http_revert() {
+  # Remove the import line. Match either the tagged form or the bare import —
+  # eslint `import/order` auto-fix can strip the trailing sentinel comment.
+  python3 - "$AUTH_HTTP" <<'PY'
+import sys
+path = sys.argv[1]
+bare_import = "import { findMockResponse } from '@utils/shared/api/mockRegistry'"
+with open(path, 'r', encoding='utf-8') as fh:
+    lines = fh.readlines()
+lines = [
+    l for l in lines
+    if 'install-dev-mocks:import' not in l and l.strip() != bare_import
+]
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.writelines(lines)
+PY
+  # Remove the intercept block and restore expression-body thunk.
+  python3 - "$AUTH_HTTP" "$BEGIN_INTERCEPT" "$END_INTERCEPT" <<'PY'
+import sys, re
+path, begin, end = sys.argv[1:4]
+with open(path, 'r', encoding='utf-8') as fh:
+    src = fh.read()
+if begin not in src:
+    sys.exit(0)
+# Strip the marker block (and surrounding newline).
+pattern = re.compile(
+    r"\n?\s*" + re.escape(begin) + r"\n(?:.*\n)*?\s*" + re.escape(end) + r"\n"
+)
+src = pattern.sub("\n", src, count=1)
+# Restore expression-body: undo `=> {`, `return fetch(`, trailing `}`.
+src = src.replace(
+    "      (): Promise<Return> => {\n        return fetch(",
+    "      (): Promise<Return> =>\n        fetch(",
+    1,
+)
+# Drop the matching closing `      }` that follows the first get()'s catch.
+tail = "          .catch((error: Error | APIError) => handleException(error))\n      }\n"
+replacement = "          .catch((error: Error | APIError) => handleException(error))\n"
+src = src.replace(tail, replacement, 1)
+with open(path, 'w', encoding='utf-8') as fh:
+    fh.write(src)
+PY
+}
+
+patch_index_tsx_revert() {
+  patch_file "$INDEX_TSX" revert "$BEGIN_LOADER" "$END_LOADER" "" ""
+}
+
+patch_vite_config_revert() {
+  [[ -f "$VITE_CFG" ]] || return 0
+  patch_file "$VITE_CFG" revert "$BEGIN_DEFINE" "$END_DEFINE" "" ""
+}
+
+git_skip() {
+  (cd "$TARGET" && git update-index --skip-worktree "$1" 2>/dev/null) || true
+}
+git_unskip() {
+  (cd "$TARGET" && git update-index --no-skip-worktree "$1" 2>/dev/null) || true
+}
+is_generated() {
+  [[ -f "$1" ]] && head -n1 "$1" | grep -qxF "$GENERATED_MARKER"
+}
+# info/exclude is shared by every linked worktree of a repo, so one worktree's
+# uninstall must not strip the rules another installed worktree still needs.
+other_worktree_installed() {
+  local wt
+  while IFS= read -r wt; do
+    wt="${wt#worktree }"
+    [[ "$wt" == "$TARGET" ]] && continue
+    is_generated "$wt/$MOCK_REG_REL" && return 0
+  done < <(git -C "$TARGET" worktree list --porcelain | grep '^worktree ')
+  return 1
+}
+git_tracked() {
+  (cd "$TARGET" && git ls-files --error-unmatch "$1" >/dev/null 2>&1)
+}
+
+add_exclude() {
+  mkdir -p "$(dirname "$GIT_EXCLUDE")"
+  touch "$GIT_EXCLUDE"
+  for p in "${EXCLUDE_PATHS[@]}"; do
+    grep -qxF "$p" "$GIT_EXCLUDE" || echo "$p" >>"$GIT_EXCLUDE"
+  done
+}
+remove_exclude() {
+  [[ -f "$GIT_EXCLUDE" ]] || return 0
+  local tmp
+  tmp="$(mktemp)"
+  for p in "${EXCLUDE_PATHS[@]}"; do
+    grep -vxF "$p" "$GIT_EXCLUDE" >"$tmp" || true
+    mv "$tmp" "$GIT_EXCLUDE"
+    tmp="$(mktemp)"
+  done
+  rm -f "$tmp"
+}
+
+# ----------------------------------------------------------------------------
+do_install() {
+  require_layer_react
+
+  # Refuse if target files already have uncommitted local edits (we'd clobber them).
+  for f in "$AUTH_HTTP" "$INDEX_TSX" "$VITE_CFG"; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$TARGET/}"
+    if git_tracked "$rel" && ! (cd "$TARGET" && git diff --quiet -- "$rel"); then
+      if ! grep -q "install-dev-mocks:" "$f"; then
+        echo "error: $rel has uncommitted local changes; resolve before installing" >&2
+        exit 1
+      fi
+    fi
+  done
+
+  # Refuse if a file we would create already exists and is not ours.
+  for f in "$VITE_DTS" "$MOCK_REG"; do
+    if [[ -f "$f" ]] && ! is_generated "$f"; then
+      echo "error: ${f#$TARGET/} exists and was not created by install-dev-mocks; move it aside before installing" >&2
+      exit 1
+    fi
+  done
+
+  write_vite_dts
+  write_mock_registry
+  scaffold_mocks_dir
+  patch_auth_http_inject
+  patch_index_tsx_inject
+  patch_vite_config_inject
+
+  add_exclude
+  git_skip "$AUTH_HTTP_REL"
+  git_skip "$INDEX_TSX_REL"
+  [[ -f "$VITE_CFG" ]] && git_skip "$VITE_CFG_REL"
+
+  echo "installed dev mocks at $TARGET"
+  echo "  new (git-ignored): $VITE_DTS_REL, $MOCK_REG_REL, $MOCKS_DIR_REL/"
+  echo "  patched (skip-worktree): $AUTH_HTTP_REL, $INDEX_TSX_REL, $VITE_CFG_REL"
+  echo "next: create src/mocks/<feature>.ts and register it in src/index.tsx"
+}
+
+do_uninstall() {
+  require_layer_react
+
+  git_unskip "$AUTH_HTTP_REL"
+  git_unskip "$INDEX_TSX_REL"
+  [[ -f "$VITE_CFG" ]] && git_unskip "$VITE_CFG_REL"
+
+  patch_auth_http_revert
+  patch_index_tsx_revert
+  patch_vite_config_revert
+
+  for f in "$VITE_DTS" "$MOCK_REG"; do
+    [[ -f "$f" ]] || continue
+    if is_generated "$f"; then
+      rm -f "$f"
+    else
+      echo "  kept: ${f#$TARGET/} (not created by install-dev-mocks)"
+    fi
+  done
+  # Archive user-authored mock files (at any depth, keeping their relative
+  # paths) to a timestamped location before removing the directory, so
+  # nothing valuable is lost on uninstall.
+  if [[ -d "$MOCKS_DIR" ]]; then
+    archive_root="/tmp/layer-react/mocks"
+    archive_dir="${archive_root}/$(date +%Y-%m-%d)"
+    # If an archive for today already exists, append a counter.
+    n=2
+    while [[ -e "$archive_dir" ]]; do
+      archive_dir="${archive_root}/$(date +%Y-%m-%d)-${n}"
+      n=$((n + 1))
+    done
+    archived=0
+    while IFS= read -r -d '' src; do
+      rel="${src#$MOCKS_DIR/}"
+      [[ "$rel" == "README.md" ]] && continue
+      dest="${archive_dir}/${rel}"
+      mkdir -p "$(dirname "$dest")"
+      mv "$src" "$dest"
+      echo "  archived: $dest"
+      archived=$((archived + 1))
+    done < <(find "$MOCKS_DIR" -type f -print0)
+    rm -rf "$MOCKS_DIR"
+    [[ "$archived" -gt 0 ]] && echo "  archived $archived mock file(s) to $archive_dir"
+  fi
+  rmdir "$(dirname "$VITE_DTS")" 2>/dev/null || true
+
+  if other_worktree_installed; then
+    echo "  kept: $GIT_EXCLUDE entries (another worktree still has dev mocks installed)"
+  else
+    remove_exclude
+  fi
+  echo "uninstalled dev mocks at $TARGET"
+}
+
+do_status() {
+  require_layer_react
+  echo "target: $TARGET"
+  for f in "$VITE_DTS" "$MOCK_REG"; do
+    if [[ -f "$f" ]]; then echo "  present: ${f#$TARGET/}"; else echo "  absent:  ${f#$TARGET/}"; fi
+  done
+  for f in "$AUTH_HTTP" "$INDEX_TSX" "$VITE_CFG"; do
+    [[ -f "$f" ]] || continue
+    rel="${f#$TARGET/}"
+    if grep -q "install-dev-mocks:" "$f" 2>/dev/null; then
+      marker="patched"
+    else
+      marker="unpatched"
+    fi
+    if (cd "$TARGET" && git ls-files -v -- "$rel" 2>/dev/null | grep -q '^S'); then
+      skip="skip-worktree"
+    else
+      skip="tracked"
+    fi
+    echo "  $rel: $marker, $skip"
+  done
+}
+
+case "$MODE" in
+  install)   do_install ;;
+  uninstall) do_uninstall ;;
+  status)    do_status ;;
+  *)
+    echo "Usage: install.sh <install|uninstall|status> [--path <dir>]" >&2
+    exit 2
+    ;;
+esac
