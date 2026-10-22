@@ -79,20 +79,8 @@ import { LayerProvider } from "@layerfi/components";
 
 #### Development
 
-In development, it's often convenient to avoid fetching business-scoped tokens. You may find it more convenient to set your sandbox `clientId` and `clientSecret` directly, which will give you access to any business in your sandbox account.
-
-```tsx
-import { LayerProvider } from "@layerfi/components";
-...
-<LayerProvider
-  businesId="..."
-  appId="..."
-  appSecret="..."
-  environment={'staging'}
->
-  {...}
-</LayerProvider>
-```
+> [!WARNING]
+> `appId` and `appSecret` are deprecated and will be removed in a future release. They send your client secret to the browser, where anyone using the page can read it. Mint a business-scoped token on your backend and pass it as `businessAccessToken` instead, in development as well as production.
 
 <br />
 
@@ -515,7 +503,7 @@ Use `onError` property on `<LayerProvider />` to get notified about all exceptio
 <LayerProvider
   businessId="..."
   environment="..."
-  appId="..."
+  businessAccessToken="..."
   onError={err => console.log('My error callback', err)}
 >
   {...}
