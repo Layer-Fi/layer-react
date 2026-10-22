@@ -38,6 +38,8 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Translated strings, plurals, the Crowdin pipeline | [`src/assets/locales/SKILL.md`](src/assets/locales/SKILL.md) |
 | Formatting money, numbers, percentages, dates, durations | [`src/utils/shared/i18n/SKILL.md`](src/utils/shared/i18n/SKILL.md) |
 | Mocking endpoints — MSW handlers, stateful stores | [`src/msw/SKILL.md`](src/msw/SKILL.md) |
+
+Repo-level task skills (not tied to one area) live in [`.agents/skills/`](.agents/skills/): `install-dev-mocks` and `css-deslop`. Company-wide skills are in the `layerfi` plugin from the `agent-skills` repo.
 | Fixture data — handwritten factories vs generated rows | [`src/fixtures/SKILL.md`](src/fixtures/SKILL.md) |
 | Writing tests | [`src/testUtils/SKILL.md`](src/testUtils/SKILL.md) |
 | Stories and visual regression | [`.storybook/SKILL.md`](.storybook/SKILL.md) |
