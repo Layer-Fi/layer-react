@@ -10,10 +10,6 @@ export type { EventCallbacks }
 
 type BaseLayerProviderProps = {
   businessId: string
-  /** @deprecated Sends the client secret to the browser. Mint a business-scoped token on your backend and pass `businessAccessToken` instead. */
-  appId?: string
-  /** @deprecated Sends the client secret to the browser. Mint a business-scoped token on your backend and pass `businessAccessToken` instead. */
-  appSecret?: string
   businessAccessToken?: string
 
   locale?: SupportedLocale

@@ -77,11 +77,6 @@ import { LayerProvider } from "@layerfi/components";
 </LayerProvider>
 ```
 
-#### Development
-
-> [!WARNING]
-> `appId` and `appSecret` are deprecated and will be removed in a future release. They send your client secret to the browser, where anyone using the page can read it. Mint a business-scoped token on your backend and pass it as `businessAccessToken` instead, in development as well as production.
-
 <br />
 
 ## Components

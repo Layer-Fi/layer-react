@@ -26,10 +26,6 @@ export type EventCallbacks = {
 
 type BaseLayerProviderProps = {
   businessId: string
-  /** @deprecated Sends the client secret to the browser. Mint a business-scoped token on your backend and pass `businessAccessToken` instead. */
-  appId?: string
-  /** @deprecated Sends the client secret to the browser. Mint a business-scoped token on your backend and pass `businessAccessToken` instead. */
-  appSecret?: string
   businessAccessToken?: string
 
   locale?: SupportedLocale
@@ -45,8 +41,6 @@ type LayerProviderPropsWithEnvironmentConfigOverride = BaseLayerProviderProps & 
 export type LayerProviderProps = LayerProviderPropsWithLayerEnv | LayerProviderPropsWithEnvironmentConfigOverride
 
 export const LayerProvider = ({
-  appId,
-  appSecret,
   businessAccessToken,
   locale = DEFAULT_LOCALE,
   usePlaidSandbox,
@@ -76,11 +70,7 @@ export const LayerProvider = ({
       <LayerI18nProvider locale={locale}>
         <StaleLocaleCacheInvalidator />
         <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
-          <AuthInputProvider
-            appId={appId}
-            appSecret={appSecret}
-            businessAccessToken={businessAccessToken}
-          >
+          <AuthInputProvider businessAccessToken={businessAccessToken}>
             <GlobalDateStoreProvider>
               <MotionConfig reducedMotion='user'>
                 <BusinessProvider {...restProps} slots={{ Toasts: ToastsContainer }} />
