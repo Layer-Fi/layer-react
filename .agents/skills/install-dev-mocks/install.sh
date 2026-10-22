@@ -55,6 +55,9 @@ BEGIN_LOADER="// <<< install-dev-mocks:loader"
 END_LOADER="// install-dev-mocks:loader >>>"
 BEGIN_DEFINE="    // <<< install-dev-mocks:define"
 END_DEFINE="    // install-dev-mocks:define >>>"
+# First line of every file this script creates; install refuses to overwrite a
+# file that lacks it, and uninstall refuses to delete one.
+GENERATED_MARKER="// install-dev-mocks:generated"
 
 EXCLUDE_PATHS=(
   "$VITE_DTS_REL"
@@ -79,7 +82,9 @@ require_layer_react() {
 
 write_vite_dts() {
   mkdir -p "$(dirname "$VITE_DTS")"
-  cat >"$VITE_DTS" <<'EOF'
+  {
+    echo "$GENERATED_MARKER"
+    cat <<'EOF'
 interface ImportMetaEnv {
   readonly DEV: boolean
   readonly PROD: boolean
@@ -90,11 +95,14 @@ interface ImportMeta {
   readonly env: ImportMetaEnv
 }
 EOF
+  } >"$VITE_DTS"
 }
 
 write_mock_registry() {
   mkdir -p "$(dirname "$MOCK_REG")"
-  cat >"$MOCK_REG" <<'EOF'
+  {
+    echo "$GENERATED_MARKER"
+    cat <<'EOF'
 type MockResponse = Record<string, unknown>
 type MockEntry = {
   match: (url: string) => boolean
@@ -117,6 +125,7 @@ export function findMockResponse(url: string): MockResponse | undefined {
   return mocks.find(entry => entry.match(url))?.response()
 }
 EOF
+  } >"$MOCK_REG"
 }
 
 scaffold_mocks_dir() {
@@ -353,6 +362,20 @@ git_skip() {
 git_unskip() {
   (cd "$TARGET" && git update-index --no-skip-worktree "$1" 2>/dev/null) || true
 }
+is_generated() {
+  [[ -f "$1" ]] && head -n1 "$1" | grep -qxF "$GENERATED_MARKER"
+}
+# info/exclude is shared by every linked worktree of a repo, so one worktree's
+# uninstall must not strip the rules another installed worktree still needs.
+other_worktree_installed() {
+  local wt
+  while IFS= read -r wt; do
+    wt="${wt#worktree }"
+    [[ "$wt" == "$TARGET" ]] && continue
+    is_generated "$wt/$MOCK_REG_REL" && return 0
+  done < <(git -C "$TARGET" worktree list --porcelain | grep '^worktree ')
+  return 1
+}
 git_tracked() {
   (cd "$TARGET" && git ls-files --error-unmatch "$1" >/dev/null 2>&1)
 }
@@ -392,6 +415,14 @@ do_install() {
     fi
   done
 
+  # Refuse if a file we would create already exists and is not ours.
+  for f in "$VITE_DTS" "$MOCK_REG"; do
+    if [[ -f "$f" ]] && ! is_generated "$f"; then
+      echo "error: ${f#$TARGET/} exists and was not created by install-dev-mocks; move it aside before installing" >&2
+      exit 1
+    fi
+  done
+
   write_vite_dts
   write_mock_registry
   scaffold_mocks_dir
@@ -421,7 +452,14 @@ do_uninstall() {
   patch_index_tsx_revert
   patch_vite_config_revert
 
-  rm -f "$VITE_DTS" "$MOCK_REG"
+  for f in "$VITE_DTS" "$MOCK_REG"; do
+    [[ -f "$f" ]] || continue
+    if is_generated "$f"; then
+      rm -f "$f"
+    else
+      echo "  kept: ${f#$TARGET/} (not created by install-dev-mocks)"
+    fi
+  done
   # Archive user-authored mock files (at any depth, keeping their relative
   # paths) to a timestamped location before removing the directory, so
   # nothing valuable is lost on uninstall.
@@ -449,7 +487,11 @@ do_uninstall() {
   fi
   rmdir "$(dirname "$VITE_DTS")" 2>/dev/null || true
 
-  remove_exclude
+  if other_worktree_installed; then
+    echo "  kept: $GIT_EXCLUDE entries (another worktree still has dev mocks installed)"
+  else
+    remove_exclude
+  fi
   echo "uninstalled dev mocks at $TARGET"
 }
 

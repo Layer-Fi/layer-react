@@ -64,4 +64,7 @@ On `uninstall`, user-authored mock files under `src/mocks/` are **moved** to `/t
 - Layer-react only; paths and vite-config shape are hard-coded.
 - `skip-worktree` + upstream edits to the three patched files breaks `git pull`. Uninstall first, pull, reinstall.
 - Restart `npm run dev` after install/uninstall — Vite resolves `define` at startup, not via HMR.
+- Mocks register asynchronously: the loader in `index.tsx` is a fire-and-forget dynamic import, and nothing in the host app waits for it. A request issued before the mocks chunk resolves (in practice only one that skips the auth-token exchange by passing an explicit token) reaches the real backend and SWR caches that response. Reload the page if the first fetch slips past a mock.
+- `install` refuses to overwrite a pre-existing `vite.d.ts` or `mockRegistry.ts` that it did not create (identified by a `// install-dev-mocks:generated` first line), and `uninstall` leaves such files alone. Move your own copy aside before installing.
+- `.git/info/exclude` is shared across linked worktrees. `uninstall` keeps the exclude entries while any other worktree still has dev mocks installed.
 - Mocks must match raw (pre-decode) API shape. Post-decode CalendarDate/Date instances will fail Schema decode.

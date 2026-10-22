@@ -6,7 +6,7 @@ description: Clean up CSS code slop
 Check the current branch git diff against main. Review every changed `.tsx` file and every `.scss` file imported. Identify fixes based on the following instructions. Flag fixes that may alter rendered output. Apply the remaining fixes.
 
 - Remove redundant declarations that duplicate parent/component behavior
-- Remove rules or selectors with no matching `className` in the `.tsx`, or `classNames` with no matching rule in the repo
+- Remove rules or selectors with no matching `className` in the `.tsx`, or `classNames` with no matching rule in the repo. Exception: legacy names emitted through `createLegacyClassNames` / `createLegacyFieldClassNames` (`src/utils/shared/styles/legacyClassNames.ts`) intentionally have no rule here because consumers style against them; never remove those or their map entries
 - When 3+ selectors share the same body, or differ by only one declaration's value, collapse them into one shared class (or a component prop, if one exists). Override only the varying value at the call site.
 
 Also ensure all style rules below are followed:
