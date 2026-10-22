@@ -7,9 +7,6 @@ import { type EventCallbacks, LayerProvider } from '@providers/global/LayerProvi
 
 export const TEST_LAYER_API_URL = 'https://api.test.layerfi.com'
 export const TEST_LAYER_BUSINESS_ID = 'test-business-id'
-const TEST_LAYER_APP_ID = 'test-app-id'
-const TEST_LAYER_APP_SECRET = 'test-app-secret'
-
 const TEST_LAYER_ENVIRONMENT_CONFIG: EnvironmentConfigOverride = {
   environment: 'production',
   apiUrl: TEST_LAYER_API_URL,
@@ -46,8 +43,7 @@ export const LayerTestProvider = ({
 }: LayerTestProviderProps) => (
   <LayerProvider
     businessId={TEST_LAYER_BUSINESS_ID}
-    appId={TEST_LAYER_APP_ID}
-    appSecret={TEST_LAYER_APP_SECRET}
+    businessAccessToken={TEST_LAYER_ACCESS_TOKEN}
     environmentConfigOverride={TEST_LAYER_ENVIRONMENT_CONFIG}
     locale={locale}
     theme={theme}
