@@ -8,11 +8,9 @@ import '../src/styles/index.scss'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
-import { setDateRangePinning } from '../src/testUtils/storybook/decorators/PinnedGlobalDateRange'
+import { LayerTestProvider } from '../src/testUtils/render/LayerTestProvider'
 import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 import { installSystemDateMock } from './mocks/systemDate'
-import { usesRealBackend } from './realBackend'
-import { StorybookLayerProvider } from './StorybookLayerProvider'
 import { DOCS_SCREENSHOT_TAG } from './tags'
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
@@ -25,10 +23,6 @@ const SIZE_CLASS_VIEWPORTS = [BREAKPOINTS.MOBILE - 1, BREAKPOINTS.TABLET - 1, 12
 // — driven by the tag rather than per-story parameters so a `public-api` story can't quietly lose
 // its loading states just because it also feeds a screenshot.
 const DEFAULT_RESPONSE_DELAY = 250
-
-// A shifted `now`, or a range pinned to the fixture year, would query periods the real business has
-// no data for.
-setDateRangePinning(!usesRealBackend)
 
 // The addon calls this once, on the first story it loads.
 const startMockServiceWorker = async () => {
@@ -45,16 +39,11 @@ const startMockServiceWorker = async () => {
   return worker
 }
 
-if (!usesRealBackend) {
-  installSystemDateMock()
-
-  setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
-}
+installSystemDateMock()
+setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
 
 const preview: Preview = {
-  // No `toolbar`: `manager.ts` contributes a free-text field and keys off this being declared.
-  globalTypes: usesRealBackend ? { business: { description: 'Layer business backing every story' } } : {},
-  loaders: usesRealBackend ? [] : [() => resetMockStores(), mswLoader(startMockServiceWorker)],
+  loaders: [() => resetMockStores(), mswLoader(startMockServiceWorker)],
   beforeEach: ({ tags }: { tags?: string[] }) => {
     setMinimumResponseDelay(tags?.includes(DOCS_SCREENSHOT_TAG) ? 0 : DEFAULT_RESPONSE_DELAY)
     return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
@@ -74,9 +63,9 @@ const preview: Preview = {
         : <Story />
 
       return (
-        <StorybookLayerProvider businessId={context.globals.business as string | undefined}>
+        <LayerTestProvider>
           {story}
-        </StorybookLayerProvider>
+        </LayerTestProvider>
       )
     },
   ],

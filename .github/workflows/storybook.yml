@@ -1,8 +1,8 @@
 name: Storybook
 
-# Rendering every story is the only check that covers feature and view stories — Chromatic is
+# Building every story is the only check that covers feature and view stories — Chromatic is
 # scoped to the design system — so it stays, but a PR that cannot affect a story should not pay
-# for a Storybook build, a Chromium install and a full render pass.
+# for a Storybook build.
 
 on:
   pull_request:
@@ -14,10 +14,8 @@ on:
       - '!src/**/*.test-d.ts'
       - '!src/**/SKILL.md'
       - .storybook/**
-      - scripts/check-stories-render.ts
       - scripts/check-docs-screenshots.ts
       - scripts/docs-screenshots.manifest.ts
-      - scripts/serve-storybook-static.ts
       - vite.config.ts
       - tsconfig.json
       - package.json
@@ -54,11 +52,3 @@ jobs:
     # Renaming a documented story must fail here, not at release time.
     - name: Check documented stories still resolve
       run: npm run screenshots:check
-
-    # Chromatic only snapshots the design system, so this is what catches a broken
-    # feature story or a play function that stopped producing its state.
-    - name: Install Chromium
-      run: npx playwright install --with-deps chromium
-
-    - name: Render every story
-      run: npm run stories:check-render

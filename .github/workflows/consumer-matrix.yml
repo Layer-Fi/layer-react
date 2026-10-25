@@ -1,28 +1,12 @@
 name: Consumers
 
-# Installs the packed tarball into throwaway consumer apps and builds them — the only PR check that
+# Installs the packed tarball into throwaway consumer apps and builds them — the only check that
 # reads the published artifact rather than the repo.
 #
-# Also the release gate: a `release/v*` PR always changes package.json, so this runs on the
-# tree that gets tagged, and Release — Publish does not repeat it.
+# Release — Publish runs the same script as a gate before `npm publish`. This workflow is for
+# checking any other branch by hand.
 
 on:
-  pull_request:
-    branches: [ main ]
-    # Globbed, not enumerated: the type-packaging inputs also produce `dist/index.d.ts`, and
-    # listing files one by one is how they got missed.
-    paths:
-      - 'src/**'
-      - 'consumer-fixtures/**'
-      - 'scripts/**'
-      - 'vite/**'
-      - 'vite.config.ts'
-      - 'tsconfig*.json'
-      - 'rollup*.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/consumer-matrix.yml'
-  workflow_call: {}
   workflow_dispatch: {}
 
 permissions:

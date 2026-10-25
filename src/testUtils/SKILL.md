@@ -248,9 +248,9 @@ will hang.
 
 ### When a story beats a test
 
-Story `play:` functions run in CI via `stories:check-render`, and Chromatic covers appearance.
-Prefer a story for **appearance or layout**, a vitest test for **logic, branching, or the request
-payload**. Only a vitest test moves the coverage number.
+Chromatic covers appearance for design-system stories only. Prefer a story for **appearance or
+layout**, a vitest test for **logic, branching, or the request payload**. Only a vitest test moves
+the coverage number.
 
 ## Other helpers
 

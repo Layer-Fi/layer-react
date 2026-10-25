@@ -138,7 +138,7 @@ const NOVEMBER: DateRange = {
 }
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  tags: ['public-api', 'docs-screenshot'],
   parameters: { pinnedDateRange: NOVEMBER },
 }
 

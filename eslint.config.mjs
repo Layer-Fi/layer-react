@@ -318,12 +318,6 @@ export default tsEslint.config(
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
-            '.storybook/manager.ts',
-            '.storybook/StorybookLayerProvider.tsx',
-            '.storybook/RealBackendBadge.tsx',
-            '.storybook/realBackend.ts',
-            '.storybook/businessHistory.ts',
-            'api/storybook-token.ts',
             'eslint.config.mjs',
             'i18next.config.ts',
             'vite.config.ts',
@@ -387,9 +381,8 @@ export default tsEslint.config(
     },
   },
   {
-    // Storybook config and the Vercel functions live outside src, so they can only reach it
-    // relatively.
-    files: ['.storybook/**/*.{ts,tsx}', 'api/**/*.ts'],
+    // Storybook config lives outside src, so it can only reach it relatively.
+    files: ['.storybook/**/*.{ts,tsx}'],
     rules: {
       'import/no-relative-parent-imports': 'off',
     },

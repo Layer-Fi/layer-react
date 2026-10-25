@@ -1,8 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run storybook:build:real",
-  "outputDirectory": "storybook-static",
-  "github": {
-    "silent": true
-  }
-}

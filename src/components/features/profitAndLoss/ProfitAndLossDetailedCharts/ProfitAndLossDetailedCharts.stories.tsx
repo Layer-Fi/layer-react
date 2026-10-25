@@ -53,10 +53,10 @@ export default meta
 type Story = StoryObj<ProfitAndLossDetailedChartsStoryArgs>
 
 export const Expenses: Story = {
-  tags: ['public-api', 'real-backend'],
+  tags: ['public-api'],
 }
 
 export const Revenue: Story = {
-  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  tags: ['public-api', 'docs-screenshot'],
   args: { scope: 'revenue' },
 }

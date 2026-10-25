@@ -147,8 +147,8 @@ is this same rule set in Augment's format — keep the two in sync.
   semicolons, indentation, line length, or CSS property order.
 - `src/fixtures/generated/*.gen.ts` — generated output, committed on purpose.
 - `consumer-fixtures/**` — deliberately minimal smoke apps, outside the lint config.
-- `*scratch.stories.tsx` — these are expected on a branch and are stripped automatically on
-  approval.
+- `*scratch.stories.tsx` — these are expected on a branch; the Scratch check blocks merge until
+  they are deleted.
 - `dist/`, `storybook-static/`, `package-lock.json`, `.claude/`.
 
 ## Tone

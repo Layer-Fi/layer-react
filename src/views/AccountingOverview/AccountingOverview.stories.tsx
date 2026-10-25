@@ -69,7 +69,7 @@ export default meta
 type Story = StoryObj<AccountingOverviewStoryArgs>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  tags: ['public-api', 'docs-screenshot'],
 }
 
 export const CustomChartConfig: Story = {
