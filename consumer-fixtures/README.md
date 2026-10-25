@@ -31,7 +31,7 @@ the script from the tarball under test.
 
 Create a directory with a `package.json` that has a `verify` script and whatever deps it needs, then
 add it to `FIXTURES` in `scripts/pack-and-test-consumers.ts`. Keep dependencies minimal — every
-fixture runs on every PR, so install time is the main cost.
+fixture runs on every release PR, so install time is the main cost.
 
 Each fixture pins its own `react`/`react-dom`; the script injects nothing version-specific, so
 covering a second peer version means a second fixture directory.

@@ -3,8 +3,8 @@ name: Consumers
 # Installs the packed tarball into throwaway consumer apps and builds them — the only PR check that
 # reads the published artifact rather than the repo.
 #
-# Also the release gate: a `release/v*` PR always changes package.json, so this runs on the
-# tree that gets tagged, and Release — Publish does not repeat it.
+# Runs only on `release/v*` PRs, where it is the release gate: it checks the tree that gets
+# tagged, and Release — Publish does not repeat it. Dispatch it by hand to check any other branch.
 
 on:
   pull_request:
@@ -35,6 +35,7 @@ concurrency:
 jobs:
   consumers:
     name: Matrix
+    if: github.event_name != 'pull_request' || startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-latest
 
     steps:
