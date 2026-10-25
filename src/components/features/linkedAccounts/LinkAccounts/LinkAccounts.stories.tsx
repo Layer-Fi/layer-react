@@ -64,13 +64,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  tags: ['public-api', 'docs-screenshot'],
   loaders: [clearBankAccounts],
 }
 
 // Both start from the seeded store; the link step renders a card per connected account.
 export const AccountsLinked: Story = {
-  tags: ['public-api', 'docs-screenshot', 'real-backend'],
+  tags: ['public-api', 'docs-screenshot'],
   parameters: { chromatic: { viewports: [1280] } },
 }
 
