@@ -5,9 +5,9 @@ name: Release — Publish
 # Release — Tag hook on PR merge), and publishes it to npm — `alpha` dist-tag for
 # a prerelease, `latest` for a stable.
 #
-# Publishing is all it does, so nothing slow or flaky can fail a run that already
-# shipped: tagging belongs to Release — Tag, the tarball check to Consumers on the
-# release PR, and everything after the publish to Release — Post-ship.
+# Nothing slow or flaky can fail a run that already shipped: tagging belongs to
+# Release — Tag and everything after the publish to Release — Post-ship. The gates
+# that do run here run before the publish, so a failure leaves the version unused.
 #
 # Set `dry_run` to rehearse: npm publish --dry-run, no Post-ship dispatch, and
 # the tag is not required (falls back to main HEAD).
@@ -116,6 +116,33 @@ jobs:
         } >> "$GITHUB_STEP_SUMMARY"
 
         echo "::error::Tag v$V contains untranslated strings. Nothing was published. Merge the i18n PRs, run Release — Tag with retag=true, then re-run Release — Publish."
+        exit 1
+
+    - name: Install Chromium
+      run: npx playwright install --with-deps chromium
+
+    # Installs the packed tarball into the consumer fixtures, so it gates exactly what ships.
+    - name: Test the packed tarball in consumer apps
+      env:
+        V: ${{ steps.r.outputs.version }}
+      run: |
+        if npm run test:consumers; then
+          exit 0
+        fi
+
+        {
+          echo "### Publish blocked — v$V failed the consumer fixtures"
+          echo
+          echo "Nothing was published, so \`v$V\` is still free to reuse. To recover:"
+          echo
+          echo "1. Merge a fix to \`main\`."
+          echo "2. Run **Release — Tag** manually with \`retag=true\` — it moves \`v$V\` onto current \`main\`."
+          echo "3. Re-run **Release — Publish**."
+          echo
+          echo "See this step's log for the failing fixture."
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "::error::v$V failed the consumer fixtures. Nothing was published. Merge a fix, run Release — Tag with retag=true, then re-run Release — Publish."
         exit 1
 
     - name: Publish to npm
