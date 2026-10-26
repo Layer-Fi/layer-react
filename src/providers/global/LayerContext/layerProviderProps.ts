@@ -10,8 +10,6 @@ export type { EventCallbacks }
 
 type BaseLayerProviderProps = {
   businessId: string
-  appId?: string
-  appSecret?: string
   businessAccessToken?: string
 
   locale?: SupportedLocale

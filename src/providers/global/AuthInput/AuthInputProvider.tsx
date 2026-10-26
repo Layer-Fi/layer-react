@@ -1,14 +1,10 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
 type AuthInputShape = {
-  appId?: string
-  appSecret?: string
   businessAccessToken?: string
 }
 
 const AuthInputContext = createContext<AuthInputShape>({
-  appId: undefined,
-  appSecret: undefined,
   businessAccessToken: undefined,
 })
 
@@ -17,16 +13,10 @@ export function useAuthInput() {
 }
 
 export function AuthInputProvider({
-  appId,
-  appSecret,
   businessAccessToken,
   children,
 }: PropsWithChildren<AuthInputShape>) {
-  const memoizedValue = useMemo(() => ({ appId, appSecret, businessAccessToken }), [
-    appId,
-    appSecret,
-    businessAccessToken,
-  ])
+  const memoizedValue = useMemo(() => ({ businessAccessToken }), [businessAccessToken])
 
   return (
     <AuthInputContext.Provider value={memoizedValue}>

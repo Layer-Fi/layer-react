@@ -77,23 +77,6 @@ import { LayerProvider } from "@layerfi/components";
 </LayerProvider>
 ```
 
-#### Development
-
-In development, it's often convenient to avoid fetching business-scoped tokens. You may find it more convenient to set your sandbox `clientId` and `clientSecret` directly, which will give you access to any business in your sandbox account.
-
-```tsx
-import { LayerProvider } from "@layerfi/components";
-...
-<LayerProvider
-  businesId="..."
-  appId="..."
-  appSecret="..."
-  environment={'staging'}
->
-  {...}
-</LayerProvider>
-```
-
 <br />
 
 ## Components
@@ -515,7 +498,7 @@ Use `onError` property on `<LayerProvider />` to get notified about all exceptio
 <LayerProvider
   businessId="..."
   environment="..."
-  appId="..."
+  businessAccessToken="..."
   onError={err => console.log('My error callback', err)}
 >
   {...}
