@@ -15,6 +15,7 @@ on a page**. Most conventions below exist to protect one of those three properti
 - Never recreate a file that is missing from the tree without asking — deletions are intentional
 - Verify with `npm run typecheck`, `npm run lint`, and `npm test -- --run` before handing work back
 - Do not run `npm install` / `npm i` — ask first; dependency changes belong in their own PR
+- In a fresh worktree, run `npm ci`. Never copy or symlink `node_modules` from another checkout.
 - PRs follow [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md): Description, Changes, Blockers, How this has been tested
 
 ## Where to read before you write
