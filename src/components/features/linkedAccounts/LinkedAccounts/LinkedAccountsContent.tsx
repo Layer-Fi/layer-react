@@ -14,7 +14,7 @@ import { LinkedAccountsContext } from '@providers/features/linkedAccounts/Linked
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { LinkAccountDemoTooltip } from '@features/linkedAccounts/LinkAccountDemoTooltip/LinkAccountDemoTooltip'
-import { LinkedAccountGridItem } from '@features/linkedAccounts/LinkedAccountGridItem/LinkedAccountGridItem'
+import { LinkedAccountGridItem, type LinkedAccountGridItemProps } from '@features/linkedAccounts/LinkedAccountGridItem/LinkedAccountGridItem'
 import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
 import './linkedAccountsContent.scss'
@@ -23,18 +23,15 @@ const legacyClassNames = createLegacyClassNames({
   'newAccount:label': 'Layer__linked-accounts__new-account-label',
 })
 
-interface LinkedAccountsDataProps {
-  asWidget?: boolean
-  showLedgerBalance?: boolean
-  showUnlinkItem?: boolean
-  showBreakConnection?: boolean
-}
+type LinkedAccountsDataProps = Omit<LinkedAccountGridItemProps, 'account'>
 
 export const LinkedAccountsContent = ({
   asWidget,
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
+  stringOverrides,
+  slotProps,
 }: LinkedAccountsDataProps) => {
   const { t } = useTranslation()
   const { data } = useBankAccountsContext()
@@ -94,6 +91,8 @@ export const LinkedAccountsContent = ({
               showLedgerBalance={showLedgerBalance}
               showUnlinkItem={showUnlinkItem}
               showBreakConnection={showBreakConnection}
+              stringOverrides={stringOverrides}
+              slotProps={slotProps}
               asWidget={asWidget}
             />
           ))}

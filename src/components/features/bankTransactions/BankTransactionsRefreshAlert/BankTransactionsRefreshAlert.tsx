@@ -12,6 +12,7 @@ import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/features/bankTransactions/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
@@ -38,8 +39,12 @@ export const BankTransactionsRefreshAlert = () => {
 
 const BankTransactionsRefreshAlertContent = () => {
   const { data, isLoading } = useBankAccountsContext()
+  const showConnectionRepairAlert = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ConnectionRepairAlert)
 
-  const refreshConnections = useMemo(() => getBankAccountRefreshConnections(data), [data])
+  const refreshConnections = useMemo(
+    () => getBankAccountRefreshConnections(data, new Date(), showConnectionRepairAlert),
+    [data, showConnectionRepairAlert],
+  )
 
   if (isLoading || refreshConnections.length === 0) {
     return null

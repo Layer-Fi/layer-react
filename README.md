@@ -130,6 +130,27 @@ setFilters({ amount: { min: 0, max: 10000 } })
 <BankTransactions />
 ```
 
+Set `showConnectionRepairAlert` on `BankTransactions` or `BankTransactionsWithLinkedAccounts`
+to include Plaid connections that need repair in the refresh banner. This option defaults to `false`.
+The existing banner for stale `USER_PRESENT_REQUIRED` connections remains enabled independently.
+
+Customize linked-account buttons through `BankTransactionsWithLinkedAccounts`:
+
+```tsx
+<BankTransactionsWithLinkedAccounts
+  showConnectionRepairAlert
+  stringOverrides={{ linkedAccounts: { fixAccountButtonText: 'Refresh Now' } }}
+  slotProps={{ FixAccountButton: { status: 'success' } }}
+/>
+```
+
+This example makes both account buttons green and labels both "Refresh Now".
+Without overrides, **Fix account** stays red and **Refresh Now** stays green.
+Use `refreshNowButtonText` to change the refresh label independently.
+Both `FixAccountButton` and `RefreshNowButton` accept `status: 'error' | 'success'`.
+The refresh banner stays green for both connection states, regardless of these button overrides.
+`LinkedAccounts` accepts the same `slotProps` and unnested `stringOverrides` directly.
+
 ### Reporting
 
 #### Profit And Loss Chart
