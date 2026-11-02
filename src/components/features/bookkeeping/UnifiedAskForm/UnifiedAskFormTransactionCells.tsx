@@ -23,13 +23,11 @@ export const UnifiedAskFormTransactionCells = ({ transaction }: { transaction: A
         <Span size='sm' variant='subtle' withTooltip>
           {description ?? ''}
         </Span>
-        {accountLabel
-          ? (
-            <Span size='xs' variant='subtle' ellipsis>
-              {accountLabel}
-            </Span>
-          )
-          : null}
+        {accountLabel && (
+          <Span size='xs' variant='subtle' ellipsis>
+            {accountLabel}
+          </Span>
+        )}
       </VStack>
       <MoneySpan
         className='Layer__UnifiedAskForm__RowAmount'
