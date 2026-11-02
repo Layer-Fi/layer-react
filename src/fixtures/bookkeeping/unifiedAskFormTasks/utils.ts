@@ -132,14 +132,16 @@ export const connectAccountStep = (id: string, prompt: string): AskFormStep => (
   prompt,
 })
 
-type AskTransactionSeed = { id: string, day: number, amount: number, description: string }
+type AskTransactionSeed = { id: string, day: number, amount: number, description: string, accountName?: string, accountMask?: string }
 
 export const askTransactions = (month: number, seeds: AskTransactionSeed[]): AskFormTransaction[] =>
-  seeds.map(({ id, day, amount, description }) => ({
+  seeds.map(({ id, day, amount, description, accountName = null, accountMask = null }) => ({
     id: fixtureId(id),
     date: new Date(Date.UTC(FIXTURE_YEAR, month - 1, day)),
     amount,
     description,
+    accountName,
+    accountMask,
   }))
 
 const baseUnifiedAskFormTask: UnifiedAskFormTask = {

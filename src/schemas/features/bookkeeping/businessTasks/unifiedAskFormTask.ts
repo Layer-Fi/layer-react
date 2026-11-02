@@ -24,6 +24,14 @@ const AskFormTransactionSchema = Schema.Struct({
   /** Signed cents: negative is money out. */
   amount: Schema.Number,
   description: Schema.NullishOr(Schema.String),
+  accountName: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('account_name'),
+  ),
+  accountMask: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('account_mask'),
+  ),
 })
 
 export type AskFormTransaction = typeof AskFormTransactionSchema.Type

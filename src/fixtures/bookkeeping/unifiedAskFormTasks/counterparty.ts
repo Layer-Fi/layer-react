@@ -128,8 +128,8 @@ export const counterpartyTaskSeeds = seedsInFixtureYear({
     counterparty: 'Costco',
     suggestions: RETAIL_SUGGESTIONS,
     transactions: askTransactions(10, [
-      { id: 'a02', day: 3, amount: -61250, description: 'COSTCO WHSE #1042' },
-      { id: 'a03', day: 19, amount: -22395, description: 'COSTCO GAS #1042' },
+      { id: 'a02', day: 3, amount: -61250, description: 'COSTCO WHSE #1042', accountName: 'Business Checking', accountMask: '4321' },
+      { id: 'a03', day: 19, amount: -22395, description: 'COSTCO GAS #1042', accountName: 'Business Platinum Card', accountMask: '1009' },
     ]),
   }),
   11: makeCounterpartyTask({
