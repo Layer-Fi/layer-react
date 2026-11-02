@@ -4,8 +4,6 @@ import { type BankTransaction } from '@internal-types/features/bankTransactions/
 import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { TransactionSource } from '@schemas/features/bankTransactions/base'
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/features/customAccounts/recordCustomTransaction'
-import { getCustomerName } from '@utils/features/customerVendor/customer'
-import { getVendorName } from '@utils/features/customerVendor/vendor'
 
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
@@ -42,7 +40,7 @@ export const buildCustomBankTransaction = (
     amount: transaction.amount,
     description: transaction.description ?? existing?.description ?? null,
     memo: transaction.memo ?? existing?.memo ?? null,
-    counterpartyName: customer ? getCustomerName(customer) : vendor ? getVendorName(vendor) : null,
+    counterpartyName: existing?.counterpartyName ?? null,
     customer,
     vendor,
     category,

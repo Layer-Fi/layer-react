@@ -6,7 +6,7 @@ import { BankTransactionSelectionVariant } from '@internal-types/features/catego
 import { SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
 import type { TagFilterInput } from '@internal-types/features/tags/tag'
 import { type DateRange } from '@internal-types/shared/dateRange'
-import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
+import { BankTransactionDirection, type MinimalBankTransaction, type RawBankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
 import type { CustomAccount } from '@schemas/features/customAccounts/customAccount'
 import { makeTagKeyValueFromTag } from '@schemas/features/tags/tagKeyValue'
@@ -57,11 +57,8 @@ export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
   source === TransactionSource.CUSTOM
 
-export const getBankTransactionDisplayName = (bankTransaction: Pick<BankTransaction, 'source' | 'counterpartyName' | 'description'>) => {
-  const { counterpartyName, description } = bankTransaction
-  const [preferred, fallback] = isCustomTransaction(bankTransaction) ? [description, counterpartyName] : [counterpartyName, description]
-  return notEmpty(preferred) ? preferred : fallback
-}
+export const getBankTransactionDisplayName = ({ counterpartyName, description }: Pick<MinimalBankTransaction, 'counterpartyName' | 'description'>) =>
+  notEmpty(counterpartyName) ? counterpartyName : description
 
 export const isEditableCustomTransaction = (
   bankTransaction: BankTransaction,
