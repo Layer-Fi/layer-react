@@ -1,19 +1,18 @@
+import { useTranslation } from 'react-i18next'
+
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
-const getAccountLabel = ({ accountName, accountMask }: Pick<AskFormTransaction, 'accountName' | 'accountMask'>) => {
-  const parts = [accountName, accountMask ? `•••${accountMask}` : null].filter(Boolean)
-  return parts.length > 0 ? parts.join(' ') : null
-}
-
 export const UnifiedAskFormTransactionCells = ({ transaction }: { transaction: AskFormTransaction }) => {
+  const { date, amount, description, accountName, accountMask } = transaction
+  const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { date, amount, description } = transaction
-  const accountLabel = getAccountLabel(transaction)
+  const accountLabel = accountName ? getBankAccountLabelWithMask(t, { accountName, mask: accountMask ?? null }) : null
 
   return (
     <>
@@ -21,12 +20,12 @@ export const UnifiedAskFormTransactionCells = ({ transaction }: { transaction: A
         {formatDate(date, DateFormat.MonthDayShort)}
       </Span>
       <VStack className='Layer__UnifiedAskForm__RowText'>
-        <Span className='Layer__UnifiedAskForm__RowDescription' size='sm' variant='subtle' noWrap withTooltip>
+        <Span size='sm' variant='subtle' withTooltip>
           {description ?? ''}
         </Span>
         {accountLabel
           ? (
-            <Span className='Layer__UnifiedAskForm__RowAccount' size='xs' variant='subtle' ellipsis>
+            <Span size='xs' variant='subtle' ellipsis>
               {accountLabel}
             </Span>
           )

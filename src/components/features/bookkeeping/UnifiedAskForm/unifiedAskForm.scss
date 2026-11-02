@@ -49,12 +49,6 @@
   min-inline-size: 0;
 }
 
-.Layer__UnifiedAskForm__RowDescription,
-.Layer__UnifiedAskForm__RowAccount {
-  min-inline-size: 0;
-  max-inline-size: 100%;
-}
-
 .Layer__UnifiedAskForm[data-presentation='takeover'] .Layer__UnifiedAskForm__Footer {
   position: sticky;
   inset-block-end: 0;
