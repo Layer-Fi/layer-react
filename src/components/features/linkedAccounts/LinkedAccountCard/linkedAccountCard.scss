@@ -84,6 +84,7 @@
 
     .Layer__LinkedAccountCard__HeaderLogo {
       display: flex;
+      flex-shrink: 0;
       align-items: center;
       justify-content: center;
       height: 28px;
