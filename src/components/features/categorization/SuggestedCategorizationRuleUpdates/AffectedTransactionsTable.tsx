@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { MinimalBankTransaction } from '@schemas/features/bankTransactions/base'
 import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { getBankTransactionDisplayName } from '@utils/features/bankTransactions/shared'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
@@ -77,7 +78,7 @@ export const AffectedTransactionsTable = ({
       header: t('common:label.description', 'Description'),
       cell: (row: AffectedTransactionRowType) => (
         <Span withTooltip>
-          {row.original.counterpartyName || row.original.description || '-'}
+          {getBankTransactionDisplayName(row.original) ?? '-'}
         </Span>
       ),
       isRowHeader: true,
