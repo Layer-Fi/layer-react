@@ -69,11 +69,11 @@ export const LinkedAccountCard = ({
     <div {...dataProperties} className='Layer__LinkedAccountCard'>
       <div {...headerDataProperties} className='Layer__LinkedAccountCard__Header'>
         <div className='Layer__LinkedAccountCard__HeaderDetails'>
-          <Span variant='inherit' ellipsis>{displayName}</Span>
+          <Span variant='inherit' ellipsis withTooltip>{displayName}</Span>
           {!asWidget && bankAccount.mask && (
             <AccountNumber accountNumber={bankAccount.mask} />
           )}
-          <Span size='sm' variant='subtle' ellipsis>
+          <Span size='sm' variant='subtle' ellipsis withTooltip>
             {institutionName || displayName}
           </Span>
         </div>

@@ -75,11 +75,6 @@
       gap: var(--spacing-4xs);
       justify-content: stretch;
       min-width: 0;
-
-      > .Layer__Span:first-child {
-        flex: 1;
-        width: 200px;
-      }
     }
 
     .Layer__LinkedAccountCard__HeaderLogo {
