@@ -73,7 +73,7 @@ export const LinkedAccountCard = ({
           {!asWidget && bankAccount.mask && (
             <AccountNumber accountNumber={bankAccount.mask} />
           )}
-          <Span size='sm' variant='subtle' noWrap>
+          <Span size='sm' variant='subtle' ellipsis>
             {institutionName || displayName}
           </Span>
         </div>
