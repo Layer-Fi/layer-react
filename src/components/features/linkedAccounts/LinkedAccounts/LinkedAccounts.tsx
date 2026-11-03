@@ -16,7 +16,6 @@ import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
-import { type LinkedAccountGridItemProps } from '@features/linkedAccounts/LinkedAccountGridItem/LinkedAccountGridItem'
 import { LinkedAccountsContent } from '@features/linkedAccounts/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
@@ -35,10 +34,10 @@ export interface LinkedAccountsProps {
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   onPlaidConnectionSuccess?: () => Awaitable<void>
+  presentRepairAsRefresh?: boolean
   stringOverrides?: {
     title?: string
-  } & LinkedAccountGridItemProps['stringOverrides']
-  slotProps?: LinkedAccountGridItemProps['slotProps']
+  }
 }
 
 export const LinkedAccounts = ({
@@ -85,8 +84,8 @@ export const LinkedAccountsComponent = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
+  presentRepairAsRefresh = false,
   stringOverrides,
-  slotProps,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
   const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
@@ -126,8 +125,7 @@ export const LinkedAccountsComponent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
-            stringOverrides={stringOverrides}
-            slotProps={slotProps}
+            presentRepairAsRefresh={presentRepairAsRefresh}
           />
         )
         : null}

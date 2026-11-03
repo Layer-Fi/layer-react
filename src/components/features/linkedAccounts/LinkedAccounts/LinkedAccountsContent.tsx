@@ -30,8 +30,7 @@ export const LinkedAccountsContent = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
-  stringOverrides,
-  slotProps,
+  presentRepairAsRefresh,
 }: LinkedAccountsDataProps) => {
   const { t } = useTranslation()
   const { data } = useBankAccountsContext()
@@ -91,8 +90,7 @@ export const LinkedAccountsContent = ({
               showLedgerBalance={showLedgerBalance}
               showUnlinkItem={showUnlinkItem}
               showBreakConnection={showBreakConnection}
-              stringOverrides={stringOverrides}
-              slotProps={slotProps}
+              presentRepairAsRefresh={presentRepairAsRefresh}
               asWidget={asWidget}
             />
           ))}

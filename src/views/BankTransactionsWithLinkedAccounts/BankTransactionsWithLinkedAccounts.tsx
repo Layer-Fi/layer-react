@@ -26,7 +26,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   elevatedLinkedAccounts?: boolean
 
   showBreakConnection?: boolean
-  showConnectionRepairAlert?: boolean
+  showConnectionAlert?: boolean
   showCustomerVendor?: boolean
   /**
    * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
@@ -46,8 +46,8 @@ export interface BankTransactionsWithLinkedAccountsProps {
    */
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
+  presentRepairAsRefresh?: boolean
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
-  slotProps?: LinkedAccountsProps['slotProps']
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
@@ -67,7 +67,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   mode,
 
   showBreakConnection = false,
-  showConnectionRepairAlert,
+  showConnectionAlert = false,
   showCustomerVendor = false,
   showLedgerBalance = true,
   showTags = false,
@@ -76,8 +76,8 @@ const BankTransactionsWithLinkedAccountsContent = ({
   showUploadOptions = false,
 
   mobileComponent,
+  presentRepairAsRefresh = false,
   stringOverrides,
-  slotProps,
   renderInAppLink,
   showCategorizationRules,
   plaidHostedLinkConfig,
@@ -107,13 +107,14 @@ const BankTransactionsWithLinkedAccountsContent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
+            presentRepairAsRefresh={presentRepairAsRefresh}
             stringOverrides={stringOverrides?.linkedAccounts}
-            slotProps={slotProps}
           />
           <BankTransactions
             asWidget
             filters={filters}
-            showConnectionRepairAlert={showConnectionRepairAlert}
+            showConnectionAlert={showConnectionAlert}
+            presentRepairAsRefresh={presentRepairAsRefresh}
             showCustomerVendor={showCustomerVendor}
             showTags={showTags}
             showTooltips={showTooltips}

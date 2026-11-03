@@ -166,12 +166,13 @@ const meta: Meta<BankTransactionsStoryArgs> = {
     const {
       pageSize,
       showCategorizationRules,
-      showConnectionRepairAlert,
+      showConnectionAlert,
       showCustomerVendor,
       showStatusToggle,
       showTags,
       showTooltips,
       showUploadOptions,
+      presentRepairAsRefresh,
       applyGlobalDateRange,
       monthlyView,
       mobileComponent,
@@ -183,12 +184,13 @@ const meta: Meta<BankTransactionsStoryArgs> = {
       <BankTransactions
         pageSize={pageSize}
         showCategorizationRules={showCategorizationRules}
-        showConnectionRepairAlert={showConnectionRepairAlert}
+        showConnectionAlert={showConnectionAlert}
         showCustomerVendor={showCustomerVendor}
         showStatusToggle={showStatusToggle}
         showTags={showTags}
         showTooltips={showTooltips}
         showUploadOptions={showUploadOptions}
+        presentRepairAsRefresh={presentRepairAsRefresh}
         applyGlobalDateRange={applyGlobalDateRange}
         monthlyView={monthlyView}
         mobileComponent={mobileComponent}
