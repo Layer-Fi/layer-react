@@ -99,29 +99,22 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
   const isMobile = view === 'mobile'
   const needsFixCopy = (connection: BankAccountRefreshConnection) => connection.needsRepair && !showRepairAsRefresh
 
-  const fixCount = refreshConnections.filter(needsFixCopy).length
   const summaryCounts = {
     count: refreshConnections.length,
     displayCount: formatNumber(refreshConnections.length),
   }
 
-  const summaryLabel = fixCount === 0
-    ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
+  const summaryLabel = refreshConnections.some(needsFixCopy)
+    ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
+      ...summaryCounts,
+      one: 'Fix {{displayCount}} bank connection to see recent transactions',
+      other: 'Fix {{displayCount}} bank connections to see recent transactions',
+    })
+    : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
       ...summaryCounts,
       one: 'Refresh {{displayCount}} bank connection to see recent transactions',
       other: 'Refresh {{displayCount}} bank connections to see recent transactions',
     })
-    : fixCount === refreshConnections.length
-      ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
-        ...summaryCounts,
-        one: 'Fix {{displayCount}} bank connection to see recent transactions',
-        other: 'Fix {{displayCount}} bank connections to see recent transactions',
-      })
-      : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_or_refresh_bank_connections', {
-        ...summaryCounts,
-        one: 'Fix or refresh {{displayCount}} bank connection to see recent transactions',
-        other: 'Fix or refresh {{displayCount}} bank connections to see recent transactions',
-      })
 
   const Trigger = useCallback(() => (
     <RefreshAlertAction label={summaryLabel} icon={<ChevronDown size={14} />} isMobile={isMobile} />
