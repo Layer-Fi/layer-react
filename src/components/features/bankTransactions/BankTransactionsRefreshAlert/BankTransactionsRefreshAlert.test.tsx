@@ -64,7 +64,10 @@ describe(BankTransactionsRefreshAlert, () => {
   it('lists a broken connection with fix copy and starts a repair', async () => {
     const { user, repairRequest } = renderRefreshAlert({ showConnectionAlert: true })
 
-    await user.click(await screen.findByRole('button', { name: 'Fix 1 bank connection to see recent transactions' }))
+    const fixAction = await screen.findByRole('button', { name: 'Fix 1 bank connection to see recent transactions' })
+    expect(screen.getByRole('region', { name: 'Bank connections require attention' })).toHaveAttribute('data-status', 'error')
+
+    await user.click(fixAction)
 
     await waitFor(() => expect(repairRequest).toHaveBeenCalled())
     const [record] = getCallArgs(repairRequest)
@@ -76,5 +79,6 @@ describe(BankTransactionsRefreshAlert, () => {
     renderRefreshAlert({ showConnectionAlert: true, showRepairAsRefresh: true })
 
     expect(await screen.findByRole('button', { name: 'Refresh 1 bank connection to see recent transactions' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Bank connections require attention' })).toHaveAttribute('data-status', 'success')
   })
 })

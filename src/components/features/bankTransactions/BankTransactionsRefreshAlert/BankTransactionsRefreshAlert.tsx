@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useMemo } from 'react'
-import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
+import { ChevronDown, CircleAlert, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
@@ -56,15 +56,18 @@ const BankTransactionsRefreshAlertContent = () => {
   )
 }
 
+type RefreshAlertStatus = 'error' | 'success'
+
 type RefreshAlertActionProps = {
   label: string
+  status: RefreshAlertStatus
   icon: ReactNode
   isMobile: boolean
   ellipsis?: true
   onPress?: () => void
 }
 
-const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
+const RefreshAlertAction = ({ label, status, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
   <Button
     className='Layer__BankTransactionsRefreshAlert__Action'
     variant='text'
@@ -78,7 +81,7 @@ const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: Refres
       pis={isMobile ? 'md' : undefined}
       pie={isMobile ? 'xs' : undefined}
     >
-      <RefreshCcw size={14} />
+      {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
       <P size='sm' weight='normal' variant='inherit' ellipsis={ellipsis}>{label}</P>
       {icon}
     </HStack>
@@ -104,7 +107,9 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
     displayCount: formatNumber(refreshConnections.length),
   }
 
-  const summaryLabel = refreshConnections.some(needsFixCopy)
+  const status: RefreshAlertStatus = refreshConnections.some(needsFixCopy) ? 'error' : 'success'
+
+  const summaryLabel = status === 'error'
     ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
       ...summaryCounts,
       one: 'Fix {{displayCount}} bank connection to see recent transactions',
@@ -117,8 +122,8 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
     })
 
   const Trigger = useCallback(() => (
-    <RefreshAlertAction label={summaryLabel} icon={<ChevronDown size={14} />} isMobile={isMobile} />
-  ), [isMobile, summaryLabel])
+    <RefreshAlertAction label={summaryLabel} status={status} icon={<ChevronDown size={14} />} isMobile={isMobile} />
+  ), [isMobile, status, summaryLabel])
 
   const connectionLabel = (connection: BankAccountRefreshConnection) => {
     const [onlyAccount] = connection.accounts
@@ -178,6 +183,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
       ref={containerRef}
       className='Layer__BankTransactionsRefreshAlert'
       data-view={view}
+      data-status={status}
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
       gap='2xs'
@@ -212,6 +218,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
           <RefreshAlertAction
             key={getRefreshConnectionKey(connection)}
             label={summaryLabel}
+            status={status}
             icon={<CircleArrowRight size={14} />}
             isMobile={isMobile}
             ellipsis
