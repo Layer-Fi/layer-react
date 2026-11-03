@@ -1,10 +1,12 @@
 import { type AskFormTransaction } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
-export const UnifiedAskFormTransactionCells = ({ transaction: { date, amount, description } }: { transaction: AskFormTransaction }) => {
+export const UnifiedAskFormTransactionCells = ({ transaction }: { transaction: AskFormTransaction }) => {
+  const { date, amount, description, accountName, accountMask } = transaction
   const { formatDate } = useIntlFormatter()
 
   return (
@@ -12,9 +14,17 @@ export const UnifiedAskFormTransactionCells = ({ transaction: { date, amount, de
       <Span className='Layer__UnifiedAskForm__RowDate' size='sm' variant='subtle' noWrap>
         {formatDate(date, DateFormat.MonthDayShort)}
       </Span>
-      <Span className='Layer__UnifiedAskForm__RowDescription' size='sm' variant='subtle' noWrap withTooltip>
-        {description ?? ''}
-      </Span>
+      <VStack className='Layer__UnifiedAskForm__RowText'>
+        <Span size='sm' variant='subtle' withTooltip>
+          {description ?? ''}
+        </Span>
+        {accountName && (
+          <Span size='xs' variant='subtle' ellipsis withTooltip>
+            {accountName}
+            {accountMask && ` •••${accountMask}`}
+          </Span>
+        )}
+      </VStack>
       <MoneySpan
         className='Layer__UnifiedAskForm__RowAmount'
         size='sm'

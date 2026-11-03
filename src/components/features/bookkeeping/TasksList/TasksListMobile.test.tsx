@@ -13,8 +13,8 @@ const STAPLES = makeUnifiedAskFormTask({
   id: '00000000-0000-4000-8000-000000000f11',
   title: 'Staples purchases',
   transactions: [
-    { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -12000, description: 'STAPLES' },
-    { id: 'txn-2', date: new Date('2025-02-19T00:00:00.000Z'), amount: -3050, description: 'STAPLES' },
+    { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -12000, description: 'STAPLES', accountName: null, accountMask: null },
+    { id: 'txn-2', date: new Date('2025-02-19T00:00:00.000Z'), amount: -3050, description: 'STAPLES', accountName: null, accountMask: null },
   ],
 })
 const UBER = makeUnifiedAskFormTask({ id: '00000000-0000-4000-8000-000000000f12', title: 'Uber rides' })

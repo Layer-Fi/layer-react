@@ -37,8 +37,8 @@ import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { spyOnEndpoint } from '@testUtils/requests/spyOnEndpoint'
 
 const TRANSACTIONS = [
-  { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -61250, description: 'COSTCO WHSE' },
-  { id: 'txn-2', date: new Date('2025-02-19T00:00:00.000Z'), amount: -22395, description: 'COSTCO GAS' },
+  { id: 'txn-1', date: new Date('2025-02-03T00:00:00.000Z'), amount: -61250, description: 'COSTCO WHSE', accountName: 'Business Checking', accountMask: '4321' },
+  { id: 'txn-2', date: new Date('2025-02-19T00:00:00.000Z'), amount: -22395, description: 'COSTCO GAS', accountName: null, accountMask: null },
 ]
 
 const OFFICE = 'acct_0f0b5c1e-1d2a-4c3b-9a8e-111111111111'
