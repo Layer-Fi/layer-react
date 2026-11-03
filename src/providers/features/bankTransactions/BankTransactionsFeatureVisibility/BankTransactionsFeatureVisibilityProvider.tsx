@@ -4,7 +4,7 @@ export enum BankTransactionsFeature {
   CategorizationRules = 'showCategorizationRules',
   ConnectionAlert = 'showConnectionAlert',
   CustomerVendor = 'showCustomerVendor',
-  RepairAsRefresh = 'presentRepairAsRefresh',
+  RepairAsRefresh = 'showRepairAsRefresh',
   StatusToggle = 'showStatusToggle',
   Tags = 'showTags',
   Tooltips = 'showTooltips',

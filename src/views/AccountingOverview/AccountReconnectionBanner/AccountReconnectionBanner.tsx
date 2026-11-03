@@ -46,7 +46,7 @@ export const AccountReconnectionBanner = ({ account, lastSyncedAt, onClick }: Ac
       other: 'Last refreshed {{displayCount}} days ago',
     })
 
-  const refreshNowLabel = t('views:AccountReconnectionBanner.action.refresh_now', 'Refresh Now')
+  const refreshNowLabel = t('views:AccountReconnectionBanner.action.refresh_account_now', 'Refresh now')
 
   const ariaLabel = t(
     'views:AccountReconnectionBanner.label.account_status',

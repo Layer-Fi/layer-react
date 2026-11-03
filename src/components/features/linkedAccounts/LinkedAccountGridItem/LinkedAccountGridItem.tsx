@@ -44,7 +44,7 @@ export interface LinkedAccountGridItemProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
-  presentRepairAsRefresh?: boolean
+  showRepairAsRefresh?: boolean
 }
 
 export const LinkedAccountGridItem = ({
@@ -53,7 +53,7 @@ export const LinkedAccountGridItem = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
-  presentRepairAsRefresh = false,
+  showRepairAsRefresh = false,
 }: LinkedAccountGridItemProps) => {
   const { t } = useTranslation()
   const {
@@ -72,8 +72,8 @@ export const LinkedAccountGridItem = ({
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getBankAccountConnectionRepairInfo(bankAccount)
   const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
-  const fixInfo = presentRepairAsRefresh ? null : repairInfo
-  const refreshableInfo = presentRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
+  const fixInfo = showRepairAsRefresh ? null : repairInfo
+  const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
 
   let pillConfig
   if (accountNeedsUniquenessConfirmation(bankAccount)) {
@@ -113,7 +113,7 @@ export const LinkedAccountGridItem = ({
   }
   else if (refreshableInfo) {
     pillConfig = {
-      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
+      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_account_now', 'Refresh now'),
       status: 'success' as const,
       icon: <RefreshCcw size={14} />,
       config: [

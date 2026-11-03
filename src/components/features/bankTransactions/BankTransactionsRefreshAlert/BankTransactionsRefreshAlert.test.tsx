@@ -73,7 +73,7 @@ describe(BankTransactionsRefreshAlert, () => {
   })
 
   it('presents a broken connection as a refresh when configured', async () => {
-    renderRefreshAlert({ showConnectionAlert: true, presentRepairAsRefresh: true })
+    renderRefreshAlert({ showConnectionAlert: true, showRepairAsRefresh: true })
 
     expect(await screen.findByRole('button', { name: 'Refresh 1 bank connection to see recent transactions' })).toBeInTheDocument()
   })

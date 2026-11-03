@@ -46,7 +46,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
    */
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
-  presentRepairAsRefresh?: boolean
+  showRepairAsRefresh?: boolean
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
@@ -76,7 +76,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   showUploadOptions = false,
 
   mobileComponent,
-  presentRepairAsRefresh = false,
+  showRepairAsRefresh = false,
   stringOverrides,
   renderInAppLink,
   showCategorizationRules,
@@ -107,14 +107,14 @@ const BankTransactionsWithLinkedAccountsContent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
-            presentRepairAsRefresh={presentRepairAsRefresh}
+            showRepairAsRefresh={showRepairAsRefresh}
             stringOverrides={stringOverrides?.linkedAccounts}
           />
           <BankTransactions
             asWidget
             filters={filters}
             showConnectionAlert={showConnectionAlert}
-            presentRepairAsRefresh={presentRepairAsRefresh}
+            showRepairAsRefresh={showRepairAsRefresh}
             showCustomerVendor={showCustomerVendor}
             showTags={showTags}
             showTooltips={showTooltips}

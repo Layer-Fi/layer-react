@@ -82,13 +82,13 @@ describe(LinkedAccountGridItem, () => {
     renderGridItem({ account: BROKEN_PLAID_ACCOUNT })
 
     expect(await screen.findByRole('button', { name: 'Fix account' })).toHaveAttribute('data-variant', 'error')
-    expect(screen.queryByRole('button', { name: 'Refresh Now' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Refresh now' })).not.toBeInTheDocument()
   })
 
   it('presents a broken connection as a green refresh pill that still repairs it', async () => {
-    const { user, repairRequest } = renderGridItem({ account: BROKEN_PLAID_ACCOUNT, presentRepairAsRefresh: true })
+    const { user, repairRequest } = renderGridItem({ account: BROKEN_PLAID_ACCOUNT, showRepairAsRefresh: true })
 
-    const refreshPill = await screen.findByRole('button', { name: 'Refresh Now' })
+    const refreshPill = await screen.findByRole('button', { name: 'Refresh now' })
     expect(refreshPill).toHaveAttribute('data-variant', 'success')
     expect(screen.queryByRole('button', { name: 'Fix account' })).not.toBeInTheDocument()
 

@@ -40,7 +40,7 @@ export const BankTransactionsRefreshAlert = () => {
 const BankTransactionsRefreshAlertContent = () => {
   const { data, isLoading } = useBankAccountsContext()
   const showConnectionAlert = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ConnectionAlert)
-  const presentRepairAsRefresh = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.RepairAsRefresh)
+  const showRepairAsRefresh = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.RepairAsRefresh)
 
   const refreshConnections = useMemo(() => getBankAccountRefreshConnections(data), [data])
 
@@ -51,7 +51,7 @@ const BankTransactionsRefreshAlertContent = () => {
   return (
     <BankTransactionsRefreshAlertBody
       refreshConnections={refreshConnections}
-      presentRepairAsRefresh={presentRepairAsRefresh}
+      showRepairAsRefresh={showRepairAsRefresh}
     />
   )
 }
@@ -87,31 +87,41 @@ const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: Refres
 
 type BankTransactionsRefreshAlertBodyProps = {
   refreshConnections: ReadonlyArray<BankAccountRefreshConnection>
-  presentRepairAsRefresh: boolean
+  showRepairAsRefresh: boolean
 }
 
-const BankTransactionsRefreshAlertBody = ({ refreshConnections, presentRepairAsRefresh }: BankTransactionsRefreshAlertBodyProps) => {
+const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefresh }: BankTransactionsRefreshAlertBodyProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const reconnectConnection = useReconnectConnection()
 
   const isMobile = view === 'mobile'
-  const needsFixCopy = (connection: BankAccountRefreshConnection) => connection.needsRepair && !presentRepairAsRefresh
+  const needsFixCopy = (connection: BankAccountRefreshConnection) => connection.needsRepair && !showRepairAsRefresh
 
-  const summaryLabel = refreshConnections.some(needsFixCopy)
-    ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
-      count: refreshConnections.length,
-      displayCount: formatNumber(refreshConnections.length),
-      one: 'Fix {{displayCount}} bank connection to see recent transactions',
-      other: 'Fix {{displayCount}} bank connections to see recent transactions',
-    })
-    : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
-      count: refreshConnections.length,
-      displayCount: formatNumber(refreshConnections.length),
+  const fixCount = refreshConnections.filter(needsFixCopy).length
+  const summaryCounts = {
+    count: refreshConnections.length,
+    displayCount: formatNumber(refreshConnections.length),
+  }
+
+  const summaryLabel = fixCount === 0
+    ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
+      ...summaryCounts,
       one: 'Refresh {{displayCount}} bank connection to see recent transactions',
       other: 'Refresh {{displayCount}} bank connections to see recent transactions',
     })
+    : fixCount === refreshConnections.length
+      ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
+        ...summaryCounts,
+        one: 'Fix {{displayCount}} bank connection to see recent transactions',
+        other: 'Fix {{displayCount}} bank connections to see recent transactions',
+      })
+      : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_or_refresh_bank_connections', {
+        ...summaryCounts,
+        one: 'Fix or refresh {{displayCount}} bank connection to see recent transactions',
+        other: 'Fix or refresh {{displayCount}} bank connections to see recent transactions',
+      })
 
   const Trigger = useCallback(() => (
     <RefreshAlertAction label={summaryLabel} icon={<ChevronDown size={14} />} isMobile={isMobile} />

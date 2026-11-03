@@ -30,7 +30,7 @@ export const LinkedAccountsContent = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
-  presentRepairAsRefresh,
+  showRepairAsRefresh,
 }: LinkedAccountsDataProps) => {
   const { t } = useTranslation()
   const { data } = useBankAccountsContext()
@@ -90,7 +90,7 @@ export const LinkedAccountsContent = ({
               showLedgerBalance={showLedgerBalance}
               showUnlinkItem={showUnlinkItem}
               showBreakConnection={showBreakConnection}
-              presentRepairAsRefresh={presentRepairAsRefresh}
+              showRepairAsRefresh={showRepairAsRefresh}
               asWidget={asWidget}
             />
           ))}

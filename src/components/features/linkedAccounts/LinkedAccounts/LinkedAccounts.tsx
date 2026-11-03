@@ -34,7 +34,7 @@ export interface LinkedAccountsProps {
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
   customerManagedPlaidConfig?: CustomerManagedPlaidConfig
   onPlaidConnectionSuccess?: () => Awaitable<void>
-  presentRepairAsRefresh?: boolean
+  showRepairAsRefresh?: boolean
   stringOverrides?: {
     title?: string
   }
@@ -84,7 +84,7 @@ export const LinkedAccountsComponent = ({
   showLedgerBalance = true,
   showUnlinkItem = false,
   showBreakConnection = false,
-  presentRepairAsRefresh = false,
+  showRepairAsRefresh = false,
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
@@ -125,7 +125,7 @@ export const LinkedAccountsComponent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
-            presentRepairAsRefresh={presentRepairAsRefresh}
+            showRepairAsRefresh={showRepairAsRefresh}
           />
         )
         : null}

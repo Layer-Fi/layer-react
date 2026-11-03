@@ -47,7 +47,7 @@ export interface BankTransactionsProps {
   showTags?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
-  presentRepairAsRefresh?: boolean
+  showRepairAsRefresh?: boolean
 
   applyGlobalDateRange?: boolean
   monthlyView?: boolean
