@@ -1,11 +1,10 @@
 import { type Meta } from '@storybook/react-vite'
 
+import { type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
+
 // The linked-accounts props shared by every component that embeds the linked
 // accounts list (LinkedAccounts, BankTransactionsWithLinkedAccounts).
-export type LinkedAccountsStoryArgs = {
-  showLedgerBalance: boolean
-  showRepairAsRefresh: boolean
-}
+export type LinkedAccountsStoryArgs = Required<Pick<LinkedAccountsProps, 'showLedgerBalance' | 'showRepairAsRefresh'>>
 
 export const linkedAccountsStoryDefaultArgs: LinkedAccountsStoryArgs = {
   showLedgerBalance: true,
