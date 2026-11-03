@@ -12,7 +12,8 @@ import {
   linkedAccountsStoryDefaultArgs,
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
-import { disconnectedBankAccounts } from '@testUtils/storybook/data/bankAccounts'
+
+type BankAccountFixture = (typeof bankAccounts)[number]
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
@@ -23,6 +24,32 @@ type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
 const keepTwoAccounts = () => {
   bankAccounts.slice(2).forEach(({ id }) => bankAccountStore.deleteById(id))
 }
+
+// Fixed so the disconnected story stays visually stable across snapshots.
+const DISCONNECTED_AS_OF = new Date('2024-03-14T12:00:00.000Z')
+
+/*
+ * A broken connection is backend state, not a prop: the "Fix account" pill
+ * appears when an external account has `connectionNeedsRepairAsOf` set, and the
+ * repair action is a no-op without a connection id to repair.
+ */
+const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixture => ({
+  ...account,
+  isDisconnected: true,
+  externalAccounts: account.externalAccounts.map(externalAccount =>
+    externalAccount.externalAccountSource === 'PLAID'
+      ? {
+        ...externalAccount,
+        connectionNeedsRepairAsOf: DISCONNECTED_AS_OF,
+        connectionExternalId: externalAccount.connectionExternalId ?? 'plaid_item_story_disconnected',
+      }
+      : externalAccount,
+  ),
+})
+
+const disconnectedBankAccounts = bankAccounts
+  .slice(0, 2)
+  .map((account, index) => index === 0 ? withBrokenPlaidConnection(account) : account)
 
 const linkedAccountsControls = makeLinkedAccountsStoryControls()
 
