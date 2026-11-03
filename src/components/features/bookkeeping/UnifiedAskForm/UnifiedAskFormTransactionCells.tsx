@@ -19,7 +19,7 @@ export const UnifiedAskFormTransactionCells = ({ transaction }: { transaction: A
           {description ?? ''}
         </Span>
         {accountName && (
-          <Span size='xs' variant='subtle' ellipsis>
+          <Span size='xs' variant='subtle' ellipsis withTooltip>
             {accountName}
             {accountMask && ` •••${accountMask}`}
           </Span>
