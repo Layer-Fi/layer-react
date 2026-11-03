@@ -18,10 +18,12 @@ import {
   UNIFIED_ASK_FORM_VERSION,
   type UnifiedAskFormTask,
 } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
+import { pickCyclic } from '@utils/shared/array/pickCyclic'
 
 import { type BankTransactionCategory } from '@fixtures/bankTransactions/constants'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
+import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 export const ASK_FORM_STEP_IDS = {
@@ -132,17 +134,21 @@ export const connectAccountStep = (id: string, prompt: string): AskFormStep => (
   prompt,
 })
 
-type AskTransactionSeed = { id: string, day: number, amount: number, description: string, accountName?: string, accountMask?: string }
+type AskTransactionSeed = { id: string, day: number, amount: number, description: string }
 
 export const askTransactions = (month: number, seeds: AskTransactionSeed[]): AskFormTransaction[] =>
-  seeds.map(({ id, day, amount, description, accountName = null, accountMask = null }) => ({
-    id: fixtureId(id),
-    date: new Date(Date.UTC(FIXTURE_YEAR, month - 1, day)),
-    amount,
-    description,
-    accountName,
-    accountMask,
-  }))
+  seeds.map(({ id, day, amount, description }, index) => {
+    const account = pickCyclic(bankAccounts, month + index)
+
+    return {
+      id: fixtureId(id),
+      date: new Date(Date.UTC(FIXTURE_YEAR, month - 1, day)),
+      amount,
+      description,
+      accountName: account.accountName,
+      accountMask: account.mask ?? null,
+    }
+  })
 
 const baseUnifiedAskFormTask: UnifiedAskFormTask = {
   id: fixtureId('c01'),
