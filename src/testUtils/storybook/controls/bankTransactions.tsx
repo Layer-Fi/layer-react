@@ -12,7 +12,6 @@ export type BankTransactionsStoryArgs = {
   showTags: boolean
   showTooltips: boolean
   showUploadOptions: boolean
-  showRepairAsRefresh: boolean
   mobileComponent: MobileComponentType
 }
 
@@ -23,7 +22,6 @@ const FEATURE_TOGGLES = [
   'showTags',
   'showTooltips',
   'showUploadOptions',
-  'showRepairAsRefresh',
 ] as const
 
 export const bankTransactionsStoryDefaultArgs: BankTransactionsStoryArgs = {

@@ -172,7 +172,6 @@ const meta: Meta<BankTransactionsStoryArgs> = {
       showTags,
       showTooltips,
       showUploadOptions,
-      showRepairAsRefresh,
       applyGlobalDateRange,
       monthlyView,
       mobileComponent,
@@ -190,7 +189,6 @@ const meta: Meta<BankTransactionsStoryArgs> = {
         showTags={showTags}
         showTooltips={showTooltips}
         showUploadOptions={showUploadOptions}
-        showRepairAsRefresh={showRepairAsRefresh}
         applyGlobalDateRange={applyGlobalDateRange}
         monthlyView={monthlyView}
         mobileComponent={mobileComponent}
