@@ -33,6 +33,7 @@ export interface BankTransactionsProps {
   mode?: BankTransactionsMode
 
   showCategorizationRules?: boolean
+  showConnectionAlert?: boolean
   showCustomerVendor?: boolean
   /**
    * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
@@ -46,6 +47,7 @@ export interface BankTransactionsProps {
   showTags?: boolean
   showTooltips?: boolean
   showUploadOptions?: boolean
+  showRepairAsRefresh?: boolean
 
   applyGlobalDateRange?: boolean
   monthlyView?: boolean

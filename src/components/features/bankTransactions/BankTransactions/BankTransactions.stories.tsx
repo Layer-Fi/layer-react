@@ -166,6 +166,7 @@ const meta: Meta<BankTransactionsStoryArgs> = {
     const {
       pageSize,
       showCategorizationRules,
+      showConnectionAlert,
       showCustomerVendor,
       showStatusToggle,
       showTags,
@@ -182,6 +183,7 @@ const meta: Meta<BankTransactionsStoryArgs> = {
       <BankTransactions
         pageSize={pageSize}
         showCategorizationRules={showCategorizationRules}
+        showConnectionAlert={showConnectionAlert}
         showCustomerVendor={showCustomerVendor}
         showStatusToggle={showStatusToggle}
         showTags={showTags}

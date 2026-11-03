@@ -4,6 +4,7 @@ import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStat
 import { BankTransactionsWithLinkedAccounts } from '@views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import {
@@ -16,6 +17,7 @@ import {
   linkedAccountsStoryDefaultArgs,
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
+import { disconnectedBankAccounts } from '@testUtils/storybook/data/bankAccounts'
 
 type BankTransactionsWithLinkedAccountsStoryArgs =
   SharedBankTransactionsArgs & SharedLinkedAccountsArgs & {
@@ -100,4 +102,13 @@ export const BookkeepingEnabled: Story = {
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {
   tags: ['public-api', 'docs-screenshot'],
+}
+
+// One broken Plaid connection, with the banner opted in so both surfaces show it.
+export const DisconnectedAccount: Story = {
+  tags: ['public-api'],
+  args: { showConnectionAlert: true },
+  parameters: {
+    msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
+  },
 }

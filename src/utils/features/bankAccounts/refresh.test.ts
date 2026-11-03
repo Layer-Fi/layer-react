@@ -114,6 +114,7 @@ describe('refresh', () => {
         reconnectWithNewCredentials: false,
         institutionName: 'Chase',
         accounts: [{ accountName: 'Chase Checking', mask: '1234' }],
+        needsRepair: false,
       },
       {
         connectionExternalId: 'plaid_rbc_1',
@@ -121,6 +122,7 @@ describe('refresh', () => {
         reconnectWithNewCredentials: false,
         institutionName: 'RBC',
         accounts: [{ accountName: 'RBC Checking', mask: '9876' }],
+        needsRepair: false,
       },
       {
         connectionExternalId: 'plaid_chase_2',
@@ -128,6 +130,7 @@ describe('refresh', () => {
         reconnectWithNewCredentials: false,
         institutionName: 'Chase',
         accounts: [{ accountName: 'Chase Business Card', mask: '2468' }],
+        needsRepair: false,
       },
     ])
   })
@@ -148,6 +151,68 @@ describe('refresh', () => {
     })
 
     expect(getBankAccountRefreshConnections([account], NOW)).toEqual([])
+  })
+
+  it('includes Plaid connections needing repair regardless of sync age', () => {
+    const brokenChecking = makeBankAccountWithMirroredExternalAccount({
+      id: '00000000-0000-4000-8000-000000000601',
+      externalAccountId: '00000000-0000-4000-8000-000000000602',
+      name: 'Chase Checking',
+      institution: 'Chase',
+      mask: '1234',
+      balance: 100,
+      externalAccountOverrides: {
+        connectionExternalId: 'plaid_chase_1',
+        updateType: 'BACKGROUND',
+        lastSyncedAt: NOW,
+        connectionNeedsRepairAsOf: NOW,
+      },
+    })
+    const brokenSavings = makeBankAccountWithMirroredExternalAccount({
+      id: '00000000-0000-4000-8000-000000000603',
+      externalAccountId: '00000000-0000-4000-8000-000000000604',
+      name: 'Chase Savings',
+      institution: 'Chase',
+      mask: '5678',
+      balance: 100,
+      externalAccountOverrides: {
+        connectionExternalId: 'plaid_chase_1',
+        updateType: 'USER_PRESENT_REQUIRED',
+        connectionNeedsRepairAsOf: NOW,
+      },
+    })
+    const brokenCustom = makeBankAccount({
+      id: '00000000-0000-4000-8000-000000000605',
+      externalAccounts: [{
+        ...makeBankAccount().externalAccounts[0]!,
+        externalAccountSource: 'CUSTOM',
+        connectionExternalId: 'custom',
+        connectionNeedsRepairAsOf: NOW,
+      }],
+    })
+    const brokenWithoutConnection = makeBankAccount({
+      id: '00000000-0000-4000-8000-000000000606',
+      externalAccounts: [{
+        ...makeBankAccount().externalAccounts[0]!,
+        connectionExternalId: null,
+        connectionNeedsRepairAsOf: NOW,
+      }],
+    })
+
+    expect(getBankAccountRefreshConnections([brokenChecking, brokenSavings, brokenCustom, brokenWithoutConnection])).toEqual([
+      {
+        connectionExternalId: 'plaid_chase_1',
+        source: 'PLAID',
+        reconnectWithNewCredentials: false,
+        institutionName: 'Chase',
+        accounts: [
+          { accountName: 'Chase Checking', mask: '1234' },
+          { accountName: 'Chase Savings', mask: '5678' },
+        ],
+        needsRepair: true,
+      },
+    ])
+    expect(getBankAccountNeedingReconnection([brokenChecking])).toBeNull()
   })
 
   it('finds the first account needing reconnection, for a single-account surface', () => {

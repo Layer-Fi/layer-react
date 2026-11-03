@@ -44,6 +44,7 @@ export interface LinkedAccountGridItemProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  showRepairAsRefresh?: boolean
 }
 
 export const LinkedAccountGridItem = ({
@@ -52,6 +53,7 @@ export const LinkedAccountGridItem = ({
   showLedgerBalance,
   showUnlinkItem,
   showBreakConnection,
+  showRepairAsRefresh = false,
 }: LinkedAccountGridItemProps) => {
   const { t } = useTranslation()
   const {
@@ -70,6 +72,8 @@ export const LinkedAccountGridItem = ({
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getBankAccountConnectionRepairInfo(bankAccount)
   const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
+  const fixInfo = showRepairAsRefresh ? null : repairInfo
+  const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
 
   let pillConfig
   if (accountNeedsUniquenessConfirmation(bankAccount)) {
@@ -96,26 +100,26 @@ export const LinkedAccountGridItem = ({
       }
     }
   }
-  else if (repairInfo) {
+  else if (fixInfo) {
     pillConfig = {
       text: t('linkedAccounts:LinkedAccountGridItem.action.fix_account', 'Fix account'),
       config: [
         {
           name: t('linkedAccounts:LinkedAccountGridItem.action.repair_connection', 'Repair connection'),
-          action: () => reconnectConnection(repairInfo),
+          action: () => reconnectConnection(fixInfo),
         },
       ],
     }
   }
-  else if (refreshInfo) {
+  else if (refreshableInfo) {
     pillConfig = {
-      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_now', 'Refresh Now'),
+      text: t('linkedAccounts:LinkedAccountGridItem.action.refresh_account_now', 'Refresh now'),
       status: 'success' as const,
       icon: <RefreshCcw size={14} />,
       config: [
         {
           name: t('linkedAccounts:LinkedAccountGridItem.action.refresh_connection', 'Refresh connection'),
-          action: () => reconnectConnection(refreshInfo),
+          action: () => reconnectConnection(refreshableInfo),
         },
       ],
     }

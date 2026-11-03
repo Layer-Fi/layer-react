@@ -1,13 +1,14 @@
 import { type Meta } from '@storybook/react-vite'
 
+import { type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
+
 // The linked-accounts props shared by every component that embeds the linked
 // accounts list (LinkedAccounts, BankTransactionsWithLinkedAccounts).
-export type LinkedAccountsStoryArgs = {
-  showLedgerBalance: boolean
-}
+export type LinkedAccountsStoryArgs = Required<Pick<LinkedAccountsProps, 'showLedgerBalance' | 'showRepairAsRefresh'>>
 
 export const linkedAccountsStoryDefaultArgs: LinkedAccountsStoryArgs = {
   showLedgerBalance: true,
+  showRepairAsRefresh: false,
 }
 
 type LinkedAccountsArgTypes = NonNullable<Meta<LinkedAccountsStoryArgs>['argTypes']>
@@ -17,6 +18,11 @@ export const makeLinkedAccountsStoryControls = ({ category }: { category?: strin
     showLedgerBalance: {
       control: 'boolean',
       description: 'Show each account’s ledger balance row',
+      table: { category },
+    },
+    showRepairAsRefresh: {
+      control: 'boolean',
+      description: 'Present a broken connection as a green Refresh now action instead of a red Fix account action',
       table: { category },
     },
   }

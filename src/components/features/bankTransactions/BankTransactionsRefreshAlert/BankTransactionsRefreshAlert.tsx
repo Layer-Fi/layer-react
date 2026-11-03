@@ -1,5 +1,5 @@
 import { type ReactNode, useCallback, useMemo } from 'react'
-import { ChevronDown, CircleArrowRight, RefreshCcw } from 'lucide-react'
+import { ChevronDown, CircleAlert, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
@@ -12,6 +12,7 @@ import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/features/bankTransactions/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useHasLinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
@@ -38,25 +39,35 @@ export const BankTransactionsRefreshAlert = () => {
 
 const BankTransactionsRefreshAlertContent = () => {
   const { data, isLoading } = useBankAccountsContext()
+  const showConnectionAlert = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ConnectionAlert)
+  const showRepairAsRefresh = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.RepairAsRefresh)
 
   const refreshConnections = useMemo(() => getBankAccountRefreshConnections(data), [data])
 
-  if (isLoading || refreshConnections.length === 0) {
+  if (!showConnectionAlert || isLoading || refreshConnections.length === 0) {
     return null
   }
 
-  return <BankTransactionsRefreshAlertBody refreshConnections={refreshConnections} />
+  return (
+    <BankTransactionsRefreshAlertBody
+      refreshConnections={refreshConnections}
+      showRepairAsRefresh={showRepairAsRefresh}
+    />
+  )
 }
+
+type RefreshAlertStatus = 'error' | 'success'
 
 type RefreshAlertActionProps = {
   label: string
+  status: RefreshAlertStatus
   icon: ReactNode
   isMobile: boolean
   ellipsis?: true
   onPress?: () => void
 }
 
-const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
+const RefreshAlertAction = ({ label, status, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
   <Button
     className='Layer__BankTransactionsRefreshAlert__Action'
     variant='text'
@@ -70,7 +81,7 @@ const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: Refres
       pis={isMobile ? 'md' : undefined}
       pie={isMobile ? 'xs' : undefined}
     >
-      <RefreshCcw size={14} />
+      {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
       <P size='sm' weight='normal' variant='inherit' ellipsis={ellipsis}>{label}</P>
       {icon}
     </HStack>
@@ -79,46 +90,87 @@ const RefreshAlertAction = ({ label, icon, isMobile, ellipsis, onPress }: Refres
 
 type BankTransactionsRefreshAlertBodyProps = {
   refreshConnections: ReadonlyArray<BankAccountRefreshConnection>
+  showRepairAsRefresh: boolean
 }
 
-const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactionsRefreshAlertBodyProps) => {
+const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefresh }: BankTransactionsRefreshAlertBodyProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { view, containerRef } = useElementViewSize<HTMLDivElement>()
   const reconnectConnection = useReconnectConnection()
 
   const isMobile = view === 'mobile'
+  const needsFixCopy = (connection: BankAccountRefreshConnection) => connection.needsRepair && !showRepairAsRefresh
 
-  const summaryLabel = tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
+  const summaryCounts = {
     count: refreshConnections.length,
     displayCount: formatNumber(refreshConnections.length),
-    one: 'Refresh {{displayCount}} bank connection to see recent transactions',
-    other: 'Refresh {{displayCount}} bank connections to see recent transactions',
-  })
+  }
+
+  const status: RefreshAlertStatus = refreshConnections.some(needsFixCopy) ? 'error' : 'success'
+
+  const summaryLabel = status === 'error'
+    ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_bank_connections', {
+      ...summaryCounts,
+      one: 'Fix {{displayCount}} bank connection to see recent transactions',
+      other: 'Fix {{displayCount}} bank connections to see recent transactions',
+    })
+    : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_bank_connections', {
+      ...summaryCounts,
+      one: 'Refresh {{displayCount}} bank connection to see recent transactions',
+      other: 'Refresh {{displayCount}} bank connections to see recent transactions',
+    })
 
   const Trigger = useCallback(() => (
-    <RefreshAlertAction label={summaryLabel} icon={<ChevronDown size={14} />} isMobile={isMobile} />
-  ), [isMobile, summaryLabel])
+    <RefreshAlertAction label={summaryLabel} status={status} icon={<ChevronDown size={14} />} isMobile={isMobile} />
+  ), [isMobile, status, summaryLabel])
 
   const connectionLabel = (connection: BankAccountRefreshConnection) => {
     const [onlyAccount] = connection.accounts
-    if (connection.accounts.length === 1 && onlyAccount) {
+    const count = connection.accounts.length
+    const displayCount = formatNumber(count)
+    const { institutionName } = connection
+
+    if (needsFixCopy(connection)) {
+      if (count === 1 && onlyAccount) {
+        return t('bankTransactions:BankTransactionsRefreshAlert.action.fix_account', 'Fix {{accountLabel}}', {
+          accountLabel: getBankAccountLabelWithMask(t, onlyAccount),
+        })
+      }
+
+      return institutionName
+        ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_institution_accounts', {
+          count,
+          displayCount,
+          institutionName,
+          one: 'Fix {{institutionName}} ({{displayCount}} account)',
+          other: 'Fix {{institutionName}} ({{displayCount}} accounts)',
+        })
+        : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.fix_linked_accounts', {
+          count,
+          displayCount,
+          one: 'Fix {{displayCount}} linked account',
+          other: 'Fix {{displayCount}} linked accounts',
+        })
+    }
+
+    if (count === 1 && onlyAccount) {
       return t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect_account', 'Refresh {{accountLabel}}', {
         accountLabel: getBankAccountLabelWithMask(t, onlyAccount),
       })
     }
 
-    return connection.institutionName
+    return institutionName
       ? tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_institution_accounts', {
-        count: connection.accounts.length,
-        displayCount: formatNumber(connection.accounts.length),
-        institutionName: connection.institutionName,
+        count,
+        displayCount,
+        institutionName,
         one: 'Refresh {{institutionName}} ({{displayCount}} account)',
         other: 'Refresh {{institutionName}} ({{displayCount}} accounts)',
       })
       : tPlural(t, 'bankTransactions:BankTransactionsRefreshAlert.action.reconnect_linked_accounts', {
-        count: connection.accounts.length,
-        displayCount: formatNumber(connection.accounts.length),
+        count,
+        displayCount,
         one: 'Refresh {{displayCount}} linked account',
         other: 'Refresh {{displayCount}} linked accounts',
       })
@@ -131,6 +183,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactio
       ref={containerRef}
       className='Layer__BankTransactionsRefreshAlert'
       data-view={view}
+      data-status={status}
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
       gap='2xs'
@@ -165,6 +218,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections }: BankTransactio
           <RefreshAlertAction
             key={getRefreshConnectionKey(connection)}
             label={summaryLabel}
+            status={status}
             icon={<CircleArrowRight size={14} />}
             isMobile={isMobile}
             ellipsis

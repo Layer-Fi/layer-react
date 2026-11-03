@@ -17,6 +17,7 @@ export type RefreshConnectionIdentity = {
 export type BankAccountRefreshConnection = RefreshConnectionIdentity & {
   institutionName: string | null
   accounts: BankAccountLabelParts[]
+  needsRepair: boolean
 }
 
 export type BankAccountNeedingReconnection = RefreshConnectionIdentity & {
@@ -45,7 +46,9 @@ function isExternalAccountRepairable(externalAccount: ExternalAccountConnection)
 }
 
 function isExternalAccountNeedingRepair(externalAccount: ExternalAccountConnection): externalAccount is RepairableExternalAccount {
-  return externalAccount.connectionNeedsRepairAsOf != null && isExternalAccountRepairable(externalAccount)
+  return externalAccount.externalAccountSource === 'PLAID'
+    && externalAccount.connectionNeedsRepairAsOf != null
+    && isExternalAccountRepairable(externalAccount)
 }
 
 function isExternalAccountDueForRefresh(
@@ -59,11 +62,11 @@ function isExternalAccountDueForRefresh(
 
 function getRefreshableAccounts(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
-  now: Date,
+  isRefreshable: (externalAccount: ExternalAccountConnection) => externalAccount is RepairableExternalAccount,
 ): RefreshableAccount[] {
   return (bankAccounts ?? []).flatMap(bankAccount =>
     bankAccount.externalAccounts
-      .filter((ea): ea is RepairableExternalAccount => isExternalAccountDueForRefresh(ea, now))
+      .filter(isRefreshable)
       .map(externalAccount => ({ bankAccount, externalAccount })),
   )
 }
@@ -100,8 +103,10 @@ export function getBankAccountRefreshConnections(
   now = new Date(),
 ): BankAccountRefreshConnection[] {
   const groups = new Map<string, { identity: RefreshConnectionIdentity, members: RefreshableAccount[] }>()
+  const isRefreshable = (ea: ExternalAccountConnection): ea is RepairableExternalAccount =>
+    isExternalAccountDueForRefresh(ea, now) || isExternalAccountNeedingRepair(ea)
 
-  for (const refreshable of getRefreshableAccounts(bankAccounts, now)) {
+  for (const refreshable of getRefreshableAccounts(bankAccounts, isRefreshable)) {
     const identity = getRefreshConnectionIdentity(refreshable.externalAccount)
     const key = getRefreshConnectionKey(identity)
     const group = groups.get(key) ?? { identity, members: [] }
@@ -119,6 +124,7 @@ export function getBankAccountRefreshConnections(
       reconnectWithNewCredentials: members.some(({ externalAccount }) => externalAccount.reconnectWithNewCredentials ?? false),
       institutionName: institutionNames.size === 1 ? [...institutionNames][0] ?? null : null,
       accounts: [...accounts.values()],
+      needsRepair: members.some(({ externalAccount }) => isExternalAccountNeedingRepair(externalAccount)),
     }
   })
 }
@@ -144,7 +150,7 @@ export function getBankAccountNeedingReconnection(
   bankAccounts: ReadonlyArray<BankAccount> | undefined,
   now = new Date(),
 ): BankAccountNeedingReconnection | null {
-  const [refreshable] = getRefreshableAccounts(bankAccounts, now)
+  const [refreshable] = getRefreshableAccounts(bankAccounts, (ea): ea is RepairableExternalAccount => isExternalAccountDueForRefresh(ea, now))
   if (!refreshable) return null
 
   const { bankAccount, externalAccount } = refreshable

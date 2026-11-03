@@ -12,11 +12,11 @@ import { AccountConfirmationStoreProvider } from '@providers/features/linkedAcco
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { View } from '@blocks/Layout/View/View'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
-import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
+import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
-  linkedAccounts?: BankTransactionsWithLinkedAccountsStringOverrides
+  linkedAccounts?: LinkedAccountsProps['stringOverrides']
   bankTransactions?: BankTransactionsStringOverrides
 }
 
@@ -26,6 +26,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   elevatedLinkedAccounts?: boolean
 
   showBreakConnection?: boolean
+  showConnectionAlert?: boolean
   showCustomerVendor?: boolean
   /**
    * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
@@ -45,6 +46,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
    */
   mode?: BankTransactionsMode
   mobileComponent?: MobileComponentType
+  showRepairAsRefresh?: boolean
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
@@ -65,6 +67,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   mode,
 
   showBreakConnection = false,
+  showConnectionAlert = false,
   showCustomerVendor = false,
   showLedgerBalance = true,
   showTags = false,
@@ -73,6 +76,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
   showUploadOptions = false,
 
   mobileComponent,
+  showRepairAsRefresh = false,
   stringOverrides,
   renderInAppLink,
   showCategorizationRules,
@@ -103,11 +107,14 @@ const BankTransactionsWithLinkedAccountsContent = ({
             showLedgerBalance={showLedgerBalance}
             showUnlinkItem={showUnlinkItem}
             showBreakConnection={showBreakConnection}
+            showRepairAsRefresh={showRepairAsRefresh}
             stringOverrides={stringOverrides?.linkedAccounts}
           />
           <BankTransactions
             asWidget
             filters={filters}
+            showConnectionAlert={showConnectionAlert}
+            showRepairAsRefresh={showRepairAsRefresh}
             showCustomerVendor={showCustomerVendor}
             showTags={showTags}
             showTooltips={showTooltips}

@@ -2,6 +2,11 @@
   background: var(--color-info-success-bg);
   color: var(--color-info-success-fg);
 
+  &[data-status='error'] {
+    background: var(--color-info-error-bg);
+    color: var(--color-info-error-fg);
+  }
+
   &__Action {
     justify-content: flex-start;
     inline-size: fit-content;
