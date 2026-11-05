@@ -36,6 +36,7 @@ const PERIODS: BookkeepingPeriod[] = [
     tasks: [
       makeUnifiedAskFormTask({ id: fixtureId('d01'), status: BusinessTaskStatus.Todo }),
       makeUnifiedAskFormTask({ id: fixtureId('d02'), status: BusinessTaskStatus.Todo }),
+      makeUnifiedAskFormTask({ id: fixtureId('d03'), status: BusinessTaskStatus.Completed }),
     ],
   },
 ]
