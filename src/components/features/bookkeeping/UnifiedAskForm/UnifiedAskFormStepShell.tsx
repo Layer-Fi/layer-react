@@ -11,7 +11,7 @@ type UnifiedAskFormStepShellProps = {
 /** A form step's prompt above its fields. */
 export const UnifiedAskFormStepShell = ({ prompt, children }: UnifiedAskFormStepShellProps) => (
   <VStack gap='xs'>
-    {prompt ? <P size='sm'>{prompt}</P> : null}
+    {prompt ? <P size='sm' className='Layer__UnifiedAskForm__Prompt'>{prompt}</P> : null}
     {children}
   </VStack>
 )
