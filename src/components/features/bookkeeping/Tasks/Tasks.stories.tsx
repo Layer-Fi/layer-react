@@ -149,6 +149,7 @@ export const ProvisionallyClosed: Story = {
     pinnedDateRange: NOVEMBER,
     msw: {
       handlers: [
+        getBankAccounts.mock(mockAccounts),
         getBookkeepingPeriods.mock(makeBookkeepingPeriods(FIXTURE_YEAR - 2).map(period =>
           period.year === FIXTURE_YEAR && period.month === 4
             ? { ...period, status: BookkeepingPeriodStatus.CLOSED_OPEN_TASKS }
