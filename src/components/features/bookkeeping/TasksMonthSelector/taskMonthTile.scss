@@ -39,7 +39,7 @@
     cursor: not-allowed;
   }
 
-  &:hover:not([data-disabled]) {
+  &:hover:not([data-disabled], [data-active]) {
     box-shadow: 0 0 0 1px var(--month-outline), 0 0 0 3px var(--color-base-300);
   }
 
