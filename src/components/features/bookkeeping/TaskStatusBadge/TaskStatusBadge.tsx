@@ -65,11 +65,18 @@ const getBadgeConfig = (
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
     }
-    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
-    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {
       return {
         color: 'warning',
         icon: <CircleAlert size={12} />,
+        label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
+      }
+    }
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+      return {
+        color: 'success',
+        icon: <CircleCheckBig size={12} />,
         label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
