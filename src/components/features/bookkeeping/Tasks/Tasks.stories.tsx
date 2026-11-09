@@ -1,16 +1,18 @@
 import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 import { pickCyclic } from '@utils/shared/array/pickCyclic'
 import { type DateRange } from '@utils/shared/date/dateRange'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@features/bookkeeping/Tasks/Tasks'
 
-import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { makeBookkeepingPeriods, makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
+import { get as getBookkeepingPeriods } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
@@ -140,6 +142,24 @@ const NOVEMBER: DateRange = {
 export const Default: Story = {
   tags: ['public-api', 'docs-screenshot'],
   parameters: { pinnedDateRange: NOVEMBER },
+}
+
+export const ProvisionallyClosed: Story = {
+  parameters: {
+    pinnedDateRange: NOVEMBER,
+    msw: {
+      handlers: [
+        getBankAccounts.mock(mockAccounts),
+        getBookkeepingPeriods.mock(makeBookkeepingPeriods(FIXTURE_YEAR - 2).map(period =>
+          period.year === FIXTURE_YEAR && period.month === 4
+            ? { ...period, status: BookkeepingPeriodStatus.CLOSED_OPEN_TASKS }
+            : period,
+        )),
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...handlers,
+      ],
+    },
+  },
 }
 
 const JULY: DateRange = {
