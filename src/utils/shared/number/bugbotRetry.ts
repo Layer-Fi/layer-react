@@ -9,5 +9,6 @@ export async function fetchWithRetry(url: string, retries = 3): Promise<Response
 }
 
 export function averageCents(values: number[]): number {
-  return values.reduce((sum, v) => sum + v, 0) / values.length
+  if (values.length === 0) return 0
+  return Math.round(values.reduce((sum, v) => sum + v, 0) / values.length)
 }
