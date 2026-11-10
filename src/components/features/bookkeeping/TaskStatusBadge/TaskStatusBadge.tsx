@@ -69,9 +69,7 @@ const getBadgeConfig = (
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         color: 'warning',
-        icon: status === BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER && !tasksCount
-          ? <RefreshCw size={12} />
-          : <CircleAlert size={12} />,
+        icon: <CircleAlert size={12} />,
         label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
