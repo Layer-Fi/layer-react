@@ -1,6 +1,4 @@
-import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { type MonthData } from '@features/bookkeeping/TasksMonthSelector/types'
 import { TaskStatusBadge } from '@features/bookkeeping/TaskStatusBadge/TaskStatusBadge'
@@ -16,9 +14,7 @@ export type TaskMonthTileProps = {
 }
 
 export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: TaskMonthTileProps) => {
-  const dataProperties = toDataProperties({ active, disabled, status: disabled ? undefined : data.status })
-  const openTasksCount = data.total - data.completed
-  const isClosed = data.status === BookkeepingPeriodStatus.CLOSED_COMPLETE || data.status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
+  const dataProperties = toDataProperties({ active, disabled })
 
   return (
     <div
@@ -30,14 +26,7 @@ export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: Tas
         {data.monthStr}
       </P>
       {data.status && (
-        <HStack align='center' gap='xs'>
-          {openTasksCount > 0 && (
-            <TaskStatusBadge status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER} tasksCount={openTasksCount} isMobile={isMobile} />
-          )}
-          {(isClosed || openTasksCount === 0) && (
-            <TaskStatusBadge status={isClosed ? BookkeepingPeriodStatus.CLOSED_COMPLETE : data.status} isMobile={isMobile} />
-          )}
-        </HStack>
+        <TaskStatusBadge status={data.status} tasksCount={data.total - data.completed} isMobile={isMobile} />
       )}
     </div>
   )
