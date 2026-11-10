@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next'
-import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, RefreshCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -60,7 +60,7 @@ const getBadgeConfig = (
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         color: 'info',
-        icon: <Clock size={12} />,
+        icon: <RefreshCw size={12} />,
         label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
@@ -69,7 +69,9 @@ const getBadgeConfig = (
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         color: 'warning',
-        icon: <CircleAlert size={12} />,
+        icon: status === BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER && !tasksCount
+          ? <RefreshCw size={12} />
+          : <CircleAlert size={12} />,
         label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }

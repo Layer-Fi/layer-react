@@ -31,37 +31,49 @@ export function useBookkeepingStatusConfig(
   if (!status) return
 
   const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
-  const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
-    ? tPlural(t, 'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.working_on_books_please_complete_tasks', {
-      count: incompleteTasksCount,
-      displayCount: formatNumber(incompleteTasksCount),
-      monthName,
-      one: 'We’re working on your {{monthName}} books. Please complete the {{displayCount}} open task.',
-      other: 'We’re working on your {{monthName}} books. Please complete the {{displayCount}} open tasks.',
-    })
-    : t(
-      'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.working_on_books_no_action_needed',
-      'We’re working on your {{monthName}} books. No action is needed from you right now.',
-      { monthName },
-    )
+  const bannerStatus = incompleteTasksCount === undefined
+    || status === BookkeepingPeriodStatus.CLOSED_COMPLETE
+    || status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
+    || status === BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
+    ? status
+    : incompleteTasksCount > 0
+      ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+      : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
 
-  switch (status) {
+  switch (bannerStatus) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
     case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_in_progress', 'Books in progress'),
-        description: inProgressDescription,
+        description: t(
+          'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.working_on_books_no_action_needed',
+          'We’re working on your {{monthName}} books. No action is needed from you right now.',
+          { monthName },
+        ),
         status: DataStateStatus.info,
         icon: <Clock size={12} />,
       }
     }
-    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
-    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {
       return {
         label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.action_required', 'Action required'),
         description: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
+        status: DataStateStatus.warning,
+        icon: <CircleAlert size={12} />,
+      }
+    }
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
+      return {
+        label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.action_required', 'Action required'),
+        description: tPlural(t, 'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.books_completed_pending_adjustments', {
+          count: incompleteTasksCount ?? 0,
+          displayCount: formatNumber(incompleteTasksCount ?? 0),
+          monthName,
+          one: 'We’ve completed your {{monthName}} books and we’ll make final adjustments after you complete {{displayCount}} outstanding task.',
+          other: 'We’ve completed your {{monthName}} books and we’ll make final adjustments after you complete {{displayCount}} outstanding tasks.',
+        }),
         status: DataStateStatus.warning,
         icon: <CircleAlert size={12} />,
       }
@@ -79,7 +91,7 @@ export function useBookkeepingStatusConfig(
     }
     default: {
       return safeAssertUnreachable({
-        value: status,
+        value: bannerStatus,
         message: 'Unexpected bookkeeping status in BookkeepingStatus',
         fallbackValue: undefined,
       })

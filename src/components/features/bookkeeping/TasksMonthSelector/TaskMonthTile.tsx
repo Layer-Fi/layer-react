@@ -26,16 +26,16 @@ export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: Tas
       onClick={() => !disabled && onClick(new Date(data.year, data.month - 1, 1))}
       {...dataProperties}
     >
-      <HStack align='center' gap='xs'>
-        <P size='sm' status={disabled ? 'disabled' : undefined}>
-          {data.monthStr}
-        </P>
-        {data.status && openTasksCount > 0 && (
-          <TaskStatusBadge status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER} tasksCount={openTasksCount} isMobile={isMobile} />
-        )}
-      </HStack>
-      {data.status && (isClosed || openTasksCount === 0) && (
-        <TaskStatusBadge status={isClosed ? BookkeepingPeriodStatus.CLOSED_COMPLETE : data.status} isMobile={isMobile} />
+      <P size='sm' status={disabled ? 'disabled' : undefined}>
+        {data.monthStr}
+      </P>
+      {data.status && (
+        <HStack align='center' gap='xs'>
+          {openTasksCount > 0 && (
+            <TaskStatusBadge status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER} tasksCount={openTasksCount} isMobile={isMobile} />
+          )}
+          <TaskStatusBadge status={isClosed ? BookkeepingPeriodStatus.CLOSED_COMPLETE : data.status} isMobile={isMobile} />
+        </HStack>
       )}
     </div>
   )
