@@ -33,4 +33,3 @@ jobs:
     secrets: inherit
     with:
       pr_number: ${{ inputs.pr_number }}
-      node_version: '22'
