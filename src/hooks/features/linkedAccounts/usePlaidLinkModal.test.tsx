@@ -217,7 +217,9 @@ describe('usePlaidLinkModal', () => {
     it('keeps repairs without a connection identifier compatible', async () => {
       const onRequest = vi.fn()
       server.use(postUpdateConnectionStatus.mock(undefined, {
-        onRequest: async ({ request }) => onRequest({ query: new URL(request.url).search, body: await request.text() }),
+        onRequest: async ({ request }) => {
+          onRequest({ query: new URL(request.url).search, body: await request.text() })
+        },
       }))
       const { session } = await renderPlaidLinkModal({ mode: 'update' })
 

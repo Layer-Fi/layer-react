@@ -72,10 +72,12 @@ describe('useLinkedAccounts', () => {
     ])('attributes a completed repair to the $name', async ({ connectionExternalId, customerManagedPlaidConfig }) => {
       const onRequest = vi.fn()
       server.use(postUpdateConnectionStatus.mock(undefined, {
-        onRequest: async ({ request }) => onRequest({
-          query: [...new URL(request.url).searchParams.entries()],
-          body: await request.text(),
-        }),
+        onRequest: async ({ request }) => {
+          onRequest({
+            query: [...new URL(request.url).searchParams.entries()],
+            body: await request.text(),
+          })
+        },
       }))
       const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
