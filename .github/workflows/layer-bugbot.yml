@@ -1,4 +1,4 @@
-name: Layer Bugbot
+name: 🐛 Layer Bugbot - PR Review
 
 on:
   pull_request:
@@ -223,7 +223,7 @@ jobs:
           COMMENT_ID: ${{ needs.route.outputs.comment_id }}
           COMMENT_TYPE: ${{ needs.route.outputs.comment_type }}
           IN_REPLY_TO_ID: ${{ needs.route.outputs.in_reply_to_id }}
-          MODEL_LABEL: Opus 5.5 High
+          MODEL_LABEL: Opus 5.5 Medium
           BUGBOT_REF: master
           RESUME_ID: ${{ steps.resume.outputs.session_id }}
           RESUME_HEAD: ${{ steps.resume.outputs.prev_head }}
@@ -284,7 +284,7 @@ jobs:
           prompt: ${{ steps.prompt.outputs.prompt }}
           claude_args: >-
             --model claude-opus-5-5
-            --effort high
+            --effort medium
             --max-turns 400
             ${{ steps.resume.outputs.session_id && format('--resume {0}', steps.resume.outputs.session_id) || '' }}
             --allowedTools "${{ steps.tools.outputs.allowed }}"
