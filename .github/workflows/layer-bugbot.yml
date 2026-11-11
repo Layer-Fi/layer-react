@@ -1,6 +1,13 @@
-# Layer Bugbot — AI PR review (Claude Code via Layer-Fi/layer-bugbot).
+# Layer Bugbot — AI PR review (Claude Code, anthropics/claude-code-action).
 # Commands on a PR: `bugbot run` / `bugbot review` (review), `bugbot fix` / `bugbot autofix` (fix).
-# All logic lives in Layer-Fi/layer-bugbot; this file only declares the triggers.
+#
+# STANDALONE COPY of Layer-Fi/layer-bugbot/.github/workflows/layer-bugbot.yml.
+# layer-react is public, and GitHub doesn't let a public repo call a reusable workflow from a
+# private repo, so this repo carries the full workflow. The prompt itself is still loaded at run
+# time from Layer-Fi/layer-bugbot (master) with the Layer Bugbot App token, so prompt changes apply
+# here automatically. Changes to the workflow logic must be copied here by hand.
+#
+# Secrets (repo-level): ANTHROPIC_API_KEY, LAYER_BUGBOT_APP_ID, LAYER_BUGBOT_APP_PRIVATE_KEY.
 name: Layer Bugbot
 
 on:
@@ -21,19 +28,253 @@ permissions:
   pull-requests: read
 
 jobs:
-  layer-bugbot:
-    # Cheap pre-filter so ordinary comments don't start the reusable workflow.
-    # (contains() is case-insensitive; exact matching happens in the route job.)
+  route:
+    name: Route event
+    runs-on: ubuntu-latest
+    # Cheap pre-filter so ordinary comments don't start a runner.
+    # (contains() is case-insensitive; exact matching happens in the Decide mode step.)
     if: >-
       github.event_name == 'pull_request' ||
       github.event_name == 'workflow_dispatch' ||
       (github.event.sender.type == 'User' &&
         (contains(github.event.comment.body, 'bugbot') || contains(github.event.comment.body, 'layer review')))
-    uses: Layer-Fi/layer-bugbot/.github/workflows/layer-bugbot.yml@master
-    # Pass only the secrets Bugbot needs (not `secrets: inherit`, which would expose every repo secret).
-    secrets:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      LAYER_BUGBOT_APP_ID: ${{ secrets.LAYER_BUGBOT_APP_ID }}
-      LAYER_BUGBOT_APP_PRIVATE_KEY: ${{ secrets.LAYER_BUGBOT_APP_PRIVATE_KEY }}
-    with:
-      pr_number: ${{ inputs.pr_number }}
+    timeout-minutes: 5
+    outputs:
+      mode: ${{ steps.route.outputs.mode }}
+      pr_number: ${{ steps.route.outputs.pr_number }}
+      comment_id: ${{ steps.route.outputs.comment_id }}
+      comment_type: ${{ steps.route.outputs.comment_type }}
+      in_reply_to_id: ${{ steps.route.outputs.in_reply_to_id }}
+    steps:
+      - name: Decide mode
+        id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          DISPATCH_PR: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          ev="$GITHUB_EVENT_PATH"
+          mode=""; pr=""; cid=""; ctype=""; reply=""
+
+          finish() {
+            {
+              echo "mode=$mode"
+              echo "pr_number=$pr"
+              echo "comment_id=$cid"
+              echo "comment_type=$ctype"
+              echo "in_reply_to_id=$reply"
+            } >> "$GITHUB_OUTPUT"
+            echo "Routed: mode='${mode:-none}' pr='${pr}' — $1"
+            exit 0
+          }
+
+          case "$REPO" in
+            Layer-Fi/api|Layer-Fi/layer-react|Layer-Fi/bookkeeping-ui) ;;
+            *) finish "repository not in allowlist" ;;
+          esac
+
+          case "$EVENT_NAME" in
+            pull_request)
+              action=$(jq -r '.action' "$ev")
+              pr=$(jq -r '.pull_request.number' "$ev")
+              state=$(jq -r '.pull_request.state' "$ev")
+              draft=$(jq -r '.pull_request.draft' "$ev")
+              head_repo=$(jq -r '.pull_request.head.repo.full_name' "$ev")
+              head_sha=$(jq -r '.pull_request.head.sha' "$ev")
+              sender_type=$(jq -r '.sender.type' "$ev")
+              [ "$state" = "open" ] || finish "PR is not open"
+              [ "$head_repo" = "$REPO" ] || { pr=""; finish "fork PR (no secrets available)"; }
+              [ "$sender_type" = "User" ] || { pr=""; finish "event sent by a bot"; }
+              if [ "$action" = "ready_for_review" ]; then
+                mode=REVIEW
+              elif { [ "$action" = "opened" ] || [ "$action" = "synchronize" ]; } && [ "$draft" = "false" ]; then
+                mode=REVIEW
+              else
+                pr=""; finish "draft PR or ignored action '$action'"
+              fi
+              if [ "$action" = "synchronize" ]; then
+                msg=$(gh api "repos/$REPO/commits/$head_sha" --jq '.commit.message' || true)
+                if printf '%s' "$msg" | grep -q '\[layer-bugbot-autofix\]'; then
+                  mode=""; pr=""; finish "push came from Bugbot autofix (that run reviews its own push)"
+                fi
+              fi
+              finish "pull_request/$action"
+              ;;
+
+            issue_comment|pull_request_review_comment)
+              [ "$(jq -r '.action' "$ev")" = "created" ] || finish "comment not created"
+              [ "$(jq -r '.sender.type' "$ev")" = "User" ] || finish "comment by a bot"
+              assoc=$(jq -r '.comment.author_association' "$ev")
+              case "$assoc" in OWNER|MEMBER|COLLABORATOR) ;; *) finish "commenter association '$assoc' not allowed" ;; esac
+
+              if [ "$EVENT_NAME" = "issue_comment" ]; then
+                [ "$(jq -r '.issue.pull_request != null' "$ev")" = "true" ] || finish "comment is not on a PR"
+                pr=$(jq -r '.issue.number' "$ev")
+              else
+                pr=$(jq -r '.pull_request.number' "$ev")
+                reply=$(jq -r '.comment.in_reply_to_id // ""' "$ev")
+              fi
+              cid=$(jq -r '.comment.id' "$ev")
+              ctype="$EVENT_NAME"
+
+              body=$(jq -r '.comment.body | ascii_downcase | gsub("^\\s+|\\s+$"; "")' "$ev")
+              case "$body" in
+                "bugbot run"|"bugbot review"|"layer review"|"layer bugbot review") mode=REVIEW ;;
+                "bugbot fix"|"bugbot autofix"|"bugbot auto-fix") mode=AUTOFIX ;;
+                *) pr=""; cid=""; ctype=""; reply=""; finish "not a Bugbot command" ;;
+              esac
+
+              pr_json=$(gh api "repos/$REPO/pulls/$pr")
+              if [ "$(jq -r '.state' <<<"$pr_json")" != "open" ]; then
+                mode=""; finish "PR is not open"
+              fi
+              if [ "$(jq -r '.head.repo.full_name' <<<"$pr_json")" != "$REPO" ]; then
+                mode=""; finish "fork PR (Bugbot does not run on untrusted fork code)"
+              fi
+              finish "$EVENT_NAME command '$body'"
+              ;;
+
+            workflow_dispatch)
+              [ -n "$DISPATCH_PR" ] || finish "no pr_number given"
+              pr="$DISPATCH_PR"
+              mode=REVIEW
+              finish "manual run"
+              ;;
+
+            *)
+              finish "unsupported event $EVENT_NAME"
+              ;;
+          esac
+
+  bugbot:
+    name: Layer Bugbot (${{ needs.route.outputs.mode }})
+    needs: route
+    if: needs.route.outputs.mode != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # One Bugbot run per PR at a time. A newer pending run replaces an older pending one.
+    concurrency:
+      group: layer-bugbot-${{ github.repository }}-pr-${{ needs.route.outputs.pr_number }}
+      cancel-in-progress: false
+    env:
+      MODE: ${{ needs.route.outputs.mode }}
+      PR_NUMBER: ${{ needs.route.outputs.pr_number }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Mint Layer Bugbot app token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.LAYER_BUGBOT_APP_ID }}
+          private-key: ${{ secrets.LAYER_BUGBOT_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }},layer-bugbot
+
+      - name: Configure gh and git identity
+        env:
+          TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+          echo "GH_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          uid=$(GH_TOKEN="$TOKEN" gh api "/users/${APP_SLUG}%5Bbot%5D" --jq .id)
+          git config --global user.name "${APP_SLUG}[bot]"
+          git config --global user.email "${uid}+${APP_SLUG}[bot]@users.noreply.github.com"
+
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Build prompt
+        id: prompt
+        env:
+          COMMENT_ID: ${{ needs.route.outputs.comment_id }}
+          COMMENT_TYPE: ${{ needs.route.outputs.comment_type }}
+          IN_REPLY_TO_ID: ${{ needs.route.outputs.in_reply_to_id }}
+          MODEL_LABEL: Opus 5.5 High
+          BUGBOT_REF: master
+        run: |
+          set -euo pipefail
+          f="$RUNNER_TEMP/layer-bugbot-prompt.md"
+          {
+            echo "MODE: $MODE"
+            echo
+            echo "# Run context"
+            echo
+            echo "- Repository: $GITHUB_REPOSITORY"
+            echo "- PR number: $PR_NUMBER"
+            echo "- Triggering event: $GITHUB_EVENT_NAME"
+            if [ -n "$COMMENT_ID" ]; then
+              echo "- Triggering comment: id $COMMENT_ID ($COMMENT_TYPE)"
+            fi
+            if [ -n "$IN_REPLY_TO_ID" ]; then
+              echo "- in_reply_to_id: $IN_REPLY_TO_ID"
+            fi
+            echo "- SESSION_URL: $RUN_URL"
+            echo "- Model label: $MODEL_LABEL"
+            echo "- Scratch directory: $RUNNER_TEMP"
+            echo
+            echo "---"
+            echo
+            gh api -H "Accept: application/vnd.github.raw" \
+              "repos/Layer-Fi/layer-bugbot/contents/prompt/layer-bugbot.md?ref=$BUGBOT_REF"
+          } > "$f"
+          delim="LAYER_BUGBOT_PROMPT_$(openssl rand -hex 8)"
+          { echo "prompt<<$delim"; cat "$f"; echo; echo "$delim"; } >> "$GITHUB_OUTPUT"
+
+      - name: Select tools
+        id: tools
+        run: |
+          set -euo pipefail
+          read_tools='Read,Glob,Grep,LS,Write,TodoWrite'
+          gh_tools='Bash(gh api:*),Bash(gh pr view:*),Bash(gh pr diff:*)'
+          git_read='Bash(git fetch:*),Bash(git checkout:*),Bash(git reset:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git rev-parse:*),Bash(git rev-list:*),Bash(git merge-base:*),Bash(git remote:*),Bash(git status:*),Bash(git blame:*),Bash(git ls-files:*),Bash(git branch:*)'
+          shell_read='Bash(jq:*),Bash(cat:*),Bash(ls:*),Bash(wc:*),Bash(head:*),Bash(tail:*),Bash(date:*),Bash(test:*),Bash(grep:*),Bash(rg:*),Bash(find:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(echo:*),Bash(printf:*),Bash(cd:*),Bash(mkdir:*),Bash(sleep:*)'
+          # No build/test/lint/install tools in any mode: GitHub CI owns build and test verification.
+          fix_tools='Edit,MultiEdit,Bash(git add:*),Bash(git commit:*),Bash(git push origin HEAD:*),Bash(git rebase:*),Bash(git stash:*)'
+          allowed="$read_tools,$gh_tools,$git_read,$shell_read"
+          if [ "$MODE" = "AUTOFIX" ]; then allowed="$allowed,$fix_tools"; fi
+          echo "allowed=$allowed" >> "$GITHUB_OUTPUT"
+
+      - name: Run Layer Bugbot
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app-token.outputs.token }}
+          prompt: ${{ steps.prompt.outputs.prompt }}
+          claude_args: >-
+            --model claude-opus-5-5
+            --effort high
+            --max-turns 400
+            --allowedTools "${{ steps.tools.outputs.allowed }}"
+            --disallowedTools "Bash(git push --force:*),Bash(git push -f:*),Bash(git push --force-with-lease:*),Bash(npm:*),Bash(npx:*),Bash(yarn:*),Bash(pnpm:*),Bash(gradle:*),Bash(./gradlew:*),Bash(mvn:*),WebFetch,WebSearch"
+          show_full_output: false
+          display_report: true
+
+      # If the job failed, timed out, or was cancelled before Bugbot cleaned up, don't leave an
+      # in-progress "Layer Bugbot" check or a "running" status comment behind.
+      - name: Clean up after an unfinished run
+        if: (failure() || cancelled()) && steps.app-token.outcome == 'success'
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          for sha in $(gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '.[].sha' | tail -n 5); do
+            gh api "repos/$REPO/commits/$sha/check-runs?check_name=Layer%20Bugbot" \
+              | jq -r --arg u "$RUN_URL" '.check_runs[] | select(.status != "completed" and .external_id == $u) | .id' \
+              | while read -r id; do
+                  jq -n --arg u "$RUN_URL" '{status:"completed",conclusion:"failure",output:{title:"Layer Bugbot did not complete",summary:("The workflow run ended before the review finished. [View run](" + $u + ")")}}' \
+                    | gh api -X PATCH "repos/$REPO/check-runs/$id" --input - >/dev/null || true
+                done
+          done
+          gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate \
+            | jq -r --arg u "$RUN_URL" '.[] | select((.body | contains("layer-bugbot:status")) and (.body | contains($u)) and (.body | contains("\"status\":\"running\""))) | .id' \
+            | while read -r cid; do
+                jq -n --arg u "$RUN_URL" '{body: ("<sup>[**Layer Bugbot**](" + $u + ")🐛</sup>\n\n❌ **Failed** — the workflow run ended unexpectedly — [view run](" + $u + ")\n\n<!-- layer-bugbot:status {\"status\":\"failed\",\"session_url\":\"" + $u + "\"} -->")}' \
+                  | gh api -X PATCH "repos/$REPO/issues/comments/$cid" --input - >/dev/null || true
+              done
