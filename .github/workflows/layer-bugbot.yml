@@ -221,8 +221,11 @@ jobs:
             echo
             echo "---"
             echo
+            # Substitute the literal scratch path so Claude never has to expand $RUNNER_TEMP
+            # (commands containing variables are blocked in non-interactive runs).
             gh api -H "Accept: application/vnd.github.raw" \
-              "repos/Layer-Fi/layer-bugbot/contents/prompt/layer-bugbot.md?ref=$BUGBOT_REF"
+              "repos/Layer-Fi/layer-bugbot/contents/prompt/layer-bugbot.md?ref=$BUGBOT_REF" \
+              | sed "s#{{SCRATCH_DIR}}#${RUNNER_TEMP}#g"
           } > "$f"
           delim="LAYER_BUGBOT_PROMPT_$(openssl rand -hex 8)"
           { echo "prompt<<$delim"; cat "$f"; echo; echo "$delim"; } >> "$GITHUB_OUTPUT"
