@@ -35,6 +35,11 @@
   &[data-status='warning'] {
     background: var(--color-info-warning);
     color: var(--color-info-warning-bg);
+
+    &[data-icononly] {
+      background: var(--color-info-warning-bg);
+      color: var(--color-info-warning-fg);
+    }
   }
 
   &[data-status='success'] {
