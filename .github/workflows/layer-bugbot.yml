@@ -1,13 +1,3 @@
-# Layer Bugbot — AI PR review (Claude Code, anthropics/claude-code-action).
-# Commands on a PR: `bugbot run` / `bugbot review` (review), `bugbot fix` / `bugbot autofix` (fix).
-#
-# STANDALONE COPY of Layer-Fi/layer-bugbot/.github/workflows/layer-bugbot.yml.
-# layer-react is public, and GitHub doesn't let a public repo call a reusable workflow from a
-# private repo, so this repo carries the full workflow. The prompt itself is still loaded at run
-# time from Layer-Fi/layer-bugbot (master) with the Layer Bugbot App token, so prompt changes apply
-# here automatically. Changes to the workflow logic must be copied here by hand.
-#
-# Secrets (repo-level): ANTHROPIC_API_KEY, LAYER_BUGBOT_APP_ID, LAYER_BUGBOT_APP_PRIVATE_KEY.
 name: Layer Bugbot
 
 on:
@@ -31,8 +21,6 @@ jobs:
   route:
     name: Route event
     runs-on: ubuntu-latest
-    # Cheap pre-filter so ordinary comments don't start a runner.
-    # (contains() is case-insensitive; exact matching happens in the Decide mode step.)
     if: >-
       github.event_name == 'pull_request' ||
       github.event_name == 'workflow_dispatch' ||
@@ -154,7 +142,6 @@ jobs:
     if: needs.route.outputs.mode != ''
     runs-on: ubuntu-latest
     timeout-minutes: 90
-    # One Bugbot run per PR at a time. A newer pending run replaces an older pending one.
     concurrency:
       group: layer-bugbot-${{ github.repository }}-pr-${{ needs.route.outputs.pr_number }}
       cancel-in-progress: false
@@ -235,7 +222,6 @@ jobs:
           gh_tools='Bash(gh api:*),Bash(gh pr view:*),Bash(gh pr diff:*)'
           git_read='Bash(git fetch:*),Bash(git checkout:*),Bash(git reset:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git rev-parse:*),Bash(git rev-list:*),Bash(git merge-base:*),Bash(git remote:*),Bash(git status:*),Bash(git blame:*),Bash(git ls-files:*),Bash(git branch:*)'
           shell_read='Bash(jq:*),Bash(cat:*),Bash(ls:*),Bash(wc:*),Bash(head:*),Bash(tail:*),Bash(date:*),Bash(test:*),Bash(grep:*),Bash(rg:*),Bash(find:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(echo:*),Bash(printf:*),Bash(cd:*),Bash(mkdir:*),Bash(sleep:*)'
-          # No build/test/lint/install tools in any mode: GitHub CI owns build and test verification.
           fix_tools='Edit,MultiEdit,Bash(git add:*),Bash(git commit:*),Bash(git push origin HEAD:*),Bash(git rebase:*),Bash(git stash:*)'
           allowed="$read_tools,$gh_tools,$git_read,$shell_read"
           if [ "$MODE" = "AUTOFIX" ]; then allowed="$allowed,$fix_tools"; fi
@@ -256,8 +242,6 @@ jobs:
           show_full_output: false
           display_report: true
 
-      # If the job failed, timed out, or was cancelled before Bugbot cleaned up, don't leave an
-      # in-progress "Layer Bugbot" check or a "running" status comment behind.
       - name: Clean up after an unfinished run
         if: (failure() || cancelled()) && steps.app-token.outcome == 'success'
         env:
