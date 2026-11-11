@@ -30,6 +30,10 @@ jobs:
       (github.event.sender.type == 'User' &&
         (contains(github.event.comment.body, 'bugbot') || contains(github.event.comment.body, 'layer review')))
     uses: Layer-Fi/layer-bugbot/.github/workflows/layer-bugbot.yml@master
-    secrets: inherit
+    # Pass only the secrets Bugbot needs (not `secrets: inherit`, which would expose every repo secret).
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      LAYER_BUGBOT_APP_ID: ${{ secrets.LAYER_BUGBOT_APP_ID }}
+      LAYER_BUGBOT_APP_PRIVATE_KEY: ${{ secrets.LAYER_BUGBOT_APP_PRIVATE_KEY }}
     with:
       pr_number: ${{ inputs.pr_number }}
