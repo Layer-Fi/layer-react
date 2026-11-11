@@ -177,6 +177,46 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Restore previous session
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.claude/projects
+            ~/.layer-bugbot-session
+          key: layer-bugbot-session-pr${{ env.PR_NUMBER }}-${{ github.run_id }}
+          restore-keys: layer-bugbot-session-pr${{ env.PR_NUMBER }}-
+
+      - name: Decide whether to resume
+        id: resume
+        if: github.event_name == 'pull_request'
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MODEL: claude-opus-5-5
+        run: |
+          set -uo pipefail
+          meta="$HOME/.layer-bugbot-session/meta.json"
+          skip() { echo "Not resuming: $1"; rm -rf "$HOME/.claude/projects"; exit 0; }
+          [ -f "$meta" ] || skip "no saved session"
+          id=$(jq -r '.session_id // ""' "$meta")
+          prev_head=$(jq -r '.head_sha // ""' "$meta")
+          ended=$(jq -r '.ended_at // 0' "$meta")
+          [[ "$id" =~ ^[A-Za-z0-9-]+$ ]] || skip "bad session id"
+          [ "$(jq -r '.model // ""' "$meta")" = "$MODEL" ] || skip "model changed"
+          age=$(( $(date +%s) - ended ))
+          [ "$age" -lt 3300 ] || skip "previous run ended $((age / 60)) min ago"
+          git merge-base --is-ancestor "$prev_head" "$HEAD_SHA" 2>/dev/null || skip "branch was rewritten since ${prev_head:0:7}"
+          file=$(find "$HOME/.claude/projects" -name "$id.jsonl" 2>/dev/null | head -n 1)
+          [ -n "$file" ] || skip "session file missing"
+          size=$(wc -c < "$file")
+          [ "$size" -lt 4000000 ] || skip "session is too large ($size bytes)"
+          echo "Resuming session $id (previous run reviewed ${prev_head:0:7}, $((age / 60)) min ago)"
+          {
+            echo "session_id=$id"
+            echo "prev_head=${prev_head:0:7}"
+            echo "age_min=$((age / 60))"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Build prompt
         id: prompt
         env:
@@ -185,6 +225,9 @@ jobs:
           IN_REPLY_TO_ID: ${{ needs.route.outputs.in_reply_to_id }}
           MODEL_LABEL: Opus 5.5 High
           BUGBOT_REF: master
+          RESUME_ID: ${{ steps.resume.outputs.session_id }}
+          RESUME_HEAD: ${{ steps.resume.outputs.prev_head }}
+          RESUME_AGE: ${{ steps.resume.outputs.age_min }}
         run: |
           set -euo pipefail
           f="$RUNNER_TEMP/layer-bugbot-prompt.md"
@@ -205,6 +248,9 @@ jobs:
             echo "- SESSION_URL: $RUN_URL"
             echo "- Model label: $MODEL_LABEL"
             echo "- Scratch directory: $RUNNER_TEMP"
+            if [ -n "$RESUME_ID" ]; then
+              echo "- Resumed session: yes. The previous Bugbot run on this PR reviewed up to $RESUME_HEAD about $RESUME_AGE min ago."
+            fi
             echo
             echo "---"
             echo
@@ -228,7 +274,10 @@ jobs:
           echo "allowed=$allowed" >> "$GITHUB_OUTPUT"
 
       - name: Run Layer Bugbot
+        id: claude
         uses: anthropics/claude-code-action@v1
+        env:
+          CLAUDE_CODE_PROMPT_CACHE_TTL: 1h
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ steps.app-token.outputs.token }}
@@ -237,10 +286,51 @@ jobs:
             --model claude-opus-5-5
             --effort high
             --max-turns 400
+            ${{ steps.resume.outputs.session_id && format('--resume {0}', steps.resume.outputs.session_id) || '' }}
             --allowedTools "${{ steps.tools.outputs.allowed }}"
             --disallowedTools "Bash(git push --force:*),Bash(git push -f:*),Bash(git push --force-with-lease:*),Bash(npm:*),Bash(npx:*),Bash(yarn:*),Bash(pnpm:*),Bash(gradle:*),Bash(./gradlew:*),Bash(mvn:*),WebFetch,WebSearch"
           show_full_output: false
           display_report: true
+
+      - name: Prepare session for the next run
+        id: save-prep
+        if: success() && github.event_name == 'pull_request' && steps.claude.outputs.session_id != ''
+        env:
+          SESSION_ID: ${{ steps.claude.outputs.session_id }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MODEL: claude-opus-5-5
+        run: |
+          set -euo pipefail
+          projects="$HOME/.claude/projects"
+          file=$(find "$projects" -name "$SESSION_ID.jsonl" 2>/dev/null | head -n 1)
+          if [ -z "$file" ]; then echo "No session file for $SESSION_ID; not saving."; exit 0; fi
+          dir=$(dirname "$file")
+          find "$projects" -mindepth 1 -maxdepth 1 ! -path "$dir" -exec rm -rf {} +
+          find "$dir" -mindepth 1 -maxdepth 1 ! -name "$SESSION_ID.jsonl" ! -name "$SESSION_ID" -exec rm -rf {} +
+          mkdir -p "$HOME/.layer-bugbot-session"
+          jq -n --arg id "$SESSION_ID" --arg head "$HEAD_SHA" --arg model "$MODEL" --argjson ended "$(date +%s)" \
+            '{session_id: $id, head_sha: $head, model: $model, ended_at: $ended}' > "$HOME/.layer-bugbot-session/meta.json"
+          echo "save=true" >> "$GITHUB_OUTPUT"
+
+      - name: Save session for the next run
+        if: steps.save-prep.outputs.save == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.claude/projects
+            ~/.layer-bugbot-session
+          key: layer-bugbot-session-pr${{ env.PR_NUMBER }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Report cache usage
+        if: always() && github.event.repository.private && steps.claude.outputs.execution_file != ''
+        env:
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
+          RESUMED: ${{ steps.resume.outputs.session_id && format('resumed ({0} min after the previous run)', steps.resume.outputs.age_min) || 'fresh' }}
+        run: |
+          set -uo pipefail
+          jq -r --arg s "$RESUMED" '[.[] | select(.type == "result")] | last | select(. != null) |
+            "Session: \($s) · cache read \(.usage.cache_read_input_tokens // 0) · cache write \(.usage.cache_creation_input_tokens // 0) · uncached input \(.usage.input_tokens // 0) · output \(.usage.output_tokens // 0) · $\(.total_cost_usd // 0)"' \
+            "$EXEC_FILE" >> "$GITHUB_STEP_SUMMARY" || true
 
       - name: Clean up after an unfinished run
         if: (failure() || cancelled()) && steps.app-token.outcome == 'success'
