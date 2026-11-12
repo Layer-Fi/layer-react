@@ -136,12 +136,29 @@ jobs:
               ;;
           esac
 
-  bugbot:
-    name: Layer Bugbot (${{ needs.route.outputs.mode }})
+  # Pushes often come in quick bursts. A pull_request run waits here first, and a newer run
+  # for the same PR cancels the waiting one, so a burst gets one review instead of several.
+  debounce:
+    name: Wait for more pushes
     needs: route
     if: needs.route.outputs.mode != ''
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: layer-bugbot-debounce-${{ github.repository }}-${{ github.event_name == 'pull_request' && format('pr-{0}', needs.route.outputs.pr_number) || github.run_id }}
+      cancel-in-progress: true
+    steps:
+      - name: Wait
+        if: github.event_name == 'pull_request'
+        run: sleep 180
+
+  bugbot:
+    name: Layer Bugbot (${{ needs.route.outputs.mode }})
+    needs: [route, debounce]
+    if: needs.route.outputs.mode != ''
+    runs-on: ubuntu-latest
     timeout-minutes: 90
+    # One Bugbot run per PR at a time. A newer pending run replaces an older pending one.
     concurrency:
       group: layer-bugbot-${{ github.repository }}-pr-${{ needs.route.outputs.pr_number }}
       cancel-in-progress: false
@@ -152,9 +169,9 @@ jobs:
     steps:
       - name: Mint Layer Bugbot app token
         id: app-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ secrets.LAYER_BUGBOT_APP_ID }}
+          client-id: Iv23lixXpwJHjTyEvW3y  # Layer Bugbot App client ID (not a secret)
           private-key: ${{ secrets.LAYER_BUGBOT_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }},layer-bugbot
@@ -177,8 +194,36 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      # The scripts load from this repo at bugbot_ref, like the prompt, so callers never carry copies.
+      - name: Load Bugbot scripts
+        env:
+          BUGBOT_REF: master
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/layer-bugbot-scripts"
+          for f in bugbot-prepare.sh bugbot-finalize.sh; do
+            gh api -H "Accept: application/vnd.github.raw" \
+              "repos/Layer-Fi/layer-bugbot/contents/scripts/$f?ref=$BUGBOT_REF" > "$RUNNER_TEMP/layer-bugbot-scripts/$f"
+          done
+
+      # Fetches PR state for Claude, decides the review range, stops duplicate runs, and posts
+      # the reaction, status comment, and in-progress check, so Claude spends no turns on them.
+      - name: Prepare run
+        id: prepare
+        env:
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          COMMENT_ID: ${{ needs.route.outputs.comment_id }}
+          COMMENT_TYPE: ${{ needs.route.outputs.comment_type }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: STATE_DIR="$RUNNER_TEMP/bugbot-state" bash "$RUNNER_TEMP/layer-bugbot-scripts/bugbot-prepare.sh"
+
+      # Session resume: a push-triggered review continues the previous push-triggered run's
+      # Claude Code session while its 1-hour prompt cache is still warm. Only pull_request runs
+      # restore or save sessions, because their caches are scoped to the PR (comment runs use
+      # the default branch's scope, which fork PRs on public repos can read).
       - name: Restore previous session
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.prepare.outputs.skip != 'true'
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -189,7 +234,7 @@ jobs:
 
       - name: Decide whether to resume
         id: resume
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.prepare.outputs.skip != 'true'
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           MODEL: claude-opus-5-5
@@ -204,6 +249,7 @@ jobs:
           [[ "$id" =~ ^[A-Za-z0-9-]+$ ]] || skip "bad session id"
           [ "$(jq -r '.model // ""' "$meta")" = "$MODEL" ] || skip "model changed"
           age=$(( $(date +%s) - ended ))
+          # 55 minutes leaves a margin inside the 1-hour cache TTL set on the Claude step.
           [ "$age" -lt 3300 ] || skip "previous run ended $((age / 60)) min ago"
           git merge-base --is-ancestor "$prev_head" "$HEAD_SHA" 2>/dev/null || skip "branch was rewritten since ${prev_head:0:7}"
           file=$(find "$HOME/.claude/projects" -name "$id.jsonl" 2>/dev/null | head -n 1)
@@ -219,6 +265,7 @@ jobs:
 
       - name: Build prompt
         id: prompt
+        if: steps.prepare.outputs.skip != 'true'
         env:
           COMMENT_ID: ${{ needs.route.outputs.comment_id }}
           COMMENT_TYPE: ${{ needs.route.outputs.comment_type }}
@@ -228,6 +275,10 @@ jobs:
           RESUME_ID: ${{ steps.resume.outputs.session_id }}
           RESUME_HEAD: ${{ steps.resume.outputs.prev_head }}
           RESUME_AGE: ${{ steps.resume.outputs.age_min }}
+          REVIEW_HEAD: ${{ steps.prepare.outputs.review_head }}
+          BASELINE: ${{ steps.prepare.outputs.baseline }}
+          RANGE_KIND: ${{ steps.prepare.outputs.range_kind }}
+          COMMIT_COUNT: ${{ steps.prepare.outputs.commit_count }}
         run: |
           set -euo pipefail
           f="$RUNNER_TEMP/layer-bugbot-prompt.md"
@@ -247,27 +298,39 @@ jobs:
             fi
             echo "- SESSION_URL: $RUN_URL"
             echo "- Model label: $MODEL_LABEL"
-            echo "- Scratch directory: $RUNNER_TEMP"
+            echo "- Scratch directory (use this literal path): $RUNNER_TEMP"
+            echo "- PR state directory (use this literal path): $RUNNER_TEMP/bugbot-state"
+            echo "- Review head: $REVIEW_HEAD"
+            case "$RANGE_KIND" in
+              full) echo "- Review range: full PR, baseline $BASELINE (merge base), $COMMIT_COUNT commit(s)" ;;
+              incremental) echo "- Review range: incremental, baseline $BASELINE (last reviewed head), $COMMIT_COUNT commit(s)" ;;
+              none) echo "- Review range: none, the review head was already reviewed" ;;
+            esac
             if [ -n "$RESUME_ID" ]; then
               echo "- Resumed session: yes. The previous Bugbot run on this PR reviewed up to $RESUME_HEAD about $RESUME_AGE min ago."
             fi
             echo
             echo "---"
             echo
+            # Substitute the literal scratch path so Claude never has to expand $RUNNER_TEMP
+            # (commands containing variables are blocked in non-interactive runs).
             gh api -H "Accept: application/vnd.github.raw" \
-              "repos/Layer-Fi/layer-bugbot/contents/prompt/layer-bugbot.md?ref=$BUGBOT_REF"
+              "repos/Layer-Fi/layer-bugbot/contents/prompt/layer-bugbot.md?ref=$BUGBOT_REF" \
+              | sed -e "s#{{SCRATCH_DIR}}#${RUNNER_TEMP}#g" -e "s#{{STATE_DIR}}#${RUNNER_TEMP}/bugbot-state#g"
           } > "$f"
           delim="LAYER_BUGBOT_PROMPT_$(openssl rand -hex 8)"
           { echo "prompt<<$delim"; cat "$f"; echo; echo "$delim"; } >> "$GITHUB_OUTPUT"
 
       - name: Select tools
         id: tools
+        if: steps.prepare.outputs.skip != 'true'
         run: |
           set -euo pipefail
           read_tools='Read,Glob,Grep,LS,Write,TodoWrite'
           gh_tools='Bash(gh api:*),Bash(gh pr view:*),Bash(gh pr diff:*)'
           git_read='Bash(git fetch:*),Bash(git checkout:*),Bash(git reset:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(git rev-parse:*),Bash(git rev-list:*),Bash(git merge-base:*),Bash(git remote:*),Bash(git status:*),Bash(git blame:*),Bash(git ls-files:*),Bash(git branch:*)'
           shell_read='Bash(jq:*),Bash(cat:*),Bash(ls:*),Bash(wc:*),Bash(head:*),Bash(tail:*),Bash(date:*),Bash(test:*),Bash(grep:*),Bash(rg:*),Bash(find:*),Bash(sort:*),Bash(uniq:*),Bash(cut:*),Bash(tr:*),Bash(sed:*),Bash(awk:*),Bash(diff:*),Bash(echo:*),Bash(printf:*),Bash(cd:*),Bash(mkdir:*),Bash(sleep:*)'
+          # No build/test/lint/install tools in any mode: GitHub CI owns build and test verification.
           fix_tools='Edit,MultiEdit,Bash(git add:*),Bash(git commit:*),Bash(git push origin HEAD:*),Bash(git rebase:*),Bash(git stash:*)'
           allowed="$read_tools,$gh_tools,$git_read,$shell_read"
           if [ "$MODE" = "AUTOFIX" ]; then allowed="$allowed,$fix_tools"; fi
@@ -275,8 +338,11 @@ jobs:
 
       - name: Run Layer Bugbot
         id: claude
+        if: steps.prepare.outputs.skip != 'true'
         uses: anthropics/claude-code-action@v1
         env:
+          # Claude Code defaults to a 5-minute prompt cache on an API key. 1 hour keeps the cache
+          # warm for the next push's review, which resumes this session (see "Decide whether to resume").
           CLAUDE_CODE_PROMPT_CACHE_TTL: 1h
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -305,6 +371,7 @@ jobs:
           file=$(find "$projects" -name "$SESSION_ID.jsonl" 2>/dev/null | head -n 1)
           if [ -z "$file" ]; then echo "No session file for $SESSION_ID; not saving."; exit 0; fi
           dir=$(dirname "$file")
+          # Keep only this run's session so the cache doesn't accumulate older ones.
           find "$projects" -mindepth 1 -maxdepth 1 ! -path "$dir" -exec rm -rf {} +
           find "$dir" -mindepth 1 -maxdepth 1 ! -name "$SESSION_ID.jsonl" ! -name "$SESSION_ID" -exec rm -rf {} +
           mkdir -p "$HOME/.layer-bugbot-session"
@@ -321,6 +388,7 @@ jobs:
             ~/.layer-bugbot-session
           key: layer-bugbot-session-pr${{ env.PR_NUMBER }}-${{ github.run_id }}-${{ github.run_attempt }}
 
+      # Private repos only: the action hides token usage from logs, and public repos' job summaries are public.
       - name: Report cache usage
         if: always() && github.event.repository.private && steps.claude.outputs.execution_file != ''
         env:
@@ -330,25 +398,20 @@ jobs:
           set -uo pipefail
           jq -r --arg s "$RESUMED" '[.[] | select(.type == "result")] | last | select(. != null) |
             "Session: \($s) · cache read \(.usage.cache_read_input_tokens // 0) · cache write \(.usage.cache_creation_input_tokens // 0) · uncached input \(.usage.input_tokens // 0) · output \(.usage.output_tokens // 0) · $\(.total_cost_usd // 0)"' \
-            "$EXEC_FILE" >> "$GITHUB_STEP_SUMMARY" || true
+            "$EXEC_FILE" > "$RUNNER_TEMP/bugbot-usage.txt" || true
+          cat "$RUNNER_TEMP/bugbot-usage.txt" >> "$GITHUB_STEP_SUMMARY"
+          # A notice is readable through the check-run annotations API, so cost can be aggregated.
+          [ -s "$RUNNER_TEMP/bugbot-usage.txt" ] && echo "::notice title=Layer Bugbot cost::$(cat "$RUNNER_TEMP/bugbot-usage.txt")"
+          true
 
-      - name: Clean up after an unfinished run
-        if: (failure() || cancelled()) && steps.app-token.outcome == 'success'
+      # Runs on every exit, including failure, timeout, and cancellation.
+      - name: Finalize run
+        if: always() && steps.prepare.outcome != 'skipped' && steps.prepare.outputs.skip != 'true' && steps.app-token.outcome == 'success'
         env:
           REPO: ${{ github.repository }}
-        run: |
-          set -uo pipefail
-          for sha in $(gh api "repos/$REPO/pulls/$PR_NUMBER/commits" --paginate --jq '.[].sha' | tail -n 5); do
-            gh api "repos/$REPO/commits/$sha/check-runs?check_name=Layer%20Bugbot" \
-              | jq -r --arg u "$RUN_URL" '.check_runs[] | select(.status != "completed" and .external_id == $u) | .id' \
-              | while read -r id; do
-                  jq -n --arg u "$RUN_URL" '{status:"completed",conclusion:"failure",output:{title:"Layer Bugbot did not complete",summary:("The workflow run ended before the review finished. [View run](" + $u + ")")}}' \
-                    | gh api -X PATCH "repos/$REPO/check-runs/$id" --input - >/dev/null || true
-                done
-          done
-          gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate \
-            | jq -r --arg u "$RUN_URL" '.[] | select((.body | contains("layer-bugbot:status")) and (.body | contains($u)) and (.body | contains("\"status\":\"running\""))) | .id' \
-            | while read -r cid; do
-                jq -n --arg u "$RUN_URL" '{body: ("<sup>[**Layer Bugbot**](" + $u + ")🐛</sup>\n\n❌ **Failed** — the workflow run ended unexpectedly — [view run](" + $u + ")\n\n<!-- layer-bugbot:status {\"status\":\"failed\",\"session_url\":\"" + $u + "\"} -->")}' \
-                  | gh api -X PATCH "repos/$REPO/issues/comments/$cid" --input - >/dev/null || true
-              done
+          CLAUDE_OUTCOME: ${{ steps.claude.outcome }}
+          REACTION_PATH: ${{ steps.prepare.outputs.reaction_path }}
+          STATUS_COMMENT_ID: ${{ steps.prepare.outputs.status_comment_id }}
+          CHECK_RUN_ID: ${{ steps.prepare.outputs.check_run_id }}
+          REVIEW_HEAD: ${{ steps.prepare.outputs.review_head }}
+        run: STATE_DIR="$RUNNER_TEMP/bugbot-state" bash "$RUNNER_TEMP/layer-bugbot-scripts/bugbot-finalize.sh"
