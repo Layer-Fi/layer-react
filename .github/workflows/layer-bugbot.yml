@@ -352,6 +352,7 @@ jobs:
             --model claude-opus-5-5
             --effort medium
             --max-turns 400
+            --add-dir ${{ runner.temp }}
             ${{ steps.resume.outputs.session_id && format('--resume {0}', steps.resume.outputs.session_id) || '' }}
             --allowedTools "${{ steps.tools.outputs.allowed }}"
             --disallowedTools "Bash(git push --force:*),Bash(git push -f:*),Bash(git push --force-with-lease:*),Bash(npm:*),Bash(npx:*),Bash(yarn:*),Bash(pnpm:*),Bash(gradle:*),Bash(./gradlew:*),Bash(mvn:*),WebFetch,WebSearch"
