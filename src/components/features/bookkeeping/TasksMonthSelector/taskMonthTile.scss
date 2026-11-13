@@ -14,19 +14,23 @@
   cursor: pointer;
   container-type: inline-size;
 
-  &[data-tone='success'] {
+  &[data-status='CLOSED_COMPLETE'],
+  &[data-status='CLOSED_OPEN_TASKS'] {
     --month-outline: var(--color-info-success-fg);
 
     background: var(--color-info-success-bg);
   }
 
-  &[data-tone='warning'] {
+  &[data-status='IN_PROGRESS_AWAITING_CUSTOMER'] {
     --month-outline: var(--color-info-warning-fg);
 
     background: var(--color-info-warning-bg);
   }
 
-  &[data-tone='info'] {
+  &[data-status='IN_PROGRESS_AWAITING_BOOKKEEPER'],
+  &[data-status='NOT_STARTED'],
+  &[data-status='CLOSING_OPEN_ITEMS'],
+  &[data-status='CLOSING_IN_REVIEW'] {
     --month-outline: var(--color-info-fg);
 
     background: var(--color-info-bg);
@@ -44,7 +48,7 @@
     box-shadow: 0 0 0 2px var(--month-outline), 0 0 0 4px var(--color-base-300);
   }
 
-  &[data-active]:not([data-tone]) {
+  &[data-active]:not([data-status]) {
     --month-outline: var(--color-base-800);
   }
 }
