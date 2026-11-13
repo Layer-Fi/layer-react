@@ -13,3 +13,15 @@
     min-inline-size: 0;
   }
 }
+
+.Layer__BankTransactionsRefreshAlert__Icon {
+  flex-shrink: 0;
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-info-success-bg);
+
+  .Layer__BankTransactionsRefreshAlert[data-status='error'] & {
+    background: var(--color-info-error-bg);
+  }
+}

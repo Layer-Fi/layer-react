@@ -168,10 +168,12 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
       gap='sm'
       pb='xs'
       pis='md'
-      pie='xs'
+      pie='sm'
     >
       <HStack align='center' gap='xs' className='Layer__BankTransactionsRefreshAlert__Content'>
-        {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
+        <HStack align='center' justify='center' className='Layer__BankTransactionsRefreshAlert__Icon'>
+          {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
+        </HStack>
         <Span variant='inherit' ellipsis>{summaryLabel}</Span>
       </HStack>
       {soleConnection && refreshConnections.length === 1
