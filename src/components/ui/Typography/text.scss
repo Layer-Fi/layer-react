@@ -59,6 +59,10 @@
     }
   }
 
+  &[data-preserve-line-breaks] {
+    white-space: pre-line;
+  }
+
   &[data-no-wrap] {
     white-space: nowrap;
   }

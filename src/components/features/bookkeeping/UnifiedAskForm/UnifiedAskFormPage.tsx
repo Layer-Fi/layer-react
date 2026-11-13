@@ -37,7 +37,7 @@ export const UnifiedAskFormPage = ({ task, page, form, navigation, presentation,
         <VStack gap='lg' pbs={padsTop ? 'md' : undefined} pbe='md'>
           {page.description && (
             <VStack pi='md'>
-              <P size='sm' variant='subtle'>{page.description}</P>
+              <P size='sm' variant='subtle' preserveLineBreaks>{page.description}</P>
             </VStack>
           )}
           <UnifiedAskFormPageSteps

@@ -47,6 +47,7 @@ export type TextStyleProps = {
   pi?: Spacing
   pie?: Spacing
   pis?: Spacing
+  preserveLineBreaks?: true
   size?: TextSize
   status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
   invert?: true
@@ -76,6 +77,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     pi,
     pie,
     pis,
+    preserveLineBreaks,
     size,
     status,
     textCase,
@@ -104,6 +106,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
       pi,
       pie,
       pis,
+      'preserve-line-breaks': preserveLineBreaks,
       size,
       status,
       'text-case': textCase,
