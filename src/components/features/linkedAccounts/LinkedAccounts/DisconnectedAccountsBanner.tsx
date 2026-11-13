@@ -5,6 +5,7 @@ import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/features/bankAccounts/bankAccount'
 import { getBankAccountDisconnection, getRefreshConnectionKey } from '@utils/features/bankAccounts/refresh'
 import { tPlural } from '@utils/shared/i18n/plural'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Banner } from '@ui/Banner/Banner'
 import { HStack } from '@ui/Stack/Stack'
 
@@ -14,6 +15,7 @@ type DisconnectedAccountsBannerProps = {
 
 export const DisconnectedAccountsBanner = ({ bankAccounts }: DisconnectedAccountsBannerProps) => {
   const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
 
   const disconnected = bankAccounts.flatMap((bankAccount) => {
     const disconnection = getBankAccountDisconnection(bankAccount)
@@ -52,23 +54,26 @@ export const DisconnectedAccountsBanner = ({ bankAccounts }: DisconnectedAccount
     if (bankCount > 1) {
       return tPlural(t, 'linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.accounts_at_banks_disconnected', {
         count,
-        bankCount,
-        one: '{{count}} account at {{bankCount}} banks is disconnected',
-        other: '{{count}} accounts at {{bankCount}} banks are disconnected',
+        displayCount: formatNumber(count),
+        displayBankCount: formatNumber(bankCount),
+        one: '{{displayCount}} account at {{displayBankCount}} banks is disconnected',
+        other: '{{displayCount}} accounts at {{displayBankCount}} banks are disconnected',
       })
     }
 
     return institutionName
       ? tPlural(t, 'linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.accounts_at_institution_disconnected', {
         count,
+        displayCount: formatNumber(count),
         institutionName,
-        one: '{{count}} account at {{institutionName}} is disconnected',
-        other: '{{count}} accounts at {{institutionName}} are disconnected',
+        one: '{{displayCount}} account at {{institutionName}} is disconnected',
+        other: '{{displayCount}} accounts at {{institutionName}} are disconnected',
       })
       : tPlural(t, 'linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.accounts_disconnected', {
         count,
-        one: '{{count}} account is disconnected',
-        other: '{{count}} accounts are disconnected',
+        displayCount: formatNumber(count),
+        one: '{{displayCount}} account is disconnected',
+        other: '{{displayCount}} accounts are disconnected',
       })
   }
 

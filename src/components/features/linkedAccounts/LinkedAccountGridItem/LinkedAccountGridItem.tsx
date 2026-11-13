@@ -74,7 +74,9 @@ export const LinkedAccountGridItem = ({
   const repairInfo = getBankAccountConnectionRepairInfo(bankAccount)
   const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
   const fixInfo = showRepairAsRefresh ? null : repairInfo
-  const disconnection = showRepairAsRefresh ? null : getBankAccountDisconnection(bankAccount)
+  const disconnection = showRepairAsRefresh || accountNeedsUniquenessConfirmation(bankAccount)
+    ? null
+    : getBankAccountDisconnection(bankAccount)
   const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
 
   let pillConfig

@@ -43,7 +43,7 @@ export const TasksPanelNotification = ({
           </P>
         </div>
         {onClickReconnectAccounts && (
-          <Button variant='outlined' inset onPress={onClickReconnectAccounts}>
+          <Button variant='outlined' inset onPress={() => onClickReconnectAccounts()}>
             {t('bookkeeping:Tasks.TasksPanelNotification.action.reconnect', 'Reconnect')}
             <CircleArrowRight size={14} />
           </Button>
