@@ -172,7 +172,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
     >
       <HStack align='center' gap='xs' className='Layer__BankTransactionsRefreshAlert__Content'>
         {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
-        <P size='sm' weight='normal' variant='inherit'>{summaryLabel}</P>
+        <P weight='normal' variant='inherit'>{summaryLabel}</P>
       </HStack>
       {soleConnection && refreshConnections.length === 1
         ? (
