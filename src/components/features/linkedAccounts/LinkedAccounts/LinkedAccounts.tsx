@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
+import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
+import { getBankAccountRefreshConnections, getRefreshConnectionKey } from '@utils/features/bankAccounts/refresh'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import {
   AccountConfirmationStoreProvider,
@@ -10,12 +12,14 @@ import {
 } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
+import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
-import { HStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
+import { AccountReconnectionBanner } from '@features/linkedAccounts/AccountReconnectionBanner/AccountReconnectionBanner'
 import { LinkedAccountsContent } from '@features/linkedAccounts/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
@@ -88,7 +92,9 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
-  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
+  const { data, isLoading, isError, isValidating, refetch } = useBankAccountsContext()
+  const reconnectConnection = useReconnectConnection()
+  const brokenConnections = getBankAccountRefreshConnections(data).filter(connection => connection.needsRepair && !connection.isUserPresentRequired)
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -98,9 +104,19 @@ export const LinkedAccountsComponent = ({
         </Heading>
       </DeprecatedHeader>
 
-      <HStack pi='lg'>
+      <VStack pi='lg' gap='xs' pbe={brokenConnections.length > 0 ? 'md' : undefined}>
         <PlaidHostedLinkErrorBanner />
-      </HStack>
+        {!isLoading && !isError && brokenConnections.map(connection => (
+          <AccountReconnectionBanner
+            key={getRefreshConnectionKey(connection)}
+            accountLabel={connection.accounts.length > 1 && connection.institutionName
+              ? connection.institutionName
+              : connection.accounts.map(account => getBankAccountLabelWithMask(t, account)).join(', ')}
+            needsRepair
+            onClick={() => reconnectConnection(connection)}
+          />
+        ))}
+      </VStack>
 
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>

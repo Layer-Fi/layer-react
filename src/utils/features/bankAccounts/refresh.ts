@@ -18,6 +18,7 @@ export type BankAccountRefreshConnection = RefreshConnectionIdentity & {
   institutionName: string | null
   accounts: BankAccountLabelParts[]
   needsRepair: boolean
+  isUserPresentRequired: boolean
 }
 
 export type BankAccountNeedingReconnection = RefreshConnectionIdentity & {
@@ -125,6 +126,7 @@ export function getBankAccountRefreshConnections(
       institutionName: institutionNames.size === 1 ? [...institutionNames][0] ?? null : null,
       accounts: [...accounts.values()],
       needsRepair: members.some(({ externalAccount }) => isExternalAccountNeedingRepair(externalAccount)),
+      isUserPresentRequired: members.some(({ externalAccount }) => isExternalAccountUserPresentRequired(externalAccount)),
     }
   })
 }
