@@ -19,7 +19,7 @@ import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconn
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack, Spacer } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
+import { P, Span } from '@ui/Typography/Text'
 
 import './bankTransactionsRefreshAlert.scss'
 
@@ -172,7 +172,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
     >
       <HStack align='center' gap='xs' className='Layer__BankTransactionsRefreshAlert__Content'>
         {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
-        <P weight='normal' variant='inherit'>{summaryLabel}</P>
+        <Span variant='inherit' ellipsis>{summaryLabel}</Span>
       </HStack>
       {soleConnection && refreshConnections.length === 1
         ? (
