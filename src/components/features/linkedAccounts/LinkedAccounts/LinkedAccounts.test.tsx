@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -46,14 +46,15 @@ const renderLinkedAccounts = (props: Partial<LinkedAccountsProps> = {}) => {
 }
 
 describe(LinkedAccounts, () => {
-  it('offers one repair per broken background connection and respects refresh presentation', async () => {
+  it('summarizes disconnected background accounts and reconnects from each card', async () => {
     const { user, repairRequest, rerender } = renderLinkedAccounts()
-    const banners = await screen.findAllByRole('alert')
+    const banner = await screen.findByRole('alert')
 
-    expect(banners).toHaveLength(2)
-    expect(screen.getAllByRole('button', { name: 'Reconnect' })).toHaveLength(2)
+    expect(banner).toHaveTextContent(/^3 accounts at .+ are disconnected/)
+    const reconnectButtons = screen.getAllByRole('button', { name: /^Reconnect/ })
+    expect(reconnectButtons).toHaveLength(3)
 
-    await user.click(within(banners[0]!).getByRole('button', { name: 'Reconnect' }))
+    await user.click(reconnectButtons[0]!)
 
     await waitFor(() => expect(repairRequest).toHaveBeenCalled())
     const [record] = getCallArgs(repairRequest)
@@ -61,7 +62,8 @@ describe(LinkedAccounts, () => {
 
     rerender(<LinkedAccounts showRepairAsRefresh />)
 
-    expect(screen.queryByRole('button', { name: 'Reconnect' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Reconnect/ })).not.toBeInTheDocument()
     expect(await screen.findAllByRole('button', { name: 'Refresh now' })).toHaveLength(4)
   })
 })

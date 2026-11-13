@@ -3,9 +3,6 @@ import { useTranslation } from 'react-i18next'
 import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
-import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
-import { getBankAccountRefreshConnections, getRefreshConnectionKey } from '@utils/features/bankAccounts/refresh'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import {
   AccountConfirmationStoreProvider,
@@ -13,11 +10,9 @@ import {
 } from '@providers/features/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
-import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
-import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
@@ -93,12 +88,7 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
-  const { formatList } = useIntlFormatter()
-  const { data, isLoading, isError, isValidating, refetch } = useBankAccountsContext()
-  const reconnectConnection = useReconnectConnection()
-  const brokenConnections = isLoading || isError || showRepairAsRefresh
-    ? []
-    : getBankAccountRefreshConnections(data).filter(connection => connection.needsRepair && !connection.isUserPresentRequired)
+  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -108,29 +98,9 @@ export const LinkedAccountsComponent = ({
         </Heading>
       </DeprecatedHeader>
 
-      <VStack pi='lg' gap='xs' pbe={brokenConnections.length > 0 ? 'md' : undefined}>
+      <HStack pi='lg'>
         <PlaidHostedLinkErrorBanner />
-        {brokenConnections.map(connection => (
-          <Banner
-            key={getRefreshConnectionKey(connection)}
-            variant='error'
-            size='sm'
-            title={t('linkedAccounts:LinkedAccounts.label.account_disconnected', '{{accountLabel}} is disconnected', {
-              accountLabel: connection.accounts.length > 1 && connection.institutionName
-                ? connection.institutionName
-                : formatList(connection.accounts.map(account => getBankAccountLabelWithMask(t, account))),
-            })}
-            description={t('linkedAccounts:LinkedAccounts.label.reconnect_description', 'Reconnect to resume importing transactions.')}
-            slots={{
-              Button: (
-                <BannerButton onPress={() => reconnectConnection(connection)}>
-                  {t('linkedAccounts:LinkedAccounts.action.reconnect', 'Reconnect')}
-                </BannerButton>
-              ),
-            }}
-          />
-        ))}
-      </VStack>
+      </HStack>
 
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>

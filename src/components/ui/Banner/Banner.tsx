@@ -29,7 +29,6 @@ export type BannerVariant = 'default' | 'info' | 'warning' | 'error' | 'success'
 
 export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
-  size?: 'sm' | 'md'
   title: string
   description?: string
   slots?: { Icon?: ReactNode | null | undefined, Button?: ReactNode }
@@ -79,17 +78,19 @@ function getDefaultIcon(variant: BannerVariant): ReactNode {
 function BannerContent({
   title,
   description,
-  size,
   children,
-}: PropsWithChildren<Pick<BannerProps, 'title' | 'description' | 'size'>>) {
+}: PropsWithChildren<{
+  title?: string
+  description?: string
+}>) {
   if (title || description) {
     return (
-      <VStack gap={size === 'sm' ? '4xs' : '3xs'} className={BANNER_CLASS_NAMES.CONTENT}>
+      <VStack gap='3xs' className={BANNER_CLASS_NAMES.CONTENT}>
         {title && (
-          <Heading level={3} size={size === 'sm' ? 'xs' : 'sm'} weight={size === 'sm' ? 'normal' : undefined}>{title}</Heading>
+          <Heading level={3} size='sm'>{title}</Heading>
         )}
         {description && (
-          <Span size={size === 'sm' ? 'xs' : undefined} className={BANNER_CLASS_NAMES.DESCRIPTION}>
+          <Span className={BANNER_CLASS_NAMES.DESCRIPTION}>
             {description}
           </Span>
         )}
@@ -107,7 +108,6 @@ function BannerContent({
 const Banner = forwardRef<HTMLDivElement, BannerProps>((
   {
     variant = 'info',
-    size,
     title,
     description,
     slots,
@@ -116,7 +116,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   },
   ref,
 ) => {
-  const dataProperties = toDataProperties({ variant, size })
+  const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
   const renderedIcon = slots?.Icon === null
@@ -138,7 +138,7 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
           {renderedIcon}
         </HStack>
       )}
-      <BannerContent title={title} description={description} size={size}>
+      <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
       {slots?.Button && (

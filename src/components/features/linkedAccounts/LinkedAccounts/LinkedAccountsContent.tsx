@@ -15,6 +15,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { LinkAccountDemoTooltip } from '@features/linkedAccounts/LinkAccountDemoTooltip/LinkAccountDemoTooltip'
 import { LinkedAccountGridItem, type LinkedAccountGridItemProps } from '@features/linkedAccounts/LinkedAccountGridItem/LinkedAccountGridItem'
+import { DisconnectedAccountsBanner } from '@features/linkedAccounts/LinkedAccounts/DisconnectedAccountsBanner'
 import { LinkedAccountsConfirmationModal } from '@features/linkedAccounts/LinkedAccountsConfirmationModal/LinkedAccountsConfirmationModal'
 
 import './linkedAccountsContent.scss'
@@ -75,6 +76,7 @@ export const LinkedAccountsContent = ({
 
   return (
     <>
+      {!showRepairAsRefresh && <DisconnectedAccountsBanner bankAccounts={data ?? []} />}
       <div className='Layer__linked-accounts__list'>
         <GridList
           aria-label={t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.label.linked_accounts_list', 'Linked accounts')}

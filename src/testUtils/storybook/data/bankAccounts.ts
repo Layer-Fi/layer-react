@@ -18,6 +18,7 @@ const withBrokenPlaidConnection = (account: BankAccountFixture): BankAccountFixt
       ? {
         ...externalAccount,
         connectionNeedsRepairAsOf: DISCONNECTED_AS_OF,
+        lastSyncedAt: externalAccount.lastSyncedAt ?? DISCONNECTED_AS_OF,
         connectionExternalId: externalAccount.connectionExternalId ?? 'plaid_item_story_disconnected',
       }
       : externalAccount,

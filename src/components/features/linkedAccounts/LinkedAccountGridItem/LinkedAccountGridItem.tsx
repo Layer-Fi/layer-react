@@ -11,6 +11,7 @@ import {
 } from '@utils/features/bankAccounts/bankAccount'
 import {
   getBankAccountConnectionRepairInfo,
+  getBankAccountDisconnection,
   getBankAccountRefreshConnectionInfo,
 } from '@utils/features/bankAccounts/refresh'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
@@ -73,6 +74,7 @@ export const LinkedAccountGridItem = ({
   const repairInfo = getBankAccountConnectionRepairInfo(bankAccount)
   const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
   const fixInfo = showRepairAsRefresh ? null : repairInfo
+  const disconnection = showRepairAsRefresh ? null : getBankAccountDisconnection(bankAccount)
   const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
 
   let pillConfig
@@ -212,6 +214,9 @@ export const LinkedAccountGridItem = ({
               bankAccount={bankAccount}
               asWidget={asWidget}
               showLedgerBalance={showLedgerBalance}
+              disconnection={disconnection
+                ? { lastSyncedAt: disconnection.lastSyncedAt, onReconnect: () => reconnectConnection(disconnection) }
+                : undefined}
               slots={{
                 Pill: pillConfig
                   ? (

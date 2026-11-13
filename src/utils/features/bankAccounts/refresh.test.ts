@@ -115,7 +115,6 @@ describe('refresh', () => {
         institutionName: 'Chase',
         accounts: [{ accountName: 'Chase Checking', mask: '1234' }],
         needsRepair: false,
-        isUserPresentRequired: true,
       },
       {
         connectionExternalId: 'plaid_rbc_1',
@@ -124,7 +123,6 @@ describe('refresh', () => {
         institutionName: 'RBC',
         accounts: [{ accountName: 'RBC Checking', mask: '9876' }],
         needsRepair: false,
-        isUserPresentRequired: true,
       },
       {
         connectionExternalId: 'plaid_chase_2',
@@ -133,7 +131,6 @@ describe('refresh', () => {
         institutionName: 'Chase',
         accounts: [{ accountName: 'Chase Business Card', mask: '2468' }],
         needsRepair: false,
-        isUserPresentRequired: true,
       },
     ])
   })
@@ -213,7 +210,6 @@ describe('refresh', () => {
           { accountName: 'Chase Savings', mask: '5678' },
         ],
         needsRepair: true,
-        isUserPresentRequired: true,
       },
     ])
     expect(getBankAccountNeedingReconnection([brokenChecking])).toBeNull()
