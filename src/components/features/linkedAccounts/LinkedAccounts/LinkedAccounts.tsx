@@ -5,6 +5,7 @@ import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccount
 import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
 import { getBankAccountRefreshConnections, getRefreshConnectionKey } from '@utils/features/bankAccounts/refresh'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import {
   AccountConfirmationStoreProvider,
@@ -92,6 +93,7 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
+  const { formatList } = useIntlFormatter()
   const { data, isLoading, isError, isValidating, refetch } = useBankAccountsContext()
   const reconnectConnection = useReconnectConnection()
   const brokenConnections = getBankAccountRefreshConnections(data).filter(connection => connection.needsRepair && !connection.isUserPresentRequired)
@@ -111,7 +113,7 @@ export const LinkedAccountsComponent = ({
             key={getRefreshConnectionKey(connection)}
             accountLabel={connection.accounts.length > 1 && connection.institutionName
               ? connection.institutionName
-              : connection.accounts.map(account => getBankAccountLabelWithMask(t, account)).join(', ')}
+              : formatList(connection.accounts.map(account => getBankAccountLabelWithMask(t, account)))}
             needsRepair
             onClick={() => reconnectConnection(connection)}
           />
