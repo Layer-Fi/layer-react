@@ -84,6 +84,14 @@ describe('TasksPending', () => {
     expect(screen.getByText(`We’ve completed your June books and we’ll make final adjustments after you complete ${taskCopy}.`)).toBeInTheDocument()
   })
 
+  it('shows provisionally closed books as completed when no open tasks remain', async () => {
+    renderTasksPending(BookkeepingPeriodStatus.CLOSED_OPEN_TASKS)
+
+    expect(await screen.findByText('Books completed')).toBeInTheDocument()
+    expect(screen.getByText('Your June books are complete and ready to view!')).toBeInTheDocument()
+    expect(screen.queryByText('Action required')).not.toBeInTheDocument()
+  })
+
   it('keeps fully closed books complete even when tasks remain', async () => {
     renderTasksPending(BookkeepingPeriodStatus.CLOSED_COMPLETE, 1)
 

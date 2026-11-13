@@ -31,7 +31,7 @@ export function useBookkeepingStatusConfig(
   if (!status) return
 
   const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
-  const bannerStatus = incompleteTasksCount === undefined
+  let bannerStatus = incompleteTasksCount === undefined
     || status === BookkeepingPeriodStatus.CLOSED_COMPLETE
     || status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
     || status === BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
@@ -39,6 +39,10 @@ export function useBookkeepingStatusConfig(
     : incompleteTasksCount > 0
       ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
       : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
+
+  if (bannerStatus === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS && incompleteTasksCount === 0) {
+    bannerStatus = BookkeepingPeriodStatus.CLOSED_COMPLETE
+  }
 
   switch (bannerStatus) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
