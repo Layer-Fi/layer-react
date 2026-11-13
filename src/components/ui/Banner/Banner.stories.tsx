@@ -1,8 +1,9 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Banner, BannerButton, type BannerVariant } from '@ui/Banner/Banner'
+import { Banner, BannerButton, type BannerProps, type BannerVariant } from '@ui/Banner/Banner'
 
 const VARIANTS: BannerVariant[] = ['default', 'info', 'warning', 'error', 'success']
+const SIZES: NonNullable<BannerProps['size']>[] = ['md', 'sm']
 
 const meta: Meta<typeof Banner> = {
   title: 'UI/Banner',
@@ -22,18 +23,18 @@ export default meta
 type Story = StoryObj<typeof Banner>
 
 export const AllVariants: Story = {
-  parameters: { chromatic: { viewports: [1280] } },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24, maxWidth: 640 }}>
-      {VARIANTS.map(variant => (
+      {VARIANTS.flatMap(variant => SIZES.map(size => (
         <Banner
-          key={variant}
+          key={`${variant}-${size}`}
           variant={variant}
-          title={`${variant} banner`}
+          size={size}
+          title={`${variant} banner (${size})`}
           description='A short description that explains the notification.'
           slots={{ Button: <BannerButton>Action</BannerButton> }}
         />
-      ))}
+      )))}
       <Banner
         variant='info'
         title='Title only'

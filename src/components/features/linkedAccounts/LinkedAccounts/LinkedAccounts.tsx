@@ -14,13 +14,13 @@ import {
 import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
 import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
+import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@blocks/Layout/Container/Container'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
-import { AccountReconnectionBanner } from '@features/linkedAccounts/AccountReconnectionBanner/AccountReconnectionBanner'
 import { LinkedAccountsContent } from '@features/linkedAccounts/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
@@ -96,7 +96,9 @@ export const LinkedAccountsComponent = ({
   const { formatList } = useIntlFormatter()
   const { data, isLoading, isError, isValidating, refetch } = useBankAccountsContext()
   const reconnectConnection = useReconnectConnection()
-  const brokenConnections = getBankAccountRefreshConnections(data).filter(connection => connection.needsRepair && !connection.isUserPresentRequired)
+  const brokenConnections = isLoading || isError || showRepairAsRefresh
+    ? []
+    : getBankAccountRefreshConnections(data).filter(connection => connection.needsRepair && !connection.isUserPresentRequired)
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -108,14 +110,24 @@ export const LinkedAccountsComponent = ({
 
       <VStack pi='lg' gap='xs' pbe={brokenConnections.length > 0 ? 'md' : undefined}>
         <PlaidHostedLinkErrorBanner />
-        {!isLoading && !isError && brokenConnections.map(connection => (
-          <AccountReconnectionBanner
+        {brokenConnections.map(connection => (
+          <Banner
             key={getRefreshConnectionKey(connection)}
-            accountLabel={connection.accounts.length > 1 && connection.institutionName
-              ? connection.institutionName
-              : formatList(connection.accounts.map(account => getBankAccountLabelWithMask(t, account)))}
-            needsRepair
-            onClick={() => reconnectConnection(connection)}
+            variant='error'
+            size='sm'
+            title={t('linkedAccounts:LinkedAccounts.label.account_disconnected', '{{accountLabel}} is disconnected', {
+              accountLabel: connection.accounts.length > 1 && connection.institutionName
+                ? connection.institutionName
+                : formatList(connection.accounts.map(account => getBankAccountLabelWithMask(t, account))),
+            })}
+            description={t('linkedAccounts:LinkedAccounts.label.reconnect_description', 'Reconnect to resume importing transactions.')}
+            slots={{
+              Button: (
+                <BannerButton onPress={() => reconnectConnection(connection)}>
+                  {t('linkedAccounts:LinkedAccounts.action.reconnect', 'Reconnect')}
+                </BannerButton>
+              ),
+            }}
           />
         ))}
       </VStack>

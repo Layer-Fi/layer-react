@@ -96,3 +96,24 @@
     align-items: flex-start;
   }
 }
+
+.Layer__UI__Banner[data-size='sm'] {
+  flex-direction: row;
+  align-items: center;
+  min-height: 0;
+  padding-block: var(--spacing-xs);
+}
+
+.Layer__UI__Banner[data-size='sm'] .Layer__UI__Banner__Actions {
+  width: auto;
+}
+
+.Layer__UI__Banner[data-size='sm'] .Layer__UI__Banner__Actions .Layer__UI__Button {
+  inline-size: auto;
+}
+
+@media (width <= 500px) {
+  .Layer__UI__Banner[data-size='sm'] .Layer__UI__Banner__IconContainer {
+    display: none;
+  }
+}

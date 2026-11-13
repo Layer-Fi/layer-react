@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { type ProfitAndLossChartConfig } from '@internal-types/features/profitAndLoss/profitAndLossChartConfig'
 import { type TagOption } from '@internal-types/features/tags/tag'
 import { type OnboardingStep } from '@internal-types/shared/layerContext'
-import { getBankAccountLabelWithMask } from '@utils/features/bankAccounts/bankAccount'
 import { getBankAccountNeedingReconnection } from '@utils/features/bankAccounts/refresh'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
@@ -17,7 +16,6 @@ import { Header } from '@blocks/Layout/Header/Header'
 import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
 import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
-import { AccountReconnectionBanner } from '@features/linkedAccounts/AccountReconnectionBanner/AccountReconnectionBanner'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
@@ -28,6 +26,7 @@ import {
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { AccountReconnectionBanner } from '@views/AccountingOverview/AccountReconnectionBanner/AccountReconnectionBanner'
 
 import './accountingOverview.scss'
 
@@ -137,7 +136,7 @@ const AccountingOverviewContent = ({
       >
         {accountNeedingReconnection && (
           <AccountReconnectionBanner
-            accountLabel={getBankAccountLabelWithMask(t, accountNeedingReconnection.account)}
+            account={accountNeedingReconnection.account}
             lastSyncedAt={accountNeedingReconnection.lastSyncedAt}
             onClick={handleAccountUpdateClick}
           />
