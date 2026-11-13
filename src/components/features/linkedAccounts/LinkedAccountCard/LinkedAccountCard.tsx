@@ -101,7 +101,7 @@ export const LinkedAccountCard = ({
 
   const headerDataProperties = toDataProperties({
     'syncing': isSyncing,
-    'hide-ledger-balance': !(showLedgerBalance || isSyncing),
+    'hide-ledger-balance': !(showLedgerBalance || isSyncing || disconnection),
   })
 
   const bankBalance = slots.Pill ?? (
