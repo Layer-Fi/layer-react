@@ -52,6 +52,12 @@ const SyncDisconnectedAccountMock = ({ disconnected }: { disconnected: boolean }
   return null
 }
 
+const periods = makeBookkeepingPeriods(FIXTURE_YEAR - 2).map(period =>
+  period.year === FIXTURE_YEAR && period.month === 4
+    ? { ...period, status: BookkeepingPeriodStatus.CLOSED_OPEN_TASKS }
+    : period,
+)
+
 const meta: Meta<TasksStoryArgs> = {
   title: 'Components/Tasks',
   component: Tasks,
@@ -60,6 +66,7 @@ const meta: Meta<TasksStoryArgs> = {
       // Tasks come from bookkeeping periods, which only fetch for enrolled businesses.
       handlers: [
         getBankAccounts.mock(mockAccounts),
+        getBookkeepingPeriods.mock(periods),
         getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
         ...handlers,
       ],
@@ -142,24 +149,6 @@ const NOVEMBER: DateRange = {
 export const Default: Story = {
   tags: ['public-api', 'docs-screenshot'],
   parameters: { pinnedDateRange: NOVEMBER },
-}
-
-export const ProvisionallyClosed: Story = {
-  parameters: {
-    pinnedDateRange: NOVEMBER,
-    msw: {
-      handlers: [
-        getBankAccounts.mock(mockAccounts),
-        getBookkeepingPeriods.mock(makeBookkeepingPeriods(FIXTURE_YEAR - 2).map(period =>
-          period.year === FIXTURE_YEAR && [1, 4].includes(period.month)
-            ? { ...period, status: BookkeepingPeriodStatus.CLOSED_OPEN_TASKS }
-            : period,
-        )),
-        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
-        ...handlers,
-      ],
-    },
-  },
 }
 
 const JULY: DateRange = {

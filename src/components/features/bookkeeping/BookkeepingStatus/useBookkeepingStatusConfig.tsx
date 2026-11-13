@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
@@ -21,6 +21,22 @@ type BookkeepingStatusConfigOptions = {
   incompleteTasksCount?: number
 }
 
+const getBannerStatus = (status: BookkeepingPeriodStatus, openTasksCount?: number) => {
+  if (openTasksCount === undefined) return status
+
+  switch (status) {
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE:
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE:
+      return status
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS:
+      return openTasksCount > 0 ? status : BookkeepingPeriodStatus.CLOSED_COMPLETE
+    default:
+      return openTasksCount > 0
+        ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+        : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
+  }
+}
+
 export function useBookkeepingStatusConfig(
   options: BookkeepingStatusConfigOptions,
 ): InternalStatusConfig | undefined {
@@ -31,21 +47,7 @@ export function useBookkeepingStatusConfig(
   if (!status) return
 
   const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
-  let bannerStatus = status
-  if (incompleteTasksCount !== undefined) {
-    switch (status) {
-      case BookkeepingPeriodStatus.CLOSED_COMPLETE:
-      case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE:
-        break
-      case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS:
-        bannerStatus = incompleteTasksCount > 0 ? status : BookkeepingPeriodStatus.CLOSED_COMPLETE
-        break
-      default:
-        bannerStatus = incompleteTasksCount > 0
-          ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
-          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
-    }
-  }
+  const bannerStatus = getBannerStatus(status, incompleteTasksCount)
 
   switch (bannerStatus) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
@@ -60,7 +62,7 @@ export function useBookkeepingStatusConfig(
           { monthName },
         ),
         status: DataStateStatus.info,
-        icon: <Clock size={12} />,
+        icon: <RefreshCw size={12} />,
       }
     }
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {

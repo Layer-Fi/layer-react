@@ -2,6 +2,7 @@ import { useRef } from 'react'
 
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
@@ -18,12 +19,32 @@ export type TaskMonthTileProps = {
   onClick: (date: Date) => void
 }
 
+const getMonthTone = (status: BookkeepingPeriodStatus) => {
+  switch (status) {
+    case BookkeepingPeriodStatus.CLOSED_COMPLETE:
+    case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS:
+      return 'success'
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
+      return 'warning'
+    case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
+    case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
+    case BookkeepingPeriodStatus.CLOSING_IN_REVIEW:
+      return 'info'
+    case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE:
+      return undefined
+    default:
+      return safeAssertUnreachable({ value: status, message: 'Unexpected bookkeeping status in TaskMonthTile', fallbackValue: undefined })
+  }
+}
+
 export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: TaskMonthTileProps) => {
   const badgesRef = useRef<HTMLDivElement>(null)
   const { status } = data
-  const dataProperties = toDataProperties({ active, disabled, status: disabled ? undefined : status })
+  const tone = status ? getMonthTone(status) : undefined
+  const dataProperties = toDataProperties({ active, disabled, tone: disabled ? undefined : tone })
   const openTasksCount = data.total - data.completed
-  const isClosed = status === BookkeepingPeriodStatus.CLOSED_COMPLETE || status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
+  const isClosed = tone === 'success'
   const isCompact = useHorizontalOverflow(badgesRef, { dependencies: [openTasksCount, status, isMobile] })
 
   return (

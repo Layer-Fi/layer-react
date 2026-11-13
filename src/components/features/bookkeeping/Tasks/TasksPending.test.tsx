@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
@@ -25,8 +24,6 @@ afterEach(() => {
 })
 
 const renderTasksPending = (status: BookkeepingPeriodStatus, openTasks = 0) => {
-  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-
   server.use(
     getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
     getBookkeepingPeriods.mock([{
@@ -46,7 +43,7 @@ const renderTasksPending = (status: BookkeepingPeriodStatus, openTasks = 0) => {
     }]),
   )
 
-  return { user, ...render(<TasksPending />, { wrapper: LayerTestProvider }) }
+  return render(<TasksPending />, { wrapper: LayerTestProvider })
 }
 
 const unfinishedStatuses = [
