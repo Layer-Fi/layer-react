@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { ChevronDown, CircleAlert, CircleArrowRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -18,7 +18,7 @@ import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/Linke
 import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
-import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { HStack, Spacer } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
 import './bankTransactionsRefreshAlert.scss'
@@ -58,36 +58,6 @@ const BankTransactionsRefreshAlertContent = () => {
 
 type RefreshAlertStatus = 'error' | 'success'
 
-type RefreshAlertActionProps = {
-  label: string
-  status: RefreshAlertStatus
-  icon: ReactNode
-  isMobile: boolean
-  ellipsis?: true
-  onPress?: () => void
-}
-
-const RefreshAlertAction = ({ label, status, icon, isMobile, ellipsis, onPress }: RefreshAlertActionProps) => (
-  <Button
-    className='Layer__BankTransactionsRefreshAlert__Action'
-    variant='text'
-    fullWidth={isMobile}
-    onPress={onPress}
-  >
-    <HStack
-      className='Layer__BankTransactionsRefreshAlert__Content'
-      align='center'
-      gap='xs'
-      pis={isMobile ? 'md' : undefined}
-      pie={isMobile ? 'xs' : undefined}
-    >
-      {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
-      <P size='sm' weight='normal' variant='inherit' ellipsis={ellipsis}>{label}</P>
-      {icon}
-    </HStack>
-  </Button>
-)
-
 type BankTransactionsRefreshAlertBodyProps = {
   refreshConnections: ReadonlyArray<BankAccountRefreshConnection>
   showRepairAsRefresh: boolean
@@ -121,9 +91,16 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
       other: 'Refresh {{displayCount}} bank connections to see recent transactions',
     })
 
+  const actionLabel = status === 'error'
+    ? t('bankTransactions:BankTransactionsRefreshAlert.action.reconnect', 'Reconnect')
+    : t('bankTransactions:BankTransactionsRefreshAlert.action.refresh', 'Refresh')
+
   const Trigger = useCallback(() => (
-    <RefreshAlertAction label={summaryLabel} status={status} icon={<ChevronDown size={14} />} isMobile={isMobile} />
-  ), [isMobile, status, summaryLabel])
+    <Button variant='outlined' inset>
+      {actionLabel}
+      <ChevronDown size={14} />
+    </Button>
+  ), [actionLabel])
 
   const connectionLabel = (connection: BankAccountRefreshConnection) => {
     const [onlyAccount] = connection.accounts
@@ -176,29 +153,39 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
       })
   }
 
-  const multipleConnections = refreshConnections.length > 1
+  const [soleConnection] = refreshConnections
 
   return (
-    <VStack
+    <HStack
       ref={containerRef}
       className='Layer__BankTransactionsRefreshAlert'
       data-view={view}
       data-status={status}
       role='region'
       aria-label={t('bankTransactions:BankTransactionsRefreshAlert.label.connections_require_attention', 'Bank connections require attention')}
-      gap='2xs'
-      pbs='xs'
-      pbe='2xs'
-      pis={isMobile ? undefined : 'md'}
-      pie={isMobile ? undefined : 'xs'}
+      align='center'
+      justify='space-between'
+      gap='sm'
+      pb='xs'
+      pis='md'
+      pie='xs'
     >
-      {multipleConnections
+      <HStack align='center' gap='xs' className='Layer__BankTransactionsRefreshAlert__Content'>
+        {status === 'error' ? <CircleAlert size={14} /> : <RefreshCcw size={14} />}
+        <P size='sm' weight='normal' variant='inherit'>{summaryLabel}</P>
+      </HStack>
+      {soleConnection && refreshConnections.length === 1
         ? (
+          <Button variant='outlined' inset onPress={() => reconnectConnection(soleConnection)}>
+            {actionLabel}
+            <CircleArrowRight size={14} />
+          </Button>
+        )
+        : (
           <DropdownMenu
             ariaLabel={summaryLabel}
             slots={{ Trigger }}
             slotProps={{ Dialog: { width: isMobile ? undefined : 320 } }}
-            popoverClassName={isMobile ? 'Layer__BankTransactionsRefreshAlert__Popover--mobile' : undefined}
           >
             <MenuList>
               {refreshConnections.map(connection => (
@@ -213,18 +200,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
               ))}
             </MenuList>
           </DropdownMenu>
-        )
-        : refreshConnections.map(connection => (
-          <RefreshAlertAction
-            key={getRefreshConnectionKey(connection)}
-            label={summaryLabel}
-            status={status}
-            icon={<CircleArrowRight size={14} />}
-            isMobile={isMobile}
-            ellipsis
-            onPress={() => reconnectConnection(connection)}
-          />
-        ))}
-    </VStack>
+        )}
+    </HStack>
   )
 }

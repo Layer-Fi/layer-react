@@ -9,17 +9,7 @@
     color: var(--color-info-error-fg);
   }
 
-  &__Action {
-    justify-content: flex-start;
-    inline-size: fit-content;
-    white-space: normal;
-  }
-
   &__Content {
     min-inline-size: 0;
-  }
-
-  &__Popover--mobile {
-    inline-size: var(--trigger-width);
   }
 }
