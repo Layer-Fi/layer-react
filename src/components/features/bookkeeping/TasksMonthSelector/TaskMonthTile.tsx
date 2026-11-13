@@ -1,5 +1,8 @@
+import { useRef } from 'react'
+
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { type MonthData } from '@features/bookkeeping/TasksMonthSelector/types'
@@ -16,9 +19,12 @@ export type TaskMonthTileProps = {
 }
 
 export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: TaskMonthTileProps) => {
-  const dataProperties = toDataProperties({ active, disabled, status: disabled ? undefined : data.status })
+  const badgesRef = useRef<HTMLDivElement>(null)
+  const { status } = data
+  const dataProperties = toDataProperties({ active, disabled, status: disabled ? undefined : status })
   const openTasksCount = data.total - data.completed
-  const isClosed = data.status === BookkeepingPeriodStatus.CLOSED_COMPLETE || data.status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
+  const isClosed = status === BookkeepingPeriodStatus.CLOSED_COMPLETE || status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
+  const isCompact = useHorizontalOverflow(badgesRef, { dependencies: [openTasksCount, status, isMobile] })
 
   return (
     <div
@@ -29,12 +35,22 @@ export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: Tas
       <P size='sm' status={disabled ? 'disabled' : undefined}>
         {data.monthStr}
       </P>
-      {data.status && (
-        <HStack align='center' gap='xs'>
-          {openTasksCount > 0 && (
-            <TaskStatusBadge status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER} tasksCount={openTasksCount} isMobile={isMobile} />
-          )}
-          <TaskStatusBadge status={isClosed ? BookkeepingPeriodStatus.CLOSED_COMPLETE : data.status} isMobile={isMobile} />
+      {status && (
+        <HStack ref={badgesRef} className='Layer__TaskMonthTile__Badges' align='center' overflow='clip' fluid>
+          {[false, true].map(compact => (
+            <HStack
+              key={compact ? 'compact' : 'expanded'}
+              className='Layer__TaskMonthTile__BadgeVariant'
+              {...toDataProperties({ compact, hidden: compact !== isCompact })}
+              align='center'
+              gap='xs'
+            >
+              {openTasksCount > 0 && (
+                <TaskStatusBadge status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER} tasksCount={openTasksCount} isMobile={isMobile || compact} />
+              )}
+              <TaskStatusBadge status={isClosed ? BookkeepingPeriodStatus.CLOSED_COMPLETE : status} isMobile={isMobile} />
+            </HStack>
+          ))}
         </HStack>
       )}
     </div>

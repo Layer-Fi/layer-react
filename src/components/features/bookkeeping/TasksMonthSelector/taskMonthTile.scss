@@ -3,6 +3,7 @@
 
   display: flex;
   flex: 1;
+  gap: var(--spacing-sm);
   align-items: center;
   justify-content: space-between;
   min-height: 32px;
@@ -45,5 +46,24 @@
 
   &[data-active] {
     box-shadow: 0 0 0 2px var(--month-outline), 0 0 0 4px var(--color-base-300);
+  }
+}
+
+.Layer__TaskMonthTile__Badges {
+  position: relative;
+  min-width: 0;
+}
+
+.Layer__TaskMonthTile__BadgeVariant {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+
+  &[data-compact] {
+    position: absolute;
+    inset-inline-end: 0;
+  }
+
+  &[data-hidden] {
+    visibility: hidden;
   }
 }

@@ -112,6 +112,7 @@ const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
           <P
             className={legacyClassNames('badge:label')}
             size='sm'
+            noWrap
             status={color}
             invert={color === 'warning' ? true : undefined}
             weight='bold'
