@@ -3,7 +3,9 @@
   color: var(--color-info-success-fg);
 
   &[data-status='error'] {
-    background: var(--color-info-error-bg);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    border: 1px solid color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
+    background: color-mix(in srgb, var(--color-info-error-bg) 25%, var(--color-base-0));
     color: var(--color-info-error-fg);
   }
 
