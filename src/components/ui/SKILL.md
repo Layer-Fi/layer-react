@@ -30,7 +30,7 @@ props. Reach for a new SCSS class only when no prop can express it.
 - `Stack`: `align`, `justify`, `gap`, `overflow`, `fluid`, and logical padding
   `pb`/`pbs`/`pbe`/`pi`/`pis`/`pie`.
 - Text: `size` (`2xs`–`xl`), `weight`, `variant` (`placeholder`/`subtle`/`inherit`/`white`),
-  `status` (`error`/`success`/`warning`/`disabled`/`info`), `align`, `ellipsis`, `noWrap`,
+  `status` (`error`/`success`/`warning`/`disabled`/`info`), `align`, `ellipsis`, `noWrap`, `preserveLineBreaks`,
   `numeric='tabular-nums'`, `textCase`, `invert`, plus the same padding props.
 - Spacing values come from the shared `Spacing` union in `@ui/sharedUITypes`
   (`4xs`…`5xl`) — never a raw `rem` value in a prop.
