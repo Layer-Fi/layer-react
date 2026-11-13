@@ -5,6 +5,7 @@ import {
   getBankAccountRefreshConnectionInfo,
   getBankAccountRefreshConnections,
   getBankAccountsReadyForRefresh,
+  getDisconnectedBankAccountsSummary,
   isBankAccountReadyForRefresh,
 } from '@utils/features/bankAccounts/refresh'
 
@@ -258,5 +259,40 @@ describe('refresh', () => {
     })
 
     expect(getBankAccountNeedingReconnection([healthyAccount], NOW)).toBeNull()
+  })
+
+  it('summarizes disconnected background accounts by bank', () => {
+    const makeBroken = (index: number, institution: string, overrides = {}) => makeBankAccountWithMirroredExternalAccount({
+      id: `00000000-0000-4000-8000-00000000070${index}`,
+      externalAccountId: `00000000-0000-4000-8000-00000000080${index}`,
+      name: `${institution} Checking`,
+      institution,
+      mask: `000${index}`,
+      balance: 100,
+      externalAccountOverrides: {
+        connectionExternalId: `plaid_${institution}`,
+        updateType: 'BACKGROUND',
+        connectionNeedsRepairAsOf: NOW,
+        ...overrides,
+      },
+    })
+    const chase = makeBroken(1, 'Chase')
+    const rbc = makeBroken(2, 'RBC')
+    const userPresentRequired = makeBroken(3, 'Wells Fargo', { updateType: 'USER_PRESENT_REQUIRED' })
+    const awaitingConfirmation = makeBroken(4, 'Capital One', { notifications: [{ type: 'CONFIRM_UNIQUE' }] })
+
+    expect(getDisconnectedBankAccountsSummary([userPresentRequired, awaitingConfirmation])).toBeNull()
+    expect(getDisconnectedBankAccountsSummary([chase, userPresentRequired])).toEqual({
+      count: 1,
+      bankCount: 1,
+      institutionName: 'Chase',
+      soleAccount: { accountName: 'Chase Checking', mask: '0001' },
+    })
+    expect(getDisconnectedBankAccountsSummary([chase, rbc, awaitingConfirmation])).toEqual({
+      count: 2,
+      bankCount: 2,
+      institutionName: null,
+      soleAccount: null,
+    })
   })
 })

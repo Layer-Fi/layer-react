@@ -153,7 +153,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
       })
   }
 
-  const [soleConnection] = refreshConnections
+  const soleConnection = refreshConnections.length === 1 ? refreshConnections[0] : undefined
 
   return (
     <HStack
@@ -176,7 +176,7 @@ const BankTransactionsRefreshAlertBody = ({ refreshConnections, showRepairAsRefr
         </HStack>
         <Span variant='inherit' ellipsis>{summaryLabel}</Span>
       </HStack>
-      {soleConnection && refreshConnections.length === 1
+      {soleConnection
         ? (
           <Button variant='outlined' inset onPress={() => reconnectConnection(soleConnection)}>
             {actionLabel}

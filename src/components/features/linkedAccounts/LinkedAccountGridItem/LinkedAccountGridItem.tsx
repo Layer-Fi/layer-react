@@ -8,6 +8,7 @@ import {
   getBankAccountDisplayName,
   getBankAccountInstitution,
   isAllExternalAccountsUserCreatedCustom,
+  isBankAccountAwaitingUniquenessConfirmation,
 } from '@utils/features/bankAccounts/bankAccount'
 import {
   getBankAccountConnectionRepairInfo,
@@ -24,12 +25,6 @@ import { LinkedAccountCard } from '@features/linkedAccounts/LinkedAccountCard/Li
 import { LinkedAccountOptions, type LinkedAccountOptionsConfig } from '@features/linkedAccounts/LinkedAccountOptions/LinkedAccountOptions'
 import { LinkedAccountPill } from '@features/linkedAccounts/LinkedAccountPill/LinkedAccountPill'
 import { UnlinkAccountConfirmationModal } from '@features/linkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
-
-function accountNeedsUniquenessConfirmation(bankAccount: BankAccount) {
-  return bankAccount.externalAccounts.some(
-    ea => ea.notifications.some(({ type }) => type === 'CONFIRM_UNIQUE'),
-  )
-}
 
 function accountMissingOpeningBalance(bankAccount: BankAccount) {
   return bankAccount.notifications.some(({ type }) => type === 'OPENING_BALANCE_MISSING')
@@ -74,13 +69,11 @@ export const LinkedAccountGridItem = ({
   const repairInfo = getBankAccountConnectionRepairInfo(bankAccount)
   const refreshInfo = getBankAccountRefreshConnectionInfo(bankAccount)
   const fixInfo = showRepairAsRefresh ? null : repairInfo
-  const disconnection = showRepairAsRefresh || accountNeedsUniquenessConfirmation(bankAccount)
-    ? null
-    : getBankAccountDisconnection(bankAccount)
+  const disconnection = showRepairAsRefresh ? null : getBankAccountDisconnection(bankAccount)
   const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
 
   let pillConfig
-  if (accountNeedsUniquenessConfirmation(bankAccount)) {
+  if (isBankAccountAwaitingUniquenessConfirmation(bankAccount)) {
     const plaidAccountForConfirm = bankAccount.externalAccounts.find(
       ea => ea.notifications.some(({ type }) => type === 'CONFIRM_UNIQUE'),
     )

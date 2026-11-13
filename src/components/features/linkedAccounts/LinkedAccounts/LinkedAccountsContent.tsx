@@ -76,7 +76,7 @@ export const LinkedAccountsContent = ({
 
   return (
     <>
-      {!showRepairAsRefresh && <DisconnectedAccountsBanner bankAccounts={data ?? []} />}
+      {!showRepairAsRefresh && <DisconnectedAccountsBanner bankAccounts={data} />}
       <div className='Layer__linked-accounts__list'>
         <GridList
           aria-label={t('linkedAccounts:LinkedAccounts.LinkedAccountsContent.label.linked_accounts_list', 'Linked accounts')}

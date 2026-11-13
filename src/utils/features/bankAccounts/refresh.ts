@@ -4,6 +4,7 @@ import {
   type BankAccountLabelParts,
   getBankAccountInstitution,
   getBankAccountLabelParts,
+  isBankAccountAwaitingUniquenessConfirmation,
 } from '@utils/features/bankAccounts/bankAccount'
 
 const REFRESH_ALERT_MINIMUM_SYNC_AGE_MS = 24 * 60 * 60 * 1000
@@ -135,7 +136,16 @@ export function getBankAccountConnectionRepairInfo(bankAccount: BankAccount): Re
   return brokenAccount ? getRefreshConnectionIdentity(brokenAccount) : null
 }
 
+export type DisconnectedBankAccountsSummary = {
+  count: number
+  bankCount: number
+  institutionName: string | null
+  soleAccount: BankAccountLabelParts | null
+}
+
 export function getBankAccountDisconnection(bankAccount: BankAccount) {
+  if (isBankAccountAwaitingUniquenessConfirmation(bankAccount)) return null
+
   const brokenAccount = bankAccount.externalAccounts
     .filter(isExternalAccountNeedingRepair)
     .find(ea => !isExternalAccountUserPresentRequired(ea))
@@ -143,6 +153,29 @@ export function getBankAccountDisconnection(bankAccount: BankAccount) {
   return brokenAccount
     ? { ...getRefreshConnectionIdentity(brokenAccount), lastSyncedAt: brokenAccount.lastSyncedAt ?? null }
     : null
+}
+
+export function getDisconnectedBankAccountsSummary(
+  bankAccounts: ReadonlyArray<BankAccount> | undefined,
+): DisconnectedBankAccountsSummary | null {
+  const disconnected = (bankAccounts ?? []).flatMap((bankAccount) => {
+    const disconnection = getBankAccountDisconnection(bankAccount)
+    return disconnection ? [{ bankAccount, disconnection }] : []
+  })
+
+  const [first] = disconnected
+  if (!first) return null
+
+  const banks = new Set(disconnected.map(({ bankAccount, disconnection }) =>
+    getBankAccountInstitution(bankAccount)?.name ?? getRefreshConnectionKey(disconnection),
+  ))
+
+  return {
+    count: disconnected.length,
+    bankCount: banks.size,
+    institutionName: banks.size === 1 ? getBankAccountInstitution(first.bankAccount)?.name ?? null : null,
+    soleAccount: disconnected.length === 1 ? getBankAccountLabelParts(first.bankAccount) : null,
+  }
 }
 
 export function getBankAccountRefreshConnectionInfo(bankAccount: BankAccount, now = new Date()) {
