@@ -29,6 +29,14 @@
   white-space: nowrap;
 }
 
+.Layer__tasks-header__notification__icon {
+  flex-shrink: 0;
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-info-error-bg);
+}
+
 .Layer__tasks-header__notification__button {
   display: flex;
   gap: var(--spacing-xs);

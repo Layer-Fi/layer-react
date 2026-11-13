@@ -8,6 +8,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { Button } from '@ui/Button/Button'
+import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
 import './tasksPanelNotification.scss'
@@ -29,7 +30,9 @@ export const TasksPanelNotification = ({
     return (
       <div className='Layer__tasks-header__notification' data-status='error'>
         <div className='Layer__tasks-header__notification__text'>
-          <P variant='inherit'><CircleAlert size={11} /></P>
+          <HStack align='center' justify='center' className='Layer__tasks-header__notification__icon'>
+            <CircleAlert size={14} />
+          </HStack>
           <P weight='bold' variant='inherit'>
             {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.bank_accounts_disconnected', {
               count: disconnectedAccountsRequiringNotification,
