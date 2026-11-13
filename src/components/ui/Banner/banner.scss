@@ -33,7 +33,7 @@
   }
 
   &[data-variant='error'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, var(--color-base-0));
+    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
     --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
     --banner-icon-color: var(--color-info-error-fg);
     --banner-icon-bg: var(--color-info-error-bg);

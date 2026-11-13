@@ -7,6 +7,7 @@ import { useGlobalDatePeriodAlignedActions } from '@providers/global/GlobalDateS
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
+import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
 
 import './tasksPanelNotification.scss'
@@ -39,22 +40,15 @@ export const TasksPanelNotification = ({
           </P>
         </div>
         {onClickReconnectAccounts && (
-          <button
-            className='Layer__tasks-header__notification__button'
-            onClick={() => {
-              onClickReconnectAccounts()
-            }}
-          >
-            <P size='sm' weight='bold' variant='inherit'>
-              {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.reconnect_count_accounts', {
-                count: disconnectedAccountsRequiringNotification,
-                displayCount: formatNumber(disconnectedAccountsRequiringNotification),
-                one: 'Reconnect {{displayCount}} account',
-                other: 'Reconnect {{displayCount}} accounts',
-              })}
-            </P>
+          <Button variant='outlined' inset onPress={onClickReconnectAccounts}>
+            {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.reconnect_count_accounts', {
+              count: disconnectedAccountsRequiringNotification,
+              displayCount: formatNumber(disconnectedAccountsRequiringNotification),
+              one: 'Reconnect {{displayCount}} account',
+              other: 'Reconnect {{displayCount}} accounts',
+            })}
             <CircleArrowRight size={14} />
-          </button>
+          </Button>
         )}
       </div>
     )

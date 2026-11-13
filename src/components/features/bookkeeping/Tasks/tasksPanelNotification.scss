@@ -14,7 +14,9 @@
     var(--color-info-warning);
 
   &[data-status='error'] {
-    background: var(--color-info-error-bg);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    border: 1px solid color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
+    background: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
     color: var(--color-info-error-fg);
   }
 }
@@ -45,15 +47,5 @@
 
   &:hover {
     background: var(--color-base-1000);
-  }
-
-  .Layer__tasks-header__notification[data-status='error'] & {
-    box-shadow: 0 1px 2px 0 hsl(0deg 0% 7% / 6%);
-    background: var(--color-base-0);
-    color: var(--color-info-error-fg);
-  }
-
-  .Layer__tasks-header__notification[data-status='error'] &:hover {
-    background: color-mix(in srgb, var(--color-info-error-bg) 25%, var(--color-base-0));
   }
 }
