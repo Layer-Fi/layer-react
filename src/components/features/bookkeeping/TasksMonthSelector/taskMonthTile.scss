@@ -47,6 +47,10 @@
   &[data-active] {
     box-shadow: 0 0 0 2px var(--month-outline), 0 0 0 4px var(--color-base-300);
   }
+
+  &[data-active]:not([data-status]) {
+    --month-outline: var(--color-base-800);
+  }
 }
 
 .Layer__TaskMonthTile__Badges {

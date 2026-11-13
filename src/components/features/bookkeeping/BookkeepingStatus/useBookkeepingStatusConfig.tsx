@@ -31,17 +31,20 @@ export function useBookkeepingStatusConfig(
   if (!status) return
 
   const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
-  let bannerStatus = incompleteTasksCount === undefined
-    || status === BookkeepingPeriodStatus.CLOSED_COMPLETE
-    || status === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS
-    || status === BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
-    ? status
-    : incompleteTasksCount > 0
-      ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
-      : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
-
-  if (bannerStatus === BookkeepingPeriodStatus.CLOSED_OPEN_TASKS && incompleteTasksCount === 0) {
-    bannerStatus = BookkeepingPeriodStatus.CLOSED_COMPLETE
+  let bannerStatus = status
+  if (incompleteTasksCount !== undefined) {
+    switch (status) {
+      case BookkeepingPeriodStatus.CLOSED_COMPLETE:
+      case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE:
+        break
+      case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS:
+        bannerStatus = incompleteTasksCount > 0 ? status : BookkeepingPeriodStatus.CLOSED_COMPLETE
+        break
+      default:
+        bannerStatus = incompleteTasksCount > 0
+          ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
+    }
   }
 
   switch (bannerStatus) {
