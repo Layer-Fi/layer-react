@@ -68,15 +68,11 @@ describe('useLinkedAccounts', () => {
     it.each([
       { name: 'Layer-managed item', connectionExternalId: PLAID_ITEM_ID, customerManagedPlaidConfig: undefined },
       { name: 'customer-managed processor account', connectionExternalId: PROCESSOR_TOKEN, customerManagedPlaidConfig: makeCustomerManagedPlaidConfig() },
-      { name: 'identifier requiring URL encoding', connectionExternalId: 'processor/account+id?x=1&y=2', customerManagedPlaidConfig: undefined },
     ])('attributes a completed repair to the $name', async ({ connectionExternalId, customerManagedPlaidConfig }) => {
       const onRequest = vi.fn()
       server.use(postUpdateConnectionStatus.mock(undefined, {
         onRequest: async ({ request }) => {
-          onRequest({
-            query: [...new URL(request.url).searchParams.entries()],
-            body: await request.text(),
-          })
+          onRequest({ query: new URL(request.url).search, body: await request.json() as unknown })
         },
       }))
       const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
@@ -88,7 +84,7 @@ describe('useLinkedAccounts', () => {
       })
 
       await expect(repair).resolves.toBe(true)
-      expect(onRequest).toHaveBeenCalledWith({ query: [['connection_external_id', connectionExternalId]], body: '' })
+      expect(onRequest).toHaveBeenCalledWith({ query: '', body: { connection_external_id: connectionExternalId } })
     })
   })
 

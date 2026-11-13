@@ -218,7 +218,7 @@ describe('usePlaidLinkModal', () => {
       const onRequest = vi.fn()
       server.use(postUpdateConnectionStatus.mock(undefined, {
         onRequest: async ({ request }) => {
-          onRequest({ query: new URL(request.url).search, body: await request.text() })
+          onRequest(await request.text())
         },
       }))
       const { session } = await renderPlaidLinkModal({ mode: 'update' })
@@ -226,7 +226,7 @@ describe('usePlaidLinkModal', () => {
       await completePlaidLink()
 
       await expect(session).resolves.toBe(true)
-      expect(onRequest).toHaveBeenCalledWith({ query: '', body: '' })
+      expect(onRequest).toHaveBeenCalledWith('')
     })
 
     it('does not report a repair completion when the user exits', async () => {

@@ -1,32 +1,23 @@
+import { Schema } from 'effect'
+
+import { type UpdateConnectionStatusBody, UpdateConnectionStatusBodySchema } from '@schemas/features/linkedAccounts/updateConnectionStatus'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/shared/request/toDefinedSearchParameters'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPDATE_CONNECTION_STATUS_TAG_KEY = '#update-connection-status'
 
-type UpdateConnectionStatusParams = { businessId: string, connectionExternalId?: string }
-type UpdateConnectionStatusArg = { connectionExternalId?: string } | undefined
-
 const updateConnectionStatus = post<
   Record<string, unknown>,
-  Record<string, unknown>,
-  UpdateConnectionStatusParams
+  typeof UpdateConnectionStatusBodySchema.Encoded,
+  { businessId: string }
 >(
-  ({ businessId, connectionExternalId }) => {
-    const query = toDefinedSearchParameters({ connectionExternalId }).toString()
-    return `/v1/businesses/${businessId}/external-accounts/update-connection-status${query ? `?${query}` : ''}`
-  },
+  ({ businessId }) =>
+    `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
 )
 
-export const usePostUpdateConnectionStatus = createMutationHook<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  UpdateConnectionStatusParams,
-  Record<string, unknown>,
-  UpdateConnectionStatusArg
->({
+export const usePostUpdateConnectionStatus = createMutationHook({
   tags: [UPDATE_CONNECTION_STATUS_TAG_KEY],
   request: updateConnectionStatus,
-  argToParams: arg => ({ connectionExternalId: arg?.connectionExternalId }),
-  argToBody: () => undefined,
+  argToBody: (arg?: UpdateConnectionStatusBody) =>
+    (arg?.connectionExternalId ? Schema.encodeSync(UpdateConnectionStatusBodySchema)(arg) : undefined),
 })
