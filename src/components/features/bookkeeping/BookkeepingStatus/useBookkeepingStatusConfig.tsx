@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, RefreshCw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
@@ -60,7 +60,7 @@ export function useBookkeepingStatusConfig(
           { monthName },
         ),
         status: DataStateStatus.info,
-        icon: <Clock size={12} />,
+        icon: <RefreshCw size={12} />,
       }
     }
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER: {
