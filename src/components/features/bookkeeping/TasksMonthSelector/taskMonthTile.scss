@@ -1,29 +1,69 @@
 .Layer__tasks-month-selector__month {
+  --month-outline: var(--color-base-300);
+
   display: flex;
   flex: 1;
+  gap: var(--spacing-sm);
   align-items: center;
   justify-content: space-between;
   min-height: 32px;
   padding: 0 var(--spacing-sm);
   border-radius: var(--border-radius-xs);
-  box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--color-base-300);
+  box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--month-outline);
   background: var(--color-base-0);
   cursor: pointer;
   container-type: inline-size;
 
-  &[data-active] {
-    box-shadow: 0 0 0 1px var(--color-base-800), 0 0 0 3px var(--color-base-300);
+  &[data-tone='success'] {
+    --month-outline: var(--color-info-success-fg);
+
+    background: var(--color-info-success-bg);
+  }
+
+  &[data-tone='warning'] {
+    --month-outline: var(--color-info-warning-fg);
+
+    background: var(--color-info-warning-bg);
+  }
+
+  &[data-tone='info'] {
+    --month-outline: var(--color-info-fg);
+
+    background: var(--color-info-bg);
   }
 
   &[data-disabled] {
     cursor: not-allowed;
   }
 
-  &:hover {
-    box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
+  &:hover:not([data-disabled], [data-active]) {
+    box-shadow: 0 0 0 1px var(--month-outline), 0 0 0 3px var(--color-base-300);
   }
 
-  & > .Layer__P {
-    min-width: 24px;
+  &[data-active] {
+    box-shadow: 0 0 0 2px var(--month-outline), 0 0 0 4px var(--color-base-300);
+  }
+
+  &[data-active]:not([data-tone]) {
+    --month-outline: var(--color-base-800);
+  }
+}
+
+.Layer__TaskMonthTile__Badges {
+  position: relative;
+  min-width: 0;
+}
+
+.Layer__TaskMonthTile__BadgeVariant {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+
+  &[data-compact] {
+    position: absolute;
+    inset-inline-end: 0;
+  }
+
+  &[data-hidden] {
+    visibility: hidden;
   }
 }
