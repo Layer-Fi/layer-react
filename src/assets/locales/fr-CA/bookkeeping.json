@@ -2,11 +2,11 @@
   "BookkeepingStatus": {
     "useBookkeepingStatusConfig": {
       "label": {
+        "books_completed_pending_adjustments_one": "",
+        "books_completed_pending_adjustments_other": "",
         "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
         "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous afin de nous aider à terminer vos livres de {{monthName}}.",
-        "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n’est requise pour le moment.",
-        "working_on_books_please_complete_tasks_one": "Nous travaillons sur vos livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
-        "working_on_books_please_complete_tasks_other": "Nous travaillons sur vos livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
+        "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n’est requise pour le moment."
       },
       "state": {
         "action_required": "Action requise",
@@ -56,22 +56,21 @@
     },
     "TasksPanelNotification": {
       "action": {
+        "reconnect": "",
         "view_and_complete": "Voir et terminer"
       },
       "label": {
         "bank_accounts_disconnected_one": "{{displayCount}} compte bancaire est déconnecté",
         "bank_accounts_disconnected_other": "{{displayCount}} comptes bancaires sont déconnectés",
         "count_open_tasks_one": "{{displayCount}} tâche ouverte en {{displayYear}}",
-        "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}",
-        "reconnect_count_accounts_one": "Reconnecter {{displayCount}} compte",
-        "reconnect_count_accounts_other": "Reconnecter {{displayCount}} comptes"
+        "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}"
       }
     },
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
-        "completed_over_total_done_many": ""
+        "completed_over_total_done_many": "",
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
       }
     }
   },

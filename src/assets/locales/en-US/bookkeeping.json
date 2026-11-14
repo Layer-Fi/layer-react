@@ -2,11 +2,11 @@
   "BookkeepingStatus": {
     "useBookkeepingStatusConfig": {
       "label": {
+        "books_completed_pending_adjustments_one": "We’ve completed your {{monthName}} books and we’ll make final adjustments after you complete {{displayCount}} outstanding task.",
+        "books_completed_pending_adjustments_other": "We’ve completed your {{monthName}} books and we’ll make final adjustments after you complete {{displayCount}} outstanding tasks.",
         "month_name_books_complete": "Your {{monthName}} books are complete and ready to view!",
         "respond_to_below_tasks": "Please respond to the below tasks to help us complete your {{monthName}} books.",
-        "working_on_books_no_action_needed": "We’re working on your {{monthName}} books. No action is needed from you right now.",
-        "working_on_books_please_complete_tasks_one": "We’re working on your {{monthName}} books. Please complete the {{displayCount}} open task.",
-        "working_on_books_please_complete_tasks_other": "We’re working on your {{monthName}} books. Please complete the {{displayCount}} open tasks."
+        "working_on_books_no_action_needed": "We’re working on your {{monthName}} books. No action is needed from you right now."
       },
       "state": {
         "action_required": "Action required",
@@ -56,15 +56,14 @@
     },
     "TasksPanelNotification": {
       "action": {
+        "reconnect": "Reconnect",
         "view_and_complete": "View and complete"
       },
       "label": {
         "bank_accounts_disconnected_one": "{{displayCount}} bank account is disconnected",
         "bank_accounts_disconnected_other": "{{displayCount}} bank accounts are disconnected",
         "count_open_tasks_one": "{{displayCount}} open task in {{displayYear}}",
-        "count_open_tasks_other": "{{displayCount}} open tasks in {{displayYear}}",
-        "reconnect_count_accounts_one": "Reconnect {{displayCount}} account",
-        "reconnect_count_accounts_other": "Reconnect {{displayCount}} accounts"
+        "count_open_tasks_other": "{{displayCount}} open tasks in {{displayYear}}"
       }
     },
     "TasksPending": {

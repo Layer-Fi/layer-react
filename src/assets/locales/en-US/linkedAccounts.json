@@ -55,12 +55,18 @@
     }
   },
   "LinkedAccountCard": {
+    "action": {
+      "reconnect": "Reconnect",
+      "reconnect_institution": "Reconnect {{institutionName}}"
+    },
     "label": {
       "bank_balance": "Bank balance",
+      "last_sync_date": "Last sync {{date}}",
       "ledger_balance": "Ledger balance",
       "may_take_up_to_5_minutes": "This may take up to 5 minutes"
     },
     "state": {
+      "disconnected": "Disconnected",
       "syncing_account_data": "Syncing account data"
     }
   },
@@ -72,8 +78,8 @@
       "fix_account": "Fix account",
       "mark_duplicate_account": "Mark as a duplicate account",
       "mark_not_duplicate_account": "Mark as not a duplicate account",
+      "refresh_account_now": "Refresh now",
       "refresh_connection": "Refresh connection",
-      "refresh_now": "Refresh Now",
       "repair_connection": "Repair connection",
       "unlink_account": "Unlink account",
       "unlink_accounts_under_connection": "Unlink all accounts under this connection",
@@ -93,6 +99,22 @@
     }
   },
   "LinkedAccounts": {
+    "DisconnectedAccountsBanner": {
+      "label": {
+        "account_with_mask": "{{accountName}} •••{{mask}}",
+        "reconnect_accounts_below_one": "Reconnect your account below to resume syncing transactions.",
+        "reconnect_accounts_below_other": "Reconnect your accounts below to resume syncing transactions."
+      },
+      "title": {
+        "account_disconnected": "{{accountLabel}} is disconnected",
+        "accounts_at_banks_disconnected_one": "{{displayCount}} account at {{displayBankCount}} banks is disconnected",
+        "accounts_at_banks_disconnected_other": "{{displayCount}} accounts at {{displayBankCount}} banks are disconnected",
+        "accounts_at_institution_disconnected_one": "{{displayCount}} account at {{institutionName}} is disconnected",
+        "accounts_at_institution_disconnected_other": "{{displayCount}} accounts at {{institutionName}} are disconnected",
+        "accounts_disconnected_one": "{{displayCount}} account is disconnected",
+        "accounts_disconnected_other": "{{displayCount}} accounts are disconnected"
+      }
+    },
     "label": {
       "linked_accounts": "Linked Accounts"
     },

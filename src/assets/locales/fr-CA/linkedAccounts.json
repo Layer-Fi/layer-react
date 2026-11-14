@@ -55,12 +55,18 @@
     }
   },
   "LinkedAccountCard": {
+    "action": {
+      "reconnect": "",
+      "reconnect_institution": ""
+    },
     "label": {
       "bank_balance": "Solde bancaire",
+      "last_sync_date": "",
       "ledger_balance": "Solde du grand livre",
       "may_take_up_to_5_minutes": "Cela peut prendre jusqu’à 5 minutes"
     },
     "state": {
+      "disconnected": "",
       "syncing_account_data": "Synchronisation des données du compte"
     }
   },
@@ -72,8 +78,8 @@
       "fix_account": "Corriger le compte",
       "mark_duplicate_account": "Marquer comme compte en double",
       "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
+      "refresh_account_now": "",
       "refresh_connection": "Actualiser la connexion",
-      "refresh_now": "Actualiser maintenant",
       "repair_connection": "Réparer la connexion",
       "unlink_account": "Déconnecter le compte",
       "unlink_accounts_under_connection": "Déconnecter tous les comptes associés à cette connexion",
@@ -93,6 +99,22 @@
     }
   },
   "LinkedAccounts": {
+    "DisconnectedAccountsBanner": {
+      "label": {
+        "account_with_mask": "",
+        "reconnect_accounts_below_one": "",
+        "reconnect_accounts_below_other": ""
+      },
+      "title": {
+        "account_disconnected": "",
+        "accounts_at_banks_disconnected_one": "",
+        "accounts_at_banks_disconnected_other": "",
+        "accounts_at_institution_disconnected_one": "",
+        "accounts_at_institution_disconnected_other": "",
+        "accounts_disconnected_one": "",
+        "accounts_disconnected_other": ""
+      }
+    },
     "label": {
       "linked_accounts": "Comptes connectés"
     },
