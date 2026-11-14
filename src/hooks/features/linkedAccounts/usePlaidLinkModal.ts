@@ -26,6 +26,7 @@ export type LinkMode = 'update' | 'add'
 type LinkSession = {
   token: string
   mode: LinkMode
+  connectionExternalId?: string
   resolve: (isConnected: boolean) => void
 }
 
@@ -209,7 +210,7 @@ export function usePlaidLinkModal({
       else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
-        void triggerUpdateConnectionStatus()
+        void triggerUpdateConnectionStatus({ connectionExternalId: session.connectionExternalId })
           .then(() => onSuccess())
           .then(
             () => session.resolve(true),
@@ -261,7 +262,7 @@ export function usePlaidLinkModal({
   }, [plaidLinkError, session, notifySessionFailed, releaseLink])
 
   const openLink = useCallback(
-    (token: string, mode: LinkMode) => new Promise<boolean>((resolve) => {
+    (token: string, mode: LinkMode, connectionExternalId?: string) => new Promise<boolean>((resolve) => {
       if (pendingSessionRef.current) {
         resolve(false)
         return
@@ -270,6 +271,7 @@ export function usePlaidLinkModal({
       const nextSession: LinkSession = {
         token,
         mode,
+        connectionExternalId,
         resolve: (isConnected) => {
           pendingSessionRef.current = null
           resolve(isConnected)

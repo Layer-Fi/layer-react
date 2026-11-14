@@ -7,8 +7,10 @@ import { type LayerEvent, LayerEventComponent, LayerEventType } from '@schemas/c
 import { type CustomerManagedPlaidConfig } from '@schemas/features/linkedAccounts/customerManagedPlaidConfig'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 
+import { post as postUpdateConnectionStatus } from '@msw/api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { post as postExchangePlaidPublicToken } from '@msw/api/businesses/[business-id]/plaid/link/exchange/post'
 import { post as postPlaidLinkOutcome } from '@msw/api/businesses/[business-id]/plaid/link/outcome/post'
+import { server } from '@msw/node'
 import { makeCustomerManagedPlaidConfig } from '@testUtils/mocks/customerManagedPlaidConfig'
 import { LayerTestProvider } from '@testUtils/render/LayerTestProvider'
 import { renderHookWithAuth } from '@testUtils/render/renderHookWithAuth'
@@ -212,6 +214,41 @@ describe('usePlaidLinkModal', () => {
   })
 
   describe('the outcome a Link session resolves', () => {
+    it('keeps repairs without a connection identifier compatible', async () => {
+      const onRequest = vi.fn()
+      server.use(postUpdateConnectionStatus.mock(undefined, {
+        onRequest: async ({ request }) => {
+          onRequest(await request.text())
+        },
+      }))
+      const { session } = await renderPlaidLinkModal({ mode: 'update' })
+
+      await completePlaidLink()
+
+      await expect(session).resolves.toBe(true)
+      expect(onRequest).toHaveBeenCalledWith('')
+    })
+
+    it('does not report a repair completion when the user exits', async () => {
+      const updateConnectionStatus = spyOnEndpoint(postUpdateConnectionStatus)
+      const { session } = await renderPlaidLinkModal({ mode: 'update' })
+
+      await exitPlaidLink()
+
+      await expect(session).resolves.toBe(false)
+      expect(updateConnectionStatus).not.toHaveBeenCalled()
+    })
+
+    it('does not report a repair completion for an add flow', async () => {
+      const updateConnectionStatus = spyOnEndpoint(postUpdateConnectionStatus)
+      const { session } = await renderPlaidLinkModal()
+
+      await completePlaidLink()
+
+      await expect(session).resolves.toBe(true)
+      expect(updateConnectionStatus).not.toHaveBeenCalled()
+    })
+
     it('resolves true once the connection is saved and clears the token', async () => {
       const { session } = await renderPlaidLinkModal()
       expect(lastPlaidLinkOptions().token).toBe('a-link-token')

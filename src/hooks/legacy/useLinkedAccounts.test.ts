@@ -10,6 +10,7 @@ import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { get as getBookkeepingPeriods } from '@msw/api/businesses/[business-id]/bookkeeping/periods-with-unified-tasks/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { post as postUpdateConnectionStatus } from '@msw/api/businesses/[business-id]/external-accounts/update-connection-status/post'
 import { get as getPlaidHostedLinkStatus } from '@msw/api/businesses/[business-id]/plaid/hosted-link/get'
 import { post as postSandboxResetPlaidItemLogin } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
 import { post as postUnlinkPlaidItem } from '@msw/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
@@ -63,6 +64,30 @@ afterEach(() => {
 })
 
 describe('useLinkedAccounts', () => {
+  describe('repair attribution', () => {
+    it.each([
+      { name: 'Layer-managed item', connectionExternalId: PLAID_ITEM_ID, customerManagedPlaidConfig: undefined },
+      { name: 'customer-managed processor account', connectionExternalId: PROCESSOR_TOKEN, customerManagedPlaidConfig: makeCustomerManagedPlaidConfig() },
+    ])('attributes a completed repair to the $name', async ({ connectionExternalId, customerManagedPlaidConfig }) => {
+      const onRequest = vi.fn()
+      server.use(postUpdateConnectionStatus.mock(undefined, {
+        onRequest: async ({ request }) => {
+          onRequest({ query: new URL(request.url).search, body: await request.json() as unknown })
+        },
+      }))
+      const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
+
+      const repair = result.current.repairConnection('PLAID', connectionExternalId)
+      await waitFor(() => expect(lastPlaidLinkOptions().token).toEqual(expect.any(String)))
+      act(() => {
+        lastPlaidLinkOptions().onSuccess('public-token', { institution: null } as PlaidLinkOnSuccessMetadata)
+      })
+
+      await expect(repair).resolves.toBe(true)
+      expect(onRequest).toHaveBeenCalledWith({ query: '', body: { connection_external_id: connectionExternalId } })
+    })
+  })
+
   describe('with a customer-managed Plaid config', () => {
     it('mints the add-flow link token through the customer, not Layer', async () => {
       const createPlaidLink = spyOnEndpoint(postPlaidLink)

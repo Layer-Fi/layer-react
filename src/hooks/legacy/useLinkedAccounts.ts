@@ -175,9 +175,10 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
       mode: LinkMode,
       requestToken: () => Promise<{ linkToken: string } | undefined>,
       errorMessage: string,
+      connectionExternalId?: string,
     ) =>
       requestToken().then(
-        result => (result ? openLink(result.linkToken, mode) : false),
+        result => (result ? openLink(result.linkToken, mode, connectionExternalId) : false),
         () => {
           addToast({ content: errorMessage, type: 'error' })
           return false
@@ -237,6 +238,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({
           plaidHostedLinkConfig,
         ),
       t('linkedAccounts:useLinkedAccounts.error.repair_connection', 'We couldn’t repair the Plaid connection with your account. Please try again.'),
+      plaidItemPlaidId,
     ),
     [fetchLinkToken, withHostedLinkRedirect, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, customerManagedPlaidConfig, t],
   )
