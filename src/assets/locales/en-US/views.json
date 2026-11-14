@@ -6,7 +6,7 @@
   },
   "AccountReconnectionBanner": {
     "action": {
-      "refresh_now": "Refresh Now"
+      "refresh_account_now": "Refresh now"
     },
     "label": {
       "account_ready_for_refresh": "{{accountLabel}} is ready for refresh",

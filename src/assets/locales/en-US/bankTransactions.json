@@ -239,13 +239,22 @@
   },
   "BankTransactionsRefreshAlert": {
     "action": {
+      "fix_account": "Fix {{accountLabel}}",
+      "fix_bank_connections_one": "Fix {{displayCount}} bank connection to see recent transactions",
+      "fix_bank_connections_other": "Fix {{displayCount}} bank connections to see recent transactions",
+      "fix_institution_accounts_one": "Fix {{institutionName}} ({{displayCount}} account)",
+      "fix_institution_accounts_other": "Fix {{institutionName}} ({{displayCount}} accounts)",
+      "fix_linked_accounts_one": "Fix {{displayCount}} linked account",
+      "fix_linked_accounts_other": "Fix {{displayCount}} linked accounts",
+      "reconnect": "Reconnect",
       "reconnect_account": "Refresh {{accountLabel}}",
       "reconnect_bank_connections_one": "Refresh {{displayCount}} bank connection to see recent transactions",
       "reconnect_bank_connections_other": "Refresh {{displayCount}} bank connections to see recent transactions",
       "reconnect_institution_accounts_one": "Refresh {{institutionName}} ({{displayCount}} account)",
       "reconnect_institution_accounts_other": "Refresh {{institutionName}} ({{displayCount}} accounts)",
       "reconnect_linked_accounts_one": "Refresh {{displayCount}} linked account",
-      "reconnect_linked_accounts_other": "Refresh {{displayCount}} linked accounts"
+      "reconnect_linked_accounts_other": "Refresh {{displayCount}} linked accounts",
+      "refresh": "Refresh"
     },
     "label": {
       "connections_require_attention": "Bank connections require attention"
