@@ -29,7 +29,7 @@ export const disconnectedBankAccounts = bankAccounts
   .slice(0, 2)
   .map((account, index) => index === 0 ? withBrokenPlaidConnection(account) : account)
 
-export const DISCONNECTED_ACCOUNTS_SCENARIOS = ['One account', 'Several accounts at one bank', 'Accounts at several banks'] as const
+export const DISCONNECTED_ACCOUNTS_SCENARIOS = ['One account', 'Several accounts at one bank', 'Several accounts at several banks'] as const
 
 export type DisconnectedAccountsScenario = typeof DISCONNECTED_ACCOUNTS_SCENARIOS[number]
 
@@ -37,7 +37,7 @@ export type DisconnectedAccountsScenario = typeof DISCONNECTED_ACCOUNTS_SCENARIO
 const DISCONNECTED_ACCOUNT_INDEXES: Record<DisconnectedAccountsScenario, ReadonlyArray<number>> = {
   'One account': [0],
   'Several accounts at one bank': [2, 3],
-  'Accounts at several banks': [0, 2, 3],
+  'Several accounts at several banks': [0, 2, 3],
 }
 
 export const getDisconnectedBankAccounts = (scenario: DisconnectedAccountsScenario) =>
