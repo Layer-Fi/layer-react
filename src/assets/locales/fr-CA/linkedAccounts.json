@@ -56,17 +56,17 @@
   },
   "LinkedAccountCard": {
     "action": {
-      "reconnect": "",
-      "reconnect_institution": ""
+      "reconnect": "Reconnecter",
+      "reconnect_institution": "Reconnecter {{institutionName}}"
     },
     "label": {
       "bank_balance": "Solde bancaire",
-      "last_sync_date": "",
+      "last_sync_date": "Dernière synchro {{date}}",
       "ledger_balance": "Solde du grand livre",
       "may_take_up_to_5_minutes": "Cela peut prendre jusqu’à 5 minutes"
     },
     "state": {
-      "disconnected": "",
+      "disconnected": "Déconnecté",
       "syncing_account_data": "Synchronisation des données du compte"
     }
   },
@@ -78,7 +78,7 @@
       "fix_account": "Corriger le compte",
       "mark_duplicate_account": "Marquer comme compte en double",
       "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
-      "refresh_account_now": "",
+      "refresh_account_now": "Actualiser maintenant",
       "refresh_connection": "Actualiser la connexion",
       "repair_connection": "Réparer la connexion",
       "unlink_account": "Déconnecter le compte",
@@ -101,18 +101,18 @@
   "LinkedAccounts": {
     "DisconnectedAccountsBanner": {
       "label": {
-        "account_with_mask": "",
-        "reconnect_accounts_below_one": "",
-        "reconnect_accounts_below_other": ""
+        "account_with_mask": "{{accountName}} •••{{mask}}",
+        "reconnect_accounts_below_one": "Reconnectez votre compte ci-dessous pour reprendre la synchronisation des transactions.",
+        "reconnect_accounts_below_other": "Reconnectez vos comptes ci-dessous pour reprendre la synchronisation des transactions."
       },
       "title": {
-        "account_disconnected": "",
-        "accounts_at_banks_disconnected_one": "",
-        "accounts_at_banks_disconnected_other": "",
-        "accounts_at_institution_disconnected_one": "",
-        "accounts_at_institution_disconnected_other": "",
-        "accounts_disconnected_one": "",
-        "accounts_disconnected_other": ""
+        "account_disconnected": "{{accountLabel}} est déconnecté",
+        "accounts_at_banks_disconnected_one": "{{displayCount}} compte dans {{displayBankCount}} banques est déconnecté",
+        "accounts_at_banks_disconnected_other": "{{displayCount}} comptes dans {{displayBankCount}} banques sont déconnectés",
+        "accounts_at_institution_disconnected_one": "{{displayCount}} compte chez {{institutionName}} est déconnecté",
+        "accounts_at_institution_disconnected_other": "{{displayCount}} comptes chez {{institutionName}} sont déconnectés",
+        "accounts_disconnected_one": "{{displayCount}} compte est déconnecté",
+        "accounts_disconnected_other": "{{displayCount}} comptes sont déconnectés"
       }
     },
     "label": {
