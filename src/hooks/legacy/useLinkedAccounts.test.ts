@@ -29,10 +29,10 @@ vi.mock('react-plaid-link', () => ({
 
 const lastPlaidLinkOptions = () => vi.mocked(usePlaidLink).mock.lastCall?.[0] as PlaidLinkOptions
 
-// `connectionExternalId` is the Plaid item id for a Layer-managed connection and the processor
-// token for a customer-managed one, so each suite passes the id its mode would really carry.
+// `connectionExternalId` is the Plaid item id for a Layer-managed connection and the Plaid
+// account id for a customer-managed processor token, so each suite passes the id its mode would really carry.
 const PLAID_ITEM_ID = 'plaid-item-id'
-const PROCESSOR_TOKEN = 'processor-sandbox-0a1b2c3d-4e5f'
+const PLAID_ACCOUNT_ID = 'plaid-account-id'
 
 const renderLinkedAccounts = (customerManagedPlaidConfig?: CustomerManagedPlaidConfig) =>
   renderHookWithAuth(() => useLinkedAccounts({ customerManagedPlaidConfig }))
@@ -67,7 +67,7 @@ describe('useLinkedAccounts', () => {
   describe('repair attribution', () => {
     it.each([
       { name: 'Layer-managed item', connectionExternalId: PLAID_ITEM_ID, customerManagedPlaidConfig: undefined },
-      { name: 'customer-managed processor account', connectionExternalId: PROCESSOR_TOKEN, customerManagedPlaidConfig: makeCustomerManagedPlaidConfig() },
+      { name: 'customer-managed processor account', connectionExternalId: PLAID_ACCOUNT_ID, customerManagedPlaidConfig: makeCustomerManagedPlaidConfig() },
     ])('attributes a completed repair to the $name', async ({ connectionExternalId, customerManagedPlaidConfig }) => {
       const onRequest = vi.fn()
       server.use(postUpdateConnectionStatus.mock(undefined, {
@@ -107,9 +107,9 @@ describe('useLinkedAccounts', () => {
 
       const { result } = await renderLinkedAccounts(customerManagedPlaidConfig)
 
-      void result.current.repairConnection('PLAID', PROCESSOR_TOKEN)
+      void result.current.repairConnection('PLAID', PLAID_ACCOUNT_ID)
 
-      await waitFor(() => expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith(PROCESSOR_TOKEN))
+      await waitFor(() => expect(customerManagedPlaidConfig.createUpdateModeLinkToken).toHaveBeenCalledWith(PLAID_ACCOUNT_ID))
       expect(createPlaidUpdateModeLink).not.toHaveBeenCalled()
     })
 
@@ -119,7 +119,7 @@ describe('useLinkedAccounts', () => {
 
       const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-      await result.current.removeConnection('PLAID', PROCESSOR_TOKEN)
+      await result.current.removeConnection('PLAID', PLAID_ACCOUNT_ID)
 
       expect(unlinkPlaidItem).not.toHaveBeenCalled()
       expect(consoleError).toHaveBeenCalledOnce()
@@ -131,7 +131,7 @@ describe('useLinkedAccounts', () => {
 
       const { result } = await renderLinkedAccounts(makeCustomerManagedPlaidConfig())
 
-      await result.current.breakConnection('PLAID', PROCESSOR_TOKEN)
+      await result.current.breakConnection('PLAID', PLAID_ACCOUNT_ID)
 
       expect(resetPlaidItemLogin).not.toHaveBeenCalled()
       expect(consoleError).toHaveBeenCalledOnce()
