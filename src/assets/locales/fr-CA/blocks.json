@@ -32,18 +32,18 @@
       },
       "label": {
         "added_count_one": "{{count}} sur {{limit}} ajoutés",
-        "added_count_many": "",
         "added_count_other": "{{count}} sur {{limit}} ajoutés",
         "any_file_type": "Tout type de fichier",
         "at_limit_one": "{{count}} sur {{limit}} fichiers ajoutés. Supprimez-en un pour en ajouter un autre.",
-        "at_limit_many": "",
         "at_limit_other": "{{count}} sur {{limit}} fichiers ajoutés. Supprimez-en un pour en ajouter un autre.",
         "drag_drop_file": "Glissez-déposez un fichier ici",
         "drag_drop_files": "Glissez-déposez des fichiers ici",
         "drag_drop_more_files": "Glissez-déposez d’autres fichiers ici",
         "file_types_and_more": "{{fileTypes}}, et plus encore",
         "max_size": "Jusqu’à {{maxSize}}",
-        "no_files": "Aucun fichier téléversé"
+        "no_files": "Aucun fichier téléversé",
+        "added_count_many": "",
+        "at_limit_many": ""
       }
     }
   },

@@ -2,8 +2,8 @@
   "BookkeepingStatus": {
     "useBookkeepingStatusConfig": {
       "label": {
-        "books_completed_pending_adjustments_one": "",
-        "books_completed_pending_adjustments_other": "",
+        "books_completed_pending_adjustments_one": "Nous avons terminé votre tenue de livres de {{monthName}} et nous ferons les derniers rajustements une fois que vous aurez terminé {{displayCount}} tâche en suspens.",
+        "books_completed_pending_adjustments_other": "Nous avons terminé votre tenue de livres de {{monthName}} et nous ferons les derniers rajustements une fois que vous aurez terminé {{displayCount}} tâches en suspens.",
         "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
         "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous afin de nous aider à terminer vos livres de {{monthName}}.",
         "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n’est requise pour le moment."
@@ -56,7 +56,7 @@
     },
     "TasksPanelNotification": {
       "action": {
-        "reconnect": "",
+        "reconnect": "Reconnecter",
         "view_and_complete": "Voir et terminer"
       },
       "label": {
@@ -69,8 +69,8 @@
     "TasksPending": {
       "label": {
         "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-        "completed_over_total_done_many": "",
-        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
+        "completed_over_total_done_many": ""
       }
     }
   },
