@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
@@ -12,11 +14,31 @@ import {
   linkedAccountsStoryDefaultArgs,
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
-import { disconnectedBankAccounts } from '@testUtils/storybook/data/bankAccounts'
+import {
+  DISCONNECTED_ACCOUNTS_SCENARIOS,
+  type DisconnectedAccountsScenario,
+  getDisconnectedBankAccounts,
+} from '@testUtils/storybook/data/bankAccounts'
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
+  disconnectedScenario: DisconnectedAccountsScenario
 } & Pick<LinkedAccountsProps, 'stringOverrides'>
+
+// MSW handlers register once per story load and can't read args, so the scenario
+// control rewrites this array in place and refetches.
+const disconnectedAccountsMock = getDisconnectedBankAccounts('One account')
+
+const SyncDisconnectedAccountsMock = ({ scenario }: { scenario: DisconnectedAccountsScenario }) => {
+  const { invalidate } = useBankAccountsGlobalCacheActions()
+
+  useEffect(() => {
+    disconnectedAccountsMock.splice(0, disconnectedAccountsMock.length, ...getDisconnectedBankAccounts(scenario))
+    void invalidate()
+  }, [scenario, invalidate])
+
+  return null
+}
 
 // Trim the store rather than overriding the GET handler: the add-account and
 // confirm/exclude mocks mutate the store, so the GET must stay store-driven.
@@ -98,7 +120,28 @@ export const ConfirmingAccounts: Story = {
 
 export const DisconnectedAccount: Story = {
   tags: ['public-api'],
-  parameters: {
-    msw: { handlers: [getBankAccounts.mock(disconnectedBankAccounts), ...handlers] },
+  args: { disconnectedScenario: 'One account' },
+  argTypes: {
+    disconnectedScenario: {
+      name: 'Disconnected accounts',
+      control: 'radio',
+      options: DISCONNECTED_ACCOUNTS_SCENARIOS,
+      description: 'Which mocked accounts have a broken Plaid connection',
+      table: { category: 'Story data' },
+    },
   },
+  parameters: {
+    controls: { include: [...linkedAccountsControls.controlNames, 'stringOverrides.title', 'Disconnected accounts'] },
+    msw: { handlers: [getBankAccounts.mock(disconnectedAccountsMock), ...handlers] },
+  },
+  render: ({ disconnectedScenario, showLedgerBalance, showRepairAsRefresh, title }) => (
+    <>
+      <SyncDisconnectedAccountsMock scenario={disconnectedScenario} />
+      <LinkedAccounts
+        showLedgerBalance={showLedgerBalance}
+        showRepairAsRefresh={showRepairAsRefresh}
+        stringOverrides={title ? { title } : undefined}
+      />
+    </>
+  ),
 }
