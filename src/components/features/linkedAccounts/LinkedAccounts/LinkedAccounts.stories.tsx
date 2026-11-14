@@ -1,41 +1,33 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { LinkedAccounts, type LinkedAccountsProps } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 import { markAccountNeedingConfirmation } from '@fixtures/bankAccounts/mocks'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
-import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
-import { handlers } from '@msw/handlers'
 import {
   type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
   linkedAccountsStoryDefaultArgs,
   makeLinkedAccountsStoryControls,
 } from '@testUtils/storybook/controls/linkedAccounts'
-import {
-  DISCONNECTED_ACCOUNTS_SCENARIOS,
-  type DisconnectedAccountsScenario,
-  getDisconnectedBankAccounts,
-} from '@testUtils/storybook/data/bankAccounts'
+import { type DisconnectedAccountScenario, disconnectedAccountScenarios } from '@testUtils/storybook/data/bankAccounts'
 
 type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
-  disconnectedScenario: DisconnectedAccountsScenario
+  disconnectedScenario: DisconnectedAccountScenario
 } & Pick<LinkedAccountsProps, 'stringOverrides'>
 
-// MSW handlers register once per story load and can't read args, so the scenario
-// control rewrites this array in place and refetches.
-const disconnectedAccountsMock = getDisconnectedBankAccounts('One account')
-
-const SyncDisconnectedAccountsMock = ({ scenario }: { scenario: DisconnectedAccountsScenario }) => {
+const SeedBankAccounts = ({ accounts }: { accounts: ReadonlyArray<BankAccount> }) => {
   const { invalidate } = useBankAccountsGlobalCacheActions()
 
-  useEffect(() => {
-    disconnectedAccountsMock.splice(0, disconnectedAccountsMock.length, ...getDisconnectedBankAccounts(scenario))
+  useLayoutEffect(() => {
+    bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))
+    accounts.forEach(account => bankAccountStore.save(account))
     void invalidate()
-  }, [scenario, invalidate])
+  }, [accounts, invalidate])
 
   return null
 }
@@ -125,18 +117,16 @@ export const DisconnectedAccount: Story = {
     disconnectedScenario: {
       name: 'Disconnected accounts',
       control: 'radio',
-      options: DISCONNECTED_ACCOUNTS_SCENARIOS,
-      description: 'Which mocked accounts have a broken Plaid connection',
+      options: Object.keys(disconnectedAccountScenarios),
       table: { category: 'Story data' },
     },
   },
   parameters: {
     controls: { include: [...linkedAccountsControls.controlNames, 'stringOverrides.title', 'Disconnected accounts'] },
-    msw: { handlers: [getBankAccounts.mock(disconnectedAccountsMock), ...handlers] },
   },
   render: ({ disconnectedScenario, showLedgerBalance, showRepairAsRefresh, title }) => (
     <>
-      <SyncDisconnectedAccountsMock scenario={disconnectedScenario} />
+      <SeedBankAccounts accounts={disconnectedAccountScenarios[disconnectedScenario]} />
       <LinkedAccounts
         showLedgerBalance={showLedgerBalance}
         showRepairAsRefresh={showRepairAsRefresh}

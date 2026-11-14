@@ -29,18 +29,14 @@ export const disconnectedBankAccounts = bankAccounts
   .slice(0, 2)
   .map((account, index) => index === 0 ? withBrokenPlaidConnection(account) : account)
 
-export const DISCONNECTED_ACCOUNTS_SCENARIOS = ['One account', 'Several accounts at one bank', 'Several accounts at several banks'] as const
-
-export type DisconnectedAccountsScenario = typeof DISCONNECTED_ACCOUNTS_SCENARIOS[number]
+const breakAccountsAt = (...indexes: number[]) =>
+  bankAccounts.map((account, index) => indexes.includes(index) ? withBrokenPlaidConnection(account) : account)
 
 // Fixture order is Chase, Wells Fargo, Capital One, Capital One, Bank of America.
-const DISCONNECTED_ACCOUNT_INDEXES: Record<DisconnectedAccountsScenario, ReadonlyArray<number>> = {
-  'One account': [0],
-  'Several accounts at one bank': [2, 3],
-  'Several accounts at several banks': [0, 2, 3],
+export const disconnectedAccountScenarios = {
+  'One account': breakAccountsAt(0),
+  'Several accounts at one bank': breakAccountsAt(2, 3),
+  'Several accounts at several banks': breakAccountsAt(0, 2, 3),
 }
 
-export const getDisconnectedBankAccounts = (scenario: DisconnectedAccountsScenario) =>
-  bankAccounts.map((account, index) =>
-    DISCONNECTED_ACCOUNT_INDEXES[scenario].includes(index) ? withBrokenPlaidConnection(account) : account,
-  )
+export type DisconnectedAccountScenario = keyof typeof disconnectedAccountScenarios
