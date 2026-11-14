@@ -62,6 +62,17 @@ export const AllVariants: Story = {
           <Span weight='bold'>Bold text</Span>
         </Row>
       </Group>
+      <Group>
+        <Row label='default whitespace'>
+          <P>{'First line\nSecond line\n\nNew paragraph'}</P>
+        </Row>
+        <Row label='preserve line breaks'>
+          <P preserveLineBreaks>{'First line\nSecond line\n\nNew paragraph'}</P>
+        </Row>
+        <Row label='preserve CRLF'>
+          <P preserveLineBreaks>{'First line\r\nSecond line\r\n\r\nNew paragraph'}</P>
+        </Row>
+      </Group>
       <P>Paragraph text rendered with the P component.</P>
     </Gallery>
   ),
