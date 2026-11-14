@@ -17,12 +17,7 @@ function getTitle(t: TFunction, formatNumber: FormatNumber, { count, bankCount, 
       ? t('linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.label.account_with_mask', '{{accountName}} •••{{mask}}', soleAccount)
       : soleAccount.accountName
 
-    return institutionName
-      ? t('linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.account_at_institution_disconnected', '{{accountLabel}} at {{institutionName}} is disconnected', {
-        accountLabel,
-        institutionName,
-      })
-      : t('linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.account_disconnected', '{{accountLabel}} is disconnected', { accountLabel })
+    return t('linkedAccounts:LinkedAccounts.DisconnectedAccountsBanner.title.account_disconnected', '{{accountLabel}} is disconnected', { accountLabel })
   }
 
   const displayCount = formatNumber(count)
