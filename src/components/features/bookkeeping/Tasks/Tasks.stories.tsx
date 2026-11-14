@@ -159,3 +159,8 @@ const JULY: DateRange = {
 export const CounterpartyAskWithoutSuggestions: Story = {
   parameters: { pinnedDateRange: JULY },
 }
+
+export const DisconnectedAccount: Story = {
+  args: { showReconnectAction: true },
+  parameters: { pinnedDateRange: NOVEMBER },
+}

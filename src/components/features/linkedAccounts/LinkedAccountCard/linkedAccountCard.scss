@@ -198,3 +198,28 @@
     }
   }
 }
+
+.Layer__LinkedAccountCard__Disconnected {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  gap: var(--spacing-sm);
+  align-items: center;
+  padding: var(--spacing-4xs) var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  border: 1px solid color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
+  background: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
+
+  .Layer__LinkedAccountCard[data-show-ledger-balance] & {
+    padding: var(--spacing-sm);
+  }
+}
+
+.Layer__LinkedAccountCard__DisconnectedText {
+  flex: 1;
+  min-width: 0;
+}
+
+.Layer__LinkedAccountCard__DisconnectedLabel {
+  color: var(--color-info-error-fg);
+}

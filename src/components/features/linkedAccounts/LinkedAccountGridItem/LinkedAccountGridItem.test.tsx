@@ -78,10 +78,12 @@ describe(LinkedAccountGridItem, () => {
     expect(screen.queryByRole('menuitem', { name: 'Add opening balance' })).not.toBeInTheDocument()
   })
 
-  it('shows a red fix pill for a broken connection by default', async () => {
+  it('shows a reconnect footer for a broken background connection by default', async () => {
     renderGridItem({ account: BROKEN_PLAID_ACCOUNT })
 
-    expect(await screen.findByRole('button', { name: 'Fix account' })).toHaveAttribute('data-variant', 'error')
+    expect(await screen.findByText('Disconnected')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Reconnect/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Fix account' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Refresh now' })).not.toBeInTheDocument()
   })
 

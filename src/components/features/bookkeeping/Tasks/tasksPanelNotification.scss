@@ -14,14 +14,10 @@
     var(--color-info-warning);
 
   &[data-status='error'] {
-    background:
-      linear-gradient(
-        0deg,
-        var(--base-transparent-10) 0%,
-        var(--base-transparent-10) 100%
-      ),
-      var(--color-info-error);
-    color: var(--color-info-error-bg);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    border: 1px solid color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
+    background: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
+    color: var(--color-info-error-fg);
   }
 }
 
@@ -31,6 +27,14 @@
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+}
+
+.Layer__tasks-header__notification__icon {
+  flex-shrink: 0;
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-info-error-bg);
 }
 
 .Layer__tasks-header__notification__button {
@@ -48,11 +52,6 @@
   font-variation-settings: 'wght' var(--font-weight-bold);
   transition: all 0.12s ease-in-out;
   white-space: nowrap;
-
-  .Layer__tasks-header__notification[data-status='error'] & {
-    background: var(--color-info-error-fg);
-    color: var(--color-info-error-bg);
-  }
 
   &:hover {
     background: var(--color-base-1000);

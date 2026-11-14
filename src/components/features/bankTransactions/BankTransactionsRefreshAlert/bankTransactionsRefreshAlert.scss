@@ -3,21 +3,25 @@
   color: var(--color-info-success-fg);
 
   &[data-status='error'] {
-    background: var(--color-info-error-bg);
+    border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
+    border: 1px solid color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
+    background: color-mix(in srgb, var(--color-info-error-bg) 30%, var(--color-base-0));
     color: var(--color-info-error-fg);
-  }
-
-  &__Action {
-    justify-content: flex-start;
-    inline-size: fit-content;
-    white-space: normal;
   }
 
   &__Content {
     min-inline-size: 0;
   }
+}
 
-  &__Popover--mobile {
-    inline-size: var(--trigger-width);
+.Layer__BankTransactionsRefreshAlert__Icon {
+  flex-shrink: 0;
+  block-size: 1.5rem;
+  inline-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-info-success-bg);
+
+  .Layer__BankTransactionsRefreshAlert[data-status='error'] & {
+    background: var(--color-info-error-bg);
   }
 }

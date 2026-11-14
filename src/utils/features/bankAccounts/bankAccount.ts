@@ -16,6 +16,12 @@ export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankA
   )
 }
 
+export function isBankAccountAwaitingUniquenessConfirmation(bankAccount: BankAccount): boolean {
+  return bankAccount.externalAccounts.some(
+    ({ notifications }) => notifications.some(({ type }) => type === 'CONFIRM_UNIQUE'),
+  )
+}
+
 export function getBankAccountDisplayName(bankAccount: BankAccount): string {
   return bankAccount.accountName
     ?? bankAccount.externalAccounts[0]?.externalAccountName
