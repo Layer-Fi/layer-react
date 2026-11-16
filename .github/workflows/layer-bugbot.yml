@@ -261,6 +261,8 @@ jobs:
             echo "session_id=$id"
             echo "prev_head=${prev_head:0:7}"
             echo "age_min=$((age / 60))"
+            # The action reports the resumed session's running cost, so the report subtracts this.
+            echo "prev_cost=$(jq -r '.cost_usd // ""' "$meta")"
           } >> "$GITHUB_OUTPUT"
 
       - name: Build prompt
@@ -364,6 +366,7 @@ jobs:
         if: success() && github.event_name == 'pull_request' && steps.claude.outputs.session_id != ''
         env:
           SESSION_ID: ${{ steps.claude.outputs.session_id }}
+          EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           MODEL: claude-opus-5-5
         run: |
@@ -376,8 +379,9 @@ jobs:
           find "$projects" -mindepth 1 -maxdepth 1 ! -path "$dir" -exec rm -rf {} +
           find "$dir" -mindepth 1 -maxdepth 1 ! -name "$SESSION_ID.jsonl" ! -name "$SESSION_ID" -exec rm -rf {} +
           mkdir -p "$HOME/.layer-bugbot-session"
-          jq -n --arg id "$SESSION_ID" --arg head "$HEAD_SHA" --arg model "$MODEL" --argjson ended "$(date +%s)" \
-            '{session_id: $id, head_sha: $head, model: $model, ended_at: $ended}' > "$HOME/.layer-bugbot-session/meta.json"
+          cost=$(jq '[.[] | select(.type == "result")] | last | .total_cost_usd // null' "$EXEC_FILE" 2>/dev/null || echo null)
+          jq -n --arg id "$SESSION_ID" --arg head "$HEAD_SHA" --arg model "$MODEL" --argjson ended "$(date +%s)" --argjson cost "${cost:-null}" \
+            '{session_id: $id, head_sha: $head, model: $model, ended_at: $ended, cost_usd: $cost}' > "$HOME/.layer-bugbot-session/meta.json"
           echo "save=true" >> "$GITHUB_OUTPUT"
 
       - name: Save session for the next run
@@ -395,10 +399,18 @@ jobs:
         env:
           EXEC_FILE: ${{ steps.claude.outputs.execution_file }}
           RESUMED: ${{ steps.resume.outputs.session_id && format('resumed ({0} min after the previous run)', steps.resume.outputs.age_min) || 'fresh' }}
+          IS_RESUMED: ${{ steps.resume.outputs.session_id != '' }}
+          PREV_COST: ${{ steps.resume.outputs.prev_cost }}
         run: |
           set -uo pipefail
-          jq -r --arg s "$RESUMED" '[.[] | select(.type == "result")] | last | select(. != null) |
-            "Session: \($s) · cache read \(.usage.cache_read_input_tokens // 0) · cache write \(.usage.cache_creation_input_tokens // 0) · uncached input \(.usage.input_tokens // 0) · output \(.usage.output_tokens // 0) · $\(.total_cost_usd // 0)"' \
+          # total_cost_usd covers the whole session, so a resumed run subtracts the previous runs' total.
+          jq -r --arg s "$RESUMED" --argjson resumed "$IS_RESUMED" --argjson prev "${PREV_COST:-null}" '
+            [.[] | select(.type == "result")] | last | select(. != null) | (.total_cost_usd // 0) as $t |
+            (if $resumed and $prev != null then " (session total $\($t * 1000 | round / 1000))" else "" end) as $note |
+            (if $resumed and $prev == null then "unknown, session total $\($t * 1000 | round / 1000)"
+             elif $resumed then "\(($t - $prev) * 1000 | round / 1000)\($note)"
+             else "\($t * 1000 | round / 1000)" end) as $cost |
+            "Session: \($s) · cache read \(.usage.cache_read_input_tokens // 0) · cache write \(.usage.cache_creation_input_tokens // 0) · uncached input \(.usage.input_tokens // 0) · output \(.usage.output_tokens // 0) · $\($cost)"' \
             "$EXEC_FILE" > "$RUNNER_TEMP/bugbot-usage.txt" || true
           cat "$RUNNER_TEMP/bugbot-usage.txt" >> "$GITHUB_STEP_SUMMARY"
           # A notice is readable through the check-run annotations API, so cost can be aggregated.
