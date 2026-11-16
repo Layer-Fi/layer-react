@@ -81,7 +81,7 @@ export const LinkedAccounts = ({
 export const LinkedAccountsComponent = ({
   asWidget,
   elevated = false,
-  showLedgerBalance = true,
+  showLedgerBalance = false,
   showUnlinkItem = false,
   showBreakConnection = false,
   showRepairAsRefresh = false,
