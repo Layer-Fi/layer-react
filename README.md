@@ -100,7 +100,7 @@ Props:
 
 - `asWidget`: Minimized version of the component
 - `elevated`: Stylistic option to highlight component
-- `showLedgerBalance`: Flag to enable or hide the current ledger balance corresponding to this external account. Useful for reconciliation.
+- `showLedgerBalance`: Flag to enable or hide the current ledger balance corresponding to this external account. Useful for reconciliation. Defaults to `false`.
 
 #### Transaction categorization
 
