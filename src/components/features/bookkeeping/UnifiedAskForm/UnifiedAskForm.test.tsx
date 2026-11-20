@@ -26,6 +26,7 @@ import {
   textFollowUp,
   textStep,
 } from '@fixtures/bookkeeping/unifiedAskFormTasks/utils'
+import { put as putUnifiedAskFormDraft } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/draft/put'
 import { post as postAskFormNextPage } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/next-page/post'
 import { post as postUnifiedAskFormResponse } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/response/post'
 import { del as deleteUnifiedAskFormDocument } from '@msw/api/businesses/[business-id]/unified-tasks/[task-id]/upload/[document-id]/delete'
@@ -210,6 +211,38 @@ describe('UnifiedAskForm', () => {
         },
       },
     })
+  })
+
+  it('saves per-transaction answers as a draft and reopens on them', async () => {
+    const task = counterpartyTask()
+    const onSubmit = spyOnSubmit(task)
+    const onDraft = vi.fn<(body: unknown) => void>()
+    server.use(putUnifiedAskFormDraft.mock({ task, categorized: false }, {
+      onRequest: async ({ request }) => onDraft(await readRequestJson(request)),
+    }))
+    const { user, unmount } = renderItem(task)
+
+    await user.click(screen.getByRole('radio', { name: 'It\'s a mix or it varies' }))
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+    await waitFor(() => expect(screen.queryByText(/What were these for/)).not.toBeInTheDocument())
+    await user.click(screen.getByRole('radio', { name: 'Office Expenses' }))
+
+    await waitFor(() => expect(onDraft).toHaveBeenCalled())
+    expect(onDraft.mock.lastCall?.[0]).toEqual({
+      answers: { rows: { transaction_answers: [{ transaction_id: 'txn-1', answer: { choice: OFFICE } }] } },
+    })
+    expect(onSubmit).not.toHaveBeenCalled()
+    unmount()
+
+    renderItem({
+      ...task,
+      answers: { category: { choice: 'mix' }, rows: { transactionAnswers: [{ transactionId: 'txn-1', answer: { choice: OFFICE } }] } },
+    })
+
+    expect(screen.getByText('Can you share more about what each transaction was for below?')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /COSTCO WHSE.*Office Expenses/ })).toBeInTheDocument()
+    expect(screen.getByText('1 of 2 categorized')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled()
   })
 
   it('goes back to the first page after a double press on Next', async () => {
