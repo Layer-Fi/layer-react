@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type AskFormPage } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askForm'
 import { AskFormNextKind, type AskFormStaticNext } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormNext'
 import { type UnifiedAskFormTask } from '@schemas/features/bookkeeping/businessTasks/unifiedAskFormTask'
@@ -10,7 +11,7 @@ import { type UnifiedAskFormApi } from '@features/bookkeeping/UnifiedAskForm/use
 import { toAnswers } from '@features/bookkeeping/UnifiedAskForm/utils/answers'
 import { findFirstIncompletePage, getPageProblem } from '@features/bookkeeping/UnifiedAskForm/utils/completion'
 import { type UnifiedAskFormValues } from '@features/bookkeeping/UnifiedAskForm/utils/formValues'
-import { getVisitedPages, indexPages, toPageView } from '@features/bookkeeping/UnifiedAskForm/utils/pages'
+import { getDraftPath, getVisitedPages, indexPages, toPageView } from '@features/bookkeeping/UnifiedAskForm/utils/pages'
 import { getPageNext } from '@features/bookkeeping/UnifiedAskForm/utils/routing'
 
 type UseUnifiedAskFormNavigationProps = {
@@ -28,7 +29,11 @@ export const useUnifiedAskFormNavigation = ({ task, form }: UseUnifiedAskFormNav
   const transactionIds = useMemo(() => task.transactions.map(({ id }) => id), [task.transactions])
 
   const entryView = useMemo(() => toPageView(entryPageId), [entryPageId])
-  const steps = useStepNavigation(entryView)
+  const steps = useStepNavigation(entryView, () => (
+    task.status === BusinessTaskStatus.Todo && task.answers
+      ? getDraftPath(entryPageId, pagesById, form.state.values, transactionIds).map(({ id }) => toPageView(id))
+      : []
+  ))
   const visitedPages = useMemo(() => getVisitedPages(steps.history, pagesById), [pagesById, steps.history])
 
   const goBack = useCallback(() => {
