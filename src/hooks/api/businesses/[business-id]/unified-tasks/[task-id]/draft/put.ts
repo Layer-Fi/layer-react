@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { BusinessTaskStatus } from '@schemas/features/bookkeeping/businessTasks/baseBusinessTask'
 import { type AskFormAnswers } from '@schemas/features/bookkeeping/businessTasks/unifiedAskForm/askFormAnswer'
 import {
   type UnifiedAskFormSubmissionEncoded,
@@ -44,8 +45,13 @@ export const usePutUnifiedAskFormDraft = createMutationHook({
   useOnTriggerSuccess: () => {
     const { patchCache: patchBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
+    // A draft that resolves after Submit must not reopen the submitted task.
     return async ({ task }: UnifiedAskFormSubmissionResult) => {
-      await patchBookkeepingPeriods(replaceTaskInPeriods(task))
+      await patchBookkeepingPeriods(periods =>
+        periods?.some(({ tasks }) => tasks.some(({ id, status }) => id === task.id && status === BusinessTaskStatus.Todo))
+          ? replaceTaskInPeriods(task)(periods)
+          : periods,
+      )
     }
   },
 })
