@@ -8,11 +8,15 @@ type StepNavigationState<View> = {
   direction: StepDirection
 }
 
-/** Back returns to wherever the current step was entered from, not to a fixed previous step. */
-export const useStepNavigation = <View>(initialView: View) => {
-  const [{ view, history, direction }, setState] = useState<StepNavigationState<View>>(
-    { view: initialView, history: [], direction: 'back' },
-  )
+/**
+ * Back returns to wherever the current step was entered from, not to a fixed previous step.
+ * `getResumePath` reopens partway through, as the views from `initialView` to the one to show; `reset` still returns to `initialView`.
+ */
+export const useStepNavigation = <View>(initialView: View, getResumePath?: () => ReadonlyArray<View>) => {
+  const [{ view, history, direction }, setState] = useState<StepNavigationState<View>>(() => {
+    const path = getResumePath?.() ?? []
+    return { view: path.at(-1) ?? initialView, history: path.slice(0, -1), direction: 'back' }
+  })
 
   /** With `fromDepth`, a repeat press that lands after the first one already moved on is ignored. */
   const goForward = useCallback((next: View, fromDepth?: number) => {
