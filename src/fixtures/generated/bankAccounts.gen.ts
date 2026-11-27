@@ -36,7 +36,8 @@ export const bankAccounts = [
     },
     "currentLedgerBalance": 2498800,
     "mask": "5717",
-    "notifications": []
+    "notifications": [],
+    "pcMsoOwner": undefined
   },
   {
     "id": "00000001-9a55-48cb-8f2a-738709fe0dd7",
@@ -72,7 +73,8 @@ export const bankAccounts = [
     },
     "currentLedgerBalance": 51100,
     "mask": "0001",
-    "notifications": []
+    "notifications": [],
+    "pcMsoOwner": "MSO"
   },
   {
     "id": "00000001-4f9f-44c5-855f-1e87fbf9d696",
@@ -108,7 +110,8 @@ export const bankAccounts = [
     },
     "currentLedgerBalance": 50900,
     "mask": "0012",
-    "notifications": []
+    "notifications": [],
+    "pcMsoOwner": undefined
   },
   {
     "id": "00000001-52bc-4e5b-8621-b3f696bff863",
@@ -144,7 +147,8 @@ export const bankAccounts = [
     },
     "currentLedgerBalance": 50200,
     "mask": "0006",
-    "notifications": []
+    "notifications": [],
+    "pcMsoOwner": null
   },
   {
     "id": "00000001-2211-45d8-8af4-5d23ec83708f",
@@ -180,6 +184,7 @@ export const bankAccounts = [
     },
     "currentLedgerBalance": 51400,
     "mask": "1846",
-    "notifications": []
+    "notifications": [],
+    "pcMsoOwner": "MSO"
   }
 ] as (typeof schema.Type)[]
