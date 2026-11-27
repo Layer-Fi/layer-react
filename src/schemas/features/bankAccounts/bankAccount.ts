@@ -9,6 +9,9 @@ export const BalanceTimestampSchema = Schema.Struct({
 })
 export type BalanceTimestamp = typeof BalanceTimestampSchema.Type
 
+export const PcMsoOwnerSchema = Schema.Literal('PC', 'MSO')
+export type PcMsoOwner = typeof PcMsoOwnerSchema.Type
+
 export const BankAccountSchema = Schema.Struct({
   id: Schema.UUID,
   accountName: pipe(
@@ -38,5 +41,9 @@ export const BankAccountSchema = Schema.Struct({
   ),
   mask: Schema.NullishOr(Schema.String),
   notifications: Schema.Array(AccountNotificationSchema),
+  pcMsoOwner: pipe(
+    Schema.optional(Schema.NullOr(PcMsoOwnerSchema)),
+    Schema.fromKey('pc_mso_owner'),
+  ),
 })
 export type BankAccount = typeof BankAccountSchema.Type

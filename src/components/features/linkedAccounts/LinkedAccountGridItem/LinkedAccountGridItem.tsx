@@ -20,11 +20,15 @@ import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@pr
 import { LinkedAccountsContext } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@providers/features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
 import { useReconnectConnection } from '@hooks/features/linkedAccounts/useReconnectConnection'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+import { Span } from '@ui/Typography/Text'
 import { LinkedAccountCard } from '@features/linkedAccounts/LinkedAccountCard/LinkedAccountCard'
 import { LinkedAccountOptions, type LinkedAccountOptionsConfig } from '@features/linkedAccounts/LinkedAccountOptions/LinkedAccountOptions'
 import { LinkedAccountPill } from '@features/linkedAccounts/LinkedAccountPill/LinkedAccountPill'
 import { UnlinkAccountConfirmationModal } from '@features/linkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
+
+import { PcMsoOwnerModal } from './PcMsoOwnerModal'
 
 function accountMissingOpeningBalance(bankAccount: BankAccount) {
   return bankAccount.notifications.some(({ type }) => type === 'OPENING_BALANCE_MISSING')
@@ -61,6 +65,7 @@ export const LinkedAccountGridItem = ({
   const { setAccountsToAddOpeningBalanceInModal } = useContext(OpeningBalanceModalContext)
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
+  const [isOwnerModalOpen, setIsOwnerModalOpen] = useState(false)
   const isFilterEnabled = useIsBankAccountFilterEnabled()
   const isFilterLocked = useIsBankAccountFilterLocked()
   const reconnectConnection = useReconnectConnection()
@@ -71,6 +76,7 @@ export const LinkedAccountGridItem = ({
   const fixInfo = showRepairAsRefresh ? null : repairInfo
   const disconnection = showRepairAsRefresh ? null : getBankAccountDisconnection(bankAccount)
   const refreshableInfo = showRepairAsRefresh ? repairInfo ?? refreshInfo : refreshInfo
+  const missingOwner = bankAccount.notifications.some(({ type }) => type === 'PC_MSO_OWNER_MISSING')
 
   let pillConfig
   if (isBankAccountAwaitingUniquenessConfirmation(bankAccount)) {
@@ -213,6 +219,17 @@ export const LinkedAccountGridItem = ({
                 ? { lastSyncedAt: disconnection.lastSyncedAt, onReconnect: () => reconnectConnection(disconnection) }
                 : undefined}
               slots={{
+                Ownership: missingOwner
+                  ? (
+                    <Badge variant={BadgeVariant.ERROR} onPress={() => { setIsOwnerModalOpen(true) }}>
+                      {t('linkedAccounts:LinkedAccountGridItem.action.owner_missing', 'Owner missing · Assign')}
+                    </Badge>
+                  )
+                  : bankAccount.pcMsoOwner && (
+                    <Span size='sm' variant='subtle'>
+                      {t('linkedAccounts:LinkedAccountGridItem.label.account_owner', 'Owner: {{owner}}', { owner: bankAccount.pcMsoOwner })}
+                    </Span>
+                  ),
                 Pill: pillConfig
                   ? (
                     <LinkedAccountPill
@@ -225,6 +242,7 @@ export const LinkedAccountGridItem = ({
                   : null,
               }}
             />
+            {isOwnerModalOpen && <PcMsoOwnerModal account={bankAccount} onOpenChange={setIsOwnerModalOpen} />}
             {isUnlinkConfirmationModalOpen && (
               <UnlinkAccountConfirmationModal
                 isOpen

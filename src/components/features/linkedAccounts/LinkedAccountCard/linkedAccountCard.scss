@@ -6,12 +6,14 @@
 }
 
 .Layer__LinkedAccountCard {
+  --linked-account-card-height: 136px;
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3xs);
   justify-content: space-between;
-  height: 136px;
+  height: var(--linked-account-card-height);
   width: 286px;
   padding: var(--spacing-3xs);
   border-radius: var(--border-radius-sm);
@@ -19,7 +21,12 @@
   background: var(--color-base-0);
 
   &[data-show-ledger-balance] {
-    height: 162px;
+    --linked-account-card-height: 162px;
+  }
+
+  &[data-show-ownership] {
+    height: auto;
+    min-height: calc(var(--linked-account-card-height) + var(--spacing-xl));
   }
 
   .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple'] & {
@@ -169,6 +176,7 @@
           transparent
         );
       content: '';
+      pointer-events: none;
       transform: translateX(-100%);
       animation: skeletonSweep 1.5s infinite;
     }

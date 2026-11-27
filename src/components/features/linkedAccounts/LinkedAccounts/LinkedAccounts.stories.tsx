@@ -100,6 +100,18 @@ export const Default: Story = {
   tags: ['public-api', 'docs-screenshot'],
 }
 
+export const AccountOwnership: Story = {
+  loaders: [() => {
+    bankAccountStore.all().forEach((account, index) => {
+      bankAccountStore.save({
+        ...account,
+        pcMsoOwner: index === 0 ? null : 'PC',
+        notifications: index === 0 ? [{ type: 'PC_MSO_OWNER_MISSING' }] : account.notifications,
+      })
+    })
+  }],
+}
+
 // Runs after the meta loader, so it flags the two accounts that survived the trim.
 export const ConfirmingAccounts: Story = {
   tags: ['public-api'],

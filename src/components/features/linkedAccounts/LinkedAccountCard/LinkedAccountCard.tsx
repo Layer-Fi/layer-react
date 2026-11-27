@@ -23,6 +23,7 @@ export interface LinkedAccountCardProps {
   disconnection?: Pick<DisconnectedFooterProps, 'lastSyncedAt' | 'onReconnect'>
   slots: {
     Pill: React.ReactNode
+    Ownership?: React.ReactNode
   }
 }
 
@@ -97,6 +98,7 @@ export const LinkedAccountCard = ({
     'ready-for-refresh': isReadyForRefresh,
     'syncing': isSyncing,
     'show-ledger-balance': showLedgerBalance,
+    'show-ownership': Boolean(slots.Ownership),
   })
 
   const headerDataProperties = toDataProperties({
@@ -137,6 +139,7 @@ export const LinkedAccountCard = ({
             )}
         </div>
       </div>
+      {slots.Ownership && <HStack pi='sm' pb='xs'>{slots.Ownership}</HStack>}
       {isSyncing
         ? (
           <div className='Layer__LinkedAccountCard__Syncing'>
